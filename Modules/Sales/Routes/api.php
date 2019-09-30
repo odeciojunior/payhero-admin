@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 Route::apiResource('sales', 'SalesApiController')
-    ->only('index')
-    ->middleware(['web', 'auth']);
+     ->only('index')
+     ->middleware(['auth:api']);
 
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
-        'prefix' => 'sales'
+        'middleware' => ['auth:api'],
+        'prefix'     => 'sales',
     ],
     function() {
 

@@ -7,18 +7,15 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/companies",
-            error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.message);
-                }
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            success: function success(response) {
-                // console.log(response);
-
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
                 //transfers_company_select
                 fillSelectAndCheckWithModelFields(
                     transfersCompanySelect,
@@ -84,19 +81,15 @@ $(document).ready(function () {
             url: "api/finances/getbalances/",
             type: "GET",
             data: {company: $("#transfers_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.message);
-                }
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
                 $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>');
                 $('.removeSpan').remove();
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
@@ -146,13 +139,15 @@ $(document).ready(function () {
             $.ajax({
                 url: "/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
                 type: "GET",
+                dataType: "json",
                 headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
-                error: function error() {
-                    //
+                error: (response) => {
+                    errorAjaxResponse(response);
                 },
-                success: function success(response) {
+                success: (response) => {
                     if (response.data.user_documents_status == 'pending') {
                         var route = '/profile';
                         $('#modal-withdrawal').modal('show');
@@ -196,37 +191,15 @@ $(document).ready(function () {
                                     company_id: $('#transfers_company_select').val(),
                                     withdrawal_value: $('#custom-input-addon').val()
                                 },
+                                dataType: "json",
                                 headers: {
-                                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
                                 },
-                                error: function (_error) {
-                                    function error(_x) {
-                                        return _error.apply(this, arguments);
-                                    }
-
-                                    error.toString = function () {
-                                        return _error.toString();
-                                    };
-
-                                    return error;
-                                }(function (response) {
-                                    loadingOnScreenRemove();
-
-                                    if (response.status === 422) {
-                                        for (error in response.errors) {
-                                            alertCustom('error', String(response.errors[error]));
-                                        }
-                                    } else if (response.status === 400) {
-                                        $('#modal-withdrawal').modal('show');
-
-                                        $('#modal-withdrawal-title').text("Oooppsssss!");
-                                        $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Algo deu errado!</strong></h3>' + '<h4 align="center">' + String(response.responseJSON.message) + '</h4>' + '<h4 align="center">Entre em contato com o suporte para mais informações</h4>');
-                                        $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                                    } else {
-                                        alertCustom('error', String(response.responseJSON.message));
-                                    }
-                                }),
-                                success: function success(response) {
+                                error: (response) => {
+                                    errorAjaxResponse(response);
+                                },
+                                success: (response) => {
                                     loadingOnScreenRemove();
                                     $('#modal-withdrawal').modal('show');
                                     $('#modal-withdrawal-title').text("Sucesso!");
@@ -264,24 +237,15 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: '/api/anticipations/' + company,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN':
-                    $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else if (response.status === 400) {
-                    $("#balance-after-anticipation").html(response.responseJSON.data['valueAntecipable'] + ',00');
-                    $("#tax-value").html(response.responseJSON.data['taxValue'] + ',00');
-                    alertCustom("error", response.responseJSON.message)
-                } else {
-                    alertCustom("error", response.responseJSON.message)
-                }
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function (response) {
+            success: (response) => {
                 $("#balance-after-anticipation").html(response.data['valueAntecipable']);
                 $("#tax-value").html(response.data['taxValue']);
             }
@@ -296,24 +260,15 @@ $(document).ready(function () {
             method: 'POST',
             url: '/api/anticipations',
             data: {company: $("#transfers_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (response) {
-                loadingOnScreenRemove();
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else if (response.status === 400) {
-                    $("#balance-after-anticipation").html(response.responseJSON.data['valueAntecipable']);
-                    $("#tax-value").html(response.responseJSON.data['taxValue']);
-                    alertCustom("error", response.responseJSON.message)
-                } else {
-                    alertCustom("error", response.responseJSON.message)
-                }
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function (response) {
+            success: (response) => {
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 updateBalances()
@@ -336,13 +291,15 @@ $(document).ready(function () {
             method: "GET",
             url: link,
             data: {company: $("#extract_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                $("#table-transfers-body").html('Erro ao encontrar dados');
+            error:  (response) => {
+                errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
 
                 $("#table-transfers-body").html('');
 
@@ -380,13 +337,15 @@ $(document).ready(function () {
                         method: "POST",
                         url: '/sales/venda/detalhe',
                         data: data,
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
-                        error: function error() {
-                            //
+                        error: (response) => {
+                            errorAjaxResponse(response);
                         },
-                        success: function success(response) {
+                        success: (response) => {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
                             $('.modal-body-details').html('');
                             $('.modal-body-details').html(response);
@@ -436,13 +395,15 @@ $(document).ready(function () {
             method: "GET",
             url: link,
             data: {company: $("#transfers_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function () {
-                $("#withdrawals-table-data").html('Erro ao encontrar dados');
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function (response) {
+            success: (response) => {
                 $("#withdrawals-table-data").html('');
                 if (response.data === '' || response.data === undefined || response.data.length === 0) {
                     $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
@@ -519,5 +480,4 @@ $(document).ready(function () {
         }
         $('table').addClass('table-striped');
     }
-
 });

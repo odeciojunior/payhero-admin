@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['api', 'auth:api']], function() {
+Route::group(['middleware' => ['auth:api']], function() {
     //teste
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies');
     Route::post('/companies/uploaddocuments', 'CompaniesController@uploadDocuments')

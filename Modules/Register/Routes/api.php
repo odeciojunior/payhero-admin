@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(
     [
-        'middleware' => ['web'],
-        'prefix' => 'register'
+        'middleware' => ['api'],
+        'prefix'     => 'register',
     ],
     function() {
         Route::post('/', 'RegisterApiController@store');

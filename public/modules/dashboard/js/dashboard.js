@@ -23,7 +23,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                if(data.companies.length) {
+                if (data.companies.length) {
                     for (let i = 0; i < data.companies.length; i++) {
                         $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
                     }

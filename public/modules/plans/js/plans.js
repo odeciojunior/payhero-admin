@@ -31,12 +31,14 @@ $(function () {
             method: "POST",
             url: "/api/products/userproducts",
             data: {project: projectId},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
+            error: function error(response) {
                 $("#modal-content").hide();
-                alertCustom('error', 'Ocorreu algum erro');
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 if (Object.keys(response.data).length === 0) {
@@ -112,11 +114,11 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "POST",
-                            // url: "/api/plans",
                             url: '/api/project/' + projectId + '/plans',
-
+                            dataType: "json",
                             headers: {
-                                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             data: formData,
                             processData: false,
@@ -124,14 +126,7 @@ $(function () {
                             cache: false,
                             error: function error(response) {
                                 loadingOnScreenRemove();
-                                if (response.status === 422) {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
-                                    }
-                                }
-                                if (response.status === 400) {
-                                    alertCustom('error', response.responseJSON.message);
-                                }
+                                errorAjaxResponse(response);
                             },
                             success: function success(response) {
                                 loadingOnScreenRemove();
@@ -165,22 +160,20 @@ $(function () {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-plan', '#table-plans');
-//        project/{projectId}/plan
         if (link == null) {
-            // link = '/api/plans'; '/api/project/'+projectId+'plans';
             link = '/api/project/' + projectId + '/plans';
 
         } else {
-            // link = '/api/plans' + link;
             link = '/api/project/' + projectId + '/plans' + link;
         }
 
         $.ajax({
             method: "GET",
             url: link,
-            // data: {project: projectId},
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (_error2) {
                 function error() {
@@ -194,14 +187,8 @@ $(function () {
                 return error;
             }(function (response) {
                 $("#data-table-plan").html('Erro ao encontrar dados');
-                if (response.status == '422') {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
+                errorAjaxResponse(response);
 
-                    alertCustom('error', response.responseJSON.message);
-                }
             }),
             success: function success(response) {
 
@@ -242,11 +229,11 @@ $(function () {
 
                     $.ajax({
                         method: "GET",
-                        // url: "/api/plans/" + plan,
                         url: '/api/project/' + projectId + '/plans/' + plan,
-                        // data: data,
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         error: function (_error3) {
                             function error(_x3) {
@@ -259,13 +246,8 @@ $(function () {
 
                             return error;
                         }(function (response) {
-                            if (response.status == '422') {
-                                for (error in response.responseJSON.errors) {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
-                                }
-                            } else {
-                                alertCustom("error", response.responseJSON.message);
-                            }
+                            errorAjaxResponse(response);
+
                             loadingOnScreenRemove();
                         }), success: function success(response) {
                             if (response.message == 'error') {
@@ -301,17 +283,18 @@ $(function () {
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
                     $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
-                    // var data = {planId: plan, project: projectId};
 
                     $.ajax({
                         method: "GET",
                         url: '/api/project/' + projectId + '/plans/' + plan,
-                        // data: data,
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         error: function error() {
-                            //
+                            errorAjaxResponse(response);
+
                             loadingOnScreenRemove()
                         }, success: function success(response) {
                             $("#form-update-plan").html('');
@@ -373,12 +356,15 @@ $(function () {
                                     method: "POST",
                                     url: "/api/products/userproducts",
                                     data: {project: projectId},
+                                    dataType: "json",
                                     headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                                        'Accept': 'application/json',
                                     },
                                     error: function error() {
                                         $("#modal-content").hide();
-                                        alertCustom('error', 'Ocorreu algum erro');
+                                        errorAjaxResponse(response);
+
                                     },
                                     success: function success(response) {
                                         $("#products_edit").html('');
@@ -392,12 +378,15 @@ $(function () {
                                 method: "POST",
                                 url: "/api/products/userproducts",
                                 data: {project: projectId},
+                                dataType: "json",
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
                                 },
                                 error: function error() {
                                     $("#modal-content").hide();
-                                    alertCustom('error', 'Ocorreu algum erro');
+                                    errorAjaxResponse(response);
+
                                 },
                                 success: function success(response) {
                                     $(".products_edit").each(function () {
@@ -468,9 +457,11 @@ $(function () {
                                 $.ajax({
                                     method: "POST",
                                     // url: "/api/plans/" + plan,
-                                    url: '/api/project/' + projectId + '/plans/'+ plan,
+                                    url: '/api/project/' + projectId + '/plans/' + plan,
+                                    dataType: "json",
                                     headers: {
-                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                                        'Accept': 'application/json',
                                     },
                                     data: formData,
                                     processData: false,
@@ -488,14 +479,8 @@ $(function () {
                                         return error;
                                     }(function (response) {
                                         loadingOnScreenRemove();
-                                        if (response.status == '422') {
-                                            for (error in response.responseJSON.errors) {
-                                                alertCustom('error', String(response.responseJSON.errors[error]));
-                                            }
-                                        }
-                                        if (response.status === 400) {
-                                            alertCustom('error', response.responseJSON.message);
-                                        }
+                                        errorAjaxResponse(response);
+
                                         index();
                                     }),
                                     success: function success(data) {
@@ -522,10 +507,11 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
-                            // url: "/api/plans/" + plan,
                             url: '/api/project/' + projectId + '/plans/' + plan,
+                            dataType: "json",
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             error: function (_error5) {
                                 function error(_x5) {
@@ -539,14 +525,8 @@ $(function () {
                                 return error;
                             }(function (response) {
                                 loadingOnScreenRemove();
-                                if (response.status == '422') {
-                                    for (error in response.responseJSON.errors) {
-                                        alertCustom('error', String(response.responseJSON.errors[error]));
-                                    }
-                                }
-                                if (response.status == '400') {
-                                    alertCustom('error', response.responseJSON.message);
-                                }
+                                errorAjaxResponse(response);
+
                             }),
                             success: function success(response) {
                                 loadingOnScreenRemove();
