@@ -27,7 +27,6 @@ class AddColumnProductPlanSaleIdTableTrackingHistories extends Migration
         Schema::table('tracking_histories', function(Blueprint $table) {
             $table->dropForeign(['delivery_id']);
             $table->dropColumn('delivery_id');
-            $table->dropForeign(['plan_sale_id']);
             $table->dropColumn('plans_sale_id');
         });
     }
@@ -50,6 +49,6 @@ class AddColumnProductPlanSaleIdTableTrackingHistories extends Migration
         Schema::table('tracking_histories', function(Blueprint $table) {
             $table->foreign('delivery_id')->references('id')->on('deliveries');
         });
-
     }
+
 }
