@@ -5,13 +5,15 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/apps/hotzapp/",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom('error', 'Ocorreu algum erro');
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
                 $('#content').html("");
                 $('.select-pad').html("");
                 let projects = response.projects;
@@ -96,13 +98,15 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/apps/hotzapp/" + $(this).attr('project'),
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom('error', 'Ocorreu algum erro');
+            error:  (response) => {
+                errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
                 console.log(response)
                 $("#select_projects_edit").val(response.data.project_id);
                 $('#integration_id').val(response.data.id);
@@ -137,17 +141,19 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/apps/hotzapp",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processData: false,
             contentType: false,
             cache: false,
             data: form_data,
-            error: function error(response) {
-                alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
                 index();
                 alertCustom('success', response.message);
             }
@@ -166,32 +172,18 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/apps/hotzapp/" + integrationId,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processData: false,
             contentType: false,
             cache: false,
             data: form_data,
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.message);
-                }
-            }),
+            error: (response) => {
+               errorAjaxResponse(response);
+            },
             success: function success(response) {
                 index();
                 alertCustom('success', response.message);
@@ -208,26 +200,14 @@ $(document).ready(function () {
         $.ajax({
             method: "DELETE",
             url: "/api/apps/hotzapp/" + project,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error2) {
-                function error(_x2) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
                 index();
                 alertCustom("success", response.message);
