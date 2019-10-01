@@ -39,11 +39,11 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             }, success: function success(response) {
-                $('#modal-detail-coupon .coupon-name').html(response.name);
-                $('#modal-detail-coupon .coupon-code').html(response.code);
-                $('#modal-detail-coupon .coupon-type').html(response.type == 1 ? 'Valor' : 'Porcentagem');
-                $('#modal-detail-coupon .coupon-value').html(response.value);
-                $('#modal-detail-coupon .coupon-status').html(response.status == 1
+                $('#modal-detail-coupon .coupon-name').html(response.data.name);
+                $('#modal-detail-coupon .coupon-code').html(response.data.code);
+                $('#modal-detail-coupon .coupon-type').html(response.data.type);
+                $('#modal-detail-coupon .coupon-value').html(response.data.type == 'Valor' ? 'R$ ' + response.data.value : response.data.value + '%');
+                $('#modal-detail-coupon .coupon-status').html(response.data.status == '1'
                     ? '<span class="badge badge-success text-left">Ativo</span>'
                     : '<span class="badge badge-danger">Desativado</span>');
                 $('#modal-detail-coupon').modal('show');

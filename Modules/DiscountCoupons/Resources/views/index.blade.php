@@ -42,7 +42,7 @@
                 </a>
             </div>
             <div class="modal-body" style='min-height: 100px'>
-                @include('discountcoupons::details')
+                @include('discountcoupons::show')
             </div>
         </div>
     </div>
