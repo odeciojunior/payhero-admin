@@ -57,7 +57,6 @@ $(document).ready(function () {
 });
 
 function alertCustom(type, message) {
-
     swal({
         position: 'bottom',
         type: type,

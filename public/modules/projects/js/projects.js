@@ -473,11 +473,13 @@ $(() => {
                     project_id: projectId
                 },
                 error: function (response) {
+                    console.log(response);
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
                     window.location.reload();
                 },
                 success: function (response) {
+                    console.log(response);
                     loadingOnScreenRemove();
                     alertCustom('success', response.message);
                 }
