@@ -25,28 +25,15 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error) {
-                function error(_x2) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.message);
-                }
-            }), success: function success(response) {
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
                 if (isEmpty(response.data)) {
                     $("#content-error").css('display', 'block');
                 } else {
@@ -62,7 +49,6 @@ $(document).ready(function () {
 
                         dados = '';
                         dados += '<tr>';
-
                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (cont += 1) + '</button></td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
@@ -99,21 +85,16 @@ $(document).ready(function () {
                             method: "POST",
                             url: "/api/invitations/resendinvitation",
                             data: {invitationId: invitationId},
+                            dataType: "json",
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
-                            error: function error(response) {
+                            error: (response) => {
                                 loadingOnScreenRemove();
-                                if (response.status == '422') {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
-                                    }
-                                }
-                                if (response.status == '400') {
-                                    alertCustom('error', response.responseJSON.message);
-
-                                }
-                            }, success: function success(response) {
+                                errorAjaxResponse(response);
+                            },
+                            success: (response) => {
                                 loadingOnScreenRemove();
                                 updateInvites();
                                 alertCustom('success', response.message);
@@ -134,13 +115,16 @@ $(document).ready(function () {
                             method: "DELETE",
                             url: "/api/invitations/" + invitationId,
                             data: {invitationId: invitationId},
+                            dataType: "json",
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
-                            error: function error(response) {
+                            error: (response) => {
                                 loadingOnScreenRemove();
-                                alertCustom('error', response.message);
-                            }, success: function success(response) {
+                                errorAjaxResponse(response);
+                            },
+                            success: (response) => {
                                 loadingOnScreenRemove();
                                 updateInvites();
                                 alertCustom('success', response.message);
@@ -160,29 +144,14 @@ $(document).ready(function () {
             url: "/api/companies",
             dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error2) {
-                function error(_x3) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
-                $('#companies_table_data').html("<tr class='text-center'><td colspan='11'>Error</td></tr>");
-                if (response.status == '422') {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.responseJSON.message);
-                }
-            }),
-            success: function success(response) {
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
                 if (isEmpty(response.data)) {
                     loadingOnScreenRemove();
                     modalNotCompanies();
@@ -238,7 +207,8 @@ $(document).ready(function () {
                     });
                 }
             }
-        });
+        })
+        ;
 
         $("#modal-invite").modal('show');
     });
@@ -247,40 +217,20 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/invitations",
-            dataType: "json",
             data: {
                 email: email,
                 company: companyId
             },
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error3) {
-                function error(_x4) {
-                    return _error3.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error3.toString();
-                };
-
-                return error;
-            }(function (response) {
-                console.log(response);
-                if (response.status == '422') {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-
-                    alertCustom('error', response.responseJSON.message);
-                }
-                $("#store-invite").click();
-
-                modalThenCompanies();
+            error: (response) =>{
                 loadingOnScreenRemove();
-            }),
-            success: function success(response) {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
                 $(".close").click();
                 alertCustom('success', response.message);
                 loadingOnScreenRemove();
@@ -288,16 +238,20 @@ $(document).ready(function () {
             }
         });
     }
+
     function getInvitationData() {
         $.ajax({
             method: "GET",
             url: '/api/invitations/getinvitationdata',
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                //
-            }, success: function success(response) {
+            error: (response) => {
+                errorAjaxResponse(response)
+            },
+            success: (response) => {
                 $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
                 $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
                 $("#commission_paid").html('' + response.data.commission_paid + '');
@@ -373,6 +327,7 @@ $(document).ready(function () {
             }
         }
     }
+
     //ALTERAÇÃO DE HTML
 
     function modalNotCompanies() {

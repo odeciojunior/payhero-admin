@@ -197,6 +197,7 @@ $(document).ready(function () {
                                     'Accept': 'application/json',
                                 },
                                 error: (response) => {
+                                    loadingOnScreenRemove();
                                     errorAjaxResponse(response);
                                 },
                                 success: (response) => {
@@ -266,6 +267,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
