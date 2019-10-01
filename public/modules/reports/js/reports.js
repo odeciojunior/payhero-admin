@@ -2,7 +2,7 @@ $(function () {
 
     $.ajax({
         method: "GET",
-        url: "/api/projects/user-projects",
+        url: "/api/projects/?select=true",
         dataType: "json",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -16,7 +16,7 @@ $(function () {
             if (Object.keys(response.data).length === 0) {
                 $("#no-projects").show();
             } else {
-                $(response.data).each(function(index, data){
+                $(response.data).each(function (index, data) {
                     $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
                 });
 
