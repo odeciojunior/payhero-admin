@@ -28,6 +28,9 @@ $(document).ready(function () {
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
                 $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function() {
+                    $(this).attr('src','/modules/global/img/user-default.png');
+                });
                 var valuecss = '';
 
                 if (response.data.personal_document_status === 1) {
@@ -66,7 +69,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: $('#profile_update_form').attr('action'),
+            url: '/api/profile/uploaddocuments',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -76,30 +79,9 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        switch (String(response.responseJSON.errors[error])) {
-                            case 'The profile photo must be a file of type: jpeg, jpg, png.':
-                                alertCustom('error', 'A imagem deve estar em um dos seguintes formatos: jpeg, jpg, png.');
-                                break;
-                            default:
-                                alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    }
-                }
-            }),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
                 loadingOnScreenRemove();
                 $(".div1").hide();
@@ -194,9 +176,11 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "POST",
-                url: "/api/profile/changepassword",
+                url: "/api/profile/changepassword",  
+                dataType: "json",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 data: {
                     new_password: $("#new_password").val(),
@@ -274,8 +258,13 @@ $(document).ready(function () {
 });
 
 Dropzone.options.dropzoneDocuments = {
+    headers: {
+        'Authorization': $('meta[name="access-token"]').attr('content'),
+        'Accept': 'application/json',
+    },
     paramName: "file",
-    maxFilesize: 2, // MB
+    maxFilesize: 2, 
+    url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     accept: function accept(file, done) {
         var dropz = this;

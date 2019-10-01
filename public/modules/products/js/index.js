@@ -12,7 +12,7 @@ $(document).ready(function () {
     function getTypeProducts() {
         $.ajax({
                 method: 'GET',
-                url: '/api/products',
+                url: '/api/projects?select=true',
                 dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -36,11 +36,13 @@ $(document).ready(function () {
                     if ($("#type-products").val() === "1") {
                         $("#select-projects").html('');
 
-                        $.each(response.data.projects, function (index, value) {
-                            $("#select-projects").append($('<option>', {
-                                value: value.id_code,
-                                text: value.name
-                            }));
+                        $.each(response.data, function (index, value) {
+                            if (value.shopify) {
+                                $("#select-projects").append($('<option>', {
+                                    value: value.id,
+                                    text: value.name
+                                }));
+                            }
                         });
                         $("#is-projects").show();
 
@@ -53,17 +55,20 @@ $(document).ready(function () {
                     $("#type-products").on('change', function () {
                         if ($("#type-products").val() === "1") {
                             $("#select-projects").html('');
-                            if (response.data.projects.length == 0) {
+                            if (response.data.length == 0) {
 
                                 $("#select-projects").hide();
                                 $(".product-is-empty-cla").hide();
 
                             } else {
-                                $.each(response.data.projects, function (index, value) {
-                                    $("#select-projects").append($('<option>', {
-                                        value: value.id_code,
-                                        text: value.name
-                                    }));
+                                $.each(response.data, function (index, value) {
+                                    if (value.shopify) {
+                                        $("#select-projects").append($('<option>', {
+                                            value: value.id,
+                                            text: value.name
+                                        }));
+                                    }
+
                                 });
                                 $("#is-projects").show();
                                 $("#select-projects").find('option:eq(0)').prop('selected', true);
@@ -103,9 +108,9 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
         if (link == null) {
-            link = '/api/products/getproducts?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
+            link = '/api/products?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
         } else {
-            link = '/api/products/getproducts' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
+            link = '/api/products' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
         }
 
         $.ajax({
