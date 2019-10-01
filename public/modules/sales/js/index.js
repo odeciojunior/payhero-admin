@@ -96,7 +96,7 @@ $(document).ready(function () {
         temp.remove();
         alertCustom('success', 'Link copiado!');
     });
-    $(document).on("click", '#boleto-digitable-line .copy_link',function () {
+    $(document).on("click", '#boleto-digitable-line .copy_link', function () {
         var temp = $("<input>");
         $("#nav-tabContent").append(temp);
         temp.val($(this).attr('digitable-line')).select();
@@ -130,39 +130,11 @@ $(document).ready(function () {
 
     //Carrega o modal para regerar boleto
     $(document).on('click', '.boleto-pending', function () {
-        // $('#saleId').val('');
-        let saleId = $(this).attr('sale');
-        // $('#saleId').val(saleId);
-        $('#modal_regerar_boleto').modal('show');
 
-        $('#bt_send').unbind("click");
-        $('#bt_send').on('click', function () {
-            loadingOnScreen();
-            $.ajax({
-                method: "POST",
-                url: "/api/recovery/regenerateboleto",
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                data: {
-                    saleId: saleId,
-                    date: $('#date').val(),
-                    discountType: $("#discount_type").val(),
-                    discountValue: $("#discount_value").val()
-                },
-                error: function error(response) {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    loadingOnScreenRemove();
-                    $(".loading").css("visibility", "hidden");
-                    window.location = '/sales';
-                }
-            });
-        });
+        let saleId = $(this).attr('sale');
+        $('#modal_regerar_boleto #bt_send').attr('sale', saleId);
+
+        $('#modal_regerar_boleto').modal('show');
     });
 
     // Carrega o modal com os detalhes da venda
@@ -216,7 +188,7 @@ $(document).ready(function () {
 
         switch (data.sale.status) {
             case 1:
-                status.append("<span class='badge badge-success'>Aprovada</span></td>");
+                status.append("<span class='badge badge-success'>Aprovada</span>");
                 break;
             case 2:
                 status.append("<span class='badge badge-pendente'>Pendente</span>");
@@ -244,43 +216,42 @@ $(document).ready(function () {
             if (!value.photo) {
                 value.photo = photo;
             }
-            div += '<div class="row align-items-baseline justify-content-between mb-15">' +
-                '<div class="col-lg-2">' +
-                "<img src='" + value.photo + "' width='50px' style='border-radius: 6px;'>" +
-                '</div>' +
-                '<div class="col-lg-5">' +
-                '<h4 class="table-title">' + value.name + '</h4>\n' +
-                '</div>' +
-                '<div class="col-lg-3 text-right">' +
-                '<p class="sm-text text-muted">' + value.amount + 'x</p>' +
-                '</div>' +
-                '</div>';
+            div += `<div class="row align-items-baseline justify-content-between mb-15">
+                        <div class="col-lg-2">
+                            <img src='${value.photo}' width='50px' style='border-radius: 6px;'>
+                        </div>
+                        <div class="col-lg-5">
+                            <h4 class="table-title">${value.name}</h4>
+                        </div>
+                        <div class="col-lg-3 text-right">
+                            <p class="sm-text text-muted">${value.amount}x</p>
+                        </div>
+                    </div>`;
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code
             if (sale_status == 1) {
                 let data = `<tr>
-                                 <td>
-                                      <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                                      <span class='small'>${value.name}</span>
-                                  </td>
-                                 <td>
-                                      <span class='tracking-code-span small'>${value.tracking_code}</span>
-                                      <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
-                                 </td>
-                                 <td>
-                                      <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
-                                 </td>
-                                 <td>
-                                      <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                      <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                      <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
-                                 </td>
-                                </tr>`;
+                                <td>
+                                    <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
+                                    <span class='small'>${value.name}</span>
+                                </td>
+                                <td>
+                                    <span class='tracking-code-span small'>${value.tracking_code}</span>
+                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
+                                </td>
+                                <td>
+                                    <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
+                                </td>
+                                <td>
+                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
+                                </td>
+                            </tr>`;
                 $('#div_tracking_code').css('display', 'block');
                 $('#data-tracking-products').append(data);
             }
-
         });
 
         //Valores
@@ -353,6 +324,35 @@ $(document).ready(function () {
         $('#checkout-content').text('UTM Content: ' + data.checkout.utm_content);
     }
 
+    //Salvar boleto regerado
+    $(document).on('click', 'modal_regerar_boleto #bt_send', function () {
+        loadingOnScreen();
+        let saleId = $(this).attr('sale');
+        $.ajax({
+            method: "POST",
+            url: "/api/recovery/regenerateboleto",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                saleId: saleId,
+                date: $('#date').val(),
+                discountType: $("#discount_type").val(),
+                discountValue: $("#discount_value").val()
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".loading").css("visibility", "hidden");
+                window.location = '/sales';
+            }
+        });
+    });
 
     //Salvar Código de Restreio
     $(document).on('click', '.btn-save-trackingcode', function () {
@@ -458,23 +458,25 @@ $(document).ready(function () {
                 };
 
                 $.each(response.data, function (index, value) {
-                    dados = '';
-                    dados += '<tr>';
-                    dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.sale_code + "</td>";
-                    dados += "<td>" + value.project + "</td>";
-                    dados += "<td>" + value.product + "</td>";
-                    dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.client + "</td>";
-                    dados += "<td><img src='/modules/global/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
-                    if (value.status_translate == 'Pendente') {
-                        dados += "<td><span class='boleto-pending badge badge-" + statusArray[value.status] + "' status=" + value.status_translate + " sale=" + value.id_default + ">" + value.status_translate + "</span></td>";
-                    } else {
-                        dados += "<td><span class='badge badge-" + statusArray[value.status] + "'>" + value.status_translate + "</span></td>";
-                    }
-                    dados += "<td class='display-sm-none display-m-none'>" + value.start_date + "</td>";
-                    dados += "<td class='display-sm-none'>" + value.end_date + "</td>";
-                    dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
-                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
-                    dados += '</tr>';
+                    dados = `<tr>
+                                <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
+                                <td>${value.project}</td>
+                                <td>${value.product}</td>
+                                <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
+                                <td>
+                                    <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
+                                </td>
+                                <td>
+                                    <span class="boleto-pending badge badge-${statusArray[value.status]}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
+                                </td>
+                                <td class='display-sm-none display-m-none'>${value.start_date}</td>
+                                <td class='display-sm-none'>${value.end_date}</td>
+                                <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
+                                <td>
+                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                </td>
+                            </tr>`;
+
                     $("#dados_tabela").append(dados);
                 });
                 if (response.data == '') {

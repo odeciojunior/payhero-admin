@@ -9,10 +9,6 @@ Route::group(
     ],
     function() {
 
-//        Route::get('/getsales', [
-//            'uses' => 'SalesApiController@getSales',
-//        ]);
-
         Route::get('/filters', [
             'uses' => 'SalesApiController@filters',
         ]);
@@ -21,26 +17,6 @@ Route::group(
             'as'   => 'sales.export',
             'uses' => 'SalesApiController@export',
         ]);
-
-//        Route::post('/detail', [
-//            'as'   => 'sales.detail',
-//            'uses' => 'SalesApiController@getSaleDetail',
-//        ]);
-
-//        Route::post('/refund', [
-//            'as'   => 'sales.refund',
-//            'uses' => 'SalesApiController@refundSale',
-//        ]);
-
-//        Route::post('/update/trackingcode', [
-//            'as'   => 'sales.updatetrackingcode',
-//            'uses' => 'SalesApiController@updateTrackingCode',
-//        ]);
-
-//        Route::post('/update/trackingcode/{sale}', [
-//            'as'   => 'sales.sentemailtrackingcode',
-//            'uses' => 'SalesApiController@sendEmailUpdateTrackingCode',
-//        ]);
     }
 );
 

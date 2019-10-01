@@ -4,7 +4,9 @@ namespace Modules\Sales\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
@@ -18,12 +20,11 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\TrackingService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
-use Modules\Sales\Http\Requests\SaleUpdateRequest;
 use Modules\Sales\Transformers\TransactionResource;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -32,9 +33,9 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class SalesApiController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
-     * @return Response
+     * @return JsonResponse
      */
     public function filters()
     {
@@ -43,7 +44,7 @@ class SalesApiController extends Controller
             $companyModel = new Company();
             $projectService = new ProjectService();
 
-            $myProjects = $projectService->getUserProjects();
+            $myProjects = $projectService->getUserProjects(true);
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
                 ->pluck('id')
@@ -77,9 +78,8 @@ class SalesApiController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @param $id
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -213,16 +213,7 @@ class SalesApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-//    public function refundSale(Request $request)
-//    {
-//        return response()->json('sucesso');
-//    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -320,7 +311,7 @@ class SalesApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return JsonResponse|BinaryFileResponse
      */
     public function export(Request $request)
     {
@@ -470,21 +461,10 @@ class SalesApiController extends Controller
                 $saleData->push(collect($saleArray));
             }
 
-            //$xlsx = new SaleReportExport($saleData, $header, 16);
-            //$z    = Excel::store($xlsx, 'x.xlsx');
-
-            //            return response()->json([
-            //                                        'message' => 'Domínio cadastrado com sucesso',
-            //                                        'data'    => $xlsx,
-            //                                    ], 200);
-
-            //$x=sys_get_temp_dir();
-
             return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.' . $dataRequest['format']);
         } catch (Exception $e) {
             report($e);
-
-            return redirect()->back()->with('error', 'Erro ao tentar gerar o arquivo Excel . ');
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
     }
 }
