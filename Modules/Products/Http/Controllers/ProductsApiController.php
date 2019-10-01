@@ -51,36 +51,27 @@ class ProductsApiController extends Controller
 
     /**
      * @param Request $request
-     * @return GetTypeProductsResource
+     * @return AnonymousResourceCollection
      * Monta o select com opção Produtos Shopify e Meus Produtos
      */
     public function index(Request $request)
     {
         try {
             $productsModel = new Product();
-            $projectModel  = new Project();
 
-            $productShopify   = $productsModel->where('user_id', auth()->user()->id)
-                                              ->where('shopify', 1)->first();
-            $productsOriginal = $productsModel->where('user_id', auth()->user()->id)
-                                              ->where('shopify', 0)->first();
+            $productsSearch = $productsModel->where('user_id', auth()->user()->id)
+                                            ->where('shopify', $request->input('shopify'));
 
-            $projects    = $projectModel->whereHas('usersProjects', function($query) {
-                $query->where('user_id', auth()->user()->id);
-            })->whereNotNull('shopify_id')->get();
-            $projectsArr = [];
-            foreach ($projects as $project) {
-                $projectsArr[] = [
-                    'id_code' => $project->id_code,
-                    'name'    => $project->name,
-                ];
+            if ($request->has('name') && !empty($request->input('name'))) {
+                $productsSearch->where('name', 'LIKE', '%' . $request->nome . '%');
             }
 
-            return GetTypeProductsResource::make([
-                                                     'shopify'         => $productShopify,
-                                                     'productOriginal' => $productsOriginal,
-                                                     'projects'        => $projectsArr ?? '',
-                                                 ]);
+            if ($request->has('project') && !empty($request->input('project') && $request->input('shopify') == 1)) {
+                $projectId = current(Hashids::decode($request->input('project')));
+                $productsSearch->where('project_id', $projectId);
+            }
+
+            return ProductsResource::collection($productsSearch->orderBy('id', 'desc')->paginate(8));
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar produtos - (ProductsApiController - index)');
             report($e);

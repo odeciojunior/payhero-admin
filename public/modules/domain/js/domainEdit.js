@@ -69,7 +69,6 @@ $(document).ready(function () {
 
                     $(".details-domain").on('click', function () {
                         let domainId = $(this).attr('domain');
-                        console.log(domainId);
                         $("#domain").val('');
                         $("#domain").val(domainId);
                         $("#content-modal-recheck-dns-error").hide();
@@ -223,7 +222,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response);
                 $("#loaderModal").remove();
                 loadingOnScreenRemove();
 
@@ -262,8 +260,6 @@ $(document).ready(function () {
             );
             $("#proxy-active").attr('disabled', true);
             $("#proxy-select ").val('0').change();
-
-
 
             $('#value-priority').mask('0#');
 
@@ -308,15 +304,12 @@ $(document).ready(function () {
      */
     $("#bt-add-record").on('click', function () {
         let domainId = $("#domain").val();
-        console.log('dominio: ' + domainId);
         loadOnTable('#table-body-new-records', '#new-registers-table');
-
 
         let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
         formData.append('project', projectId);
 
         formData.append('domain', domainId);
-        console.log(formData);
 
         $.ajax({
             method: 'POST',
@@ -580,7 +573,6 @@ $(document).ready(function () {
     $(".btn-verify-domain").unbind('click');
     $(".btn-verify-domain").on('click', function () {
         let domainId = $("#domain").val();
-        console.log('recheck dominio: ' + domainId);
         $("#modal-title-dns-recheck").hide();
 
         loadOnModal('.content-dns');
