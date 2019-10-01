@@ -17,9 +17,9 @@ Route::group(
             'uses' => 'SalesApiController@filters',
         ]);
 
-        Route::post('/getcsvsales', [
-            'as'   => 'sales.getcsvsales',
-            'uses' => 'SalesApiController@getCsvSales',
+        Route::post('/export', [
+            'as'   => 'sales.export',
+            'uses' => 'SalesApiController@export',
         ]);
 
 //        Route::post('/detail', [
@@ -32,15 +32,15 @@ Route::group(
 //            'uses' => 'SalesApiController@refundSale',
 //        ]);
 
-        Route::post('/update/trackingcode', [
-            'as'   => 'sales.updatetrackingcode',
-            'uses' => 'SalesApiController@updateTrackingCode',
-        ]);
+//        Route::post('/update/trackingcode', [
+//            'as'   => 'sales.updatetrackingcode',
+//            'uses' => 'SalesApiController@updateTrackingCode',
+//        ]);
 
-        Route::post('/update/trackingcode/{sale}', [
-            'as'   => 'sales.sentemailtrackingcode',
-            'uses' => 'SalesApiController@sendEmailUpdateTrackingCode',
-        ]);
+//        Route::post('/update/trackingcode/{sale}', [
+//            'as'   => 'sales.sentemailtrackingcode',
+//            'uses' => 'SalesApiController@sendEmailUpdateTrackingCode',
+//        ]);
     }
 );
 

@@ -322,9 +322,8 @@ class SalesApiController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function getCsvSales(Request $request)
+    public function export(Request $request)
     {
-
         try {
             $dataRequest = $request->all();
             $dataRequest = array_filter($dataRequest);
@@ -481,74 +480,11 @@ class SalesApiController extends Controller
 
             //$x=sys_get_temp_dir();
 
-            return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.xlsx');
+            return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.' . $dataRequest['format']);
         } catch (Exception $e) {
             report($e);
 
             return redirect()->back()->with('error', 'Erro ao tentar gerar o arquivo Excel . ');
-        }
-    }
-
-    /**
-     * @param SaleUpdateRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function updateTrackingCode(SaleUpdateRequest $request)
-    {
-        try {
-            $requestValidated = $request->validated();
-
-            $deliveryModel = new Delivery();
-            if ($requestValidated['delivery'] && !empty($requestValidated['delivery']) && !empty($requestValidated['trackingCode'])) {
-                $deliveryId = current(Hashids::decode($requestValidated['delivery']));
-
-                $delivery = $deliveryModel->find($deliveryId);
-                if (!empty($delivery)) {
-                    $delivery->update(['tracking_code' => $requestValidated['trackingCode']]);
-
-                    return response()->json([
-                        'message' => 'Código Rastreio salvo com sucesso',
-                        'data' => [
-                            'tracking_code' => $delivery->tracking_code,
-                        ],
-                    ], 200);
-                }
-            }
-
-            return response()->json([
-                'message' => 'Preencha o campo Código Rastreio corretamente',
-                'data' => [
-                    'tracking_code' => $delivery->tracking_code,
-                ],
-            ], 400);
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar atualizar o codigo de rastreio SalesController - updateTrackingCode');
-            report($e);
-        }
-    }
-
-    /**
-     * @param $saleCode
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function sendEmailUpdateTrackingCode($saleCode)
-    {
-        try {
-            $saleModel = new Sale();
-            if (!empty($saleCode)) {
-                $saleId = current(Hashids::connection('sale_id')->decode($saleCode));
-                $sale = $saleModel->with('delivery')->find($saleId);
-                if (!empty($sale)) {
-                    event(new TrackingCodeUpdatedEvent($sale));
-
-                    return response()->json([
-                        'message' => 'Email enviado com sucesso',
-                    ], 200);
-                }
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar enviar email atualização tracking code');
-            report($e);
         }
     }
 }

@@ -30,8 +30,7 @@
         </div>
         <div class="page-content container" style="display:none">
             <div class="fixhalf"></div>
-                <form id='filter_form' action='{{route('sales.getcsvsales')}}' method='POST'>
-                    @csrf
+                <form id='filter_form'>
                     <div id="" class="card shadow p-20">
                         <div class="row align-items-baseline">
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -200,7 +199,7 @@
         </div>
     </div>
     <!-- End Modal -->
- 
+
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>

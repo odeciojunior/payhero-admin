@@ -74,8 +74,10 @@
 </div>
 <div class="nav-tabs-horizontal">
     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" style="width:50%;">Cliente</a>
-        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" style="width:50%;">Detalhes</a>
+        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+           style="width:50%;">Cliente</a>
+        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+           style="width:50%;">Detalhes</a>
     </div>
 </div>
 <div class="tab-content p-10" id="nav-tabContent">
@@ -103,42 +105,42 @@
             {{--            @if (empty($sale->shopify_order) && $sale->status == 1)--}}
             <table class='table table-striped mt-15'>
                 <thead>
-                    <tr>
-                        <th>Produto</th>
-                        <th>Rastreio</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
+                <tr>
+                    <th>Produto</th>
+                    <th>Rastreio</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
                 </thead>
                 <tbody id='data-tracking-products'>
-                        {{-- js carregado--}}
+                {{-- js carregado--}}
                 </tbody>
             </table>
             {{--            @endif--}}
         </div>
 
-{{--        <span class="table-title gray table-code-tracking">--}}
-{{--            <div class='row' style='line-height: 1.5;'>--}}
-{{--                <span class="table-title gray ml-15">Código Rastreio:</span>--}}
-{{--                    <div id="tracking-actions" class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle' style="display:none">--}}
-{{--                        <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code=''><i class='icon wb-edit' aria-hidden='true'></i></a>--}}
-{{--                        <a id='btn-sent-tracking-user' style="display:none" class='pointer' title='Enviar Email' data-code=''><i class='icon wb-inbox' aria-hidden='true'></i></a>--}}
-{{--                    </div>--}}
-{{--            </div>--}}
-{{--            <div class='tracking-code'>--}}
-{{--                <span class='tracking-code-value'></span>--}}
-{{--            </div>--}}
-{{--        </span>--}}
-{{--        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value=''>--}}
-{{--        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code=''>Salvar</button>--}}
-{{--        <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>--}}
-{{--        <br>--}}
+        {{--        <span class="table-title gray table-code-tracking">--}}
+        {{--            <div class='row' style='line-height: 1.5;'>--}}
+        {{--                <span class="table-title gray ml-15">Código Rastreio:</span>--}}
+        {{--                    <div id="tracking-actions" class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle' style="display:none">--}}
+        {{--                        <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code=''><i class='icon wb-edit' aria-hidden='true'></i></a>--}}
+        {{--                        <a id='btn-sent-tracking-user' style="display:none" class='pointer' title='Enviar Email' data-code=''><i class='icon wb-inbox' aria-hidden='true'></i></a>--}}
+        {{--                    </div>--}}
+        {{--            </div>--}}
+        {{--            <div class='tracking-code'>--}}
+        {{--                <span class='tracking-code-value'></span>--}}
+        {{--            </div>--}}
+        {{--        </span>--}}
+        {{--        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value=''>--}}
+        {{--        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code=''>Salvar</button>--}}
+        {{--        <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>--}}
+        {{--        <br>--}}
 
-{{--        <span id="delivery-address" class="table-title gray"></span>--}}
-{{--        <br>--}}
-{{--        <span id="delivery-zipcode" class="table-title gray"></span>--}}
-{{--        <br>--}}
-{{--        <span id="delivery-city" class="table-title gray"></span>--}}
+        {{--        <span id="delivery-address" class="table-title gray"></span>--}}
+        {{--        <br>--}}
+        {{--        <span id="delivery-zipcode" class="table-title gray"></span>--}}
+        {{--        <br>--}}
+        {{--        <span id="delivery-city" class="table-title gray"></span>--}}
     </div>
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -150,9 +152,15 @@
             <br>
         </div>
         <div id="details-boleto" style="display:none">
-            <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link' style='cursor:pointer;' link=''><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+            <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
+                                                                                   style='cursor:pointer;' link=''><i
+                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
             <br>
-            <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+            <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
+                                                                                          class='copy_link'
+                                                                                          style='cursor:pointer;'
+                                                                                          digitable-line=''><i
+                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
             <br>
             <span id="boleto-due" class="table-title gray"></span>
             <br>
@@ -179,7 +187,3 @@
         <span id="checkout-content" class="table-title gray"></span>
     </div>
 </div>
-@push('scripts')
-    <script src="{{ asset('/modules/sales/js/details.js') }}"></script>
-@endpush
-
