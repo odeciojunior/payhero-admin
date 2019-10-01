@@ -139,7 +139,7 @@ $(document).ready(function () {
             $.ajax({
                 url: "/api/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
                 type: "GET",
-                dataType: "json", 
+                dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
@@ -314,7 +314,7 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, value) {
                         data += '<tr >';
-                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>' + '</a></td>';
+                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>' + '</a></td>';
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
                             data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';
@@ -328,49 +328,6 @@ $(document).ready(function () {
 
                     paginationTransfersTable(response);
                 }
-                $('.detalhes_venda').on('click', function () {
-                    var sale = $(this).attr('sale');
-
-                    $('#modal_venda_titulo').html('Detalhes da venda ' + sale + '<br><hr>');
-                    var data = {sale_id: sale};
-
-                    $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                    $.ajax({
-                        method: "POST",
-                        url: '/api/sales/detail',
-                        data: data,
-                        dataType: "json",
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        error: (response) => {
-                            errorAjaxResponse(response);
-                        },
-                        success: (response) => {
-                            $('.subTotal').mask('#.###,#0', {reverse: true});
-                            // $('.modal-body-details').html('');
-                            // $('.modal-body-details').html(response); 
-
-                            $(".copy_link").on("click", function () {
-                                var temp = $("<input>");
-                                $("#nav-profile").append(temp);
-                                temp.val($(this).attr('link')).select();
-                                document.execCommand("copy");
-                                temp.remove();
-                                alertCustom('success', 'Link copiado!');
-                            });
-                            $(".copy_link").on("click", function () {
-                                var temp = $("<input>");
-                                $("#nav-profile").append(temp);
-                                temp.val($(this).attr('digitable-line')).select();
-                                document.execCommand("copy");
-                                temp.remove();
-                                alertCustom('success', 'Linha Digitável copiado!');
-                            });
-                        }
-                    });
-                });
             }
         });
     }

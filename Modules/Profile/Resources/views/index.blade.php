@@ -29,7 +29,7 @@
                     <div class="p-30 pt-20">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab_user" role="tabpanel">
-                                <form method="POST" action="{!! route('api.profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
+                                <form method="POST" enctype="multipart/form-data" id='profile_update_form'>
                                     @csrf
                                     @method('PUT')
                                     <div class="row">
@@ -73,7 +73,7 @@
                                                 <div style="margin: 20px 0 0 30px;">
                                                     <img src="" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
                                                 </div>
-                                                <input type="hidden" name="photo_x1"/>
+                                                <input type="hidden" name="photo_x1"/> 
                                                 <input type="hidden" name="photo_y1"/>
                                                 <input type="hidden" name="photo_w"/>
                                                 <input type="hidden" name="photo_h"/>
@@ -140,7 +140,7 @@
                                 <div class="row mt-15">
                                     <div class="col-lg-6">
                                         <div id="dropzone">
-                                            <form method="POST" action="{!! route('profile.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                            <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                                 @csrf
                                                 <div class="dz-message needsclick">
                                                     Arraste ou clique para fazer upload.<br/>
@@ -175,7 +175,6 @@
                                         </small>
                                     </div>
                                 </div>
-                                --
                             </div>
                         </div>
                     </div>

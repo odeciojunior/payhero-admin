@@ -114,9 +114,9 @@
      <script>
            window.Intercom('boot', {
                app_id: "q35ubavq",
-               user_id: "{!! auth()->user()->id !!}",
-               name: "{!! auth()->user()->name !!}",
-               email: "{!! auth()->user()->email !!}",
+               user_id: "{{ auth()->user()->id }}",
+               name: "{{ auth()->user()->name }}",
+               email: "{{ auth()->user()->email }}",
            });
      </script>
 

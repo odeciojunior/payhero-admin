@@ -34,7 +34,7 @@ class SalesRecoveryApiController extends Controller
         try {
             $projectService = new ProjectService();
 
-            $projects = $projectService->getUserProjects();
+            $projects = $projectService->getUserProjects(true);
             if (!empty($projects)) {
                 return SalesRecoveryIndexResourceTransformer::collection($projects);
             } else {
@@ -185,7 +185,7 @@ class SalesRecoveryApiController extends Controller
                         ]);
                     }
 
-                    $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice); 
+                    $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
 
                     $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
                     if ($boletoRegenerated['status'] == 'success') {

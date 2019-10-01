@@ -4,6 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
     @endpush
 
     <!-- Page -->
@@ -30,8 +31,7 @@
         </div>
         <div class="page-content container" style="display:none">
             <div class="fixhalf"></div>
-                <form id='filter_form' action='{{route('sales.getcsvsales')}}' method='POST'>
-                    @csrf
+                <form id='filter_form'>
                     <div id="" class="card shadow p-20">
                         <div class="row align-items-baseline">
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -112,26 +112,7 @@
                         </table>
                     </div>
                     <!-- Modal detalhes da venda-->
-                    <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-                            <div id='modal-saleDetails' class="modal-content p-20 " style="width: 500px;">
-                                <div class="header-modal">
-                                    <div class="row justify-content-between align-items-center" style="width: 100%;">
-                                        <div class="col-lg-2"> &nbsp;</div>
-                                        <div class="col-lg-8 text-center"><h4> Detalhes da venda </h4></div>
-                                        <div class="col-lg-2 text-right">
-                                            <a role="button" data-dismiss="modal">
-                                                <i class="material-icons pointer">close</i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-body">
-                                    @include('sales::details')
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                    </div>
+                        @include('sales::details')
                     <!-- End Modal -->
                 </div>
 
@@ -139,10 +120,6 @@
                     {{-- js carrega... --}}
                 </ul>
         </div>
-        @push('css')
-            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-        @endpush
-
         <div class="content-error text-center" style="display:none">
             <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
             <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
@@ -200,7 +177,7 @@
         </div>
     </div>
     <!-- End Modal -->
- 
+
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>

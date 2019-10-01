@@ -532,7 +532,6 @@ $(document).ready(function () {
     }
 
     function removePriorityField() {
-        console.log($('#valor_registro').html());
         if ($('#valor_prioridade').html() != undefined) {
             $('#valor_registro, #valor_prioridade, #nome_registro').parent().remove();
             $('#tipo_registro').parent().after('<div class="col-sm-12 col-md-6 col-lg-4 mb-3">' +

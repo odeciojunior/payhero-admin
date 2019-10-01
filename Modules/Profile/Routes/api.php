@@ -11,6 +11,8 @@ Route::group(
              ->only('index', 'show', 'edit', 'store', 'update', 'destroy', 'create')
              ->names('api.profile');
 
-        Route::post('profile.uploaddocuments', 'ProfileApiController@uploaddocuments')->name('profile.uploaddocuments');
+        Route::post('/profile/uploaddocuments', 'ProfileApiController@uploaddocuments');
+
+        Route::post('/profile/changepassword', 'ProfileApiController@changePassword'); 
     }
 );
