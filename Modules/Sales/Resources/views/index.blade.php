@@ -199,6 +199,7 @@
 
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 
