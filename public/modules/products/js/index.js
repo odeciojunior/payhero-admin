@@ -23,7 +23,6 @@ $(document).ready(function () {
 
                 },
                 success: function (response) {
-                    console.log(response.data);
                     $("#type-products").append($('<option>', {
                         value: '0',
                         text: 'Meus Produtos'

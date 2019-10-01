@@ -52,7 +52,7 @@ class DiscountCouponsApiController extends Controller
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao listar dados de pixels',
+                'message' => 'Erro ao listar dados de cupons',
             ], 400);
         }
     }
@@ -110,10 +110,11 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
+
     /**
      * @param $projectId
      * @param $id
-     * @return JsonResponse
+     * @return JsonResponse|DiscountCouponsResource
      */
     public function show($projectId, $id)
     {

@@ -264,25 +264,7 @@
     </div>
     <!-- End Modal -->
     <!-- Modal Detalhes -->
-    <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple modal-sidebar">
-            <div class="modal-content p-20 " style="">
-                <div class="header-modal">
-                    <div class="row justify-content-between align-items-center" style="width: 100%;">
-                        <div class="col-lg-2"> &nbsp;</div>
-                        <div class="col-lg-8 text-center"><h4> Detalhes da venda </h4></div>
-                        <div class="col-lg-2 text-right">
-                            <a role="button" data-dismiss="modal">
-                                <i class="material-icons pointer">close</i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body-details">
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
+    @include('sales::details')
     <!-- End Modal -->
 
     @push('scripts')
