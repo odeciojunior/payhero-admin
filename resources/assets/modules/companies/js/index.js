@@ -34,12 +34,15 @@ $(document).ready(function () {
 
                 $(".delete-company").unbind('click');
                 $(".delete-company").on("click", function (event) {
+                    console.log('entrou no delete1!');
+                    alertCustom("warning", 'entrou no delete1!');
                     event.preventDefault();
-                    var company = $(this).attr('company');
+                    let company = $(this).attr('company');
 
                     $("#bt-delete").unbind('click');
                     $("#bt-delete").on('click', function () {
                         $("#close-modal-delete").click();
+                        console.log('entrou no delete2!');
 
                         $.ajax({
                             method: "DELETE",
@@ -48,15 +51,8 @@ $(document).ready(function () {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function (response) {
-                                if (response.status == '422') {
-                                    if (response.responseJSON.errors) {
-                                        for (error in response.responseJSON.errors) {
-                                            alertCustom('error', String(response.responseJSON.errors[error]));
-                                        }
-                                    } else {
-                                        alertCustom('error', String(response.responseJSON.message));
-                                    }
-                                }
+                                console.log(response);
+                                errorAjaxResponse(response);
                             },
                             success: function (data) {
                                 alertCustom("success", data.message);

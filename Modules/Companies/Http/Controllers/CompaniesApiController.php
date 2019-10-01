@@ -15,12 +15,13 @@ use Illuminate\View\View;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Companies\Transformers\CompaniesSelectResource;
+use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -78,13 +79,13 @@ class CompaniesApiController extends Controller
                     'message'   => 'Dados atualizados com sucesso',
                     'idEncoded' => Hashids::encode($company->id),
                     //                    'redirect' => route('companies.edit', ['idEncoded' => Hashids::encode($company->id)]),
-                ], 200
+                ], Response::HTTP_OK
             );
         } catch (Exception $e) {
             Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
             report($e);
 
-            return response()->json('erro', 400);
+            return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -112,20 +113,20 @@ class CompaniesApiController extends Controller
                     [
                         'company' => $companyResource,
                         'banks'   => $banks,
-                    ], 200
+                    ], Response::HTTP_OK
                 );
             } else {
                 return response()->json(
                     [
                         'message' => 'Sem permissão para editar a empresa',
-                    ], 403
+                    ], Response::HTTP_FORBIDDEN
                 );
             }
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
 
-            return response()->json('erro', 400);
+            return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -149,15 +150,15 @@ class CompaniesApiController extends Controller
                 $requestData = array_filter($requestData);
                 $company->update($requestData);
 
-                return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
+                return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
             } else {
-                return response()->json(['message' => 'Sem permissão para atualizar a empresa'], 403);
+                return response()->json(['message' => 'Sem permissão para atualizar a empresa'], Response::HTTP_FORBIDDEN);
             }
         } catch (Exception $e) {
             Log::warning('CompaniesController - update - error');
             report($e);
 
-            return response()->json('erro', 400);
+            return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -178,28 +179,30 @@ class CompaniesApiController extends Controller
             if ($company) {
                 if (Gate::allows('destroy', [$company])) {
                     if ($company->transactions_count > 0) {
-                        return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], 422);
+                        return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], Response::HTTP_BAD_REQUEST);
                     } else if ($company->users_projects_count > 0) {
-                        return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], 422);
+                        return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], Response::HTTP_BAD_REQUEST);
                     } else {
                         $company->delete();
 
-                        return response()->json(['message' => 'Empresa removida com sucesso'], 200);
+                        return response()->json(['message' => 'Empresa removida com sucesso'], Response::HTTP_OK);
                     }
                 } else {
-                    return response()->json([
-                                                'message' => 'Sem permissão para remover a empresa',
-                                            ], 403);
+                    return response()->json(
+                        [
+                            'message' => 'Sem permissão para remover a empresa',
+                        ], Response::HTTP_FORBIDDEN
+                    );
                 }
             } else {
                 //empresa nao exsite
-                return response()->json(['message' => 'Empresa não encontrada para remoção'], 422);
+                return response()->json(['message' => 'Empresa não encontrada para remoção'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             Log::warning('CompaniesController - destroy - error');
             report($e);
 
-            return response()->json('erro', 400);
+            return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -271,17 +274,17 @@ class CompaniesApiController extends Controller
                                                                                                                 ->getContractDocumentStatus($company->contract_document_status)),
                                                 ],
                                             ],
-                                        ], 200);
+                                        ], Response::HTTP_OK);
             } else {
                 return response()->json([
                                             'message' => 'Sem permissão para enviar documentos para a empresa',
-                                        ], 403);
+                                        ], Response::HTTP_FORBIDDEN);
             }
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');
             report($e);
 
-            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], Response::HTTP_BAD_REQUEST);
         }
     }
 
