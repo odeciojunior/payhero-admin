@@ -12,7 +12,7 @@ $(document).ready(function () {
     function getTypeProducts() {
         $.ajax({
                 method: 'GET',
-                url: '/api/projects/?select=true',
+                url: '/api/projects?select=true',
                 dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -37,10 +37,12 @@ $(document).ready(function () {
                         $("#select-projects").html('');
 
                         $.each(response.data, function (index, value) {
-                            $("#select-projects").append($('<option>', {
-                                value: value.id,
-                                text: value.name
-                            }));
+                            if (value.shopify) {
+                                $("#select-projects").append($('<option>', {
+                                    value: value.id,
+                                    text: value.name
+                                }));
+                            }
                         });
                         $("#is-projects").show();
 
@@ -60,10 +62,13 @@ $(document).ready(function () {
 
                             } else {
                                 $.each(response.data, function (index, value) {
-                                    $("#select-projects").append($('<option>', {
-                                        value: value.id,
-                                        text: value.name
-                                    }));
+                                    if (value.shopify) {
+                                        $("#select-projects").append($('<option>', {
+                                            value: value.id,
+                                            text: value.name
+                                        }));
+                                    }
+
                                 });
                                 $("#is-projects").show();
                                 $("#select-projects").find('option:eq(0)').prop('selected', true);
