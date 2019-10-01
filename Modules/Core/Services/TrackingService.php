@@ -26,7 +26,7 @@ class TrackingService
             /** @var ProductPlan $productPlan */
             foreach ($planSale->plan->productsPlans as $productPlan) {
                 $productPlanSale                 = $productPlan->product()
-                                                               ->first()->productPlanSales->where('sale_id', $sale->id)
+                                                               ->first()->productsPlanSales->where('sale_id', $sale->id)
                                                                                           ->first();
                 $product                         = $productPlan->product()->first()->toArray();
                 $product['amount']               = $productPlan->amount * $planSale->amount;
