@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
@@ -13,6 +14,8 @@ use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Exceptions\Services\ServiceException;
+use Modules\Projects\Transformers\ProjectsResource;
+use Modules\Projects\Transformers\ProjectsSelectResource;
 
 /**
  * Class ProjectService
@@ -281,15 +284,20 @@ class ProjectService
     }
 
     /**
-     * @return mixed
+     * @param string $pagination
+     * @return AnonymousResourceCollection
      */
-    public function getUserProjects()
+    public function getUserProjects(string $pagination)
     {
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
         $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
-
-        return $projectModel->whereIn('id', $userProjects)->orderBy('id', 'DESC')->get();
+        $projects     = $projectModel->whereIn('id', $userProjects)->orderBy('id', 'DESC');
+        if ($pagination) {
+            return ProjectsResource::collection($projects->paginate(10));
+        } else {
+            return ProjectsSelectResource::collection($projects->get());
+        }
     }
 }
