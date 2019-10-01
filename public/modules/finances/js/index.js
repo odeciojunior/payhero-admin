@@ -337,7 +337,7 @@ $(document).ready(function () {
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
                     $.ajax({
                         method: "POST",
-                        url: '/sales/venda/detalhe',
+                        url: '/api/sales/detail',
                         data: data,
                         dataType: "json",
                         headers: {
@@ -349,8 +349,8 @@ $(document).ready(function () {
                         },
                         success: (response) => {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
-                            $('.modal-body-details').html('');
-                            $('.modal-body-details').html(response);
+                            // $('.modal-body-details').html('');
+                            // $('.modal-body-details').html(response); 
 
                             $(".copy_link").on("click", function () {
                                 var temp = $("<input>");
@@ -482,4 +482,5 @@ $(document).ready(function () {
         }
         $('table').addClass('table-striped');
     }
+
 });

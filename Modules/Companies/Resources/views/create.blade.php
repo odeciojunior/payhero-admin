@@ -25,6 +25,7 @@
                         </select>
                     </div>
                     <div id="store_form" style="width:100%">
+                        @include('companies::create_brazilian_company')
                     </div>
                     <div class="form-group col-xl-4">
                         <button class="form-control btn btn-success" type='submit'>
