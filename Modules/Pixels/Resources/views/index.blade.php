@@ -93,7 +93,7 @@
                 </a>
             </div>
             <div class="modal-body" style='min-height: 100px'>
-                @include('pixels::details')
+                @include('pixels::show')
             </div>
         </div>
     </div>

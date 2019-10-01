@@ -6,7 +6,7 @@
         <td class='text-left pixel-description'></td>
     </tr>
     <tr>
-        <td class="table-title">Code</td>
+        <td class="table-title">Código</td>
         <td style='width: 20px'></td>
         <td class='text-left pixel-code'></td>
     </tr>

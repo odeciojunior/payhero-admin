@@ -127,8 +127,7 @@ class DiscountCouponsApiController extends Controller
 
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
-                        $coupon->makeHidden(['id', 'project_id']);
-                        return response()->json($coupon, 200);
+                        return new DiscountCouponsResource($coupon);
                     } else {
                         return response()->json(['message' => 'Erro ao buscar Cupom'], 400);
                     }

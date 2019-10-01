@@ -6,7 +6,7 @@
             <td class='text-left coupon-name'></td>
         </tr>
         <tr>
-            <td class="table-title">Code</td>
+            <td class="table-title">Código</td>
             <td style='width: 20px'></td>
             <td class='text-left coupon-code'></td>
         </tr>
