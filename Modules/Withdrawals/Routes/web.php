@@ -12,10 +12,6 @@
 */
 
 Route::middleware(['web', 'auth'])->prefix('withdrawals')->group(function() {
-
-    Route::resource('/', 'WithdrawalsController')->only('index','store');
-
-    Route::get('/getaccountinformation/{company_id}', 'WithdrawalsController@getAccountInformation');
-
+    //
 });
 

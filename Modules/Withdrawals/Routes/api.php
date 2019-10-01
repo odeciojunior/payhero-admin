@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/withdrawals', function (Request $request) {
-    return $request->user();
-});
+Route::group(
+    [
+        'middleware' => ['auth:api'],
+    ],
+    function() {
+        Route::apiResource('/withdrawals', 'WithdrawalsApiController')
+             ->only('index', 'store')->names('api.withdrawals');
+
+        Route::get('/withdrawals/getaccountinformation/{company_id}', 'WithdrawalsApiController@getAccountInformation');
+    }
+);
+

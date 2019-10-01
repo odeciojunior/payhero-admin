@@ -137,9 +137,9 @@ $(document).ready(function () {
             alertCustom('error', 'Valor do saque inválido!');
         } else {
             $.ajax({
-                url: "/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
+                url: "/api/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
                 type: "GET",
-                dataType: "json",
+                dataType: "json", 
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
@@ -185,7 +185,7 @@ $(document).ready(function () {
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
                             $.ajax({
-                                url: "/withdrawals",
+                                url: "/api/withdrawals",
                                 type: "POST",
                                 data: {
                                     company_id: $('#transfers_company_select').val(),
@@ -389,9 +389,9 @@ $(document).ready(function () {
         loadOnTable('withdrawals-table-data', 'transfersTable');
         $("#withdrawals-table-data").html("");
         if (link == null) {
-            link = '/withdrawals';
+            link = '/api/withdrawals';
         } else {
-            link = '/withdrawals' + link;
+            link = '/api/withdrawals' + link;
         }
         $.ajax({
             method: "GET",
