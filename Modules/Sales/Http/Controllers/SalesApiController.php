@@ -80,8 +80,8 @@ class SalesApiController extends Controller
         try {
             $requestData = $request->all();
 
-            $saleModel        = new \Modules\Core\Entities\Sale();
-            $planSaleModel    = new \Modules\Core\Entities\PlanSale();
+            $saleModel        = new Sale();
+            $planSaleModel    = new PlanSale();
             $clientModel      = new Client();
             $deliveryModel    = new Delivery();
             $checkoutModel    = new Checkout();
@@ -92,7 +92,8 @@ class SalesApiController extends Controller
             if (!empty($requestData['sale_id'])) {
                 $sale = $saleModel->with([
                                              'transactions' => function($query) {
-                                                 $query->where('company_id', '!=', null)->first();
+                                                 $query->where('company_id', '!=', null)
+                                                       ->first();
                                              },
                                          ])->find(current(Hashids::connection('sale_id')
                                                                  ->decode($requestData['sale_id'])));
@@ -180,8 +181,8 @@ class SalesApiController extends Controller
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
 
-                $sale['code']    = Hashids::connection('sale_id')->encode($sale->id);
-                $data            = [
+                $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
+                $data         = [
                     'sale'            => $sale,
                     'products'        => $products,
                     'client'          => $client,
@@ -200,12 +201,20 @@ class SalesApiController extends Controller
                 ];
 
                 return response()->json($data, 200);
+            } else {
+                Log::warning('Erro ao mostrar detalhes da venda  SalesController - details - id : ' . $requestData['sale_id']);
+
+                return response()->json([
+                                            'message' => 'Erro ao exibir detalhes da venda',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
             report($e);
 
-            return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
+            return response()->json([
+                                        'message' => 'Erro ao exibir detalhes da venda',
+                                    ], 400);
         }
     }
 
@@ -247,7 +256,7 @@ class SalesApiController extends Controller
                                              ->whereHas('sale', function($querySale) {
                                                  $querySale->whereNotIn('status', [3, 5, 10]);
                                              })
-                                             ->whereIn('company_id', $userCompanies);
+                                             ->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
 
             if (!empty($data["projeto"])) {
                 $projectId = current(Hashids::decode($data["projeto"]));

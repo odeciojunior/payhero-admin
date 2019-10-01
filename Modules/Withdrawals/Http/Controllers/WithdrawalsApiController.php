@@ -18,10 +18,10 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
- * Class WithdrawalsController
+ * Class WithdrawalsApiController
  * @package Modules\Withdrawals\Http\Controllers
  */
-class WithdrawalsController extends Controller
+class WithdrawalsApiController extends Controller
 {
     /**
      * @param Request $request

@@ -27,7 +27,7 @@ $(document).ready(function () {
                 $('#complement').val(response.data.complement);
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
-                $('#previewimage').attr("src", response.data.photo);
+                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
                 var valuecss = '';
 
                 if (response.data.personal_document_status === 1) {

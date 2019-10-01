@@ -22,13 +22,13 @@ $(document).ready(function () {
                     $(response.data).each(function(index, data){
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                <div class="card shadow card-edit" project=` + data.id +` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo +` onerror="this.onerror=null;this.src='https://app.cloudfox.net/modules/global/img/produto.png'" />
+                                <div class="card shadow card-edit" project="${data.id}">
+                                    <img class="card-img-top img-fluid w-full" src="${data.project_photo ? data.project_photo : '/modules/global/img/produto.png'}" />
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-12'>
-                                                <h4 class="card-title">` + data.project_name +`</h4>
-                                                <p class="card-text sm">Criado em ` + data.created_at + `</p>
+                                                <h4 class="card-title">${data.project_name}</h4>
+                                                <p class="card-text sm">Criado em ${data.created_at}</p>
                                             </div>
                                         </div>
                                     </div>

@@ -22,16 +22,16 @@ $(document).ready(function () {
                     $(response.data).each(function(index, data){
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                <div class="card shadow card-edit" project=` + data.id +` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo +` onerror="this.onerror=null;this.src='{!! asset('modules/global/img/produto.png') !!}';" alt="{!! asset('modules/global/img/produto.png') !!}"/>
+                                <div class="card shadow card-edit" project=${data.id} style='cursor:pointer;'>
+                                    <img class="card-img-top img-fluid w-full" src="${data.project_photo ? data.project_photo : '/modules/global/img/produto.png'}"/>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
-                                                <h4 class="card-title">` + data.project_name +`</h4>
-                                                <p class="card-text sm">Criado em ` + data.created_at + `</p>
+                                                <h4 class="card-title">${data.project_name}</h4>
+                                                <p class="card-text sm">Criado em ${data.created_at}</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' class='delete-integration pointer float-right mt-35' project=` + data.id +` data-toggle='modal' data-target='#modal-delete' type='a'>
+                                                <a role='button' class='delete-integration pointer float-right mt-35' project="${data.id}" data-toggle='modal' data-target='#modal-delete' type='a'>
                                                     <i class='material-icons gradient'>delete_outline</i>
                                                 </a>
                                             </div>
@@ -102,6 +102,7 @@ $(document).ready(function () {
                                         $('#integration_id').val(response.data.id);
                                         $("#link_edit").val(response.data.link);
                                         $("#value_edit").val(response.data.value);
+                                        $('#value_edit').unmask();
                                         $('#value_edit').mask('#.###,#0', {reverse: true});
 
                                         $("#boleto_generated_edit").val(response.data.boleto_generated);
@@ -196,6 +197,7 @@ $(document).ready(function () {
                     $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' + '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
+                    $("#select_projects").html('');
                     $(response.data).each(function(index, data){
                         $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
