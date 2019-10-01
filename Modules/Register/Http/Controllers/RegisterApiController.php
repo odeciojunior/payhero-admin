@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Register\Http\Controllers;
-
 
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -55,39 +53,41 @@ class RegisterApiController extends Controller
 
             if ($invite) {
                 $invite->update([
-                    'user_invited'    => $user->id,
-                    'status'          => '1',
-                    'register_date'   => Carbon::now()->format('Y-m-d'),
-                    'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                    'email_invited'   => $requestData['email'],
-                ]);
+                                    'user_invited'    => $user->id,
+                                    'status'          => '1',
+                                    'register_date'   => Carbon::now()->format('Y-m-d'),
+                                    'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                    'email_invited'   => $requestData['email'],
+                                ]);
             } else {
 
                 $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
                 if ($company) {
                     $inviteModel->create([
-                        'invite'          => null,
-                        'user_invited'    => $user->id,
-                        'status'          => '1',
-                        'company'         => $company->id,
-                        'register_date'   => Carbon::now()->format('Y-m-d'),
-                        'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                        'email_invited'   => $requestData['email'],
-                    ]);
+                                             'invite'          => null,
+                                             'user_invited'    => $user->id,
+                                             'status'          => '1',
+                                             'company'         => $company->id,
+                                             'register_date'   => Carbon::now()->format('Y-m-d'),
+                                             'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                             'email_invited'   => $requestData['email'],
+                                         ]);
                 }
             }
 
             return response()->json([
-                'success' => 'true',
-            ]);
+                                        'success'      => 'true',
+                                        'access_token' => auth()->user()
+                                                                ->createToken("Laravel Password Grant Client")->accessToken,
+                                    ]);
         } catch (Exception $ex) {
             Log::warning('Erro ao registrar novo usuario (RegisterController - store)');
             report($ex);
 
             return response()->json([
-                'success' => 'false',
-            ]);
+                                        'success' => 'false',
+                                    ]);
         }
     }
 
@@ -102,7 +102,7 @@ class RegisterApiController extends Controller
         $data            = [
             "name" => $userName,
         ];
-        $emailValidated = FoxUtils::validateEmail($userEmail);
+        $emailValidated  = FoxUtils::validateEmail($userEmail);
         if ($emailValidated) {
             $sendgridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
         }
