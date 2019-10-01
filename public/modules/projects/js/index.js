@@ -14,9 +14,8 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                console.log(response)
-                if (response.length) {
-                    $.each(response, (key, project) => {
+                if (response.data.length) {
+                    $.each(response.data, (key, project) => {
                         let data = `<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                                         <div class="card">
                                             ${project.shopify_id != null ? '<div class="ribbon"><span>Shopify <a class="ribbon-shopify-default"></a></span></div>' : ''}

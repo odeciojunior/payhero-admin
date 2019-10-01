@@ -20,8 +20,9 @@ class ProjectsSelectResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'   => Hashids::encode($this->id),
-            'name' => $this->name,
+            'id'      => Hashids::encode($this->id),
+            'name'    => $this->name,
+            'shopify' => ($this->shopify_id != null ? 1 : 0),
         ];
     }
 }

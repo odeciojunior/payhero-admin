@@ -295,9 +295,9 @@ class ProjectService
         $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
         $projects     = $projectModel->whereIn('id', $userProjects)->orderBy('id', 'DESC');
         if ($pagination) {
-            return ProjectsResource::collection($projects->paginate(10));
-        } else {
             return ProjectsSelectResource::collection($projects->get());
+        } else {
+            return ProjectsResource::collection($projects->paginate(10));
         }
     }
 }
