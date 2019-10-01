@@ -37,6 +37,7 @@
                         <div class="tab-content pt-10 pr-30 pl-30">
                             <div class="tab-pane active" id="tab_user" role="tabpanel">
                                 <form method="POST" enctype="multipart/form-data" id='company_update_form'>
+                                    @csrf
                                     @method('PUT')
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">

@@ -286,15 +286,7 @@ function copyToClipboard(element) {
 }
 
 function errorAjaxResponse(response) {
-    if (response.status === 422) {
-        for (error in response.responseJSON.errors) {
-            alertCustom('error', response.responseJSON.errors[error]);
-        }
-    } else if (response.status === 404) { // Conteudo Não pode ser encontrado
-        for (error in response.responseJSON.errors) {
-            alertCustom('error', response.responseJSON.errors[error]);
-        }
-    } else if (response.status === 403) { // Não tem acesso ao conteudo
+    if (response.status === 422 || response.status === 404 || response.status === 403) {
         for (error in response.responseJSON.errors) {
             alertCustom('error', response.responseJSON.errors[error]);
         }

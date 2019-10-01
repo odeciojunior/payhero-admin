@@ -62,8 +62,8 @@ class HotZappApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
         try {
             $data                    = $request->all();
             $hotzappIntegrationModel = new HotzappIntegration();
@@ -83,12 +83,13 @@ class HotZappApiController extends Controller
                     $data['boleto_paid'] = 0;
                 }
                 if (empty($data['credit_card_paid'])) {
-
                     $data['credit_card_paid'] = 0;
                 }
                 if (empty($data['credit_card_refused'])) {
-
                     $data['credit_card_refused'] = 0;
+                }
+                if (empty($data['abandoned_cart'])) {
+                    $data['abandoned_cart'] = 0;
                 }
 
                 $integrationCreated = $hotzappIntegrationModel->create([
