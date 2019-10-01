@@ -21,7 +21,7 @@
                         <label for="country">País da empresa</label>
                         <select id="country" name='country' class="form-control select-pad">
                             <option value="brasil">Brasil</option>
-                            <option value="usa" >United States</option>
+                            <option value="usa" disabled>United States</option>
                         </select>
                     </div>
                     <div id="store_form" style="width:100%">
