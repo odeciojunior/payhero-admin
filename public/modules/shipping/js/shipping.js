@@ -82,11 +82,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/shippings/" + frete,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom("error", "Erro ao carregar detalhes do frete");
+            error: function error(response) {
+                errorAjaxResponse(response);
             }, success: function success(response) {
                 switch (response.type) {
                     case 'static':
@@ -118,11 +120,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/shippings/" + frete + "/edit",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom("error", "Erro ao tentar editar frete");
+            error: function error(response) {
+                errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#modal-edit-shipping .shipping-id').val(response.id_code);
 
@@ -172,8 +176,10 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/shippings",
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             processData: false,
@@ -190,14 +196,7 @@ $(document).ready(function () {
 
                 return error;
             }(function (response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-
-                }
+                errorAjaxResponse(response);
             }),
             success: function success(data) {
                 loadingOnScreenRemove();
@@ -217,8 +216,10 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/shippings/" + frete,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             processData: false,
@@ -236,13 +237,7 @@ $(document).ready(function () {
                 return error;
             }(function (response) {
                 loadingOnScreenRemove();
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
+                errorAjaxResponse(response);
             }),
             success: function success(data) {
                 loadingOnScreenRemove();
@@ -258,8 +253,10 @@ $(document).ready(function () {
         $.ajax({
             method: "DELETE",
             url: "/api/project/" + projectId + "/shippings/" + frete,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (_error4) {
                 function error(_x3) {
@@ -273,14 +270,7 @@ $(document).ready(function () {
                 return error;
             }(function (response) {
                 loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-                if (response.status == '400') {
-                    alertCustom('error', response.responseJSON.message);
-                }
+                errorAjaxResponse(response);
             }),
             success: function success(data) {
                 loadingOnScreenRemove();
@@ -297,11 +287,14 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/shippings",
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
                 $("#dados-tabela-frete").html(response.message);
+                errorAjaxResponse(response);
             },
             success: function success(response) {
 

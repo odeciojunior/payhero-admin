@@ -1,11 +1,11 @@
 $(document).ready(function () {
 
     atualizar(1);
-
+ 
     function atualizar(page) {
 
         $('#companies_table_data').html('');
-
+ 
         $.ajax({
             method: "GET",
             url: "/api/companies?page=" + page,
@@ -15,8 +15,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                console.log('GET /api/companies: error');
-                $('#companies_table_data').html("<tr class='text-center'><td colspan='11'>Error</td></tr>");
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 console.log('GET /api/companies: success');
@@ -56,32 +55,14 @@ $(document).ready(function () {
                         $.ajax({
                             method: "DELETE",
                             url: "/api/companies/" + company,
+                            dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
                             },
                             error: function (_error) {
-                                console.log('DELETE /api/companies: error');
-                                function error(_x) {
-                                    return _error.apply(this, arguments);
-                                }
-
-                                error.toString = function () {
-                                    return _error.toString();
-                                };
-
-                                return error;
-                            }(function (response) {
-                                if (response.status == '422') {
-                                    if (response.responseJSON.errors) {
-                                        for (error in response.responseJSON.errors) {
-                                            alertCustom('error', String(response.responseJSON.errors[error]));
-                                        }
-                                    } else {
-                                        alertCustom('error', String(response.responseJSON.message));
-                                    }
-                                }
-                            }),
+                                errorAjaxResponse(response);
+                            },
                             success: function success(data) {
                                 console.log('DELETE /api/companies: success');
                                 alertCustom("success", data.message);

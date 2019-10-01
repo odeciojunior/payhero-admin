@@ -55,7 +55,6 @@ $(document).ready(function () {
             data: {company: $('#company').val()},
             error: function error(response) {
                 errorAjaxResponse(response);
-
             },
             success: function success(data) {
 

@@ -54,8 +54,6 @@ $(document).ready(function () {
             url = `${link}&project=${$("#project option:selected").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         }
 
-        console.log(url);
-
         if (selectTypeSalesRecovery.val() == 1) {
             return `/api/checkout` + url;
         } else {
@@ -77,16 +75,15 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                console.log(response);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response);
 
                 $('#table_data').html('');
                 $('#carrinhoAbandonado').addClass('table-striped');
@@ -163,6 +160,7 @@ $(document).ready(function () {
                             $.ajax({
                                 method: "POST",
                                 url: "/api/recovery/regenerateboleto",
+                                dataType: "json",
                                 headers: {
                                     'Authorization': $('meta[name="access-token"]').attr('content'),
                                     'Accept': 'application/json',
@@ -201,11 +199,12 @@ $(document).ready(function () {
                         method: "POST",
                         url: '/api/recovery/details',
                         data: {checkout: sale},
+                        dataType: "json",
                         headers: {
                             'Authorization': $('meta[name="access-token"]').attr('content'),
                             'Accept': 'application/json',
                         },
-                        error: function error() {
+                        error: function error(response) {
                             errorAjaxResponse(response);
 
                         },
