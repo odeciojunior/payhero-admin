@@ -117,8 +117,8 @@
                         <span id="delivery-zipcode" class="table-title gray"></span>
                         <br>
                         <span id="delivery-city" class="table-title gray"></span>
-                        <h4> Rastreio </h4>
                         <div id='div_tracking_code' style='display:none;'>
+                            <h4> Rastreio </h4>
                             <table class='table table-striped mt-15'>
                                 <thead>
                                 <tr>
