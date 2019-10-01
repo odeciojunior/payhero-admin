@@ -399,7 +399,7 @@ $(document).ready(function () {
     function getFilters() {
         $.ajax({
             method: "GET",
-            url: "/api/sales/filters",
+            url: "/api/projects/user-projects",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -408,17 +408,10 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(data) {
-                if (data.sales_amount) {
-                    for (let i = 0; i < data.projetos.length; i++) {
-                        $('#projeto').append('<option value="' + data.projetos[i].id + '">' + data.projetos[i].nome + '</option>')
-                    }
-                    $('#export-excel, .page-content').show();
-                    $('.content-error').hide();
-                } else {
-                    $('#export-excel, .page-content').hide();
-                    $('.content-error').show();
-                }
+            success: function success(response) {
+                $.each(response.data, function (index, project) {
+                    $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
+                });
             }
         });
     }
@@ -457,36 +450,44 @@ $(document).ready(function () {
                     2: 'pendente'
                 };
 
-                $.each(response.data, function (index, value) {
-                    dados = `<tr>
-                                <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
-                                <td>${value.project}</td>
-                                <td>${value.product}</td>
-                                <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
-                                <td>
-                                    <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
-                                </td>
-                                <td>
-                                    <span class="boleto-pending badge badge-${statusArray[value.status]}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
-                                </td>
-                                <td class='display-sm-none display-m-none'>${value.start_date}</td>
-                                <td class='display-sm-none'>${value.end_date}</td>
-                                <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                <td>
-                                    <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
-                                </td>
-                            </tr>`;
+                if(response.data) {
+                    $.each(response.data, function (index, value) {
+                        dados = `<tr>
+                                    <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
+                                    <td>${value.project}</td>
+                                    <td>${value.product}</td>
+                                    <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
+                                    <td>
+                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
+                                    </td>
+                                    <td>
+                                        <span class="boleto-pending badge badge-${statusArray[value.status]}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
+                                    </td>
+                                    <td class='display-sm-none display-m-none'>${value.start_date}</td>
+                                    <td class='display-sm-none'>${value.end_date}</td>
+                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
+                                    <td>
+                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                    </td>
+                                </tr>`;
 
-                    $("#dados_tabela").append(dados);
-                });
-                if (response.data == '') {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                        $("#dados_tabela").append(dados);
+                    });
+                    if (response.data == '') {
+                        $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    }
+
+                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                    $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
+
+                    pagination(response, 'sales', atualizar);
+
+                    $('#export-excel, .page-content').show();
+                    $('.content-error').hide();
+                } else {
+                    $('#export-excel, .page-content').hide();
+                    $('.content-error').show();
                 }
-
-                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
-
-                pagination(response, 'sales', atualizar);
             }
         });
     }

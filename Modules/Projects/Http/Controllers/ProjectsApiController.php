@@ -35,7 +35,7 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectService = new ProjectService();
-            $pagination     = $request->input('select') ?? false;
+            $pagination = $request->input('select') ?? false;
 
             return $projectService->getUserProjects($pagination);
         } catch (Exception $e) {
@@ -72,33 +72,33 @@ class ProjectsApiController extends Controller
         try {
             $requestValidated = $request->validated();
 
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
-            $shippingModel       = new Shipping();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
+            $shippingModel = new Shipping();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (!empty($requestValidated)) {
                 $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
 
                 $project = $projectModel->create([
-                                                     'name'                       => $requestValidated['name'],
-                                                     'description'                => $requestValidated['description'],
-                                                     'installments_amount'        => 12,
-                                                     'installments_interest_free' => 1,
-                                                     'visibility'                 => 'private',
-                                                     'automatic_affiliation'      => 0,
-                                                     'boleto'                     => 1,
-                                                 ]);
+                    'name' => $requestValidated['name'],
+                    'description' => $requestValidated['description'],
+                    'installments_amount' => 12,
+                    'installments_interest_free' => 1,
+                    'visibility' => 'private',
+                    'automatic_affiliation' => 0,
+                    'boleto' => 1,
+                ]);
                 if (!empty($project)) {
                     $shipping = $shippingModel->create([
-                                                           'project_id'   => $project->id,
-                                                           'name'         => 'Frete gratis',
-                                                           'information'  => 'de 15 até 30 dias',
-                                                           'value'        => '0,00',
-                                                           'type'         => 'static',
-                                                           'status'       => '1',
-                                                           'pre_selected' => '1',
-                                                       ]);
+                        'project_id' => $project->id,
+                        'name' => 'Frete gratis',
+                        'information' => 'de 15 até 30 dias',
+                        'value' => '0,00',
+                        'type' => 'static',
+                        'status' => '1',
+                        'pre_selected' => '1',
+                    ]);
 
                     if (!empty($shipping)) {
                         $photo = $request->file('photo-main');
@@ -118,14 +118,14 @@ class ProjectsApiController extends Controller
                         }
 
                         $userProject = $userProjectModel->create([
-                                                                     'user_id'           => auth()->user()->id,
-                                                                     'project_id'        => $project->id,
-                                                                     'company_id'        => $requestValidated['company'],
-                                                                     'type'              => 'producer',
-                                                                     'access_permission' => 1,
-                                                                     'edit_permission'   => 1,
-                                                                     'status'            => 'active',
-                                                                 ]);
+                            'user_id' => auth()->user()->id,
+                            'project_id' => $project->id,
+                            'company_id' => $requestValidated['company'],
+                            'type' => 'producer',
+                            'access_permission' => 1,
+                            'edit_permission' => 1,
+                            'status' => 'active',
+                        ]);
                         if (!empty($userProject)) {
                             return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
@@ -162,21 +162,21 @@ class ProjectsApiController extends Controller
     {
         try {
             if (isset($id)) {
-                $projectModel            = new Project();
-                $userProjectModel        = new UserProject();
+                $projectModel = new Project();
+                $userProjectModel = new UserProject();
                 $shopifyIntegrationModel = new ShopifyIntegration();
 
                 $user = auth()->user()->load('companies');
 
                 $idProject = Hashids::decode($id)[0];
-                $project   = $projectModel->find($idProject);
+                $project = $projectModel->find($idProject);
 
                 $userProject = $userProjectModel->where('user_id', $user->id)
-                                                ->where('project_id', $idProject)->first();
+                    ->where('project_id', $idProject)->first();
                 $userProject = new UserProjectResource($userProject);
 
                 $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', $user->id)
-                                                               ->where('project_id', $idProject)->get();
+                    ->where('project_id', $idProject)->get();
                 $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
 
                 $companies = CompaniesSelectResource::collection($user->companies);
@@ -191,15 +191,15 @@ class ProjectsApiController extends Controller
             }
 
             return response()->json([
-                                        'message' => 'Erro ao carregar configuracoes do projeto',
-                                    ], 400);
+                'message' => 'Erro ao carregar configuracoes do projeto',
+            ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao carregar configuracoes do projeto (ProjectsApiController - edit)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Erro ao carregar configuracoes do projeto',
-                                    ], 400);
+                'message' => 'Erro ao carregar configuracoes do projeto',
+            ], 400);
         }
     }
 
@@ -256,9 +256,9 @@ class ProjectsApiController extends Controller
     {
         try {
 
-            $requestValidated    = $request->validated();
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
+            $requestValidated = $request->validated();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if ($requestValidated) {
@@ -272,7 +272,7 @@ class ProjectsApiController extends Controller
                     }
 
                     $requestValidated['cookie_duration'] = 60;
-                    $requestValidated['status']          = 1;
+                    $requestValidated['status'] = 1;
 
                     $projectUpdate = $project->update($requestValidated);
                     if ($projectUpdate) {
@@ -288,8 +288,8 @@ class ProjectsApiController extends Controller
                                 $digitalOceanPath = $digitalOceanService
                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $projectPhoto);
                                 $project->update([
-                                                     'photo' => $digitalOceanPath,
-                                                 ]);
+                                    'photo' => $digitalOceanPath,
+                                ]);
                             }
 
                             $projectLogo = $request->file('logo');
@@ -298,7 +298,7 @@ class ProjectsApiController extends Controller
                                 $digitalOceanService->deleteFile($project->logo);
                                 $img = Image::make($projectLogo->getPathname());
 
-                                $img->resize(null, 300, function($constraint) {
+                                $img->resize(null, 300, function ($constraint) {
                                     $constraint->aspectRatio();
                                 });
 
@@ -308,8 +308,8 @@ class ProjectsApiController extends Controller
                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/logo', $projectLogo);
 
                                 $project->update([
-                                                     'logo' => $digitalOceanPathLogo,
-                                                 ]);
+                                    'logo' => $digitalOceanPathLogo,
+                                ]);
                             }
                         } catch (Exception $e) {
                             Log::warning('ProjectController - update - Erro ao enviar foto');
@@ -318,10 +318,10 @@ class ProjectsApiController extends Controller
                             return response()->json(['message', 'Erro ao atualizar projeto'], 400);
                         }
 
-                        $userProject                    = $userProjectModel->where([
-                                                                                       ['user_id', auth()->user()->id],
-                                                                                       ['project_id', $project->id],
-                                                                                   ])->first();
+                        $userProject = $userProjectModel->where([
+                            ['user_id', auth()->user()->id],
+                            ['project_id', $project->id],
+                        ])->first();
                         $requestValidated['company_id'] = Hashids::decode($requestValidated['company_id'])[0];
                         if ($userProject->company_id != $requestValidated['company_id']) {
                             $userProject->update(['company_id' => $requestValidated['company_id']]);
@@ -383,14 +383,14 @@ class ProjectsApiController extends Controller
 
             $projectService = new ProjectService();
 
-            return ProjectsSelectResource::collection($projectService->getUserProjects());
+            return $projectService->getUserProjects(true);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, ao buscar dados das empresas',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, ao buscar dados das empresas',
+            ], 400);
         }
     }
 }

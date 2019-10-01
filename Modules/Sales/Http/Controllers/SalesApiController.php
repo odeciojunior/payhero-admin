@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
@@ -20,7 +19,6 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\TrackingService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Transformers\TransactionResource;
@@ -33,47 +31,101 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class SalesApiController extends Controller
 {
-
     /**
-     * @return JsonResponse
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function filters()
+    public function index(Request $request)
     {
         try {
-            $transactionModel = new Transaction();
             $companyModel = new Company();
-            $projectService = new ProjectService();
+            $clientModel = new Client();
+            $transactionModel = new Transaction();
 
-            $myProjects = $projectService->getUserProjects(true);
+            $data = $request->all();
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
                 ->pluck('id')
                 ->toArray();
 
-            $projects = [];
+            $transactions = $transactionModel->with([
+                'sale',
+                'sale.project',
+                'sale.client',
+                'sale.plansSales',
+                'sale.plansSales.plan',
+                'sale.plansSales.plan.products',
+                'sale.plansSales.plan.project',
+            ])
+                ->whereHas('sale', function ($querySale) {
+                    $querySale->whereNotIn('status', [3, 5, 10]);
+                })
+                ->whereIn('company_id', $userCompanies);
 
-            foreach ($myProjects as $project) {
-                if ($project != null) {
-                    $projects[] = [
-                        'id' => Hashids::encode($project->id),
-                        'nome' => $project->name,
-                    ];
+            if (!empty($data["projeto"])) {
+                $projectId = current(Hashids::decode($data["projeto"]));
+                $transactions->whereHas('sale', function ($querySale) use ($projectId) {
+                    $querySale->where('project_id', $projectId);
+                });
+            }
+
+            if (!empty($data["transaction"])) {
+                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $data["transaction"])));
+
+                $transactions->whereHas('sale', function ($querySale) use ($saleId) {
+                    $querySale->where('id', $saleId);
+                });
+            }
+
+            if (!empty($data["comprador"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $data["comprador"] . '%')->pluck('id');
+                $transactions->whereHas('sale', function ($querySale) use ($customers) {
+                    $querySale->whereIn('client_id', $customers);
+                });
+            }
+
+            if (!empty($data["forma"])) {
+                $forma = $data["forma"];
+                $transactions->whereHas('sale', function ($querySale) use ($forma) {
+                    $querySale->where('payment_method', $forma);
+                });
+            }
+
+            if (!empty($data["status"])) {
+                $status = $data["status"];
+                $transactions->whereHas('sale', function ($querySale) use ($status) {
+                    $querySale->where('status', $status);
+                });
+            }
+
+            if (!empty($data["data_inicial"]) && !empty($data["data_final"])) {
+                $data_inicial = $data["data_inicial"];
+                $data_final = $data["data_final"];
+                $transactions->whereHas('sale', function ($querySale) use ($data_inicial, $data_final) {
+                    $querySale->whereBetween('start_date', [$data_inicial, date('Y-m-d', strtotime($data_final . ' + 1 day'))]);
+                });
+            } else {
+
+                if (!empty($data["data_inicial"])) {
+                    $data_inicial = $data["data_inicial"];
+                    $transactions->whereHas('sale', function ($querySale) use ($data_inicial) {
+                        $querySale->whereDate('start_date', '>=', $data_inicial);
+                    });
+                }
+
+                if (!empty($data["data_final"])) {
+                    $data_final = $data["data_final"];
+                    $transactions->whereHas('sale', function ($querySale) use ($data_final) {
+                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($data_final . ' + 1 day')));
+                    });
                 }
             }
 
-            $sales_amount = $transactionModel->whereIn('company_id', $userCompanies)
-                ->get()
-                ->count();
-
-            return response()->json([
-                'projetos' => $projects,
-                'sales_amount' => $sales_amount,
-            ], 200);
-
+            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
         } catch (Exception $e) {
-            Log::warning('Erro ao carregar filtros das vendas - filters');
+            Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
-            return response()->json(['message' => 'Erro ao carregar filtros das vendas'], 400);
+            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
     }
 
@@ -208,104 +260,6 @@ class SalesApiController extends Controller
             Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
             report($e);
             return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
-    public function index(Request $request)
-    {
-        try {
-            $companyModel = new Company();
-            $clientModel = new Client();
-            $transactionModel = new Transaction();
-
-            $data = $request->all();
-
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                ->pluck('id')
-                ->toArray();
-
-            $transactions = $transactionModel->with([
-                'sale',
-                'sale.project',
-                'sale.client',
-                'sale.plansSales',
-                'sale.plansSales.plan',
-                'sale.plansSales.plan.products',
-                'sale.plansSales.plan.project',
-            ])
-                ->whereHas('sale', function ($querySale) {
-                    $querySale->whereNotIn('status', [3, 5, 10]);
-                })
-                ->whereIn('company_id', $userCompanies);
-
-            if (!empty($data["projeto"])) {
-                $projectId = current(Hashids::decode($data["projeto"]));
-                $transactions->whereHas('sale', function ($querySale) use ($projectId) {
-                    $querySale->where('project_id', $projectId);
-                });
-            }
-
-            if (!empty($data["transaction"])) {
-                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $data["transaction"])));
-
-                $transactions->whereHas('sale', function ($querySale) use ($saleId) {
-                    $querySale->where('id', $saleId);
-                });
-            }
-
-            if (!empty($data["comprador"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $data["comprador"] . '%')->pluck('id');
-                $transactions->whereHas('sale', function ($querySale) use ($customers) {
-                    $querySale->whereIn('client_id', $customers);
-                });
-            }
-
-            if (!empty($data["forma"])) {
-                $forma = $data["forma"];
-                $transactions->whereHas('sale', function ($querySale) use ($forma) {
-                    $querySale->where('payment_method', $forma);
-                });
-            }
-
-            if (!empty($data["status"])) {
-                $status = $data["status"];
-                $transactions->whereHas('sale', function ($querySale) use ($status) {
-                    $querySale->where('status', $status);
-                });
-            }
-
-            if (!empty($data["data_inicial"]) && !empty($data["data_final"])) {
-                $data_inicial = $data["data_inicial"];
-                $data_final = $data["data_final"];
-                $transactions->whereHas('sale', function ($querySale) use ($data_inicial, $data_final) {
-                    $querySale->whereBetween('start_date', [$data_inicial, date('Y-m-d', strtotime($data_final . ' + 1 day'))]);
-                });
-            } else {
-
-                if (!empty($data["data_inicial"])) {
-                    $data_inicial = $data["data_inicial"];
-                    $transactions->whereHas('sale', function ($querySale) use ($data_inicial) {
-                        $querySale->whereDate('start_date', '>=', $data_inicial);
-                    });
-                }
-
-                if (!empty($data["data_final"])) {
-                    $data_final = $data["data_final"];
-                    $transactions->whereHas('sale', function ($querySale) use ($data_final) {
-                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($data_final . ' + 1 day')));
-                    });
-                }
-            }
-
-            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
-        } catch (Exception $e) {
-            Log::warning('Erro ao buscar vendas SalesController - getSales');
-            report($e);
-            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
     }
 

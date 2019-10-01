@@ -4,6 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
     @endpush
 
     <!-- Page -->
@@ -138,10 +139,6 @@
                     {{-- js carrega... --}}
                 </ul>
         </div>
-        @push('css')
-            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-        @endpush
-
         <div class="content-error text-center" style="display:none">
             <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
             <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
