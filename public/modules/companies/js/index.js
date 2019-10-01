@@ -1,11 +1,11 @@
 $(document).ready(function () {
 
     atualizar(1);
- 
+
     function atualizar(page) {
 
         $('#companies_table_data').html('');
- 
+
         $.ajax({
             method: "GET",
             url: "/api/companies?page=" + page,
@@ -47,6 +47,7 @@ $(document).ready(function () {
                 $(".delete-company").on("click", function (event) {
                     event.preventDefault();
                     var company = $(this).attr('company');
+                    console.log('carai');
 
                     $("#bt-delete").unbind('click');
                     $("#bt-delete").on('click', function () {
@@ -60,7 +61,9 @@ $(document).ready(function () {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
                             },
-                            error: function (_error) {
+                            error: function (response) {
+                                console.log('deu ruim');
+                                console.log(response)
                                 errorAjaxResponse(response);
                             },
                             success: function success(data) {
