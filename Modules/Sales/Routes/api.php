@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('sales', 'SalesApiController')
-     ->only('index')
-     ->middleware(['auth:api']);
-
 Route::group(
     [
         'middleware' => ['auth:api'],
@@ -13,8 +9,12 @@ Route::group(
     ],
     function() {
 
-        Route::get('/getsales', [
-            'uses' => 'SalesApiController@getSales',
+//        Route::get('/getsales', [
+//            'uses' => 'SalesApiController@getSales',
+//        ]);
+
+        Route::get('/filters', [
+            'uses' => 'SalesApiController@filters',
         ]);
 
         Route::post('/getcsvsales', [
@@ -22,15 +22,15 @@ Route::group(
             'uses' => 'SalesApiController@getCsvSales',
         ]);
 
-        Route::post('/detail', [
-            'as'   => 'sales.detail',
-            'uses' => 'SalesApiController@getSaleDetail',
-        ]);
+//        Route::post('/detail', [
+//            'as'   => 'sales.detail',
+//            'uses' => 'SalesApiController@getSaleDetail',
+//        ]);
 
-        Route::post('/refund', [
-            'as'   => 'sales.refund',
-            'uses' => 'SalesApiController@refundSale',
-        ]);
+//        Route::post('/refund', [
+//            'as'   => 'sales.refund',
+//            'uses' => 'SalesApiController@refundSale',
+//        ]);
 
         Route::post('/update/trackingcode', [
             'as'   => 'sales.updatetrackingcode',
@@ -43,3 +43,7 @@ Route::group(
         ]);
     }
 );
+
+Route::apiResource('sales', 'SalesApiController')
+    ->only('index', 'show')
+    ->middleware(['auth:api']);

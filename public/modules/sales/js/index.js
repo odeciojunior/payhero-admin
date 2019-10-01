@@ -46,7 +46,7 @@ $(document).ready(function () {
     function getSalesData() {
         $.ajax({
             method: "GET",
-            url: "/api/sales/",
+            url: "/api/sales/filters",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -98,9 +98,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales/getsales?' + 'projeto=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales?' + 'projeto=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         } else {
-            link = '/api/sales/getsales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
         function renderDetails(data) {
@@ -322,7 +322,7 @@ $(document).ready(function () {
                         $(this).css('cursor', 'pointer').text('Regerar');
                         $(this).css("background", "#545B62");
                     }, function () {
-                        var status = $(this).attr('status'); 
+                        var status = $(this).attr('status');
                         $(this).removeAttr("style");
                         $(this).text(status);
                     }
@@ -375,8 +375,6 @@ $(document).ready(function () {
                     $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
 
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
- 
-                    var data = {sale_id: venda};
 
                     // $.ajax({
                     //     method: "get",
@@ -394,9 +392,8 @@ $(document).ready(function () {
                     // });
 
                     $.ajax({
-                        method: "POST",
-                        url: '/api/sales/detail',
-                        data: data,
+                        method: "GET",
+                        url: '/api/sales/' + venda,
                         dataType: "json",
                         headers: {
                             'Authorization': $('meta[name="access-token"]').attr('content'),
