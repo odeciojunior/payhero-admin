@@ -166,11 +166,19 @@
     100% { transform: rotate(360deg); }
 }
 
+.loader-any-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .loader-any{
     width: 75px;
     height: 75px;
-    margin: 120px auto;
-    display: block;
+    margin: 0;
+    display: inline-block;
     border-top: 10px solid rgba(163,175,183,.5);
     border-right: 10px solid rgba(163,175,183,.5);
     border-bottom: 10px solid rgba(163,175,183,.5);

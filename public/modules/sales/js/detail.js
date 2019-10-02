@@ -72,13 +72,10 @@ $(() => {
 
     // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
-        // let btn_detalhe = $(this);
-        // btn_detalhe.hide();
-        // btn_detalhe.parent().append('<span class="loaderSpan"></span>');
         var venda = $(this).attr('venda');
 
-        $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
-        $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+        loadOnAny('#modal-saleDetails');
+        $('#modal_detalhes').modal('show');
 
         $.ajax({
             method: "GET",
@@ -90,8 +87,6 @@ $(() => {
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                // btn_detalhe.parent().children('span').remove();
-                // btn_detalhe.show();
             },
             success: (response) => {
                 getSale(response);
@@ -111,9 +106,6 @@ $(() => {
         getDelivery(sale.delivery_id);
 
         getCheckout(sale.checkout_id);
-
-        // btn_detalhe.parent().children('span').remove();
-        // btn_detalhe.show();
     }
 
     function renderSale(data) {
@@ -337,7 +329,6 @@ $(() => {
         $('#checkout-ip').text('IP: ' + checkout.ip);
         $('#checkout-operational-system').text('Dispositivo: ' + checkout.operational_system);
         $('#checkout-browser').text('Navegador: ' + checkout.browser);
-
         $('#checkout-src').text('SRC: ' + checkout.src);
         $('#checkout-source').text('UTM Source: ' + checkout.source);
         $('#checkout-medium').text('UTM Medium: ' + checkout.utm_medium);
@@ -345,8 +336,8 @@ $(() => {
         $('#checkout-term').text('UTM Term: ' + checkout.utm_term);
         $('#checkout-content').text('UTM Content: ' + checkout.utm_content);
 
-        //Abre o modal depois da ultima requisiçao
-        $('#modal_detalhes').modal('show');
+        //remove o loader depois de tudo carregado
+        loadOnAny('#modal-saleDetails', true);
     }
 
     // FIM - MODAL DETALHES DA VENDA

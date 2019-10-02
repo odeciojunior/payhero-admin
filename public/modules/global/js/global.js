@@ -148,14 +148,16 @@ function loadOnTable(whereToLoad, tableReference) {
         "</tr>");
 }
 
-function loadOnAny(element, stop = false) {
-    $('.element-loading').remove();
-    if (!stop) {
-        let loading = `<span class="loader loader-circle loader-any" style=""></span>`;
-        let loader = $(element).clone().addClass('element-loading').html(loading);
+function loadOnAny(element, remove = false, useElementHeight = false) {
+    $(element).parent().find('.loader-any-container').remove();
+    if (!remove) {
+        let loading = $(`<div class="loader-any-container"><span class="loader-any"></span></div>`);
+        let minWidth = $(element).css('width');
+        let minHeight = useElementHeight ? $(element).css('height') : '200px';
+        loading.css('min-width', minWidth);
+        loading.css('min-height', minHeight);
         $(element).hide();
-        $(element).parent().append(loader);
-        loader.show();
+        $(element).parent().append(loading);
     } else {
         if (!$(element).hasClass('tab-pane') ||
             ($(element).hasClass('tab-pane') &&

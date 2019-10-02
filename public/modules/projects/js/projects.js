@@ -148,7 +148,7 @@ $(() => {
     //carrega detalhes do projeto
     function show() {
 
-        loadOnAny('#tab_info_geral');
+        loadOnAny('#tab_info_geral .card');
 
         $.ajax({
             url: '/api/projects/' + projectId,
@@ -176,11 +176,11 @@ $(() => {
                 }
                 $('#show-description').text(project.description);
 
-                loadOnAny('#tab_info_geral', true);
+                loadOnAny('#tab_info_geral .card', true);
             },
             error: (response) => {
                 errorAjaxResponse(response);
-                loadOnAny('#tab_info_geral', true);
+                loadOnAny('#tab_info_geral .card', true);
             }
         });
     }
@@ -239,7 +239,7 @@ $(() => {
 
     //carrega a tela de edicao do proejto
     function updateConfiguracoes() {
-        loadOnAny('#tab_configuration_project');
+        loadOnAny('#tab_configuration_project .card');
         $.ajax({
             method: "GET",
             url: "/api/projects/" + projectId + '/edit',
@@ -248,12 +248,12 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             }, error: function (response) {
-                loadOnAny('#tab_configuration_project', true);
+                loadOnAny('#tab_configuration_project .card', true);
                 errorAjaxResponse(response);
 
             }, success: function (data) {
                 renderProjectConfig(data);
-                loadOnAny('#tab_configuration_project', true);
+                loadOnAny('#tab_configuration_project .card', true);
             }
         });
     }
