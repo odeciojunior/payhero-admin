@@ -7,6 +7,6 @@ Route::group(
         'middleware' => ['auth:api'],
     ],
     function() {
-        Route::apiResource('/sale/{sale}/delivery', 'DeliveryApiController')->only('show')->names('api.client');
+        Route::apiResource('/delivery', 'DeliveryApiController')->only('show')->names('api.client');
     }
 );

@@ -1,4 +1,4 @@
-$(()=>{
+$(() => {
     // COMPORTAMENTOS DA JANELA
 
     //Codigo de rastreio
@@ -58,6 +58,7 @@ $(()=>{
         temp.remove();
         alertCustom('success', 'Link copiado!');
     });
+
     $(document).on("click", '#boleto-digitable-line .copy_link', function () {
         var temp = $("<input>");
         $("#nav-tabContent").append(temp);
@@ -69,17 +70,12 @@ $(()=>{
 
     // FIM - COMPORTAMENTOS DA JANELA
 
-    // Carrega o modal com os detalhes da venda
+    // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
-        let btn_detalhe = $(this);
-        btn_detalhe.hide();
-        btn_detalhe.parent().append('<span class="loaderSpan"></span>');
-
         var venda = $(this).attr('venda');
 
-        $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
-
-        $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+        loadOnAny('#modal-saleDetails');
+        $('#modal_detalhes').modal('show');
 
         $.ajax({
             method: "GET",
@@ -89,27 +85,30 @@ $(()=>{
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: (response) => {
                 errorAjaxResponse(response);
-                btn_detalhe.parent().children('span').remove();
-                btn_detalhe.show();
             },
-            success: function success(response) {
-                $('.subTotal').mask('#.###,#0', {reverse: true});
-
-                renderDetails(response);
-
-                $('.btn-save-trackingcode').attr('sale', response.sale.code);
-                $('.btn-save-trackingcode').attr('delivery', response.delivery.code);
-
-                $('#modal_detalhes').modal('show');
-                btn_detalhe.parent().children('span').remove();
-                btn_detalhe.show();
+            success: (response) => {
+                getSale(response);
             }
         });
     });
 
-    function renderDetails(data) {
+    function getSale(response){
+        let sale = response.sale;
+
+        renderSale(response);
+
+        getClient(sale.client_id);
+
+        getProducts(sale.code);
+
+        getDelivery(sale.delivery_id);
+
+        getCheckout(sale.checkout_id);
+    }
+
+    function renderSale(data) {
         //Dados da venda
         $('#sale-code').text(data.sale.code);
         $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
@@ -140,59 +139,9 @@ $(()=>{
                 break;
         }
 
-        //Produtos
-        $("#table-product").html('');
-        $('#data-tracking-products').html('');
-        let div = '';
-        let photo = 'public/modules/global/img/produto.png';
-        $.each(data.products, function (index, value) {
-            if (!value.photo) {
-                value.photo = photo;
-            }
-            div += `<div class="row align-items-baseline justify-content-between mb-15">
-                        <div class="col-lg-2">
-                            <img src='${value.photo}' width='50px' style='border-radius: 6px;'>
-                        </div>
-                        <div class="col-lg-5">
-                            <h4 class="table-title">${value.name}</h4>
-                        </div>
-                        <div class="col-lg-3 text-right">
-                            <p class="sm-text text-muted">${value.amount}x</p>
-                        </div>
-                    </div>`;
-            $("#table-product").html(div);
-
-            //Tabela de produtos Tracking Code
-            if (sale_status == 1) {
-                let data = `<tr>
-                                <td>
-                                    <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                                    <span class='small'>${value.name}</span>
-                                </td>
-                                <td>
-                                    <span class='tracking-code-span small'>${value.tracking_code}</span>
-                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
-                                </td>
-                                <td>
-                                    <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
-                                </td>
-                                <td>
-                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
-                                </td>
-                            </tr>`;
-                $('#div_tracking_code').css('display', 'block');
-                $('#data-tracking-products').append(data);
-            }else{
-                $('#div_tracking_code').css('display', 'none');
-            }
-        });
-
         //Valores
         $("#subtotal-value").html("R$ " + data.subTotal);
         $("#shipment-value").html("R$ " + data.shipment_value);
-        $("#subtotal-value").html("R$ " + data.subTotal);
 
         $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
         if (data.sale.dolar_quotation) {
@@ -216,18 +165,6 @@ $(()=>{
 
         $('#comission-value').text(data.comission ? data.comission : '');
 
-        //Cliente
-        $('#client-name').text('Nome: ' + data.client.name);
-        $('#client-telephone').text('Telefone: ' + data.client.telephone);
-        $('#client-whatsapp').attr('href', data.whatsapp_link);
-        $('#client-email').text('Email: ' + data.client.email);
-        $('#client-document').text('CPF: ' + data.client.document);
-
-        //Entrega
-        $('#delivery-address').text('Endereço: ' + data.delivery.street + ', ' + data.delivery.number);
-        $('#delivery-zipcode').text('CEP: ' + data.delivery.zip_code);
-        $('#delivery-city').text('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
-
         //Detalhes da venda
         if (data.sale.payment_method === 1) {
             $('#details-card #card-flag').text('Bandeira: ' + data.sale.flag);
@@ -242,22 +179,168 @@ $(()=>{
             $('#details-boleto').show();
         }
 
-        $('#checkout-ip').text('IP: ' + data.checkout.ip);
-        $('#checkout-operational-system').text('Dispositivo: ' + data.checkout.operational_system);
-        $('#checkout-browser').text('Navegador: ' + data.checkout.browser);
-
         $('#checkout-attempts').hide();
         if (data.sale.payment_method === 1) {
             $('#checkout-attempts').text('Quantidade de tentativas: ' + data.sale.attempts).show();
         }
 
-        $('#checkout-src').text('SRC: ' + data.checkout.src);
-        $('#checkout-source').text('UTM Source: ' + data.checkout.source);
-        $('#checkout-medium').text('UTM Medium: ' + data.checkout.utm_medium);
-        $('#checkout-campaign').text('UTM Campaign: ' + data.checkout.utm_campaign);
-        $('#checkout-term').text('UTM Term: ' + data.checkout.utm_term);
-        $('#checkout-content').text('UTM Content: ' + data.checkout.utm_content);
+        $('.btn-save-trackingcode').attr('sale', data.sale.code);
     }
+
+    function getClient(client) {
+        $.ajax({
+            method: "GET",
+            url: '/api/client/' + client,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderClient(response.data);
+            }
+        });
+    }
+
+    function renderClient(client) {
+        //Cliente
+        $('#client-name').text('Nome: ' + client.name);
+        $('#client-telephone').text('Telefone: ' + client.telephone);
+        $('#client-whatsapp').attr('href', client.whatsapp_link);
+        $('#client-email').text('Email: ' + client.email);
+        $('#client-document').text('CPF: ' + client.document);
+    }
+
+    function getProducts(venda) {
+        $.ajax({
+            method: "GET",
+            url: '/api/products/saleproducts/' + venda,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderProducts(response.data);
+            }
+        });
+    }
+
+    function renderProducts(products) {
+        $("#table-product").html('');
+        $('#data-tracking-products').html('');
+        let div = '';
+        let photo = '/modules/global/img/produto.png';
+        $.each(products, function (index, value) {
+            if (!value.photo) {
+                value.photo = photo;
+            }
+            div += `<div class="row align-items-baseline justify-content-between mb-15">
+                        <div class="col-lg-2">
+                            <img src='${value.photo}' width='50px' style='border-radius: 6px;'>
+                        </div>
+                        <div class="col-lg-5">
+                            <h4 class="table-title">${value.name}</h4>
+                        </div>
+                        <div class="col-lg-3 text-right">
+                            <p class="sm-text text-muted">${value.amount}x</p>
+                        </div>
+                    </div>`;
+            $("#table-product").html(div);
+
+            //Tabela de produtos Tracking Code
+            if (value.sale_status == 1) {
+                let data = `<tr>
+                                <td>
+                                    <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
+                                    <span class='small'>${value.name}</span>
+                                </td>
+                                <td>
+                                    <span class='tracking-code-span small'>${value.tracking_code}</span>
+                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
+                                </td>
+                                <td>
+                                    <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
+                                </td>
+                                <td>
+                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
+                                </td>
+                            </tr>`;
+                $('#div_tracking_code').css('display', 'block');
+                $('#data-tracking-products').append(data);
+            }else{
+                $('#div_tracking_code').css('display', 'none');
+            }
+        });
+    }
+
+    function getDelivery(deliveryId){
+        $.ajax({
+            method: "GET",
+            url: '/api/delivery/' + deliveryId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderDelivery(response.data);
+            }
+        });
+    }
+
+    function renderDelivery(delivery){
+        $('.btn-save-trackingcode').attr('delivery', delivery.id);
+        $('#delivery-address').text('Endereço: ' + delivery.street + ', ' + delivery.number);
+        $('#delivery-zipcode').text('CEP: ' + delivery.zip_code);
+        $('#delivery-city').text('Cidade: ' + delivery.city + '/' + delivery.state);
+    }
+
+    function getCheckout(checkoutId){
+        $.ajax({
+            method: "GET",
+            url: '/api/checkout/' + checkoutId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderCheckout(response.data);
+            }
+        });
+    }
+
+    function renderCheckout(checkout){
+        $('#checkout-ip').text('IP: ' + checkout.ip);
+        $('#checkout-operational-system').text('Dispositivo: ' + checkout.operational_system);
+        $('#checkout-browser').text('Navegador: ' + checkout.browser);
+        $('#checkout-src').text('SRC: ' + checkout.src);
+        $('#checkout-source').text('UTM Source: ' + checkout.source);
+        $('#checkout-medium').text('UTM Medium: ' + checkout.utm_medium);
+        $('#checkout-campaign').text('UTM Campaign: ' + checkout.utm_campaign);
+        $('#checkout-term').text('UTM Term: ' + checkout.utm_term);
+        $('#checkout-content').text('UTM Content: ' + checkout.utm_content);
+
+        //remove o loader depois de tudo carregado
+        loadOnAny('#modal-saleDetails', true);
+    }
+
+    // FIM - MODAL DETALHES DA VENDA
 
     //Salvar Código de Restreio
     $(document).on('click', '.btn-save-trackingcode', function () {
@@ -279,10 +362,10 @@ $(()=>{
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
                 var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
                 var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
                 var btnEdit = btnSave.parent().find('.btn-edit-trackingcode');

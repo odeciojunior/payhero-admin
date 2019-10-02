@@ -8,11 +8,13 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Modules\Checkouts\Http\Requests\CheckoutIndexRequest;
 use Modules\Checkouts\Transformers\CheckoutIndexResource;
+use Modules\Checkouts\Transformers\CheckoutResource;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CheckoutApiController
@@ -28,16 +30,16 @@ class CheckoutApiController extends Controller
     {
         try {
             $requestValidated = Validator::make($request->all(), [
-                'project'     => 'required|string',
-                'type'        => 'required|string',
-                'start_date'  => 'nullable',
-                'end_date'    => 'nullable',
+                'project' => 'required|string',
+                'type' => 'required|string',
+                'start_date' => 'nullable',
+                'end_date' => 'nullable',
                 'client_name' => 'nullable|string',
             ]);
             if ($requestValidated->fails()) {
                 return response()->json([
-                                            'message' => 'Erro ao listar projetos, tente novamente mais tarde',
-                                        ], 400);
+                    'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+                ], 400);
             } else {
                 $checkoutService = new CheckoutService();
 
@@ -66,10 +68,32 @@ class CheckoutApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)');
             report($e);
-
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ], 400);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            if (isset($id)) {
+
+                $checkoutModel = new Checkout();
+
+                $id = current(Hashids::decode($id));
+
+                $checkout = $checkoutModel->find($id);
+
+                return new CheckoutResource($checkout);
+
+            } else {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)');
+            report($e);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
         }
     }
 }
