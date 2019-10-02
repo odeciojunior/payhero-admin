@@ -118,6 +118,7 @@ $(function () {
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Cupom Adicionado!");
                 atualizarCoupon();
+                clearFields();
             }
         });
     });
@@ -216,7 +217,12 @@ $(function () {
             }
         });
     }
+    function clearFields() {
+        $('.coupon-name').val('');
+        $('.coupon-value').val('');
+        $('.coupon-code').val('');
 
+    }
     function pagination(response) {
         if (response.meta.last_page == 1) {
             $("#primeira_pagina_pixel").hide();
