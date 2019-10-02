@@ -11,7 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Delivery;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Sale;
@@ -19,7 +18,6 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\TrackingService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Transformers\TransactionResource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -137,19 +135,15 @@ class SalesApiController extends Controller
     {
         try {
             $saleModel = new Sale();
-            $clientModel = new Client();
-            $deliveryModel = new Delivery();
-            $checkoutModel = new Checkout();
             $companyModel = new Company();
             $transactionModel = new Transaction();
-            $trackingSerive = new TrackingService();
 
             if (isset($id)) {
                 $sale = $saleModel->with([
                     'transactions' => function ($query) {
                         $query->where('company_id', '!=', null)->first();
                     },
-                ])->find(Hashids::connection('sale_id')->decode($id)[0]);
+                ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
                 $sale['hours'] = (new Carbon($sale['start_date']))->format('H:m:s');
 
@@ -167,16 +161,7 @@ class SalesApiController extends Controller
                     $sale['flag'] = 'boleto';
                 }
 
-                $client = $clientModel->find($sale->client_id);
-                if (!empty($client['telephone'])) {
-                    $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
-                } else {
-                    $client['telephone'] = '';
-                }
-
-                //                $products = $sale->present()->getProducts();
-
-                $products = $trackingSerive->getTrackingProducts($sale);
+                $sale['client_id'] = Hashids::encode($sale['client_id']);
 
                 $discount = '0,00';
                 $subTotal = $sale->present()->getSubTotal();
@@ -190,18 +175,10 @@ class SalesApiController extends Controller
                     $discount = '0,00';
                 }
 
-                $delivery = $deliveryModel->find($sale['delivery_id']);
-                if (isset($delivery)) {
-                    $delivery['code'] = Hashids::encode($delivery->id);
-                }
+                $sale['delivery_id'] = Hashids::encode($sale['delivery_id']);
 
-                $checkout = $checkoutModel->find($sale['checkout_id']) ?? (object)[];
-                $checkout->src = isset($checkout->src) ? $checkout->src : '';
-                $checkout->source = isset($checkout->source) ? $checkout->source : '';
-                $checkout->utm_medium = isset($checkout->utm_medium) ? $checkout->utm_medium : '';
-                $checkout->utm_campaign = isset($checkout->utm_campaign) ? $checkout->utm_campaign : '';
-                $checkout->utm_term = isset($checkout->utm_term) ? $checkout->utm_term : '';
-                $checkout->utm_content = isset($checkout->utm_content) ? $checkout->utm_content : '';
+                $sale['checkout_id'] = Hashids::encode($sale['checkout_id']);
+
                 $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
@@ -235,17 +212,13 @@ class SalesApiController extends Controller
                 }
 
                 $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
+
                 $data = [
                     'sale' => $sale,
-                    'products' => $products,
-                    'client' => $client,
-                    'delivery' => $delivery,
-                    'checkout' => $checkout,
                     'total' => number_format(intval($total) / 100, 2, ',', '.'),
                     'subTotal' => number_format(intval($subTotal) / 100, 2, ',', '.'),
                     'discount' => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link' => $client->present()->getWhatsappMessage(),
                     'comission' => $comission,
                     'convertax_value' => $convertaxValue,
                     'taxa' => number_format($taxa / 100, 2, ',', '.'),
