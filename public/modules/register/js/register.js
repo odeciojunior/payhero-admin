@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     $("#progress-bar-register").css('width', '33%');
-
+    var accessToken = '';
     // MASCARA CNPJ/CPF
     var options = {
         onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
@@ -60,13 +60,12 @@ $(document).ready(function () {
             loadingOnScreenRemove();
             return false;
         }
-
         $.ajax({
             method: "POST",
             url: "/api/companies",
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Authorization': 'Bearer ' + accessToken,
                 'Accept': 'application/json',
             },
             data: {
@@ -82,7 +81,7 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
                 loadingOnScreenRemove();
@@ -110,10 +109,8 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/register/",
-            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
                 name: $('#firstname').val() + ' ' + $('#lastname').val(),
@@ -133,13 +130,17 @@ $(document).ready(function () {
 
                 return error;
             }(function (response) {
-                errorAjaxResponse(response);
-
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
                 loadingOnScreenRemove();
             }),
             success: function success(response) {
                 loadingOnScreenRemove();
                 if (response.success == 'true') {
+                    accessToken = response.access_token;
                     currentPage = 'company';
                     $(".div1").hide();
                     $(".div2").show();
@@ -249,9 +250,8 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/register/welcome/",
-            dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Authorization': 'Bearer ' + accessToken,
                 'Accept': 'application/json',
             },
             error: function error() {

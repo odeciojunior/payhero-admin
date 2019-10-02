@@ -2,13 +2,17 @@
 
 namespace Modules\Core\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\ShopifyIntegration;
 
+/**
+ * Class ShopifyIntegrationEvent
+ * @package Modules\Core\Events
+ */
 class ShopifyIntegrationEvent
 {
     use SerializesModels;
-
     public $shopifyIntegration;
     public $userId;
 
@@ -25,12 +29,10 @@ class ShopifyIntegrationEvent
 
     /**
      * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
         return [];
     }
-
 }

@@ -9,6 +9,14 @@ Route::group(
     ],
     function() {
         Route::post('/', 'RegisterApiController@store');
+    }
+);
+Route::group(
+    [
+        'middleware' => ['auth:api'],
+        'prefix'     => 'register',
+    ],
+    function() {
         Route::get('/welcome', 'RegisterApiController@welcomeEmail');
     }
 );

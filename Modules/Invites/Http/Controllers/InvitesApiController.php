@@ -51,7 +51,7 @@ class InvitesApiController extends Controller
                         $user            = $userModel->where('email', $request->input('email'))->first();
                         $sendgridService = new EmailService();
                         if (!$user) {
-                            $emailInvited = $sendgridService->sendInvite($request->input('email'), $company);
+                            $emailInvited = $sendgridService->sendInvite($request->input('email'), Hashids::encode($company));
                         } else {
                             return response()->json([
                                                         'message' => 'Já existe um usuário cadastrado com esse Email.',
@@ -196,7 +196,7 @@ class InvitesApiController extends Controller
                 if (FoxUtils::validateEmail($invitation->email_invited) && !empty($invitation->company_id)) {
                     $user = $userModel->where('email', $invitation->email_invited)->first();
                     if (!$user) {
-                        $emailInvited = $sendgridService->sendInvite($invitation->email_invited, $invitation->company_id);
+                        $emailInvited = $sendgridService->sendInvite($invitation->email_invited, Hashids::encode($invitation->company_id));
                     } else {
                         return response()->json([
                                                     'message' => 'Já existe um usuário cadastrado com esse Email.',

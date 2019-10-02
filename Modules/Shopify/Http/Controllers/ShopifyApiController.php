@@ -4,22 +4,28 @@ namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Shopify\Transformers\ShopifyResource;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Services\ShopifyService;
-use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Shopify\Transformers\ShopifyResource;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class ShopifyApiController
+ * @package Modules\Shopify\Http\Controllers
+ */
 class ShopifyApiController extends Controller
 {
     /**
@@ -34,13 +40,13 @@ class ShopifyApiController extends Controller
 
             //            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
 
-            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
+            $shopifyIntegrations = $shopifyIntegrationModel->newQuery()->where('user_id', auth()->user()->id)->get();
 
             $projects = [];
 
             foreach ($shopifyIntegrations as $shopifyIntegration) {
 
-                $project = $projectModel->find($shopifyIntegration->project_id);
+                $project = $projectModel->newQuery()->find($shopifyIntegration->project_id);
 
                 if (!empty($project)) {
                     $projects[] = $project;
@@ -49,7 +55,7 @@ class ShopifyApiController extends Controller
 
             return ShopifyResource::collection(collect($projects));
         } catch (Exception $e) {
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+            return response()->json(['message' => 'Ocorreu algum erro'], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -67,16 +73,16 @@ class ShopifyApiController extends Controller
 
             $dataRequest = $request->all();
 
-            $shopifyIntegration = $shopifyIntegrationModel
-                ->where('token', $dataRequest['token'])
-                ->first();
+            $shopifyIntegration = $shopifyIntegrationModel->newQuery()
+                                                          ->where('token', $dataRequest['token'])
+                                                          ->first();
 
             if ($shopifyIntegration) {
                 if ($shopifyIntegration->status == 1) {
-                    return response()->json(['message' => 'Integração em andamento'], 400);
+                    return response()->json(['message' => 'Integração em andamento'], Response::HTTP_BAD_REQUEST);
                 }
 
-                return response()->json(['message' => 'Projeto já integrado'], 400);
+                return response()->json(['message' => 'Projeto já integrado'], Response::HTTP_BAD_REQUEST);
             }
 
             try {
@@ -91,16 +97,16 @@ class ShopifyApiController extends Controller
                 $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dataRequest['token']);
 
                 if (empty($shopifyService->getClient())) {
-                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], Response::HTTP_BAD_REQUEST);
                 }
             } catch (Exception $e) {
                 report($e);
 
-                return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], Response::HTTP_BAD_REQUEST);
             }
 
             $shopifyName = $shopifyService->getShopName();
-            $project     = $projectModel->create([
+            $project     = $projectModel->newQuery()->create([
                                                      'name'                       => $shopifyName,
                                                      'status'                     => $projectModel->present()
                                                                                                   ->getStatus('approved'),
@@ -116,7 +122,7 @@ class ShopifyApiController extends Controller
                                                      'installments_interest_free' => '1',
                                                  ]);
             if (!empty($project)) {
-                $shippingModel->create([
+                $shippingModel->newQuery()->create([
                                            'project_id'   => $project->id,
                                            'name'         => 'Frete gratis',
                                            'information'  => 'de 15 até 30 dias',
@@ -126,7 +132,8 @@ class ShopifyApiController extends Controller
                                            'pre_selected' => '1',
                                        ]);
                 if (!empty($shippingModel)) {
-                    $shopifyIntegration = $shopifyIntegrationModel->create([
+                    /** @var ShopifyIntegration $shopifyIntegration */
+                    $shopifyIntegration = $shopifyIntegrationModel->newQuery()->create([
                                                                                'token'         => $dataRequest['token'],
                                                                                'shared_secret' => '',
                                                                                'url_store'     => $urlStore . '.myshopify.com',
@@ -137,7 +144,7 @@ class ShopifyApiController extends Controller
                     if (!empty($shopifyIntegration)) {
                         $companyId = current(Hashids::decode($dataRequest['company']));
 
-                        $userProjectModel->create([
+                        $userProjectModel->newQuery()->create([
                                                       'user_id'              => auth()->user()->id,
                                                       'project_id'           => $project->id,
                                                       'company_id'           => $companyId,
@@ -154,29 +161,29 @@ class ShopifyApiController extends Controller
                             $shopifyIntegration->delete();
                             $project->delete();
 
-                            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                         }
                     } else {
                         $shippingModel->delete();
                         $project->delete();
 
-                        return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                        return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                     }
                 } else {
                     $project->delete();
 
-                    return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                    return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                 }
             } else {
-                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
             }
 
-            return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], 200);
+            return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], Response::HTTP_OK);
         } catch (Exception $e) {
             Log::critical('Erro ao realizar integração com loja do shopify | ShopifyController@store');
             report($e);
 
-            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -223,23 +230,23 @@ class ShopifyApiController extends Controller
                                                         ]);
                         }
 
-                        return response()->json(['message' => 'Integração com o shopify desfeita'], 200);
+                        return response()->json(['message' => 'Integração com o shopify desfeita'], Response::HTTP_OK);
                     } catch (Exception $e) {
                         //throwl
-                        return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], 400);
+                        return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                     }
                 } else {
-                    return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                    return response()->json(['message' => 'Este projeto não tem integração com o shopify'], Response::HTTP_BAD_REQUEST);
                 }
             } else {
                 //problema no id
-                return response()->json(['message' => 'Projeto não encontrado'], 400);
+                return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             Log::warning('ShopifyController - undoIntegration - Erro ao desfazer integracao');
             report($e);
 
-            return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], 400);
+            return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -333,27 +340,27 @@ class ShopifyApiController extends Controller
                                                             ]);
                             }
 
-                            return response()->json(['message' => 'Integração com o shopify refeita'], 200);
+                            return response()->json(['message' => 'Integração com o shopify refeita'], Response::HTTP_OK);
                         } catch (Exception $e) {
                             //throwl
-                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], Response::HTTP_BAD_REQUEST);
                     }
                 } else {
                     //nenhum dominio ativado
-                    return response()->json(['message' => 'Produtos do shopify importados, adicione um domínio para finalizar a sua integração'], 200);
+                    return response()->json(['message' => 'Produtos do shopify importados, adicione um domínio para finalizar a sua integração'], Response::HTTP_OK);
                 }
             } else {
                 //problema no id
-                return response()->json(['message' => 'Projeto não encontrado'], 400);
+                return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             Log::warning('ShopifyController - reIntegration - Erro ao refazer integracao');
             report($e);
 
-            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -363,30 +370,46 @@ class ShopifyApiController extends Controller
      */
     public function synchronizeProducts(Request $request)
     {
+        //            return response()->json(['message' => 'Funfou!'], Response::HTTP_OK);
         try {
             $requestData = $request->all();
             $projectId   = current(Hashids::decode($requestData['project_id']));
-
+            /** @var ShopifyIntegration $shopifyModel */
             $shopifyModel = new ShopifyIntegration();
             if (!empty($projectId)) {
-                $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
+                /** @var ShopifyIntegration $shopifyIntegration */
+                $shopifyIntegration = $shopifyModel->newQuery()->where('project_id', $projectId)->first();
                 if (!empty($shopifyIntegration)) {
                     event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
-                    return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], 200);
+                    //                    $this->teste($shopifyIntegration, auth()->user()->id);
+
+                    return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], Response::HTTP_OK);
                 } else {
-                    return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
+                    return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                 }
             } else {
-                return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
+                return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
             report($e);
 
-            return response()->json(['message' => 'Problema ao sincronizar produtos do shopify, tente novamente mais tarde'], 400);
+            return response()->json(['message' => 'Problema ao sincronizar produtos do shopify, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    /**
+     * @param ShopifyIntegration $shopifyIntegration
+     * @param $userId
+     * @throws PresenterException
+     */
+    //    public function teste(ShopifyIntegration $shopifyIntegration, $userId)
+    //    {
+    //        /** @var ShopifyService $shopifyService */
+    //        $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+    //        $shopifyService->importShopifyStore($shopifyIntegration->project->id, $userId);
+    //    }
 
     /**
      * @param Request $request
@@ -469,32 +492,32 @@ class ShopifyApiController extends Controller
                                                             ]);
                             }
 
-                            return response()->json(['message' => 'Sincronização do template com o shopify concluida com sucesso!'], 200);
+                            return response()->json(['message' => 'Sincronização do template com o shopify concluida com sucesso!'], Response::HTTP_OK);
                         } catch (Exception $e) {
                             //throwl
-                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], Response::HTTP_BAD_REQUEST);
                     }
                 } else {
-                    return response()->json(['message' => 'Você não tem nenhum domínio configurado'], 400);
+                    return response()->json(['message' => 'Você não tem nenhum domínio configurado'], Response::HTTP_BAD_REQUEST);
                 }
             } else {
-                return response()->json(['message' => 'Projeto não encontrado'], 400);
+                return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
             report($e);
 
-            return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], 400);
+            return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
     }
 
     public function getCompanies()
     {
         $companyModel = new Company();
-        $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+        $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->id)->get();
 
         return CompaniesSelectResource::collection($companies);
     }

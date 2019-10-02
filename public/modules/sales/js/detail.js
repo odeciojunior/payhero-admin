@@ -284,6 +284,8 @@ $(() => {
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
                 $('#data-tracking-products').append(data);
+            }else{
+                $('#div_tracking_code').css('display', 'none');
             }
         });
     }
