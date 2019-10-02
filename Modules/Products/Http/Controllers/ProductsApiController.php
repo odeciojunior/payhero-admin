@@ -7,6 +7,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\ProductService;
+use Modules\Products\Http\Requests\IndexProductRequest;
 use Modules\Products\Http\Requests\UpdateProductRequest;
 use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Transformers\CreateProductResource;
@@ -49,24 +50,29 @@ class ProductsApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param IndexProductRequest $request
      * @return AnonymousResourceCollection
      * Monta o select com opção Produtos Shopify e Meus Produtos
      */
-    public function index(Request $request)
+    public function index(IndexProductRequest $request)
     {
         try {
             $productsModel = new Product();
 
-            $productsSearch = $productsModel->where('user_id', auth()->user()->id)
-                ->where('shopify', $request->input('shopify'));
+            $filters = $request->validated();
 
-            if ($request->has('name') && !empty($request->input('name'))) {
-                $productsSearch->where('name', 'LIKE', '%' . $request->name . '%');
+            $productsSearch = $productsModel->where('user_id', auth()->user()->id);
+
+            if(isset($filters['shopify'])){
+                $productsSearch->where('shopify', $filters['shopify']);
             }
 
-            if ($request->has('project') && !empty($request->input('project') && $request->input('shopify') == 1)) {
-                $projectId = current(Hashids::decode($request->input('project')));
+            if (isset($filters['name'])) {
+                $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
+            }
+
+            if (isset($filters['project']) && $filters['shopify'] == 1) {
+                $projectId = current(Hashids::decode($filters['project']));
                 $productsSearch->where('project_id', $projectId);
             }
 

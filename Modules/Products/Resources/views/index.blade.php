@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-3">
                     <label for="name">Nome do produto</label>
-                    <input id="name" class="input-pad" placeholder="Digite 3 ou mais caracteres">
+                    <input id="name" class="input-pad" placeholder="Digite 3 ou mais caracteres" maxlength="100">
                 </div>
                 <div id='div-create' class="col-6">
                     <a href="/products/create" class="btn btn-floating btn-danger" style="position: relative; float: right">
