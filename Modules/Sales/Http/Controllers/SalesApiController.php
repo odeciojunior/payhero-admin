@@ -19,6 +19,7 @@ use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Sales\Exports\Reports\SaleReportExport;
+use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -129,14 +130,12 @@ class SalesApiController extends Controller
 
     /**
      * @param $id
-     * @return JsonResponse
+     * @return JsonResponse|SalesResource
      */
     public function show($id)
     {
         try {
             $saleModel = new Sale();
-            $companyModel = new Company();
-            $transactionModel = new Transaction();
 
             if (isset($id)) {
                 $sale = $saleModel->with([
@@ -145,88 +144,90 @@ class SalesApiController extends Controller
                     },
                 ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
-                $sale['hours'] = (new Carbon($sale['start_date']))->format('H:m:s');
+                return new SalesResource($sale);
 
-                $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
-
-                if (isset($sale['boleto_due_date'])) {
-                    $sale['boleto_due_date'] = (new Carbon($sale['boleto_due_date']))->format('d/m/Y');
-                }
-
-                if ($sale->flag) {
-                    $sale['flag'] = $sale->flag;
-                } else if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
-                    $sale['flag'] = 'generico';
-                } else {
-                    $sale['flag'] = 'boleto';
-                }
-
-                $sale['client_id'] = Hashids::encode($sale['client_id']);
-
-                $discount = '0,00';
-                $subTotal = $sale->present()->getSubTotal();
-                $total = $subTotal;
-
-                $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);
-                if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
-                    $total -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
-                    $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
-                } else {
-                    $discount = '0,00';
-                }
-
-                $sale['delivery_id'] = Hashids::encode($sale['delivery_id']);
-
-                $sale['checkout_id'] = Hashids::encode($sale['checkout_id']);
-
-                $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
-
-                $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
-                    ->first();
-
-                $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
-                    ->where('company_id', 29)
-                    ->first();
-
-                if (!empty($transactionConvertax)) {
-                    $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
-                } else {
-                    $convertaxValue = '0,00';
-                }
-
-                $value = $transaction->value;
-
-                $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
-
-                $taxa = 0;
-                $taxaReal = 0;
-
-                if ($sale->dolar_quotation != 0) {
-                    $taxa = intval($total / $sale->dolar_quotation);
-                    $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-                    $total += preg_replace('/[^0-9]/', '', $sale->iof);
-                } else {
-                    $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
-                    $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
-                }
-
-                $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
-
-                $data = [
-                    'sale' => $sale,
-                    'total' => number_format(intval($total) / 100, 2, ',', '.'),
-                    'subTotal' => number_format(intval($subTotal) / 100, 2, ',', '.'),
-                    'discount' => number_format(intval($discount) / 100, 2, ',', '.'),
-                    'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'comission' => $comission,
-                    'convertax_value' => $convertaxValue,
-                    'taxa' => number_format($taxa / 100, 2, ',', '.'),
-                    'taxaReal' => $taxaReal,
-                    'transaction' => $transaction,
-                ];
-
-                return response()->json($data, 200);
+//                $sale['hours'] = (new Carbon($sale['start_date']))->format('H:m:s');
+//
+//                $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
+//
+//                if (isset($sale['boleto_due_date'])) {
+//                    $sale['boleto_due_date'] = (new Carbon($sale['boleto_due_date']))->format('d/m/Y');
+//                }
+//
+//                if ($sale->flag) {
+//                    $sale['flag'] = $sale->flag;
+//                } else if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
+//                    $sale['flag'] = 'generico';
+//                } else {
+//                    $sale['flag'] = 'boleto';
+//                }
+//
+//                $sale['client_id'] = Hashids::encode($sale['client_id']);
+//
+//                $discount = '0,00';
+//                $subTotal = $sale->present()->getSubTotal();
+//                $total = $subTotal;
+//
+//                $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);
+//                if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
+//                    $total -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+//                    $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+//                } else {
+//                    $discount = '0,00';
+//                }
+//
+//                $sale['delivery_id'] = Hashids::encode($sale['delivery_id']);
+//
+//                $sale['checkout_id'] = Hashids::encode($sale['checkout_id']);
+//
+//                $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
+//
+//                $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
+//                $transaction = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
+//                    ->first();
+//
+//                $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
+//                    ->where('company_id', 29)
+//                    ->first();
+//
+//                if (!empty($transactionConvertax)) {
+//                    $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
+//                } else {
+//                    $convertaxValue = '0,00';
+//                }
+//
+//                $value = $transaction->value;
+//
+//                $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
+//
+//                $taxa = 0;
+//                $taxaReal = 0;
+//
+//                if ($sale->dolar_quotation != 0) {
+//                    $taxa = intval($total / $sale->dolar_quotation);
+//                    $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
+//                    $total += preg_replace('/[^0-9]/', '', $sale->iof);
+//                } else {
+//                    $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
+//                    $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
+//                }
+//
+//                $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
+//
+//                $data = [
+//                    'sale' => $sale,
+//                    'total' => number_format(intval($total) / 100, 2, ',', '.'),
+//                    'subTotal' => number_format(intval($subTotal) / 100, 2, ',', '.'),
+//                    'discount' => number_format(intval($discount) / 100, 2, ',', '.'),
+//                    'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
+//                    'comission' => $comission,
+//                    'convertax_value' => $convertaxValue,
+//                    'taxa' => number_format($taxa / 100, 2, ',', '.'),
+//                    'taxaReal' => $taxaReal,
+//                    'transaction' => $transaction,
+//                ];
+//
+//                return response()->json($data, 200);
             }
             return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
         } catch (Exception $e) {
