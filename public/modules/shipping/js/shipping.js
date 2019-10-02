@@ -225,21 +225,11 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             cache: false,
-            error: function (_error3) {
-                function error() {
-                    return _error3.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error3.toString();
-                };
-
-                return error;
-            }(function (response) {
+            error: function (response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-            }),
-            success: function success(data) {
+            },
+            success: function success() {
                 loadingOnScreenRemove();
                 alertCustom("success", "Frete atualizado com sucesso");
                 atualizarFrete();

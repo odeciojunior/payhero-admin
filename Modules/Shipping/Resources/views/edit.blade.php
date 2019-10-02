@@ -1,5 +1,4 @@
 <form id='form-update-shipping' enctype="multipart/form-data">
-    @csrf
     @method('PUT')
     <input type="hidden" class="shipping-id" value="">
     <div class='row'>
