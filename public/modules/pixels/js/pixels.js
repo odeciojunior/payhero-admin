@@ -167,6 +167,7 @@ $(function () {
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Pixel Adicionado!");
                 atualizarPixel();
+                clearFields();
             }
         });
     });
@@ -282,7 +283,10 @@ $(function () {
             }
         });
     }
-
+    function clearFields() {
+        $('.pixel-description').val('');
+        $('.pixel-code').val('');
+    }
     function pagination(response) {
         if (response.meta.last_page == 1) {
             $("#primeira_pagina_pixel").hide();
