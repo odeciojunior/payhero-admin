@@ -16,40 +16,52 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                //transfers_company_select
-                fillSelectAndCheckWithModelFields(
-                    transfersCompanySelect,
-                    {company: response.data},
-                    null,
-                    {company: selectItemsFunction}
-                );
-                transfersCompanySelect.on("change", function () {
-                    $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]")
-                        .prop("selected", true);
-                    $('#custom-input-addon').val('');
+
+                if(response.data){
+
+                    $('.page-content').show();
+                    $('.content-error').hide();
+
+                    //transfers_company_select
+                    fillSelectAndCheckWithModelFields(
+                        transfersCompanySelect,
+                        {company: response.data},
+                        null,
+                        {company: selectItemsFunction}
+                    );
+                    transfersCompanySelect.on("change", function () {
+                        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]")
+                            .prop("selected", true);
+                        $('#custom-input-addon').val('');
+                        updateBalances();
+                        //updateWithdrawalsTable(null, "transfersCompanySelect:change");
+                        // updateTransfersTable();
+                    });
+
+                    //extract_company_select
+                    fillSelectAndCheckWithModelFields(
+                        extractCompanySelect,
+                        {company: response.data},
+                        null,
+                        {company: selectItemsFunction}
+                    );
+                    extractCompanySelect.on("change", function () {
+                        $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
+                            .prop("selected", true);
+                        // $('#custom-input-addon').val('');
+                        updateTransfersTable();
+                        // updateBalances();
+                        // updateWithdrawalsTable();
+                    });
+
                     updateBalances();
-                    //updateWithdrawalsTable(null, "transfersCompanySelect:change");
-                    // updateTransfersTable();
-                });
-
-                //extract_company_select
-                fillSelectAndCheckWithModelFields(
-                    extractCompanySelect,
-                    {company: response.data},
-                    null,
-                    {company: selectItemsFunction}
-                );
-                extractCompanySelect.on("change", function () {
-                    $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
-                        .prop("selected", true);
-                    // $('#custom-input-addon').val('');
                     updateTransfersTable();
-                    // updateBalances();
-                    // updateWithdrawalsTable();
-                });
+                }else{
+                    $('.page-content').hide();
+                    $('.content-error').show();
+                }
 
-                updateBalances();
-                updateTransfersTable();
+
             }
         });
     }
