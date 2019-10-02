@@ -7,12 +7,22 @@
         <div class="page-header container">
             <div class="row">
                 <div class="col-3">
-                    <select id='type-products'> </select>
+                    <label for="type-products">Tipo</label>
+                    <select id='type-products'>
+                        <option value="0">Meus Produtos</option>
+                        <option value="1">Produtos Shopify</option>
+                    </select>
                 </div>
                 <div class="col-3" id='is-projects' style='display:none;'>
-                    <select id='select-projects'> </select>
+                    <label for="select-projects">Projeto</label>
+                    <select id='select-projects'>
+                    </select>
                 </div>
-                <div id='div-create' class="col-9">
+                <div class="col-3">
+                    <label for="name">Nome do produto</label>
+                    <input id="name" class="input-pad" placeholder="Digite 3 ou mais caracteres">
+                </div>
+                <div id='div-create' class="col-6">
                     <a href="/products/create" class="btn btn-floating btn-danger" style="position: relative; float: right">
                         <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
                     </a>

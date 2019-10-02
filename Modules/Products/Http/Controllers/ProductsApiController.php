@@ -62,7 +62,7 @@ class ProductsApiController extends Controller
                 ->where('shopify', $request->input('shopify'));
 
             if ($request->has('name') && !empty($request->input('name'))) {
-                $productsSearch->where('name', 'LIKE', '%' . $request->nome . '%');
+                $productsSearch->where('name', 'LIKE', '%' . $request->name . '%');
             }
 
             if ($request->has('project') && !empty($request->input('project') && $request->input('shopify') == 1)) {
