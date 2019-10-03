@@ -5,7 +5,7 @@ $(document).ready(function () {
     function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/convertax",
+            url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -69,7 +69,7 @@ $(document).ready(function () {
                         var project_id = $(this).attr('project');
                         $.ajax({
                             method: "GET",
-                            url: "/api/projects/user-projects",
+                            url: $('meta[name="current-url"]').attr('content') + "/api/projects/user-projects",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
@@ -87,7 +87,7 @@ $(document).ready(function () {
 
                                 $.ajax({
                                     method: "GET",
-                                    url: "/api/apps/convertax/" + project_id,
+                                    url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax/" + project_id,
                                     headers: {
                                         'Authorization': $('meta[name="access-token"]').attr('content'),
                                         'Accept': 'application/json',
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
                                             $.ajax({
                                                 method: "POST",
-                                                url: "/api/apps/convertax/" + integrationId,
+                                                url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax/" + integrationId,
                                                 headers: {
                                                     'Authorization': $('meta[name="access-token"]').attr('content'),
                                                     'Accept': 'application/json',
@@ -180,7 +180,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true",
+            url: $('meta[name="current-url"]').attr('content') + "/api/projects?select=true",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -233,7 +233,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "POST",
-                            url: "/api/apps/convertax",
+                            url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',

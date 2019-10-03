@@ -34,7 +34,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/api/companies",
+            url: $('meta[name="current-url"]').attr('content') + "/api/companies",
             dataType: "json",
             data: $("#create_form").serialize(),
             headers: {
