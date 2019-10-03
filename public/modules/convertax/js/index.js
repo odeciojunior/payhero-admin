@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     index();
 
-    function index(){
+    function index() {
         $.ajax({
             method: "GET",
             url: "/api/apps/convertax",
@@ -15,11 +15,10 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 $('#content').html("");
-                if(Object.keys(response.data).length === 0){
+                if (Object.keys(response.data).length === 0) {
                     $("#no-integration-found").show();
-                }
-                else{
-                    $(response.data).each(function(index, data){
+                } else {
+                    $(response.data).each(function (index, data) {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=${data.id} style='cursor:pointer;'>
@@ -80,7 +79,7 @@ $(document).ready(function () {
                             },
                             success: function success(response) {
                                 $("#select_projects_edit").html('');
-                                $(response.data).each(function(index, data){
+                                $(response.data).each(function (index, data) {
                                     $("#select_projects_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
                                 });
 
@@ -106,19 +105,19 @@ $(document).ready(function () {
                                         $('#value_edit').mask('#.###,#0', {reverse: true});
 
                                         $("#boleto_generated_edit").val(response.data.boleto_generated);
-                                        $("#boleto_generated_edit").val() == '1' ? $("#boleto_generated_edit").attr('checked','checked') : $("#boleto_generated_edit").attr('');
+                                        $("#boleto_generated_edit").val() == '1' ? $("#boleto_generated_edit").attr('checked', 'checked') : $("#boleto_generated_edit").attr('');
 
                                         $("#boleto_paid_edit").val(response.data.boleto_paid);
-                                        $("#boleto_paid_edit").val() == '1' ? $("#boleto_paid_edit").attr('checked','checked') : $("#boleto_paid_edit").attr('');
+                                        $("#boleto_paid_edit").val() == '1' ? $("#boleto_paid_edit").attr('checked', 'checked') : $("#boleto_paid_edit").attr('');
 
                                         $("#credit_card_refused_edit").val(response.data.credit_card_refused);
-                                        $("#credit_card_refused_edit").val() == '1' ? $("#credit_card_refused_edit").attr('checked','checked') : $("#credit_card_refused_edit").attr('');
+                                        $("#credit_card_refused_edit").val() == '1' ? $("#credit_card_refused_edit").attr('checked', 'checked') : $("#credit_card_refused_edit").attr('');
 
                                         $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                                        $("#credit_card_paid_edit").val() == '1' ? $("#credit_card_paid_edit").attr('checked','checked') : $("#credit_card_paid_edit").attr('');
+                                        $("#credit_card_paid_edit").val() == '1' ? $("#credit_card_paid_edit").attr('checked', 'checked') : $("#credit_card_paid_edit").attr('');
 
                                         $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                                        $("#abandoned_cart_edit").val() == '1' ? $("#abandoned_cart_edit").attr('checked','checked') : $("#abandoned_cart_edit").attr('');
+                                        $("#abandoned_cart_edit").val() == '1' ? $("#abandoned_cart_edit").attr('checked', 'checked') : $("#abandoned_cart_edit").attr('');
 
                                         $("#modal_add_integracao").modal('show');
                                         $("#form_add_integration").hide();
@@ -177,11 +176,11 @@ $(document).ready(function () {
         });
     }
 
-    function create(){
+    function create() {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects/user-projects",
+            url: "/api/projects?select=true",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -198,7 +197,7 @@ $(document).ready(function () {
                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
                     $("#select_projects").html('');
-                    $(response.data).each(function(index, data){
+                    $(response.data).each(function (index, data) {
                         $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
                     $(".modal-title").html('Adicionar nova Integração com ConvertaX');

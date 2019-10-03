@@ -107,53 +107,53 @@ class ShopifyApiController extends Controller
 
             $shopifyName = $shopifyService->getShopName();
             $project     = $projectModel->newQuery()->create([
-                                                     'name'                       => $shopifyName,
-                                                     'status'                     => $projectModel->present()
-                                                                                                  ->getStatus('approved'),
-                                                     'visibility'                 => 'private',
-                                                     'percentage_affiliates'      => '0',
-                                                     'description'                => $shopifyName,
-                                                     'invoice_description'        => $shopifyName,
-                                                     'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
-                                                     'automatic_affiliation'      => false,
-                                                     'shopify_id'                 => $shopifyService->getShopId(),
-                                                     'boleto'                     => '1',
-                                                     'installments_amount'        => '12',
-                                                     'installments_interest_free' => '1',
-                                                 ]);
+                                                                 'name'                       => $shopifyName,
+                                                                 'status'                     => $projectModel->present()
+                                                                                                              ->getStatus('approved'),
+                                                                 'visibility'                 => 'private',
+                                                                 'percentage_affiliates'      => '0',
+                                                                 'description'                => $shopifyName,
+                                                                 'invoice_description'        => $shopifyName,
+                                                                 'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
+                                                                 'automatic_affiliation'      => false,
+                                                                 'shopify_id'                 => $shopifyService->getShopId(),
+                                                                 'boleto'                     => '1',
+                                                                 'installments_amount'        => '12',
+                                                                 'installments_interest_free' => '1',
+                                                             ]);
             if (!empty($project)) {
                 $shippingModel->newQuery()->create([
-                                           'project_id'   => $project->id,
-                                           'name'         => 'Frete gratis',
-                                           'information'  => 'de 15 até 30 dias',
-                                           'value'        => '0,00',
-                                           'type'         => 'static',
-                                           'status'       => '1',
-                                           'pre_selected' => '1',
-                                       ]);
+                                                       'project_id'   => $project->id,
+                                                       'name'         => 'Frete gratis',
+                                                       'information'  => 'de 15 até 30 dias',
+                                                       'value'        => '0,00',
+                                                       'type'         => 'static',
+                                                       'status'       => '1',
+                                                       'pre_selected' => '1',
+                                                   ]);
                 if (!empty($shippingModel)) {
                     /** @var ShopifyIntegration $shopifyIntegration */
                     $shopifyIntegration = $shopifyIntegrationModel->newQuery()->create([
-                                                                               'token'         => $dataRequest['token'],
-                                                                               'shared_secret' => '',
-                                                                               'url_store'     => $urlStore . '.myshopify.com',
-                                                                               'user_id'       => auth()->user()->id,
-                                                                               'project_id'    => $project->id,
-                                                                               'status'        => 1,
-                                                                           ]);
+                                                                                           'token'         => $dataRequest['token'],
+                                                                                           'shared_secret' => '',
+                                                                                           'url_store'     => $urlStore . '.myshopify.com',
+                                                                                           'user_id'       => auth()->user()->id,
+                                                                                           'project_id'    => $project->id,
+                                                                                           'status'        => 1,
+                                                                                       ]);
                     if (!empty($shopifyIntegration)) {
                         $companyId = current(Hashids::decode($dataRequest['company']));
 
                         $userProjectModel->newQuery()->create([
-                                                      'user_id'              => auth()->user()->id,
-                                                      'project_id'           => $project->id,
-                                                      'company_id'           => $companyId,
-                                                      'type'                 => 'producer',
-                                                      'shipment_responsible' => true,
-                                                      'permissao_acesso'     => true,
-                                                      'permissao_editar'     => true,
-                                                      'status'               => 'active',
-                                                  ]);
+                                                                  'user_id'              => auth()->user()->id,
+                                                                  'project_id'           => $project->id,
+                                                                  'company_id'           => $companyId,
+                                                                  'type'                 => 'producer',
+                                                                  'shipment_responsible' => true,
+                                                                  'permissao_acesso'     => true,
+                                                                  'permissao_editar'     => true,
+                                                                  'status'               => 'active',
+                                                              ]);
                         if (!empty($userProjectModel)) {
                             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
                         } else {
@@ -516,9 +516,19 @@ class ShopifyApiController extends Controller
 
     public function getCompanies()
     {
-        $companyModel = new Company();
-        $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->id)->get();
+        try {
 
-        return CompaniesSelectResource::collection($companies);
+            $companyModel = new Company();
+            $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+
+            return CompaniesSelectResource::collection($companies);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar abrir modal de integração shopify');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
+        }
     }
 }

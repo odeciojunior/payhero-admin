@@ -63,7 +63,9 @@ class CheckoutApiController extends Controller
                     $startDate = null;
                 }
 
-                return CheckoutIndexResource::collection($checkoutService->getAbandonedCart($projectId, $startDate, $endDate, $clientId));
+                $checkouts = $checkoutService->getAbandonedCart($projectId, $startDate, $endDate, $clientId);
+
+                return CheckoutIndexResource::collection($checkouts);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)');

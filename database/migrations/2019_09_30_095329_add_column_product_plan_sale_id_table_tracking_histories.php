@@ -50,5 +50,4 @@ class AddColumnProductPlanSaleIdTableTrackingHistories extends Migration
             $table->foreign('delivery_id')->references('id')->on('deliveries');
         });
     }
-
 }

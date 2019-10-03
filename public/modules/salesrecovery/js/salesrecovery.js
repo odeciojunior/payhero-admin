@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    let selectTypeSalesRecovery = $("#type_recovery option:selected");
 
     getProjects();
 
@@ -11,7 +10,7 @@ $(document).ready(function () {
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: "/api/recovery",
+            url: "/api/projects/?select=true",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -19,7 +18,6 @@ $(document).ready(function () {
             },
             error: function (response) {
                 errorAjaxResponse(response);
-
             },
             success: function (response) {
                 if (!isEmpty(response.data)) {
@@ -49,15 +47,15 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = '';
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
+            url = `?project=${$("#project option:selected").val()}&type=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         } else {
-            url = `${link}&project=${$("#project option:selected").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
+            url = `${link}&project=${$("#project option:selected").val()}&type=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         }
 
-        if (selectTypeSalesRecovery.val() == 1) {
-            return `/api/checkout` + url;
+        if ($("#type_recovery option:selected").val() == 1) {
+            return `/api/checkout${url}`;
         } else {
-            return `/api/sale` + url;
+            return `/api/sale${url}`;
         }
     }
 
@@ -190,126 +188,9 @@ $(document).ready(function () {
                 $('.details-cart-recovery').unbind('click');
                 $('.details-cart-recovery').on('click', function () {
 
-                    var sale = $(this).data('venda');
+                    ajaxDetails($(this).data('venda'));
 
-                    $('#modal-title').html('Detalhes Carrinho Abandonado' + '<br><hr>');
-                    clearFields();
-
-                    $.ajax({
-                        method: "POST",
-                        url: '/api/recovery/details',
-                        data: {checkout: sale},
-                        dataType: "json",
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        error: function error(response) {
-                            errorAjaxResponse(response);
-
-                        },
-                        success: function success(response) {
-                            $("#table-product").html('');
-
-                            if (!isEmpty(response.data)) {
-                                $("#date-as-hours").html(`${response.data.checkout.date} às ${response.data.checkout.hours}`);
-                                $("#status-checkout").addClass('badge-' + statusRecovery[response.data.status]).html(response.data.status);
-
-                                /**
-                                 * Produtos
-                                 */
-                                let div = '';
-                                let photo = 'public/modules/global/img/produto.png';
-                                $.each(response.data.products, function (index, value) {
-                                    if (!isEmpty(value.photo)) {
-                                        photo = value.photo;
-                                    }
-
-                                    div += '<div class="row align-items-baseline justify-content-between mb-15">' +
-                                        '<div class="col-lg-2">' +
-                                        "<img src='" + value.photo + "' width='50px' style='border-radius: 6px;'>" +
-                                        '</div>' +
-                                        '<div class="col-lg-5">' +
-                                        '<h4 class="table-title">' + value.name + '</h4>\n' +
-                                        '</div>' +
-                                        '<div class="col-lg-3 text-right">' +
-                                        '<p class="sm-text text-muted">' + value.amount + 'x</p>' +
-                                        '</div>' +
-                                        '</div>';
-
-                                    $("#table-product").html(div);
-                                });
-                                $("#total-value").html("R$ " + response.data.checkout.total);
-                                /**
-                                 * Fim Produtos
-                                 */
-
-                                /**
-                                 * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
-                                 */
-                                $("#client-name-details").html('Nome: ' + response.data.client.name);
-                                $("#client-telephone").html('Telefone: ' + response.data.client.telephone);
-                                $("#client-whatsapp").attr('href', response.data.client.whatsapp_link);
-                                $("#client-email").html('E-mail: ' + response.data.client.email);
-                                $("#client-document").html('CPF: ' + response.data.client.document);
-                                $("#client-street").html('Endereço: ' + response.data.delivery.street);
-                                $("#client-zip-code").html('CEP: ' + response.data.delivery.zip_code);
-                                $("#client-city-state").html('Cidade: ' + response.data.delivery.city + '/' + response.data.delivery.state);
-                                $("#sale-motive").html('Motivo: ' + response.data.client.error);
-
-                                if (!isEmpty(response.data.link)) {
-                                    $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + response.data.link + '"><i class="material-icons gradient" style="font-size:17px;">file_copy</i> </a> ');
-                                } else {
-                                    $("#link-sale").html('Link: ' + response.data.link);
-                                }
-
-                                $("#checkout-ip").html('IP: ' + response.data.checkout.ip);
-
-                                $("#checkout-is-mobile").html(response.data.checkout.is_mobile);
-                                /**
-                                 * Fim dados do Cliente
-                                 */
-
-                                /**
-                                 * Dados do checkout - UTM
-                                 */
-                                $("#checkout-operational-system").html('Sistema: ' + response.data.checkout.operational_system);
-                                $("#checkout-browser").html('Navegador: ' + response.data.checkout.browser);
-                                $("#checkout-src").html('SRC: ' + response.data.checkout.src);
-                                $("#checkout-utm-source").html('UTM Source: ' + response.data.checkout.utm_source);
-                                $("#checkout-utm-medium").html('UTM Medium: ' + response.data.checkout.utm_medium);
-                                $("#checkout-utm-campaign").html('UTM Campaign: ' + response.data.checkout.utm_campaign);
-                                $("#checkout-utm-term").html('UTM Term: ' + response.data.checkout.utm_term);
-                                $("#checkout-utm-content").html('UTM Content: ' + response.data.checkout.utm_content);
-                                /**
-                                 * Fim dados do checkout
-                                 */
-
-
-                                $('#modal_detalhes').modal('show');
-
-                                $(".copy_link").on("click", function () {
-                                    var temp = $("<input>");
-                                    $("#nav-tabContent").append(temp);
-                                    temp.val($(this).attr('link')).select();
-                                    document.execCommand("copy");
-                                    temp.remove();
-                                    alertCustom('success', 'Link copiado!');
-                                });
-
-                            } else {
-
-                            }
-
-                        }
-                    });
                 });
-
-                function clearFields() {
-                    $("#status-checkout").removeClass('badge-success badge-danger');
-                    $("#client-whatsapp").attr('href', '');
-                    $("#date-as-hours, #table-product, #total-value, #client-name-details, #client-telephone, #client-email, #client-document, #client-street, #client-zip-code, #client-city-state, #sale-motive, #link-sale, #checkout-ip, #checkout-is-mobile, #checkout-operational-system, #checkout-browser, #checkout-src, #checkout-utm-source, #checkout-utm-medium, #checkout-utm-campaign, #checkout-utm-term, #checkout-utm-content").html('');
-                }
 
                 $('.estornar_venda').unbind('click');
 
@@ -322,7 +203,129 @@ $(document).ready(function () {
                 });
             }
         });
+    }
 
+    // ajax modal details
+    function ajaxDetails(sale) {
+        $.ajax({
+            method: "POST",
+            url: '/api/recovery/details',
+            data: {checkout: sale},
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+
+            },
+            success: function success(response) {
+                $("#table-product").html('');
+
+                if (!isEmpty(response.data)) {
+
+                    createHtmlDetails(response.data)
+                } else {
+
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Monta html da modal
+     * @param data
+     */
+    function createHtmlDetails(data) {
+        clearFields();
+
+        $('#modal-title').html('Detalhes Carrinho Abandonado' + '<br><hr>');
+        $("#date-as-hours").html(`${data.checkout.date} às ${data.checkout.hours}`);
+        $("#status-checkout").addClass('badge-' + statusRecovery[data.status]).html(data.status);
+
+        /**
+         * Produtos
+         */
+        let div = '';
+        let photo = 'public/modules/global/img/produto.png';
+        $.each(data.products, function (index, value) {
+            if (!isEmpty(value.photo)) {
+                photo = value.photo;
+            }
+
+            div += '<div class="row align-items-baseline justify-content-between mb-15">' +
+                '<div class="col-lg-2">' +
+                "<img src='" + value.photo + "' width='50px' style='border-radius: 6px;'>" +
+                '</div>' +
+                '<div class="col-lg-5">' +
+                '<h4 class="table-title">' + value.name + '</h4>\n' +
+                '</div>' +
+                '<div class="col-lg-3 text-right">' +
+                '<p class="sm-text text-muted">' + value.amount + 'x</p>' +
+                '</div>' +
+                '</div>';
+
+            $("#table-product").html(div);
+        });
+        $("#total-value").html("R$ " + data.checkout.total);
+        /**
+         * Fim Produtos
+         */
+
+        /**
+         * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
+         */
+        $("#client-name-details").html('Nome: ' + data.client.name);
+        $("#client-telephone").html('Telefone: ' + data.client.telephone);
+        $("#client-whatsapp").attr('href', data.client.whatsapp_link);
+        $("#client-email").html('E-mail: ' + data.client.email);
+        $("#client-document").html('CPF: ' + data.client.document);
+        $("#client-street").html('Endereço: ' + data.delivery.street);
+        $("#client-zip-code").html('CEP: ' + data.delivery.zip_code);
+        $("#client-city-state").html('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
+        $("#sale-motive").html('Motivo: ' + data.client.error);
+
+        if (!isEmpty(data.link)) {
+            $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + data.link + '"><i class="material-icons gradient" style="font-size:17px;">file_copy</i> </a> ');
+        } else {
+            $("#link-sale").html('Link: ' + data.link);
+        }
+
+        $("#checkout-ip").html('IP: ' + data.checkout.ip);
+
+        $("#checkout-is-mobile").html(data.checkout.is_mobile);
+        /**
+         * Fim dados do Cliente
+         */
+
+        /**
+         * Dados do checkout - UTM
+         */
+        $("#checkout-operational-system").html('Sistema: ' + data.checkout.operational_system);
+        $("#checkout-browser").html('Navegador: ' + data.checkout.browser);
+        $("#checkout-src").html('SRC: ' + data.checkout.src);
+        $("#checkout-utm-source").html('UTM Source: ' + data.checkout.utm_source);
+        $("#checkout-utm-medium").html('UTM Medium: ' + data.checkout.utm_medium);
+        $("#checkout-utm-campaign").html('UTM Campaign: ' + data.checkout.utm_campaign);
+        $("#checkout-utm-term").html('UTM Term: ' + data.checkout.utm_term);
+        $("#checkout-utm-content").html('UTM Content: ' + data.checkout.utm_content);
+        /**
+         * Fim dados do checkout
+         */
+
+
+        $('#modal_detalhes').modal('show');
+
+        $(".copy_link").on("click", function () {
+            var temp = $("<input>");
+            $("#nav-tabContent").append(temp);
+            temp.val($(this).attr('link')).select();
+            document.execCommand("copy");
+            temp.remove();
+            alertCustom('success', 'Link copiado!');
+        });
     }
 
     $('#discount_value').mask('00%', {reverse: true});
@@ -382,6 +385,13 @@ $(document).ready(function () {
      */
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
+    }
+
+    function clearFields() {
+        $("#status-checkout").removeClass('badge-success badge-danger');
+        $("#client-whatsapp").attr('href', '');
+        $(".clear-fields").empty();
+        // $("#date-as-hours, #table-product, #total-value, #client-name-details, #client-telephone, #client-email, #client-document, #client-street, #client-zip-code, #client-city-state, #sale-motive, #link-sale, #checkout-ip, #checkout-is-mobile, #checkout-operational-system, #checkout-browser, #checkout-src, #checkout-utm-source, #checkout-utm-medium, #checkout-utm-campaign, #checkout-utm-term, #checkout-utm-content").html('');
     }
 
 });

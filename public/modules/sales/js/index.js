@@ -184,13 +184,13 @@ $(document).ready(function () {
                                     </td>
                                 </tr>`;
 
-                        $("#dados_tabela").append(dados); 
+                        $("#dados_tabela").append(dados);
                     });
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
-                    pagination(response, 'sales', atualizar); 
+                    pagination(response, 'sales', atualizar);
                 }
             }
         });
