@@ -396,8 +396,14 @@ class DomainsApiController extends Controller
                         if ($cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
                             if (!empty($domain->project->shopify_id)) {
                                 // se for shopify, fazer check
+
                                 try {
                                     if (!empty($domain->project->shopifyIntegrations)) {
+                                        $domain->update([
+                                            'status' => $domainModel->present()
+                                                                    ->getStatus('approved'),
+                                        ]);
+
                                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
                                             try {
@@ -414,10 +420,6 @@ class DomainsApiController extends Controller
                                             if (empty($shopifyIntegration->layout_theme_html)) {
                                                 $html = $shopify->getTemplateHtml($shopify::templateKeyName);
                                                 if (!empty($html) && $shopify->checkCartTemplate($html)) {
-                                                    $domain->update([
-                                                                        'status' => $domainModel->present()
-                                                                                                ->getStatus('approved'),
-                                                                    ]);
 
                                                     return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                                 } else {
@@ -474,11 +476,6 @@ class DomainsApiController extends Controller
                                                         return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
                                                     }
 
-                                                    $domain->update([
-                                                                        'status' => $domainModel->present()
-                                                                                                ->getStatus('approved'),
-                                                                    ]);
-
                                                     return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                                 }
                                             } else {
@@ -514,7 +511,7 @@ class DomainsApiController extends Controller
                                             ]);
 
                             return response()->json([
-                                                        'message' => 'A verificação falhou, atualização de entradas DNS pendentes',
+                                                        'message' => 'A verificação falhou, atualização de nameservers pendentes',
                                                     ], 400);
                         }
                     } else {
