@@ -52,6 +52,9 @@ $(document).ready(function () {
     }
 
     function updateProducts(link = null) {
+
+        loadOnAny('.page-content');
+
         if (link == null) {
             link = '/api/products?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val() + '&name=' + $('#name').val();
         } else {
@@ -67,6 +70,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -104,13 +108,16 @@ $(document).ready(function () {
                         $(this).attr("src", "https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png");
                     });
 
-                    pagination(response, 'products', updateProducts)
+                    pagination(response, 'products', updateProducts);
 
+                    $('#filter-products, #div-create').show();
+                    $(".products-is-empty").hide();
                 } else {
-                    $("#data-table-products").html('');
-                    $("#pagination-products").html('');
+                    $("#data-table-products, #pagination-products").html('');
+                    $('#filter-products, #div-create').hide();
                     $(".products-is-empty").show();
                 }
+                loadOnAny('.page-content', true);
             }
         });
     }

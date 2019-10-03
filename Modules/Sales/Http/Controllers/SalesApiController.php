@@ -61,8 +61,8 @@ class SalesApiController extends Controller
                 })
                 ->whereIn('company_id', $userCompanies);
 
-            if (!empty($data["projeto"])) {
-                $projectId = current(Hashids::decode($data["projeto"]));
+            if (!empty($data["project"])) {
+                $projectId = current(Hashids::decode($data["project"]));
                 $transactions->whereHas('sale', function ($querySale) use ($projectId) {
                     $querySale->where('project_id', $projectId);
                 });
@@ -76,15 +76,15 @@ class SalesApiController extends Controller
                 });
             }
 
-            if (!empty($data["comprador"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $data["comprador"] . '%')->pluck('id');
+            if (!empty($data["client"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
                 $transactions->whereHas('sale', function ($querySale) use ($customers) {
                     $querySale->whereIn('client_id', $customers);
                 });
             }
 
-            if (!empty($data["forma"])) {
-                $forma = $data["forma"];
+            if (!empty($data["payment_method"])) {
+                $forma = $data["payment_method"];
                 $transactions->whereHas('sale', function ($querySale) use ($forma) {
                     $querySale->where('payment_method', $forma);
                 });
@@ -97,25 +97,25 @@ class SalesApiController extends Controller
                 });
             }
 
-            if (!empty($data["data_inicial"]) && !empty($data["data_final"])) {
-                $data_inicial = $data["data_inicial"];
-                $data_final = $data["data_final"];
-                $transactions->whereHas('sale', function ($querySale) use ($data_inicial, $data_final) {
-                    $querySale->whereBetween('start_date', [$data_inicial, date('Y-m-d', strtotime($data_final . ' + 1 day'))]);
+            if (!empty($data["start_date"]) && !empty($data["end_date"])) {
+                $start_date = $data["start_date"];
+                $end_date = $data["end_date"];
+                $transactions->whereHas('sale', function ($querySale) use ($start_date, $end_date) {
+                    $querySale->whereBetween('start_date', [$start_date, date('Y-m-d', strtotime($end_date . ' + 1 day'))]);
                 });
             } else {
 
-                if (!empty($data["data_inicial"])) {
-                    $data_inicial = $data["data_inicial"];
-                    $transactions->whereHas('sale', function ($querySale) use ($data_inicial) {
-                        $querySale->whereDate('start_date', '>=', $data_inicial);
+                if (!empty($data["start_date"])) {
+                    $start_date = $data["start_date"];
+                    $transactions->whereHas('sale', function ($querySale) use ($start_date) {
+                        $querySale->whereDate('start_date', '>=', $start_date);
                     });
                 }
 
-                if (!empty($data["data_final"])) {
-                    $data_final = $data["data_final"];
-                    $transactions->whereHas('sale', function ($querySale) use ($data_final) {
-                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($data_final . ' + 1 day')));
+                if (!empty($data["end_date"])) {
+                    $end_date = $data["end_date"];
+                    $transactions->whereHas('sale', function ($querySale) use ($end_date) {
+                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($end_date . ' + 1 day')));
                     });
                 }
             }

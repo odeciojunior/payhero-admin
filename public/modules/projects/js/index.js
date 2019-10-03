@@ -3,6 +3,7 @@ $(() => {
     index();
 
     function index() {
+        loadOnAny('#data-table-projects');
         $.ajax({
             url: '/api/projects',
             dataType: "json",
@@ -11,6 +12,7 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadOnAny('#data-table-projects', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -34,6 +36,7 @@ $(() => {
                     $('#data-table-projects').hide();
                     $('.content-error').show();
                 }
+                loadOnAny('#data-table-projects', true);
             }
         });
     }

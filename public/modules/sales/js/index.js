@@ -100,6 +100,7 @@ $(document).ready(function () {
 
     // Obtem o os campos dos filtros
     function getFilters() {
+        loadOnAny('.page-content');
         $.ajax({
             method: "GET",
             url: "/api/projects/user-projects",
@@ -109,12 +110,16 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $.each(response.data, function (index, project) {
-                    $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
-                });
+                if(response.data){
+                    $.each(response.data, function (index, project) {
+                        $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
+                    });
+                }
+                loadOnAny('.page-content', true);
             }
         });
     }
@@ -126,9 +131,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + 'projeto=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
         } else {
-            link = '/api/sales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales' + link + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
         }
         $.ajax({
             method: "GET",
@@ -153,7 +158,7 @@ $(document).ready(function () {
                     2: 'pendente'
                 };
 
-                if(response.data) {
+                if (response.data) {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
@@ -176,18 +181,13 @@ $(document).ready(function () {
 
                         $("#dados_tabela").append(dados);
                     });
-                    if (response.data == '') {
-                        $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
-                    }
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
                     pagination(response, 'sales', atualizar);
-
-                    $('#export-excel, .page-content').show();
-                    $('.content-error').hide();
                 } else {
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                     $('#export-excel, .page-content').hide();
                     $('.content-error').show();
                 }

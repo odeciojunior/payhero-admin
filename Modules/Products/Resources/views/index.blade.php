@@ -4,19 +4,19 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div class="page-header container pb-0">
             <div class="row align-items-center mb-30" style="min-height:4rem">
                 <div class="col-lg-6">
                     <h1 class="page-title">Produtos</h1>
                 </div>
-                <div id='div-create' class="col-lg-6">
+                <div id='div-create' class="col-lg-6" style="display:none">
                     <a href="/products/create" class="btn btn-floating btn-danger"
                        style="position: relative; float: right">
                         <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
                     </a>
                 </div>
             </div>
-            <div class="card shadow p-20">
+            <div class="card shadow p-20" id="filter-products" style="display:none">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="type-products">Tipo</label>
@@ -54,10 +54,10 @@
                     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                 @endpush
                 <div class="content-error text-center">
-                    <img src="{!! asset('modules/global/img/emptyprodutos.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyprodutos.svg') !!}" width="180px">
                     <h1 class="big gray">Zero produtos por aqui!</h1>
                     <div class='product-is-empty-cla'>
-                        <p class="desc gray"> Vamos adicionar seu primeiro produto? </p>
+                        <p class="gray"> Vamos adicionar seu primeiro produto? </p>
                         <a href="/products/create" class="btn btn-primary gradient">Novo Produto</a>
                     </div>
                 </div>
