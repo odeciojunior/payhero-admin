@@ -5,6 +5,7 @@ namespace Modules\Companies\Http\Controllers;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
@@ -20,6 +21,7 @@ use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -31,18 +33,28 @@ use Vinkla\Hashids\Facades\Hashids;
 class CompaniesApiController extends Controller
 {
     /**
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        /** @var Company $companyModel */
-        $companyModel = new Company();
-        /** @var LengthAwarePaginator $companies */
-        $companies = $companyModel->with('user')
-                                  ->where('user_id', auth()->id())
-                                  ->paginate();
+        try {
+            $companyService = new CompanyService();
 
-        return CompanyResource::collection($companies);
+            $paginate = true;
+            if ($request->has('select') && $request->input('select')) {
+                $paginate = false;
+            }
+
+            return $companyService->getCompaniesUser($paginate);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados companies CompaniesApiController - index');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
+        }
     }
 
     /**
@@ -293,11 +305,18 @@ class CompaniesApiController extends Controller
      */
     public function getCompanies()
     {
-        /** @var Company $companyModel */
-        $companyModel = new Company();
-        $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->id)->get();
+        try {
+            $companyModel = new Company();
+            $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
 
-        return CompaniesSelectResource::collection($companies);
+            return CompaniesSelectResource::collection($companies);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao tentar buscar dados, tente novamente mais tarde',
+                                    ], 400);
+        }
     }
 }
 
