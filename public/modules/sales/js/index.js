@@ -23,6 +23,42 @@ $(document).ready(function () {
         atualizar();
     });
 
+    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    let endDate = moment().format('YYYY-MM-DD');
+    $('#date_range').daterangepicker({
+        startDate: moment().subtract(30, 'days'),
+        endDate: moment(),
+        opens: 'center',
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
+        locale: {
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, function (start, end) {
+        startDate = start.format('YYYY-MM-DD');
+        endDate = end.format('YYYY-MM-DD');
+    });
+
     $(document).on({
             mouseenter: function () {
                 $(this).css('cursor', 'pointer').text('Regerar');
@@ -124,6 +160,7 @@ $(document).ready(function () {
                     });
                 }
                 loadOnAny('.page-content', true);
+                $('#export-excel').show();
                 atualizar();
             }
         });
@@ -135,9 +172,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
+            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&date_type=' + $("#date_type").val() + '&date_range=' + $("#date_range").val();
         } else {
-            link = '/api/sales' + link + '&project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
+            link = '/api/sales' + link + '&project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&date_type=' + $("#date_type").val() + '&date_range=' + $("#date_range").val();
         }
         $.ajax({
             method: "GET",
@@ -206,8 +243,8 @@ $(document).ready(function () {
             'select_payment_method': $("#forma").val(),
             'sale_status': $("#status").val(),
             'client': $("#comprador").val(),
-            'start_date': $("#data_inicial").val(),
-            'end_date': $("#data_final").val(),
+            'date_type': $("#date_type").val(),
+            'date_range': $("#date_range").val(),
             'format': fileFormat
         };
         $.ajax({

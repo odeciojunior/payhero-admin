@@ -8,7 +8,7 @@
     <meta name="description" content="cloudfox">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
-    @if(getenv('APP_ENV') === 'PRODUCTION')
+    @if(getenv('APP_ENV') === 'production')
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
