@@ -16,7 +16,7 @@ class ShippingUpdateRequest extends FormRequest
             "type"            => "required|string",
             "name"            => "required|string|max:100",
             "information"     => "required|string|max:30",
-            "value"           => "nullable|string|max:7",
+            "value"           => "nullable|string|max:8",
             "zip_code_origin" => "nullable|string",
             "status"          => "nullable",
             "pre_selected"    => "nullable",
@@ -37,7 +37,7 @@ class ShippingUpdateRequest extends FormRequest
             'zip_code_origin.required' => 'O campo código de origem é obrigatório',
             'status.required'          => 'O campo status é obrigatório',
             'pre_selected.required'    => 'O campo Pré-selecionado é obrigatório',
-            'value.max'                => 'O campo Valor do Frete permite apenas 30 caracteres',
+            'value.max'                => 'O campo Valor do Frete permite apenas 8 caracteres',
         ];
     }
 

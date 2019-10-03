@@ -24,11 +24,12 @@ class ClientResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'code'      => $this->id_code,
-            'name'      => $this->name,
-            'document'  => $this->document,
-            'email'     => $this->email,
-            'telephone' => $this->telephone,
+            'code'          => $this->id_code,
+            'name'          => $this->name,
+            'document'      => $this->document,
+            'email'         => $this->email,
+            'telephone'     => $this->telephone,
+            'whatsapp_link' => $this->present()->getWhatsappLink()
         ];
     }
 }

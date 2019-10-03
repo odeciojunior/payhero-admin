@@ -11,5 +11,6 @@ Route::group(
              ->only('index', 'show', 'edit', 'store', 'update', 'destroy', 'create')
              ->names('api.products');
         Route::post('/products/userproducts', 'ProductsApiController@getProducts')->name('api.products.getproducts');
+        Route::get('/products/saleproducts/{saleId}', 'ProductsApiController@getProductBySale')->name('api.products.saleproducts');
     }
 );

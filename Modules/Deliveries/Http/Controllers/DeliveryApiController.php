@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Delivery;
 use Modules\Deliveries\Transformers\DeliveryResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class DeliveryApiController
@@ -20,11 +21,13 @@ class DeliveryApiController extends Controller
      * @param $deliveryId
      * @return JsonResponse|DeliveryResource
      */
-    public function show($saleId, $deliveryId)
+    public function show($deliveryId)
     {
         try {
-            if (!empty($saleId) || !empty($deliveryId)) {
+            if (isset($deliveryId)) {
                 $deliveryModel = new Delivery();
+
+                $deliveryId = current(Hashids::decode($deliveryId));
 
                 $delivery = $deliveryModel->find($deliveryId);
 

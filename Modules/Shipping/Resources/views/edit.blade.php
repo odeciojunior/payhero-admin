@@ -1,5 +1,4 @@
 <form id='form-update-shipping' enctype="multipart/form-data">
-    @csrf
     @method('PUT')
     <input type="hidden" class="shipping-id" value="">
     <div class='row'>
@@ -35,7 +34,7 @@
     <div class='row zip-code-origin-shipping-row' style="display:block">
         <div class='form-group col-12'>
             <label for='zip-code-origin'>CEP de origem</label>
-            <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' value=''
+            <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' data-mask="00000-000" value=''
                    placeholder='12345-678'>
         </div>
     </div>

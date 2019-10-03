@@ -30,7 +30,7 @@ class PixelsApiController extends Controller
                 $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
                 if (Gate::allows('edit', [$project])) {
                     $pixels = $pixelModel->where('project_id', $project->id);
 
@@ -108,8 +108,8 @@ class PixelsApiController extends Controller
                 $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -143,8 +143,8 @@ class PixelsApiController extends Controller
                 $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
-                $projectId = Hashids::decode($projectId)[0];
+                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $projectId = current(Hashids::decode($projectId));
                 $project = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
@@ -178,8 +178,8 @@ class PixelsApiController extends Controller
                 $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -213,8 +213,8 @@ class PixelsApiController extends Controller
                 $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 

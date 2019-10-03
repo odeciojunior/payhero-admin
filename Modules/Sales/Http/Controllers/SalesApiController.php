@@ -11,7 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Delivery;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Sale;
@@ -19,8 +18,8 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\TrackingService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
+use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -62,8 +61,8 @@ class SalesApiController extends Controller
                 })
                 ->whereIn('company_id', $userCompanies);
 
-            if (!empty($data["projeto"])) {
-                $projectId = current(Hashids::decode($data["projeto"]));
+            if (!empty($data["project"])) {
+                $projectId = current(Hashids::decode($data["project"]));
                 $transactions->whereHas('sale', function ($querySale) use ($projectId) {
                     $querySale->where('project_id', $projectId);
                 });
@@ -77,15 +76,15 @@ class SalesApiController extends Controller
                 });
             }
 
-            if (!empty($data["comprador"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $data["comprador"] . '%')->pluck('id');
+            if (!empty($data["client"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
                 $transactions->whereHas('sale', function ($querySale) use ($customers) {
                     $querySale->whereIn('client_id', $customers);
                 });
             }
 
-            if (!empty($data["forma"])) {
-                $forma = $data["forma"];
+            if (!empty($data["payment_method"])) {
+                $forma = $data["payment_method"];
                 $transactions->whereHas('sale', function ($querySale) use ($forma) {
                     $querySale->where('payment_method', $forma);
                 });
@@ -98,25 +97,25 @@ class SalesApiController extends Controller
                 });
             }
 
-            if (!empty($data["data_inicial"]) && !empty($data["data_final"])) {
-                $data_inicial = $data["data_inicial"];
-                $data_final = $data["data_final"];
-                $transactions->whereHas('sale', function ($querySale) use ($data_inicial, $data_final) {
-                    $querySale->whereBetween('start_date', [$data_inicial, date('Y-m-d', strtotime($data_final . ' + 1 day'))]);
+            if (!empty($data["start_date"]) && !empty($data["end_date"])) {
+                $start_date = $data["start_date"];
+                $end_date = $data["end_date"];
+                $transactions->whereHas('sale', function ($querySale) use ($start_date, $end_date) {
+                    $querySale->whereBetween('start_date', [$start_date, date('Y-m-d', strtotime($end_date . ' + 1 day'))]);
                 });
             } else {
 
-                if (!empty($data["data_inicial"])) {
-                    $data_inicial = $data["data_inicial"];
-                    $transactions->whereHas('sale', function ($querySale) use ($data_inicial) {
-                        $querySale->whereDate('start_date', '>=', $data_inicial);
+                if (!empty($data["start_date"])) {
+                    $start_date = $data["start_date"];
+                    $transactions->whereHas('sale', function ($querySale) use ($start_date) {
+                        $querySale->whereDate('start_date', '>=', $start_date);
                     });
                 }
 
-                if (!empty($data["data_final"])) {
-                    $data_final = $data["data_final"];
-                    $transactions->whereHas('sale', function ($querySale) use ($data_final) {
-                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($data_final . ' + 1 day')));
+                if (!empty($data["end_date"])) {
+                    $end_date = $data["end_date"];
+                    $transactions->whereHas('sale', function ($querySale) use ($end_date) {
+                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($end_date . ' + 1 day')));
                     });
                 }
             }
@@ -131,129 +130,21 @@ class SalesApiController extends Controller
 
     /**
      * @param $id
-     * @return JsonResponse
+     * @return JsonResponse|SalesResource
      */
     public function show($id)
     {
         try {
             $saleModel = new Sale();
-            $clientModel = new Client();
-            $deliveryModel = new Delivery();
-            $checkoutModel = new Checkout();
-            $companyModel = new Company();
-            $transactionModel = new Transaction();
-            $trackingSerive = new TrackingService();
 
             if (isset($id)) {
                 $sale = $saleModel->with([
                     'transactions' => function ($query) {
                         $query->where('company_id', '!=', null)->first();
                     },
-                ])->find(Hashids::connection('sale_id')->decode($id)[0]);
+                ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
-                $sale['hours'] = (new Carbon($sale['start_date']))->format('H:m:s');
-
-                $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
-
-                if (isset($sale['boleto_due_date'])) {
-                    $sale['boleto_due_date'] = (new Carbon($sale['boleto_due_date']))->format('d/m/Y');
-                }
-
-                if ($sale->flag) {
-                    $sale['flag'] = $sale->flag;
-                } else if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
-                    $sale['flag'] = 'generico';
-                } else {
-                    $sale['flag'] = 'boleto';
-                }
-
-                $client = $clientModel->find($sale->client_id);
-                if (!empty($client['telephone'])) {
-                    $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
-                } else {
-                    $client['telephone'] = '';
-                }
-
-                //                $products = $sale->present()->getProducts();
-
-                $products = $trackingSerive->getTrackingProducts($sale);
-
-                $discount = '0,00';
-                $subTotal = $sale->present()->getSubTotal();
-                $total = $subTotal;
-
-                $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);
-                if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
-                    $total -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
-                    $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
-                } else {
-                    $discount = '0,00';
-                }
-
-                $delivery = $deliveryModel->find($sale['delivery_id']);
-                if (isset($delivery)) {
-                    $delivery['code'] = Hashids::encode($delivery->id);
-                }
-
-                $checkout = $checkoutModel->find($sale['checkout_id']) ?? (object)[];
-                $checkout->src = isset($checkout->src) ? $checkout->src : '';
-                $checkout->source = isset($checkout->source) ? $checkout->source : '';
-                $checkout->utm_medium = isset($checkout->utm_medium) ? $checkout->utm_medium : '';
-                $checkout->utm_campaign = isset($checkout->utm_campaign) ? $checkout->utm_campaign : '';
-                $checkout->utm_term = isset($checkout->utm_term) ? $checkout->utm_term : '';
-                $checkout->utm_content = isset($checkout->utm_content) ? $checkout->utm_content : '';
-                $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
-
-                $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
-                    ->first();
-
-                $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
-                    ->where('company_id', 29)
-                    ->first();
-
-                if (!empty($transactionConvertax)) {
-                    $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
-                } else {
-                    $convertaxValue = '0,00';
-                }
-
-                $value = $transaction->value;
-
-                $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
-
-                $taxa = 0;
-                $taxaReal = 0;
-
-                if ($sale->dolar_quotation != 0) {
-                    $taxa = intval($total / $sale->dolar_quotation);
-                    $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-                    $total += preg_replace('/[^0-9]/', '', $sale->iof);
-                } else {
-                    $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
-                    $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
-                }
-
-                $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
-                $data = [
-                    'sale' => $sale,
-                    'products' => $products,
-                    'client' => $client,
-                    'delivery' => $delivery,
-                    'checkout' => $checkout,
-                    'total' => number_format(intval($total) / 100, 2, ',', '.'),
-                    'subTotal' => number_format(intval($subTotal) / 100, 2, ',', '.'),
-                    'discount' => number_format(intval($discount) / 100, 2, ',', '.'),
-                    'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link' => $client->present()->getWhatsappMessage(),
-                    'comission' => $comission,
-                    'convertax_value' => $convertaxValue,
-                    'taxa' => number_format($taxa / 100, 2, ',', '.'),
-                    'taxaReal' => $taxaReal,
-                    'transaction' => $transaction,
-                ];
-
-                return response()->json($data, 200);
+                return new SalesResource($sale);
             }
             return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
         } catch (Exception $e) {

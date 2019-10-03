@@ -29,7 +29,7 @@ class DiscountCouponsApiController extends Controller
             $projectModel = new Project();
 
             if (isset($projectId)) {
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
                 if (Gate::allows('edit', [$project])) {
                     $projectId = $project->id;
                     $coupons = $discountCouponsModel->whereHas('project', function ($query) use ($projectId) {
@@ -70,7 +70,7 @@ class DiscountCouponsApiController extends Controller
                 $projectModel = new Project();
 
                 $requestData = $request->validated();
-                $requestData["project_id"] = Hashids::decode($projectId)[0];
+                $requestData["project_id"] = current(Hashids::decode($projectId));
                 $requestData['value'] = preg_replace("/[^0-9]/", "", $requestData['value']);
 
                 $project = $projectModel->find($requestData["project_id"]);
@@ -123,8 +123,8 @@ class DiscountCouponsApiController extends Controller
                 $discountCouponsModel = new DiscountCoupon();
                 $projectModel = new Project();
 
-                $coupon = $discountCouponsModel->find(Hashids::decode($id)[0]);
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $coupon = $discountCouponsModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
@@ -159,8 +159,8 @@ class DiscountCouponsApiController extends Controller
                 $discountCouponsModel = new DiscountCoupon();
                 $projectModel = new Project();
 
-                $coupon = $discountCouponsModel->find(Hashids::decode($id)[0]);
-                $project = $projectModel->find(Hashids::decode($projectId)[0]);
+                $coupon = $discountCouponsModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
@@ -198,8 +198,8 @@ class DiscountCouponsApiController extends Controller
 
                 $requestValidated = $request->validated();
 
-                $coupon = $discountCouponsModel->find(Hashids::decode($id)[0]);
-                $project =  $projectModel->find(Hashids::decode($projectId)[0]);;
+                $coupon = $discountCouponsModel->find(current(Hashids::decode($id)));
+                $project =  $projectModel->find(current(Hashids::decode($projectId)));;
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -239,8 +239,8 @@ class DiscountCouponsApiController extends Controller
                 $discountCouponsModel = new DiscountCoupon();
                 $projectModel = new Project();
 
-                $descountCoupon = $discountCouponsModel->find(Hashids::decode($id)[0]);
-                $project = $projectModel->find( Hashids::decode($projectId)[0]);
+                $descountCoupon = $discountCouponsModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find( current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
                     $descountCoupon->delete();

@@ -148,19 +148,44 @@ function loadOnTable(whereToLoad, tableReference) {
         "</tr>");
 }
 
-function loadOnAny(element, stop = false) {
-    $('.element-loading').remove();
-    if (!stop) {
-        let loading = `<span class="loader loader-circle loader-any" style=""></span>`;
-        let loader = $(element).clone().addClass('element-loading').html(loading);
-        $(element).hide();
-        $(element).parent().append(loader);
-        loader.show();
+
+function loadOnAny(target, remove = false, options = {}) {
+    //cleanup
+    target = $(target);
+    target.parent().find('.loader-any-container').remove();
+
+    if (!remove) {
+
+        //create elements
+        let container = $('<div class="loader-any-container"></div>');
+        let loader = $('<span class="loader-any"></span>');
+
+        //apply styles or use default
+        options.styles = options.styles ? options.styles : {};
+        options.styles.container = options.styles.container ? options.styles.container : {};
+        options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
+        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : '250px';
+        container.css(options.styles.container);
+        if (options.styles.loader) {
+            loader.css(options.styles.loader);
+        }
+
+        //add loader to container
+        container.append(loader);
+
+        //add loader to screen
+        target.hide();
+        if (options.insertBefore) {
+            container.insertBefore(target.parent().find(options.insertBefore));
+        } else {
+            target.parent().append(container);
+        }
     } else {
-        if (!$(element).hasClass('tab-pane') ||
-            ($(element).hasClass('tab-pane') &&
-                $(element).hasClass('active'))) {
-            $(element).show();
+        // show target again with fix to Bootstrap tabs
+        if (!target.hasClass('tab-pane') ||
+            (target.hasClass('tab-pane') &&
+                target.hasClass('active'))) {
+            $(target).show();
         }
     }
 }

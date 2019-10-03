@@ -81,7 +81,7 @@ class ClientPresenter extends Presenter
     /**
      * @return string
      */
-    public function getWhatsappMessage(){
+    public function getWhatsappLink(){
        return  "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $this->telephone) . '&text=Olá ' . $this->getFirstName();
     }
 

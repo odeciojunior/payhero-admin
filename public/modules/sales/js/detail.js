@@ -1,33 +1,5 @@
-$(()=>{
+$(() => {
     // COMPORTAMENTOS DA JANELA
-
-    //Codigo de rastreio
-    $(document).on('click', '.btn-edit-trackingcode', function () {
-        var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
-        var btnEdit = $(this);
-        var btnSave = btnEdit.parent().find('.btn-save-trackingcode');
-        var btnClose = $(this).parent().find('.btn-close-tracking');
-        btnEdit.hide('fast');
-        btnSave.show('fast');
-        btnClose.show('fast');
-        trackingCodeSpan.hide('fast');
-        trackingInput.show('fast');
-    });
-
-    //Botão para ocultar campos rastreio
-    $(document).on('click', '.btn-close-tracking', function () {
-        var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
-        var btnEdit = $(this).parent().find('.btn-edit-trackingcode');
-        var btnSave = $(this).parent().find('.btn-save-trackingcode');
-
-        $(this).hide('fast');
-        btnSave.hide('fast');
-        trackingInput.hide('fast');
-        btnEdit.show('fast');
-        trackingCodeSpan.show('fast');
-    });
 
     $('#discount_value').mask('00%', {reverse: true});
 
@@ -58,6 +30,7 @@ $(()=>{
         temp.remove();
         alertCustom('success', 'Link copiado!');
     });
+
     $(document).on("click", '#boleto-digitable-line .copy_link', function () {
         var temp = $("<input>");
         $("#nav-tabContent").append(temp);
@@ -67,59 +40,83 @@ $(()=>{
         alertCustom('success', 'Linha Digitável copiado!');
     });
 
+    //Codigo de rastreio
+    $(document).on('click', '.btn-edit-trackingcode', function () {
+        var trackingInput = $(this).parent().parent().find('#tracking_code');
+        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
+        var btnEdit = $(this);
+        var btnSave = btnEdit.parent().find('.btn-save-trackingcode');
+        var btnClose = $(this).parent().find('.btn-close-tracking');
+        btnEdit.hide('fast');
+        btnSave.show('fast');
+        btnClose.show('fast');
+        trackingCodeSpan.hide('fast');
+        trackingInput.show('fast');
+    });
+
+    //Botão para ocultar campos rastreio
+    $(document).on('click', '.btn-close-tracking', function () {
+        var trackingInput = $(this).parent().parent().find('#tracking_code');
+        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
+        var btnEdit = $(this).parent().find('.btn-edit-trackingcode');
+        var btnSave = $(this).parent().find('.btn-save-trackingcode');
+
+        $(this).hide('fast');
+        btnSave.hide('fast');
+        trackingInput.hide('fast');
+        btnEdit.show('fast');
+        trackingCodeSpan.show('fast');
+    });
+
     // FIM - COMPORTAMENTOS DA JANELA
 
-    // Carrega o modal com os detalhes da venda
+    // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
-        let btn_detalhe = $(this);
-        btn_detalhe.hide();
-        btn_detalhe.parent().append('<span class="loaderSpan"></span>');
+        var sale = $(this).attr('venda');
 
-        var venda = $(this).attr('venda');
-
-        $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
-
-        $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+        loadOnAny('#modal-saleDetails');
+        $('#modal_detalhes').modal('show');
 
         $.ajax({
             method: "GET",
-            url: '/api/sales/' + venda,
+            url: '/api/sales/' + sale,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: (response) => {
                 errorAjaxResponse(response);
-                btn_detalhe.parent().children('span').remove();
-                btn_detalhe.show();
             },
-            success: function success(response) {
-                $('.subTotal').mask('#.###,#0', {reverse: true});
-
-                renderDetails(response);
-
-                $('.btn-save-trackingcode').attr('sale', response.sale.code);
-                $('.btn-save-trackingcode').attr('delivery', response.delivery.code);
-
-                $('#modal_detalhes').modal('show');
-                btn_detalhe.parent().children('span').remove();
-                btn_detalhe.show();
+            success: (response) => {
+                getSale(response.data);
             }
         });
     });
 
-    function renderDetails(data) {
+    function getSale(sale){
+
+        renderSale(sale);
+
+        getClient(sale.client_id);
+
+        getProducts(sale.id);
+
+        getDelivery(sale.delivery_id);
+
+        getCheckout(sale.checkout_id);
+    }
+
+    function renderSale(sale) {
         //Dados da venda
-        $('#sale-code').text(data.sale.code);
-        $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
-        var sale_status = data.sale.status;
+        $('#sale-code').text(sale.id);
+        $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
         //Status
         let status = $('.modal-body #status');
         status.html('');
-        status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' + data.sale.flag + '.png">');
+        status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' + sale.flag + '.png">');
 
-        switch (data.sale.status) {
+        switch (sale.status) {
             case 1:
                 status.append("<span class='badge badge-success'>Aprovada</span>");
                 break;
@@ -136,16 +133,107 @@ $(()=>{
                 status.append("<span class='badge badge-primary'>Em análise</span>");
                 break;
             default:
-                status.append("<span class='badge badge-primary'>" + data.sale.status + "</span>");
+                status.append("<span class='badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
 
-        //Produtos
+        //Valores
+        $("#subtotal-value").html("R$ " + sale.subTotal);
+        $("#shipment-value").html("R$ " + sale.shipment_value);
+
+        $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
+        if (sale.dolar_quotation) {
+            $('#iof-value span').text('R$ ' + sale.iof);
+            $('#cambio-label span').text('Câmbio (1 $ = R$ ' + sale.dolar_quotation + '): ');
+            $('#cambio-value span').text('US$ ' + sale.taxa);
+            $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
+        }
+
+        $("#desconto-value").html("R$ " + sale.discount);
+        $("#total-value").html("R$ " + sale.total);
+
+        $('#taxas-label').text('Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ');
+        $('#taxareal-value').text(sale.taxaReal ? sale.taxaReal : '');
+
+        $('#convertax-label, #convertax-value').hide();
+        if (sale.convertax_value !== '0,00') {
+            $('#convertax-value').text(sale.convertax_value ? sale.convertax_value : '');
+            $('#convertax-label, #convertax-value').show();
+        }
+
+        $('#comission-value').text(sale.comission ? sale.comission : '');
+
+        //Detalhes da venda
+        if (sale.payment_method === 1) {
+            $('#details-card #card-flag').text('Bandeira: ' + sale.flag);
+            $('#details-card #card-installments').text('Quantidade de parcelas: ' + sale.installments_amount);
+            $('#details-card').show();
+        }
+
+        if (sale.payment_method === 2) {
+            $('#details-boleto #boleto-link a').attr('link', sale.boleto_link);
+            $('#details-boleto #boleto-digitable-line a').attr('digitable-line', sale.boleto_digitable_line);
+            $('#details-boleto #boleto-due').text('Vencimento: ' + sale.boleto_due_date);
+            $('#details-boleto').show();
+        }
+
+        $('#checkout-attempts').hide();
+        if (sale.payment_method === 1) {
+            $('#checkout-attempts').text('Quantidade de tentativas: ' + sale.attempts).show();
+        }
+    }
+
+    function getClient(client) {
+        $.ajax({
+            method: "GET",
+            url: '/api/client/' + client,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderClient(response.data);
+            }
+        });
+    }
+
+    function renderClient(client) {
+        //Cliente
+        $('#client-name').text('Nome: ' + client.name);
+        $('#client-telephone').text('Telefone: ' + client.telephone);
+        $('#client-whatsapp').attr('href', client.whatsapp_link);
+        $('#client-email').text('Email: ' + client.email);
+        $('#client-document').text('CPF: ' + client.document);
+    }
+
+    function getProducts(sale) {
+        $.ajax({
+            method: "GET",
+            url: '/api/products/saleproducts/' + sale,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderProducts(response.data, sale);
+            }
+        });
+    }
+
+    function renderProducts(products, sale) {
         $("#table-product").html('');
         $('#data-tracking-products').html('');
         let div = '';
-        let photo = 'public/modules/global/img/produto.png';
-        $.each(data.products, function (index, value) {
+        let photo = '/modules/global/img/produto.png';
+        $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
             }
@@ -163,22 +251,22 @@ $(()=>{
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code
-            if (sale_status == 1) {
+            if (value.sale_status == 1) {
                 let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
                                     <span class='small'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <span class='tracking-code-span small'>${value.tracking_code}</span>
+                                    <span class='tracking-code-span small ellipsis'>${value.tracking_code}</span>
                                     <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
                                 <td>
-                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' sale='${sale}' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
                                     <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
                                 </td>
                             </tr>`;
@@ -188,78 +276,69 @@ $(()=>{
                 $('#div_tracking_code').css('display', 'none');
             }
         });
-
-        //Valores
-        $("#subtotal-value").html("R$ " + data.subTotal);
-        $("#shipment-value").html("R$ " + data.shipment_value);
-        $("#subtotal-value").html("R$ " + data.subTotal);
-
-        $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
-        if (data.sale.dolar_quotation) {
-            $('#iof-value span').text('R$ ' + data.sale.iof);
-            $('#cambio-label span').text('Câmbio (1 $ = R$ ' + data.sale.dolar_quotation + '): ');
-            $('#cambio-value span').text('US$ ' + data.taxa);
-            $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
-        }
-
-        $("#desconto-value").html("R$ " + data.discount);
-        $("#total-value").html("R$ " + data.total);
-
-        $('#taxas-label').text('Taxas (' + data.transaction.percentage_rate + '% + ' + data.transaction.transaction_rate + '): ');
-        $('#taxareal-value').text(data.taxaReal ? data.taxaReal : '');
-
-        $('#convertax-label, #convertax-value').hide();
-        if (data.convertax_value !== '0,00') {
-            $('#convertax-value').text(data.convertax_value ? data.convertax_value : '');
-            $('#convertax-label, #convertax-value').show();
-        }
-
-        $('#comission-value').text(data.comission ? data.comission : '');
-
-        //Cliente
-        $('#client-name').text('Nome: ' + data.client.name);
-        $('#client-telephone').text('Telefone: ' + data.client.telephone);
-        $('#client-whatsapp').attr('href', data.whatsapp_link);
-        $('#client-email').text('Email: ' + data.client.email);
-        $('#client-document').text('CPF: ' + data.client.document);
-
-        //Entrega
-        $('#delivery-address').text('Endereço: ' + data.delivery.street + ', ' + data.delivery.number);
-        $('#delivery-zipcode').text('CEP: ' + data.delivery.zip_code);
-        $('#delivery-city').text('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
-
-        //Detalhes da venda
-        if (data.sale.payment_method === 1) {
-            $('#details-card #card-flag').text('Bandeira: ' + data.sale.flag);
-            $('#details-card #card-installments').text('Quantidade de parcelas: ' + data.sale.installments_amount);
-            $('#details-card').show();
-        }
-
-        if (data.sale.payment_method === 2) {
-            $('#details-boleto #boleto-link a').attr('link', data.sale.boleto_link);
-            $('#details-boleto #boleto-digitable-line a').attr('digitable-line', data.sale.boleto_digitable_line);
-            $('#details-boleto #boleto-due').text('Vencimento: ' + data.sale.boleto_due_date);
-            $('#details-boleto').show();
-        }
-
-        $('#checkout-ip').text('IP: ' + data.checkout.ip);
-        $('#checkout-operational-system').text('Dispositivo: ' + data.checkout.operational_system);
-        $('#checkout-browser').text('Navegador: ' + data.checkout.browser);
-
-        $('#checkout-attempts').hide();
-        if (data.sale.payment_method === 1) {
-            $('#checkout-attempts').text('Quantidade de tentativas: ' + data.sale.attempts).show();
-        }
-
-        $('#checkout-src').text('SRC: ' + data.checkout.src);
-        $('#checkout-source').text('UTM Source: ' + data.checkout.source);
-        $('#checkout-medium').text('UTM Medium: ' + data.checkout.utm_medium);
-        $('#checkout-campaign').text('UTM Campaign: ' + data.checkout.utm_campaign);
-        $('#checkout-term').text('UTM Term: ' + data.checkout.utm_term);
-        $('#checkout-content').text('UTM Content: ' + data.checkout.utm_content);
     }
 
-    //Salvar Código de Restreio
+    function getDelivery(deliveryId){
+        $.ajax({
+            method: "GET",
+            url: '/api/delivery/' + deliveryId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderDelivery(response.data);
+            }
+        });
+    }
+
+    function renderDelivery(delivery){
+        $('.btn-save-trackingcode').attr('delivery', delivery.id);
+        $('#delivery-address').text('Endereço: ' + delivery.street + ', ' + delivery.number);
+        $('#delivery-zipcode').text('CEP: ' + delivery.zip_code);
+        $('#delivery-city').text('Cidade: ' + delivery.city + '/' + delivery.state);
+    }
+
+    function getCheckout(checkoutId){
+        $.ajax({
+            method: "GET",
+            url: '/api/checkout/' + checkoutId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                renderCheckout(response.data);
+            }
+        });
+    }
+
+    function renderCheckout(checkout){
+        $('#checkout-ip').text('IP: ' + checkout.ip);
+        $('#checkout-operational-system').text('Dispositivo: ' + checkout.operational_system);
+        $('#checkout-browser').text('Navegador: ' + checkout.browser);
+        $('#checkout-src').text('SRC: ' + checkout.src);
+        $('#checkout-source').text('UTM Source: ' + checkout.source);
+        $('#checkout-medium').text('UTM Medium: ' + checkout.utm_medium);
+        $('#checkout-campaign').text('UTM Campaign: ' + checkout.utm_campaign);
+        $('#checkout-term').text('UTM Term: ' + checkout.utm_term);
+        $('#checkout-content').text('UTM Content: ' + checkout.utm_content);
+
+        //remove o loader depois de tudo carregado
+        loadOnAny('#modal-saleDetails', true);
+    }
+
+    // FIM - MODAL DETALHES DA VENDA
+
+    //Salvar Código de Rastreio
     $(document).on('click', '.btn-save-trackingcode', function () {
         var btnSave = $(this);
         var trackingInput = $(this).parent().parent().find('#tracking_code');
@@ -279,10 +358,10 @@ $(()=>{
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: (response) => {
                 var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
                 var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
                 var btnEdit = btnSave.parent().find('.btn-edit-trackingcode');

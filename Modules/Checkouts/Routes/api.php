@@ -7,6 +7,6 @@ Route::group(
         'middleware' => ['auth:api'],
     ],
     function() {
-        Route::apiResource('checkout', 'CheckoutApiController')->only('index')->names('api.checkout');
+        Route::apiResource('checkout', 'CheckoutApiController')->only('index', 'show')->names('api.checkout');
     }
 );

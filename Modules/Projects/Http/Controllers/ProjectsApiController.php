@@ -263,7 +263,7 @@ class ProjectsApiController extends Controller
 
             if ($requestValidated) {
 
-                $project = $projectModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(current(Hashids::decode($id)));
 
                 if (Gate::allows('update', [$project])) {
 
@@ -356,7 +356,7 @@ class ProjectsApiController extends Controller
 
                 $projectModel = new Project();
 
-                $project = $projectModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(current(Hashids::decode($id)));
 
                 if (Gate::allows('show', [$project])) {
                     return new ProjectsResource($project);

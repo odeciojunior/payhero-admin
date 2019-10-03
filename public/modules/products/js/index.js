@@ -1,116 +1,64 @@
 $(document).ready(function () {
-    /**
-     * Helper Functions
-     */
 
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
     }
 
+    // Comportamentos da tela
+    $("#type-products").on('change', function () {
+
+        if ($(this).val() === "1") {
+            $('#is-projects').show();
+            $('#btn-filtro').parent().removeClass('offset-md-3');
+            $('#div-create').hide();
+        } else {
+            $('#is-projects').hide();
+            $('#btn-filtro').parent().addClass('offset-md-3');
+            $('#div-create').show();
+        }
+    });
+
+    $('#btn-filtro').on('click', function () {
+        updateProducts();
+    });
+
     getTypeProducts();
+
+    updateProducts();
 
     function getTypeProducts() {
         $.ajax({
-                method: 'GET',
-                url: '/api/projects?select=true',
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: function error(response) {
-                    errorAjaxResponse(response);
-
-                },
-                success: function (response) {
-                    $("#type-products").append($('<option>', {
-                        value: '0',
-                        text: 'Meus Produtos'
-                    }));
-
-                    $("#type-products").append($('<option>', {
-                        value: '1',
-                        text: 'Produtos Shopify'
-                    }));
-
-                    if ($("#type-products").val() === "1") {
-                        $("#select-projects").html('');
-
-                        $.each(response.data, function (index, value) {
-                            if (value.shopify) {
-                                $("#select-projects").append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            }
-                        });
-                        $("#is-projects").show();
-
-                        $("#select-projects").find('option:eq(0)').prop('selected', true);
-                    } else {
-                        $("#is-projects").hide();
-
+            method: 'GET',
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                $.each(response.data, function (index, value) {
+                    if (value.shopify) {
+                        $("#select-projects").append($('<option>', {
+                            value: value.id,
+                            text: value.name
+                        }));
                     }
-
-                    $("#type-products").on('change', function () {
-                        if ($("#type-products").val() === "1") {
-                            $("#select-projects").html('');
-                            if (response.data.length == 0) {
-
-                                $("#select-projects").hide();
-                                $(".product-is-empty-cla").hide();
-
-                            } else {
-                                $.each(response.data, function (index, value) {
-                                    if (value.shopify) {
-                                        $("#select-projects").append($('<option>', {
-                                            value: value.id,
-                                            text: value.name
-                                        }));
-                                    }
-
-                                });
-                                $("#is-projects").show();
-                                $("#select-projects").find('option:eq(0)').prop('selected', true);
-                                $(".product-is-empty-cla").hide();
-
-                            }
-
-                        } else {
-                            $("#is-projects").hide();
-                        }
-
-                        if ($("#type-products").val() === "0") {
-                            $(".product-is-empty-cla").show();
-
-                        }
-                    });
-
-                    updateProducts();
-
-                    $('#type-products').on('change', function () {
-                        if ($(this).val() == 1) {
-                            $("#div-create").hide();
-                        } else if ($(this).val() == 0) {
-                            $("#div-create").show();
-                        }
-                        updateProducts();
-                    });
-
-                    $('#select-projects').on('change', function () {
-                        updateProducts();
-                    });
-
-                }
+                });
             }
-        );
+        });
     }
 
     function updateProducts(link = null) {
+
+        loadOnAny('.page-content');
+
         if (link == null) {
-            link = '/api/products?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
+            link = '/api/products?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val() + '&name=' + $('#name').val();
         } else {
-            link = '/api/products' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
+            link = '/api/products' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val() + '&name=' + $('#name').val();
         }
 
         $.ajax({
@@ -122,8 +70,8 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
-
             },
             success: function (response) {
                 if (!isEmpty(response.data)) {
@@ -160,19 +108,15 @@ $(document).ready(function () {
                         $(this).attr("src", "https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png");
                     });
 
-                    pagination(response, 'products', updateProducts)
+                    pagination(response, 'products', updateProducts);
 
+                    $(".products-is-empty").hide();
                 } else {
-                    $("#data-table-products").html('');
-                    $("#pagination-products").html('');
-
+                    $("#data-table-products, #pagination-products").html('');
                     $(".products-is-empty").show();
-
                 }
-
+                loadOnAny('.page-content', true);
             }
         });
     }
-
-})
-;
+});

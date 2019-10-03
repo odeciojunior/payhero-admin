@@ -5,14 +5,13 @@ namespace Modules\Products\Http\Controllers;
 use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
-use Modules\Core\Entities\Project;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\ProductService;
+use Modules\Products\Http\Requests\IndexProductRequest;
 use Modules\Products\Http\Requests\UpdateProductRequest;
 use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Transformers\CreateProductResource;
 use Modules\Products\Transformers\EditProductResource;
-use Modules\Products\Transformers\GetTypeProductsResource;
 use Modules\Products\Transformers\ProductsResource;
 use Exception;
 use Intervention\Image\Facades\Image;
@@ -23,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Products\Transformers\ProductsSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -50,24 +50,29 @@ class ProductsApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param IndexProductRequest $request
      * @return AnonymousResourceCollection
      * Monta o select com opção Produtos Shopify e Meus Produtos
      */
-    public function index(Request $request)
+    public function index(IndexProductRequest $request)
     {
         try {
             $productsModel = new Product();
 
-            $productsSearch = $productsModel->where('user_id', auth()->user()->id)
-                                            ->where('shopify', $request->input('shopify'));
+            $filters = $request->validated();
 
-            if ($request->has('name') && !empty($request->input('name'))) {
-                $productsSearch->where('name', 'LIKE', '%' . $request->nome . '%');
+            $productsSearch = $productsModel->where('user_id', auth()->user()->id);
+
+            if(isset($filters['shopify'])){
+                $productsSearch->where('shopify', $filters['shopify']);
             }
 
-            if ($request->has('project') && !empty($request->input('project') && $request->input('shopify') == 1)) {
-                $projectId = current(Hashids::decode($request->input('project')));
+            if (isset($filters['name'])) {
+                $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
+            }
+
+            if (isset($filters['project']) && $filters['shopify'] == 1) {
+                $projectId = current(Hashids::decode($filters['project']));
                 $productsSearch->where('project_id', $projectId);
             }
 
@@ -93,16 +98,16 @@ class ProductsApiController extends Controller
                 return CreateProductResource::make(['categories' => $categories]);
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente  mais tarde!',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro, tente novamente  mais tarde!',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar categorias (ProductsApiController - store)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente  mais tarde!',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente  mais tarde!',
+            ], 400);
         }
     }
 
@@ -113,19 +118,19 @@ class ProductsApiController extends Controller
     public function store(CreateProductRequest $request)
     {
         try {
-            $productModel  = new Product();
+            $productModel = new Product();
             $categoryModel = new Category();
 
-            $data            = $request->validated();
+            $data = $request->validated();
             $data['shopify'] = 0;
-            $data['user']    = auth()->user()->id;
-            $data['price']   = preg_replace("/[^0-9]/", "", $data['price']);
-            $data['cost']    = preg_replace("/[^0-9]/", "", $data['cost']);
+            $data['user'] = auth()->user()->id;
+            $data['price'] = preg_replace("/[^0-9]/", "", $data['price']);
+            $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
             $data['user_id'] = auth()->user()->id;
-            $category        = $categoryModel->find(current(Hashids::decode($data['category'])));
+            $category = $categoryModel->find(current(Hashids::decode($data['category'])));
 
             if (empty($category)) {
-                $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+                $category = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
                 $data['category_id'] = $category->id;
             } else {
                 $data['category_id'] = $category->id;
@@ -144,11 +149,11 @@ class ProductsApiController extends Controller
                     $img->save($productPhoto->getPathname());
 
                     $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+                        ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
 
                     $product->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
+                        'photo' => $digitalOceanPath,
+                    ]);
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar foto do product');
                     report($e);
@@ -156,15 +161,15 @@ class ProductsApiController extends Controller
             }
 
             return response()->json([
-                                        'message' => 'Produto salvo com sucesso!',
-                                    ], 200);
+                'message' => 'Produto salvo com sucesso!',
+            ], 200);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar produto (ProductsApiController - store)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+            ], 400);
         }
     }
 
@@ -179,7 +184,7 @@ class ProductsApiController extends Controller
             $productsModel = new Product();
 
             $productsSearch = $productsModel->where('user_id', auth()->user()->id)
-                                            ->where('shopify', $request->input('shopify'));
+                ->where('shopify', $request->input('shopify'));
 
             if ($request->has('name') && !empty($request->input('name'))) {
                 $productsSearch->where('name', 'LIKE', '%' . $request->nome . '%');
@@ -196,8 +201,8 @@ class ProductsApiController extends Controller
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ], 400);
         }
     }
 
@@ -208,38 +213,38 @@ class ProductsApiController extends Controller
     public function edit($id)
     {
         try {
-            $productModel  = new Product();
+            $productModel = new Product();
             $categoryModel = new Category();
 
             $productId = current(Hashids::decode($id));
 
             if ($productId) {
-                $product    = $productModel->find($productId);
+                $product = $productModel->find($productId);
                 $categories = $categoryModel->all();
 
                 if (Gate::allows('edit', [$product])) {
                     return EditProductResource::make([
-                                                         'product'    => $product,
-                                                         'categories' => $categories,
-                                                     ]);
+                        'product' => $product,
+                        'categories' => $categories,
+                    ]);
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ], 400);
                 }
             } else {
 
                 return response()->json([
-                                            'message' => 'Produto não encontrado',
-                                        ], 400);
+                    'message' => 'Produto não encontrado',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela de editar Produto (ProductsApiController - edit)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Produto não encontrado',
-                                    ], 400);
+                'message' => 'Produto não encontrado',
+            ], 400);
         }
     }
 
@@ -253,13 +258,13 @@ class ProductsApiController extends Controller
         try {
             $data = $request->validated();
 
-            $productModel  = new Product();
+            $productModel = new Product();
             $categoryModel = new Category();
 
             $category = $categoryModel->find(current(Hashids::decode($data['category'])));
 
             if (empty($category)) {
-                $category         = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+                $category = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
                 $data['category'] = $category->id;
             } else {
                 $data['category'] = $category->id;
@@ -291,41 +296,41 @@ class ProductsApiController extends Controller
                             $img->save($productPhoto->getPathname());
 
                             $digitalOceanPath = $this->getDigitalOceanFileService()
-                                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+                                ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
 
                             $product->update([
-                                                 'photo' => $digitalOceanPath,
-                                             ]);
+                                'photo' => $digitalOceanPath,
+                            ]);
                         } catch (Exception $e) {
                             Log::warning('ProductsApiController - update- Erro ao enviar foto do produto');
                             report($e);
 
                             return response()->json([
-                                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                                    ], 400);
+                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                            ], 400);
                         }
                     }
 
                     return response()->json([
-                                                'message' => 'Produto Atualizado com sucesso!',
-                                            ], 200);
+                        'message' => 'Produto Atualizado com sucesso!',
+                    ], 200);
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ], 400);
                 }
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro produto não encontrado, tente novamente mais tarde',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro produto não encontrado, tente novamente mais tarde',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar o produto (ProductsApiController - update)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ], 400);
         }
     }
 
@@ -336,7 +341,7 @@ class ProductsApiController extends Controller
     public function destroy($id)
     {
         try {
-            $productModel     = new Product();
+            $productModel = new Product();
             $productPlanModel = new ProductPlan();
 
             $productId = current(Hashids::decode($id));
@@ -352,36 +357,36 @@ class ProductsApiController extends Controller
                         $product->delete();
 
                         return response()->json([
-                                                    'message' => 'Produto excluido com sucesso',
-                                                ], 200);
+                            'message' => 'Produto excluido com sucesso',
+                        ], 200);
                     } else {
                         return response()->json([
-                                                    'message' => 'Impossivel excluir, existem planos associados a este produto!',
-                                                ], 400);
+                            'message' => 'Impossivel excluir, existem planos associados a este produto!',
+                        ], 400);
                     }
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                    ], 400);
                 }
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir produto (ProductsApiController - destroy)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+            ], 400);
         }
     }
 
     public function getProducts(Request $request)
     {
-        $data           = $request->all();
+        $data = $request->all();
         $productService = new ProductService();
 
         $projectId = current(Hashids::decode($data['project']));
@@ -389,5 +394,24 @@ class ProductsApiController extends Controller
         $products = $productService->getProductsMyProject($projectId);
 
         return ProductsSelectResource::collection($products);
+    }
+
+    public function getProductBySale($saleId)
+    {
+        try {
+            if ($saleId) {
+                $productService = new ProductService();
+
+                $products = $productService->getProductsBySale($saleId);
+
+                return ProductsSaleResource::collection($products);
+            } else {
+                return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar obter produtos (TrackingApiController - getTrackingProducts)');
+            report($e);
+            return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);
+        }
     }
 }
