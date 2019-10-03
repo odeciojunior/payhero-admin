@@ -58,9 +58,7 @@ use Modules\Core\Presenters\SalePresenter;
 class Sale extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait;
-
     protected $presenter = SalePresenter::class;
-
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -182,5 +180,13 @@ class Sale extends Model
     public function notazzInvoices()
     {
         return $this->hasMany('Modules\Core\Entities\NotazzInvoice');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function productsPlansSale()
+    {
+        return $this->hasMany('Modules\Core\Entities\ProductPlanSale');
     }
 }

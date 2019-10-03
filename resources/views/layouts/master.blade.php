@@ -8,21 +8,20 @@
     <meta name="description" content="cloudfox">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    @if(getenv('APP_ENV') === 'PRODUCTION')
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    @endif
 
-
-    <!-- csrf token used for ajax requests -->
+<!-- csrf token used for ajax requests -->
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
-    <!-- access token used for api ajax requests -->
+<!-- access token used for api ajax requests -->
     <meta name="access-token" content="Bearer {{ auth()->user()->createToken("Laravel Password Grant Client")->accessToken  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
-
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
-
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
@@ -30,48 +29,39 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
-
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
-
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css') }}">
-
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css') }}">
-
     @stack('css')
 
-    <!-- Scripts -->
+<!-- Scripts -->
     @if(env('APP_ENV', 'production') == 'production')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
             Sentry.init({dsn: 'https://4b81ab6a91684acd888b817f34bd755b@sentry.io/1542991'});
         </script>
     @endif
-
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
         Breakpoints();
     </script>
-
 </head>
-
 <body class="animsition site-navbar-small dashboard">
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
 </div>
@@ -108,27 +98,55 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js') }}"></script>
-
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
-     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/q35ubavq';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
+    <script>(function () {
+            var w = window;
+            var ic = w.Intercom;
+            if (typeof ic === "function") {
+                ic('reattach_activator');
+                ic('update', w.intercomSettings);
+            } else {
+                var d = document;
+                var i = function () {
+                    i.c(arguments);
+                };
+                i.q = [];
+                i.c = function (args) {
+                    i.q.push(args);
+                };
+                w.Intercom = i;
+                var l = function () {
+                    var s = d.createElement('script');
+                    s.type = 'text/javascript';
+                    s.async = true;
+                    s.src = 'https://widget.intercom.io/widget/q35ubavq';
+                    var x = d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                };
+                if (w.attachEvent) {
+                    w.attachEvent('onload', l);
+                } else {
+                    w.addEventListener('load', l, false);
+                }
+            }
+        })();</script>
 
-     <script>
-           window.Intercom('boot', {
-               app_id: "q35ubavq",
-               user_id: "{{ auth()->user()->id }}",
-               name: "{{ auth()->user()->name }}",
-               email: "{{ auth()->user()->email }}",
-           });
-     </script>
+    <script>
+        window.Intercom('boot', {
+            app_id: "q35ubavq",
+            user_id: "{{ auth()->user()->id }}",
+            name: "{{ auth()->user()->name }}",
+            email: "{{ auth()->user()->email }}",
+        });
+    </script>
 
-     {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
-     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
+    {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
+    <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-     <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
 
 @endif
-
 </body>
 </html>

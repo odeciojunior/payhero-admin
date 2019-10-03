@@ -49,43 +49,33 @@ class PostBackShopifyController extends Controller
 
                 $shopifyOrder = $requestData['id'];
 
-                $sale = $salesModel->with(['delivery', 'delivery.trackingHistories'])
+                $sale = $salesModel->with(['delivery'])
                                    ->where('shopify_order', $shopifyOrder)
                                    ->where('project_id', $project->id)
                                    ->first();
 
                 if ($sale) {
                     //venda encontrada
-
                     foreach ($requestData['fulfillments'] as $fulfillment) {
 
                         if (!empty($fulfillment["tracking_number"])) {
-                            if ($sale->delivery->tracking_code != $fulfillment["tracking_number"]) {
-
-                                $sale->delivery->update([
-                                                                           'tracking_code' => $fulfillment["tracking_number"],
-                                                                       ]);
-
-                                $sale->delivery->trackingHistories()->create([
-                                                                                                'tracking_code' => $fulfillment["tracking_number"],
-                                                                                            ]);
-                                event(new TrackingCodeUpdatedEvent($sale));
+                            foreach ($sale->productsPlansSale as $productPlanSale) {
+                                $productPlanSale->update([
+                                                             'tracking_code' => $fulfillment["tracking_number"],
+                                                         ]);
                             }
-
-                            return response()->json([
-                                                        'message' => 'success',
-                                                    ], 200);
                         }
                     }
-                } else {
-                    Log::warning('Shopify atualizar código de rastreio - venda não encontrada');
-                    //venda nao encontrada
+
+                    event(new TrackingCodeUpdatedEvent($sale));
+
                     return response()->json([
-                                                'message' => 'sale not found',
+                                                'message' => 'success',
                                             ], 200);
                 }
             } else {
                 Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
+
                 //projeto nao existe
                 return response()->json([
                                             'message' => 'project not found',
@@ -93,6 +83,7 @@ class PostBackShopifyController extends Controller
             }
         } else {
             Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
+
             //projectid errado
             return response()->json([
                                         'message' => 'project not found',
@@ -150,7 +141,7 @@ class PostBackShopifyController extends Controller
             }
 
             $variant = current($requestData['variants']);
- 
+
             $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
 
             return response()->json([

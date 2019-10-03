@@ -200,6 +200,7 @@ $(document).ready(function () {
      * @param value
      */
     function createHtmlCartAbandoned(value) {
+
         let data = '';
         data += '<tr>';
         data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
@@ -224,7 +225,6 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
-        console.log(value.recovery_status);
 
         let data = '';
         data += '<tr>';
