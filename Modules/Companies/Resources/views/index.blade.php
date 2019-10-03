@@ -107,7 +107,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/index.js') }}"></script>
+        <script src="{{ asset('/modules/companies/js/index.js?v=1') }}"></script>
         <script type="text/javascript">
             // console.log($('meta[name="access-token"]').attr('content'));
             // getUserResume();
