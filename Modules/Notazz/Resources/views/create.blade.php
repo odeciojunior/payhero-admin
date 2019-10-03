@@ -1,82 +1,47 @@
-<form id='form_add_integration' method="post" action="#" style="display:none">
+<input type='hidden' id='integration_id' value=''/>
+<form id='form_add_integration' method="post" action="#">
     @csrf
     <div style="width:100%">
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="company">Selecione seu projeto</label>
-                    <select class="select-pad" id="select_projects" name="project_id">
+                    <label for="select_projects_create">Selecione seu projeto</label>
+                    <select class="select-pad" id="select_projects_create" name="select_projects_create"> </select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class='form-group'>
+                    <label for="select_invoice_type_create">Tipo de nota fiscal emitida para o projeto</label>
+                    <select class="select-pad" id="select_invoice_type_create" name="select_invoice_type_create">
+                        <option value='1'>Nota de Serviço (nfse)</option>
+                        <option value='2'>Nota de Produto (nfe)</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class='form-group col-12'>
-                <label for="link">Link</label>
+                <label for="url_store">Token Api</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="link" id="link" placeholder="Digite o link">
+                    <input type="text" class="input-pad addon" name="token_api_create" id="token_api_create" placeholder="Digite o Token Api" value=''>
                 </div>
             </div>
             <div class='form-group col-12'>
-                <label for="value">Valor</label>
+                <label for="url_store">Token Webhook</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="value" id="value" placeholder="Digite o valor">
+                    <input type="text" class="input-pad addon" name="token_webhook_create" id="token_webhook_create" placeholder="Digite o Token Webhook" value=''>
                 </div>
             </div>
-        </div>
-        <div class="row mt-20">
-            <div class="col-6">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Boleto gerado:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="boleto_generated" id="boleto_generated" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
+            <div class='form-group col-12'>
+                <label for="url_store">Token Logística</label>
+                <div class="d-flex input-group">
+                    <input type="text" class="input-pad addon" name="token_logistics_create" id="token_logistics_create" placeholder="Digite o Token Logística" value=''>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Boleto pago:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="boleto_paid" id="boleto_paid" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-20">
-            <div class="col-6">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Cartão de crédito pago:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="credit_card_paid" id="credit_card_paid" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Carrinho abandonado:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="abandoned_cart" id="abandoned_cart" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-20">
-            <div class="col-12">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Cartão de crédito Recusado:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="credit_card_refused" id="credit_card_refused" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
+            <div class='form-group col-12'>
+                <label for="url_store">Data inicial</label>
+                <div class="d-flex input-group">
+                    <input type="date" class="input-pad addon" name="start_date_create" id="start_date_create" placeholder="Data Inicial" value=''>
                 </div>
             </div>
         </div>

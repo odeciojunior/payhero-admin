@@ -28,6 +28,8 @@ class NotazzInvoicePresenter extends Presenter
                     return 'error';
                 case 5:
                     return 'in_process';
+                case 6:
+                    return 'error_max_attempts';
             }
 
             return '';
@@ -43,6 +45,8 @@ class NotazzInvoicePresenter extends Presenter
                     return 4;
                 case 'in_process':
                     return 5;
+                case 'error_max_attempts':
+                    return 6;
             }
 
             return '';

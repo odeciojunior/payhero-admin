@@ -6,9 +6,11 @@ use App\Jobs\SendNotazzInvoiceJob;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
+use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
 use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
@@ -122,17 +124,17 @@ class NotazzService
                                       //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
                                       //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
                                       //'CITY_SERVICE_CODE'    => '12345', // Código de serviço do município (opcional), somente números. Se não seja informado será utilizado o padrão da empresa
-/*
-                                      'ALIQUOTAS' => [
-                                          'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                      ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
-*/
-                                      'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será enviado
+                                      /*
+                                                                            'ALIQUOTAS' => [
+                                                                                'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                            ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
+                                      */
+                                      'EXTERNAL_ID'          => $notazzInvoice->external_id, // ID externo do documento que será enviado
                                   ]);
 
             $notazzInvoice->update([
@@ -585,5 +587,143 @@ class NotazzService
             //todas as vendas possuem invoices já gerados
             return $createdCount;
         }
+    }
+
+    /**
+     * Gerar todas as invoices
+     */
+    public function generateRetroactiveInvoices()
+    {
+        try {
+
+            $notazzService     = new NotazzService();
+            $notazzIntegration = new NotazzIntegration();
+            $pusherService     = new PusherService();
+
+            $integrations = $notazzIntegration->with([
+                                                         'project',
+                                                         'user',
+                                                     ])
+                                              ->whereNotNull('start_date')
+                                              ->whereNull('retroactive_generated_date')
+                                              ->get();
+
+            foreach ($integrations as $integration) {
+                $count = $notazzService->createOldInvoices($integration->project_id, $integration->start_date);
+                $integration->update([
+                                         'retroactive_generated_date' => Carbon::now(),
+                                     ]);
+
+                $data = [
+                    'message' => 'Integração com a Notazz para o projeto ' . $integration->project->name . ' foi concluida. As Notas fiscais apartir da data ' . Carbon::parse($integration->start_date)
+                                                                                                                                                                       ->format('d/m/Y') . ' foram agendadas para o envio',
+                    'user'    => $integration->user->id,
+                ];
+
+                $pusherService->sendPusher($data);
+                $integration->user->notify(new RetroactiveNotazzNotification($data["message"]));
+            }
+        } catch (Exception $e) {
+            Log::warning('NotazzService - generateRetroactiveInvoices - error');
+            report($e);
+        }
+    }
+
+    /**
+     * @param $notazzInvoiceId
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     */
+    public function sendInvoice($notazzInvoiceId)
+    {
+        $notazzService      = new NotazzService();
+        $notazzInvoiceModel = new NotazzInvoice();
+
+        $notazzInvoice = $notazzInvoiceModel->find($notazzInvoiceId);
+
+        if ($notazzInvoice->attempts <= $notazzInvoice->max_attempts) {
+            //ainda nao chegou no maximo de tentativas
+
+            $notazzInvoice->update([
+                                       'status' => $notazzInvoiceModel->present()
+                                                                      ->getStatus('in_process'),
+                                   ]);
+
+            if ($notazzInvoice->invoice_type == $notazzInvoiceModel->present()->getInvoiceType('service')) {
+                //nota de servico
+
+                $result = $notazzService->sendNfse($notazzInvoiceId);
+            } else if ($notazzInvoice->invoice_type == $notazzInvoiceModel->present()->getInvoiceType('product')) {
+                //nota de produto
+
+                //$result = $notazzService->sendNfse($this->notazzInvoiceId);
+            } else {
+                //erro ?
+
+                $notazzInvoice->update([
+                                           'return_message'   => 'Invoice Type Error',
+                                           'return_http_code' => '500',
+                                           'schedule'         => $notazzInvoice->schedule,
+                                           'date_error'       => Carbon::now(),
+                                           'status'           => $notazzInvoiceModel->present()
+                                                                                    ->getStatus('error'), //error
+                                           'attempts'         => $notazzInvoice->max_attempts + 1,
+
+                                       ]);
+
+                Log::warning('Type da invoice invalido (SendNotazzInvoiceJob - handle)');
+                report(new Exception('NotazzInvoice - type da invoice invalido, invoice : ' . $notazzInvoice->id));
+            }
+
+            if (!empty($result)) {
+                if (($result->codigoProcessamento == 000)) {
+                    //200 code
+                    $notazzInvoice->update([
+                                               'return_message'   => $result->motivo,
+                                               'return_http_code' => $result->codigoProcessamento,
+                                               'date_sent'        => Carbon::now(),
+                                               'status'           => $notazzInvoiceModel->present()
+                                                                                        ->getStatus('send'), //send
+
+                                           ]);
+                } else {
+                    //qualquer outro erro, remarcar invoice para ser enviado depois
+
+                    $notazzInvoice->update([
+                                               'return_message'   => $result->motivo,
+                                               'return_http_code' => $result->codigoProcessamento,
+                                               'schedule'         => Carbon::now()
+                                                                           ->addHour(),
+                                               'date_error'       => Carbon::now(),
+                                               'status'           => $notazzInvoiceModel->present()
+                                                                                        ->getStatus('error'), //error
+                                           ]);
+                }
+            } else {
+                //venda invalida
+                $notazzInvoice->update([
+                                           'return_message'   => 'Venda não localizada',
+                                           'return_http_code' => '500',
+                                           'schedule'         => $notazzInvoice->schedule,
+                                           'date_error'       => Carbon::now(),
+                                           'status'           => $notazzInvoiceModel->present()
+                                                                                    ->getStatus('error'), //error
+                                           'attempts'         => $notazzInvoice->max_attempts + 1,
+
+                                       ]);
+            }
+        } else {
+            //chegou no maximo de tentativa, report e alertar vendedor?
+
+            $notazzInvoice->update([
+                                       'status' => $notazzInvoiceModel->present()
+                                                                      ->getStatus('error_max_attempts'),
+                                   ]);
+            //TODO alertar vendedor
+
+
+            Log::warning('Maximo de tentativas para o envio da invoice (SendNotazzInvoiceJob - handle)');
+            report(new Exception('NotazzInvoice - Maximo de tentativas, invoice : ' . $notazzInvoice->id));
+        }
+
     }
 }

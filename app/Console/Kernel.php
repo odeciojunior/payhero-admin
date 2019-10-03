@@ -26,9 +26,15 @@ class Kernel extends ConsoleKernel
 
         // transfer money from transactions for user companies
         $schedule->command('verify:transfers')->dailyAt('03:00');
- 
+
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
+
+        //generate all retroactive invoices
+        $schedule->command('generate:retroactivenotazzinvoices')->hourly();
+
+        //verify pending notazz invoices
+        $schedule->command('verify:pendingnotazzinvoices')->hourly();
 
         // notify user to paid boletos
         $schedule->command('verify:boletopaid')->dailyAt('10:00');
@@ -43,7 +49,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('verify:boletoexpired4')->dailyAt('10:00');
 
         //abandoned carts
-        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes(); 
+        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
         $schedule->command('verify:abandonedcarts2')->dailyAt('11:30');
 
         //Alterar status do boletos de pendente para cancelado

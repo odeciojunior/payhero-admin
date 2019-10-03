@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
 @endpush
 @section('content')
@@ -9,7 +9,7 @@
             <div class="page-header container">
                 <div class="row jusitfy-content-between">
                     <div class="col-lg-8">
-                        <h1 class="page-title">Integrações com ConvertaX</h1>
+                        <h1 class="page-title">Integrações com Notazz</h1>
                     </div>
                     <div class="col text-right">
                         <a data-toggle="modal" id='btn-add-integration' class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
@@ -26,7 +26,7 @@
                     <div class="content-error text-center">
                         <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
                         <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                        <p class="desc gray">Integre seus projetos com ConvertaX de forma totalmente automatizada!</p>
+                        <p class="desc gray">Integre seus projetos com Notazz de forma totalmente automatizada!</p>
                     </div>
                 </div>
 
@@ -59,5 +59,6 @@
 
     @push('scripts')
         <script src="/modules/notazz/js/index.js"></script>
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection

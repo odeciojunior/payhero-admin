@@ -254,9 +254,9 @@ $(document).ready(function () {
                 'Authorization': 'Bearer ' + accessToken,
                 'Accept': 'application/json',
             },
-            error: function error() {
+            error: function error(response) {
             },
-            success: function success() {
+            success: function success(response) {
             }
 
         });

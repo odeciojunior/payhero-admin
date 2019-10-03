@@ -464,6 +464,7 @@ class BoletoService
                         'transaction_value' => "R$ " . number_format(intval($boleto->transactions_amount) / 100, 2, ',', '.'),
                     ];
                     event(new BoletoPaidEvent($data));
+
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
                     report($e);
