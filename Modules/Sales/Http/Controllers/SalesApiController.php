@@ -2,12 +2,10 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
@@ -38,72 +36,79 @@ class SalesApiController extends Controller
     public function index(Request $request)
     {
         try {
+            $data = $request->validate([
+                'project'     => 'nullable|string',
+                'transaction' => 'nullable',
+                'payment_method'        => 'nullable|string',
+                'status'      => 'nullable',
+                'client' => 'nullable|string',
+                'date_type'  => 'nullable',
+                'date_range'    => 'nullable',
+            ]);
+
             $companyModel = new Company();
             $clientModel = new Client();
             $transactionModel = new Transaction();
 
-            $data = $request->all();
 
-                if (empty($request['status'])) {
-                    $status = [1, 2, 4, 6];
-                } else {
-                    $status = [$request['status']];
-                }
+            if (empty($request['status'])) {
+                $status = [1, 2, 4, 6];
+            } else {
+                $status = [$request['status']];
+            }
 
-                $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                                              ->pluck('id')
-                                              ->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                ->pluck('id')
+                ->toArray();
 
-                $transactions = $transactionModel->with([
-                                                            'sale',
-                                                            'sale.project',
-                                                            'sale.client',
-                                                            'sale.plansSales',
-                                                            'sale.plansSales.plan',
-                                                            'sale.plansSales.plan.products',
-                                                            'sale.plansSales.plan.project',
-                                                        ])
-                                                 ->whereHas('sale', function($querySale) use ($status) {
-                                                     $querySale->whereIn('status', $status);
-                                                 })
-                                                 ->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
+            $transactions = $transactionModel->with([
+                'sale',
+                'sale.project',
+                'sale.client',
+                'sale.plansSales',
+                'sale.plansSales.plan',
+                'sale.plansSales.plan.products',
+                'sale.plansSales.plan.project',
+            ])->whereHas('sale', function ($querySale) use ($status) {
+                $querySale->whereIn('status', $status);
+            })->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
 
-                if (!empty($data["project"])) {
-                    $projectId = current(Hashids::decode($data["project"]));
-                    $transactions->whereHas('sale', function($querySale) use ($projectId) {
-                        $querySale->where('project_id', $projectId);
-                    });
-                }
+            if (!empty($data["project"])) {
+                $projectId = current(Hashids::decode($data["project"]));
+                $transactions->whereHas('sale', function ($querySale) use ($projectId) {
+                    $querySale->where('project_id', $projectId);
+                });
+            }
 
-                if (!empty($data["transaction"])) {
-                    $saleId = current(Hashids::connection('sale_id')
-                                             ->decode(str_replace('#', '', $data["transaction"])));
+            if (!empty($data["transaction"])) {
+                $saleId = current(Hashids::connection('sale_id')
+                    ->decode(str_replace('#', '', $data["transaction"])));
 
-                    $transactions->whereHas('sale', function($querySale) use ($saleId) {
-                        $querySale->where('id', $saleId);
-                    });
-                }
+                $transactions->whereHas('sale', function ($querySale) use ($saleId) {
+                    $querySale->where('id', $saleId);
+                });
+            }
 
-                if (!empty($data["client"])) {
-                    $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
-                    $transactions->whereHas('sale', function($querySale) use ($customers) {
-                        $querySale->whereIn('client_id', $customers);
-                    });
-                }
+            if (!empty($data["client"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
+                $transactions->whereHas('sale', function ($querySale) use ($customers) {
+                    $querySale->whereIn('client_id', $customers);
+                });
+            }
 
-                if (!empty($data["payment_method"])) {
-                    $forma = $data["payment_method"];
-                    $transactions->whereHas('sale', function($querySale) use ($forma) {
-                        $querySale->where('payment_method', $forma);
-                    });
-                }
+            if (!empty($data["payment_method"])) {
+                $forma = $data["payment_method"];
+                $transactions->whereHas('sale', function ($querySale) use ($forma) {
+                    $querySale->where('payment_method', $forma);
+                });
+            }
 
-                if (!empty($data["status"])) {
-                    $status = $data["status"];
-                    $transactions->whereHas('sale', function($querySale) use ($status) {
-                        $querySale->where('status', $status);
-                    });
-                }
+            if (!empty($data["status"])) {
+                $status = $data["status"];
+                $transactions->whereHas('sale', function ($querySale) use ($status) {
+                    $querySale->where('status', $status);
+                });
+            }
 
             $dateRange = $this->validateDateRange($data["date_range"]);
             if (!empty($data["date_type"]) && $dateRange) {
@@ -113,7 +118,7 @@ class SalesApiController extends Controller
                 });
             }
 
-                return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
+            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
@@ -132,10 +137,10 @@ class SalesApiController extends Controller
 
             if (isset($id)) {
                 $sale = $saleModel->with([
-                                             'transactions' => function($query) {
-                                                 $query->where('company_id', '!=', null)->first();
-                                             },
-                                         ])->find(current(Hashids::connection('sale_id')->decode($id)));
+                    'transactions' => function ($query) {
+                        $query->where('company_id', '!=', null)->first();
+                    },
+                ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
                 return new SalesResource($sale);
             }
@@ -240,7 +245,6 @@ class SalesApiController extends Controller
                 'utm_term',
                 'utm_content',
                 'utm_perfect',
-
             ];
 
             $saleData = collect();
@@ -302,7 +306,6 @@ class SalesApiController extends Controller
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
     }
-
 
     /**
      * @param $dateString
