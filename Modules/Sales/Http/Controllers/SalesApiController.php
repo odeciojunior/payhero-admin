@@ -57,7 +57,6 @@ class SalesApiController extends Controller
                 $transactionModel = new Transaction();
 
                 $data = $request->all();
-
                 if (empty($request['status'])) {
                     $status = [1, 2, 4, 6];
                 } else {
@@ -77,9 +76,6 @@ class SalesApiController extends Controller
                                                             'sale.plansSales.plan.products',
                                                             'sale.plansSales.plan.project',
                                                         ])
-                                                 ->whereHas('sale', function($querySale) use ($status) {
-                                                     $querySale->whereIn('status', $status);
-                                                 })
                                                  ->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
 
                 if (!empty($data["project"])) {
