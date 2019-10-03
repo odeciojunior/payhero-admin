@@ -8,25 +8,18 @@ $(document).ready(function () {
     $("#type-products").on('change', function () {
 
         if ($(this).val() === "1") {
-            $('#is-projects').show();
+            $('#select-projects-label').removeClass('disabled');
+            $('#select-projects').prop('disabled', false).removeClass('disabled');
             $('#div-create').hide();
         } else {
-            $('#is-projects').hide();
+            $('#select-projects-label').addClass('disabled');
+            $('#select-projects').prop('disabled', true).addClass('disabled');
             $('#div-create').show();
         }
-        updateProducts();
     });
 
-    $('#select-projects').on('change', function () {
+    $('#btn-filtro').on('click', function () {
         updateProducts();
-    });
-
-    $('#name').on('keyup', function () {
-        let minlength = 3;
-        let currentLenght = $(this).val().length;
-        if (currentLenght >= minlength || currentLenght === 0) {
-            updateProducts();
-        }
     });
 
     getTypeProducts();
