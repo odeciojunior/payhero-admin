@@ -120,7 +120,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=2') }}"></script>
     @endpush
 
 @endsection
