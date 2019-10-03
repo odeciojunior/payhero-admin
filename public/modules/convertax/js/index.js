@@ -5,7 +5,7 @@ $(document).ready(function () {
     function index() {
         $.ajax({
             method: "GET",
-            url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax",
+            url: "/api/apps/convertax",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
