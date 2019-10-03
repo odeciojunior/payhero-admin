@@ -131,9 +131,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + 'projeto=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
         } else {
-            link = '/api/sales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales' + link + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
         }
         $.ajax({
             method: "GET",
