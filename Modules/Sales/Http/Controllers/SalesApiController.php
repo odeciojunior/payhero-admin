@@ -2,7 +2,6 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -97,27 +96,12 @@ class SalesApiController extends Controller
                 });
             }
 
-            if (!empty($data["start_date"]) && !empty($data["end_date"])) {
-                $start_date = $data["start_date"];
-                $end_date = $data["end_date"];
-                $transactions->whereHas('sale', function ($querySale) use ($start_date, $end_date) {
-                    $querySale->whereBetween('start_date', [$start_date, date('Y-m-d', strtotime($end_date . ' + 1 day'))]);
+            $dateRange = $this->validateDateRange($data["date_range"]);
+            if (!empty($data["date_type"]) && $dateRange) {
+                $dateType = $data["date_type"];
+                $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 });
-            } else {
-
-                if (!empty($data["start_date"])) {
-                    $start_date = $data["start_date"];
-                    $transactions->whereHas('sale', function ($querySale) use ($start_date) {
-                        $querySale->whereDate('start_date', '>=', $start_date);
-                    });
-                }
-
-                if (!empty($data["end_date"])) {
-                    $end_date = $data["end_date"];
-                    $transactions->whereHas('sale', function ($querySale) use ($end_date) {
-                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($end_date . ' + 1 day')));
-                    });
-                }
             }
 
             return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
@@ -192,16 +176,10 @@ class SalesApiController extends Controller
                 $sales->where('status', $dataRequest['sale_status']);
             }
 
-            if (!empty($dataRequest['start_date'])) {
-                $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['start_date'] . ' 00:00:00')
-                    ->toDateTimeString();
-                $sales->where('start_date', '>=', $startDateTime ?? null);
-            }
-
-            if (!empty($dataRequest['end_date'])) {
-                $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['end_date'] . " 23:59:59")
-                    ->toDateTimeString();
-                $sales->where('start_date', '<=', $endDateTime ?? null);
+            $dateRange = $this->validateDateRange($dataRequest['date_range']);
+            if (!empty($dataRequest['date_type']) && $dateRange) {
+                $dateType = $dataRequest['date_type'];
+                $sales->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             }
 
             $sales->with(['client', 'project', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
@@ -311,5 +289,22 @@ class SalesApiController extends Controller
             report($e);
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
+    }
+
+
+    /**
+     * @param $dateString
+     * @return bool|mixed
+     */
+    private function validateDateRange($dateString)
+    {
+        preg_match_all('/(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)[0-9]{2})/', $dateString, $matches);
+        $dateRange = current($matches);
+        if (count($dateRange) == 2) {
+            $dateRange[0] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[0])));
+            $dateRange[1] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[1])));
+            return $dateRange;
+        }
+        return false;
     }
 }

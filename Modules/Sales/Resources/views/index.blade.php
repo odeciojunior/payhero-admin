@@ -79,12 +79,15 @@
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="data_inicial">Data inicial</label>
-                            <input name='start_date' id="data_inicial" class="form-control input-pad" type="date">
+                            <label for="date_type">Data da venda</label>
+                            <select name='date_type' id="date_type" class="form-control select-pad">
+                                <option value="">Nenhuma</option>
+                                <option value="start_date">Início</option>
+                                <option value="end_date">Aprovação</option>
+                            </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="data_final">Data final</label>
-                            <input name='end_date' id="data_final" class="form-control input-pad" type="date">
+                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
@@ -187,6 +190,7 @@
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
     @endpush
 
 @endsection
