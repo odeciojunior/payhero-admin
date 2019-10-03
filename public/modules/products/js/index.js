@@ -8,13 +8,11 @@ $(document).ready(function () {
     $("#type-products").on('change', function () {
 
         if ($(this).val() === "1") {
-            $('#is-projects').show();
-            $('#btn-filtro').parent().removeClass('offset-md-3');
-            $('#div-create').hide();
+            $('#is-projects label').removeClass('disabled');
+            $('#is-projects select').prop('disabled', false).removeClass('disabled');
         } else {
-            $('#is-projects').hide();
-            $('#btn-filtro').parent().addClass('offset-md-3');
-            $('#div-create').show();
+            $('#is-projects label').addClass('disabled');
+            $('#is-projects select').prop('disabled', true).addClass('disabled');
         }
     });
 
@@ -39,14 +37,17 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                $.each(response.data, function (index, value) {
-                    if (value.shopify) {
-                        $("#select-projects").append($('<option>', {
-                            value: value.id,
-                            text: value.name
-                        }));
-                    }
-                });
+                if(response.data){
+                    $("#select-projects").html('');
+                    $.each(response.data, function (index, value) {
+                        if (value.shopify) {
+                            $("#select-projects").append($('<option>', {
+                                value: value.id,
+                                text: value.name
+                            }));
+                        }
+                    });
+                }
             }
         });
     }
