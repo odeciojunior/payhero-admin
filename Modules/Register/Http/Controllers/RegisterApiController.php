@@ -2,16 +2,17 @@
 
 namespace Modules\Register\Http\Controllers;
 
+use Exception;
 use Carbon\Carbon;
+use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Invitation;
-use Modules\Core\Entities\User;
 use Modules\Core\Services\FoxUtils;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\SendgridService;
 use Modules\Register\Http\Requests\RegisterRequest;
-use Vinkla\Hashids\Facades\Hashids;
 
 class RegisterApiController extends Controller
 {
@@ -35,9 +36,9 @@ class RegisterApiController extends Controller
             $requestData['foxcoin']                             = '0';
             $requestData['credit_card_antecipation_money_days'] = '15';
             $requestData['release_money_days']                  = '30';
-            $requestData['boleto_antecipation_money_days']      = '7';
-            $requestData['antecipation_tax']                    = '5.0';
-            $requestData['percentage_antecipable']              = '80';
+            $requestData['boleto_antecipation_money_days']      = '2';
+            $requestData['antecipation_tax']                    = '0';
+            $requestData['percentage_antecipable']              = '100';
             $requestData['email_amount']                        = '0';
             $requestData['call_amount']                         = '0';
             $requestData['score']                               = '0';
@@ -47,7 +48,7 @@ class RegisterApiController extends Controller
 
             $user->assignRole('administrador empresarial');
 
-            auth()->loginUsingId($user['id']);
+            auth()->loginUsingId($user->id, true);
 
             $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
 

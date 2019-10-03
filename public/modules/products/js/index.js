@@ -8,13 +8,11 @@ $(document).ready(function () {
     $("#type-products").on('change', function () {
 
         if ($(this).val() === "1") {
-            $('#select-projects-label').removeClass('disabled');
-            $('#select-projects').prop('disabled', false).removeClass('disabled');
-            $('#div-create').hide();
+            $('#is-projects label').removeClass('disabled');
+            $('#is-projects select').prop('disabled', false).removeClass('disabled');
         } else {
-            $('#select-projects-label').addClass('disabled');
-            $('#select-projects').prop('disabled', true).addClass('disabled');
-            $('#div-create').show();
+            $('#is-projects label').addClass('disabled');
+            $('#is-projects select').prop('disabled', true).addClass('disabled');
         }
     });
 
@@ -39,14 +37,17 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                $.each(response.data, function (index, value) {
-                    if (value.shopify) {
-                        $("#select-projects").append($('<option>', {
-                            value: value.id,
-                            text: value.name
-                        }));
-                    }
-                });
+                if(response.data){
+                    $("#select-projects").html('');
+                    $.each(response.data, function (index, value) {
+                        if (value.shopify) {
+                            $("#select-projects").append($('<option>', {
+                                value: value.id,
+                                text: value.name
+                            }));
+                        }
+                    });
+                }
             }
         });
     }
@@ -110,11 +111,9 @@ $(document).ready(function () {
 
                     pagination(response, 'products', updateProducts);
 
-                    $('#filter-products, #div-create').show();
                     $(".products-is-empty").hide();
                 } else {
                     $("#data-table-products, #pagination-products").html('');
-                    $('#filter-products, #div-create').hide();
                     $(".products-is-empty").show();
                 }
                 loadOnAny('.page-content', true);

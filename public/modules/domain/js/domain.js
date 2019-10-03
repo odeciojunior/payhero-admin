@@ -118,7 +118,7 @@ $(document).ready(function () {
                 $('#domain-table-body').html('');
 
                 if (response.data == '') {
-                    $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>");
+                    $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum domínio encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
                         modalUpdateDomains(index, value);
@@ -153,7 +153,7 @@ $(document).ready(function () {
                     resetFooter();
                     showElements('.modal-footer');
 
-                    $("#modal_excluir_titulo").html("Remover dominio?");
+                    $("#modal_excluir_titulo").html("Remover domínio?");
 
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on("click", function () {
@@ -421,7 +421,7 @@ $(document).ready(function () {
         $('#modal-add-body').children().hide('slow');
         $('#btn-modal').hide();
         $('#modal-title').html('Oppsssss...');
-        $('#modal-add-body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' + '<h4 align="center">Parece que o seu dominio ainda não foi liberado</h4>' + '<h4 align="center">Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></h4>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span>' + '</div>');
+        $('#modal-add-body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' + '<h4 align="center">Parece que o seu domínio ainda não foi liberado</h4>' + '<h4 align="center">Seria bom conferir as configurações no seu provedor de domínio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></h4>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span>' + '</div>');
     }
 
     function modalUpdateDomains(index, value) {
@@ -448,7 +448,7 @@ $(document).ready(function () {
             '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
             '<h4 align="center">Agora falta pouco</h4>' +
             '<h4 align="center">Você só precisa adicionar essas novas entradas <strong>DNS</strong>' +
-            ' onde você registrou seu dominio' + responseDomain.data["domainHost"] + '. Logo apos clique em <strong style="color:green">verificar</strong>!</h4>' +
+            ' onde você registrou seu domínio' + responseDomain.data["domainHost"] + '. Logo após clique em <strong style="color:green">verificar</strong>!</h4>' +
             '<div id="tableDomain" style="width:100%">' +
             '<table class="table table-striped">' + '<thead></thead>' +
             '<tbody id="tableDomainBody">' +

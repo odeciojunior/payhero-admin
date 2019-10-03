@@ -217,6 +217,8 @@ $(function () {
             }
         });
     }
+
+    //Limpa campos
     function clearFields() {
         $('.coupon-name').val('');
         $('.coupon-value').val('');

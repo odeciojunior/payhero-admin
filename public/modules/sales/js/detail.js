@@ -258,7 +258,7 @@ $(() => {
                                     <span class='small'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <span class='tracking-code-span small'>${value.tracking_code}</span>
+                                    <span class='tracking-code-span small ellipsis'>${value.tracking_code}</span>
                                     <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
                                 </td>
                                 <td>
