@@ -174,7 +174,7 @@ $(document).ready(function () {
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
                                     </td>
                                     <td>
-                                        <span class="boleto-pending badge badge-${statusArray[value.status]}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
+                                        <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>
