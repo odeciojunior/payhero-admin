@@ -307,45 +307,59 @@ class DomainsApiController extends Controller
                                   ->find($domainId);
 
             if (Gate::allows('edit', [$domain->project])) {
+                if (!empty($domain->cloudflare_domain_id)) {
+                    if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
+                        //zona deletada
+                        $sendgridService->deleteLinkBrand($domain->name);
+                        $sendgridService->deleteZone($domain->name);
 
-                if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
-                    //zona deletada
-                    $sendgridService->deleteLinkBrand($domain->name);
-                    $sendgridService->deleteZone($domain->name);
+                        $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
+                        $domainDeleted  = $domain->delete();
+
+                        if ($domainDeleted) {
+
+                            if (!empty($domain->project->shopify_id)) {
+                                //se for shopify, voltar as integraçoes ao html padrao
+                                try {
+
+                                    foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                        $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                        $shopify->setThemeByRole('main');
+                                        if (!empty($shopifyIntegration->theme_html)) {
+                                            $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                        }
+                                        if (!empty($shopifyIntegration->layout_theme_html)) {
+                                            $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                        }
+                                    }
+                                } catch (Exception $e) {
+                                    report($e);
+
+                                    return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                                }
+                            }
+
+                            return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                        } else {
+                            return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                        }
+                    } else {
+                        //erro ao deletar zona
+                        return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+                    }
+                } else {
 
                     $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
                     $domainDeleted  = $domain->delete();
 
                     if ($domainDeleted) {
-
-                        if (!empty($domain->project->shopify_id)) {
-                            //se for shopify, voltar as integraçoes ao html padrao
-                            try {
-
-                                foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                                    $shopify->setThemeByRole('main');
-                                    if (!empty($shopifyIntegration->theme_html)) {
-                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                    }
-                                    if (!empty($shopifyIntegration->layout_theme_html)) {
-                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                    }
-                                }
-                            } catch (Exception $e) {
-                                //throwl
-
-                            }
-                        }
-
-                        return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                        return response()->json([
+                                                    'message' => 'Dominio removido com sucesso!',
+                                                ], 200);
                     } else {
-                        return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                        return response()->json(['message' => 'Sem permissão para deletar domínio'], 400);
                     }
-                } else {
-                    //erro ao deletar zona
-                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
                 }
             } else {
                 return response()->json(['message' => 'Sem permissão para deletar domínio'], 400);
@@ -397,74 +411,78 @@ class DomainsApiController extends Controller
                                                                         ], 400);
                                             }
 
-                                            if (!empty($shopifyIntegration->layout_theme_html) || $shopify->checkCartTemplate($shopify->getTemplateHtml($shopify::templateKeyName))) {
+                                            if (empty($shopifyIntegration->layout_theme_html)) {
+                                                $html = $shopify->getTemplateHtml($shopify::templateKeyName);
+                                                if (!empty($html) && $shopify->checkCartTemplate($html)) {
+                                                    $domain->update([
+                                                                        'status' => $domainModel->present()
+                                                                                                ->getStatus('approved'),
+                                                                    ]);
 
-                                                $domain->update([
-                                                                    'status' => $domainModel->present()
-                                                                                            ->getStatus('approved'),
-                                                                ]);
+                                                    return response()->json(['message' => 'Domínio validado com sucesso'], 200);
+                                                } else {
 
-                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
-                                            } else {
+                                                    try {
 
-                                                try {
+                                                        $shopify->setThemeByRole('main');
+                                                        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
-                                                    $shopify->setThemeByRole('main');
-                                                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                                                        if ($htmlCart) {
+                                                            //template normal
 
-                                                    if ($htmlCart) {
-                                                        //template normal
+                                                            $shopifyIntegration->update([
+                                                                                            'theme_type' => $shopifyIntegration->present()
+                                                                                                                               ->getThemeType('basic_theme'),
+                                                                                            'theme_name' => $shopify->getThemeName(),
+                                                                                            'theme_file' => 'sections/cart-template.liquid',
+                                                                                            'theme_html' => $htmlCart,
+                                                                                        ]);
 
-                                                        $shopifyIntegration->update([
-                                                                                        'theme_type' => $shopifyIntegration->present()
-                                                                                                                           ->getThemeType('basic_theme'),
-                                                                                        'theme_name' => $shopify->getThemeName(),
-                                                                                        'theme_file' => 'sections/cart-template.liquid',
-                                                                                        'theme_html' => $htmlCart,
-                                                                                    ]);
+                                                            $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                                        } else {
 
-                                                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
-                                                    } else {
+                                                            //template ajax
+                                                            /* $shopifyIntegration->update([
+                                                                                             'theme_type' => $shopifyIntegration->present()
+                                                                                                                                ->getThemeType('ajax_theme'),
+                                                                                             'theme_name' => $shopify->getThemeName(),
+                                                                                             'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                                             'theme_html' => $htmlCart,
+                                                                                         ]);
 
-                                                        //template ajax
-                                                        $shopifyIntegration->update([
-                                                                                        'theme_type' => $shopifyIntegration->present()
-                                                                                                                           ->getThemeType('ajax_theme'),
-                                                                                        'theme_name' => $shopify->getThemeName(),
-                                                                                        'theme_file' => 'snippets/ajax-cart-template.liquid',
-                                                                                        'theme_html' => $htmlCart,
-                                                                                    ]);
+                                                             $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);*/
+                                                        }
 
-                                                        $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                                        //inserir o javascript para o trackeamento (src, utm)
+                                                        $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                                        if ($htmlBody) {
+                                                            //template do layout
+                                                            $shopifyIntegration->update([
+                                                                                            'layout_theme_html' => $htmlBody,
+                                                                                        ]);
+
+                                                            $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                                        }
+                                                    } catch (Exception $e) {
+                                                        report($e);
+
+                                                        $domain->update([
+                                                                            'status' => $domainModel->present()
+                                                                                                    ->getStatus('pending'),
+                                                                        ]);
+
+                                                        return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
                                                     }
-
-                                                    //inserir o javascript para o trackeamento (src, utm)
-                                                    $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
-                                                    if ($htmlBody) {
-                                                        //template do layout
-                                                        $shopifyIntegration->update([
-                                                                                        'layout_theme_html' => $htmlBody,
-                                                                                    ]);
-
-                                                        $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
-                                                    }
-                                                } catch (Exception $e) {
-                                                    report($e);
 
                                                     $domain->update([
                                                                         'status' => $domainModel->present()
-                                                                                                ->getStatus('pending'),
+                                                                                                ->getStatus('approved'),
                                                                     ]);
 
-                                                    return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
+                                                    return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                                 }
+                                            } else {
 
-                                                $domain->update([
-                                                                    'status' => $domainModel->present()
-                                                                                            ->getStatus('approved'),
-                                                                ]);
-
-                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                             }
                                         }
                                     } else {
