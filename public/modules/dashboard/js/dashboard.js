@@ -14,7 +14,7 @@ $(document).ready(function () {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
-            url: "/api/dashboard",
+            url: "https://app.cloudfox.net/api/dashboard",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
