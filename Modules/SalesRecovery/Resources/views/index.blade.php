@@ -252,7 +252,7 @@
 
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
 
     @endpush

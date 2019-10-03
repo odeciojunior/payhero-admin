@@ -61,6 +61,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/convertax/js/index.js"></script>
+        <script src="/modules/convertax/js/index.js?v=1"></script>
     @endpush
 @endsection

@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <label for="name">Nome do produto</label>
-                        <input id="name" class="input-pad" placeholder="Digite 3 ou mais caracteres" maxlength="100">
+                        <input id="name" class="input-pad" placeholder="Nome" maxlength="100">
                     </div>
                     <div class="col-lg-3 col-md-6" style="margin-top: 30px">
                         <button id="btn-filtro" class="btn btn-primary w-full">
@@ -64,7 +64,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{asset('/modules/products/js/index.js')}}'></script>
+        <script src='{{asset('/modules/products/js/index.js?v=1')}}'></script>
     @endpush
 
 @endsection
