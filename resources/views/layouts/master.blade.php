@@ -8,6 +8,8 @@
     <meta name="description" content="cloudfox">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
 
     <!-- csrf token used for ajax requests -->
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
