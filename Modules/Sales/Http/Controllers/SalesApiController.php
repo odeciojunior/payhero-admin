@@ -80,7 +80,7 @@ class SalesApiController extends Controller
                                                  ->whereHas('sale', function($querySale) use ($status) {
                                                      $querySale->whereIn('status', $status);
                                                  })
-                                                 ->whereIn('company_id', $userCompanies);
+                                                 ->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
 
                 if (!empty($data["project"])) {
                     $projectId = current(Hashids::decode($data["project"]));
