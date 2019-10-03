@@ -46,6 +46,14 @@ $(document).ready(function () {
         }
     });
 
+    //Limpa campos
+    function clearFields() {
+        $('.shipping-description').val('');
+        $('.shipping-info').val('');
+        $('.shipping-value').val('');
+        $('.shipping-zipcode').val('');
+    }
+
     $(".shipping-description").keyup(function () {
         if ($(this).val().length > 30) {
             $(this).parent().children("#shipping-name-error").html("O campo descrição permite apenas 30 caracteres");
@@ -202,6 +210,7 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
                 alertCustom("success", data.message);
                 atualizarFrete();
+                clearFields();
             }
         });
     });

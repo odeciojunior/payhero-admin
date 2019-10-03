@@ -35,7 +35,7 @@
     <div class='row zip-code-origin-shipping-row' style='display:none'>
         <div class='form-group col-12'>
             <label for='zip-code-origin'>CEP de origem</label>
-            <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' value='' placeholder='12345-678'>
+            <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' data-mask="00000-000" value='' placeholder='12345-678'>
         </div>
     </div>
     <div class='row'>
