@@ -3,7 +3,7 @@ $(function () {
     $.ajax({
         method: "GET",
         url: "/api/projects/?select=true",
-        dataType: "json",
+        dataType: "jsonp",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
             'Accept': 'application/json',
@@ -52,7 +52,7 @@ $(function () {
                 endDate: endDate,
                 startDate: startDate
             },
-            dataType: "json",
+            dataType: "jsonp",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -113,7 +113,7 @@ $(function () {
         $.ajax({
             url: link,
             type: 'GET',
-            dataType: "json",
+            dataType: "jsonp",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
