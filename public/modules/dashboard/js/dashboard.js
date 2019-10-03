@@ -14,7 +14,7 @@ $(document).ready(function () {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
-            url: "/api/dashboard/",
+            url: $('meta[name="current-url"]').attr('content') + "/api/dashboard/",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/api/dashboard/getvalues",
+            url: $('meta[name="current-url"]').attr('content') + "/api/dashboard/getvalues",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
