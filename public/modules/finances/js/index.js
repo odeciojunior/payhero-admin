@@ -17,7 +17,7 @@ $(document).ready(function () {
             },
             success: (response) => {
 
-                if(response.data){
+                if (response.data) {
 
                     $('.page-content').show();
                     $('.content-error').hide();
@@ -56,7 +56,7 @@ $(document).ready(function () {
 
                     updateBalances();
                     updateTransfersTable();
-                }else{
+                } else {
                     $('.page-content').hide();
                     $('.content-error').show();
                 }
@@ -87,7 +87,20 @@ $(document).ready(function () {
     });
 
     function updateBalances() {
-        $(".price").append("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+        loadOnAny('.price', false, {
+            styles: {
+                container: {
+                    minHeight: '31px',
+                    justifyContent: 'flex-start',
+                },
+                loader: {
+                    width: '20px',
+                    height: '20px',
+                    borderWidth: '4px'
+                },
+            },
+            insertBefore: '.grad-border',
+        });
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
         $.ajax({
             url: "api/finances/getbalances/",
@@ -99,6 +112,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadOnAny('.price', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -122,6 +136,7 @@ $(document).ready(function () {
                 // $.getScript('modules/withdrawals/js/index.js');
                 // $("#withdrawals-table-data").html('');
                 updateWithdrawalsTable();
+                loadOnAny('.price', true);
             }
         });
 
@@ -310,7 +325,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error:  (response) => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
