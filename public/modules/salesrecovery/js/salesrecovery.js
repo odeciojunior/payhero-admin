@@ -47,15 +47,15 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = '';
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&type=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
+            url = `?project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client=${$("#client-name").val()}`;
         } else {
-            url = `${link}&project=${$("#project option:selected").val()}&type=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
+            url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client=${$("#client-name").val()}`;
         }
 
         if ($("#type_recovery option:selected").val() == 1) {
             return `/api/checkout${url}`;
         } else {
-            return `/api/sale${url}`;
+            return `/api/sales${url}`;
         }
     }
 
@@ -85,35 +85,17 @@ $(document).ready(function () {
 
                 $('#table_data').html('');
                 $('#carrinhoAbandonado').addClass('table-striped');
-                let cont = 0;
 
-                $.each(response.data, function (index, value) {
+                createHTMLTable(response);
+                pagination(response, 'salesRecovery', updateSalesRecovery);
 
-                    dados = '';
-                    dados += '<tr>';
-                    dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
-                    dados += "<td>" + value.project + "</td>";
-                    dados += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
-                    dados += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
-                    dados += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-                    dados += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' status='" + value.recovery_status + "' sale_id='" + value.id + "'>" + value.recovery_status + "</span></td>";
-                    dados += "<td>" + value.value + "</td>";
-                    dados += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
-                    dados += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
-                    dados += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i></button></td>";
-
-                    dados += "</tr>";
-                    cont++;
-                    $("#table_data").append(dados);
-
-                    $(".copy_link").on("click", function () {
-                        var temp = $("<input>");
-                        $("body").append(temp);
-                        temp.val($(this).attr('link')).select();
-                        document.execCommand("copy");
-                        temp.remove();
-                        alertCustom('success', 'Link copiado!');
-                    });
+                $(".copy_link").on("click", function () {
+                    var temp = $("<input>");
+                    $("body").append(temp);
+                    temp.val($(this).attr('link')).select();
+                    document.execCommand("copy");
+                    temp.remove();
+                    alertCustom('success', 'Link copiado!');
                 });
 
                 if (response.data == '' && $('#type_recovery').val() == 1) {
@@ -122,14 +104,6 @@ $(document).ready(function () {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido até o momento</td></tr>");
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
-                }
-
-                if (response.data.length > 9) {
-                    $("#pagination-salesRecovery").show();
-                    pagination(response, 'salesRecovery', updateSalesRecovery);
-
-                } else {
-                    $("#pagination-salesRecovery").hide();
                 }
 
                 if ($("#type_recovery").val() == '2') {
@@ -193,7 +167,6 @@ $(document).ready(function () {
                 });
 
                 $('.estornar_venda').unbind('click');
-
                 $('.estornar_venda').on('click', function () {
 
                     id_venda = $(this).attr('venda');
@@ -203,6 +176,72 @@ $(document).ready(function () {
                 });
             }
         });
+    }
+
+    /**
+     *
+     * @param response
+     */
+    function createHTMLTable(response) {
+        let html = '';
+        $.each(response.data, function (index, value) {
+            if (typeof value.sale_code === 'undefined') {
+                html += createHtmlCartAbandoned(value);
+            } else {
+                html += createHtmlOthers(value);
+            }
+        });
+
+        $("#table_data").append(html);
+    }
+
+    /**
+     * Cria html quando e carrinho abandonado
+     * @param value
+     */
+    function createHtmlCartAbandoned(value) {
+        let data = '';
+        data += '<tr>';
+        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
+        data += "<td>" + value.project + "</td>";
+        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
+        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
+        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.status_translate] + "' status='" + value.status_translate + "' sale_id='" + value.id + "'>" + value.status_translate + "</span></td>";
+        data += "<td>" + value.value + "</td>";
+        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+        data += "</tr>";
+
+        return data;
+
+    }
+
+    /**
+     * Cria html quando for boleto vencido ou cartão recusado
+     * @param value
+     * @returns {string}
+     */
+    function createHtmlOthers(value) {
+        console.log(value.recovery_status);
+
+        let data = '';
+        data += '<tr>';
+        data += "<td class='display-sm-none display-m-none display-lg-none'>" + value.start_date + "</td>";
+        data += "<td>" + value.project + "</td>";
+        data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
+        data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+        data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
+        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' status='" + value.recovery_status + "' sale_id='" + value.id + "'>" + value.recovery_status + "</span></td>";
+        data += "<td>" + value.total_paid + "</td>";
+        data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+        data += "</tr>";
+
+        return data;
+
     }
 
     // ajax modal details
@@ -350,20 +389,21 @@ $(document).ready(function () {
     });
 
     /**
-     * Helper Functions
-     */
-
-    /**
      * Adiciona class ao badge da modal e da tabela
      * @type {{Recuperado: string, Recusado: string, "Não recuperado": string, Expirado: string}}
      */
     var statusRecovery = {
-        "Recuperado": "success",
-        "Não recuperado": "danger",
-        "Recusado": "danger",
-        "Expirado": "danger",
+        'Recuperado': 'success',
+        'Não recuperado': 'danger',
+        'Recusado': 'danger',
+        'Expirado': 'danger',
 
     };
+
+    var statusRecoverySale = {
+        "Cancelado": 'danger',
+        "Recusado": 'danger',
+    }
     /**
      * @param sendNumber
      * @returns {string}
