@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
@@ -38,9 +39,9 @@ class SalesApiController extends Controller
     {
         try {
             $requestValidated = Validator::make($request->all(), [
-                'project'     => 'required|string',
+                'project'     => 'nullable|string',
                 'transaction' => 'nullable',
-                'type'        => 'required|string',
+                'type'        => 'nullable|string',
                 'status'      => 'nullable',
                 'client_name' => 'nullable|string',
                 'start_date'  => 'nullable',
@@ -51,92 +52,98 @@ class SalesApiController extends Controller
                                             'message' => 'Erro ao listar vendas, tente novamente mais tarde',
                                         ], 400);
             } else {
-            }
+                $companyModel     = new Company();
+                $clientModel      = new Client();
+                $transactionModel = new Transaction();
 
-            $companyModel     = new Company();
-            $clientModel      = new Client();
-            $transactionModel = new Transaction();
+                $data = $request->all();
 
-            $data = $request->all();
+                if (empty($request['status'])) {
+                    $status = [1, 2, 4, 6];
+                } else {
+                    $status = [$request['status']];
+                }
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                                          ->pluck('id')
-                                          ->toArray();
+                $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                                              ->pluck('id')
+                                              ->toArray();
 
-            $transactions = $transactionModel->with([
-                                                        'sale',
-                                                        'sale.project',
-                                                        'sale.client',
-                                                        'sale.plansSales',
-                                                        'sale.plansSales.plan',
-                                                        'sale.plansSales.plan.products',
-                                                        'sale.plansSales.plan.project',
-                                                    ])
-                                             ->whereHas('sale', function($querySale) {
-                                                 $querySale->whereNotIn('status', [3, 5, 10]);
-                                             })
-                                             ->whereIn('company_id', $userCompanies);
+                $transactions = $transactionModel->with([
+                                                            'sale',
+                                                            'sale.project',
+                                                            'sale.client',
+                                                            'sale.plansSales',
+                                                            'sale.plansSales.plan',
+                                                            'sale.plansSales.plan.products',
+                                                            'sale.plansSales.plan.project',
+                                                        ])
+                                                 ->whereHas('sale', function($querySale) use ($status) {
+                                                     $querySale->whereIn('status', $status);
+                                                 })
+                                                 ->whereIn('company_id', $userCompanies);
 
-            if (!empty($data["project"])) {
-                $projectId = current(Hashids::decode($data["project"]));
-                $transactions->whereHas('sale', function ($querySale) use ($projectId) {
-                    $querySale->where('project_id', $projectId);
-                });
-            }
+                if (!empty($data["project"])) {
+                    $projectId = current(Hashids::decode($data["project"]));
+                    $transactions->whereHas('sale', function($querySale) use ($projectId) {
+                        $querySale->where('project_id', $projectId);
+                    });
+                }
 
-            if (!empty($data["transaction"])) {
-                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $data["transaction"])));
+                if (!empty($data["transaction"])) {
+                    $saleId = current(Hashids::connection('sale_id')
+                                             ->decode(str_replace('#', '', $data["transaction"])));
 
-                $transactions->whereHas('sale', function($querySale) use ($saleId) {
-                    $querySale->where('id', $saleId);
-                });
-            }
+                    $transactions->whereHas('sale', function($querySale) use ($saleId) {
+                        $querySale->where('id', $saleId);
+                    });
+                }
 
-            if (!empty($data["client"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
-                $transactions->whereHas('sale', function ($querySale) use ($customers) {
-                    $querySale->whereIn('client_id', $customers);
-                });
-            }
+                if (!empty($data["client"])) {
+                    $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
+                    $transactions->whereHas('sale', function($querySale) use ($customers) {
+                        $querySale->whereIn('client_id', $customers);
+                    });
+                }
 
-            if (!empty($data["payment_method"])) {
-                $forma = $data["payment_method"];
-                $transactions->whereHas('sale', function ($querySale) use ($forma) {
-                    $querySale->where('payment_method', $forma);
-                });
-            }
+                if (!empty($data["payment_method"])) {
+                    $forma = $data["payment_method"];
+                    $transactions->whereHas('sale', function($querySale) use ($forma) {
+                        $querySale->where('payment_method', $forma);
+                    });
+                }
 
-            if (!empty($data["status"])) {
-                $status = $data["status"];
-                $transactions->whereHas('sale', function($querySale) use ($status) {
-                    $querySale->where('status', $status);
-                });
-            }
+                if (!empty($data["status"])) {
+                    $status = $data["status"];
+                    $transactions->whereHas('sale', function($querySale) use ($status) {
+                        $querySale->where('status', $status);
+                    });
+                }
 
-            if (!empty($data["start_date"]) && !empty($data["end_date"])) {
-                $start_date = $data["start_date"];
-                $end_date = $data["end_date"];
-                $transactions->whereHas('sale', function ($querySale) use ($start_date, $end_date) {
-                    $querySale->whereBetween('start_date', [$start_date, date('Y-m-d', strtotime($end_date . ' + 1 day'))]);
-                });
-            } else {
-
-                if (!empty($data["start_date"])) {
+                if (!empty($data["start_date"]) && !empty($data["end_date"])) {
                     $start_date = $data["start_date"];
-                    $transactions->whereHas('sale', function ($querySale) use ($start_date) {
-                        $querySale->whereDate('start_date', '>=', $start_date);
+                    $end_date   = $data["end_date"];
+                    $transactions->whereHas('sale', function($querySale) use ($start_date, $end_date) {
+                        $querySale->whereBetween('start_date', [$start_date, date('Y-m-d', strtotime($end_date . ' + 1 day'))]);
                     });
+                } else {
+
+                    if (!empty($data["start_date"])) {
+                        $start_date = $data["start_date"];
+                        $transactions->whereHas('sale', function($querySale) use ($start_date) {
+                            $querySale->whereDate('start_date', '>=', $start_date);
+                        });
+                    }
+
+                    if (!empty($data["end_date"])) {
+                        $end_date = $data["end_date"];
+                        $transactions->whereHas('sale', function($querySale) use ($end_date) {
+                            $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($end_date . ' + 1 day')));
+                        });
+                    }
                 }
 
-                if (!empty($data["end_date"])) {
-                    $end_date = $data["end_date"];
-                    $transactions->whereHas('sale', function ($querySale) use ($end_date) {
-                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($end_date . ' + 1 day')));
-                    });
-                }
+                return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
             }
-
-            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
