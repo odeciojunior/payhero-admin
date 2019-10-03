@@ -11,6 +11,7 @@ $(document).ready(function () {
     });
 
     function getDataDashboard() {
+        loadOnAny('.page-content');
         $.ajax({
             method: "GET",
             url: "/api/dashboard/",
@@ -20,6 +21,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -32,12 +34,11 @@ $(document).ready(function () {
                     $("#antecipation_money").html(data.values.antecipable_balance);
                     $("#available_money").html(data.values.available_balance);
                     $("#total_money").html(data.values.total_balance);
-                    $(".page-content").show();
                     $(".content-error").hide();
                 } else {
-                    $(".page-content").hide();
                     $(".content-error").show();
                 }
+                loadOnAny('.page-content', true);
             }
         });
     }
