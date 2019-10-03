@@ -7,9 +7,13 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
@@ -19,6 +23,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
 use Slince\Shopify\Client;
@@ -345,9 +350,58 @@ class TesteController extends Controller
         dd('aa');
     }
 
-    public function joaoLucasFunction()
+    public function joaoLucasFunctionDomain()
     {
-        dd(current(Hashids::decode('nyOeXZKYkgAQap9')));
+        $domainModel       = new Domain();
+        $domainRecordModel = new DomainRecord();
+
+        $domains = $domainModel->whereNull('cloudflare_domain_id')->get();
+
+        $cloudFlareService = new CloudFlareService();
+
+        /*foreach ($domains as $domain) {
+            if (!empty($domain)) {
+
+                $domainCloudflare = $cloudFlareService->getZones($domain->name);
+                if (!empty($domainCloudflare)) {
+
+                    foreach ($domainCloudflare as $dom) {
+
+                        $domain->update([
+                                            'cloudflare_domain_id' => $dom->id,
+                                        ]);
+                    }
+                } else {
+                    $domainRecordModel->where('domain_id', $domain->id)->delete();
+                    $domain->delete();
+                }
+            }
+        }*/
+
+        $domainRecords = $domainRecordModel->with('domain')->where('cloudflare_record_id', '')->get();
+
+        foreach ($domainRecords as $domainRecord) {
+            if (empty($domainRecord->cloudflare_record_id)) {
+                if (empty($domainRecord->domain)) {
+                } else {
+
+                    $domainRecordCloudflare = $cloudFlareService->getRecords($domainRecord->domain->name);
+                    foreach ($domainRecordCloudflare as $item) {
+                        if ($domainRecord->type == $item->type && $domainRecord->name == $item->name && $domainRecord->content == $item->content) {
+
+                            $domainRecord->update([
+                                                      'cloudflare_record_id' => $item->id,
+                                                  ]);
+                        }
+                    }
+                }
+            }
+        }
+
+        dd($domainRecords = $domainRecordModel->with('domain')->get());
+        /*$domainRecordModel->where('domain_id', $domain->id)->update([
+                                                                        'cloudflare_record_id' => $domainCloudflare->id,
+                                                                    ]);*/
     }
 
     public function removeSpecialCharacter()
@@ -384,6 +438,24 @@ class TesteController extends Controller
                                  ]
                              )->get();
         dd($start, $end, $boletos);
+    }
+
+    public function joaoLucasFunction()
+    {
+        $checkoutModel = new Checkout();
+
+        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
+                                        ->leftjoin('logs', function($join) {
+                                            $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
+                                        })
+                                        ->whereIn('status', ['recovered', 'abandoned cart'])->where('project_id', 111)
+                                        ->take(10)->get();
+
+        foreach ($abandonedCarts as $abandonedCart) {
+            $checkoutModel->find($abandonedCart->id)->update([
+                                                                 'client_name' => $abandonedCart->name,
+                                                             ]);
+        }
     }
 }
 

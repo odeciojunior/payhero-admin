@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Domain;
 
 /**
  * Class CheckoutService
@@ -22,12 +23,9 @@ class CheckoutService
     public function getAbandonedCart(string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
         $checkoutModel = new Checkout();
+        $domainModel   = new Domain();
 
-        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
-                                        ->leftjoin('logs', function($join) {
-                                            $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
-                                        })
-                                        ->whereIn('status', ['recovered', 'abandoned cart']);
+        $abandonedCarts = $checkoutModel->whereIn('status', ['recovered', 'abandoned cart']);
 
         $abandonedCarts->where('project_id', $projectId);
 
@@ -47,11 +45,11 @@ class CheckoutService
         }
 
         return $abandonedCarts->with([
-                                         'project.domains' => function($query) {
-                                             $query->where('status', 3);
+                                         'project.domains' => function($query) use ($domainModel) {
+                                             $query->where('status', $domainModel->present()->getStatus('approved'));
                                          },
                                          'checkoutPlans.plan',
-                                     ])->orderBy('id', 'DESC')->simplePaginate(10);
+                                     ])->orderBy('id', 'DESC')->paginate(10);
     }
 
     /**

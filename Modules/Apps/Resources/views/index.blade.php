@@ -52,5 +52,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('modules/apps/js/index.js') }}"></script>
+    <script src="{{ asset('modules/apps/js/index.js?v=1') }}"></script>
 @endpush

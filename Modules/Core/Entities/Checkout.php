@@ -82,6 +82,7 @@ class Checkout extends Model
         'utm_content',
         'email_sent_amount',
         'sms_sent_amount',
+        'client_name',
         'created_at',
         'updated_at',
         'deleted_at',

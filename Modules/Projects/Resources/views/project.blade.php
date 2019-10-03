@@ -276,15 +276,15 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/partners/js/partners.js')}}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js')}}"></script>
+        <script src="{{asset('modules/partners/js/partners.js?v=1')}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v=1')}}"></script>
         {{--<script src="{{asset('modules/domain/js/domain.js')}}"></script>--}}
-        <script src="{{asset('modules/domain/js/domainEdit.js')}}"></script>
-        <script src="{{asset('modules/sms-message/js/smsMessage.js')}}"></script>
-        <script src="{{asset('modules/pixels/js/pixels.js')}}"></script>
-        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js')}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js')}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js')}}"></script>
+        <script src="{{asset('modules/domain/js/domainEdit.js?v=1')}}"></script>
+        <script src="{{asset('modules/sms-message/js/smsMessage.js?v=1')}}"></script>
+        <script src="{{asset('modules/pixels/js/pixels.js?v=1')}}"></script>
+        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=1')}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js?v=1')}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v=1')}}"></script>
     @endpush
 @endsection
 

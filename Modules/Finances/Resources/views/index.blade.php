@@ -290,7 +290,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/finances/js/index.js') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection

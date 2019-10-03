@@ -93,6 +93,8 @@ $(document).ready(function () {
 
     getFilters();
 
+    atualizar();
+
     //Carrega o modal para regerar boleto
     $(document).on('click', '.boleto-pending', function () {
 

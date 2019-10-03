@@ -8,7 +8,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/companies?page=" + page,
+            url: $('meta[name="current-url"]').attr('content') + "/api/companies?page=" + page,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -18,7 +18,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log('GET /api/companies: success');
                 $.each(response.data, function (index, value) {
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
@@ -47,7 +46,6 @@ $(document).ready(function () {
                 $(".delete-company").on("click", function (event) {
                     event.preventDefault();
                     var company = $(this).attr('company');
-                    console.log('carai');
 
                     $("#bt-delete").unbind('click');
                     $("#bt-delete").on('click', function () {
@@ -55,19 +53,16 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "DELETE",
-                            url: "/api/companies/" + company,
+                            url: $('meta[name="current-url"]').attr('content') + "/api/companies/" + company,
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
                             },
                             error: function (response) {
-                                console.log('deu ruim');
-                                console.log(response)
                                 errorAjaxResponse(response);
                             },
                             success: function success(data) {
-                                console.log('DELETE /api/companies: success');
                                 alertCustom("success", data.message);
                                 atualizar(page);
                             }
