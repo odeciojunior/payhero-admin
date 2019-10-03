@@ -8,12 +8,12 @@ $(document).ready(function () {
     $("#type-products").on('change', function () {
 
         if ($(this).val() === "1") {
-            $('#select-projects-label').removeClass('disabled');
-            $('#select-projects').prop('disabled', false).removeClass('disabled');
+            $('#is-projects').show();
+            $('#btn-filtro').parent().removeClass('offset-md-3');
             $('#div-create').hide();
         } else {
-            $('#select-projects-label').addClass('disabled');
-            $('#select-projects').prop('disabled', true).addClass('disabled');
+            $('#is-projects').hide();
+            $('#btn-filtro').parent().addClass('offset-md-3');
             $('#div-create').show();
         }
     });
@@ -110,11 +110,9 @@ $(document).ready(function () {
 
                     pagination(response, 'products', updateProducts);
 
-                    $('#filter-products, #div-create').show();
                     $(".products-is-empty").hide();
                 } else {
                     $("#data-table-products, #pagination-products").html('');
-                    $('#filter-products, #div-create').hide();
                     $(".products-is-empty").show();
                 }
                 loadOnAny('.page-content', true);
