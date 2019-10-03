@@ -57,8 +57,6 @@ $(document).ready(function () {
 
     getFilters();
 
-    atualizar();
-
     //Carrega o modal para regerar boleto
     $(document).on('click', '.boleto-pending', function () {
 
@@ -114,26 +112,30 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(response.data){
+                if(response.data == ''){
+                    $('#export-excel, .page-content').hide();
+                    $('.content-error').show();
+                }
+                else{
                     $.each(response.data, function (index, project) {
                         $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
                     });
                 }
                 loadOnAny('.page-content', true);
+                atualizar();
             }
         });
     }
 
     // Obtem lista de vendas
-    function atualizar() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    function atualizar(link = null) {
 
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&type=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
+            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
         } else {
-            link = '/api/sales' + link + '&project=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&type=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
+            link = '/api/sales' + link + '&project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&start_date=' + $("#data_inicial").val() + '&end_date=' + $("#data_final").val();
         }
         $.ajax({
             method: "GET",
@@ -158,8 +160,10 @@ $(document).ready(function () {
                     2: 'pendente'
                 };
 
-                if (response.data) {
-                    console.log(response.data)
+                if (response.data == '') {
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                }
+                else{
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
@@ -187,10 +191,6 @@ $(document).ready(function () {
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
                     pagination(response, 'sales', atualizar);
-                } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
-                    $('#export-excel, .page-content').hide();
-                    $('.content-error').show();
                 }
             }
         });
