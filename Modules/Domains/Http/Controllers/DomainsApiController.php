@@ -496,7 +496,7 @@ class DomainsApiController extends Controller
                                             ]);
 
                             return response()->json([
-                                                        'message' => 'A verificação falhou, atualização de entradas DNS pendentes',
+                                                        'message' => 'A verificação falhou, atualização de nameservers pendentes',
                                                     ], 400);
                         }
                     } else {

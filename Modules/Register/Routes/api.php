@@ -4,13 +4,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['api'],
-        'prefix'     => 'register',
+        'middleware' => ['web'],
+        'prefix'     => 'register', 
     ],
     function() {
         Route::post('/', 'RegisterApiController@store');
     }
 );
+
 Route::group(
     [
         'middleware' => ['auth:api'],
