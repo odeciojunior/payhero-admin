@@ -224,7 +224,6 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
-        console.log(value.recovery_status);
 
         let data = '';
         data += '<tr>';
