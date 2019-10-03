@@ -2,12 +2,10 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
@@ -38,112 +36,92 @@ class SalesApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $requestValidated = Validator::make($request->all(), [
+            $data = $request->validate([
                 'project'     => 'nullable|string',
                 'transaction' => 'nullable',
-                'type'        => 'nullable|string',
+                'payment_method'        => 'nullable|string',
                 'status'      => 'nullable',
-                'client_name' => 'nullable|string',
-                'start_date'  => 'nullable',
-                'end_date'    => 'nullable',
+                'client' => 'nullable|string',
+                'date_type'  => 'nullable',
+                'date_range'    => 'nullable',
             ]);
-            if ($requestValidated->fails()) {
-                return response()->json([
-                                            'message' => 'Erro ao listar vendas, tente novamente mais tarde',
-                                        ], 400);
+
+            $companyModel = new Company();
+            $clientModel = new Client();
+            $transactionModel = new Transaction();
+
+
+            if (empty($request['status'])) {
+                $status = [1, 2, 4, 6];
             } else {
-                $companyModel     = new Company();
-                $clientModel      = new Client();
-                $transactionModel = new Transaction();
-
-                $data = $request->all();
-                if (empty($request['status'])) {
-                    $status = [1, 2, 4, 6];
-                } else {
-                    $status = [$request['status']];
-                }
-
-                $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                                              ->pluck('id')
-                                              ->toArray();
-
-                $transactions = $transactionModel->with([
-                                                            'sale',
-                                                            'sale.project',
-                                                            'sale.client',
-                                                            'sale.plansSales',
-                                                            'sale.plansSales.plan',
-                                                            'sale.plansSales.plan.products',
-                                                            'sale.plansSales.plan.project',
-                                                        ])
-                                                 ->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
-
-                if (!empty($data["project"])) {
-                    $projectId = current(Hashids::decode($data["project"]));
-                    $transactions->whereHas('sale', function($querySale) use ($projectId) {
-                        $querySale->where('project_id', $projectId);
-                    });
-                }
-
-                if (!empty($data["transaction"])) {
-                    $saleId = current(Hashids::connection('sale_id')
-                                             ->decode(str_replace('#', '', $data["transaction"])));
-
-                    $transactions->whereHas('sale', function($querySale) use ($saleId) {
-                        $querySale->where('id', $saleId);
-                    });
-                }
-
-                if (!empty($data["client"])) {
-                    $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
-                    $transactions->whereHas('sale', function($querySale) use ($customers) {
-                        $querySale->whereIn('client_id', $customers);
-                    });
-                }
-
-                if (!empty($data["payment_method"])) {
-                    $forma = $data["payment_method"];
-                    $transactions->whereHas('sale', function($querySale) use ($forma) {
-                        $querySale->where('payment_method', $forma);
-                    });
-                }
-
-                if (!empty($data["status"])) {
-                    $status = $data["status"];
-                    $transactions->whereHas('sale', function($querySale) use ($status) {
-                        $querySale->where('status', $status);
-                    });
-                }
-
-                if (!empty($data["start_date"]) && !empty($data["end_date"])) {
-                    $start_date = $data["start_date"];
-                    $end_date   = $data["end_date"];
-                    $transactions->whereHas('sale', function($querySale) use ($start_date, $end_date) {
-                        $querySale->whereBetween('start_date', [$start_date, date('Y-m-d', strtotime($end_date . ' + 1 day'))]);
-                    });
-                } else {
-
-                    if (!empty($data["start_date"])) {
-                        $start_date = $data["start_date"];
-                        $transactions->whereHas('sale', function($querySale) use ($start_date) {
-                            $querySale->whereDate('start_date', '>=', $start_date);
-                        });
-                    }
-
-                    if (!empty($data["end_date"])) {
-                        $end_date = $data["end_date"];
-                        $transactions->whereHas('sale', function($querySale) use ($end_date) {
-                            $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($end_date . ' + 1 day')));
-                        });
-                    }
-                }
-
-                return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
+                $status = [$request['status']];
             }
+
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                ->pluck('id')
+                ->toArray();
+
+            $transactions = $transactionModel->with([
+                'sale',
+                'sale.project',
+                'sale.client',
+                'sale.plansSales',
+                'sale.plansSales.plan',
+                'sale.plansSales.plan.products',
+                'sale.plansSales.plan.project',
+            ])->whereHas('sale', function ($querySale) use ($status) {
+                $querySale->whereIn('status', $status);
+            })->whereIn('company_id', $userCompanies)->whereNull('invitation_id');
+
+            if (!empty($data["project"])) {
+                $projectId = current(Hashids::decode($data["project"]));
+                $transactions->whereHas('sale', function ($querySale) use ($projectId) {
+                    $querySale->where('project_id', $projectId);
+                });
+            }
+
+            if (!empty($data["transaction"])) {
+                $saleId = current(Hashids::connection('sale_id')
+                    ->decode(str_replace('#', '', $data["transaction"])));
+
+                $transactions->whereHas('sale', function ($querySale) use ($saleId) {
+                    $querySale->where('id', $saleId);
+                });
+            }
+
+            if (!empty($data["client"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
+                $transactions->whereHas('sale', function ($querySale) use ($customers) {
+                    $querySale->whereIn('client_id', $customers);
+                });
+            }
+
+            if (!empty($data["payment_method"])) {
+                $forma = $data["payment_method"];
+                $transactions->whereHas('sale', function ($querySale) use ($forma) {
+                    $querySale->where('payment_method', $forma);
+                });
+            }
+
+            if (!empty($data["status"])) {
+                $status = $data["status"];
+                $transactions->whereHas('sale', function ($querySale) use ($status) {
+                    $querySale->where('status', $status);
+                });
+            }
+
+            $dateRange = $this->validateDateRange($data["date_range"]);
+            if (!empty($data["date_type"]) && $dateRange) {
+                $dateType = $data["date_type"];
+                $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                });
+            }
+
+            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
-
             return response()->json(['message' => 'Erro ao carregar vendas'], 400);
         }
     }
@@ -159,10 +137,10 @@ class SalesApiController extends Controller
 
             if (isset($id)) {
                 $sale = $saleModel->with([
-                                             'transactions' => function($query) {
-                                                 $query->where('company_id', '!=', null)->first();
-                                             },
-                                         ])->find(current(Hashids::connection('sale_id')->decode($id)));
+                    'transactions' => function ($query) {
+                        $query->where('company_id', '!=', null)->first();
+                    },
+                ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
                 return new SalesResource($sale);
             }
@@ -186,17 +164,17 @@ class SalesApiController extends Controller
             $dataRequest = $request->all();
             $dataRequest = array_filter($dataRequest);
 
-            $saleModel     = new Sale();
+            $saleModel = new Sale();
             $planSaleModel = new PlanSale();
-            $clientModel   = new Client();
-            $planModel     = new Plan();
+            $clientModel = new Client();
+            $planModel = new Plan();
             $checkoutModel = new Checkout();
             $shippingModel = new Shipping();
 
             $sales = $saleModel->where('owner_id', auth()->user()->id);
 
             if (!empty($dataRequest['select_project'])) {
-                $plans    = $planModel->where('project', $dataRequest['select_project'])->pluck('id');
+                $plans = $planModel->where('project', $dataRequest['select_project'])->pluck('id');
                 $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
@@ -214,20 +192,14 @@ class SalesApiController extends Controller
                 $sales->where('status', $dataRequest['sale_status']);
             }
 
-            if (!empty($dataRequest['start_date'])) {
-                $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['start_date'] . ' 00:00:00')
-                                       ->toDateTimeString();
-                $sales->where('start_date', '>=', $startDateTime ?? null);
-            }
-
-            if (!empty($dataRequest['end_date'])) {
-                $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['end_date'] . " 23:59:59")
-                                     ->toDateTimeString();
-                $sales->where('start_date', '<=', $endDateTime ?? null);
+            $dateRange = $this->validateDateRange($dataRequest['date_range']);
+            if (!empty($dataRequest['date_type']) && $dateRange) {
+                $dateType = $dataRequest['date_type'];
+                $sales->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             }
 
             $sales->with(['client', 'project', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
-                  ->orderBy('id', 'DESC');
+            ->orderBy('id', 'DESC');
 
             $salesResult = $sales->get();
 
@@ -273,56 +245,55 @@ class SalesApiController extends Controller
                 'utm_term',
                 'utm_content',
                 'utm_perfect',
-
             ];
 
             $saleData = collect();
             foreach ($salesResult as $sale) {
-                $checkout  = $checkoutModel->find($sale->checkout->id);
-                $shipping  = $shippingModel->find($sale->shipping->id);
+                $checkout = $checkoutModel->find($sale->checkout->id);
+                $shipping = $shippingModel->find($sale->shipping->id);
                 $saleArray = [
-                    'project_name'          => $sale->project->name ?? '',
-                    'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')
-                                                                       ->encode($sale->id)),
-                    'owner'                 => $sale->user->name ?? '',
-                    'affiliate'             => null,
-                    'payment_form'          => $sale->payment_form ?? '',
+                    'project_name' => $sale->project->name ?? '',
+                    'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
+                            ->encode($sale->id)),
+                    'owner' => $sale->user->name ?? '',
+                    'affiliate' => null,
+                    'payment_form' => $sale->payment_form ?? '',
                     //'payment_method' => ($sale->payment_method == 1) ? "credit_card" : "boleto",
-                    'installments_amount'   => $sale->installments_amount ?? '',
-                    'installments_value'    => $sale->installments_value ?? '',
-                    'flag'                  => $sale->flag ?? '',
-                    'boleto_link'           => $sale->boleto_link ?? '',
+                    'installments_amount' => $sale->installments_amount ?? '',
+                    'installments_value' => $sale->installments_value ?? '',
+                    'flag' => $sale->flag ?? '',
+                    'boleto_link' => $sale->boleto_link ?? '',
                     'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
-                    'boleto_due_date'       => $sale->boleto_due_date ?? '',
-                    'start_date'            => $sale->start_date ?? '',
-                    'end_date'              => $sale->end_date ?? '',
-                    'created_at'            => $sale->created_at ?? '',
-                    'status'                => $sale->status ?? '',
-                    'gateway_status'        => $sale->gateway_status ?? '',
-                    'iof'                   => $sale->iof ?? '',
-                    'shopify_discount'      => $sale->shopify_discount ?? '',
-                    'shipping'              => $shipping->name ?? '',
-                    'shipping_value'        => $shipping->value ?? '',
-                    'dolar_quotation'       => $sale->dolar_quotation ?? '',
-                    'total_paid'            => $sale->total_paid_value ?? '',
-                    'client_name'           => $sale->client->name ?? '',
-                    'client_telephone'      => $sale->client->telephone ?? '',
-                    'client_email'          => $sale->client->email ?? '',
-                    'client_document'       => $sale->client->document ?? '',
-                    'client_street'         => $sale->delivery->street ?? '',
-                    'client_number'         => $sale->delivery->number ?? '',
-                    'client_complement'     => $sale->delivery->complement ?? '',
-                    'client_neighborhood'   => $sale->delivery->neighborhood ?? '',
-                    'client_zip_code'       => $sale->delivery->zip_code ?? '',
-                    'client_city'           => $sale->delivery->city ?? '',
-                    'client_state'          => $sale->delivery->state ?? '',
-                    'client_country'        => $sale->delivery->country ?? '',
-                    'src'                   => $checkout->src ?? '',
-                    'utm_source'            => $checkout->utm_source ?? '',
-                    'utm_medium'            => $checkout->utm_medium ?? '',
-                    'utm_campaign'          => $checkout->utm_campaign ?? '',
-                    'utm_term'              => $checkout->utm_term ?? '',
-                    'utm_content'           => $checkout->utm_content ?? '',
+                    'boleto_due_date' => $sale->boleto_due_date ?? '',
+                    'start_date' => $sale->start_date ?? '',
+                    'end_date' => $sale->end_date ?? '',
+                    'created_at' => $sale->created_at ?? '',
+                    'status' => $sale->status ?? '',
+                    'gateway_status' => $sale->gateway_status ?? '',
+                    'iof' => $sale->iof ?? '',
+                    'shopify_discount' => $sale->shopify_discount ?? '',
+                    'shipping' => $shipping->name ?? '',
+                    'shipping_value' => $shipping->value ?? '',
+                    'dolar_quotation' => $sale->dolar_quotation ?? '',
+                    'total_paid' => $sale->total_paid_value ?? '',
+                    'client_name' => $sale->client->name ?? '',
+                    'client_telephone' => $sale->client->telephone ?? '',
+                    'client_email' => $sale->client->email ?? '',
+                    'client_document' => $sale->client->document ?? '',
+                    'client_street' => $sale->delivery->street ?? '',
+                    'client_number' => $sale->delivery->number ?? '',
+                    'client_complement' => $sale->delivery->complement ?? '',
+                    'client_neighborhood' => $sale->delivery->neighborhood ?? '',
+                    'client_zip_code' => $sale->delivery->zip_code ?? '',
+                    'client_city' => $sale->delivery->city ?? '',
+                    'client_state' => $sale->delivery->state ?? '',
+                    'client_country' => $sale->delivery->country ?? '',
+                    'src' => $checkout->src ?? '',
+                    'utm_source' => $checkout->utm_source ?? '',
+                    'utm_medium' => $checkout->utm_medium ?? '',
+                    'utm_campaign' => $checkout->utm_campaign ?? '',
+                    'utm_term' => $checkout->utm_term ?? '',
+                    'utm_content' => $checkout->utm_content ?? '',
                 ];
 
                 $saleData->push(collect($saleArray));
@@ -334,5 +305,21 @@ class SalesApiController extends Controller
 
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
+    }
+
+    /**
+     * @param $dateString
+     * @return bool|mixed
+     */
+    private function validateDateRange($dateString)
+    {
+        preg_match_all('/(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)[0-9]{2})/', $dateString, $matches);
+        $dateRange = current($matches);
+        if (count($dateRange) == 2) {
+            $dateRange[0] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[0])));
+            $dateRange[1] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[1])));
+            return $dateRange;
+        }
+        return false;
     }
 }
