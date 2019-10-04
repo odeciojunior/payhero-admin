@@ -7,9 +7,8 @@ use Modules\Core\Entities\Checkout;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateCheckoutTableListener implements ShouldQueue
+class UpdateCheckoutTableListener
 {
-    use Queueable;
 
     public function __construct(){
 
@@ -31,7 +30,7 @@ class UpdateCheckoutTableListener implements ShouldQueue
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart'])
                                         ->whereNull('client_name')
-                                        ->get();
+                                        ->take(1000)->get();
 
         foreach ($abandonedCarts as $abandonedCart) {
             $abandonedCart->update([
