@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SalesRecoveryService;
+use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoveryIndexResourceTransformer;
@@ -169,20 +171,19 @@ class SalesRecoveryApiController extends Controller
                     $totalPaidValue = $saleService->getSubTotal($sale);
                     $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-                    if(!empty($request->input('discountValue'))){
+                    if (!empty($request->input('discountValue'))) {
 
-                        if($request->discountType == 'percentage'){
-                            $discount = intval($totalPaidValue * (preg_replace("/[^0-9]/", "", $request->input('discountValue')) / 100 ));
+                        if ($request->discountType == 'percentage') {
+                            $discount       = intval($totalPaidValue * (preg_replace("/[^0-9]/", "", $request->input('discountValue')) / 100));
                             $totalPaidValue -= preg_replace("/[^0-9]/", "", $discount);
-                        }
-                        else{
-                            $discount = preg_replace("/[^0-9]/", "", $request->input('discountValue'));
+                        } else {
+                            $discount       = preg_replace("/[^0-9]/", "", $request->input('discountValue'));
                             $totalPaidValue -= $discount;
                         }
 
                         $sale->update([
-                            'shopify_discount' => $discount
-                        ]);
+                                          'shopify_discount' => $discount,
+                                      ]);
                     }
 
                     $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
@@ -214,5 +215,78 @@ class SalesRecoveryApiController extends Controller
                                         'message' => "Ocorreu um erro, tente novamente mais tarde",
                                     ], 400);
         }
+    }
+
+    public function getCartRefused(Request $request)
+    {
+        try {
+            $data                 = $request->all();
+            $salesRecoveryService = new SalesRecoveryService();
+
+            $projectId = null;
+            if (!empty($data['project'])) {
+                $projectId = current(Hashids::decode($data['project']));
+            }
+
+            $client = null;
+            if (!empty($data['client'])) {
+                $client = $data['client'];
+            }
+
+            $dateStart = null;
+            $dateEnd   = null;
+
+            $dateRange = FoxUtils::validateDateRange($data["date_range"]);
+            if (!empty($data["date_type"]) && $dateRange) {
+                $dateStart = $dateRange[0] . ' 00:00:00';
+                $dateEnd   = $dateRange[1] . ' 23:59:59';
+            }
+
+            $paymentMethod = 1;
+            $status        = [3];
+
+            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client);
+
+            return SalesRecoveryCardRefusedResource::collection($sales);
+        } catch (Exception $e) {
+            Log::warning('Erro buscar dados cartão recusado, SalesRecoveryApiController - getCartRefused');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ]);
+        }
+    }
+
+    public function getBoletoOverdue(Request $request)
+    {
+        $data                 = $request->all();
+        $salesRecoveryService = new SalesRecoveryService();
+
+        $projectId = null;
+        if (!empty($data['project'])) {
+            $projectId = current(Hashids::decode($data['project']));
+        }
+
+        $client = null;
+        if (!empty($data['client'])) {
+            $client = $data['client'];
+        }
+
+        $dateStart = null;
+        $dateEnd   = null;
+
+        $dateRange = FoxUtils::validateDateRange($data["date_range"]);
+        if (!empty($data["date_type"]) && $dateRange) {
+            $dateStart = $dateRange[0] . ' 00:00:00';
+            $dateEnd   = $dateRange[1] . ' 23:59:59';
+        }
+
+        $paymentMethod = 2;
+        $status        = [5];
+
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client);
+
+        return SalesRecoveryCardRefusedResource::collection($sales);
     }
 }

@@ -15,12 +15,12 @@
         <div class="page-content container">
             <div id='project-not-empty' style='display:none'>
                 <div id="" class="card shadow p-20">
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3">
+                    <div class="row align-items-baseline">
+                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad"> </select>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3">
+                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
                             <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
@@ -28,25 +28,23 @@
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <label for="start_date">Data inicial</label>
-                            <input name='start_date' id="start_date" timezone='' class="form-control input-pad" type="date">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <label for='date-range-sales-recovery'>Filtrar Data</label>
+                            <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad' placeholder='Clique para editar...' readonly>
                         </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <label for="end_date">Data final</label>
-                            <input name='end_date' id="end_date" class="form-control input-pad" type="date">
-                        </div>
-                    </div>
-                    <div class="row mt-15">
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="client-name">Nome do Cliente</label>
                             <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
                         </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-2 mt-30 text-right float-right">
-                            <button id="bt_filtro" class="btn btn-primary col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-2 col-12 text-right">
+                            <label></label>
+                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top:7px">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
                         </div>
+                    </div>
+                    <div class="row mt-15">
+                        <div class='col-xl-3'></div>
                     </div>
                 </div>
                 <div class="card shadow" style="min-height: 300px">
@@ -127,7 +125,8 @@
                                 <div class="header-modal">
                                     <div class="row justify-content-between align-items-center" style="width: 100%;">
                                         <div class="col-lg-2"> &nbsp;</div>
-                                        <div class="col-lg-8 text-center"><h4 id='modal-title'> Detalhes da venda </h4>
+                                        <div class="col-lg-8 text-center">
+                                            <h4 id='modal-title'> Detalhes da venda </h4>
                                         </div>
                                         <div class="col-lg-2 text-right">
                                             <a role="button" data-dismiss="modal">
@@ -244,11 +243,11 @@
             {{-- FIM projeto nao existem projetos--}}
         </div>
     </div>
-
     @push('scripts')
 
         <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
 
     @endpush
 

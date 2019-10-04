@@ -21,11 +21,6 @@ class TransactionResource extends Resource
         } else {
             $flag = 'boleto';
         }
-      /*  if ($sale->checkout->status == 'abandoned cart') {
-            $status = 'Não recuperado';
-        } else if ($sale->checkout->status == 'recovered') {
-            $status = 'Recuperado';
-        }*/
 
         return [
             'sale_code'        => '#' . Hashids::connection('sale_id')->encode($sale->id),
@@ -46,6 +41,7 @@ class TransactionResource extends Resource
             'sms_status'       => $sale->checkout->present()->getSmsSentAmount(),
             'recovery_status'  => $sale->checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado',
             'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber(preg_replace('/\D/', '', $sale->client->telephone)) . '&text=Olá ' . explode(' ', preg_replace('/\D/', '', $sale->client->name))[0],
-        ];
+            'total'
+            ];
     }
 }

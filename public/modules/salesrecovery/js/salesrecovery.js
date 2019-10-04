@@ -7,6 +7,45 @@ $(document).ready(function () {
         updateSalesRecovery();
     });
 
+    let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    let endDate = moment().format('YYYY-MM-DD');
+    $("#date-range-sales-recovery").daterangepicker({
+        startDate: moment().subtract(30, 'days'),
+        endDate: moment(),
+        opens: 'center',
+        maxDate: moment().endOf('day'),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
+        locale: {
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Limpar',
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, function (start, end) {
+        startDate = start.format('YYYY-MM-DD');
+        endDate = end.format('YYYY-MM-DD');
+    });
+
+    /**
+     * Busca os projetos para montar o select
+     */
     function getProjects() {
         $.ajax({
             method: "GET",
@@ -47,15 +86,20 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = '';
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client=${$("#client-name").val()}`;
+            url = `?project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at`;
         } else {
-            url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client=${$("#client-name").val()}`;
+            url = `${link}&project=${$("#project option:selected").val()}&status=${$("#type_recovery option:selected").val()}&date_range=${$("#date-range-sales-recovery").val()}&client=${$("#client-name").val()}&date_type=created_at`;
         }
 
         if ($("#type_recovery option:selected").val() == 1) {
             return `/api/checkout${url}`;
+        } else if ($("#type_recovery option:selected").val() == 3) {
+            return `/api/recovery/getrefusedcart${url}`;
+        } else if ($("#type_recovery option:selected").val() == 5) {
+            return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
+
         }
     }
 
@@ -86,94 +130,105 @@ $(document).ready(function () {
                 $('#table_data').html('');
                 $('#carrinhoAbandonado').addClass('table-striped');
 
-                createHTMLTable(response);
-                pagination(response, 'salesRecovery', updateSalesRecovery);
-
-                $(".copy_link").on("click", function () {
-                    var temp = $("<input>");
-                    $("body").append(temp);
-                    temp.val($(this).attr('link')).select();
-                    document.execCommand("copy");
-                    temp.remove();
-                    alertCustom('success', 'Link copiado!');
-                });
-
                 if (response.data == '' && $('#type_recovery').val() == 1) {
+                    $("#pagination-salesRecovery").hide();
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
-                } else if (response.data == '' && $('#type_recovery').val() == 2) {
+                } else if (response.data == '' && $('#type_recovery').val() == 5) {
+                    $("#pagination-salesRecovery").hide();
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido até o momento</td></tr>");
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
+                    $("#pagination-salesRecovery").hide();
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
-                }
+                } else {
 
-                if ($("#type_recovery").val() == '2') {
-                    $(".sale_status").hover(
-                        function () {
-                            $(this).css('cursor', 'pointer').text('Regerar');
-                            $(this).css("background", "#545B62");
-                        }, function () {
-                            var status = $(this).attr('status');
-                            $(this).removeAttr("style");
-                            $(this).text(status);
-                        }
-                    );
+                    createHTMLTable(response);
+                    $("#pagination-salesRecovery").show();
+                    pagination(response, 'salesRecovery', updateSalesRecovery);
 
-                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
-                    $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
+                    $(".copy_link").on("click", function () {
+                        var temp = $("<input>");
+                        $("body").append(temp);
+                        temp.val($(this).attr('link')).select();
+                        document.execCommand("copy");
+                        temp.remove();
+                        alertCustom('success', 'Link copiado!');
+                    });
 
-                    $('.sale_status').on('click', function () {
-                        $('#saleId').val('');
-                        let saleId = $(this).attr('sale_id');
-                        $('#saleId').val(saleId);
-                        $('#modal_regerar_boleto').modal('show');
+                    if ($("#type_recovery").val() == '5') {
+                        $(".sale_status").hover(
+                            function () {
+                                $(this).css('cursor', 'pointer').text('Regerar');
+                                $(this).css("background", "#545B62");
+                            }, function () {
+                                var status = $(this).attr('status');
+                                $(this).removeAttr("style");
+                                $(this).text(status);
+                            }
+                        );
 
-                        $('#bt_send').on('click', function () {
-                            loadingOnScreen();
-                            $.ajax({
-                                method: "POST",
-                                url: "/api/recovery/regenerateboleto",
-                                dataType: "json",
-                                headers: {
-                                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                                    'Accept': 'application/json',
-                                },
-                                data: {
-                                    saleId: saleId,
-                                    date: $('#date').val(),
-                                    discountType: $("#discount_type").val(),
-                                    discountValue: $("#discount_value").val()
-                                },
-                                error: function error(response) {
-                                    loadingOnScreenRemove();
+                        $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                        $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
-                                    errorAjaxResponse(response);
+                        $('.sale_status').on('click', function () {
+                            $('#saleId').val('');
+                            let saleId = $(this).attr('sale_id');
+                            $('#saleId').val(saleId);
+                            $('#modal_regerar_boleto').modal('show');
 
-                                },
-                                success: function success() {
-                                    loadingOnScreenRemove();
-                                    $(".loading").css("visibility", "hidden");
-                                    window.location = '/sales';
-                                }
+                            $('#bt_send').on('click', function () {
+                                loadingOnScreen();
+
+                                regenerateBoleto(saleId);
+
                             });
                         });
+                    }
+                    $('.details-cart-recovery').unbind('click');
+                    $('.details-cart-recovery').on('click', function () {
+
+                        ajaxDetails($(this).data('venda'));
+
+                    });
+
+                    $('.estornar_venda').unbind('click');
+                    $('.estornar_venda').on('click', function () {
+
+                        id_venda = $(this).attr('venda');
+
+                        $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
+                        $('#modal_estornar_body').html('');
                     });
                 }
+            }
+        });
+    }
 
-                $('.details-cart-recovery').unbind('click');
-                $('.details-cart-recovery').on('click', function () {
-
-                    ajaxDetails($(this).data('venda'));
-
-                });
-
-                $('.estornar_venda').unbind('click');
-                $('.estornar_venda').on('click', function () {
-
-                    id_venda = $(this).attr('venda');
-
-                    $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
-                    $('#modal_estornar_body').html('');
-                });
+    /**
+     * @param saleId
+     */
+    function regenerateBoleto(saleId) {
+        $.ajax({
+            method: "POST",
+            url: "/api/recovery/regenerateboleto",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                saleId: saleId,
+                date: $('#date').val(),
+                discountType: $("#discount_type").val(),
+                discountValue: $("#discount_value").val()
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success() {
+                loadingOnScreenRemove();
+                $(".loading").css("visibility", "hidden");
+                window.location = '/sales';
             }
         });
     }
@@ -185,7 +240,11 @@ $(document).ready(function () {
     function createHTMLTable(response) {
         let html = '';
         $.each(response.data, function (index, value) {
-            if (typeof value.sale_code === 'undefined') {
+            if (value.type === 'cart_refundend') {
+                html += createHtmlOthers(value);
+            } else if (value.type === 'expired') {
+                html += createHtmlOthers(value);
+            } else if (typeof value.sale_code === 'undefined') {
                 html += createHtmlCartAbandoned(value);
             } else {
                 html += createHtmlOthers(value);
@@ -225,14 +284,6 @@ $(document).ready(function () {
      * @returns {string}
      */
     function createHtmlOthers(value) {
-        console.log(value);
-        let badge = '';
-        let label = '';
-        if (value.method === 2) {
-            label = 'vencido';
-        } else {
-            label = 'recusado';
-        }
 
         let data = '';
         data += '<tr>';
@@ -241,18 +292,18 @@ $(document).ready(function () {
         data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
         data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
         data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-        data += "<td><span class='sale_status badge badge-danger' status='" + value.recovery_status + "' sale_id='" + value.id + "'>" + label + "</span></td>";
+        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' sale_id='" + value.id + "'>" + value.recovery_status + "</span></td>";
         data += "<td>" + value.total_paid + "</td>";
         data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
         data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
-        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+        data += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id_default + "' ><i class='material-icons gradient'>remove_red_eye</i></button></td>";
         data += "</tr>";
 
         return data;
 
     }
 
-    // ajax modal details
+// ajax modal details
     function ajaxDetails(sale) {
         $.ajax({
             method: "POST",

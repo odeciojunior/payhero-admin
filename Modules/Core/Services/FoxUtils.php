@@ -154,4 +154,18 @@ class FoxUtils
     {
         return current(Hashids::decode($hash));
     }
+
+    public static function validateDateRange($dateString)
+    {
+        preg_match_all('/(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)[0-9]{2})/', $dateString, $matches);
+        $dateRange = current($matches);
+        if (count($dateRange) == 2) {
+            $dateRange[0] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[0])));
+            $dateRange[1] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[1])));
+
+            return $dateRange;
+        }
+
+        return false;
+    }
 }
