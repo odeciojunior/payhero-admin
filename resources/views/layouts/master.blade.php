@@ -145,7 +145,7 @@
     {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=1') }}"></script>
 
 @endif
 </body>
