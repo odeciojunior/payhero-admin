@@ -20,12 +20,11 @@
     .display-xlg-none {
         display: none !important;
     }
-
-    .min-row-height tr{
-        height:60px;
+    .min-row-height tr {
+        height: 60px;
     }
-    .options-column-width{
-        width:200px !important;
+    .options-column-width {
+        width: 200px !important;
     }
 
     .mg-responsive {
@@ -41,13 +40,11 @@
     .display-lg-none {
         display: none !important;
     }
-
-    .min-row-height tr{
-        height:60px;
+    .min-row-height tr {
+        height: 60px;
     }
-
-    .options-column-width{
-        width:200px;
+    .options-column-width {
+        width: 200px;
     }
 
     .mg-responsive {
@@ -63,13 +60,11 @@
     .display-m-none {
         display: none !important;
     }
-
-    .min-row-height tr{
-        height:60px;
+    .min-row-height tr {
+        height: 60px;
     }
-
-    .options-column-width{
-        width:200px;
+    .options-column-width {
+        width: 200px;
     }
 
     .mg-responsive {
@@ -92,13 +87,11 @@
     .display-sm-none {
         display: none !important;
     }
-
-    .min-row-height tr{
-        height:60px;
+    .min-row-height tr {
+        height: 60px;
     }
-
-    .options-column-width{
-        width:200px;
+    .options-column-width {
+        width: 200px;
     }
 
     .mg-responsive {
@@ -128,9 +121,8 @@
     .display-xsm-none {
         display: none !important;
     }
-
-    .min-row-height tr, .options-column-width, #modal-saleDetails{
-        height:unset;
+    .min-row-height tr, .options-column-width, #modal-saleDetails {
+        height: unset;
         width: unset !important;
     }
 
@@ -225,6 +217,13 @@
             border-bottom: 0;
         }
     }
+}
+.ellipsis {
+    display: inline-block;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
 }
 
 .swal2-toast .swal2-title {

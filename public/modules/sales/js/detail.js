@@ -255,7 +255,7 @@ $(() => {
                 let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                                    <span class='small'>${value.name}</span>
+                                    <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
                                 </td>
                                 <td>
                                     <span class='tracking-code-span small ellipsis'>${value.tracking_code}</span>

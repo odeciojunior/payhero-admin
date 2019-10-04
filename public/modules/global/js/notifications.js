@@ -26,7 +26,8 @@ $(document).ready(function () {
             method: 'POST',
             url: '/api/notifications/markasread/',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -43,7 +44,8 @@ $(document).ready(function () {
             method: 'GET',
             url: '/api/notifications/unreadamount',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -62,7 +64,8 @@ $(document).ready(function () {
             method: 'GET',
             url: '/api/notifications/unread',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
