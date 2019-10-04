@@ -8,7 +8,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: $('meta[name="current-url"]').attr('content') + "/api/companies?page=" + page,
+            url: "/api/companies?page=" + page,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -53,7 +53,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "DELETE",
-                            url: $('meta[name="current-url"]').attr('content') + "/api/companies/" + company,
+                            url: "/api/companies/" + company,
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),

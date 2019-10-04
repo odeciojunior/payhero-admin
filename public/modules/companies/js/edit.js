@@ -71,7 +71,7 @@ $(document).ready(function () {
         //Get Company data from laravel api
         $.ajax({
             method: "GET",
-            url: $('meta[name="current-url"]').attr('content') + "/api/companies/" + encodedId,
+            url: "/api/companies/" + encodedId,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -103,7 +103,7 @@ $(document).ready(function () {
             loadingOnScreen();
             $.ajax({
                 method: "POST",
-                url: $('meta[name="current-url"]').attr('content') + companyUpdateForm.attr('action'),
+                url: companyUpdateForm.attr('action'),
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
@@ -127,7 +127,7 @@ $(document).ready(function () {
             loadingOnScreen();
             $.ajax({
                 method: "POST",
-                url: $('meta[name="current-url"]').attr('content') + companyBankUpdateForm.attr('action'),
+                url: companyBankUpdateForm.attr('action'),
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
