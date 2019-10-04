@@ -448,15 +448,18 @@ class TesteController extends Controller
                                         ->leftjoin('logs', function($join) {
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
                                         })
-                                        ->whereIn('status', ['recovered', 'abandoned cart'])->where('project_id', 111)
-                                        ->take(10)->get();
+                                        ->whereIn('status', ['recovered', 'abandoned cart'])
+                                        ->get();
 
         foreach ($abandonedCarts as $abandonedCart) {
             $checkoutModel->find($abandonedCart->id)->update([
-                                                                 'client_name' => $abandonedCart->name,
+                                                                 'client_name'      => $abandonedCart->name,
+                                                                 'client_telephone' => $abandonedCart->telephone,
                                                              ]);
         }
+
     }
+
 }
 
 

@@ -244,11 +244,19 @@ $(function () {
 
     function atualizarPixel() {
 
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (link == null) {
+            link = '/api/project/' + projectId + '/pixels';
+        } else {
+            link = '/api/project/' + projectId + '/pixels' + link;
+        }
+
         loadOnTable('#data-table-pixel', '#table-pixel');
 
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId + "/pixels",
+            url: link,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -286,79 +294,5 @@ $(function () {
     function clearFields() {
         $('.pixel-description').val('');
         $('.pixel-code').val('');
-    }
-    function pagination(response) {
-        if (response.meta.last_page == 1) {
-            $("#primeira_pagina_pixel").hide();
-            $("#ultima_pagina_pixel").hide();
-        } else {
-
-            $("#pagination-pixels").html("");
-
-            let primeira_pagina_pixel = "<button id='primeira_pagina_pixel' class='btn nav-btn'>1</button>";
-
-            $("#pagination-pixels").append(primeira_pagina_pixel);
-
-            if (response.meta.current_page == '1') {
-                $("#primeira_pagina_pixel").attr('disabled', true);
-                $("#primeira_pagina_pixel").addClass('nav-btn');
-                $("#primeira_pagina_pixel").addClass('active');
-            }
-
-            $('#primeira_pagina_pixel').on("click", function () {
-                atualizarPixel('?page=1');
-            });
-
-            for (x = 3; x > 0; x--) {
-
-                if (response.meta.current_page - x <= 1) {
-                    continue;
-                }
-
-                $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-                $('#pagina_pixel_' + (response.meta.current_page - x)).on("click", function () {
-                    atualizarPixel('?page=' + $(this).html());
-                });
-            }
-
-            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                let pagina_atual_pixel = "<button id='pagina_atual_pixel' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-                $("#pagination-pixels").append(pagina_atual_pixel);
-
-                $("#pagina_atual_pixel").attr('disabled', true);
-                $("#pagina_atual_pixel").addClass('nav-btn');
-                $("#pagina_atual_pixel").addClass('active');
-            }
-            for (x = 1; x < 4; x++) {
-
-                if (response.meta.current_page + x >= response.meta.last_page) {
-                    continue;
-                }
-
-                $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-                $('#pagina_pixel_' + (response.meta.current_page + x)).on("click", function () {
-                    atualizarPixel('?page=' + $(this).html());
-                });
-            }
-
-            if (response.meta.last_page != '1') {
-                let ultima_pagina_pixel = "<button id='ultima_pagina_pixel' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
-                $("#pagination-pixels").append(ultima_pagina_pixel);
-
-                if (response.meta.current_page == response.meta.last_page) {
-                    $("#ultima_pagina_pixel").attr('disabled', true);
-                    $("#ultima_pagina_pixel").addClass('nav-btn');
-                    $("#ultima_pagina_pixel").addClass('active');
-                }
-
-                $('#ultima_pagina_pixel').on("click", function () {
-                    atualizarPixel('?page=' + response.meta.last_page);
-                });
-            }
-        }
     }
 });
