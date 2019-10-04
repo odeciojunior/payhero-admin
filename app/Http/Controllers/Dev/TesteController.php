@@ -257,21 +257,24 @@ class TesteController extends Controller
     public function julioFunction()
     {
 
-        $plans = Plan::whereNotNull('shopify_variant_id')->get();
+        $checkoutModel = new Checkout();
 
-        foreach ($plans as $plan) {
+        $checkouts = $checkoutModel->where('email_sent_amount', '>', '10')->get();
 
-            $product = $plan->products->first();
-
-            if (!empty($product)) {
-                $product->update([
-                                     'shopify_id'         => $plan->shopify_id,
-                                     'shopify_variant_id' => $plan->shopify_variant_id,
-                                 ]);
-            }
+        foreach($checkouts as $checkout){
+            $checkout->update([
+                'email_sent_amount' => '6'
+            ]);
         }
 
-        dd('heyy');
+        $checkouts = $checkoutModel->where('sms_sent_amount', '>', '10')->get();
+
+        foreach($checkouts as $checkout){
+            $checkout->update([
+                'sms_sent_amount' => '3'
+            ]);
+        }
+
     }
 
     public function parseToArray($xpath, $class)
