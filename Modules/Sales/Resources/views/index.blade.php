@@ -6,15 +6,6 @@
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <style type='text/css'>
-            .ellipsis {
-                display: inline-block;
-                width: 100px;
-                white-space: nowrap;
-                overflow: hidden !important;
-                text-overflow: ellipsis;
-            }
-        </style>
     @endpush
 
     <!-- Page -->

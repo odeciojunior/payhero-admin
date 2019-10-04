@@ -38,7 +38,6 @@ class ProjectsResource extends Resource
      */
     public function toArray($request)
     {
-
         return [
             'id'                         => Hashids::encode($this->id),
             'photo'                      => $this->photo,
@@ -58,6 +57,7 @@ class ProjectsResource extends Resource
             'card_redirect'              => $this->card_redirect,
             'analyzing_redirect'         => $this->analyzing_redirect,
             'shopify_id'                 => $this->shopify_id,
+            'status'                     => isset($this->domains[0]->name) ? 1 : 0,
         ];
     }
 }
