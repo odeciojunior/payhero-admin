@@ -453,10 +453,10 @@ class TesteController extends Controller
                                         ->take(500)->get();
 
         foreach ($abandonedCarts as $abandonedCart) {
-            $checkoutModel->find($abandonedCart->id)->update([
-                                                                 'client_name'      => $abandonedCart->name,
-                                                                 'client_telephone' => $abandonedCart->telephone,
-                                                             ]);
+            $abandonedCart->update([
+                                    'client_name'      => $abandonedCart->name,
+                                    'client_telephone' => $abandonedCart->telephone,
+                                ]);
         }
 
     }
