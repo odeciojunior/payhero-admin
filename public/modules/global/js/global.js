@@ -311,17 +311,19 @@ function copyToClipboard(element) {
 }
 
 function errorAjaxResponse(response) {
-    if (response.status === 422 || response.status === 404 || response.status === 403) {
-        for (error in response.responseJSON.errors) {
-            alertCustom('error', response.responseJSON.errors[error]);
-        }
-    } else if (response.status === 401) { // Não esta autenticado
-        window.location.href = window.location.origin + '/';
-        for (error in response.responseJSON.errors) {
-            alertCustom('error', response.responseJSON.errors[error]);
+    if(response.responseJSON){
+        let errors = response.responseJSON.errors ? response.responseJSON.errors : {};
+        errors = Object.values(errors).join('\n');
+        if (response.status === 422 || response.status === 404 || response.status === 403) {
+            alertCustom('error', errors);
+        } else if (response.status === 401) { // Não esta autenticado
+            window.location.href = window.location.origin + '/';
+            alertCustom('error', errors);
+        } else {
+            alertCustom('error', response.responseJSON.message);
         }
     } else {
-        alertCustom('error', response.responseJSON.message);
+        alertCustom('error', 'Erro ao executar esta ação!');
     }
 }
 
