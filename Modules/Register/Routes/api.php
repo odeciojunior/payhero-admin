@@ -2,15 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(
-    [
-        'middleware' => ['web'],
-        'prefix'     => 'register', 
-    ],
-    function() {
-        Route::post('/', 'RegisterApiController@store');
-    }
-);
+// Route::group(
+//     [
+//         'middleware' => ['web'],
+//         'prefix'     => 'register', 
+//     ],
+//     function() {
+//         Route::post('/', 'RegisterApiController@store');
+//     }
+// );
 
 Route::group(
     [
