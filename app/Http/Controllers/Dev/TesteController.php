@@ -442,7 +442,6 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-
         $checkoutModel = new Checkout();
 
         $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
@@ -451,14 +450,16 @@ class TesteController extends Controller
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart'])
                                         ->get();
-dd($abandonedCarts->count());
+
         foreach ($abandonedCarts as $abandonedCart) {
             $checkoutModel->find($abandonedCart->id)->update([
                                                                  'client_name'      => $abandonedCart->name,
                                                                  'client_telephone' => $abandonedCart->telephone,
                                                              ]);
         }
+
     }
+
 }
 
 
