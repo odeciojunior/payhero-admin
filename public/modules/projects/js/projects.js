@@ -160,7 +160,6 @@ $(() => {
             success: (response) => {
 
                 let project = response.data;
-
                 $('.page-title, .title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
                 $('#created_at').text('Criado em ' + project.created_at);
@@ -169,7 +168,7 @@ $(() => {
                 } else {
                     $('#show-visibility').text('Privado').addClass('badge-danger');
                 }
-                if (project.status) {
+                if (project.status == '1') {
                     $('#show-status').text('Ativo').addClass('badge-primary');
                 } else {
                     $('#show-status').text('Inativo').addClass('badge-danger');
