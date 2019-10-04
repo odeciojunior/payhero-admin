@@ -168,12 +168,14 @@ $(() => {
             $('#details-card #card-flag').text('Bandeira: ' + sale.flag);
             $('#details-card #card-installments').text('Quantidade de parcelas: ' + sale.installments_amount);
             $('#details-card').show();
+            $('#details-boleto').hide();
         }
 
         if (sale.payment_method === 2) {
             $('#details-boleto #boleto-link a').attr('link', sale.boleto_link);
             $('#details-boleto #boleto-digitable-line a').attr('digitable-line', sale.boleto_digitable_line);
             $('#details-boleto #boleto-due').text('Vencimento: ' + sale.boleto_due_date);
+            $('#details-card').hide();
             $('#details-boleto').show();
         }
 
