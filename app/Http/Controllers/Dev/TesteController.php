@@ -451,7 +451,7 @@ class TesteController extends Controller
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart'])
                                         ->get();
-dd($abandonedCarts->count());
+
         foreach ($abandonedCarts as $abandonedCart) {
             $checkoutModel->find($abandonedCart->id)->update([
                                                                  'client_name'      => $abandonedCart->name,
