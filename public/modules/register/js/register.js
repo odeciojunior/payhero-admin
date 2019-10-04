@@ -108,7 +108,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/api/register/",
+            url: "/api/register",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
