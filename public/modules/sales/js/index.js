@@ -105,7 +105,7 @@ $(document).ready(function () {
     });
 
     //Salvar boleto regerado
-    $(document).on('click', 'modal_regerar_boleto #bt_send', function () {
+    $('#bt_send').on('click', function () {
         loadingOnScreen();
         let saleId = $(this).attr('sale');
         $.ajax({
@@ -150,11 +150,10 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(response.data == ''){
+                if (response.data == '') {
                     $('#export-excel, .page-content').hide();
                     $('.content-error').show();
-                }
-                else{
+                } else {
                     $.each(response.data, function (index, project) {
                         $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
                     });
@@ -201,8 +200,7 @@ $(document).ready(function () {
 
                 if (response.data == '') {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
-                }
-                else{
+                } else {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
