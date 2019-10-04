@@ -449,7 +449,8 @@ class TesteController extends Controller
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart'])
-                                        ->get();
+                                        ->whereNull('client_name')
+                                        ->take(500)->get();
 
         foreach ($abandonedCarts as $abandonedCart) {
             $checkoutModel->find($abandonedCart->id)->update([
