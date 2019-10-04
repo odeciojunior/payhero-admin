@@ -43,7 +43,7 @@ $(document).ready(function () {
         $("#country").val('usa');
     });
 
-    ///// botão prosseguir
+    // botão prosseguir
     $("#btn-go").click(function () {
         loadingOnScreen();
         if (currentPage == 'user') {
