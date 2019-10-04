@@ -193,19 +193,10 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             cache: false,
-            error: function (_error2) {
-                function error(_x) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
+            error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
-            }),
+            },
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", data.message);
@@ -257,20 +248,10 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function (_error4) {
-                function error(_x3) {
-                    return _error4.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error4.toString();
-                };
-
-                return error;
-            }(function (response) {
+            error: function (response) {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
-            }),
+            },
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", "Frete Removido com sucesso");
@@ -279,13 +260,21 @@ $(document).ready(function () {
         });
     });
 
-    function atualizarFrete(link = null) {
+    function atualizarFrete() {
+
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (link == null) {
+            link = '/api/project/' + projectId + '/shippings';
+        } else {
+            link = '/api/project/' + projectId + '/shippings' + link;
+        }
 
         loadOnTable('#dados-tabela-frete', '#tabela_fretes');
 
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId + "/shippings",
+            url: link,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

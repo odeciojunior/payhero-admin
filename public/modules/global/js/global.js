@@ -244,10 +244,10 @@ function pagination(response, model, callback) {
     $("#pagination-" + model).append(first_page);
 
     if (response.meta.current_page === 1) {
-        $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+        $('#pagination-' + model + ' #first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
     }
 
-    $('#first_page').on("click", function () {
+    $('#pagination-' + model + ' #first_page').on("click", function () {
         callback('?page=1');
     });
 
@@ -290,10 +290,10 @@ function pagination(response, model, callback) {
         $("#pagination-" + model).append(last_page);
 
         if (response.meta.current_page === response.meta.last_page) {
-            $("#last_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+            $('#pagination-' + model + ' #last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
         }
 
-        $('#last_page').on("click", function () {
+        $('#pagination-' + model + ' #last_page').on("click", function () {
             callback('?page=' + response.meta.last_page);
         });
     }
