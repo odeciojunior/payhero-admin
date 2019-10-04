@@ -3,16 +3,19 @@
     overflow-x: hidden;
     overflow-y: hidden;
 }
+
 .menu-active {
     border-right: 5px solid;
     border-image-source: linear-gradient(11deg, #E6774C, rgb(249, 34, 120));
     border-image-slice: 2;
 }
+
 .menu-img-active {
     height: 30px;
     width: 30px;
     margin-left: -5px;
 }
+
 @media screen and (min-width: 1201px) {
     .display-xlg-none {
         display: none !important;
@@ -23,13 +26,16 @@
     .options-column-width {
         width: 200px !important;
     }
+
     .mg-responsive {
         margin: 0px 15px;
     }
+
     .table td {
         padding: 10px 13px !important;
     }
 }
+
 @media screen and (min-width: 992px) and (max-width: 1200px) {
     .display-lg-none {
         display: none !important;
@@ -40,13 +46,16 @@
     .options-column-width {
         width: 200px;
     }
+
     .mg-responsive {
         margin: 0px 15px;
     }
+
     .table td {
         padding: 10px 13px !important;
     }
 }
+
 @media screen and (min-width: 815px) and (max-width: 991px) {
     .display-m-none {
         display: none !important;
@@ -57,15 +66,19 @@
     .options-column-width {
         width: 200px;
     }
+
     .mg-responsive {
         margin: 0px 10px;
     }
+
     .table td {
         padding: 10px 13px !important;
     }
+
     tr td, tr .headCenter {
         text-align: center;
     }
+
     td.noMiddle {
         text-align: justify !important;
     }
@@ -80,24 +93,30 @@
     .options-column-width {
         width: 200px;
     }
+
     .mg-responsive {
         margin: 0px 10px;
     }
+
     .table td {
         padding: 10px 13px !important;
     }
+
     tr td {
         text-align: center;
     }
+
     td.noMiddle {
         text-align: justify !important;
     }
+
     @media screen and (min-width: 768px) and (max-width: 794px) {
         .mg-responsive {
             margin: 3px !important;
         }
     }
 }
+
 @media screen and (min-width: 1px) and (max-width: 767px) {
     .display-xsm-none {
         display: none !important;
@@ -106,12 +125,15 @@
         height: unset;
         width: unset !important;
     }
+
     .mg-responsive {
         margin: 0px 1.5em;
     }
+
     .table td {
         padding: .3em !important;
     }
+
     table.unify {
         border: 1px solid #CCCCCC;
         border-collapse: collapse;
@@ -120,35 +142,43 @@
         width: 100%;
         table-layout: fixed;
     }
+
     table.unify caption {
         font-size: 1.5em;
         margin: .5em 0 .75em;
     }
+
     table.unify tr {
         background-color: #F8F8F8;
         border: 1px solid #DDDDDD;
         padding: .35em;
     }
+
     table.unify th,
     table.unify td {
         padding: .625em;
         text-align: center;
     }
+
     table.unify th {
         font-size: .85em;
         letter-spacing: .1em;
         text-transform: uppercase;
     }
+
     table.unify .display-sm-none {
         display: none;
     }
+
     @media screen and (max-width: 767px) {
         table.unify {
             border: 0;
         }
+
         table.unify caption {
             font-size: 1.3em;
         }
+
         table.unify thead {
             border: none;
             clip: rect(0 0 0 0);
@@ -159,17 +189,20 @@
             position: absolute;
             width: 1px;
         }
+
         table.unify tr {
             border-bottom: 3px solid #DDDDDD;
             display: block;
             margin-bottom: .625em;
         }
+
         table.unify td {
             border-bottom: 1px solid #DDDDDD;
             display: block;
             font-size: 1.0em;
             text-align: center;
         }
+
         table.unify td::before {
             /*
             * aria-label has no advantage, it won't be read inside a table
@@ -179,6 +212,7 @@
         / float: left;/ font-weight: bold;
             text-transform: uppercase;
         }
+
         table.unify td:last-child {
             border-bottom: 0;
         }
@@ -190,4 +224,8 @@
     white-space: nowrap;
     overflow: hidden !important;
     text-overflow: ellipsis;
+}
+
+.swal2-toast .swal2-title {
+    text-align: start !important;
 }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Modules\Core\Events\UpdateCheckoutTable;
+use Modules\Core\Listeners\UpdateCheckoutTableListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -43,7 +45,9 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
             //            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
         ],
-
+        UpdateCheckoutTable::class      => [
+            UpdateCheckoutTableListener::class,
+        ],
     ];
 
     /**
