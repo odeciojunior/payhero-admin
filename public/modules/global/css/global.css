@@ -226,3 +226,7 @@
         }
     }
 }
+
+.swal2-toast .swal2-title {
+    text-align: start !important;
+}
