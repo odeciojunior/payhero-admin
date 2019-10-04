@@ -47,7 +47,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: $('meta[name="current-url"]').attr('content') + "/api/dashboard/getvalues",
+            url: "/api/dashboard/getvalues",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
