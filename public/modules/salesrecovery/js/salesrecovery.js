@@ -292,7 +292,7 @@ $(document).ready(function () {
         data += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
         data += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
         data += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
-        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' sale_id='" + value.id + "'>" + value.recovery_status + "</span></td>";
+        data += "<td><span class='sale_status badge badge-" + statusRecovery[value.recovery_status] + "' sale_id='" + value.id_default + "'>" + value.recovery_status + "</span></td>";
         data += "<td>" + value.total_paid + "</td>";
         data += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
         data += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
