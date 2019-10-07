@@ -97,7 +97,9 @@ $(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
         $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
     }, 2000);*/
     $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
-})
+});
+
+$(".table").addClass('table-striped');
 
 function loading(elementId, loaderClass) {
 
@@ -147,7 +149,6 @@ function loadOnTable(whereToLoad, tableReference) {
         "</td>" +
         "</tr>");
 }
-
 
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
@@ -311,7 +312,7 @@ function copyToClipboard(element) {
 }
 
 function errorAjaxResponse(response) {
-    if(response.responseJSON){
+    if (response.responseJSON) {
         let errors = response.responseJSON.errors ? response.responseJSON.errors : {};
         errors = Object.values(errors).join('\n');
         if (response.status === 422 || response.status === 404 || response.status === 403) {
