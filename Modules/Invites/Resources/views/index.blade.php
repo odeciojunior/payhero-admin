@@ -13,21 +13,25 @@
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
             <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
-                    <div class="col-md-3 col-sm-12">
-                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites Enviados </h6>
+                    <div style="width: 20%">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> card_giftcard </i> Convites disponíveis </h6>
+                        <h4 id='invitations_amount' class="number text-center green-gradient"></h4>
+                    </div>
+                    <div style="width: 20%">
+                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites enviados </h6>
                         <h4 id='invitations_sent' class="number text-center orange-gradient"></h4>
                     </div>
-                    <div class="col-md-3 col-sm-12">
+                    <div style="width: 20%">
                         <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > people </i>  Convites ativos </h6>
                         <h4 id='invitations_accepted' class="number text-center green-gradient"></i>
                         </h4>
                     </div>
-                    <div class="col-md-3 col-sm-12">
+                    <div style="width: 20%">
                         <h6 class="text-center orange-gradient"> <i class="material-icons align-middle orange-gradient"> attach_money </i> Comissão pendente </h6>
                         <h4 id='commission_pending' class="number text-center orange-gradient" style='color:green'></i>
                         </h4>
                     </div>
-                    <div class="col-md-3 col-sm-12">
+                    <div style="width: 20%">
                         <h6 class="text-center green-gradient"> <i class="material-icons align-middle green-gradient"> attach_money </i> Comissão paga </h6>
                         <h4 id='commission_paid' class="number text-center green-gradient"></i>
                         </h4>
@@ -66,67 +70,7 @@
             </ul>
             <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-simple">
-                    {{--<div id="modal-not-companies" class='modal-content p-10' style='display:none'>
-                        <div class='header-modal simple-border-bottom'>
-                            <h2 id='modal-title' class='modal-title'>Ooooppsssss!</h2>
-                        </div>
-                        <div class='modal-body simple-border-bottom' style='padding-bottom:1%; padding-top:1%;'>
-                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
-                                                    <span class='swal2-x-mark'>
-                                                        <span class='swal2-x-mark-line-left'></span>
-                                                        <span class='swal2-x-mark-line-right'></span>
-                                                    </span>
-                            </div>
-                            <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
-                            <h5 align='center'>Deseja cadastrar uma empresa?
-                                <a class='red pointer' href='/companies' target='_blank'>clique aqui</a>
-                            </h5>
-                        </div>
-                        <div style='width:100%; text-align:center; padding-top:3%;'>
-                            <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>Retornar</span>
-                        </div>
-                    </div>--}}
-                    {{--<div id="modal-then-companies" class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4>
-                        </div>
-                        <div id="modal-reverse-body" class="modal-body">
-                            <div id='body-modal'>
-                                <div class="row">
-                                    <div class="form-group col-12">
-                                        <label for="email">Email do convidado</label>
-                                        <input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-12">
-                                        <label for="company">Empresa para receber</label>
-                                        <div id='company-list'>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label for="email">Link de convite</label>
-                                    </div>
-                                    <div id='invite-link-select' class="input-group col-12">
-                                        <input type="text" class="form-control" id="invite-link" value="" readonly>
-                                        <span class="input-group-btn">
-                                            <button id="copy-link" class="btn btn-default" type="button">Copiar</button>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 35px">
-                                    <div class="form-group col-12">
-                                        <input id='btn-send-invite' type="button" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>--}}
+
                 </div>
             </div>
         </div>
