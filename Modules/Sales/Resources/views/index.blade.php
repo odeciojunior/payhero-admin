@@ -6,15 +6,6 @@
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <style type='text/css'>
-            .ellipsis {
-                display: inline-block;
-                width: 100px;
-                white-space: nowrap;
-                overflow: hidden !important;
-                text-overflow: ellipsis;
-            }
-        </style>
     @endpush
 
     <!-- Page -->
@@ -79,11 +70,11 @@
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_type">Data da venda</label>
+                            <label for="date_type">Data</label>
                             <select name='date_type' id="date_type" class="form-control select-pad">
-                                <option value="">Nenhuma</option>
-                                <option value="start_date">Início</option>
-                                <option value="end_date">Aprovação</option>
+                                <option value="">Não aplicar</option>
+                                <option value="start_date">Data do pedido</option>
+                                <option value="end_date">Data do pagamento</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -190,7 +181,7 @@
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
+        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
 
 @endsection

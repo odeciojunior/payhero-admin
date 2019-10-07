@@ -4,11 +4,10 @@ $(document).ready(function () {
 
     function atualizar(page) {
 
-        $('#companies_table_data').html('');
-
+        loadOnTable('#companies_table_data', '#companies_table');
         $.ajax({
             method: "GET",
-            url: $('meta[name="current-url"]').attr('content') + "/api/companies?page=" + page,
+            url: "/api/companies?page=" + page,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -18,13 +17,15 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                $('#companies_table_data').html('');
+
                 $.each(response.data, function (index, value) {
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
                     dados += "<td>" + value.company_document + "</td>";
                     // dados += "<td>" + value.document_status + "</td>";
                     dados += '<td>';
-                    if (value.document_status == 'Aprovado') {
+                    if (value.document_status == 'aprovado') {
                         dados += '<span class="badge badge-success">' + value.document_status + '</span>';
                     } else {
                         dados += '<span class="badge badge-primary">' + value.document_status + '</span>';
@@ -34,7 +35,7 @@ $(document).ready(function () {
                     dados += "<td><a href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><i class='material-icons gradient'>  edit </i></a></td>";
                     dados += "<td><a class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>";
                     dados += "</tr>";
-
+                    $('#companies_table').addClass('table-striped');
                     $("#companies_table_data").append(dados);
                 });
 
@@ -50,19 +51,22 @@ $(document).ready(function () {
                     $("#bt-delete").unbind('click');
                     $("#bt-delete").on('click', function () {
                         $("#close-modal-delete").click();
+                        loadingOnScreen();
 
                         $.ajax({
                             method: "DELETE",
-                            url: $('meta[name="current-url"]').attr('content') + "/api/companies/" + company,
+                            url: "/api/companies/" + company,
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
                             },
                             error: function (response) {
+                                loadingOnScreenRemove();
                                 errorAjaxResponse(response);
                             },
                             success: function success(data) {
+                                loadingOnScreenRemove();
                                 alertCustom("success", data.message);
                                 atualizar(page);
                             }

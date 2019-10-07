@@ -29,44 +29,28 @@ class CheckoutApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $requestValidated = Validator::make($request->all(), [
-                'project'    => 'required|string',
-                'status'     => 'required|string',
-                'start_date' => 'nullable',
-                'end_date'   => 'nullable',
-                'client'     => 'nullable|string',
-            ]);
-            if ($requestValidated->fails()) {
-                return response()->json([
-                                            'message' => 'Erro ao listar carrinho abandonado, tente novamente mais tarde',
-                                        ], 400);
+
+            $checkoutService = new CheckoutService();
+
+            $projectId = FoxUtils::decodeHash($request->input('project'));
+
+            if (!empty($request->input('client'))) {
+                $clientId = $request->input('client');
             } else {
-                $checkoutService = new CheckoutService();
-
-                $projectId = FoxUtils::decodeHash($request->input('project'));
-
-                if (!empty($request->input('client'))) {
-                    $clientId = $request->input('client');
-                } else {
-                    $clientId = null;
-                }
-
-                if (!empty($request->input('end_date'))) {
-                    $endDate = date('Y-m-d', strtotime($request->input('end_date') . ' + 1 day'));
-                } else {
-                    $endDate = null;
-                }
-
-                if (!empty($request->input('start_date'))) {
-                    $startDate = date('Y-m-d', strtotime($request->input('start_date')));
-                } else {
-                    $startDate = null;
-                }
-
-                $checkouts = $checkoutService->getAbandonedCart($projectId, $startDate, $endDate, $clientId);
-
-                return CheckoutIndexResource::collection($checkouts);
+                $clientId = null;
             }
+
+            $dateRange = FoxUtils::validateDateRange($request->input('date_range'));
+            $startDate = null;
+            $endDate   = null;
+            if (!empty($dateRange) && $dateRange) {
+                $startDate = $dateRange[0] . ' 00:00:00';
+                $endDate   = $dateRange[1] . ' 23:59:59';
+            }
+
+            $checkouts = $checkoutService->getAbandonedCart($projectId, $startDate, $endDate, $clientId);
+
+            return CheckoutIndexResource::collection($checkouts);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados recuperação de vendas (CheckoutApiController - index)');
             report($e);

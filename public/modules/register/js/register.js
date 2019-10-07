@@ -43,7 +43,7 @@ $(document).ready(function () {
         $("#country").val('usa');
     });
 
-    ///// botão prosseguir
+    // botão prosseguir
     $("#btn-go").click(function () {
         loadingOnScreen();
         if (currentPage == 'user') {
@@ -108,7 +108,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/api/register/",
+            url: "/api/register",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

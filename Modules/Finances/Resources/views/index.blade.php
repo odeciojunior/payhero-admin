@@ -172,7 +172,7 @@
                                     </table>
                                     <ul id="pagination-withdrawals" class="pagination-sm"
                                         style="margin-top:10px;position:relative;float:right">
-                                        js carrega...
+                                        {{--js carrega...--}}
                                     </ul>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@
                                     </table>
                                     <ul id="pagination-transfers" class="pagination-sm"
                                         style="margin-top:10px;position:relative;float:right">
-                                        js carrega...
+                                        {{--js carrega...--}}
                                     </ul>
                                 </div>
                             </div>
@@ -234,12 +234,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-error text-center" style="display:none">
-            <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
-            <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
-            <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
-            <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>
-        </div>
+        @include('companies::empty')
     </div>
     <!-- Modal confirmar saque -->
     <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">

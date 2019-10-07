@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    index();
+    create();
 
     function index() {
         $.ajax({
@@ -69,7 +69,7 @@ $(document).ready(function () {
                         var project_id = $(this).attr('project');
                         $.ajax({
                             method: "GET",
-                            url: $('meta[name="current-url"]').attr('content') + "/api/projects/user-projects",
+                            url: "/api/projects/user-projects",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
@@ -87,7 +87,7 @@ $(document).ready(function () {
 
                                 $.ajax({
                                     method: "GET",
-                                    url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax/" + project_id,
+                                    url: "/api/apps/convertax/" + project_id,
                                     headers: {
                                         'Authorization': $('meta[name="access-token"]').attr('content'),
                                         'Accept': 'application/json',
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
                                             $.ajax({
                                                 method: "POST",
-                                                url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax/" + integrationId,
+                                                url: "/api/apps/convertax/" + integrationId,
                                                 headers: {
                                                     'Authorization': $('meta[name="access-token"]').attr('content'),
                                                     'Accept': 'application/json',
@@ -180,7 +180,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: $('meta[name="current-url"]').attr('content') + "/api/projects?select=true",
+            url: "/api/projects?select=true",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -189,12 +189,9 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if (Object.keys(response.data).length === 0) {
-                    var route = '/projects/create';
-                    $('#modal-project').modal('show');
-                    $('#modal-project-title').text("Oooppsssss!");
-                    $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' + '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                if (isEmpty(response.data)) {
+                    $('#project-empty').show();
+                    $('#integration-actions').hide();
                 } else {
                     $("#select_projects").html('');
                     $(response.data).each(function (index, data) {
@@ -203,7 +200,6 @@ $(document).ready(function () {
                     $(".modal-title").html('Adicionar nova Integração com ConvertaX');
                     $("#bt_integration").addClass('btn-save');
                     $("#bt_integration").text('Adicionar integração');
-                    $("#modal_add_integracao").modal('show');
                     $("#form_update_integration").hide();
                     $("#form_add_integration").show();
 
@@ -233,7 +229,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "POST",
-                            url: $('meta[name="current-url"]').attr('content') + "/api/apps/convertax",
+                            url: "/api/apps/convertax",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',
@@ -258,12 +254,17 @@ $(document).ready(function () {
                             }
                         });
                     });
+
+                    $('#project-empty').hide();
+                    $('#integration-actions').show();
+
+                    index();
                 }
             }
         });
     }
 
     $("#btn-add-integration").on("click", function () {
-        create();
+        $("#modal_add_integracao").modal('show');
     });
 });

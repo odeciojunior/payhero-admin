@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    @if(getenv('APP_ENV') === 'production')
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    @endif
+
     <title>Cadastro | CloudFox </title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('modules/register/css/bootstrap.min.css')}}">
@@ -593,7 +598,7 @@
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
-<script src="{{asset('modules/register/js/register.js?v=1')}}"></script>
+<script src="{{asset('modules/register/js/register.js?v=2')}}"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
 {{--<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>--}}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>

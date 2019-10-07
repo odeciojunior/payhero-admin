@@ -23,7 +23,7 @@ class PlansDetailsResource extends Resource
             'id'                => Hashids::encode($this->id),
             'name'              => $this->name,
             'description'       => $this->description,
-            'code'              => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Dominio não configurado',
+            'code'              => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado',
             'price'             => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'            => isset($this->project->domains[0]->name) ? 1 : 0,
             'status_translated' => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',

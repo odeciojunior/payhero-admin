@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+
+    loadOnAny('#card-project');
     $.ajax({
         url: '/api/projects/create',
         dataType: "json",
@@ -8,13 +10,16 @@ $(document).ready(function () {
             'Accept': 'application/json',
         },
         error: (response) => {
+            loadOnAny('#card-project', true);
             errorAjaxResponse(response);
         },
         success: (response) => {
-            if (response.length) {
+            loadOnAny('#card-project', true);
+            if (!isEmpty(response)) {
                 $.each(response, (key, company) => {
                     $('#company').append(`<option value="${company.id}">${company.name}</option>`);
                 });
+                $('.content-error').hide();
             } else {
                 $('#card-project').hide();
                 $('.content-error').show();
@@ -22,32 +27,50 @@ $(document).ready(function () {
         }
     });
 
-    $('#btn-save').on('click', () => {
-        loadingOnScreen();
-        let formData = new FormData(document.querySelector('#form-create-project'));
-        $.ajax({
-            method: 'post',
-            url: '/api/projects',
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
+    function verifyFields() {
+        if ($('#name').val().length === 0) {
+            alertCustom('error', 'É obrigatório preencher o campo Nome!');
+            return true;
+        } else if ($("#company option:selected").val().length === 0) {
+            alertCustom('error', 'É obrigatório selecionar uma empresa!');
+            return true;
 
-            },
-            success: (response) => {
-                loadingOnScreenRemove();
-                alertCustom('success', 'Projeto salvo com sucesso!');
-                window.location = "/projects"
-            }
-        });
+        } else {
+            return false;
+        }
+    }
+
+    $('#btn-save').on('click', () => {
+        if (verifyFields()) {
+            return false;
+        } else {
+
+            loadingOnScreen();
+            let formData = new FormData(document.querySelector('#form-create-project'));
+            $.ajax({
+                method: 'post',
+                url: '/api/projects',
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                error: (response) => {
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+
+                },
+                success: (response) => {
+                    loadingOnScreenRemove();
+                    alertCustom('success', 'Projeto salvo com sucesso!');
+                    window.location = "/projects"
+                }
+            });
+        }
 
     });
 

@@ -105,7 +105,7 @@ $(document).ready(function () {
     });
 
     //Salvar boleto regerado
-    $(document).on('click', 'modal_regerar_boleto #bt_send', function () {
+    $('#bt_send').on('click', function () {
         loadingOnScreen();
         let saleId = $(this).attr('sale');
         $.ajax({
@@ -150,17 +150,11 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(response.data == ''){
-                    $('#export-excel, .page-content').hide();
-                    $('.content-error').show();
-                }
-                else{
+                if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, project) {
                         $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
                     });
                 }
-                loadOnAny('.page-content', true);
-                $('#export-excel').show();
                 atualizar();
             }
         });
@@ -185,6 +179,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -199,10 +194,7 @@ $(document).ready(function () {
                     2: 'pendente'
                 };
 
-                if (response.data == '') {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
-                }
-                else{
+                if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
@@ -230,6 +222,14 @@ $(document).ready(function () {
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
                     pagination(response, 'sales', atualizar);
+
+                    loadOnAny('.page-content', true);
+                    $('#export-excel').show();
+                    $('.content-error').hide();
+                } else {
+                    loadOnAny('.page-content', true);
+                    $('#export-excel, .page-content').hide();
+                    $('.content-error').show();
                 }
             }
         });

@@ -25,12 +25,11 @@ class CheckoutService
         $checkoutModel = new Checkout();
         $domainModel   = new Domain();
 
-        $abandonedCarts = $checkoutModel->whereIn('status', ['recovered', 'abandoned cart']);
-
-        $abandonedCarts->where('project_id', $projectId);
+        $abandonedCarts = $checkoutModel->whereIn('status', ['recovered', 'abandoned cart'])
+                                        ->where('project_id', $projectId);
 
         if (!empty($client)) {
-            $abandonedCarts->where('name', 'like', '%' . $client . '%');
+            $abandonedCarts->where('client_name', 'like', '%' . $client . '%');
         }
 
         if (!empty($dateStart) && !empty($dateEnd)) {

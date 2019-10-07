@@ -12,9 +12,9 @@
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
-<!-- csrf token used for ajax requests -->
+    <!-- csrf token used for ajax requests -->
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
-<!-- access token used for api ajax requests -->
+    <!-- access token used for api ajax requests -->
     <meta name="access-token" content="Bearer {{ auth()->user()->createToken("Laravel Password Grant Client")->accessToken  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
@@ -145,7 +145,7 @@
     {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=1') }}"></script>
 
 @endif
 </body>

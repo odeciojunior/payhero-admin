@@ -97,7 +97,9 @@ $(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
         $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
     }, 2000);*/
     $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
-})
+});
+
+$(".table").addClass('table-striped');
 
 function loading(elementId, loaderClass) {
 
@@ -147,7 +149,6 @@ function loadOnTable(whereToLoad, tableReference) {
         "</td>" +
         "</tr>");
 }
-
 
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
@@ -244,10 +245,10 @@ function pagination(response, model, callback) {
     $("#pagination-" + model).append(first_page);
 
     if (response.meta.current_page === 1) {
-        $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+        $('#pagination-' + model + ' #first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
     }
 
-    $('#first_page').on("click", function () {
+    $('#pagination-' + model + ' #first_page').on("click", function () {
         callback('?page=1');
     });
 
@@ -290,10 +291,10 @@ function pagination(response, model, callback) {
         $("#pagination-" + model).append(last_page);
 
         if (response.meta.current_page === response.meta.last_page) {
-            $("#last_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+            $('#pagination-' + model + ' #last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
         }
 
-        $('#last_page').on("click", function () {
+        $('#pagination-' + model + ' #last_page').on("click", function () {
             callback('?page=' + response.meta.last_page);
         });
     }
@@ -311,17 +312,19 @@ function copyToClipboard(element) {
 }
 
 function errorAjaxResponse(response) {
-    if (response.status === 422 || response.status === 404 || response.status === 403) {
-        for (error in response.responseJSON.errors) {
-            alertCustom('error', response.responseJSON.errors[error]);
-        }
-    } else if (response.status === 401) { // Não esta autenticado
-        window.location.href = window.location.origin + '/';
-        for (error in response.responseJSON.errors) {
-            alertCustom('error', response.responseJSON.errors[error]);
+    if (response.responseJSON) {
+        let errors = response.responseJSON.errors ? response.responseJSON.errors : {};
+        errors = Object.values(errors).join('\n');
+        if (response.status === 422 || response.status === 404 || response.status === 403) {
+            alertCustom('error', errors);
+        } else if (response.status === 401) { // Não esta autenticado
+            window.location.href = window.location.origin + '/';
+            alertCustom('error', errors);
+        } else {
+            alertCustom('error', response.responseJSON.message);
         }
     } else {
-        alertCustom('error', response.responseJSON.message);
+        alertCustom('error', 'Erro ao executar esta ação!');
     }
 }
 
@@ -338,6 +341,10 @@ function extractIdFromPathName() {
 
 function isEmptyValue(value) {
     return value.length !== 0;
+}
+
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
 }
 
 function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {

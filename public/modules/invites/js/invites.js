@@ -7,10 +7,6 @@ var statusInvite = {
 $(document).ready(function () {
     updateInvites();
 
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
-
     function updateInvites() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 

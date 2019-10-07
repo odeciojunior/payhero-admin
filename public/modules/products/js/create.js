@@ -2,9 +2,6 @@ $(document).ready(function () {
     /**
      * Helper Functions
      */
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
 
     function verify() {
         let ver = true;

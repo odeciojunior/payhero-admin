@@ -4,12 +4,11 @@ namespace Modules\ConvertaX\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\ConvertaX\Transformers\ConvertaxResource;
 
@@ -17,16 +16,15 @@ class ConvertaXApiController extends Controller {
 
     /**
      * Return resource of integrations.
-     * @param Request $request
-     * @return Response
+     * @return AnonymousResourceCollection
      */
     public function index(){
 
         try{
             $convertaxIntegration = new ConvertaxIntegration();
-    
+
             $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->id)->with('project')->get();
-    
+
             return ConvertaxResource::collection($convertaxIntegrations);
         }
         catch(Exception $e){
@@ -51,7 +49,7 @@ class ConvertaXApiController extends Controller {
                 $integration = $convertaxIntegrationModel->where('project_id', $projectId)->first();
                 if ($integration) {
                     return response()->json([
-                                                'message' => 'Projeto já integrado', 
+                                                'message' => 'Projeto já integrado',
                                             ], 400);
                 }
                 if (empty($data['boleto_generated'])) {

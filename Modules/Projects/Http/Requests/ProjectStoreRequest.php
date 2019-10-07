@@ -30,7 +30,8 @@ class ProjectStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'required' => 'O campo deve ser preenchido corretamente',
+            'name.required'    => 'O campo nome deve ser preenchido corretamente',
+            'company.required' => 'É obrigatório selecionar campo empresa',
         ];
     }
 

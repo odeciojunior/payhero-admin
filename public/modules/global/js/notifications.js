@@ -40,7 +40,7 @@ $(document).ready(function () {
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {
-        $.ajax({
+        $.ajax({ 
             method: 'GET',
             url: '/api/notifications/unreadamount',
             headers: {
@@ -74,7 +74,7 @@ $(document).ready(function () {
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
                 $(response.data).each(function(index, data){
-                    $("#notificationTemplate").append(notificationTemplate(data));
+                    $("#notificationTemplate").append(notificationTemplate(data));                    
                 });
                 markNotificationsAsRead();
             }

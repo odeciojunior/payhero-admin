@@ -17,7 +17,7 @@ $(document).ready(function () {
             },
             success: (response) => {
 
-                if (response.data) {
+                if (!isEmpty(response.data)) {
 
                     $('.page-content').show();
                     $('.content-error').hide();
@@ -60,7 +60,6 @@ $(document).ready(function () {
                     $('.page-content').hide();
                     $('.content-error').show();
                 }
-
 
             }
         });
@@ -271,6 +270,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                console.log(response);
+                $("#balance-after-anticipation").html(response.responseJSON.data.valueAntecipable);
+                $(".loaderSpan").remove();
                 errorAjaxResponse(response);
             },
             success: (response) => {

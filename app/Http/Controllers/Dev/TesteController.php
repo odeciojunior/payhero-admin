@@ -18,6 +18,7 @@ use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
@@ -257,21 +258,23 @@ class TesteController extends Controller
     public function julioFunction()
     {
 
-        $plans = Plan::whereNotNull('shopify_variant_id')->get();
+        $checkoutModel = new Checkout();
 
-        foreach ($plans as $plan) {
+        $checkouts = $checkoutModel->where('email_sent_amount', '>', '10')->get();
 
-            $product = $plan->products->first();
-
-            if (!empty($product)) {
-                $product->update([
-                                     'shopify_id'         => $plan->shopify_id,
-                                     'shopify_variant_id' => $plan->shopify_variant_id,
-                                 ]);
-            }
+        foreach ($checkouts as $checkout) {
+            $checkout->update([
+                                  'email_sent_amount' => '6',
+                              ]);
         }
 
-        dd('heyy');
+        $checkouts = $checkoutModel->where('sms_sent_amount', '>', '10')->get();
+
+        foreach ($checkouts as $checkout) {
+            $checkout->update([
+                                  'sms_sent_amount' => '3',
+                              ]);
+        }
     }
 
     public function parseToArray($xpath, $class)
@@ -404,6 +407,9 @@ class TesteController extends Controller
                                                                     ]);*/
     }
 
+    /**
+     * Funcao para remover caracteres especiais de produtos shopify
+     */
     public function removeSpecialCharacter()
     {
         $productsModel = new Product();
@@ -448,13 +454,39 @@ class TesteController extends Controller
                                         ->leftjoin('logs', function($join) {
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
                                         })
-                                        ->whereIn('status', ['recovered', 'abandoned cart'])->where('project_id', 111)
-                                        ->take(10)->get();
+            // ->orWhereNull('client_name')
+                                        ->whereIn('status', ['recovered', 'abandoned cart'])
+                                        ->get();
 
         foreach ($abandonedCarts as $abandonedCart) {
             $checkoutModel->find($abandonedCart->id)->update([
-                                                                 'client_name' => $abandonedCart->name,
+                                                                 'client_name'      => $abandonedCart->name,
+                                                                 'client_telephone' => $abandonedCart->telephone,
                                                              ]);
+        }
+
+        dd("heee");
+    }
+
+    /**
+     * Funcao tracking code
+     */
+    public function trackingCodeFunction()
+    {
+        $saleModel            = new Sale();
+        $productPlanSaleModel = new ProductPlanSale();
+        $sales                = $saleModel->whereHas('delivery', function($query) {
+            $query->where('tracking_code', '!=', null);
+        })->with('delivery', 'productsPlansSale')->get();
+        foreach ($sales as $sale) {
+            foreach ($sale->productsPlansSale as $product) {
+                $product->update([
+
+                                     'tracking_status_enum' => $productPlanSaleModel->present()
+                                                                                    ->getStatusEnum('posted'),
+                                     'tracking_code'        => $sale->delivery->tracking_code,
+                                 ]);
+            }
         }
     }
 }
