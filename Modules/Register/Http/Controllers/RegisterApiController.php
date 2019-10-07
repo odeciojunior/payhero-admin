@@ -43,6 +43,7 @@ class RegisterApiController extends Controller
             $requestData['call_amount']                         = '0';
             $requestData['score']                               = '0';
             $requestData['sms_zenvia_amount']                   = '0';
+            $requestData['sms_zenvia_amount']                   = '0';
 
             $user = $userModel->create($requestData);
 
@@ -74,6 +75,12 @@ class RegisterApiController extends Controller
                                              'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
                                              'email_invited'   => $requestData['email'],
                                          ]);
+
+                    if(empty($invite->invite)){
+                        $invite->update([
+                            'invite' => $company->user_id
+                        ]);
+                    }
                 }
             }
 

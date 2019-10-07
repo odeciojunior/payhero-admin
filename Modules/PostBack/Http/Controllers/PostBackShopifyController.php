@@ -67,7 +67,7 @@ class PostBackShopifyController extends Controller
                         }
                     }
 
-                    event(new TrackingCodeUpdatedEvent($sale));
+                    // event(new TrackingCodeUpdatedEvent($sale));
 
                     return response()->json([
                                                 'message' => 'success',
