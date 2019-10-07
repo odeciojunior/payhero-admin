@@ -14,7 +14,7 @@
                     <div class="col-lg-8">
                         <h1 class="page-title">Integrações com ConvertaX</h1>
                     </div>
-                    <div class="col text-right">
+                    <div class="col text-right" id="integration-actions" style="display:none">
                         <a data-toggle="modal" id='btn-add-integration' class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                             <i class="icon wb-plus" aria-hidden="true"></i>
                         </a>
@@ -32,7 +32,7 @@
                         <p class="desc gray">Integre seus projetos com ConvertaX de forma totalmente automatizada!</p>
                     </div>
                 </div>
-        
+
                 {{-- Modal add-edit integration --}}
                 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                     <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -57,6 +57,7 @@
                 {{-- End Modal  --}}
 
             </div>
+            @include('projects::empty')
         </div>
     </div>
 
