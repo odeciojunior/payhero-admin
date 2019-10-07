@@ -477,15 +477,6 @@ $(document).ready(function () {
         }
     }
 
-    /**
-     * Verifica se algum valor esta vazio
-     * @param obj
-     * @returns {boolean}
-     */
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
-
     function clearFields() {
         $("#status-checkout").removeClass('badge-success badge-danger');
         $("#client-whatsapp").attr('href', '');
