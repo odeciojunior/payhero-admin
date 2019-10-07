@@ -342,6 +342,10 @@ function isEmptyValue(value) {
     return value.length !== 0;
 }
 
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
+
 function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
     let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");
     if (formData === undefined || formData === null) {
