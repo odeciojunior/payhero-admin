@@ -176,8 +176,6 @@ class PlansApiController extends Controller
                             },
                                                    ])->find($planId);
 
-                        $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Domínio não configurado';
-
                         if (empty($plan)) {
                             return response()->json([
                                                         'message' => 'error',

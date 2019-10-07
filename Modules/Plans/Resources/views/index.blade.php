@@ -20,7 +20,7 @@
                         <td class='table-title'>Preço</td>
                         <td class='table-title'>Status</td>
                         <td class='table-title text-center options-column-width'>Opções</td>
-                    </tr>
+                    </tr> 
                 </thead>
                 <tbody id='data-table-plan' class='min-row-height'>
                     {{-- js carregando dados --}}
@@ -57,7 +57,7 @@
         </div>
     </div>
 </div>
-{{-- Modal error --}}}
+{{-- Modal error --}}
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-error-plan" role="dialog" tabindex="-1">
     <div id="modal-add-size-plan-error" class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10" id="content-modal-plan-error">
@@ -93,11 +93,6 @@
             <div id="modal-details-body" class="modal-body" style='min-height: 100px'>
                 @include('plans::details')
             </div>
-            {{--            <div class="modal-footer">--}}
-            {{--                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">--}}
-            {{--                    Fechar--}}
-            {{--                </a>--}}
-            {{--            </div>--}}
         </div>
     </div>
 </div>
