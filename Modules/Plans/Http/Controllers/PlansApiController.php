@@ -81,7 +81,7 @@ class PlansApiController extends Controller
      * @param PlanStoreRequest $request
      * @return JsonResponse
      */
-    public function store(PlanStoreRequest $request,$projectID)
+    public function store(PlanStoreRequest $request, $projectID)
     {
         try {
             $planModel    = new Plan();
@@ -176,8 +176,6 @@ class PlansApiController extends Controller
                             },
                                                    ])->find($planId);
 
-                        $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Dominio não configurado';
-
                         if (empty($plan)) {
                             return response()->json([
                                                         'message' => 'error',
@@ -217,7 +215,7 @@ class PlansApiController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function update(PlanUpdateRequest $request,$projectID,$id)
+    public function update(PlanUpdateRequest $request, $projectID, $id)
     {
         try {
             $planModel    = new Plan();
@@ -288,7 +286,7 @@ class PlansApiController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($projectId,$id)
+    public function destroy($projectId, $id)
     {
         try {
 

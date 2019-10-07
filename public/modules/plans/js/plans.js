@@ -43,10 +43,10 @@ $(function () {
             success: function success(response) {
                 if (Object.keys(response.data).length === 0) {
                     var route = '/products/create';
-                    $('#modal-project').modal('show');
-                    $('#modal-project-title').text("Oooppsssss!");
-                    $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não cadastrou nenhum produto</strong></h3>' + '<h5 align="center">Deseja cadastrar uma produto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                    $('#modal-title-plan-error').text("Oooppsssss!");
+                    $('#modal-add-plan-body-error').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não cadastrou nenhum produto</strong></h3>' + '<h5 align="center">Deseja cadastrar uma produto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
+                    $('#modal-footer-plan-error').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                    $('#modal-error-plan').modal('show');
                 } else {
                     $("#product_1").html('');
                     $(response.data).each(function (index, data) {

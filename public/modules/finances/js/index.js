@@ -61,7 +61,6 @@ $(document).ready(function () {
                     $('.content-error').show();
                 }
 
-
             }
         });
     }
@@ -271,6 +270,9 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                console.log(response);
+                $("#balance-after-anticipation").html(response.responseJSON.data.valueAntecipable);
+                $(".loaderSpan").remove();
                 errorAjaxResponse(response);
             },
             success: (response) => {

@@ -43,6 +43,14 @@ class InvitesApiController extends Controller
                 $userModel       = new User();
                 $inviteSaved     = null;
 
+                $invitesSent = Invitation::where('invite', auth()->user()->id)->count();
+
+                if($invitesSent == auth()->user()->invites_amount){
+                    return response()->json([
+                        'message' => 'Envio de convites indisponível, limite atingido!',
+                    ], 400);
+                }
+
                 $company = current(Hashids::decode($request->input('company')));
                 if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
                     try {
@@ -50,14 +58,14 @@ class InvitesApiController extends Controller
                                                            ->first();
                         $user            = $userModel->where('email', $request->input('email'))->first();
                         $sendgridService = new EmailService();
-                        if (!$user) {
+                        if (empty($user)) {
                             $emailInvited = $sendgridService->sendInvite($request->input('email'), Hashids::encode($company));
                         } else {
                             return response()->json([
                                                         'message' => 'Já existe um usuário cadastrado com esse Email.',
                                                     ], 400);
                         }
-
+ 
                         if ($emailInvited == 'error') {
                             return response()->json([
                                                         'message' => 'Erro ao tentar enviar convite, tente novamente mais tarde.',
@@ -171,6 +179,7 @@ class InvitesApiController extends Controller
                                             'invitation_sent_count'     => $invitationSentCount,
                                             'commission_paid'           => 'R$ ' . number_format(intval($commissionPaid) / 100, 2, ',', '.'),
                                             'commission_pending'        => 'R$ ' . number_format(intval($commissionPending) / 100, 2, ',', '.'),
+                                            'invitations_available'     => auth()->user()->invites_amount - $invitationSentCount,
                                         ],
                                     ], 200);
         } catch (Exception $e) {

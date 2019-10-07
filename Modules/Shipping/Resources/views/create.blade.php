@@ -19,17 +19,16 @@
     </div>
     <div class='row'>
         <div class='form-group col-12'>
-            <label for='information'>Tempo de entrega estimado apresentado no checkout</label>
+            <label for='information'>Tempo de entrega apresentado</label>
             <input name='information' type='text' class='input-pad shipping-info' value='' placeholder='10 até 20 dias' maxlength='30'>
             <span id='shipping-information-error' class='text-danger'></span>
         </div>
     </div>
-    <div class='row value-shipping-row'  style=''>
+    <div class='row value-shipping-row' style=''>
         <div class='form-group col-12'>
             <label for='value'>Valor do Frete</label>
             <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
             <span id='shipping-value-error' class='text-danger'></span>
-
         </div>
     </div>
     <div class='row zip-code-origin-shipping-row' style='display:none'>

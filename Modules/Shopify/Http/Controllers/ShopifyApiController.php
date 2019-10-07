@@ -34,11 +34,8 @@ class ShopifyApiController extends Controller
     public function index()
     {
         try {
-            //            $companyModel            = new Company();
             $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
-
-            //            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
 
             $shopifyIntegrations = $shopifyIntegrationModel->newQuery()->where('user_id', auth()->user()->id)->get();
 
@@ -101,7 +98,6 @@ class ShopifyApiController extends Controller
                 }
             } catch (Exception $e) {
                 report($e);
-
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], Response::HTTP_BAD_REQUEST);
             }
 
@@ -132,7 +128,6 @@ class ShopifyApiController extends Controller
                                                        'pre_selected' => '1',
                                                    ]);
                 if (!empty($shippingModel)) {
-                    /** @var ShopifyIntegration $shopifyIntegration */
                     $shopifyIntegration = $shopifyIntegrationModel->newQuery()->create([
                                                                                            'token'         => $dataRequest['token'],
                                                                                            'shared_secret' => '',
@@ -143,7 +138,6 @@ class ShopifyApiController extends Controller
                                                                                        ]);
                     if (!empty($shopifyIntegration)) {
                         $companyId = current(Hashids::decode($dataRequest['company']));
-
                         $userProjectModel->newQuery()->create([
                                                                   'user_id'              => auth()->user()->id,
                                                                   'project_id'           => $project->id,
@@ -400,18 +394,6 @@ class ShopifyApiController extends Controller
     }
 
     /**
-     * @param ShopifyIntegration $shopifyIntegration
-     * @param $userId
-     * @throws PresenterException
-     */
-    //    public function teste(ShopifyIntegration $shopifyIntegration, $userId)
-    //    {
-    //        /** @var ShopifyService $shopifyService */
-    //        $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-    //        $shopifyService->importShopifyStore($shopifyIntegration->project->id, $userId);
-    //    }
-
-    /**
      * @param Request $request
      * @return JsonResponse
      */
@@ -463,16 +445,20 @@ class ShopifyApiController extends Controller
 
                                     $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
                                 } else {
+
+                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+
                                     //template ajax
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_file' => 'sections/cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                    //$shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                 }
 
                                 //inserir o javascript para o trackeamento (src, utm)

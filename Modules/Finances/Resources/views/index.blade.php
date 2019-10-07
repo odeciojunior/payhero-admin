@@ -172,7 +172,7 @@
                                     </table>
                                     <ul id="pagination-withdrawals" class="pagination-sm"
                                         style="margin-top:10px;position:relative;float:right">
-                                        js carrega...
+                                        {{--js carrega...--}}
                                     </ul>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@
                                     </table>
                                     <ul id="pagination-transfers" class="pagination-sm"
                                         style="margin-top:10px;position:relative;float:right">
-                                        js carrega...
+                                        {{--js carrega...--}}
                                     </ul>
                                 </div>
                             </div>

@@ -31,7 +31,7 @@ class SalesRecoveryCardRefusedResource extends Resource
             $type   = 'expired';
         }
 
-        $link = 'Dominio não configurado';
+        $link = 'Domínio não configurado';
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $this->id_log_session;
         }

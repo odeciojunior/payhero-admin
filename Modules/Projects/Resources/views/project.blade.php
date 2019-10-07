@@ -1,72 +1,9 @@
 @extends("layouts.master")
 
 @push('css')
-    <style type='text/css'>
-        /* SWITCH CONFIG */
-        label.switch {
-            margin-bottom: 0 !important;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 35px;
-            height: 15px;
-            margin-right: 15px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: -3px;
-            top: -2px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-            box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.15);
-        }
-        input:checked + .slider {
-            background-color: #f78d1e;
-        }
-        input:focus + .slider {
-            box-shadow: 0 0 1px #f78d1e;
-        }
-        input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-        .slider.round:before {
-            border-radius: 50%;
-        }
-    </style>
-@endpush
-
-@section('styles')
-
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-@endsection
+@endpush
 
 @section('content')
 
@@ -198,78 +135,30 @@
                         </div>
                     </div>
 
-                    <!-- Modal padrão para adicionar Adicionar e Editar -->
-{{--                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" role="dialog" tabindex="-1">--}}
-{{--                        <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">--}}
-{{--                            <div class="modal-content p-10" id="conteudo_modal_add">--}}
-{{--                                <div class="modal-header simple-border-bottom mb-10">--}}
-{{--                                    <h4 class="modal-title" id="modal-title"></h4>--}}
-{{--                                    <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">--}}
-{{--                                        <i class="material-icons md-16">close</i>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                                <div id="modal-add-body" class="modal-body" style='min-height: 100px'>--}}
-{{--                                </div>--}}
-{{--                                <div class="modal-footer">--}}
-{{--                                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">--}}
-{{--                                        Fechar--}}
-{{--                                    </a>--}}
-{{--                                    <button id="btn-modal" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" data-dismiss="modal">--}}
-{{--                                        <i class="material-icons btn-fix"> save </i> Salvar--}}
-{{--                                    </button>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-
-                    <!-- Modal padrão para excluir -->
-{{--                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">--}}
-{{--                        <div class="modal-dialog  modal-dialog-centered  modal-simple">--}}
-{{--                            <div class="modal-content">--}}
-{{--                                <div class="modal-header text-center">--}}
-{{--                                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">--}}
-{{--                                        <i class="material-icons md-16">close</i>--}}
-{{--                                    </a>--}}
-{{--                                </div>--}}
-{{--                                <div id="modal_excluir_body" class="modal-body text-center p-20">--}}
-{{--                                    <div class="d-flex justify-content-center">--}}
-{{--                                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>--}}
-{{--                                    </div>--}}
-{{--                                    <h3 class="black"> Você tem certeza? </h3>--}}
-{{--                                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>--}}
-{{--                                </div>--}}
-{{--                                <div class="modal-footer d-flex align-items-center justify-content-center">--}}
-{{--                                    <button id='bt_cancel' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>--}}
-{{--                                    <button id="bt_excluir" type="button" class="col-4 btn btn-danger" style="width: 20%;">Excluir</button>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    @if($project->shopify_id)--}}
                     <!-- Modal para fazer-desfazer integração com shopify -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog  modal-dialog-centered  modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header text-center">
-                                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
-                                            <i class="material-icons md-16">close</i>
-                                        </a>
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
+                                </div>
+                                <div class="modal-body text-center p-20">
+                                    <div class="d-flex justify-content-center">
+                                        <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
                                     </div>
-                                    <div class="modal-body text-center p-20">
-                                        <div class="d-flex justify-content-center">
-                                            <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
-                                        </div>
-                                        <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
-                                        <p class="gray" id="modal-change-shopify-integration-text"></p>
-                                    </div>
-                                    <div class="modal-footer d-flex align-items-center justify-content-center">
-                                        <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>
-                                    </div>
+                                    <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
+                                    <p class="gray" id="modal-change-shopify-integration-text"></p>
+                                </div>
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                    <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                                    <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>
                                 </div>
                             </div>
                         </div>
-{{--                    @endif--}}
+                    </div>
+
                 </div>
             </div>
         </div>
