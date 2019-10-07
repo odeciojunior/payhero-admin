@@ -14,7 +14,7 @@ $(function () {
         },
         success: function success(response) {
             if (Object.keys(response.data).length === 0) {
-                $("#no-projects").show();
+                $("#project-empty").show();
             } else {
                 $(response.data).each(function (index, data) {
                     $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
