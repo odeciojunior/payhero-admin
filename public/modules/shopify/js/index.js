@@ -46,7 +46,7 @@ $(document).ready(function () {
     function createHtmlIntegrations(data) {
         $('#content').html("");
 
-        if (Object.keys(data).length === 0) {
+        if (isEmpty(data)) {
             $("#no-integration-found").show();
         } else {
             $(data).each(function (index, data) {
@@ -70,8 +70,8 @@ $(document).ready(function () {
     }
 
     $('#btn-integration-model').on('click', function () {
-        console.log('aki');
-
+        $("#modal_add_integracao").modal('show');
+        $("#form_add_integration").show();
     });
 
     $("#modal_add_integracao .btn-save").on("click", function () {
@@ -93,7 +93,7 @@ $(document).ready(function () {
     function create(data) {
         if (isEmpty(data)) {
             $('#integration-actions, .page-content').hide();
-            $('.content-error').show();
+            $('#empty-companies-error').show();
             // var route = '/companies/create';
             // $('#modal-project').modal('show');
             // $('#modal-project-title').text("Oooppsssss!");
@@ -101,7 +101,7 @@ $(document).ready(function () {
             // $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
         } else {
             $('#integration-actions, .page-content').show();
-            $('.content-error').hide();
+            $('#empty-companies-error').hide();
 
             $("#select_companies").empty();
             $(data).each(function (index, data) {
@@ -110,8 +110,6 @@ $(document).ready(function () {
             $(".modal-title").html('Adicionar nova integração com Shopify');
             $("#bt_integration").addClass('btn-save');
             $("#bt_integration").text('Realizar integração');
-            $("#modal_add_integracao").modal('show');
-            $("#form_add_integration").show();
 
             $('.check').on('click', function () {
                 if ($(this).is(':checked')) {
