@@ -4,6 +4,7 @@ namespace Modules\PostBack\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -24,15 +25,41 @@ class PostBackPerfectLogController extends Controller
             'status' => 'required',
         ]);
 
-        $saleModel = new Sale();
+        $productPlanSaleModel = new ProductPlanSale();
 
-        $sale = $saleModel->with(['productsPlansSale'])
-            ->find(current(Hashids::connection('sale_id')->decode($requestValidated['external_reference'])));
+        $productPlanSale = $productPlanSaleModel->find(current(Hashids::decode($requestValidated['external_reference'])));
 
-//        foreach ($sale->productsPlansSale as $productPlanSale) {
-//
-//        }
-//        event(new TrackingCodeUpdatedEvent($sale));
+        if(isset($productPlanSale)){
+
+            $status = 0;
+
+            switch ($requestValidated['status']){
+                case 'sent':
+                case 'out_for_delivery':
+                case 'resend':
+                    $status = $productPlanSale->present()->getStatusEnum('dispatched');
+                    break;
+                case 'delivered':
+                    $status = $productPlanSale->present()->getStatusEnum('delivered');
+                    break;
+                //case 'preparation':
+                //case 'canceled':
+                //case 'pending':
+                //case 'erro_fiscal':
+                //case 'returned':
+                default:
+                    $status = $productPlanSale->present()->getStatusEnum('posted');
+                    break;
+            }
+
+            $productPlanSale->tracking_status_enum = $status;
+            $productPlanSale->tracking_status_code = $requestValidated['tracking'];
+            $productPlanSale->save();
+
+
+
+            //event(new TrackingCodeUpdatedEvent($sale));
+        }
     }
 }
 

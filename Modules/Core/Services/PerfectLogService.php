@@ -14,15 +14,15 @@ class PerfectLogService
 
 
     /**
-     * @param $sale
+     * @param $productPlanSaleId
      * @param $trackingNumber
      * @return mixed
      */
-    public function track($sale, $trackingNumber)
+    public function track($productPlanSaleId, $trackingNumber)
     {
         $data = [
-            'external_reference' => $sale,
-            'response_webhook_url' => '',
+            'external_reference' => $productPlanSaleId,
+            'response_webhook_url' => 'http://dev.cloudfox.com.br/api/postback/perfectlog',
             'tracking' => $trackingNumber,
             'token_user' => self::API_USER_TOKEN,
             'system' => self::API_SYSTEM_TOKEN,
