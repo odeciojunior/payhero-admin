@@ -66,7 +66,7 @@ class TransfersService
 
         foreach ($transactionsAnticipateds as $transactionsAnticipated) {
             try {
-                $company = $companyModel->find($transactionsAnticipated->company);
+                $company = $companyModel->find($transactionsAnticipated->company_id);
 
                 $transferAnticipted = $transferModel->create([
                                                                  'transaction_id' => $transactionsAnticipated->id,
