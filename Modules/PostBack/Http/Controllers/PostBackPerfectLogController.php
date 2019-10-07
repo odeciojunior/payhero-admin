@@ -52,11 +52,9 @@ class PostBackPerfectLogController extends Controller
                     break;
             }
 
-            $productPlanSale->tracking_status_enum = $status;
-            $productPlanSale->tracking_status_code = $requestValidated['tracking'];
-            $productPlanSale->save();
+            //ATUALIZAR O STATUS
 
-
+            //NOTIFICAR O USUARIO
 
             //event(new TrackingCodeUpdatedEvent($sale));
         }
