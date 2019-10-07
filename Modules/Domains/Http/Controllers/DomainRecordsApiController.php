@@ -161,7 +161,7 @@ class DomainRecordsApiController extends Controller
                         DB::rollBack();
 
                         return response()->json([
-                                                    'message' => 'Este dominio já esta cadastrado',
+                                                    'message' => 'Este domínio já esta cadastrado',
                                                 ], 400);
                     }
                 } else {

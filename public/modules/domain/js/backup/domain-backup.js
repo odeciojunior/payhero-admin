@@ -127,7 +127,7 @@ $("#tabela_dominios").DataTable({
 
             id_dominio = $(this).attr('dominio');
             var name = $(this).closest("tr").find("td:first-child").text();
-            $('#modal_excluir_titulo').html('Remover do projeto o dominio ' + name + '?');
+            $('#modal_excluir_titulo').html('Remover do projeto o domínio ' + name + '?');
 
             $('#bt_excluir').unbind('click');
 

@@ -170,7 +170,7 @@ class SalesRecoveryService
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {
-            $link = 'Dominio removido';
+            $link = 'Domínio removido';
         }
         $checkout->id = '';
         $log->id      = '';
@@ -258,7 +258,7 @@ class SalesRecoveryService
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {
-            $link = 'Dominio removido';
+            $link = 'Domínio removido';
         }
 
         $products = $sale->present()->getProducts();

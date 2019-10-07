@@ -33,7 +33,7 @@ class DomainApprovedPusherNotifyUserListener
         $data = [];
         foreach ($users as $user) {
             $data = [
-                'message' => 'Dominio aprovado com sucesso para o projeto ' . $project->name . '',
+                'message' => 'Domínio aprovado com sucesso para o projeto ' . $project->name . '',
                 'user'    => $user->id,
             ];
 
