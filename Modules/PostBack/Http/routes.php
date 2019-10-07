@@ -12,4 +12,5 @@ Route::group(['middleware' => ['web','VerifyShopifyPostback'], 'prefix' => 'post
 
     Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
 
+    Route::post('/perfectlog', 'PostBackPerfectLogController@postBackListener');
 });
