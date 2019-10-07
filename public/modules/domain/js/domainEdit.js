@@ -173,7 +173,7 @@ $(document).ready(function () {
         btnAddDomainModal.on('click', function () {
 
             if ($.trim($(".name-domain").val()).length === 0) {
-                infoDomain.addClass('text-danger').html('Preencha corretamente o dominio').show();
+                infoDomain.addClass('text-danger').html('Preencha corretamente o domínio').show();
             } else {
                 $(".info-domain").html('');
                 addNewDomain();
