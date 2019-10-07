@@ -11,7 +11,7 @@
                     <div class="col-lg-8">
                         <h1 class="page-title">Integrações com HotZapp</h1>
                     </div>
-                    <div class="col text-right">
+                    <div class="col text-right" id="integration-actions" style="display:none">
                         <a id='btn-add-integration' class="btn btn-floating btn-danger"
                            style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                             <i class="icon wb-plus" aria-hidden="true"></i>
@@ -21,14 +21,6 @@
             </div>
             <div class='page-content container' id='project-integrated'>
                 <div class='col-md-12'>
-                    <div id="no-integration-found" class='row justify-content-center' style="display:none">
-                        <div class="content-error text-center">
-                            <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
-                            <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                            <p class="desc gray">Integre seus projetos com HotZapp de forma totalmente automatizada!</p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
                     <div class="row" id="content">
                     </div>
                 </div>
@@ -70,6 +62,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            @include('projects::empty')
+
+            <div id="no-integration-found" class='row justify-content-center' style="display:none">
+                <div class="content-error text-center">
+                    <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
+                    <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
+                    <p class="desc gray">Integre seus projetos com HotZapp de forma totalmente automatizada!</p>
                 </div>
             </div>
         </div>

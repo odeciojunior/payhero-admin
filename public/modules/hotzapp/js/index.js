@@ -14,20 +14,27 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                $('#content').html("");
-                $('.select-pad').html("");
-                let projects = response.projects;
-                for (let i = 0; i < projects.length; i++) {
-                    $('.select-pad').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
-                }
-                if(Object.keys(response.integrations).length === 0){
-                    $("#no-integration-found").show();
+                if(isEmpty(response.projects)){
+                    $('#project-empty').show();
+                    $('#integration-actions').hide();
                 } else {
-                    let integrations = response.integrations;
-                    for (let i = 0; i < integrations.length; i++) {
-                        renderIntegration(integrations[i]);
+                    $('.select-pad').html("");
+                    let projects = response.projects;
+                    for (let i = 0; i < projects.length; i++) {
+                        $('.select-pad').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
                     }
-                    $("#no-integration-found").hide();
+                    if (isEmpty(response.integrations)) {
+                        $("#no-integration-found").show();
+                    } else {
+                        $('#content').html("");
+                        let integrations = response.integrations;
+                        for (let i = 0; i < integrations.length; i++) {
+                            renderIntegration(integrations[i]);
+                        }
+                        $("#no-integration-found").hide();
+                    }
+                    $('#project-empty').hide();
+                    $('#integration-actions').show();
                 }
             }
         });
@@ -107,7 +114,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                console.log(response)
                 $("#select_projects_edit").val(response.data.project_id);
                 $('#integration_id').val(response.data.id);
                 $("#link_edit").val(response.data.link);
