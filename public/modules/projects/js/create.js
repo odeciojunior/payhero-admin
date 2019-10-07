@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+
+    loadOnAny('#card-project');
     $.ajax({
         url: '/api/projects/create',
         dataType: "json",
@@ -8,13 +10,16 @@ $(document).ready(function () {
             'Accept': 'application/json',
         },
         error: (response) => {
+            loadOnAny('#card-project', true);
             errorAjaxResponse(response);
         },
         success: (response) => {
-            if (response.length) {
+            loadOnAny('#card-project', true);
+            if (!isEmpty(response)) {
                 $.each(response, (key, company) => {
                     $('#company').append(`<option value="${company.id}">${company.name}</option>`);
                 });
+                $('.content-error').hide();
             } else {
                 $('#card-project').hide();
                 $('.content-error').show();

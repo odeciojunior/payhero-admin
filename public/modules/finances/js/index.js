@@ -17,7 +17,7 @@ $(document).ready(function () {
             },
             success: (response) => {
 
-                if (response.data) {
+                if (!isEmpty(response.data)) {
 
                     $('.page-content').show();
                     $('.content-error').hide();
