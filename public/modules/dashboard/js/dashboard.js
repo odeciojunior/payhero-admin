@@ -25,7 +25,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                if (data.companies.length) {
+                loadOnAny('.page-content', true);
+                if (!isEmpty(data.companies)) {
                     for (let i = 0; i < data.companies.length; i++) {
                         $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
                     }
@@ -35,10 +36,11 @@ $(document).ready(function () {
                     $("#available_money").html(data.values.available_balance);
                     $("#total_money").html(data.values.total_balance);
                     $(".content-error").hide();
+                    $('#company-select').show();
                 } else {
                     $(".content-error").show();
+                    $('#company-select, .page-content').hide();
                 }
-                loadOnAny('.page-content', true);
             }
         });
     }

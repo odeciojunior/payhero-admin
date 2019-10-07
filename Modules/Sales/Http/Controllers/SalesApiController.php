@@ -171,14 +171,15 @@ class SalesApiController extends Controller
             $sales = $saleModel->where('owner_id', auth()->user()->id);
 
             if (!empty($dataRequest['select_project'])) {
-                $plans    = $planModel->where('project', $dataRequest['select_project'])->pluck('id');
-                $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
+                $projectId = current(Hashids::decode($dataRequest['select_project']));
+                $plans     = $planModel->where('project_id', $projectId)->pluck('id');
+                $salePlan  = $planSaleModel->whereIn('plan_id', $plans)->pluck('sale_id');
                 $sales->whereIn('id', $salePlan);
             }
 
             if (!empty($dataRequest['client'])) {
                 $clientes = $clientModel->where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
-                $sales->whereIn('client', $clientes);
+                $sales->whereIn('client_id', $clientes);
             }
 
             if (!empty($dataRequest['select_payment_method'])) {

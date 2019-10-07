@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
-
     // Comportamentos da tela
     $("#type-products").on('change', function () {
 

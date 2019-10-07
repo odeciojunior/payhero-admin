@@ -1,5 +1,15 @@
 $(document).ready(function () {
 
+    let maskOptions = {
+        onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
+            var masks = ['000.000.000-000', '00.000.000/0000-00'];
+            var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
+            $('#document').mask(mask, maskOptions);
+        }
+    };
+
+    $('#document').mask('000.000.000-000', maskOptions);
+
     getDataProfile();
     function getDataProfile() {
         $.ajax({
@@ -176,7 +186,7 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "POST",
-                url: "/api/profile/changepassword",  
+                url: "/api/profile/changepassword",
                 dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -263,7 +273,7 @@ Dropzone.options.dropzoneDocuments = {
         'Accept': 'application/json',
     },
     paramName: "file",
-    maxFilesize: 2, 
+    maxFilesize: 2,
     url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     accept: function accept(file, done) {

@@ -163,15 +163,6 @@ $(document).ready(function () {
     }
 
     /**
-     * Verifica se existe algum objeto vazio
-     * @param obj
-     * @returns {boolean}
-     */
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
-
-    /**
      * Helper verifica campos
      * @returns {boolean}
      */
