@@ -13,6 +13,7 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\BankService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -105,7 +106,7 @@ class WithdrawalsApiController extends Controller
             }
             $company->update(['balance' => $company->balance -= $withdrawalValue]);
             $withdrawalValue -= 380;
-            $withdrawalModel->newQuery()->create(
+            $withdrawal      = $withdrawalModel->newQuery()->create(
                 [
                     'value'         => $withdrawalValue,
                     'company_id'    => $company->id,
@@ -117,6 +118,7 @@ class WithdrawalsApiController extends Controller
                     'status'        => $companyModel->present()->getStatus('pending'),
                 ]
             );
+            event(new WithdrawalRequestEvent($withdrawal));
 
             return response()->json(['message' => 'Saque pendente'], 200);
         } else {
