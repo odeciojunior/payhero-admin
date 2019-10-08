@@ -23,7 +23,7 @@ class InviteResource extends Resource
                                                                                           ->getStatus($this->status)),
             'register_date'     => ($this->register_date != '') ? date('d/m/Y', strtotime($this->register_date)) : 'Pendente',
             'expiration_date'   => ($this->expiration_date != '') ? date('d/m/Y', strtotime($this->expiration_date)) : 'Pendente',
-            'company_name'      => $this->company->fantasy_name,
+            'company_name'      => $this->company->fantasy_name ?? '',
         ];
     }
 }
