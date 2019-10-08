@@ -3,12 +3,15 @@
 namespace Modules\Invites\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\FoxUtils;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\EmailService;
@@ -45,10 +48,10 @@ class InvitesApiController extends Controller
 
                 $invitesSent = Invitation::where('invite', auth()->user()->id)->count();
 
-                if($invitesSent == auth()->user()->invites_amount){
+                if ($invitesSent == auth()->user()->invites_amount) {
                     return response()->json([
-                        'message' => 'Envio de convites indisponível, limite atingido!',
-                    ], 400);
+                                                'message' => 'Envio de convites indisponível, limite atingido!',
+                                            ], 400);
                 }
 
                 $company = current(Hashids::decode($request->input('company')));
@@ -65,7 +68,7 @@ class InvitesApiController extends Controller
                                                         'message' => 'Já existe um usuário cadastrado com esse Email.',
                                                     ], 400);
                         }
- 
+
                         if ($emailInvited == 'error') {
                             return response()->json([
                                                         'message' => 'Erro ao tentar enviar convite, tente novamente mais tarde.',
@@ -99,7 +102,7 @@ class InvitesApiController extends Controller
                         return response()->json([
                                                     'message' => 'Erro ao tentar enviar convite, tente novamente mais tarde.',
                                                 ], 400);
-                    } catch (\Throwable $e) {
+                    } catch (Throwable $e) {
                         Log::warning('Erro ao tentar enviar convite (InvitesApiController - store)');
                         report($e);
 
@@ -234,6 +237,49 @@ class InvitesApiController extends Controller
 
             return response()->json([
                                         'message' => 'Erro ao tentar reenviar convite',
+                                    ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $inviteId
+     * @return JsonResponse
+     */
+    public function verifyInviteRegistration(Request $request, $inviteId)
+    {
+        try {
+            $companyModel    = new Company();
+            $invitationModel = new Invitation();
+
+            $company = $companyModel->find(current(Hashids::decode($inviteId)));
+
+            if (empty($company)) {
+                return response()->json([
+                                            'message' => 'Link convite inválido!',
+                                            'data'    => 'invalido',
+                                        ], 400);
+            } else {
+                $invitesSent = $invitationModel->where('invite', $company->user_id)->count();
+
+                if ($invitesSent > $company->user->invites_amount) {
+                    return response()->json([
+                                                'message' => 'Convite indisponivel, limite atingido!',
+                                                'data'    => 'invalido',
+                                            ], 400);
+                } else {
+                    return response()->json([
+                                                'message' => 'Convite valido!',
+                                                'data'    => 'valido',
+                                            ], 200);
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao verificar convite (InviteApiController - VerifyInviteRegistration)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro com o link do convite, tente novamente mais tarde',
                                     ], 400);
         }
     }

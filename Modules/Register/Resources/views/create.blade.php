@@ -55,7 +55,7 @@
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
 </head>
-<body style='padding-top:0px;'>
+<body id='register-body' style='padding-top:0px;'>
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
 </div>
 <section class="topbar" style=''>

@@ -45,6 +45,9 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
             //            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
         ],
+        'Modules\Core\Events\WithdrawalRequestEvent'         => [
+            'Modules\Core\Listeners\WithdrawalRequestSendEmailListener',
+        ],
         UpdateCheckoutTable::class      => [
             UpdateCheckoutTableListener::class,
         ],
