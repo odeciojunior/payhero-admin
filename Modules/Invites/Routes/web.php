@@ -34,3 +34,14 @@ Route::group(
 Route::group(['middleware' => ['web', 'auth']], function() {
     Route::Resource('invitations', 'InvitesController')->only('index', 'create', 'store')->names('invitations');
 });
+
+Route::group(
+    [
+        'middleware' => ['web'],
+        'prefix'     => 'api/invitations',
+    ],
+    function() {
+        Route::get('verifyinvite/{code}', 'InvitesApiController@verifyInviteRegistration')
+             ->name('api.verifyinvite');
+    }
+);
