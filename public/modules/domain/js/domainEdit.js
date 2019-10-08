@@ -324,7 +324,7 @@ $(document).ready(function () {
             data: formData,
             dataType: "json",
             error: function (response) {
-                $(".swal2-container, #modal-backdrop").remove();
+                $(".swal2-container, #modal-backdrop, #loaderLine").remove();
                 removeLoad();
                 errorAjaxResponse(response);
             },
