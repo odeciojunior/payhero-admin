@@ -108,7 +108,7 @@ $(document).ready(function () {
 
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
-                message   = data.message + (data.message > 1) ? ' boletos compensados' : ' boleto compensado';
+                message   = data.message + (data.message > 1 ? ' boletos compensados' : ' boleto compensado');
                 iconClass = 'money-success';
                 link      = '/sales';
                 break;
@@ -123,7 +123,7 @@ $(document).ready(function () {
                 link      = '/finances';
                 break;
             case 'SaleNotification' :
-                message   = data.message + (data.message > 1) ? ' novas vendas' : ' nova venda';
+                message   = data.message + (data.message > 1 ? ' novas vendas' : ' nova venda');
                 iconClass = 'money-success';
                 link      = '/sales';
                 break;
