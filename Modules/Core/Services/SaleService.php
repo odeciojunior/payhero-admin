@@ -35,6 +35,9 @@ class SaleService
             'sale.plansSales.plan',
             'sale.plansSales.plan.products',
             'sale.plansSales.plan.project',
+            'sale.shipping',
+            'sale.checkout',
+            'sale.delivery'
         ])->whereIn('company_id', $userCompanies)
             ->whereNull('invitation_id');
 
@@ -90,7 +93,12 @@ class SaleService
         if ($paginate) {
             return $transactions->orderBy('id', 'DESC')->paginate(10);
         }
-        return [];
+
+        return  $transactions->orderBy('id', 'DESC')->get()->map(
+            function ($value){
+                return $value->sale;
+            }
+        );
     }
 
 

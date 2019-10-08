@@ -4,20 +4,11 @@ namespace Modules\Sales\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Client;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Shipping;
-use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
@@ -84,54 +75,17 @@ class SalesApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param SaleIndexRequest $request
      * @return JsonResponse|BinaryFileResponse
      */
-    public function export(Request $request)
+    public function export(SaleIndexRequest $request)
     {
         try {
             $dataRequest = $request->all();
-            $dataRequest = array_filter($dataRequest);
 
-            $saleModel     = new Sale();
-            $planSaleModel = new PlanSale();
-            $clientModel   = new Client();
-            $planModel     = new Plan();
-            $checkoutModel = new Checkout();
-            $shippingModel = new Shipping();
+            $saleService = new SaleService();
 
-            $sales = $saleModel->where('owner_id', auth()->user()->id);
-
-            if (!empty($dataRequest['select_project'])) {
-                $projectId = current(Hashids::decode($dataRequest['select_project']));
-                $plans     = $planModel->where('project_id', $projectId)->pluck('id');
-                $salePlan  = $planSaleModel->whereIn('plan_id', $plans)->pluck('sale_id');
-                $sales->whereIn('id', $salePlan);
-            }
-
-            if (!empty($dataRequest['client'])) {
-                $clientes = $clientModel->where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
-                $sales->whereIn('client_id', $clientes);
-            }
-
-            if (!empty($dataRequest['select_payment_method'])) {
-                $sales->where('payment_form', $dataRequest['select_payment_method']);
-            }
-
-            if (!empty($dataRequest['sale_status'])) {
-                $sales->where('status', $dataRequest['sale_status']);
-            }
-
-            $dateRange = FoxUtils::validateDateRange($dataRequest['date_range'] ?? '');
-            if (!empty($dataRequest['date_type']) && $dateRange) {
-                $dateType = $dataRequest['date_type'];
-                $sales->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            }
-
-            $sales->with(['client', 'project', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
-                  ->orderBy('id', 'DESC');
-
-            $salesResult = $sales->get();
+            $salesResult = $saleService->getSales($dataRequest, false);
 
             $header = [
                 'Projeto',
@@ -140,7 +94,6 @@ class SalesApiController extends Controller
                 'Afiliado',
                 'Forma de Pagamento',
                 'Número de Parcelas',
-                'Valor da Parcela',
                 'Bandeira do Cartão',
                 'Link do Boleto',
                 'Linha Digitavel do Boleto',
@@ -179,8 +132,6 @@ class SalesApiController extends Controller
 
             $saleData = collect();
             foreach ($salesResult as $sale) {
-                $checkout  = $checkoutModel->find($sale->checkout->id);
-                $shipping  = $shippingModel->find($sale->shipping->id);
                 $saleArray = [
                     'project_name'          => $sale->project->name ?? '',
                     'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')
@@ -188,9 +139,7 @@ class SalesApiController extends Controller
                     'owner'                 => $sale->user->name ?? '',
                     'affiliate'             => null,
                     'payment_form'          => $sale->payment_form ?? '',
-                    //'payment_method' => ($sale->payment_method == 1) ? "credit_card" : "boleto",
                     'installments_amount'   => $sale->installments_amount ?? '',
-                    'installments_value'    => $sale->installments_value ?? '',
                     'flag'                  => $sale->flag ?? '',
                     'boleto_link'           => $sale->boleto_link ?? '',
                     'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
@@ -202,8 +151,8 @@ class SalesApiController extends Controller
                     'gateway_status'        => $sale->gateway_status ?? '',
                     'iof'                   => $sale->iof ?? '',
                     'shopify_discount'      => $sale->shopify_discount ?? '',
-                    'shipping'              => $shipping->name ?? '',
-                    'shipping_value'        => $shipping->value ?? '',
+                    'shipping'              => $sale->shipping->name ?? '',
+                    'shipping_value'        => $sale->shipping->value ?? '',
                     'dolar_quotation'       => $sale->dolar_quotation ?? '',
                     'total_paid'            => $sale->total_paid_value ?? '',
                     'client_name'           => $sale->client->name ?? '',
@@ -218,12 +167,12 @@ class SalesApiController extends Controller
                     'client_city'           => $sale->delivery->city ?? '',
                     'client_state'          => $sale->delivery->state ?? '',
                     'client_country'        => $sale->delivery->country ?? '',
-                    'src'                   => $checkout->src ?? '',
-                    'utm_source'            => $checkout->utm_source ?? '',
-                    'utm_medium'            => $checkout->utm_medium ?? '',
-                    'utm_campaign'          => $checkout->utm_campaign ?? '',
-                    'utm_term'              => $checkout->utm_term ?? '',
-                    'utm_content'           => $checkout->utm_content ?? '',
+                    'src'                   => $sale->checkout->src ?? '',
+                    'utm_source'            => $sale->checkout->utm_source ?? '',
+                    'utm_medium'            => $sale->checkout->utm_medium ?? '',
+                    'utm_campaign'          => $sale->checkout->utm_campaign ?? '',
+                    'utm_term'              => $sale->checkout->utm_term ?? '',
+                    'utm_content'           => $sale->checkout->utm_content ?? '',
                 ];
 
                 $saleData->push(collect($saleArray));
