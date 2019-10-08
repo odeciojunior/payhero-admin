@@ -19,6 +19,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\FoxUtils;
 use Modules\Sales\Exports\Reports\SaleReportExport;
+use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -31,21 +32,13 @@ use Vinkla\Hashids\Facades\Hashids;
 class SalesApiController extends Controller
 {
     /**
-     * @param Request $request
+     * @param SaleIndexRequest $request
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(SaleIndexRequest $request)
     {
         try {
-            $data = $request->validate([
-                                           'project'        => 'nullable|string',
-                                           'transaction'    => 'nullable',
-                                           'payment_method' => 'nullable|string',
-                                           'status'         => 'nullable',
-                                           'client'         => 'nullable|string',
-                                           'date_type'      => 'nullable',
-                                           'date_range'     => 'nullable',
-                                       ]);
+            $data = $request->all();
 
             $companyModel     = new Company();
             $clientModel      = new Client();
@@ -106,13 +99,13 @@ class SalesApiController extends Controller
                 $querySale->whereIn('status', $status);
             });
 
+            //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($data["date_range"]);
-            if (!empty($data["date_type"]) && $dateRange) {
-                $dateType = $data["date_type"];
-                $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                });
-            }
+            $dateType = $data["date_type"];
+
+            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
+                $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+            });
 
             return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
         } catch (Exception $e) {
@@ -190,7 +183,7 @@ class SalesApiController extends Controller
                 $sales->where('status', $dataRequest['sale_status']);
             }
 
-            $dateRange = FoxUtils::validateDateRange($dataRequest['date_range']);
+            $dateRange = FoxUtils::validateDateRange($dataRequest['date_range'] ?? '');
             if (!empty($dataRequest['date_type']) && $dateRange) {
                 $dateType = $dataRequest['date_type'];
                 $sales->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
