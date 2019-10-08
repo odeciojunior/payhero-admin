@@ -18,6 +18,7 @@ $(document).ready(function () {
 
     $("#notification").on('click', function () {
         getNotifications();
+        updateUnreadNotificationsAmount();
     });
 
     // autaliza status das notificações para lidas
