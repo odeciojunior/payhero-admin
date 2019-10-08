@@ -51,7 +51,8 @@ class RegisterApiController extends Controller
 
             auth()->loginUsingId($user->id, true);
 
-            $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
+            $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
+            $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
             if ($invite) {
                 $invite->update([
@@ -62,15 +63,12 @@ class RegisterApiController extends Controller
                                     'email_invited'   => $requestData['email'],
                                 ]);
 
-                if(empty($invite->invite)){
+                if (empty($invite->invite)) {
                     $invite->update([
-                        'invite' => $company->user_id
-                    ]);
+                                        'invite' => $company->user_id,
+                                    ]);
                 }
-            
             } else {
-
-                $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
                 if ($company) {
                     $inviteModel->create([
