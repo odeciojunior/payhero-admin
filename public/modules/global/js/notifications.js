@@ -24,7 +24,7 @@ $(document).ready(function () {
     function markNotificationsAsRead() {
         $.ajax({
             method: 'POST',
-            url: '/api/notifications/markasread/',
+            url: '/api/notifications/markasread',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
