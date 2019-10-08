@@ -74,7 +74,7 @@ $(document).ready(function () {
         $("#form_add_integration").show();
     });
 
-    $("#modal_add_integracao .btn-save").on("click", function () {
+    $("#bt_integration").on("click", function () {
 
         if ($('#token').val() == '' || $('#url_store').val() == '' || $('#company').val() == '') {
             alertCustom('error', 'Dados informados inválidos');
