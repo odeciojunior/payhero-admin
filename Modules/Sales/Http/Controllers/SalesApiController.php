@@ -18,6 +18,7 @@ use Modules\Core\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
@@ -38,76 +39,14 @@ class SalesApiController extends Controller
     public function index(SaleIndexRequest $request)
     {
         try {
+
+            $saleService = new SaleService();
+
             $data = $request->all();
 
-            $companyModel     = new Company();
-            $clientModel      = new Client();
-            $transactionModel = new Transaction();
+            $sales = $saleService->getSales($data);
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                                          ->pluck('id')
-                                          ->toArray();
-
-            $transactions = $transactionModel->with([
-                                                        'sale',
-                                                        'sale.project',
-                                                        'sale.client',
-                                                        'sale.plansSales',
-                                                        'sale.plansSales.plan',
-                                                        'sale.plansSales.plan.products',
-                                                        'sale.plansSales.plan.project',
-                                                    ])->whereIn('company_id', $userCompanies)
-                                             ->whereNull('invitation_id');
-
-            if (!empty($data["project"])) {
-                $projectId = current(Hashids::decode($data["project"]));
-                $transactions->whereHas('sale', function($querySale) use ($projectId) {
-                    $querySale->where('project_id', $projectId);
-                });
-            }
-
-            if (!empty($data["transaction"])) {
-                $saleId = current(Hashids::connection('sale_id')
-                                         ->decode(str_replace('#', '', $data["transaction"])));
-
-                $transactions->whereHas('sale', function($querySale) use ($saleId) {
-                    $querySale->where('id', $saleId);
-                });
-            }
-
-            if (!empty($data["client"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $data["client"] . '%')->pluck('id');
-                $transactions->whereHas('sale', function($querySale) use ($customers) {
-                    $querySale->whereIn('client_id', $customers);
-                });
-            }
-
-            if (!empty($data["payment_method"])) {
-                $forma = $data["payment_method"];
-                $transactions->whereHas('sale', function($querySale) use ($forma) {
-                    $querySale->where('payment_method', $forma);
-                });
-            }
-
-            if (empty($data['status'])) {
-                $status = [1, 2, 4, 6];
-            } else {
-                $status = [$data["status"]];
-            }
-
-            $transactions->whereHas('sale', function($querySale) use ($status) {
-                $querySale->whereIn('status', $status);
-            });
-
-            //tipo da data e periodo obrigatorio
-            $dateRange = FoxUtils::validateDateRange($data["date_range"]);
-            $dateType = $data["date_type"];
-
-            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
-                $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            });
-
-            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
+            return TransactionResource::collection($sales);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);

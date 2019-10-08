@@ -221,14 +221,11 @@ $(document).ready(function () {
 
                     pagination(response, 'sales', atualizar);
 
-                    loadOnAny('.page-content', true);
-                    $('#export-excel').show();
-                    $('.content-error').hide();
                 } else {
-                    loadOnAny('.page-content', true);
-                    $('#export-excel, .page-content').hide();
-                    $('.content-error').show();
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
+                $('#export-excel').show();
+                loadOnAny('.page-content', true);
             }
         });
     }

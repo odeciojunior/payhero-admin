@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
     @endpush
 
     <!-- Page -->
@@ -31,6 +32,7 @@
             </div>
         </div>
         <div class="page-content container" style="display:none">
+            <!-- Filtro -->
             <div class="fixhalf"></div>
             <form id='filter_form'>
                 <div id="" class="card shadow p-20">
@@ -89,6 +91,28 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Resumo -->
+            <div class="fixhalf"></div>
+            <div class="card shadow p-20" id='card-invitation-data' style='display:block;'>
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Produtos vendidos </h6>
+                        <h4 id='invitations_amount' class="number text-center green-gradient">234</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> restore </i> Saldo pendente </h6>
+                        <h4 id='invitations_sent' class="number text-center orange-gradient">23</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > attach_money </i> Receita gerada </h6>
+                        <h4 id='invitations_accepted' class="number text-center green-gradient">2</i>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
@@ -116,16 +140,17 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
+
             <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
-        <div class="content-error text-center" style="display:none">
-            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
-            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
-            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
-            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
-        </div>
+{{--        <div class="content-error text-center" style="display:none">--}}
+{{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
+{{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
+{{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
+{{--            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>--}}
+{{--        </div>--}}
     </div>
 
     <!-- Modal regerar boleto-->
