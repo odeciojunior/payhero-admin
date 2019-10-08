@@ -303,16 +303,18 @@ class TesteController extends Controller
     {
         //nada
 
-        $saleModel = new Sale();
-        $nservice  = new NotazzService();
+        //
 
-        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
+       // $saleModel = new Sale();
+        //$nservice  = new NotazzService();
+
+        //$sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
         // $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
-        dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
+        //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
         //        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
         //

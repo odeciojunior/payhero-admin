@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
+use Modules\Core\Entities\NotazzInvoice;
+use Modules\Notazz\Transformers\NotazzInvoiceResource;
 use Modules\Notazz\Transformers\NotazzResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -222,6 +224,42 @@ class NotazzApiController extends Controller
             return response()->json([
                                         'message' => 'Integração não encontrada',
                                     ], 400);
+        }
+    }
+
+    public function getInvoice($code)
+    {
+        try {
+
+            $notazzInvoiceModel = new NotazzInvoice();
+
+            $notazzInvoiceId = current(Hashids::decode($code));
+
+            if ($notazzInvoiceId) {
+                //hash ok
+                $notazzInvoice = $notazzInvoiceModel->find($notazzInvoiceId);
+
+                if ($notazzInvoice) {
+
+                    return new NotazzInvoiceResource($notazzInvoice);
+                } else {
+                    return response()->json([
+                                                'data' => [],
+                                            ], 200);
+                }
+            } else {
+                //erro no hash
+                return response()->json([
+                                            'data' => [],
+                                        ], 200);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar integraçeõs da Notazz (NotazzController - getInvoice)');
+            report($e);
+
+            return response()->json([
+                                        'data' => [],
+                                    ], 200);
         }
     }
 }

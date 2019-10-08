@@ -60,6 +60,7 @@ class SalesApiController extends Controller
                     'transactions' => function ($query) {
                         $query->where('company_id', '!=', null)->first();
                     },
+                    'notazzInvoices'
                 ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
                 return new SalesResource($sale);

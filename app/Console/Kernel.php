@@ -30,11 +30,10 @@ class Kernel extends ConsoleKernel
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
 
-        //generate all retroactive invoices
-        $schedule->command('generate:retroactivenotazzinvoices')->hourly();
-
+        //generate all sale approved invoices
+        //$schedule->command('generate:notazzinvoicessalesapproved')->hourly();
         //verify pending notazz invoices
-        $schedule->command('verify:pendingnotazzinvoices')->hourly();
+        //$schedule->command('verify:pendingnotazzinvoices')->hourly();
 
         // notify user to paid boletos
         $schedule->command('verify:boletopaid')->dailyAt('10:00');

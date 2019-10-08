@@ -35,14 +35,14 @@ class GenerateRetroactiveNotazzInvoices extends Command
      */
     public function handle()
     {
-        try {
-
-            $notazzService = new NotazzService();
-
-            $notazzService->generateRetroactiveInvoices();
-        } catch (Exception $e) {
-            Log::warning('GenerateRetroactiveNotazzInvoices - Erro no command ');
-            report($e);
-        }
+//        try {
+//
+//            $notazzService = new NotazzService();
+//
+//            $notazzService->generateRetroactiveInvoices();
+//        } catch (Exception $e) {
+//            Log::warning('GenerateRetroactiveNotazzInvoices - Erro no command ');
+//            report($e);
+//        }
     }
 }

@@ -24,7 +24,7 @@ $(document).ready(function () {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" integration=` + data.id + ` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='modules/global/img/produto.png';" alt="'modules/global/img/produto.png'"/>
+                                    <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"/>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>

@@ -836,6 +836,15 @@ class ShopifyService
                                     ->first();
             if ($product) {
                 //plano ja existe, atualiza o plano, produto, produtoplanos
+
+//                $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())
+//                    ->getCost();
+//
+//                if($productCost)
+//                {
+//
+//                }
+
                 $product->update(
                     [
                         'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
