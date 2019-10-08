@@ -3,6 +3,7 @@
 namespace Modules\Invites\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\FoxUtils;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\EmailService;
@@ -100,7 +102,7 @@ class InvitesApiController extends Controller
                         return response()->json([
                                                     'message' => 'Erro ao tentar enviar convite, tente novamente mais tarde.',
                                                 ], 400);
-                    } catch (\Throwable $e) {
+                    } catch (Throwable $e) {
                         Log::warning('Erro ao tentar enviar convite (InvitesApiController - store)');
                         report($e);
 
@@ -239,6 +241,11 @@ class InvitesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $inviteId
+     * @return JsonResponse
+     */
     public function verifyInviteRegistration(Request $request, $inviteId)
     {
         try {
