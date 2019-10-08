@@ -103,7 +103,7 @@ class BoletoService
                     if (!empty($link) && !empty($telephoneValidated)) {
                         $zenviaSms = new ZenviaSmsService();
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
-                        $checkout->newQuery()->increment('sms_sent_amount');
+                        $checkout->increment('sms_sent_amount');
                     }
 
                     $data           = [
@@ -124,7 +124,7 @@ class BoletoService
                     if ($emailValidated) {
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
 
-                        $checkout->newQuery()->increment('email_sent_amount');
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
@@ -218,7 +218,7 @@ class BoletoService
                     if ($emailValidated) {
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
 
-                        $checkout->increment('email_sent_amount', 1);
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boletos par e-mail no foreach - Já separamos seu pedido');
@@ -312,7 +312,7 @@ class BoletoService
                         $sendEmail = new SendgridService();
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
-                        $checkout->newQuery()->increment('email_sent_amount');
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');
