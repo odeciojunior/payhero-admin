@@ -39,7 +39,7 @@ class SalesApiController extends Controller
 
             return TransactionResource::collection($sales);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar vendas SalesController - getSales');
+            Log::warning('Erro ao buscar vendas SalesApiController - index');
             report($e);
 
             return response()->json(['message' => 'Erro ao carregar vendas'], 400);
@@ -57,17 +57,17 @@ class SalesApiController extends Controller
 
             if (isset($id)) {
                 $sale = $saleModel->with([
-                                             'transactions' => function($query) {
-                                                 $query->where('company_id', '!=', null)->first();
-                                             },
-                                         ])->find(current(Hashids::connection('sale_id')->decode($id)));
+                    'transactions' => function ($query) {
+                        $query->where('company_id', '!=', null)->first();
+                    },
+                ])->find(current(Hashids::connection('sale_id')->decode($id)));
 
                 return new SalesResource($sale);
             }
 
             return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
+            Log::warning('Erro ao mostrar detalhes da venda  SalesApiController - show');
             report($e);
 
             return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
@@ -85,7 +85,11 @@ class SalesApiController extends Controller
 
             $saleService = new SaleService();
 
-            $salesResult = $saleService->getSales($dataRequest, false);
+            $salesResult = $saleService->getSales($dataRequest, false)->map(
+                function ($transaction) {
+                    return $transaction->sale;
+                }
+            );
 
             $header = [
                 'Projeto',
@@ -133,46 +137,46 @@ class SalesApiController extends Controller
             $saleData = collect();
             foreach ($salesResult as $sale) {
                 $saleArray = [
-                    'project_name'          => $sale->project->name ?? '',
-                    'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')
-                                                                       ->encode($sale->id)),
-                    'owner'                 => $sale->user->name ?? '',
-                    'affiliate'             => null,
-                    'payment_form'          => $sale->payment_form ?? '',
-                    'installments_amount'   => $sale->installments_amount ?? '',
-                    'flag'                  => $sale->flag ?? '',
-                    'boleto_link'           => $sale->boleto_link ?? '',
+                    'project_name' => $sale->project->name ?? '',
+                    'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
+                            ->encode($sale->id)),
+                    'owner' => $sale->user->name ?? '',
+                    'affiliate' => null,
+                    'payment_form' => $sale->payment_form ?? '',
+                    'installments_amount' => $sale->installments_amount ?? '',
+                    'flag' => $sale->flag ?? '',
+                    'boleto_link' => $sale->boleto_link ?? '',
                     'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
-                    'boleto_due_date'       => $sale->boleto_due_date ?? '',
-                    'start_date'            => $sale->start_date ?? '',
-                    'end_date'              => $sale->end_date ?? '',
-                    'created_at'            => $sale->created_at ?? '',
-                    'status'                => $sale->status ?? '',
-                    'gateway_status'        => $sale->gateway_status ?? '',
-                    'iof'                   => $sale->iof ?? '',
-                    'shopify_discount'      => $sale->shopify_discount ?? '',
-                    'shipping'              => $sale->shipping->name ?? '',
-                    'shipping_value'        => $sale->shipping->value ?? '',
-                    'dolar_quotation'       => $sale->dolar_quotation ?? '',
-                    'total_paid'            => $sale->total_paid_value ?? '',
-                    'client_name'           => $sale->client->name ?? '',
-                    'client_telephone'      => $sale->client->telephone ?? '',
-                    'client_email'          => $sale->client->email ?? '',
-                    'client_document'       => $sale->client->document ?? '',
-                    'client_street'         => $sale->delivery->street ?? '',
-                    'client_number'         => $sale->delivery->number ?? '',
-                    'client_complement'     => $sale->delivery->complement ?? '',
-                    'client_neighborhood'   => $sale->delivery->neighborhood ?? '',
-                    'client_zip_code'       => $sale->delivery->zip_code ?? '',
-                    'client_city'           => $sale->delivery->city ?? '',
-                    'client_state'          => $sale->delivery->state ?? '',
-                    'client_country'        => $sale->delivery->country ?? '',
-                    'src'                   => $sale->checkout->src ?? '',
-                    'utm_source'            => $sale->checkout->utm_source ?? '',
-                    'utm_medium'            => $sale->checkout->utm_medium ?? '',
-                    'utm_campaign'          => $sale->checkout->utm_campaign ?? '',
-                    'utm_term'              => $sale->checkout->utm_term ?? '',
-                    'utm_content'           => $sale->checkout->utm_content ?? '',
+                    'boleto_due_date' => $sale->boleto_due_date ?? '',
+                    'start_date' => $sale->start_date ?? '',
+                    'end_date' => $sale->end_date ?? '',
+                    'created_at' => $sale->created_at ?? '',
+                    'status' => $sale->status ?? '',
+                    'gateway_status' => $sale->gateway_status ?? '',
+                    'iof' => $sale->iof ?? '',
+                    'shopify_discount' => $sale->shopify_discount ?? '',
+                    'shipping' => $sale->shipping->name ?? '',
+                    'shipping_value' => $sale->shipping->value ?? '',
+                    'dolar_quotation' => $sale->dolar_quotation ?? '',
+                    'total_paid' => $sale->total_paid_value ?? '',
+                    'client_name' => $sale->client->name ?? '',
+                    'client_telephone' => $sale->client->telephone ?? '',
+                    'client_email' => $sale->client->email ?? '',
+                    'client_document' => $sale->client->document ?? '',
+                    'client_street' => $sale->delivery->street ?? '',
+                    'client_number' => $sale->delivery->number ?? '',
+                    'client_complement' => $sale->delivery->complement ?? '',
+                    'client_neighborhood' => $sale->delivery->neighborhood ?? '',
+                    'client_zip_code' => $sale->delivery->zip_code ?? '',
+                    'client_city' => $sale->delivery->city ?? '',
+                    'client_state' => $sale->delivery->state ?? '',
+                    'client_country' => $sale->delivery->country ?? '',
+                    'src' => $sale->checkout->src ?? '',
+                    'utm_source' => $sale->checkout->utm_source ?? '',
+                    'utm_medium' => $sale->checkout->utm_medium ?? '',
+                    'utm_campaign' => $sale->checkout->utm_campaign ?? '',
+                    'utm_term' => $sale->checkout->utm_term ?? '',
+                    'utm_content' => $sale->checkout->utm_content ?? '',
                 ];
 
                 $saleData->push(collect($saleArray));
@@ -183,6 +187,58 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
+        }
+    }
+
+    public function resume(SaleIndexRequest $request)
+    {
+        try {
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $transactions = $saleService->getSales($data, false);
+
+            if ($transactions->count()) {
+                //cria um item no array pra cada moeda inclusa nas vendas
+                $resume = $transactions->reduce(function ($carry, $item) {
+                    $carry['total_sales'] += $item->sale->plansSales->count();
+                    $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
+                    $carry[$item->currency]['comission'] += $item->status == 'paid' ? intval($item->value) : 0;
+                    //calcula o total
+                    $subTotal = $item->sale->present()->getSubTotal();
+                    $total = $subTotal;
+                    $total += preg_replace("/[^0-9]/", "", $item->sale->shipment_value);
+                    if (preg_replace("/[^0-9]/", "", $item->sale->shopify_discount) > 0) {
+                        $total -= preg_replace("/[^0-9]/", "", $item->sale->shopify_discount);
+                    }
+                    if ($item->sale->dolar_quotation != 0) {
+                        $total += preg_replace('/[^0-9]/', '', $item->sale->iof);
+                    }
+                    $carry[$item->currency]['total'] += $total;
+                    return $carry;
+                }, ['total_sales' => 0]);
+
+                //formata os valores
+                foreach ($resume as &$item) {
+                    if (is_array($item)) {
+                        foreach ($item as &$value) {
+                            if($value == 0){
+                                $value = '000';
+                            }
+                            $value = substr_replace($value, ',', strlen($value) - 2, 0);
+                        }
+                    }
+                }
+                return response()->json($resume);
+            } else {
+                return response()->json([]);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir resumo das venda  SalesApiController - resume');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
         }
     }
 }

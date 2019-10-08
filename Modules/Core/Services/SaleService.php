@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
@@ -91,14 +92,12 @@ class SaleService
 
 
         if ($paginate) {
-            return $transactions->orderBy('id', 'DESC')->paginate(10);
+            $sales = $transactions->orderBy('id', 'DESC')->paginate(10);
+        } else {
+            $sales = $transactions->orderBy('id', 'DESC')->get();
         }
 
-        return  $transactions->orderBy('id', 'DESC')->get()->map(
-            function ($value){
-                return $value->sale;
-            }
-        );
+        return $sales;
     }
 
 
@@ -145,7 +144,6 @@ class SaleService
         try {
             $saleModel = new Sale();
             $productModel = new Product();
-            $planSaleModel = new PlanSale();
 
             if ($saleId) {
 
@@ -164,8 +162,8 @@ class SaleService
                 return null;
             }
         } catch (Exception $ex) {
-
-            //thowl
+            Log::warning('Erro ao buscar produtos - SaleService - getProducts');
+            report($ex);
         }
     }
 }
