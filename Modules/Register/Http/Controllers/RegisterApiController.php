@@ -61,13 +61,20 @@ class RegisterApiController extends Controller
                                     'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
                                     'email_invited'   => $requestData['email'],
                                 ]);
+
+                if(empty($invite->invite)){
+                    $invite->update([
+                        'invite' => $company->user_id
+                    ]);
+                }
+            
             } else {
 
                 $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
                 if ($company) {
                     $inviteModel->create([
-                                             'invite'          => null,
+                                             'invite'          => $company->user_id,
                                              'user_invited'    => $user->id,
                                              'status'          => '1',
                                              'company'         => $company->id,
@@ -75,12 +82,6 @@ class RegisterApiController extends Controller
                                              'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
                                              'email_invited'   => $requestData['email'],
                                          ]);
-
-                    if(empty($invite->invite)){
-                        $invite->update([
-                            'invite' => $company->user_id
-                        ]);
-                    }
                 }
             }
 

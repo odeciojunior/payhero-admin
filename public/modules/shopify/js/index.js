@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    loadOnAny('.page-content');
+
     $.ajax({
         method: "GET",
         url: "/api/companies?select=true",
@@ -9,11 +12,12 @@ $(document).ready(function () {
         },
         error: function error(response) {
             $("#modal-content").hide();
+            loadOnAny('.page-content', true);
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            create(response.data);
             index();
+            create(response.data);
         }
     });
 
@@ -30,10 +34,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                // loadingOnScreenRemove();
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                loadOnAny('.page-content', true);
                 createHtmlIntegrations(response.data);
             }
         });
@@ -74,7 +79,7 @@ $(document).ready(function () {
         $("#form_add_integration").show();
     });
 
-    $("#modal_add_integracao .btn-save").on("click", function () {
+    $("#bt_integration").on("click", function () {
 
         if ($('#token').val() == '' || $('#url_store').val() == '' || $('#company').val() == '') {
             alertCustom('error', 'Dados informados inválidos');
@@ -94,13 +99,8 @@ $(document).ready(function () {
         if (isEmpty(data)) {
             $('#integration-actions, .page-content').hide();
             $('#empty-companies-error').show();
-            // var route = '/companies/create';
-            // $('#modal-project').modal('show');
-            // $('#modal-project-title').text("Oooppsssss!");
-            // $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não possui empresa para realizar integração/strong></h3>' + '<h5 align="center">Deseja criar sua primeira empresa? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-            // $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
         } else {
-            $('#integration-actions, .page-content').show();
+            $('#integration-actions').show();
             $('#empty-companies-error').hide();
 
             $("#select_companies").empty();
