@@ -134,7 +134,6 @@
                             @include('projects::edit')
                         </div>
                     </div>
-
                     <!-- Modal para fazer-desfazer integração com shopify -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -158,7 +157,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -168,7 +166,7 @@
         <script src="{{asset('modules/partners/js/partners.js?v=1')}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v=1')}}"></script>
         {{--<script src="{{asset('modules/domain/js/domain.js')}}"></script>--}}
-        <script src="{{asset('modules/domain/js/domainEdit.js?v=1')}}"></script>
+        <script src="{{asset('modules/domain/js/domainEdit.js?v=2')}}"></script>
         <script src="{{asset('modules/sms-message/js/smsMessage.js?v=1')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=1')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=1')}}"></script>
