@@ -72,7 +72,6 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="date_type">Data</label>
                             <select name='date_type' id="date_type" class="form-control select-pad">
-                                <option value="">Não aplicar</option>
                                 <option value="start_date">Data do pedido</option>
                                 <option value="end_date">Data do pagamento</option>
                             </select>
