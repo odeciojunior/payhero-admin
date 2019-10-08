@@ -133,7 +133,7 @@ $(document).ready(function () {
                 link      = '/projects';
                 break;
             case 'UserShopifyIntegrationStroreNotification' :
-                message   = data.success;
+                message   = data.message;
                 iconClass = 'shopify-success';
                 link      = '/projects';
                 break;
