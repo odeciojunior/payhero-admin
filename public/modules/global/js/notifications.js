@@ -105,7 +105,6 @@ $(document).ready(function () {
     function getNotificationData(data){
 
         var message = '', iconClass = '', link = '';
-
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
                 message   = data.message + (data.message > 1 ? ' boletos compensados' : ' boleto compensado');
@@ -132,7 +131,7 @@ $(document).ready(function () {
                 iconClass = 'shopify-success';
                 link      = '/projects';
                 break;
-            case 'UserShopifyIntegrationStroreNotification' :
+            case 'UserShopifyIntegrationStoreNotification' :
                 message   = data.message;
                 iconClass = 'shopify-success';
                 link      = '/projects';
