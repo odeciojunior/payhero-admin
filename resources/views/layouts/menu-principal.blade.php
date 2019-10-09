@@ -8,7 +8,7 @@
             <i class="icon wb-more-horizontal" aria-hidden="true"></i>
         </button>
         <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-            <img class="navbar-brand-logo" src="{{ asset('modules/global/adminremark/assets/images/cloudfox_logo.png') }}" title="Remark">
+            <img class="navbar-brand-logo" src="{{ asset('modules/global/adminremark/assets/images/cloudfox_logo.png') }}" >
             <span class="navbar-brand-text hidden-xs-down" style="color: black"> <span style="font-weight: 300;">Cloud</span><strong>Fox</strong></span>
         </div>
         <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
@@ -33,7 +33,7 @@
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
                 <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-                    <span class="nav-link" data-toggle="dropdown" title="Notifications" id='notification'
+                    <span class="nav-link" data-toggle="dropdown" title="Notificações" id='notification'
                           aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                         <i class="material-icons">notifications_none</i>
                         <span class="badge badge-danger badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>

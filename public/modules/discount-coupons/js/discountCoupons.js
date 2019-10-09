@@ -30,7 +30,7 @@ $(function () {
         $("#btn-modal").hide();
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon,
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -57,7 +57,7 @@ $(function () {
         let coupon = $(this).attr('coupon');
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon + "/edit",
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon + "/edit",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -154,7 +154,7 @@ $(function () {
     });
 
     //deletar cupom
-    $('#modal-delete-coupon .btn-delete').on('click',  function () {
+    $('#modal-delete-coupon .btn-delete').on('click', function () {
         let coupon = $(this).attr('coupon');
         loadingOnScreen();
         $.ajax({
@@ -215,9 +215,9 @@ $(function () {
                                 <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
-                                <a role="button" class="mg-responsive details-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">remove_red_eye</i></a>
-                                <a role="button" class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                <a role="button" class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
+                                <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">remove_red_eye</i></a>
+                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
                             </td>
                         </tr>`;
 

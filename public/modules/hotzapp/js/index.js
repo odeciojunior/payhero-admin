@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     index();
-    function index(){
+    function index() {
         $.ajax({
             method: "GET",
             url: "/api/apps/hotzapp/",
@@ -14,7 +14,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                if(isEmpty(response.projects)){
+                if (isEmpty(response.projects)) {
                     $('#project-empty').show();
                     $('#integration-actions').hide();
                 } else {
@@ -50,14 +50,14 @@ $(document).ready(function () {
     });
 
     //reset the intergation modal
-    function clearForm(){
+    function clearForm() {
         $(':text').val('')
         $(':checkbox').prop('checked', true).val(1);
         $('.select-pad').prop("selectedIndex", 0).change();
     }
 
     //draw the integration cards
-    function renderIntegration(data){
+    function renderIntegration(data) {
         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` + data.id + ` style='cursor:pointer;'>
@@ -69,7 +69,7 @@ $(document).ready(function () {
                                                 <p class="card-text sm">Criado em ` + data.created_at + `</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
+                                                <a role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
                                                     <i class='material-icons gradient'>delete_outline</i>
                                                 </a>
                                             </div>
@@ -81,7 +81,7 @@ $(document).ready(function () {
     }
 
     //create
-    $('#btn-add-integration').on('click', function(){
+    $('#btn-add-integration').on('click', function () {
         $(".modal-title").html('Adicionar nova Integração com HotZapp');
         $("#bt_integration").addClass('btn-save');
         $("#bt_integration").removeClass('btn-update');
@@ -110,7 +110,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error:  (response) => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -188,7 +188,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: (response) => {
-               errorAjaxResponse(response);
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 index();
