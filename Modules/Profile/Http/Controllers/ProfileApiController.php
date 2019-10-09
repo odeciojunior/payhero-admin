@@ -3,6 +3,8 @@
 namespace Modules\Profile\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +14,7 @@ use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
+use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -47,7 +50,7 @@ class ProfileApiController
     /**
      * @param ProfileUpdateRequest $request
      * @param $idCode
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(ProfileUpdateRequest $request, $idCode)
     {
@@ -56,8 +59,7 @@ class ProfileApiController
 
             if (Gate::allows('update', [$user])) {
 
-                $digitalOceanFileService = app(DigitalOceanFileService::class);
-                $requestData             = $request->validated();
+                $requestData = $request->validated();
 
                 $user->update([
                                   'name'         => $requestData['name'],
@@ -117,7 +119,7 @@ class ProfileApiController
 
     /**
      * @param ProfilePasswordRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function changePassword(ProfilePasswordRequest $request)
     {
@@ -142,7 +144,7 @@ class ProfileApiController
 
     /**
      * @param ProfileUploadDocumentRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
@@ -200,6 +202,38 @@ class ProfileApiController
             report($e);
 
             return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+        }
+    }
+
+    /**
+     * @param $userId
+     * @return JsonResponse|ProfileTaxResource
+     */
+    public function getTax($userId)
+    {
+        try {
+            if (!empty($userId)) {
+                $user   = auth()->user();
+                $userId = current(Hashids::decode($userId));
+                if ($user->id == $userId) {
+                    return new ProfileTaxResource($user);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro!',
+                                            ], 400);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar buscar dados taxas do usuario (ProfileApiController - getTax)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 }
