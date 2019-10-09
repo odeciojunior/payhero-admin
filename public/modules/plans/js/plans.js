@@ -153,6 +153,10 @@ $(function () {
         });
     });
 
+    $("#btn-search-plan").on('click', function () {
+        index();
+    });
+
     /**
      * Update Table Plan
      */
@@ -171,6 +175,9 @@ $(function () {
             method: "GET",
             url: link,
             dataType: "json",
+            data: {
+                plan: $("#plan-name").val()
+            },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
