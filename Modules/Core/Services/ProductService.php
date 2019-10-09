@@ -54,10 +54,10 @@ class ProductService
                 $product = $productPlan->product()->first();
                 $product['sale_status'] = $sale->status;
                 $product['amount'] = $productPlan->amount * $planSale->amount;
-                $product['tracking_code'] = $productPlanSale->tracking_code ?? '';
-                $product['tracking_status_enum'] = $productPlanSale->tracking_status_enum != null ?
+                $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
+                $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
                     Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                            ->getStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado';
+                            ->getStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
                 $productsSale->add($product);
             }
         }
