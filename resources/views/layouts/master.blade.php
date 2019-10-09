@@ -15,7 +15,7 @@
     <!-- csrf token used for ajax requests -->
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <!-- access token used for api ajax requests -->
-    <meta name="access-token" content="Bearer {{ auth()->user()->createToken("Laravel Password Grant Client")->accessToken  }}">
+    <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">

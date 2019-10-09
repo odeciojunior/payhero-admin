@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\InvitePresenter;
@@ -21,9 +22,8 @@ use Modules\Core\Presenters\InvitePresenter;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Company $company_id
- * @property Invitation $invitation_id
- * @property User $user
+ * @property Company $company
+ * @property Invitation $invitation
  * @property User $user
  */
 class Invitation extends Model
@@ -36,7 +36,6 @@ class Invitation extends Model
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
@@ -45,22 +44,22 @@ class Invitation extends Model
      * @var array
      */
     protected $fillable = [
-        'invite', 
-        'user_invited', 
+        'invite',
+        'user_invited',
         'company_id',
         'invitation_id',
-        'email_invited', 
-        'status', 
-        'register_date', 
-        'expiration_date', 
-        'parameter', 
-        'created_at', 
-        'updated_at', 
+        'email_invited',
+        'status',
+        'register_date',
+        'expiration_date',
+        'parameter',
+        'created_at',
+        'updated_at',
         'deleted_at'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {
@@ -68,7 +67,7 @@ class Invitation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function userInvited()
     {
@@ -76,7 +75,7 @@ class Invitation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
@@ -84,7 +83,7 @@ class Invitation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function invitation()
     {

@@ -17,7 +17,7 @@
         </button>
     </div>
     <div class="navbar-container container-fluid">
-        <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->user()->id)}}'>
+        <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->id())}}'>
         <!-- Navbar Collapse -->
         <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
             <!-- Navbar Toolbar -->
@@ -182,6 +182,12 @@
             <a href="{{ route('apps') }}" id='apps-link'>
                 <i class="material-icons">apps</i>
                 <span class="site-menu-title">Aplicativos</span>
+            </a>
+        </li>
+        <li class="site-menu-item has-sub">
+            <a href="{{ route('integrations.index') }}">
+                <i class="material-icons">devices_other</i>
+                <span class="site-menu-title">Integrações</span>
             </a>
         </li>
         <li class="site-menu-item has-sub">
