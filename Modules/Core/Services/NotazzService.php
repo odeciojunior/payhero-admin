@@ -759,7 +759,7 @@ class NotazzService
                                                    'return_status'    => $result->statusProcessamento,
                                                    'return_http_code' => $result->codigoProcessamento,
                                                    'schedule'         => Carbon::now()
-                                                                               ->addHour(),
+                                                                               ->addHour()->toDateTime(),
                                                    'date_error'       => Carbon::now(),
                                                    'status'           => $notazzInvoiceModel->present()
                                                                                             ->getStatus('error'), //error
@@ -783,7 +783,7 @@ class NotazzService
                 //TODO alertar produtor? colocando schedule para ser executado 2h a frente
 
                 $notazzInvoice->update([
-                                           'schedule' => Carbon::now()->addHours(2),
+                                           'schedule' => Carbon::now()->addHours(2)->toDateTime(),
                                        ]);
             }
         } else {
