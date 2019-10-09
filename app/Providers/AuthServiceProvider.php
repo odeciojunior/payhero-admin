@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         //-------------------------------
         Passport::routes();
         //        Passport::tokensExpireIn(now()->addMinutes('30'));
-        //        Passport::loadKeysFrom(app_path() . '/Credentials/Passport');
+        Passport::loadKeysFrom(app_path() . '/Credentials/Passport');
         Passport::tokensCan(ApiToken::$tokenScopes);
         //tokens duram 5 anos
         /** @var Carbon $expireAt */
