@@ -33,6 +33,7 @@
         "sendgrid/sendgrid": "~7",
         "sentry/sentry-laravel": "1.1.0",
         "slince/shopify-api-php": "2.2.0",
+        "laravel/socialite": "^4.2",
         "socialiteproviders/shopify": "^1.0",
         "spatie/laravel-permission": "^2.20",
         "vinkla/hashids": "^5",
