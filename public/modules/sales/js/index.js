@@ -262,7 +262,7 @@ $(document).ready(function () {
     // Resumo
     function salesResume() {
 
-        loadOnAny('.number', false, {
+        /*loadOnAny('.number', false, {
             styles: {
                 container: {
                     minHeight: '32px',
@@ -315,6 +315,6 @@ $(document).ready(function () {
                 }
 
             }
-        });
+        });*/
     }
 });
