@@ -188,7 +188,7 @@ class SalesRecoveryService
     /**
      * @param Sale $sale
      * @return array
-     * @throws PresenterException
+     * @throws \Exception
      * Modal detalhes quando for cartão recusado ou boleto
      */
     public function getSalesCartOrBoletoDetails(Sale $sale)
@@ -196,6 +196,7 @@ class SalesRecoveryService
         $checkoutModel = new checkout();
         $logModel      = new CheckoutLog();
         $domainModel   = new Domain();
+        $saleService   = new SaleService();
 
         $checkout = $checkoutModel->find($sale->checkout_id);
         $delivery = $sale->delivery()->first();
@@ -261,7 +262,7 @@ class SalesRecoveryService
             $link = 'Domínio removido';
         }
 
-        $products = $sale->present()->getProducts();
+        $products = $saleService->getProducts($sale->id);
 
         $client->document = FoxUtils::getDocument($client->document);
 

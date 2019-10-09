@@ -3,8 +3,6 @@
 namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 
 /**
@@ -60,56 +58,6 @@ class SalePresenter extends Presenter
     public function getBoletoDueDate()
     {
         return date('d/m/Y', strtotime($this->boleto_due_date));
-    }
-
-    /**
-     * @return float|int
-     */
-    public function getSubTotal()
-    {
-        $subTotal = 0;
-        foreach ($this->plansSales as $planSale) {
-            $subTotal += preg_replace("/[^0-9]/", "", $planSale->plan_value) * $planSale->amount;
-        }
-
-        return $subTotal;
-    }
-
-    /**
-     * @return array
-     */
-    public function getProducts()
-    {
-        $productsSale = [];
-        /** @var PlanSale $planSale */
-        foreach ($this->entity->plansSales as $planSale) {
-            /** @var ProductPlan $productPlan */
-            foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product           = $productPlan->product()->first()->toArray();
-                $product['amount'] = $productPlan->amount * $planSale->amount;
-                $productsSale[]    = $product;
-            }
-        }
-
-        return $productsSale;
-    }
-
-    /**
-     * @return array
-     */
-    public function getHotzappPlansList()
-    {
-        $plans = [];
-        /** @var PlanSale $planSale */
-        foreach ($this->plansSales as $planSale) {
-            $plans[] = [
-                "price"        => $planSale->plan()->first()->price,
-                "quantity"     => $planSale->amount,
-                "product_name" => $planSale->plan()->first()->name,
-            ];
-        }
-
-        return $plans;
     }
 
     /**

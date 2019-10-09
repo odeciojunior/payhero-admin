@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Core\Entities\Sale;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\SaleService;
@@ -53,15 +52,10 @@ class SalesApiController extends Controller
     public function show($id)
     {
         try {
-            $saleModel = new Sale();
+            $saleService = new SaleService();
 
             if (isset($id)) {
-                $sale = $saleModel->with([
-                    'transactions' => function ($query) {
-                        $query->where('company_id', '!=', null)->first();
-                    },
-                    'notazzInvoices'
-                ])->find(current(Hashids::connection('sale_id')->decode($id)));
+                $sale = $saleService->getSaleWithDetails($id);
 
                 return new SalesResource($sale);
             }
@@ -202,12 +196,12 @@ class SalesApiController extends Controller
 
             if ($transactions->count()) {
                 //cria um item no array pra cada moeda inclusa nas vendas
-                $resume = $transactions->reduce(function ($carry, $item) {
+                $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
                     $carry['total_sales'] += $item->sale->plansSales->count();
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
                     $carry[$item->currency]['comission'] += $item->status == 'paid' ? intval($item->value) : 0;
                     //calcula o total
-                    $subTotal = $item->sale->present()->getSubTotal();
+                    $subTotal = $saleService->getSubtotal($item->sale);
                     $total = $subTotal;
                     $total += preg_replace("/[^0-9]/", "", $item->sale->shipment_value);
                     if (preg_replace("/[^0-9]/", "", $item->sale->shopify_discount) > 0) {
