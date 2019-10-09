@@ -94,7 +94,7 @@ $(() => {
         });
     });
 
-    function getSale(sale){
+    function getSale(sale) {
 
         renderSale(sale);
 
@@ -105,6 +105,8 @@ $(() => {
         getDelivery(sale.delivery_id);
 
         getCheckout(sale.checkout_id);
+
+        getNotazz(sale.invoices);
     }
 
     function renderSale(sale) {
@@ -182,6 +184,96 @@ $(() => {
         $('#checkout-attempts').hide();
         if (sale.payment_method === 1) {
             $('#checkout-attempts').text('Quantidade de tentativas: ' + sale.attempts).show();
+        }
+    }
+
+    function getNotazz(invoices) {
+        if(!isEmpty(invoices)){
+
+            let lastInvoice = invoices[invoices.length - 1];
+
+            $.ajax({
+                method: "GET",
+                url: '/api/apps/notazz/invoice/' + lastInvoice,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    renderNotazz(response.data);
+                }
+            });
+
+        }
+    }
+
+    function renderNotazz(invoice) {
+
+        if (!isEmpty(invoice)) {
+            //exist
+
+            $('#data-notazz-invoices').empty();
+
+            if (invoice.date_pending) {
+
+                let data = `<tr>
+                                <td>
+                                    ${invoice.date_pending}
+                                </td>
+                                <td>
+                                    Pendente de envio
+                                </td>
+                                <td>
+                                    0
+                                </td>
+                                <td>
+                                    Sucesso
+                                </td>
+                                <td>
+                                    
+                                </td>
+                            </tr>`;
+                $('#data-notazz-invoices').append(data);
+            }
+
+            if (invoice.date_sent) {
+
+                var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
+
+                var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
+                var link = (invoice.pdf) ? "<a role='button' class='copy_link' style='cursor:pointer;' link='${invoice.pdf}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                let data = `<tr>
+                                <td>
+                                    ${invoice.date_sent}
+                                </td>
+                                <td>
+                                    ${status}
+                                </td>
+                                <td>
+                                    ${invoice.return_http_code}
+                                </td>
+                                <td>
+                                    ${return_message}
+                                </td>
+                                <td>
+                                    ${link}
+                                </td>
+                            </tr>`;
+                $('#data-notazz-invoices').append(data);
+            }
+
+            if (invoice.return_message) {
+                $('#div_notazz_schedule').html('Próxima tentativa de envio em ' + invoice.schedule);
+            }
+
+            $('#div_notazz_invoice').show();
+        } else {
+            //not exist
+            $('#div_notazz_invoice').hide();
         }
     }
 
@@ -274,13 +366,13 @@ $(() => {
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
                 $('#data-tracking-products').append(data);
-            }else{
+            } else {
                 $('#div_tracking_code').css('display', 'none');
             }
         });
     }
 
-    function getDelivery(deliveryId){
+    function getDelivery(deliveryId) {
         $.ajax({
             method: "GET",
             url: '/api/delivery/' + deliveryId,
@@ -298,14 +390,14 @@ $(() => {
         });
     }
 
-    function renderDelivery(delivery){
+    function renderDelivery(delivery) {
         $('.btn-save-trackingcode').attr('delivery', delivery.id);
         $('#delivery-address').text('Endereço: ' + delivery.street + ', ' + delivery.number);
         $('#delivery-zipcode').text('CEP: ' + delivery.zip_code);
         $('#delivery-city').text('Cidade: ' + delivery.city + '/' + delivery.state);
     }
 
-    function getCheckout(checkoutId){
+    function getCheckout(checkoutId) {
         $.ajax({
             method: "GET",
             url: '/api/checkout/' + checkoutId,
@@ -323,7 +415,7 @@ $(() => {
         });
     }
 
-    function renderCheckout(checkout){
+    function renderCheckout(checkout) {
         $('#checkout-ip').text('IP: ' + checkout.ip);
         $('#checkout-operational-system').text('Dispositivo: ' + checkout.operational_system);
         $('#checkout-browser').text('Navegador: ' + checkout.browser);

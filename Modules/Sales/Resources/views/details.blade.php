@@ -177,6 +177,26 @@
                         <span id="checkout-term" class="table-title gray"></span>
                         <br>
                         <span id="checkout-content" class="table-title gray"></span>
+                        <div id='div_notazz_invoice' style='display:none;'>
+                            <br>
+                            <h4> Integração Notazz </h4>
+                            <table class='table table-striped mt-15'>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Code</th>
+                                        <th>Message</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id='data-notazz-invoices'>
+                                    {{-- js carregado--}}
+                                </tbody>
+                            </table>
+                            <div id='div_notazz_schedule'>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

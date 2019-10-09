@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    let user = '';
 
     let maskOptions = {
         onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
@@ -25,6 +26,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+
                 $('#email').val(response.data.email);
                 $('#name').val(response.data.name);
                 $('#document').val(response.data.document);
@@ -38,8 +40,8 @@ $(document).ready(function () {
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
                 $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function() {
-                    $(this).attr('src','/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
                 });
                 var valuecss = '';
 
@@ -68,7 +70,7 @@ $(document).ready(function () {
 
                 linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
                 $("#td_address_status").append(linha);
-
+                user = response.data.id_code;
             }
         });
     }
@@ -265,6 +267,46 @@ $(document).ready(function () {
             }
         });
     });
+
+    /**
+     * Nav Tarifas e Prazos
+     */
+    $("#nav_taxs").on('click', function () {
+        getTax();
+    });
+
+    function getTax() {
+        $.ajax({
+            method: "GET",
+            url: `/api/profile/${user}/tax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                setValuesHtml(response.data);
+            }
+        });
+    }
+
+    function setValuesHtml(data) {
+        $("#sale-percent").val(data.percentage_rate + '%');
+        $("#sale-fix").val(data.transaction_rate).attr('disabled','disabled');;
+        $("#days-liberation").val(data.release_money_days).attr('disabled','disabled');;
+        $("#percent-anticipation").val(data.percentage_antecipable + '%').attr('disabled','disabled');;
+        $("#tax-anticipation").val(data.antecipation_tax + '%').attr('disabled','disabled');;
+        $("#days-liberation-boleto").val(data.boleto_antecipation_money_days).attr('disabled','disabled');;
+        $("#days-liberation-cart").val(data.credit_card_antecipation_money_days).attr('disabled','disabled');;
+
+    }
+
 });
 
 Dropzone.options.dropzoneDocuments = {

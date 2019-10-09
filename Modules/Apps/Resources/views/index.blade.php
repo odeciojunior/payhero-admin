@@ -7,7 +7,7 @@
     </div>
     <div class="page-content container">
         <div class="row">
-{{--              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">--}}
+{{--             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">--}}
 {{--                <div class="card" onclick="window.location.href='/apps/notazz/'" style='width:300px;'>--}}
 {{--                    <a id="notazz-bt" href="/apps/notazz/" class="add-btn"><i id="notazz-icon" class="icon wb-plus" aria-hidden="true"></i></a>--}}
 {{--                    <img class="card-img-top mt-100" src="{!! asset('modules/global/img/notazz.png') !!}" alt="" align="middle">--}}

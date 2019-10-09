@@ -39,6 +39,9 @@ class NotazzIntegration extends Model
         'token_webhook',
         'token_api',
         'token_logistics',
+        'start_date',   //data inicial da geracao das notas
+        'retroactive_generated_date',    //data da geração das notas retroativas
+        'invoice_type',
         'created_at',
         'updated_at',
         'deleted_at',

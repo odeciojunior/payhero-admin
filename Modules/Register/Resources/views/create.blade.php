@@ -593,11 +593,14 @@
     </div>
 </footer>
 <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
+{{--<script src="{{asset('modules/global/js/global.js')}}"></script>--}}
+<script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
 <script src="{{asset('modules/register/js/register.js?v=2')}}"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
+{{--<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>--}}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
@@ -617,8 +620,12 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
+{{--<script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>--}}
+{{--<script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>--}}
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js') }}"></script>
+{{--<script src="https://js.pusher.com/4.4/pusher.min.js"></script>--}}
+{{--<script src="{{ asset('modules/global/js/notifications.js') }}"></script>--}}
 </body>
 </html>
 

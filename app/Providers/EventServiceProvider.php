@@ -46,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle',
         ],
+        'Modules\Core\Events\WithdrawalRequestEvent'         => [
+            'Modules\Core\Listeners\WithdrawalRequestSendEmailListener',
+        ],
     ];
 
     /**

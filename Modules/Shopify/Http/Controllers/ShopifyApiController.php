@@ -1,5 +1,4 @@
 <?php
-
 namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
@@ -67,7 +66,7 @@ class ShopifyApiController extends Controller
         try{
             $dataRequest = $request->all();
 
-            session(['company_id' => $requestData['company_id']]);
+            $shopifyIntegrationModel = new ShopifyIntegration();
 
             $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
             $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
@@ -76,7 +75,11 @@ class ShopifyApiController extends Controller
 
             $urlStore = str_replace('.myshopify.com', '', $dataRequest['url_store']);
 
-            dd(session['company_id'], $urlStore);
+            $shopifyIntegration = $shopifyIntegrationModel->where('url_store', $urlStore . '.myshopify.com')->first();
+
+            if(!empty($shopifyIntegration)){
+                return response()->json(['message' => 'Erro! Integração já existe!'], Response::HTTP_BAD_REQUEST);
+            }
 
             $config = new \SocialiteProviders\Manager\Config(
                 env('SHOPIFY_KEY'),
@@ -102,9 +105,13 @@ class ShopifyApiController extends Controller
                                                 'read_products', 
                                                 'write_themes',
                                                 'read_themes',
+                                                'write_fulfillments',
+                                                'read_fulfillments',
+                                                'read_assigned_fulfillment_orders',
+                                                'write_assigned_fulfillment_orders'
                                             ])
                                             ->stateless()
-                                            ->with(['company_id' => $dataRequest['company']])
+                                            ->with(['state' => $dataRequest['company']])
                                             ->redirect()
                                             ->getTargetUrl();
 
@@ -125,13 +132,13 @@ class ShopifyApiController extends Controller
 
     public function callbackShopifyIntegration(Request $request){
 
-        dd(Socialite::driver('shopify')->stateless(), $request->all());
+        $integrationToken = Socialite::driver('shopify')->stateless()->user()->token;
 
         $projectModel            = new Project();
         $userProjectModel        = new UserProject(); 
         $shopifyIntegrationModel = new ShopifyIntegration();
         $shippingModel           = new Shipping();
-        $shopifyService          = new ShopifyService($request->shop, Socialite::driver('shopify')->stateless()->user()->token);
+        $shopifyService          = new ShopifyService($request->shop, $integrationToken);
 
         try {
             $shopifyName = $shopifyService->getShopName();
@@ -168,10 +175,12 @@ class ShopifyApiController extends Controller
                                                                                            'user_id'       => auth()->user()->id,
                                                                                            'project_id'    => $project->id,
                                                                                            'status'        => 1,
-                                                                                           'token'         => Socialite::driver('shopify')->stateless()->user()->token,
+                                                                                           'token'         => $integrationToken,
                                                                                         ]);
                     if (!empty($shopifyIntegration)) {
-                        $companyId = current(Hashids::decode($dataRequest['company']));
+
+                        $companyId = current(Hashids::decode(request()->input('state')));
+
                         $userProject = $userProjectModel->newQuery()->create([
                                                                   'user_id'              => auth()->user()->id,
                                                                   'project_id'           => $project->id,
@@ -186,28 +195,30 @@ class ShopifyApiController extends Controller
                         if (!empty($userProjectModel)) {
                             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
                         } else {
+                            Log::warning('callback shopfiy - erro 1');
                             $shipping->delete();
                             $shopifyIntegration->delete();
                             $project->delete();
                 
                             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                         }
-
-                        return view('shopify::index');
+ 
+                        return response()->redirectTo('/apps/shopify');
 
                     } else {
-                        
+                        Log::warning('callback shopfiy - erro 2');
                         $shipping->delete();
                         $project->delete();
 
                         return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                     }
                 } else {
+                    Log::warning('callback shopfiy - erro 3');
                     $project->delete();
-
                     return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                 }
             } else {
+                Log::warning('callback shopfiy - erro 4');
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
             }
 
@@ -215,7 +226,7 @@ class ShopifyApiController extends Controller
         } catch (Exception $e) {
             Log::critical('Erro ao realizar integração com loja do shopify | ShopifyController@store');
             report($e);
-
+            Log::warning('callback shopfiy - erro 5');
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
 
