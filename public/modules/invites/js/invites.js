@@ -54,12 +54,12 @@ $(document).ready(function () {
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
                         if (value.status != '2') {
-                            dados += "<td><button class='btn pointer resend-invitation' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gray gradient'> sync </i></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gradient'>delete</i></button></td>";
+                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gray gradient'> sync </i></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gradient'>delete</i></button></td>";
 
                         } else {
-                            dados += "<td><button class='btn pointer resend-invitation' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gray gradient'> sync </i></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gradient'>delete</i></button></td>";
+                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gray gradient'> sync </i></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gradient'>delete</i></button></td>";
                         }
                         dados += '</tr>';
                         $("#table-body-invites").append(dados);
@@ -222,7 +222,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: (response) =>{
+            error: (response) => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
