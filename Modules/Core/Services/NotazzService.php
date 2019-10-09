@@ -172,6 +172,7 @@ class NotazzService
     public function updateNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel = new NotazzInvoice();
+        $saleService        = new SaleService();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -189,6 +190,20 @@ class NotazzService
             if (!empty($notazzInvoice->notazz_id)) {
                 //id do notazz existe
 
+                $products = $saleService->getProducts($sale->id);
+
+                $costTotal = 0;
+                foreach ($products as $product) {
+
+                    $costTotal += $product->cost;
+                }
+
+                $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+
+                $baseValue = ($saleService->getSubTotal($sale) + $shippingCost) - $costTotal;
+
+                $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
+
                 $tokenApi = $sale->project->notazzIntegration->token_api;
 
                 $fields = json_encode([
@@ -197,8 +212,8 @@ class NotazzService
                                           'API_KEY'                => $tokenApi,
                                           'DESTINATION_NAME'       => $sale->client->name,// Nome completo do cliente
                                           'DESTINATION_TAXID'      => $sale->client->document,//CPF ou CNPJ, somente números
-                                          'DESTINATION_IE'         => '',//Inscrição Estadual (opcional), somente números
-                                          'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
+                                          //'DESTINATION_IE'         => '',//Inscrição Estadual (opcional), somente números
+                                          //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
                                           'DESTINATION_TAXTYPE'    => 'F',//F = Física, J = Jurídica, E = Estrangeiro
                                           'DESTINATION_STREET'     => $sale->delivery->street,//Rua do cliente
                                           'DESTINATION_NUMBER'     => $sale->delivery->number,//Número
@@ -216,22 +231,22 @@ class NotazzService
                                               ],
                                           ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
 
-                                          'DOCUMENT_BASEVALUE'   => '100.00',//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
-                                          'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em consultoria',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
+                                          'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
+                                          'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
                                           'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
                                           //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
                                           //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
                                           //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
                                           //'CITY_SERVICE_CODE'    => '12345', // Código de serviço do município (opcional), somente números. Se não seja informado será utilizado o padrão da empresa
 
-                                          'ALIQUOTAS' => [
+                                          /*'ALIQUOTAS' => [
                                               'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                               'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                               'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                               'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                               'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                               'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
+                                          ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa*/
 
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
                                           'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será atualizado
@@ -759,7 +774,7 @@ class NotazzService
                                                    'return_status'    => $result->statusProcessamento,
                                                    'return_http_code' => $result->codigoProcessamento,
                                                    'schedule'         => Carbon::now()
-                                                                               ->addHour(),
+                                                                               ->addHour()->toDateTime(),
                                                    'date_error'       => Carbon::now(),
                                                    'status'           => $notazzInvoiceModel->present()
                                                                                             ->getStatus('error'), //error
@@ -783,7 +798,7 @@ class NotazzService
                 //TODO alertar produtor? colocando schedule para ser executado 2h a frente
 
                 $notazzInvoice->update([
-                                           'schedule' => Carbon::now()->addHours(2),
+                                           'schedule' => Carbon::now()->addHours(2)->toDateTime(),
                                        ]);
             }
         } else {
