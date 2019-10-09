@@ -116,50 +116,51 @@ class SaleService
     public function getSaleWithDetails($saleId)
     {
         $companyModel = new Company();
-        $transactionModel = new Transaction();
         $saleModel = new Sale();
 
+        //get sale
         $sale = $saleModel->with([
-            'transactions' => function ($query) {
-                $query->where('company_id', '!=', null)->first();
-            },
+            'transactions',
             'notazzInvoices',
-            'plansSales'
         ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
+        //format dates
         $sale->hours = (new Carbon($sale->start_date))->format('H:m:s');
         $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y');
-
         if (isset($sale->boleto_due_date)) {
             $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
         }
 
+        //set flag
         if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
             $sale->flag = 'generico';
         } elseif (!$sale->flag || empty($sale->flag)) {
             $sale->flag = 'boleto';
         }
 
-        $discount = '0,00';
+        //calcule total
         $subTotal = $this->getSubTotal($sale);
-        $total = $subTotal;
 
+        $total = $subTotal;
 
         $shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
         $total += $shipment_value;
+        $sale->shipment_value = number_format(intval($shipment_value) / 100, 2, ',', '.');
+
         if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
             $total -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
             $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
         } else {
             $discount = '0,00';
         }
-        $sale->shipment_value = number_format(intval($shipment_value) / 100, 2, ',', '.');
 
+        //calcule fees
         $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-        $transaction = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
+
+        $transaction = $sale->transactions->whereIn('company_id', $userCompanies)
             ->first();
 
-        $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
+        $transactionConvertax = $sale->transactions
             ->where('company_id', 29)
             ->first();
 
@@ -173,23 +174,23 @@ class SaleService
 
         $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
-        $taxa = 0;
-        $taxaReal = 0;
-
         if ($sale->dolar_quotation != 0) {
             $taxa = intval($total / $sale->dolar_quotation);
             $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
             $total += preg_replace('/[^0-9]/', '', $sale->iof);
         } else {
+            $taxa = 0;
             $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
             $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
         }
 
+        //invoices
         $invoices = [];
         foreach ($sale->notazzInvoices as $notazzInvoice) {
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
 
+        //add details to sale
         $sale->details = (object)[
             //invoices
             'invoices'              => $invoices,
