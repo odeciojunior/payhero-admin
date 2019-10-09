@@ -25,6 +25,11 @@
                                 Documentos
                             </a>
                         </li>
+                        <li class="nav-item" role="presentation" id="nav_taxs">
+                            <a class="nav-link" data-toggle="tab" href="#tab_taxs" aria-controls="tab_taxs" role="tab">
+                                Tarifas e Prazos
+                            </a>
+                        </li>
                     </ul>
                     <div class="p-30 pt-20">
                         <div class="tab-content">
@@ -73,7 +78,7 @@
                                                 <div style="margin: 20px 0 0 30px;">
                                                     <img src="" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
                                                 </div>
-                                                <input type="hidden" name="photo_x1"/> 
+                                                <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>
                                                 <input type="hidden" name="photo_w"/>
                                                 <input type="hidden" name="photo_h"/>
@@ -173,6 +178,58 @@
                                         <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto)
                                             <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
                                         </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='tab-pane fade' id='tab_taxs' role='tabpanel'>
+                                <div class='row' style='padding:0 30px 0 30px'>
+                                    <div class='col-lg-6'>
+                                        <h5 class='title-pad'>Taxas e prazos</h5>
+                                    </div>
+                                    <div class='col'></div>
+                                    <div class='row mt-15'>
+                                        <div class='form-group col-xl-6'>
+                                            <label for='sale-percent'>Por venda (porcentagem):</label>
+                                            <input id='sale-percent' disabled='disabled' class="form-control">
+                                        </div>
+                                        <div class='col-lg-6'>
+                                            <div class='form-group'>
+                                                <label for='sale-fix'>Por venda (valor fixo):</label>
+                                                <input id='sale-fix' disabled='disabled' class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class='form-group col-xl-6'>
+                                            <div class='form-group'>
+                                                <label for='days-liberation'>Dias para liberação do saldo:</label>
+                                                <input id='days-liberation' disabled='disabled' class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class='form-group col-xl-6'>
+                                        </div>
+                                    </div>
+                                    <div class='row' style='padding:0 20px 0 20px'>
+                                        <div class='col-lg-6'>
+                                            <h2 class='title-pad'>Antecipação</h2>
+                                        </div>
+                                        <div class='col'></div>
+                                        <div class='row mt-15'>
+                                            <div class='form-group col-xl-6'>
+                                                <label for='percent-anticipation'>Porcentagem Antecipável:</label>
+                                                <input id='percent-anticipation' disabled='disabled' class="form-control">
+                                            </div>
+                                            <div class='form-group col-xl-6'>
+                                                <label for='tax-anticipation'>Taxa base de antecipação:</label>
+                                                <input id='tax-anticipation' disabled='disabled' class="form-control">
+                                            </div>
+                                            <div class='form-group col-xl-6'>
+                                                <label for='days-liberation-boleto'>Dias para liberar (boleto):</label>
+                                                <input id='days-liberation-boleto' disabled='disabled' class="form-control">
+                                            </div>
+                                            <div class='form-group col-xl-6'>
+                                                <label for='days-liberation-cart'>Dias para liberar (cartão):</label>
+                                                <input id='days-liberation-cart' disabled='disabled' class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
