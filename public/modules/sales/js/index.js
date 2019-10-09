@@ -7,7 +7,8 @@ $(document).ready(function () {
     });
 
     $("#bt_get_xls").on("click", function () {
-        salesExport('xls');
+        //salesExport('xls');
+        salesExport('csv');
     });
 
     $("#filtros").on("click", function () {
