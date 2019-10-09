@@ -4,6 +4,7 @@ namespace Modules\Core\Listeners;
 
 use Modules\Core\Entities\Domain;
 use Illuminate\Queue\InteractsWithQueue;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -18,6 +19,7 @@ class TrackingCodeUpdatedSendEmailClientListener
     public function handle(TrackingCodeUpdatedEvent $event)
     {
         $sendGridService = new SendgridService();
+        $saleService     = new SaleService();
         $domainModel     = new Domain();
         $clientName      = $event->sale->client->name;
         $clientEmail     = $event->sale->client->email;
@@ -26,7 +28,7 @@ class TrackingCodeUpdatedSendEmailClientListener
         $projectContact  = $event->sale->project->contact;
         $clientNameExploded = explode(' ', $clientName);
         $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
-        $products           = $event->sale->present()->getProducts();
+        $products           = $saleService->getProducts($event->sale->id);
         $data = [
             'name'            => $clientNameExploded[0],
             'project_logo'    => $event->sale->project->logo,

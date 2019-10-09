@@ -188,29 +188,32 @@ $(() => {
     }
 
     function getNotazz(invoices) {
-        let lastInvoice = invoices[invoices.length - 1];
+        if(!isEmpty(invoices)){
 
-        $.ajax({
-            method: "GET",
-            url: '/api/apps/notazz/invoice/' + lastInvoice,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                renderNotazz(response.data);
-            }
-        });
+            let lastInvoice = invoices[invoices.length - 1];
 
+            $.ajax({
+                method: "GET",
+                url: '/api/apps/notazz/invoice/' + lastInvoice,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    renderNotazz(response.data);
+                }
+            });
+
+        }
     }
 
     function renderNotazz(invoice) {
 
-        if (invoice != '') {
+        if (!isEmpty(invoice)) {
             //exist
 
             $('#data-notazz-invoices').empty();

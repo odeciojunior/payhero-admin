@@ -33,6 +33,7 @@
         "sendgrid/sendgrid": "~7",
         "sentry/sentry-laravel": "1.1.0",
         "slince/shopify-api-php": "2.2.0",
+        "laravel/socialite": "^4.2",
         "socialiteproviders/shopify": "^1.0",
         "spatie/laravel-permission": "^2.20",
         "vinkla/hashids": "^5",
@@ -47,7 +48,8 @@
         "nunomaduro/collision"           : "^2.0",
         "phpunit/phpunit"                : "^7.0",
         "symfony/thanks"                 : "^1.0",
-        "krlove/eloquent-model-generator": "dev-master"
+        "krlove/eloquent-model-generator": "dev-master",
+        "ext-curl": "*"
     },
     "autoload"         : {
         "classmap": [

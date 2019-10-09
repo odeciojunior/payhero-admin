@@ -2,7 +2,10 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+
 @endpush
+
 @section('content')
     <!-- Page -->
     <div class="page">
@@ -111,11 +114,13 @@
                                     @method('PUT')
                                     <h3 class="mb-15 mt-10">Informações Bancárias</h3>
                                     <div class="row">
-                                        <div class="form-group col-xl-4">
-                                            <label for="bank">Banco</label>
-                                            <select id="bank" name="bank" class="form-control select-pad">
-                                                <option value="">Selecione</option>
-                                            </select>
+                                        <div class="col-xl-4">
+                                            <div class='form-group'>
+                                                <label for='bank'>Banco</label>
+                                                <select id="bank" name="bank" class="form-control" style='width:100%' data-plugin="select2" >
+                                                    <option value="">Selecione</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -201,6 +206,8 @@
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
         <script src="{{asset('/modules/companies/js/edit.js?v=1')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
     @endpush
 @endsection
 

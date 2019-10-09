@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -27,7 +28,6 @@ class HotZappService
      */
     function boletoPaid(Sale $sale)
     {
-
         $data = [
             'transaction_id'        => Hashids::encode($sale->id),
             'name'                  => $sale->client->name,
@@ -53,7 +53,7 @@ class HotZappService
             'payment_method'        => 'billet',
             'financial_status'      => 'paid',
             'risk_level'            => '',
-            'line_items'            => $sale->present()->getHotzappPlansList(),
+            'line_items'            => $this->getHotzappPlansList($sale),
         ];
 
         self::sendPost($data);
@@ -83,6 +83,25 @@ class HotZappService
         $response = curl_exec($curl);
 
         curl_close($curl);
+    }
+
+    /**
+     * @param Sale $sale
+     * @return array
+     */
+    public function getHotzappPlansList(Sale $sale)
+    {
+        $plans = [];
+        /** @var PlanSale $planSale */
+        foreach ($sale->plansSales as $planSale) {
+            $plans[] = [
+                "price"        => $planSale->plan()->first()->price,
+                "quantity"     => $planSale->amount,
+                "product_name" => $planSale->plan()->first()->name,
+            ];
+        }
+
+        return $plans;
     }
 }
 
