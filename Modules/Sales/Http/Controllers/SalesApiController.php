@@ -202,12 +202,12 @@ class SalesApiController extends Controller
 
             if ($transactions->count()) {
                 //cria um item no array pra cada moeda inclusa nas vendas
-                $resume = $transactions->reduce(function ($carry, $item) {
+                $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
                     $carry['total_sales'] += $item->sale->plansSales->count();
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
                     $carry[$item->currency]['comission'] += $item->status == 'paid' ? intval($item->value) : 0;
                     //calcula o total
-                    $subTotal = $item->sale->present()->getSubTotal();
+                    $subTotal = $saleService->getSubtotal($item->sale);
                     $total = $subTotal;
                     $total += preg_replace("/[^0-9]/", "", $item->sale->shipment_value);
                     if (preg_replace("/[^0-9]/", "", $item->sale->shopify_discount) > 0) {
