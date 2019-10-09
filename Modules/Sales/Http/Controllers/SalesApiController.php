@@ -53,15 +53,10 @@ class SalesApiController extends Controller
     public function show($id)
     {
         try {
-            $saleModel = new Sale();
+            $saleService = new SaleService();
 
             if (isset($id)) {
-                $sale = $saleModel->with([
-                    'transactions' => function ($query) {
-                        $query->where('company_id', '!=', null)->first();
-                    },
-                    'notazzInvoices'
-                ])->find(current(Hashids::connection('sale_id')->decode($id)));
+                $sale = $saleService->getSaleWithDetails($id);
 
                 return new SalesResource($sale);
             }
