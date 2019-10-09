@@ -5,6 +5,7 @@ namespace Modules\Sales\Transformers;
 use Carbon\Carbon;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -14,6 +15,7 @@ class SalesResource extends Resource
     {
         $companyModel     = new Company();
         $transactionModel = new Transaction();
+        $saleService = new SaleService();
 
         $this['hours']      = (new Carbon($this['start_date']))->format('H:m:s');
         $this['start_date'] = (new Carbon($this['start_date']))->format('d/m/Y');
@@ -31,7 +33,7 @@ class SalesResource extends Resource
         }
 
         $discount = '0,00';
-        $subTotal = $this->present()->getSubTotal();
+        $subTotal = $saleService->getSubTotal($this->resource);
         $total    = $subTotal;
 
         $total += preg_replace("/[^0-9]/", "", $this->shipment_value);
