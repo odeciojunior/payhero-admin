@@ -252,11 +252,10 @@ class BoletoService
             /** @var Checkout $checkoutModel */
             $checkoutModel = new Checkout();
             /** @var Carbon $startDate */
-            $startDate = now()->startOfDay()->subDay();
+            $startDate = now()->startOfDay()->subDays(2);
             /** @var Carbon $endDate */
-            $endDate = now()->endOfDay()->subDay();
-            $boletos = $saleModel->newQuery()
-                                 ->with('client', 'plansSales.plan.products')
+            $endDate = now()->endOfDay()->subDays(2);
+            $boletos = $saleModel->with('client', 'plansSales.plan.products')
                                  ->whereBetween('start_date', [$startDate, $endDate])
                                  ->where(
                                      [
@@ -264,16 +263,16 @@ class BoletoService
                                          ['status', '=', '2'],
                                      ]
                                  )->get();
+
             /** @var Sale $boleto */
             foreach ($boletos as $boleto) {
                 try {
-                    /** @var Checkout $checkout */
                     $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
                     $subTotal    = $saleService->getSubTotal($boleto);;
-                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
                         $iof = '';
                     } else {
@@ -470,7 +469,6 @@ class BoletoService
                         'transaction_value' => "R$ " . number_format(intval($boleto->transactions_amount) / 100, 2, ',', '.'),
                     ];
                     event(new BoletoPaidEvent($data));
-
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
                     report($e);

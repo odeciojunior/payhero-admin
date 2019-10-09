@@ -15,7 +15,7 @@ class ProfileTaxResource extends Resource
     {
         return [
             'percentage_rate'                     => $this->percentage_rate,
-            'transaction_rate'                    => $this->transaction_rate,
+            'transaction_rate'                    => $this->present()->getTransactionRate(),
             'release_money_days'                  => $this->release_money_days,
             'percentage_antecipable'              => $this->percentage_antecipable,
             'antecipation_tax'                    => $this->antecipation_tax,
