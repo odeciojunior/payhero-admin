@@ -187,24 +187,22 @@
                                         <h5 class='title-pad'>Taxas e prazos</h5>
                                     </div>
                                     <div class='col'></div>
-                                    <div class='row mt-15'>
-                                        <div class='form-group col-xl-6'>
+                                    <div class='row mt-15 col-xl-12'>
+                                        <div class='form-group col-xl-4'>
                                             <label for='sale-percent'>Por venda (porcentagem):</label>
                                             <input id='sale-percent' disabled='disabled' class="form-control">
                                         </div>
-                                        <div class='col-lg-6'>
+                                        <div class='form-group col-xl-4'>
                                             <div class='form-group'>
                                                 <label for='sale-fix'>Por venda (valor fixo):</label>
                                                 <input id='sale-fix' disabled='disabled' class="form-control">
                                             </div>
                                         </div>
-                                        <div class='form-group col-xl-6'>
+                                        <div class='form-group col-xl-4'>
                                             <div class='form-group'>
                                                 <label for='days-liberation'>Dias para liberação do saldo:</label>
                                                 <input id='days-liberation' disabled='disabled' class="form-control">
                                             </div>
-                                        </div>
-                                        <div class='form-group col-xl-6'>
                                         </div>
                                     </div>
                                     <div class='row' style='padding:0 20px 0 20px'>
@@ -212,7 +210,7 @@
                                             <h2 class='title-pad'>Antecipação</h2>
                                         </div>
                                         <div class='col'></div>
-                                        <div class='row mt-15'>
+                                        <div class='row mt-15 col-xl-12'>
                                             <div class='form-group col-xl-6'>
                                                 <label for='percent-anticipation'>Porcentagem Antecipável:</label>
                                                 <input id='percent-anticipation' disabled='disabled' class="form-control">

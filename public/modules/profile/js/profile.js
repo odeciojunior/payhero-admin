@@ -298,12 +298,12 @@ $(document).ready(function () {
 
     function setValuesHtml(data) {
         $("#sale-percent").val(data.percentage_rate + '%');
-        $("#sale-fix").val(data.transaction_rate).attr('disabled','disabled');;
-        $("#days-liberation").val(data.release_money_days).attr('disabled','disabled');;
-        $("#percent-anticipation").val(data.percentage_antecipable + '%').attr('disabled','disabled');;
-        $("#tax-anticipation").val(data.antecipation_tax + '%').attr('disabled','disabled');;
-        $("#days-liberation-boleto").val(data.boleto_antecipation_money_days).attr('disabled','disabled');;
-        $("#days-liberation-cart").val(data.credit_card_antecipation_money_days).attr('disabled','disabled');;
+        $("#sale-fix").val('R$ ' + data.transaction_rate).attr('disabled', 'disabled');
+        $("#days-liberation").val(data.release_money_days).attr('disabled', 'disabled');
+        $("#percent-anticipation").val(data.percentage_antecipable + '%').attr('disabled', 'disabled');
+        $("#tax-anticipation").val(data.antecipation_tax + '%').attr('disabled', 'disabled');
+        $("#days-liberation-boleto").val(data.boleto_antecipation_money_days).attr('disabled', 'disabled');
+        $("#days-liberation-cart").val(data.credit_card_antecipation_money_days).attr('disabled', 'disabled');
 
     }
 
