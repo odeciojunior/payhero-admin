@@ -7,8 +7,7 @@ $(document).ready(function () {
     });
 
     $("#bt_get_xls").on("click", function () {
-        //salesExport('xls');
-        salesExport('csv');
+        salesExport('xls');
     });
 
     $("#filtros").on("click", function () {
@@ -247,6 +246,9 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
+            xhrFields: {
+                responseType: 'blob'
+            },
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
