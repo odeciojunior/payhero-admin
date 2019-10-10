@@ -71,22 +71,10 @@ $(document).ready(function () {
             dados += '<br><small class="text-muted">Expira em: ' + expirationDate + '</small>';
             // dados += '<br><small class="text-muted">' + value.description + '</small>'
             dados += '</td>';
-            //integrationTypeEnum[value.integration_type]
-
-            // <td data-label='Produto' class="align-middle">
-            //         <br>
-            //         <strong>{{ $product->name }}</strong> {!! $product->product_status_enum_badge !!}
-            //     <small class="text-muted">
-            //         Criado em: {{ $product->created_at }}
-            // </small>
-            //     <br>
-            //     <small class='text-muted'>Código: {{ $product->code }} </small>
-            //     </td>
             dados += '<td class="text-center" style="vertical-align: middle;">';
             dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
             dados += '<br><span class="badge badge-' + statusBadge[value.status] + ' text-center mt-1">' + status[value.status] + '</span>';
             dados += '</td>';
-
             //-----------------------------------
             //Access Token
             dados += '<td class="text-center" style="vertical-align: middle;">';
@@ -97,20 +85,7 @@ $(document).ready(function () {
             dados += '<i class="material-icons gray gradient"> file_copy </i>'
             dados += '</a></div></div></div>';
             dados += '</div>';
-            // <div class="input-group mb-2 mr-sm-2 mt-2">
-            //         <div class="input-group-prepend">
-            //         <input type="text" class="form-control font-sm brr" id="inputToken{{ $tokenPersonal->code}}" value="{{ $tokenPersonal->token_integration }}" disabled="disabled">
-            //         </div>
-            //         <div class="input-group-append">
-            //         <div class="input-group-text p-1 p-lg-2">
-            //         <a href="#" class='btn btn-sm btn-xs btn-light btnCopiarLink' data-toggle="tooltip" data-copy_id="#inputToken{{ $tokenPersonal->code}}" title='Copiar token'>
-            //         <i class="fa fa-clipboard" aria-hidden="true"></i>&nbsp;
-            //         </a>
-            //         </div>
-            //         </div>
-            //         </div>
             //-----------------------------------
-
             dados += '</td>';
             // dados += '<td class="text-center" style="vertical-align: middle;">' + expirationDate + '</td>';
             dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><i class="material-icons gray gradient"> sync </i></button></td>';
