@@ -199,7 +199,7 @@ class SalesApiController extends Controller
                 $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
                     $carry['total_sales'] += $item->sale->plansSales->count();
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
-                    $carry[$item->currency]['comission'] += $item->status == 'paid' ? intval($item->value) : 0;
+                    $carry[$item->currency]['comission'] += $item->status == 'paid' || $item->status == 'transfered' ? intval($item->value) : 0;
                     //calcula o total
                     $subTotal = preg_replace("/[^0-9]/", "", $item->sale->sub_total);
                     $total = $subTotal;
