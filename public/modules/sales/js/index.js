@@ -299,7 +299,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response)
                 loadOnAny('.number' ,true);
                 $('#total-sales').text('0');
                 $('#comission, #total').text('R$ 0,00');
