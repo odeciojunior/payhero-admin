@@ -466,7 +466,7 @@ class ShopifyService
             success: function success(response) {
               var form = document.createElement('form');
               form.method = 'POST';
-              form.action = 'https://checkout.junbotron.cf/';   
+              form.action = 'https://checkout.".$domain."/';   
               
               for(x=0;x < response.items.length;x++)
               {
