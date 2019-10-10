@@ -201,7 +201,7 @@ class SalesApiController extends Controller
                     //cria um item no array pra cada moeda inclusa nas vendas
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
                     //comissao
-                    $carry[$item->currency]['comission'] += $item->status == 'paid' || $item->status == 'transfered' ? (floatval($item->value) / 100) : 0;
+                    $carry[$item->currency]['comission'] += in_array($item->status,['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
                     //calcula o total
                     $total = $item->sale->sub_total;
                     $total +=  $item->sale->shipment_value;
