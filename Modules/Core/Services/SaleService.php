@@ -171,7 +171,7 @@ class SaleService
 
         $value = $transaction->value;
 
-        $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = ($transaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         if ($sale->dolar_quotation != 0) {
             $taxa     = intval($total / $sale->dolar_quotation);
@@ -179,8 +179,8 @@ class SaleService
             $total    += preg_replace('/[^0-9]/', '', $sale->iof);
         } else {
             $taxa     = 0;
-            $taxaReal = ($total / 100) * $transaction->percentage_rate + preg_replace('/\D/', '', $transaction->transaction_rate);
-            $taxaReal = 'R$ ' . number_format(preg_replace('/\D/', '', $taxaReal) / 100, 2, ',', '.');
+            $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
+            $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
         }
 
         //invoices
