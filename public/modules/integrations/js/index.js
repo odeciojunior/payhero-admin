@@ -66,10 +66,8 @@ $(document).ready(function () {
             dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (index += 1) + '</button></td>';
             dados += '<td class="" style="vertical-align: middle;">';
             dados += '<strong class="mr-1">' + value.description + '</strong>';
-            // dados += '<span class="badge badge-' + statusBadge[value.status] + ' text-center">' + status[value.status] + '</span>';
             dados += '<br><small class="text-muted">Criada em: ' + value.register_date + '</small>';
             dados += '<br><small class="text-muted">Expira em: ' + expirationDate + '</small>';
-            // dados += '<br><small class="text-muted">' + value.description + '</small>'
             dados += '</td>';
             dados += '<td class="text-center" style="vertical-align: middle;">';
             dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
