@@ -50,8 +50,8 @@
         <span class="clear-fields table-title gray"> Nome: {{$client->name}} </span>
         <br>
         <span class='clear-fields table-title gray'>Telefone: {{$client->telephone}}</span>
-        <a href="{{$whatsapp_link}}" target='_blank'>
-            <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px">
+        <a href="{{$whatsapp_link}}" target='_blank' title='Enviar mensagem pelo whatsapp'>
+            <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px" >
         </a>
         <br>
         <span class="clear-fields table-title gray"> E-mail: {{$client->email}} </span>
@@ -72,7 +72,7 @@
         @if($link == 'Dominio removido')
             <span class="clear-fields table-title gray"> Link: {{$link}} </span>
         @else
-            <span class="clear-fields table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+            <span class="clear-fields table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}' title='Copiar link'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
         @endif
         <br>
         <span class="clear-fields table-title gray"> IP: {{$checkout->ip}}  </span>

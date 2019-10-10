@@ -15,7 +15,7 @@
     <!-- csrf token used for ajax requests -->
     {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <!-- access token used for api ajax requests -->
-    <meta name="access-token" content="Bearer {{ auth()->user()->createToken("Laravel Password Grant Client")->accessToken  }}">
+    <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
@@ -97,7 +97,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=1') }}"></script>
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
@@ -145,7 +145,7 @@
     {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=1') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=4') }}"></script>
 
 @endif
 </body>

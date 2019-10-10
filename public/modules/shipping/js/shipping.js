@@ -306,9 +306,9 @@ $(document).ready(function () {
                                             <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated}</span>
                                         </td>
                                         <td style='text-align:center'>
-                                            <a role='button' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'>remove_red_eye</i></a>
-                                            <a role='button' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'> edit </i></a>
-                                            <a role='button' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'> delete_outline </i></a>
+                                            <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'>remove_red_eye</i></a>
+                                            <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'> edit </i></a>
+                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'> delete_outline </i></a>
                                         </td>
                                      </tr>`;
                         $("#dados-tabela-frete").append(dados);

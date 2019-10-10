@@ -10,8 +10,8 @@ use Modules\Core\Exceptions\Services\ServiceException;
  * Class BankService
  * @package Modules\Core\Services
  */
-class BankService {
-
+class BankService
+{
     /**
      * @param $countryCode
      * @return array
@@ -32,13 +32,15 @@ class BankService {
      * @param $countryCode
      * @return array
      */
-    public function getBankName($bankCode) {
+    public function getBankName($bankCode)
+    {
 
-        foreach($this->brazilianBanks() as $bank){
-            if($bank['code'] == $bankCode){
+        foreach ($this->brazilianBanks() as $bank) {
+            if ($bank['code'] == $bankCode) {
                 return $bank['name'];
             }
         }
+
         return null;
     }
 
@@ -49,8 +51,10 @@ class BankService {
     {
         $banks = [
             ['code' => '001', 'name' => 'Banco do Brasil'],
+            ['code' => '002', 'name' => 'Banco Central do Brasil'],
             ['code' => '003', 'name' => 'Banco da Amazônia'],
             ['code' => '004', 'name' => 'Banco do Nordeste'],
+            ['code' => '007', 'name' => 'Banco Nacional de Desenvolvimento Econômico e Social'],
             ['code' => '021', 'name' => 'Banestes'],
             ['code' => '025', 'name' => 'Banco Alfa'],
             ['code' => '027', 'name' => 'Besc'],
@@ -77,16 +81,18 @@ class BankService {
             ['code' => '074', 'name' => 'Banco J. Safra'],
             ['code' => '075', 'name' => 'Banco CR2'],
             ['code' => '076', 'name' => 'Banco KDB'],
+            ['code' => '077', 'name' => 'Banco Inter'],
             ['code' => '096', 'name' => 'Banco BMF'],
             ['code' => '104', 'name' => 'Caixa Econômica Federal'],
             ['code' => '107', 'name' => 'Banco BBM'],
             ['code' => '116', 'name' => 'Banco Único'],
+            ['code' => '121', 'name' => 'Agibank'],
             ['code' => '151', 'name' => 'Nossa Caixa'],
             ['code' => '175', 'name' => 'Banco Finasa'],
             ['code' => '184', 'name' => 'Banco Itaú BBA'],
             ['code' => '204', 'name' => 'American Express Bank'],
             ['code' => '208', 'name' => 'Banco Pactual'],
-            ['code' => '212', 'name' => 'Banco Matone'],
+            ['code' => '212', 'name' => 'Banco Original'],
             ['code' => '213', 'name' => 'Banco Arbi'],
             ['code' => '214', 'name' => 'Banco Dibens'],
             ['code' => '217', 'name' => 'Banco Joh Deere'],
@@ -106,6 +112,7 @@ class BankService {
             ['code' => '250', 'name' => 'Banco Schahin'],
             ['code' => '252', 'name' => 'Fininvest'],
             ['code' => '254', 'name' => 'Paraná Banco'],
+            ['code' => '260', 'name' => 'Nubank Pagamentos S.A'],
             ['code' => '263', 'name' => 'Banco Cacique'],
             ['code' => '265', 'name' => 'Banco Fator'],
             ['code' => '266', 'name' => 'Banco Cédula'],
@@ -159,7 +166,7 @@ class BankService {
             ['code' => '719', 'name' => 'Banif'],
             ['code' => '721', 'name' => 'Banco Credibel'],
             ['code' => '734', 'name' => 'Banco Gerdau'],
-            ['code' => '735', 'name' => 'Banco Pottencial'],
+            ['code' => '735', 'name' => 'Banco Neon'],
             ['code' => '738', 'name' => 'Banco Morada'],
             ['code' => '739', 'name' => 'Banco Galvão de Negócios'],
             ['code' => '740', 'name' => 'Banco Barclays'],
@@ -180,6 +187,4 @@ class BankService {
 
         return $banks;
     }
-
-
 }

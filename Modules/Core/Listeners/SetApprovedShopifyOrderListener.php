@@ -3,6 +3,7 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Modules\Core\Services\SaleService;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,7 @@ class SetApprovedShopifyOrderListener
         $planSaleModel           = new PlanSale();
         $planModel               = new Plan();
         $productPlanModel        = new ProductPlan();
+        $saleService             = new SaleService();
 
         if ($event->sale->payment_method == 1) {
             $shopifyIntegration = $shopifyIntegrationModel->where('project', $event->project->id)->first();
@@ -53,7 +55,7 @@ class SetApprovedShopifyOrderListener
                     ];
                 }
 
-                $products = $event->sale->present()->getProducts();
+                $products = $saleService->getProducts($event->sale->id);;
 
                 if (!empty($event->sale->shopify_discount)) {
                     $plans[0]['price'] = preg_replace("/[^0-9]/", "", $plans[0]['price']) - (intval(preg_replace("/[^0-9]/", "", $event->sale->shopify_discount) / $products[0]['amount']));

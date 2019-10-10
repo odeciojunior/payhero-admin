@@ -14,4 +14,10 @@
 Route::group(['middleware' => ['web', 'auth']], function() {
     Route::Resource('apps/shopify', 'ShopifyController')
          ->only('index');
+
+    Route::get('apps/shopify/login/callback/', [
+        'uses' => 'ShopifyApiController@callbackShopifyIntegration',
+        'as'   => 'shopify.login.callback',
+    ]);
+
 });

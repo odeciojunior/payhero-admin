@@ -105,7 +105,7 @@
                         <br>
                         <span id="client-telephone" class='table-title gray'></span>
                         <a id="client-whatsapp" href="#" target='_blank'>
-                            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px">
+                            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px" title='Enviar mensagem pelo whatsapp'>
                         </a>
                         <br>
                         <span id="client-email" class="table-title gray"></span>
@@ -145,13 +145,13 @@
                         </div>
                         <div id="details-boleto" style="display:none">
             <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
-                                                                                   style='cursor:pointer;' link=''><i
+                                                                                   style='cursor:pointer;' link='' title='Copiar link'><i
                         class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
                                                                                                           class='copy_link'
                                                                                                           style='cursor:pointer;'
-                                                                                                          digitable-line=''><i
+                                                                                                          digitable-line='' title='Copiar link'><i
                                         class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
@@ -177,6 +177,26 @@
                         <span id="checkout-term" class="table-title gray"></span>
                         <br>
                         <span id="checkout-content" class="table-title gray"></span>
+                        <div id='div_notazz_invoice' style='display:none;'>
+                            <br>
+                            <h4> Integração Notazz </h4>
+                            <table class='table table-striped mt-15'>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Code</th>
+                                        <th>Message</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id='data-notazz-invoices'>
+                                    {{-- js carregado--}}
+                                </tbody>
+                            </table>
+                            <div id='div_notazz_schedule'>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -13,6 +13,8 @@ Route::group(
 
         Route::post('/profile/uploaddocuments', 'ProfileApiController@uploaddocuments');
 
-        Route::post('/profile/changepassword', 'ProfileApiController@changePassword'); 
+        Route::post('/profile/changepassword', 'ProfileApiController@changePassword');
+
+        Route::get('/profile/{usercode}/tax', 'ProfileApiController@getTax');
     }
 );

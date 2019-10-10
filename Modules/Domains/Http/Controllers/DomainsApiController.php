@@ -444,7 +444,9 @@ class DomainsApiController extends Controller
                                                         } else {
 
                                                             //template ajax
-                                                            /* $shopifyIntegration->update([
+                                                            $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+
+                                                             $shopifyIntegration->update([
                                                                                              'theme_type' => $shopifyIntegration->present()
                                                                                                                                 ->getThemeType('ajax_theme'),
                                                                                              'theme_name' => $shopify->getThemeName(),
@@ -452,7 +454,7 @@ class DomainsApiController extends Controller
                                                                                              'theme_html' => $htmlCart,
                                                                                          ]);
 
-                                                             $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);*/
+                                                             $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                                         }
 
                                                         //inserir o javascript para o trackeamento (src, utm)

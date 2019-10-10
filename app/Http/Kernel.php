@@ -38,6 +38,14 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'api-socialite' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            'throttle:60,1',
+            'bindings',
+        ],
+
     ];
     /**
      * The application's route middleware.

@@ -7,7 +7,7 @@ $(document).ready(function () {
     });
 
     $("#bt_get_xls").on("click", function () {
-        salesExport('xlsx');
+        salesExport('xls');
     });
 
     $("#filtros").on("click", function () {
@@ -93,8 +93,6 @@ $(document).ready(function () {
 
     getFilters();
 
-    atualizar();
-
     //Carrega o modal para regerar boleto
     $(document).on('click', '.boleto-pending', function () {
 
@@ -155,6 +153,7 @@ $(document).ready(function () {
                         $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
                     });
                 }
+                loadOnAny('.page-content', true);
                 atualizar();
             }
         });
@@ -179,7 +178,6 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -220,19 +218,15 @@ $(document).ready(function () {
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
-
-                    pagination(response, 'sales', atualizar);
-
-                    loadOnAny('.page-content', true);
-                    $('#export-excel').show();
-                    $('.content-error').hide();
                 } else {
-                    loadOnAny('.page-content', true);
-                    $('#export-excel, .page-content').hide();
-                    $('.content-error').show();
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
+                pagination(response, 'sales', atualizar);
+                $('#export-excel').show();
             }
         });
+
+        salesResume();
     }
 
     // Download do relatorio
@@ -240,8 +234,8 @@ $(document).ready(function () {
 
         let data = {
             'select_project': $("#projeto").val(),
-            'select_payment_method': $("#forma").val(),
-            'sale_status': $("#status").val(),
+            'payment_method': $("#forma").val(),
+            'status': $("#status").val(),
             'client': $("#comprador").val(),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
@@ -250,6 +244,9 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
+            xhrFields: {
+                responseType: 'blob'
+            },
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -259,6 +256,65 @@ $(document).ready(function () {
             },
             success: function success(response, textStatus, request) {
                 downloadFile(response, request);
+            }
+        });
+    }
+
+    // Resumo
+    function salesResume() {
+
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: '32px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '20px',
+                    height: '20px',
+                    borderWidth: '4px'
+                },
+            }
+        });
+
+        let data = {
+            'select_project': $("#projeto").val(),
+            'payment_method': $("#forma").val(),
+            'status': $("#status").val(),
+            'client': $("#comprador").val(),
+            'date_type': $("#date_type").val(),
+            'date_range': $("#date_range").val(),
+        };
+        $.ajax({
+            method: "GET",
+            url: '/api/sales/resume',
+            data: data,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.number' ,true);
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadOnAny('.number' ,true);
+                $('#total-sales').text('0');
+                $('#comission, #total').text('R$ 0,00');
+                if(response.total_sales){
+                    $('#total-sales, #comission, #total').text('');
+                    $('#total-sales').text(response.total_sales);
+                    if(!isEmpty(response.real)){
+                        $('#comission').append(`<div>R$ ${response.real.comission}</div>`);
+                        $('#total').append(`<div>R$ ${response.real.total}</div>`);
+                    }
+                    if(!isEmpty(response.dolar)){
+                        $('#comission').append(`<div>$ ${response.dolar.comission}</div>`);
+                        $('#total').append(`<div>$ ${response.dolar.total}</div>`);
+                    }
+                }
+
             }
         });
     }

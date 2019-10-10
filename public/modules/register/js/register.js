@@ -1,5 +1,42 @@
 $(document).ready(function () {
 
+    verifyInviteRegister();
+    function verifyInviteRegister() {
+        let inviteCode = $(window.location.pathname.split('/')).get(-1);
+
+        $.ajax({
+            method: "GET",
+            url: `/api/invitations/verifyinvite/${inviteCode}`,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: (response) => {
+                if (response.responseJSON.data === 'invalido') {
+                    $('head').append('<link rel="stylesheet" href="/modules/global/css/page-error.css" type="text/css" />');
+                    $("#register-body").html('').append(createHtmlLinkInvalid());
+
+                } else {
+                    errorAjaxResponse(response);
+                }
+            },
+            success: (response) => {
+                $("#link-invalid").html('');
+                console.log(response);
+            }
+        });
+    }
+
+    function createHtmlLinkInvalid() {
+        return '<div id="link-invalid" class="page-holder">' +
+            '        <div class="content-error d-flex text-center">' +
+            '            <img class="svgorange" src="/modules/global/img/error.png">' +
+            '            <h1 class="big"> Ops! Link de convite inválido</h1>' +
+            '            <p style="font-size:12px">Parece que esse link é inválido. </p>' +
+            '        </div>' +
+            '    </div>';
+
+    }
+
     $("#progress-bar-register").css('width', '33%');
     var accessToken = '';
     // MASCARA CNPJ/CPF
@@ -254,9 +291,9 @@ $(document).ready(function () {
                 'Authorization': 'Bearer ' + accessToken,
                 'Accept': 'application/json',
             },
-            error: function error() {
+            error: function error(response) {
             },
-            success: function success() {
+            success: function success(response) {
             }
 
         });
