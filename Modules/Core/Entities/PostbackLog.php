@@ -2,7 +2,10 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\PostbackLogPresenter;
 
 /**
  * @property integer $id
@@ -14,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PostbackLog extends Model
 {
+    use PresentableTrait, FoxModelTrait;
+
+    protected $presenter = PostbackLogPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * 
