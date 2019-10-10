@@ -245,7 +245,7 @@ class TesteController extends Controller
     public function indexx()
     {
         $this->tgFunction();
-        /*$dataValue = [ 
+        /*$dataValue = [
             'type' => 'payment',
 
             'data' => [
@@ -261,7 +261,7 @@ class TesteController extends Controller
 
         $shopifyService = new ShopifyService('cloudteste.myshopify.com','a9630467f0884fceaa3cfd150f836bbe');
 
-        dd($shopifyService->getShopProducts()); 
+        dd($shopifyService->getShopProducts());
     }
 
     public function parseToArray($xpath, $class)
@@ -292,7 +292,7 @@ class TesteController extends Controller
 
         //
 
-       // $saleModel = new Sale();
+        // $saleModel = new Sale();
         //$nservice  = new NotazzService();
 
         //$sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
@@ -303,15 +303,20 @@ class TesteController extends Controller
 
         //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-        //        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
-        //
-        //        $shopifyService->setThemeByRole('main');
-        //        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
-        //        if ($htmlBody) {
-        //            //template do layout
-        //
-        //            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
-        //        }
+        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
+
+        $shopifyService->setThemeByRole('main');
+
+        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
+
+        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
+
+//        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+//        if ($htmlBody) {
+//            //template do layout
+//
+//            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+//        }
 
         /*
         $nservice  = new NotazzService();

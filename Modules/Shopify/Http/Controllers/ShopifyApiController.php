@@ -358,6 +358,8 @@ class ShopifyApiController extends Controller
                                     $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
                                 } else {
                                     //template ajax
+                                    $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
+
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
@@ -505,12 +507,12 @@ class ShopifyApiController extends Controller
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
-                                    //$shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                    //$shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                 }
 
                                 //inserir o javascript para o trackeamento (src, utm)
