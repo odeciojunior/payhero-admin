@@ -30,7 +30,7 @@ $(document).ready(function () {
                                                 <p class="card-text sm">Criado em ${data.created_at}</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' class='delete-integration pointer float-right mt-35' project="${data.id}" data-toggle='modal' data-target='#modal-delete' type='a'>
+                                                <a role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project="${data.id}" data-toggle='modal' data-target='#modal-delete' type='a'>
                                                     <i class='material-icons gradient'>delete_outline</i>
                                                 </a>
                                             </div>

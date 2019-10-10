@@ -174,7 +174,7 @@
                                             <span id='client-name-details' class="table-title gray clear-fields"> </span>
                                             <br>
                                             <span id='client-telephone' class='table-title gray clear-fields'></span>
-                                            <a id='client-whatsapp' target='_blank'>
+                                            <a id='client-whatsapp' target='_blank' title='Enviar mensagem pelo whatsapp'>
                                                 <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px">
                                             </a>
                                             <br>

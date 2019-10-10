@@ -5,10 +5,13 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+/**
+ * Class Kernel
+ * @package App\Console
+ */
 class Kernel extends ConsoleKernel
 {
     /**
-     * The Artisan commands provided by your application.
      * @var array
      */
     protected $commands = [
@@ -16,13 +19,12 @@ class Kernel extends ConsoleKernel
     ];
 
     /**
-     * Define the application's command schedule.
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     * @return void
+     * @param Schedule $schedule
      */
     protected function schedule(Schedule $schedule)
     {
         date_default_timezone_set('America/Sao_Paulo');
+        setlocale(LC_ALL, 'pt_BR');
 
         // transfer money from transactions for user companies
         $schedule->command('verify:transfers')->dailyAt('03:00');
