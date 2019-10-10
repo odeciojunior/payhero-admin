@@ -344,7 +344,7 @@ function isEmptyValue(value) {
 }
 
 function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
+    return Object.keys(obj ? obj : {}).length === 0;
 }
 
 function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
