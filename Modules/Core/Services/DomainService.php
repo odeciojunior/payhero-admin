@@ -187,6 +187,8 @@ class DomainService
                                     //template ajax
                                     Log::warning('domains update command tema ajax ...');
 
+                                    $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
+
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $this->getShopifyIntegrationModel()->present()
                                                                                          ->getThemeType('ajax_theme'),
