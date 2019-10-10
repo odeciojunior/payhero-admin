@@ -195,20 +195,21 @@ class SalesApiController extends Controller
             $transactions = $saleService->getSales($data, false);
 
             if ($transactions->count()) {
-                //cria um item no array pra cada moeda inclusa nas vendas
                 $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
+                    //quantidade de vendas
                     $carry['total_sales'] += $item->sale->plansSales->count();
+                    //cria um item no array pra cada moeda inclusa nas vendas
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
-                    $carry[$item->currency]['comission'] += $item->status == 'paid' || $item->status == 'transfered' ? intval($item->value) : 0;
+                    //comissao
+                    $carry[$item->currency]['comission'] += $item->status == 'paid' || $item->status == 'transfered' ? (floatval($item->value) / 100) : 0;
                     //calcula o total
-                    $subTotal = preg_replace("/[^0-9]/", "", $item->sale->sub_total);
-                    $total = $subTotal;
-                    $total += preg_replace("/[^0-9]/", "", $item->sale->shipment_value);
-                    if (preg_replace("/[^0-9]/", "", $item->sale->shopify_discount) > 0) {
-                        $total -= preg_replace("/[^0-9]/", "", $item->sale->shopify_discount);
+                    $total = $item->sale->sub_total;
+                    $total +=  $item->sale->shipment_value;
+                    if ($item->sale->shopify_discount > 0) {
+                        $total -= $item->sale->shopify_discount;
                     }
                     if ($item->sale->dolar_quotation != 0) {
-                        $total += preg_replace('/[^0-9]/', '', $item->sale->iof);
+                        $total +=  $item->sale->iof;
                     }
                     $carry[$item->currency]['total'] += $total;
                     return $carry;
@@ -218,10 +219,7 @@ class SalesApiController extends Controller
                 foreach ($resume as &$item) {
                     if (is_array($item)) {
                         foreach ($item as &$value) {
-                            if($value == 0){
-                                $value = '000';
-                            }
-                            $value = substr_replace($value, ',', strlen($value) - 2, 0);
+                            $value = number_format($value, 2, ',', '.');
                         }
                     }
                 }
