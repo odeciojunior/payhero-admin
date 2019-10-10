@@ -148,7 +148,13 @@ $(() => {
     //carrega detalhes do projeto
     function show() {
 
-        loadOnAny('#tab_info_geral .card');
+        loadOnAny('#tab_info_geral .card', false,{
+            styles: {
+                container: {
+                    minHeight: '250px'
+                }
+            }
+        });
 
         $.ajax({
             url: '/api/projects/' + projectId,
