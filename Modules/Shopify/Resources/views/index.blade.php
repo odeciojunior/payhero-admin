@@ -334,7 +334,7 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/shopify/js/index.js?v=1"></script>
+        <script src="/modules/shopify/js/index.js?v=2"></script>
     @endpush
 
 @endsection
