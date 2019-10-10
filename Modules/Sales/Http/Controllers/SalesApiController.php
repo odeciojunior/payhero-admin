@@ -199,6 +199,7 @@ class SalesApiController extends Controller
                     //quantidade de vendas
                     $carry['total_sales'] += $item->sale->plansSales->count();
                     //cria um item no array pra cada moeda inclusa nas vendas
+                    $item->currency = $item->currency ?? 'real';
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
                     //comissao
                     $carry[$item->currency]['comission'] += in_array($item->status,['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
