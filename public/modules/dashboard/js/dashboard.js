@@ -27,13 +27,12 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.page-content', true);
                 if (!isEmpty(response.companies)) {
-
                     for (let i = 0; i < response.companies.length; i++) {
                         $('#company').append('<option value="' + response.companies[i].id_code + '">' + response.companies[i].fantasy_name + '</option>')
                     }
-                    console.log($('#company').val());
+                    // console.log($('#company').val());
                     let resumeData = response.data.filter(function (company) {
-                        console.log(company.id_code);
+                        // console.log(company.id_code);
                         return company.id_code == $('#company').val();
                     });
                     if (isEmpty(resumeData)) {
@@ -41,7 +40,7 @@ $(document).ready(function () {
                         errorAjaxResponse("Ocorreu um erro inesperado!");
                     } else {
                         let resume = resumeData[0];
-                        console.log(resume);
+                        // console.log(resume);
                         $(".moeda").html(resume.currency);
                         $("#pending_money").html(resume.pending_balance);
                         $("#antecipation_money").html(resume.antecipable_balance);
