@@ -113,8 +113,8 @@ $(document).ready(function () {
 
             dados += '</td>';
             // dados += '<td class="text-center" style="vertical-align: middle;">' + expirationDate + '</td>';
-            dados += '<td><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><i class="material-icons gray gradient"> sync </i></button></td>';
-            dados += '<td><button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><i class="material-icons gradient">delete</i></button></td>';
+            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><i class="material-icons gray gradient"> sync </i></button></td>';
+            dados += '<td class="text-center"><button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><i class="material-icons gradient">delete</i></button></td>';
             dados += '</tr>';
             $("#table-body-integrates").append(dados);
         });
