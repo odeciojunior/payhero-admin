@@ -91,11 +91,11 @@ $(document).ready(function () {
             //Access Token
             dados += '<td class="text-center" style="vertical-align: middle;">';
             dados += '<div class="input-group mb-2 mr-sm-2 mt-2">';
-            dados += '<div class="input-group-prepend"><input type="text" class="form-control font-sm brr" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled"></div>';
+            dados += '<div class="input-group"><input type="text" class="form-control font-sm brr" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
             dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
-            dados += '<a href="#" class="btn btn-sm btn-xs btn-light btnCopiarLink" data-toggle="tooltip" data-copy_id="#inputToken' + value.id_code + '" title="Copiar token">';
-            dados += '<i class="material-icons gray gradient"> file_copy </i>&nbsp;'
-            dados += '</a></div></div>';
+            dados += '<a href="#" class="btnCopiarLink" data-toggle="tooltip" data-copy_id="#inputToken' + value.id_code + '" title="Copiar token">';
+            dados += '<i class="material-icons gray gradient"> file_copy </i>'
+            dados += '</a></div></div></div>';
             dados += '</div>';
             // <div class="input-group mb-2 mr-sm-2 mt-2">
             //         <div class="input-group-prepend">
