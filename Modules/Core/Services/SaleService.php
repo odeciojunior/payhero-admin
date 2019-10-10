@@ -180,7 +180,7 @@ class SaleService
         } else {
             $taxa     = 0;
             $taxaReal = ($total / 100) * $transaction->percentage_rate + preg_replace('/\D/', '', $transaction->transaction_rate);
-            $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
+            $taxaReal = 'R$ ' . number_format(preg_replace('/\D/', '', $taxaReal) / 100, 2, ',', '.');
         }
 
         //invoices
@@ -194,7 +194,7 @@ class SaleService
             //invoices
             'invoices'         => $invoices,
             //transaction
-            'transaction_rate' => number_format($transaction->transaction_rate / 100, 2, ',', '.'),
+            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $transaction->transaction_rate) / 100, 2, ',', '.'),
             'percentage_rate'  => $transaction->percentage_rate,
             //extra info
             'total'            => number_format(intval($total) / 100, 2, ',', '.'),
