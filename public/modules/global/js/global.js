@@ -165,7 +165,7 @@ function loadOnAny(target, remove = false, options = {}) {
         options.styles = options.styles ? options.styles : {};
         options.styles.container = options.styles.container ? options.styles.container : {};
         options.styles.container.minWidth = options.styles.container.minWidth ? options.styles.container.minWidth : $(target).css('width');
-        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : '250px';
+        options.styles.container.minHeight = options.styles.container.minHeight ? options.styles.container.minHeight : $(window.top).height() * 0.7; //70% of visible window area
         container.css(options.styles.container);
         if (options.styles.loader) {
             loader.css(options.styles.loader);
@@ -344,7 +344,7 @@ function isEmptyValue(value) {
 }
 
 function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
+    return Object.keys(obj ? obj : {}).length === 0;
 }
 
 function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {

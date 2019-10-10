@@ -93,24 +93,24 @@
             </form>
 
             <!-- Resumo -->
-{{--            <div class="fixhalf"></div>--}}
-{{--            <div class="card shadow p-20" style='display:block;'>--}}
-{{--                <div class="row justify-content-center">--}}
-{{--                    <div class="col-md-4">--}}
-{{--                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas</h6>--}}
-{{--                        <h4 id="total-sales" class="number text-center green-gradient"></h4>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-md-4">--}}
-{{--                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão </h6>--}}
-{{--                        <h4 id="comission" class="number text-center orange-gradient"></h4>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-md-4">--}}
-{{--                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > trending_up </i> Total </h6>--}}
-{{--                        <h4 id="total" class="number text-center green-gradient"></i>--}}
-{{--                        </h4>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="fixhalf"></div>
+            <div class="card shadow p-20" style='display:block;'>
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas</h6>
+                        <h4 id="total-sales" class="number text-center green-gradient"></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão </h6>
+                        <h4 id="comission" class="number text-center orange-gradient"></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > trending_up </i> Total </h6>
+                        <h4 id="total" class="number text-center green-gradient"></i>
+                        </h4>
+                    </div>
+                </div>
+            </div>
 
             <!-- Tabela -->
             <div class="fixhalf"></div>
@@ -203,7 +203,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=2') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

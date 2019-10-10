@@ -7,8 +7,7 @@ $(document).ready(function () {
     });
 
     $("#bt_get_xls").on("click", function () {
-        //salesExport('xls');
-        salesExport('csv');
+        salesExport('xls');
     });
 
     $("#filtros").on("click", function () {
@@ -219,12 +218,10 @@ $(document).ready(function () {
 
                     $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
-
-                    pagination(response, 'sales', atualizar);
-
                 } else {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
+                pagination(response, 'sales', atualizar);
                 $('#export-excel').show();
             }
         });
@@ -247,6 +244,9 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
+            xhrFields: {
+                responseType: 'blob'
+            },
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -263,7 +263,7 @@ $(document).ready(function () {
     // Resumo
     function salesResume() {
 
-        /*loadOnAny('.number', false, {
+        loadOnAny('.number', false, {
             styles: {
                 container: {
                     minHeight: '32px',
@@ -316,6 +316,6 @@ $(document).ready(function () {
                 }
 
             }
-        });*/
+        });
     }
 });

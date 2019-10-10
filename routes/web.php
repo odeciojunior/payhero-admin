@@ -71,6 +71,7 @@ Route::group(
         Route::get('/julio', 'TesteController@julioFunction');
         Route::get('/joao', 'TesteController@joaoLucasFunction');
         Route::get('/thales', 'TesteController@thalesFunction');
+        Route::get('/jean', 'TesteController@jeanFunction');
         Route::get('/rmcharacter', 'TesteController@removeSpecialCharacter');
         Route::get('/trackingcode', 'TesteController@trackingCodeFunction');
     }

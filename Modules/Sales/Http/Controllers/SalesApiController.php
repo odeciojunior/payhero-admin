@@ -195,20 +195,25 @@ class SalesApiController extends Controller
             $transactions = $saleService->getSales($data, false);
 
             if ($transactions->count()) {
-                //cria um item no array pra cada moeda inclusa nas vendas
                 $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
+                    //quantidade de vendas
                     $carry['total_sales'] += $item->sale->plansSales->count();
+                    //cria um item no array pra cada moeda inclusa nas vendas
+                    $item->currency = $item->currency ?? 'real';
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
-                    $carry[$item->currency]['comission'] += $item->status == 'paid' ? intval($item->value) : 0;
+                    //comissao
+                    $carry[$item->currency]['comission'] += in_array($item->status,['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
                     //calcula o total
-                    $subTotal = $saleService->getSubtotal($item->sale);
-                    $total = $subTotal;
-                    $total += preg_replace("/[^0-9]/", "", $item->sale->shipment_value);
-                    if (preg_replace("/[^0-9]/", "", $item->sale->shopify_discount) > 0) {
-                        $total -= preg_replace("/[^0-9]/", "", $item->sale->shopify_discount);
+                    $total = $item->sale->sub_total;
+                    $total +=  $item->sale->shipment_value;
+                    $shopify_discount = floatval($item->sale->shopify_discount) / 100;
+                    if ($shopify_discount > 0) {
+                        $total -= $shopify_discount;
                     }
                     if ($item->sale->dolar_quotation != 0) {
-                        $total += preg_replace('/[^0-9]/', '', $item->sale->iof);
+                        $iof = preg_replace('/[^0-9]/', '', $item->sale->iof);
+                        $iof = substr_replace($iof, '.', strlen($iof) - 2, 0);
+                        $total += floatval($iof);
                     }
                     $carry[$item->currency]['total'] += $total;
                     return $carry;
@@ -218,10 +223,7 @@ class SalesApiController extends Controller
                 foreach ($resume as &$item) {
                     if (is_array($item)) {
                         foreach ($item as &$value) {
-                            if($value == 0){
-                                $value = '000';
-                            }
-                            $value = substr_replace($value, ',', strlen($value) - 2, 0);
+                            $value = number_format($value, 2, ',', '.');
                         }
                     }
                 }

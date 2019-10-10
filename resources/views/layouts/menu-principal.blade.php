@@ -184,12 +184,12 @@
                 <span class="site-menu-title">Aplicativos</span>
             </a>
         </li>
-        <li class="site-menu-item has-sub">
+        {{-- <li class="site-menu-item has-sub">
             <a href="{{ route('integrations.index') }}">
                 <i class="material-icons">devices_other</i>
                 <span class="site-menu-title">Integrações</span>
             </a>
-        </li>
+        </li> --}}
         <li class="site-menu-item has-sub">
             <a href="{{ route('invitations.index') }}">
                 <i class="material-icons">person_add</i>
