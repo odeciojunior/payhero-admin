@@ -206,11 +206,14 @@ class SalesApiController extends Controller
                     //calcula o total
                     $total = $item->sale->sub_total;
                     $total +=  $item->sale->shipment_value;
-                    if ($item->sale->shopify_discount > 0) {
-                        $total -= $item->sale->shopify_discount;
+                    $shopify_discount = floatval($item->sale->shopify_discount) / 100;
+                    if ($shopify_discount > 0) {
+                        $total -= $shopify_discount;
                     }
                     if ($item->sale->dolar_quotation != 0) {
-                        $total +=  $item->sale->iof;
+                        $iof = preg_replace('/[^0-9]/', '', $item->sale->iof);
+                        $iof = substr_replace($iof, '.', strlen($iof) - 2, 0);
+                        $total += floatval($iof);
                     }
                     $carry[$item->currency]['total'] += $total;
                     return $carry;
