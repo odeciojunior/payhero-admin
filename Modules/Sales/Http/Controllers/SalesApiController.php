@@ -201,7 +201,7 @@ class SalesApiController extends Controller
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
                     $carry[$item->currency]['comission'] += $item->status == 'paid' ? intval($item->value) : 0;
                     //calcula o total
-                    $subTotal = $saleService->getSubtotal($item->sale);
+                    $subTotal = preg_replace("/[^0-9]/", "", $item->sale->sub_total);
                     $total = $subTotal;
                     $total += preg_replace("/[^0-9]/", "", $item->sale->shipment_value);
                     if (preg_replace("/[^0-9]/", "", $item->sale->shopify_discount) > 0) {

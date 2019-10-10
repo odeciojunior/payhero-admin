@@ -102,7 +102,8 @@ class NotazzService
 
             $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-            $baseValue = ($saleService->getSubTotal($sale) + $shippingCost) - $costTotal;
+            $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+            $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
             $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 
@@ -200,7 +201,8 @@ class NotazzService
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-                $baseValue = ($saleService->getSubTotal($sale) + $shippingCost) - $costTotal;
+                $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+                $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 

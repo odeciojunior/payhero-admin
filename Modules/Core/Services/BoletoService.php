@@ -66,7 +66,7 @@ class BoletoService
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
 
-                    $subTotal = $saleService->getSubTotal($boleto);
+                    $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
                     $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
 
@@ -176,7 +176,7 @@ class BoletoService
                     $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $subTotal    = $saleService->getSubTotal($boleto);
+                    $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
                     $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
@@ -270,7 +270,7 @@ class BoletoService
                     $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $subTotal    = $saleService->getSubTotal($boleto);;
+                    $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
                     $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
