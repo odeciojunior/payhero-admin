@@ -14,7 +14,7 @@
                     <label for="select_invoice_type_create">Tipo de nota fiscal emitida para o projeto</label>
                     <select class="select-pad" id="select_invoice_type_create" name="select_invoice_type_create">
                         <option value='1'>Nota de Serviço (nfse)</option>
-                        <option value='2'>Nota de Produto (nfe)</option>
+{{--                        <option value='2'>Nota de Produto (nfe)</option>--}}
                     </select>
                 </div>
             </div>
