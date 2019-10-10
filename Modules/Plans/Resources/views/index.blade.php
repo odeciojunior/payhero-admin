@@ -1,9 +1,18 @@
 <div class='row no-gutters mb-10'>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class='d-flex align-items-center justify-content-end'>
-            <div id="add-plan" class="d-flex align-items-center justify-content-end pointer">
-                <span class="link-button-dependent red"> Adicionar Plano </span>
-                <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                <div class="input-group">
+                    <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Nome">
+                    <span class="input-group-append" id='btn-search-plan'>
+                      <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+            <div class='col-md-6'>
+                <div class='col-md-2'></div>
+                <div id="add-plan" class="d-flex col-md-5 align-items-center float-right justify-content-end pointer">
+                    <span class="link-button-dependent red"> Adicionar Plano </span>
+                    <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                </div>
             </div>
         </div>
     </div>
@@ -20,7 +29,7 @@
                         <td class='table-title'>Preço</td>
                         <td class='table-title'>Status</td>
                         <td class='table-title text-center options-column-width'>Opções</td>
-                    </tr> 
+                    </tr>
                 </thead>
                 <tbody id='data-table-plan' class='min-row-height'>
                     {{-- js carregando dados --}}

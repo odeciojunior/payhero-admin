@@ -13,9 +13,9 @@
                     <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-danger ml-10" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-plus" aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" data-target='#modal_explicacao' class="btn btn-floating" style="background-color:blue;position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                    {{-- <a data-toggle="modal" data-target='#modal_explicacao' class="btn btn-floating" style="background-color:blue;position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-help" aria-hidden="true"></i>
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>
@@ -153,7 +153,7 @@
             </div>
         {{-- End Modal  --}}
 
-        <!-- End Modal -->
+        {{-- <!-- End Modal -->
             <!-- Modal Explicação -->
             <div class="modal fade modal-3d-flip-vertical" id="modal_explicacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-lg">
@@ -321,7 +321,7 @@
                     </div>
                 </div>
             </div>
-            <!-- End Modal -->
+            <!-- End Modal --> --}}
         </div>
         @include('companies::empty')
         <div id="no-integration-found" class='row justify-content-center' style="display:none">
@@ -334,7 +334,7 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/shopify/js/index.js?v=1"></script>
+        <script src="/modules/shopify/js/index.js?v=2"></script>
     @endpush
 
 @endsection

@@ -32,8 +32,8 @@ $(document).ready(function () {
 
                     }
                     dados += '</td>';
-                    dados += "<td><a href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><i class='material-icons gradient'>  edit </i></a></td>";
-                    dados += "<td><a class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>";
+                    dados += "<td><a title='Editar' href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><i class='material-icons gradient'>  edit </i></a></td>";
+                    dados += "<td><a title='Excluir' class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>";
                     dados += "</tr>";
                     $('#companies_table').addClass('table-striped');
                     $("#companies_table_data").append(dados);

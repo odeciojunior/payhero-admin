@@ -439,3 +439,27 @@ function defaultSelectItemsFunction(item) {
     return {value: item.id_code, text: item.name};
 }
 
+$(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i) {
+    event.preventDefault();
+    let inputId = $(this).data('copy_id') || '#copyText';
+    let copyText = (inputId === '#copyText' ? $(this).data('copy_text') || '' : $(inputId).val() || '');
+    if (copyText === '') {
+        console.log('textovazio');
+        return false;
+    }
+    if (document.getElementById("copyText") === null) {
+        let input = document.createElement("input");
+        input.type = "text";
+        input.id = "copyText";
+        input.value = copyText;
+        document.getElementsByTagName("body")[0].appendChild(input);
+    } else {
+        document.getElementById("copyText").value = copyText;
+    }
+    document.getElementById("copyText").select();
+    document.execCommand("copy");
+    setTimeout(function () {
+        $('#copyText').remove();
+    }, 1000);
+    alert("Link " + $(inputId).val() + " copiado com Sucesso!");
+});

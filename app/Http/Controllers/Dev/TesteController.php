@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers\Dev;
 
-use App\Http\Controllers\Controller;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Modules\Checkout\Classes\MP;
-use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\DomainRecord;
-use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\HotZappService;
-use Modules\Core\Services\NotazzService;
-use Slince\Shopify\Client;
-use Slince\Shopify\PublicAppCredential;
+use Modules\Checkout\Classes\MP;
+use Illuminate\Http\JsonResponse;
+use Modules\Core\Entities\Domain;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Product;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Transfer;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\Controller;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\DomainRecord;
+use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Services\NotazzService;
+use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\ShopifyService;
+use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Entities\HotZappIntegration;
+use Modules\Core\Entities\ShopifyIntegration;
 
 class TesteController extends Controller
 {
@@ -279,23 +280,9 @@ class TesteController extends Controller
     public function julioFunction()
     {
 
-        $checkoutModel = new Checkout();
+        $shopifyService = new ShopifyService('cloudteste.myshopify.com','a9630467f0884fceaa3cfd150f836bbe');
 
-        $checkouts = $checkoutModel->where('email_sent_amount', '>', '10')->get();
-
-        foreach ($checkouts as $checkout) {
-            $checkout->update([
-                                  'email_sent_amount' => '6',
-                              ]);
-        }
-
-        $checkouts = $checkoutModel->where('sms_sent_amount', '>', '10')->get();
-
-        foreach ($checkouts as $checkout) {
-            $checkout->update([
-                                  'sms_sent_amount' => '3',
-                              ]);
-        }
+        dd($shopifyService->getShopProducts());
     }
 
     public function parseToArray($xpath, $class)
@@ -326,7 +313,7 @@ class TesteController extends Controller
 
         //
 
-       // $saleModel = new Sale();
+        // $saleModel = new Sale();
         //$nservice  = new NotazzService();
 
         //$sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
@@ -337,15 +324,20 @@ class TesteController extends Controller
 
         //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-        //        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
-        //
-        //        $shopifyService->setThemeByRole('main');
-        //        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
-        //        if ($htmlBody) {
-        //            //template do layout
-        //
-        //            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
-        //        }
+        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
+
+        $shopifyService->setThemeByRole('main');
+
+        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
+
+        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
+
+//        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+//        if ($htmlBody) {
+//            //template do layout
+//
+//            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+//        }
 
         /*
         $nservice  = new NotazzService();

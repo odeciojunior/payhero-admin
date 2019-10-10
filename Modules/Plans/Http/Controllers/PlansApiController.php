@@ -27,9 +27,10 @@ class PlansApiController extends Controller
 {
     /**
      * @param $projectId
+     * @param Request $request
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index($projectId)
+    public function index($projectId, Request $request)
     {
         try {
             $planModel    = new Plan();
@@ -49,6 +50,9 @@ class PlansApiController extends Controller
                                                                 ->first();
                                                       },
                                                   ])->where('project_id', $projectId);
+                        if ($request->has('plan') && !empty($request->input('plan'))) {
+                            $plans->where('name', 'like', '%' . $request->input('plan') . '%');
+                        }
 
                         return PlansResource::collection($plans->orderBy('id', 'DESC')->paginate(5));
                     } else {
@@ -365,4 +369,12 @@ class PlansApiController extends Controller
 
         return $str;
     }
+    /*public function getPlanName(Request $request)
+    {
+        try{
+
+        }catch (Exception $e){
+            Log::warning('Erro ao buscar ')
+        }
+    }*/
 }
