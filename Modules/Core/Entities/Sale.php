@@ -78,6 +78,7 @@ class Sale extends Model
         'payment_form',
         'payment_method',
         'total_paid_value',
+        'sub_total',
         'shipment_value',
         'start_date',
         'end_date',

@@ -84,7 +84,7 @@ class ShopifyApiController extends Controller
             $config = new \SocialiteProviders\Manager\Config(
                 env('SHOPIFY_KEY'),
                 env('SHOPIFY_SECRET'),
-                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' : 'http://5eb1d409.ngrok.io/apps/shopify/login/callback',
+                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' : 'http://1ed522bb.ngrok.io/apps/shopify/login/callback',
                 ['subdomain' => $urlStore]
             );
 
