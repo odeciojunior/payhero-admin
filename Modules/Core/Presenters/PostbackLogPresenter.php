@@ -19,9 +19,13 @@ class PostbackLogPresenter extends Presenter
                 case 2:
                     return 'pagarme';
                 case 3:
-                    return 'shopify';
+                    return 'shopify-products';
                 case 4:
                     return 'mercado-pago';
+                case 5:
+                    return 'shopify-tracking';
+                case 6:
+                    return 'notazz';
             }
 
             return '';
@@ -31,10 +35,14 @@ class PostbackLogPresenter extends Presenter
                     return 1;
                 case 'pagarme':
                     return 2;
-                case 'shopify':
+                case 'shopify-products':
                     return 3;
                 case 'mercado-pago':
                     return 4;
+                case 'shopify-tracking':
+                    return 5;
+                case 'notazz':
+                    return 6;
             }
 
             return '';
