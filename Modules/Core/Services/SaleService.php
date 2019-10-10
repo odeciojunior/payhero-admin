@@ -211,21 +211,6 @@ class SaleService
 
     /**
      * @param Sale $sale
-     * @return float|int
-     */
-//    public function getSubTotal(Sale $sale)
-//    {
-//        return preg_replace("/[^0-9]/", "", $sale->sub_total);
-//        $subTotal = 0;
-//        foreach ($sale->plansSales as $planSale) {
-//            $subTotal += preg_replace("/[^0-9]/", "", $planSale->plan()->first()->price) * $planSale->amount;
-//        }
-//
-//        return $subTotal;
-//    }
-
-    /**
-     * @param Sale $sale
      * @return array
      */
     public function getPagarmeItensList(Sale $sale)
