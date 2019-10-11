@@ -51,7 +51,8 @@ class TesteController extends Controller
     {
         $id = current(Hashids::decode($code));
         $idSale = current(Hashids::connection('sale_id')->decode($code));
-        dd($id,'connection("sale_id") = '.$idSale);
+        $idPusher = current(Hashids::connection('pusher_connection')->decode($code));
+        dd('connection("main") = '.$id,'connection("sale_id") = '.$idSale,'connection("pusher_connection") = '.$idPusher);
     }
 
     /**
