@@ -66,6 +66,8 @@ class NotazzInvoice extends Model
         'date_sent',
         'date_completed',
         'date_error',
+        'date_rejected',
+        'date_canceled',
         'return_message',
         'return_http_code',
         'return_status',

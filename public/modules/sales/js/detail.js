@@ -245,7 +245,7 @@ $(() => {
                 var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
                 var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                var link = (invoice.pdf) ? "<a role='button' class='copy_link' style='cursor:pointer;' link='${invoice.pdf}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -258,6 +258,54 @@ $(() => {
                                 </td>
                                 <td>
                                     ${return_message}
+                                </td>
+                                <td>
+                                    ${link}
+                                </td>
+                            </tr>`;
+                $('#data-notazz-invoices').append(data);
+            }
+
+            if (invoice.date_rejected) {
+
+                var postback_message = (invoice.postback_message == null) ? 'Sucesso' : invoice.postback_message;
+
+
+                let data = `<tr>
+                                <td>
+                                    ${invoice.date_sent}
+                                </td>
+                                <td>
+                                    Nota fiscal rejeitada
+                                </td>
+                                <td>
+                                    ${invoice.return_http_code}
+                                </td>
+                                <td>
+                                    ${postback_message}
+                                </td>
+                                <td>
+                                    
+                                </td>
+                            </tr>`;
+                $('#data-notazz-invoices').append(data);
+            }
+
+            if (invoice.date_canceled) {
+
+                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                let data = `<tr>
+                                <td>
+                                    ${invoice.date_sent}
+                                </td>
+                                <td>
+                                    Nota fical cancelada
+                                </td>
+                                <td>
+                                    ${invoice.return_http_code}
+                                </td>
+                                <td>
+                                    Sucesso
                                 </td>
                                 <td>
                                     ${link}
