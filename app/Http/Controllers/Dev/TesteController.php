@@ -47,6 +47,13 @@ class TesteController extends Controller
         ///
     }
 
+    public function code($code)
+    {
+        $id = current(Hashids::decode($code));
+        $idSale = current(Hashids::connection('sale_id')->decode($code));
+        dd($id,'connection("sale_id") = '.$idSale);
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
