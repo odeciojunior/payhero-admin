@@ -18,16 +18,20 @@ class NotazzInvoiceResource extends Resource
         return [
             'id'               => Hashids::encode($this->id),
             'invoice_type'     => $this->invoice_type,
-            'date_pending'     => Carbon::parse($this->date_pending)
-                                        ->format('d/m/Y H:i:s'),
-            'date_sent'        => Carbon::parse($this->date_sent)
-                                        ->format('d/m/Y H:i:s'),
-            'date_completed'   => Carbon::parse($this->date_completed)
-                                        ->format('d/m/Y H:i:s'),
-            'date_error'       => Carbon::parse($this->date_error)
-                                        ->format('d/m/Y H:i:s'),
-            'schedule'         => Carbon::parse($this->schedule)
-                                        ->format('d/m/Y H:i:s'),
+            'date_pending'     => ($this->date_pending) ? Carbon::parse($this->date_pending)
+                                                                ->format('d/m/Y H:i:s') : null,
+            'date_sent'        => ($this->date_sent) ? Carbon::parse($this->date_sent)
+                                                             ->format('d/m/Y H:i:s') : null,
+            'date_completed'   => ($this->date_completed) ? Carbon::parse($this->date_completed)
+                                                                  ->format('d/m/Y H:i:s') : null,
+            'date_error'       => ($this->date_error) ? Carbon::parse($this->date_error)
+                                                              ->format('d/m/Y H:i:s') : null,
+            'date_rejected'    => ($this->date_rejected) ? Carbon::parse($this->date_rejected)
+                                                                 ->format('d/m/Y H:i:s') : null,
+            'date_canceled'    => ($this->date_canceled) ? Carbon::parse($this->date_canceled)
+                                                                 ->format('d/m/Y H:i:s') : null,
+            'schedule'         => ($this->schedule) ? Carbon::parse($this->schedule)
+                                                            ->format('d/m/Y H:i:s') : null,
             'status'           => $this->status,
             'xml'              => $this->xml,
             'pdf'              => $this->pdf,
