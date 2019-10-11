@@ -268,7 +268,7 @@ $(() => {
 
             if (invoice.date_rejected) {
 
-                var postback_message = (invoice.postback_message == null) ? 'Sucesso' : invoice.postback_message;
+                var postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;
 
 
                 let data = `<tr>
