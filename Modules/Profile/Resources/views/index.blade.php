@@ -188,20 +188,26 @@
                                     </div>
                                     <div class='col'></div>
                                     <div class='row mt-15 col-xl-12'>
-                                        <div class='form-group col-xl-4'>
+                                        <div class='form-group col-xl-3'>
                                             <label for='sale-percent'>Por venda (porcentagem):</label>
                                             <input id='sale-percent' disabled='disabled' class="form-control">
                                         </div>
-                                        <div class='form-group col-xl-4'>
+                                        <div class='form-group col-xl-3'>
                                             <div class='form-group'>
                                                 <label for='sale-fix'>Por venda (valor fixo):</label>
                                                 <input id='sale-fix' disabled='disabled' class="form-control">
                                             </div>
                                         </div>
-                                        <div class='form-group col-xl-4'>
+                                        <div class='form-group col-xl-3'>
                                             <div class='form-group'>
                                                 <label for='days-liberation'>Dias para liberação do saldo:</label>
                                                 <input id='days-liberation' disabled='disabled' class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class='form-group col-xl-3'>
+                                            <div class='form-group'>
+                                                <label for='installment-tax'>Taxa de parcelamento:</label>
+                                                <input id='installment-tax' disabled='disabled' class="form-control">
                                             </div>
                                         </div>
                                     </div>

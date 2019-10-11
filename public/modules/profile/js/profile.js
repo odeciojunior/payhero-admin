@@ -126,7 +126,6 @@ $(document).ready(function () {
                 } else {
                     if (img.naturalWidth < img.naturalHeight) {
                         x1 = Math.floor(img.naturalWidth / 100 * 10);
-                        ;
                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                         y2 = y1 + (x2 - x1);
@@ -304,7 +303,7 @@ $(document).ready(function () {
         $("#tax-anticipation").val(data.antecipation_tax + '%').attr('disabled', 'disabled');
         $("#days-liberation-boleto").val(data.boleto_antecipation_money_days).attr('disabled', 'disabled');
         $("#days-liberation-cart").val(data.credit_card_antecipation_money_days).attr('disabled', 'disabled');
-
+        $("#installment-tax").val(data.installment_tax).attr('disabled', 'disabled');
     }
 
 });

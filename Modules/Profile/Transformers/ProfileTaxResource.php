@@ -21,6 +21,7 @@ class ProfileTaxResource extends Resource
             'antecipation_tax'                    => $this->antecipation_tax,
             'boleto_antecipation_money_days'      => $this->boleto_antecipation_money_days,
             'credit_card_antecipation_money_days' => $this->credit_card_antecipation_money_days,
+            'installment_tax'                     => $this->installment_tax . ' %',
         ];
     }
 }

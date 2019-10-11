@@ -30,11 +30,11 @@ class RegisterApiController extends Controller
             $companyModel = new Company();
 
             $requestData['password']                            = bcrypt($requestData['password']);
-            $requestData['percentage_rate']                     = '6.5';
+            $requestData['percentage_rate']                     = '5.9';
             $requestData['transaction_rate']                    = '1.00';
             $requestData['balance']                             = '0';
             $requestData['foxcoin']                             = '0';
-            $requestData['credit_card_antecipation_money_days'] = '15';
+            $requestData['credit_card_antecipation_money_days'] = '30';
             $requestData['release_money_days']                  = '30';
             $requestData['boleto_antecipation_money_days']      = '2';
             $requestData['antecipation_tax']                    = '0';
@@ -42,7 +42,6 @@ class RegisterApiController extends Controller
             $requestData['email_amount']                        = '0';
             $requestData['call_amount']                         = '0';
             $requestData['score']                               = '0';
-            $requestData['sms_zenvia_amount']                   = '0';
             $requestData['sms_zenvia_amount']                   = '0';
 
             $user = $userModel->create($requestData);
