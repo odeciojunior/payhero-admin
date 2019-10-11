@@ -51,6 +51,7 @@ use Modules\Core\Presenters\UserPresenter;
  * @property int $percentage_antecipable
  * @property int $antecipation_tax
  * @property int $invites_amount
+ * @property string installment_tax
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
@@ -106,6 +107,7 @@ class User extends Authenticable
         'percentage_antecipable',
         'antecipation_tax',
         'invites_amount',
+        'installment_tax',
         'created_at',
         'updated_at',
         'deleted_at',

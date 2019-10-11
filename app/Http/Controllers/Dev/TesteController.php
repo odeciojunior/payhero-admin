@@ -47,6 +47,14 @@ class TesteController extends Controller
         ///
     }
 
+    public function code($code)
+    {
+        $id = current(Hashids::decode($code));
+        $idSale = current(Hashids::connection('sale_id')->decode($code));
+        $idPusher = current(Hashids::connection('pusher_connection')->decode($code));
+        dd('connection("main") = '.$id,'connection("sale_id") = '.$idSale,'connection("pusher_connection") = '.$idPusher);
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -313,24 +321,21 @@ class TesteController extends Controller
 
         //
 
-        // $saleModel = new Sale();
-        //$nservice  = new NotazzService();
+         $saleModel = new Sale();
+        $nservice  = new NotazzService();
 
-        //$sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
+        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
-        // $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+         $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
         //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
-
-        $shopifyService->setThemeByRole('main');
-
-        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
-
-        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
+//        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
+//        $shopifyService->setThemeByRole('main');
+//        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
+//        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
 
 //        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
 //        if ($htmlBody) {

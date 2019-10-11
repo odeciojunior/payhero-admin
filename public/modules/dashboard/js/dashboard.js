@@ -13,8 +13,8 @@ $(document).ready(function () {
     function getDataDashboard() {
         loadOnAny('.page-content');
         $.ajax({
-            method: "GET",
-            url: "/api/dashboard",
+            method: "POST",
+            url: "/api/dashboard/resume",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -24,19 +24,32 @@ $(document).ready(function () {
                 loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
-            success: function success(data) {
+            success: function success(response) {
                 loadOnAny('.page-content', true);
-                if (!isEmpty(data.companies)) {
-                    for (let i = 0; i < data.companies.length; i++) {
-                        $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                if (!isEmpty(response.companies)) {
+
+                    for (let i = 0; i < response.companies.length; i++) {
+                        $('#company').append('<option value="' + response.companies[i].id_code + '">' + response.companies[i].fantasy_name + '</option>')
                     }
-                    $(".moeda").html(data.values.currency);
-                    $("#pending_money").html(data.values.pending_balance);
-                    $("#antecipation_money").html(data.values.antecipable_balance);
-                    $("#available_money").html(data.values.available_balance);
-                    $("#total_money").html(data.values.total_balance);
-                    $(".content-error").hide();
-                    $('#company-select').show();
+                    console.log($('#company').val());
+                    let resumeData = response.data.filter(function (company) {
+                        console.log(company.id_code);
+                        return company.id_code == $('#company').val();
+                    });
+                    if (isEmpty(resumeData)) {
+                        loadOnAny('.page-content', true);
+                        errorAjaxResponse("Ocorreu um erro inesperado!");
+                    } else {
+                        let resume = resumeData[0];
+                        console.log(resume);
+                        $(".moeda").html(resume.currency);
+                        $("#pending_money").html(resume.pending_balance);
+                        $("#antecipation_money").html(resume.antecipable_balance);
+                        $("#available_money").html(resume.available_balance);
+                        $("#total_money").html(resume.total_balance);
+                        $(".content-error").hide();
+                        $('#company-select').show();
+                    }
                 } else {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
@@ -46,10 +59,9 @@ $(document).ready(function () {
     }
 
     function updateValues() {
-
         $.ajax({
             method: "POST",
-            url: "/api/dashboard/getvalues",
+            url: "/api/dashboard/resume",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -59,13 +71,13 @@ $(document).ready(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(data) {
-
-                $(".moeda").html(data.currency);
-                $("#pending_money").html(data.pending_balance);
-                $("#antecipation_money").html(data.antecipable_balance);
-                $("#available_money").html(data.available_balance);
-                $("#total_money").html(data.total_balance);
+            success: function success(response) {
+                let resume = response.data[0];
+                $(".moeda").html(resume.currency);
+                $("#pending_money").html(resume.pending_balance);
+                $("#antecipation_money").html(resume.antecipable_balance);
+                $("#available_money").html(resume.available_balance);
+                $("#total_money").html(resume.total_balance);
             }
         });
     }
