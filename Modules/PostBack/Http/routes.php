@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web','VerifyShopifyPostback'], 'prefix' => 'postback', 'namespace' => 'Modules\PostBack\Http\Controllers'], function() {
+Route::group(['middleware' => ['web'], 'prefix' => 'postback', 'namespace' => 'Modules\PostBack\Http\Controllers'], function() {
 
     Route::post('/pagarme', 'PostBackPagarmeController@postBackListener');
 
@@ -8,10 +8,14 @@ Route::group(['middleware' => ['web','VerifyShopifyPostback'], 'prefix' => 'post
 
     Route::post('/mercadopago', 'PostBackMercadoPagoController@postBackListener');
 
+    Route::post('/notazz', 'PostBackNotazzController@postBackListener');
+
+});
+
+Route::group(['middleware' => ['web','VerifyShopifyPostback'], 'prefix' => 'postback', 'namespace' => 'Modules\PostBack\Http\Controllers'], function() {
+
     Route::post('/shopify/{project_id}/tracking', 'PostBackShopifyController@postBackTracking');
 
     Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
-
-    Route::post('/notazz', 'PostBackNotazzController@postBackListener');
 
 });
