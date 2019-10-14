@@ -27,13 +27,12 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.page-content', true);
                 if (!isEmpty(response.companies)) {
-
                     for (let i = 0; i < response.companies.length; i++) {
                         $('#company').append('<option value="' + response.companies[i].id_code + '">' + response.companies[i].fantasy_name + '</option>')
                     }
-                    console.log($('#company').val());
+                    // console.log($('#company').val());
                     let resumeData = response.data.filter(function (company) {
-                        console.log(company.id_code);
+                        // console.log(company.id_code);
                         return company.id_code == $('#company').val();
                     });
                     if (isEmpty(resumeData)) {
@@ -41,10 +40,10 @@ $(document).ready(function () {
                         errorAjaxResponse("Ocorreu um erro inesperado!");
                     } else {
                         let resume = resumeData[0];
-                        console.log(resume);
+                        // console.log(resume);
                         $(".moeda").html(resume.currency);
+                        $("#today_money").html(resume.today_balance);
                         $("#pending_money").html(resume.pending_balance);
-                        $("#antecipation_money").html(resume.antecipable_balance);
                         $("#available_money").html(resume.available_balance);
                         $("#total_money").html(resume.total_balance);
                         $(".content-error").hide();
@@ -74,6 +73,7 @@ $(document).ready(function () {
             success: function success(response) {
                 let resume = response.data[0];
                 $(".moeda").html(resume.currency);
+                $("#today_money").html(resume.today_balance);
                 $("#pending_money").html(resume.pending_balance);
                 $("#antecipation_money").html(resume.antecipable_balance);
                 $("#available_money").html(resume.available_balance);

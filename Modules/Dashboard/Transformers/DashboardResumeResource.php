@@ -20,13 +20,13 @@ class DashboardResumeResource extends Resource
     public function toArray($request)
     {
         return [
-            'id_code'             => Hashids::encode($this->resource->company_id),
-            "fantasy_name"        => $this->resource->fantasy_name,
-            'pending_balance'     => number_format(intval($this->resource->pending_balance) / 100, 2, ',', '.'),
-            'antecipable_balance' => number_format(intval($this->resource->antecipable_balance) / 100, 2, ',', '.'),
-            'available_balance'   => number_format(intval($this->resource->available_balance) / 100, 2, ',', '.'),
-            'total_balance'       => number_format(intval($this->resource->total_balance) / 100, 2, ',', '.'),
-            'currency'            => $this->resource->country == 'usa' ? '$' : 'R$',
+            'id_code'           => Hashids::encode($this->resource->company_id),
+            "fantasy_name"      => $this->resource->fantasy_name,
+            'today_balance'     => number_format(intval($this->resource->today_balance) / 100, 2, ',', '.'),
+            'pending_balance'   => number_format(intval($this->resource->pending_balance) / 100, 2, ',', '.'),
+            'available_balance' => number_format(intval($this->resource->available_balance) / 100, 2, ',', '.'),
+            'total_balance'     => number_format(intval($this->resource->total_balance) / 100, 2, ',', '.'),
+            'currency'          => $this->resource->country == 'usa' ? '$' : 'R$',
         ];
     }
 }
