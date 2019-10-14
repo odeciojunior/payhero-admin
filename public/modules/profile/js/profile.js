@@ -126,7 +126,6 @@ $(document).ready(function () {
                 } else {
                     if (img.naturalWidth < img.naturalHeight) {
                         x1 = Math.floor(img.naturalWidth / 100 * 10);
-                        ;
                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                         y2 = y1 + (x2 - x1);
@@ -268,9 +267,6 @@ $(document).ready(function () {
         });
     });
 
-    /**
-     * Nav Tarifas e Prazos
-     */
     $("#nav_taxs").on('click', function () {
         getTax();
     });
@@ -297,15 +293,34 @@ $(document).ready(function () {
     }
 
     function setValuesHtml(data) {
-        $("#sale-percent").val(data.percentage_rate + '%');
-        $("#sale-fix").val('R$ ' + data.transaction_rate).attr('disabled', 'disabled');
-        $("#days-liberation").val(data.release_money_days).attr('disabled', 'disabled');
-        $("#percent-anticipation").val(data.percentage_antecipable + '%').attr('disabled', 'disabled');
-        $("#tax-anticipation").val(data.antecipation_tax + '%').attr('disabled', 'disabled');
-        $("#days-liberation-boleto").val(data.boleto_antecipation_money_days).attr('disabled', 'disabled');
-        $("#days-liberation-cart").val(data.credit_card_antecipation_money_days).attr('disabled', 'disabled');
-
+        $("#credit-card-tax").val(data.credit_card_tax + '%');
+        $("#boleto-tax").val(data.boleto_tax + '%');
+        $("#credit-card-release").val('plan-' + data.credit_card_release_money);
+        $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
+        $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
+        $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
     }
+
+    $("#update_taxes").on("click", function(){
+
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/updatetaxes',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: { plan : $("#credit-card-release").val() },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                alertCustom('success', response.message);
+                $("#credit-card-tax").val(response.data.new_tax_value);
+            }
+        });
+    });
 
 });
 
@@ -388,3 +403,5 @@ Dropzone.options.dropzoneDocuments = {
     }
 
 };
+
+

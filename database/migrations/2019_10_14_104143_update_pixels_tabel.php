@@ -1,10 +1,11 @@
 <?php
 
+use Modules\Core\Entities\Pixel;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterUsersTableAddColumnInstallmentTax extends Migration
+class UpdatePixelsTabel extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +14,22 @@ class AlterUsersTableAddColumnInstallmentTax extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->string('installment_tax')->default('2.99');
-        });
+        $pixels = Pixel::where('platform', 'like', '%google%')->get();
+
+        foreach ($pixels as $pixel) {
+            $pixel->update([
+                               'platform' => 'google_adwords',
+                           ]);
+        }    
     }
 
     /**
      * Reverse the migrations.
+     *
      * @return void
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('installment_tax');
-        });
+        //
     }
 }

@@ -92,8 +92,11 @@ $(function () {
         if (pixel.platform == 'facebook') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 0).change();
         }
-        if (pixel.platform == 'google') {
+        if (pixel.platform == 'google_adwords') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 1).change();
+        }
+        if (pixel.platform == 'google_analytics') {
+            $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 2).change();
         }
         if (pixel.status == '1') { //Ativo
             $('#modal-edit-pixel .pixel-status').prop("selectedIndex", 0).change();
