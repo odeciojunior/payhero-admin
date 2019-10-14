@@ -847,7 +847,12 @@ class ShopifyService
                     if (empty($photo)) {
                         $image = $storeProduct->getImage();
                         if (!empty($image)) {
-                            $photo = $image->getSrc();
+                            try {
+                                $photo = $image->getSrc();
+                            } catch (Exception $e) {
+                                Log::warning('Erro ao importar foto do shopify');
+                                report($e);
+                            }
                         }
                         //$photo = $storeProduct->getImage()->getSrc();
                     }
@@ -933,7 +938,12 @@ class ShopifyService
                 if (empty($photo)) {
                     $image = $storeProduct->getImage();
                     if (!empty($image)) {
-                        $photo = $image->getSrc();
+                        try {
+                            $photo = $image->getSrc();
+                        } catch (Exception $e) {
+                            Log::warning('Erro ao importar foto do shopify');
+                            report($e);
+                        }
                     }
                     //$photo = $storeProduct->getImage()->getSrc();
                 }
