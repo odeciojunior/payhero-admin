@@ -828,7 +828,7 @@ class ShopifyService
                             'status'      => '1',
                         ]
                     );
-                    Log::warning('plano atualizado');
+                    //Log::warning('plano atualizado');
                     $photo = '';
                     if (count($storeProduct->getVariants()) > 1) {
                         foreach ($storeProduct->getImages() as $image) {
@@ -847,7 +847,12 @@ class ShopifyService
                     if (empty($photo)) {
                         $image = $storeProduct->getImage();
                         if (!empty($image)) {
-                            $photo = $image->getSrc();
+                            try {
+                                $photo = $image->getSrc();
+                            } catch (Exception $e) {
+                                Log::warning('Erro ao importar foto do shopify');
+                                report($e);
+                            }
                         }
                         //$photo = $storeProduct->getImage()->getSrc();
                     }
@@ -933,7 +938,12 @@ class ShopifyService
                 if (empty($photo)) {
                     $image = $storeProduct->getImage();
                     if (!empty($image)) {
-                        $photo = $image->getSrc();
+                        try {
+                            $photo = $image->getSrc();
+                        } catch (Exception $e) {
+                            Log::warning('Erro ao importar foto do shopify');
+                            report($e);
+                        }
                     }
                     //$photo = $storeProduct->getImage()->getSrc();
                 }
@@ -966,8 +976,14 @@ class ShopifyService
         /** @var \Slince\Shopify\Manager\Product\Product[] $storeProducts */
         $storeProducts = $this->getShopProducts();
         /** @var \Slince\Shopify\Manager\Product\Product $shopifyProduct */
+
         foreach ($storeProducts as $shopifyProduct) {
-            $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+            try {
+                $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+            } catch (Exception $e) {
+                Log::warning('Erro ao importar produto do shopify');
+                report($e);
+            }
         }
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
         /** @var Project $project */
