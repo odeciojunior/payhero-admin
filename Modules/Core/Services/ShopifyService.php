@@ -1119,6 +1119,9 @@ class ShopifyService
                 ];
             }
 
+//            $x = $this->client->getProductManager()
+//                              ->count();
+
             return $this->client->getProductManager()
                                 ->findAll($filter);
         } else {
