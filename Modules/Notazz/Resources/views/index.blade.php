@@ -41,8 +41,8 @@
                                 <h4 class="modal-title" style="font-weight: 700;"></h4>
                             </div>
                             <div class="pt-10 pr-20 pl-20 modal_integracao_body">
-                                @include('notazz::create')
-                                @include('notazz::edit')
+{{--                                @include('notazz::create')--}}
+{{--                                @include('notazz::edit')--}}
                             </div>
                             <div class="modal-footer" style="margin-top: 15px">
                                 <button id="bt_integration" type="button" class="btn btn-success" data-dismiss="modal"></button>
