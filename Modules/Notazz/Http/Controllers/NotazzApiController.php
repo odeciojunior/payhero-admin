@@ -109,12 +109,18 @@ class NotazzApiController extends Controller
 
             $integrationId = current(Hashids::decode($integrationCode));
 
-            $notazzIntegration = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
-                                                        ->whereHas('project.usersProjects', function($query) {
-                                                            $query->where('user_id', auth()->user()->id);
-                                                        })->find($integrationId);
+            if ($integrationId) {
+                //hash ok
+                $notazzIntegration = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
+                                                            ->whereHas('project.usersProjects', function($query) {
+                                                                $query->where('user_id', auth()->user()->id);
+                                                            })->find($integrationId);
 
-            return new NotazzResource($notazzIntegration);
+                return new NotazzResource($notazzIntegration);
+            } else {
+                //hash wrong
+                return response()->json(['message' => 'Ocorreu um erro ao listar a integração com a notazz'], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar integração da Notazz (NotazzApiController - index)');
             report($e);
