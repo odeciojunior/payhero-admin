@@ -12,7 +12,8 @@
                         <label for="platform">Plataforma</label>
                         <select name="platform" type="text" class="form-control pixel-platform">
                             <option value="facebook">Facebook</option>
-                            <option value="google">Google</option>
+                            <option value="google_adwords">Google Adwords</option>
+                            <option value="google_analytics">Google Analytics</option>
                             <option value="null" disabled='disabled'>Taboola (em breve)</option>
                             <option value="null" disabled='disabled'>Outbrain (em breve)</option>
                         </select>

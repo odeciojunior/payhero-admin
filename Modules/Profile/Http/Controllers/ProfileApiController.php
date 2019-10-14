@@ -3,20 +3,21 @@
 namespace Modules\Profile\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\RedirectResponse;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\UserDocument;
-use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Profile\Http\Requests\ProfilePasswordRequest;
-use Modules\Profile\Http\Requests\ProfileUpdateRequest;
-use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
-use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Profile\Transformers\ProfileTaxResource;
+use Modules\Profile\Http\Requests\ProfileUpdateRequest;
+use Modules\Profile\Http\Requests\ProfilePasswordRequest;
+use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 
 /**
  * Class ProfileApiController
@@ -114,6 +115,43 @@ class ProfileApiController
         } catch (Exception $e) {
             Log::warning('ProfileController update');
             report($e);
+        }
+    }
+
+    public function updateTaxes(Request $request){
+
+        try{
+            $requestData = $request->all();
+
+            $newCardTax = '';
+
+            if($requestData['plan'] == 'plan-30'){
+                auth()->user()->update([
+                    'credit_card_tax' => '5.9',
+                    'credit_card_release_money_days' => 30
+                ]);
+                $newCardTax = '5.9%';
+            }
+            elseif($requestData['plan'] == 'plan-15'){
+                auth()->user()->update([
+                    'credit_card_tax' => '6.5',
+                    'credit_card_release_money_days' => 15
+                ]);
+                $newCardTax = '6.5%';
+            }
+
+            return response()->json([
+                'message' => 'Plano atualizado com sucesso', 
+                'data' => [
+                    'new_tax_value' => $newCardTax
+                ]
+            ]);
+        }
+        catch(Exception $e){
+            report($e);
+            return response()->json([
+                'message' => 'Ocorreu algum erro'
+            ]);
         }
     }
 

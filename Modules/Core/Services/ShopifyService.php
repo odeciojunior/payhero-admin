@@ -466,7 +466,7 @@ class ShopifyService
             success: function success(response) {
               var form = document.createElement('form');
               form.method = 'POST';
-              form.action = 'https://checkout.".$domain."/';   
+              form.action = 'https://checkout." . $domain . "/';   
               
               for(x=0;x < response.items.length;x++)
               {
@@ -813,14 +813,13 @@ class ShopifyService
                     ]
                 );
                 /** @var ProductPlan $productPlan */
-                $productPlan = $productPlanModel->newQuery()
-                                                ->where('product_id', $product->id)
+                $productPlan = $productPlanModel->where('product_id', $product->id)
                                                 ->where('amount', 1)
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
                 if (!empty($productPlan)) {
                     /** @var Plan $plan */
-                    $plan = $planModel->newQuery()->find($productPlan->plan_id);
+                    $plan = $planModel->find($productPlan->plan_id);
                     $plan->update(
                         [
                             'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
@@ -846,77 +845,76 @@ class ShopifyService
                         }
                     }
                     if (empty($photo)) {
-                        $photo = $storeProduct->getImage()->getSrc();
+                        $image = $storeProduct->getImage();
+                        if (!empty($image)) {
+                            $photo = $image->getSrc();
+                        }
+                        //$photo = $storeProduct->getImage()->getSrc();
                     }
                     $product->update(['photo' => $photo]);
                 } else {
-                    $plan = $planModel->newQuery()
-                                      ->create(
-                                          [
-                                              'shopify_id'         => $storeProduct->getId(),
-                                              'shopify_variant_id' => $variant->getId(),
-                                              'project_id'         => $projectId,
-                                              'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                                              'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
-                                              'code'               => '',
-                                              'price'              => $variant->getPrice(),
-                                              'status'             => '1',
-                                          ]
-                                      );
+                    $plan = $planModel->create(
+                        [
+                            'shopify_id'         => $storeProduct->getId(),
+                            'shopify_variant_id' => $variant->getId(),
+                            'project_id'         => $projectId,
+                            'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                            'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                            'code'               => '',
+                            'price'              => $variant->getPrice(),
+                            'status'             => '1',
+                        ]
+                    );
 
-                    $productPlanModel->newQuery()
-                                     ->create(
-                                         [
-                                             'product_id' => $product->id,
-                                             'plan_id'    => $plan->id,
-                                             'amount'     => 1,
-                                         ]
-                                     );
+                    $productPlanModel->create(
+                        [
+                            'product_id' => $product->id,
+                            'plan_id'    => $plan->id,
+                            'amount'     => 1,
+                        ]
+                    );
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
             } else {
                 /** @var Product $product */
-                $product = $productModel->newQuery()
-                                        ->create(
-                                            [
-                                                'user_id'            => $userId,
-                                                'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                                                'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
-                                                'guarantee'          => '0',
-                                                'format'             => 1,
-                                                'category_id'        => '11',
-                                                'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                                             ->getCost(),
-                                                'shopify'            => true,
-                                                'price'              => '',
-                                                'shopify_id'         => $storeProduct->getId(),
-                                                'shopify_variant_id' => $variant->getId(),
-                                                'project_id'         => $projectId,
-                                            ]
-                                        );
+                $product = $productModel->create(
+                    [
+                        'user_id'            => $userId,
+                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'guarantee'          => '0',
+                        'format'             => 1,
+                        'category_id'        => '11',
+                        'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                     ->getCost(),
+                        'shopify'            => true,
+                        'price'              => '',
+                        'shopify_id'         => $storeProduct->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'project_id'         => $projectId,
+                    ]
+                );
                 /** @var Plan $plan */
-                $plan = $planModel->newQuery()
-                                  ->create(
-                                      [
-                                          'shopify_id'         => $storeProduct->getId(),
-                                          'shopify_variant_id' => $variant->getId(),
-                                          'project_id'         => $projectId,
-                                          'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                                          'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
-                                          'code'               => '',
-                                          'price'              => $variant->getPrice(),
-                                          'status'             => '1',
-                                      ]
-                                  );
+                $plan = $planModel->create(
+                    [
+                        'shopify_id'         => $storeProduct->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'project_id'         => $projectId,
+                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'code'               => '',
+                        'price'              => $variant->getPrice(),
+                        'status'             => '1',
+                    ]
+                );
                 $plan->update(['code' => Hashids::encode($plan->id)]);
-                $productPlanModel->newQuery()
-                                 ->create(
-                                     [
-                                         'product_id' => $product->id,
-                                         'plan_id'    => $plan->id,
-                                         'amount'     => '1',
-                                     ]
-                                 );
+                $productPlanModel->create(
+                    [
+                        'product_id' => $product->id,
+                        'plan_id'    => $plan->id,
+                        'amount'     => '1',
+                    ]
+                );
                 $photo = '';
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
@@ -933,7 +931,11 @@ class ShopifyService
                     }
                 }
                 if (empty($photo)) {
-                    $photo = $storeProduct->getImage()->getSrc();
+                    $image = $storeProduct->getImage();
+                    if (!empty($image)) {
+                        $photo = $image->getSrc();
+                    }
+                    //$photo = $storeProduct->getImage()->getSrc();
                 }
                 $product->update(['photo' => $photo]);
             }
@@ -955,8 +957,7 @@ class ShopifyService
         $userModel = new User();
         /** @var ShopifyIntegration $shopifyIntegrationModel */
         $shopifyIntegrationModel = new ShopifyIntegration();
-        $shopifyIntegrationModel->newQuery()
-                                ->where('project_id', $projectId)
+        $shopifyIntegrationModel->where('project_id', $projectId)
                                 ->update(
                                     [
                                         'status' => $shopifyIntegrationModel->present()->getStatus('pending'),
@@ -970,13 +971,12 @@ class ShopifyService
         }
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
         /** @var Project $project */
-        $project = $projectModel->newQuery()->find($projectId);
+        $project = $projectModel->find($projectId);
         /** @var User $user */
-        $user = $userModel->newQuery()->find($userId);
+        $user = $userModel->find($userId);
         if (!empty($project) && !empty($user)) {
             event(new ShopifyIntegrationReadyEvent($user, $project));
-            $shopifyIntegrationModel->newQuery()
-                                    ->where('project_id', $projectId)
+            $shopifyIntegrationModel->where('project_id', $projectId)
                                     ->update(
                                         [
                                             'status' => $shopifyIntegrationModel->present()->getStatus('approved'),

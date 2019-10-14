@@ -23,7 +23,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        date_default_timezone_set('America/Sao_Paulo');
         setlocale(LC_ALL, 'pt_BR');
 
         // transfer money from transactions for user companies
@@ -41,9 +40,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boletopaid')->dailyAt('10:00');
 
         //boletos 
-        $schedule->command('verify:boletowaitingpayment')->dailyAt('09:00');
-        $schedule->command('verify:boleto2')->dailyAt('09:30');
-        $schedule->command('verify:boletoexpiring')->dailyAt('10:00');
+        $schedule->command('verify:boletowaitingpayment')->dailyAt('12:00');
+        $schedule->command('verify:boleto2')->dailyAt('12:30');
+        $schedule->command('verify:boletoexpiring')->dailyAt('13:00');
 
         // $schedule->command('verify:boletoexpired')->dailyAt('10:00');
         // $schedule->command('verify:boletoexpired3')->dailyAt('10:00');
