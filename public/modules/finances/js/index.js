@@ -21,7 +21,7 @@ $(document).ready(function () {
 
                     $('.page-content').show();
                     $('.content-error').hide();
-
+ 
                     //transfers_company_select
                     fillSelectAndCheckWithModelFields(
                         transfersCompanySelect,
@@ -78,11 +78,11 @@ $(document).ready(function () {
     });
 
     $("#pop-antecipacao").click(function () {
-        if ($("#antecipa-popover").css('display') == 'none') {
-            $("#antecipa-popover").delay(200).fadeIn(200);
-        } else {
-            $("#antecipa-popover").fadeOut(100);
-        }
+        // if ($("#antecipa-popover").css('display') == 'none') {
+        //     $("#antecipa-popover").delay(200).fadeIn(200);
+        // } else {
+        //     $("#antecipa-popover").fadeOut(100);
+        // }
     });
 
     function updateBalances() {
@@ -253,35 +253,33 @@ $(document).ready(function () {
     /**
      * Modulo Anticipations
      */
+    // $("#btn-disponible-antecipation").unbind('click');
+    // $("#btn-disponible-antecipation").on('click', function () {
+    //     // loading("#balance-after-anticipation",'');
+    //     $('#balance-after-anticipation').html("<span class='loaderSpan' >" + "</span>")
+    //     let company = transfersCompanySelect.val();
+    //     $("#tax-value").html('');
 
-    $("#btn-disponible-antecipation").unbind('click');
-    $("#btn-disponible-antecipation").on('click', function () {
-        // loading("#balance-after-anticipation",'');
-        $('#balance-after-anticipation').html("<span class='loaderSpan' >" + "</span>")
-        let company = transfersCompanySelect.val();
-        $("#tax-value").html('');
-
-        $.ajax({
-            method: 'GET',
-            url: '/api/anticipations/' + company,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                console.log(response);
-                $("#balance-after-anticipation").html(response.responseJSON.data.valueAntecipable);
-                $(".loaderSpan").remove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $("#balance-after-anticipation").html(response.data['valueAntecipable']);
-                $("#tax-value").html(response.data['taxValue']);
-            }
-        });
-
-    });
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: '/api/anticipations/' + company,
+    //         dataType: "json",
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: (response) => {
+    //             console.log(response);
+    //             $("#balance-after-anticipation").html(response.responseJSON.data.valueAntecipable);
+    //             $(".loaderSpan").remove();
+    //             errorAjaxResponse(response);
+    //         },
+    //         success: (response) => {
+    //             $("#balance-after-anticipation").html(response.data['valueAntecipable']);
+    //             $("#tax-value").html(response.data['taxValue']);
+    //         }
+    //     });
+    // });
 
     $("#btn-anticipation").unbind('click');
     $("#btn-anticipation").on('click', function () {

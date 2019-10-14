@@ -14,7 +14,7 @@ class AlterUsersTableAddColumnInstallmentTax extends Migration
     public function up()
     {
         Schema::table('users', function(Blueprint $table) {
-            $table->string('installment_tax')->default('2.9');
+            $table->string('installment_tax')->default('2.99');
         });
     }
 
