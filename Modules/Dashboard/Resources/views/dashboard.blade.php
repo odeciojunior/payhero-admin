@@ -37,10 +37,11 @@
                                 <span class="card-desc">Hoje</span>
                             </div>
                         </div>
-                        <div
-                            class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
+                        <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
                             <span class="moeda">R$</span>
-                            <span id="antecipation_money" class="text-money"></span>
+                            <span class="text-money"></span>
+                            {{--  <span class="moeda">R$</span>
+                            <span id="antecipation_money" class="text-money"></span>  --}}
                         </div>
                         <div class="card-bottom orangered"></div>
                     </div>
