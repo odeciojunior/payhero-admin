@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
+use Modules\Notazz\Http\Requests\NotazzStoreRequest;
 use Modules\Notazz\Transformers\NotazzInvoiceResource;
 use Modules\Notazz\Transformers\NotazzResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -52,7 +53,7 @@ class NotazzApiController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(NotazzStoreRequest $request)
     {
 
         try {
@@ -71,7 +72,7 @@ class NotazzApiController extends Controller
                                                                       'token_api'       => $data['token_api_create'],
                                                                       'invoice_type'    => $data['select_invoice_type_create'],
                                                                       'token_webhook'   => $data['token_webhook_create'],
-                                                                      'token_logistics' => $data['token_logistics_create'],
+                                                                      'token_logistics' => $data['token_logistics_create'] ?? null,
                                                                       'project_id'      => $projectId,
                                                                       'user_id'         => auth()->user()->id,
                                                                       'start_date'      => $data['start_date_create'],
@@ -227,6 +228,10 @@ class NotazzApiController extends Controller
         }
     }
 
+    /**
+     * @param $code
+     * @return \Illuminate\Http\JsonResponse|NotazzInvoiceResource
+     */
     public function getInvoice($code)
     {
         try {
