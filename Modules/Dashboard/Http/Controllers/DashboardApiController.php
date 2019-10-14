@@ -52,6 +52,7 @@ class DashboardApiController extends Controller
                 SELECT b.company_id
                 , b.fantasy_name
                 , b.country
+                , (b.today_transaction) AS today_balance
                 , (b.pending_transaction + b.anticipated_transaction) AS pending_balance
                 , (b.antecipable_transaction) AS antecipable_balance
                 , (b.balance) AS available_balance
@@ -64,6 +65,7 @@ class DashboardApiController extends Controller
                     , SUM(CASE WHEN t.status = 'paid' AND t.release_date > CURRENT_DATE THEN COALESCE(t.value, 0) ELSE 0 END) pending_transaction
                     , SUM(CASE WHEN t.status = 'anticipated' AND t.release_date > CURRENT_DATE THEN COALESCE(t.value, 0) - COALESCE(t.antecipable_value, 0) ELSE 0 END) anticipated_transaction
                     , SUM(CASE WHEN t.status = 'paid' AND t.release_date > CURRENT_DATE AND t.antecipation_date <= CURRENT_DATE THEN COALESCE(t.antecipable_value, 0) ELSE 0 END) antecipable_transaction
+                    , SUM(CASE WHEN t.status IN ('paid', 'pending') AND DATE(t.created_at) = CURRENT_DATE THEN COALESCE(t.value, 0) ELSE 0 END) today_transaction
                     FROM companies c
                     LEFT JOIN transactions t ON t.company_id = c.id
                     WHERE 1 = 1

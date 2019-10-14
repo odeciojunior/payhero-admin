@@ -42,8 +42,8 @@ $(document).ready(function () {
                         let resume = resumeData[0];
                         // console.log(resume);
                         $(".moeda").html(resume.currency);
+                        $("#today_money").html(resume.today_balance);
                         $("#pending_money").html(resume.pending_balance);
-                        $("#antecipation_money").html(resume.antecipable_balance);
                         $("#available_money").html(resume.available_balance);
                         $("#total_money").html(resume.total_balance);
                         $(".content-error").hide();
@@ -73,6 +73,7 @@ $(document).ready(function () {
             success: function success(response) {
                 let resume = response.data[0];
                 $(".moeda").html(resume.currency);
+                $("#today_money").html(resume.today_balance);
                 $("#pending_money").html(resume.pending_balance);
                 $("#antecipation_money").html(resume.antecipable_balance);
                 $("#available_money").html(resume.available_balance);
