@@ -18,7 +18,7 @@ class PostBackPerfectLogController extends Controller
     {
         $requestValidated = $request->validate([
             'code' => 'required',
-            'external_reference' => 'nullable',
+            'external_reference' => 'required',
             'logistic' => 'required',
             'tracking' => 'required',
             'updated_at' => 'required',
