@@ -828,7 +828,7 @@ class ShopifyService
                             'status'      => '1',
                         ]
                     );
-                    Log::warning('plano atualizado');
+                    //Log::warning('plano atualizado');
                     $photo = '';
                     if (count($storeProduct->getVariants()) > 1) {
                         foreach ($storeProduct->getImages() as $image) {
