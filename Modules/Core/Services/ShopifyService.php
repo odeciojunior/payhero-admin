@@ -976,8 +976,14 @@ class ShopifyService
         /** @var \Slince\Shopify\Manager\Product\Product[] $storeProducts */
         $storeProducts = $this->getShopProducts();
         /** @var \Slince\Shopify\Manager\Product\Product $shopifyProduct */
+
         foreach ($storeProducts as $shopifyProduct) {
-            $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+            try {
+                $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+            } catch (Exception $e) {
+                Log::warning('Erro ao importar produto do shopify');
+                report($e);
+            }
         }
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
         /** @var Project $project */
