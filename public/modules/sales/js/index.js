@@ -89,9 +89,31 @@ $(document).ready(function () {
         document.body.removeChild(a);
     }
 
+    function getFilters(urlParams = false) {
+        let data = {
+            'project': $("#projeto").val(),
+            'payment_method': $("#forma").val(),
+            'status': $("#status").val(),
+            'client': $("#comprador").val(),
+            'date_type': $("#date_type").val(),
+            'date_range': $("#date_range").val(),
+            'transaction': $("#transaction").val(),
+        };
+
+        if(urlParams){
+            let params = "";
+            for(let param in data){
+                params += '&' + param + '=' + data[param];
+            }
+            return params;
+        }else{
+            return data;
+        }
+    }
+
     // FIM - COMPORTAMENTOS DA JANELA
 
-    getFilters();
+    getProjects();
 
     //Carrega o modal para regerar boleto
     $(document).on('click', '.boleto-pending', function () {
@@ -133,7 +155,7 @@ $(document).ready(function () {
     });
 
     // Obtem o os campos dos filtros
-    function getFilters() {
+    function getProjects() {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
@@ -165,10 +187,11 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + 'project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&date_type=' + $("#date_type").val() + '&date_range=' + $("#date_range").val();
+            link = '/api/sales?' + getFilters(true).substr(1);
         } else {
-            link = '/api/sales' + link + '&project=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&payment_method=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&client=' + $("#comprador").val() + '&date_type=' + $("#date_type").val() + '&date_range=' + $("#date_range").val();
+            link = '/api/sales' + link + getFilters(true);
         }
+
         $.ajax({
             method: "GET",
             url: link,
@@ -232,15 +255,8 @@ $(document).ready(function () {
     // Download do relatorio
     function salesExport(fileFormat) {
 
-        let data = {
-            'select_project': $("#projeto").val(),
-            'payment_method': $("#forma").val(),
-            'status': $("#status").val(),
-            'client': $("#comprador").val(),
-            'date_type': $("#date_type").val(),
-            'date_range': $("#date_range").val(),
-            'format': fileFormat
-        };
+        let data = getFilters();
+        data['format'] = fileFormat;
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
@@ -277,18 +293,10 @@ $(document).ready(function () {
             }
         });
 
-        let data = {
-            'select_project': $("#projeto").val(),
-            'payment_method': $("#forma").val(),
-            'status': $("#status").val(),
-            'client': $("#comprador").val(),
-            'date_type': $("#date_type").val(),
-            'date_range': $("#date_range").val(),
-        };
         $.ajax({
             method: "GET",
             url: '/api/sales/resume',
-            data: data,
+            data: getFilters(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
