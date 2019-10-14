@@ -36,6 +36,7 @@ class InvitesApiController extends Controller
             $invites = $invitationModel->newQuery()->where('invite', auth()->user()->id)->with('company');
 
             return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(5));
+
         } catch (Exception $e) {
             Log::warning('Erro ao tentar listar convites (InvitesApiController - index)');
             report($e);
@@ -60,7 +61,7 @@ class InvitesApiController extends Controller
                 $userModel       = new User();
                 $inviteSaved     = null;
 
-                $invitesSent = $invitationModel->newQuery()->where('invite', auth()->user()->id)->count();
+                $invitesSent = $invitationModel->where('invite', auth()->user()->id)->count();
 
                 if ($invitesSent == auth()->user()->invites_amount) {
                     return response()->json([
@@ -326,7 +327,7 @@ class InvitesApiController extends Controller
             $companyModel    = new Company();
             $invitationModel = new Invitation();
 
-            $company = $companyModel->newQuery()->find(current(Hashids::decode($inviteId)));
+            $company = $companyModel->find(current(Hashids::decode($inviteId)));
 
             if (empty($company)) {
                 return response()->json(
@@ -336,9 +337,9 @@ class InvitesApiController extends Controller
                     ], 400
                 );
             } else {
-                $invitesSent = $invitationModel->newQuery()->where('invite', $company->user_id)->count();
+                $invitesSent = $invitationModel->where('invite', $company->user_id)->count();
 
-                if ($invitesSent > $company->user->invites_amount) {
+                if ($invitesSent >= $company->user->invites_amount) {
                     return response()->json(
                         [
                             'message' => 'Convite indisponivel, limite atingido!',
