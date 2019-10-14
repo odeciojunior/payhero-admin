@@ -16,6 +16,10 @@ use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Pixels\Transformers\PixelsResource;
 
+/**
+ * Class PixelsApiController
+ * @package Modules\Pixels\Http\Controllers
+ */
 class PixelsApiController extends Controller
 {
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
+use Modules\Core\Entities\Pixel;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -44,15 +45,15 @@ class TesteController extends Controller
      */
     public function __construct()
     {
-        ///
+        //
     }
 
     public function code($code)
     {
-        $id = current(Hashids::decode($code));
-        $idSale = current(Hashids::connection('sale_id')->decode($code));
+        $id       = current(Hashids::decode($code));
+        $idSale   = current(Hashids::connection('sale_id')->decode($code));
         $idPusher = current(Hashids::connection('pusher_connection')->decode($code));
-        dd('connection("main") = '.$id,'connection("sale_id") = '.$idSale,'connection("pusher_connection") = '.$idPusher);
+        dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
     }
 
     /**
@@ -288,7 +289,7 @@ class TesteController extends Controller
     public function julioFunction()
     {
 
-        $shopifyService = new ShopifyService('cloudteste.myshopify.com','a9630467f0884fceaa3cfd150f836bbe');
+        $shopifyService = new ShopifyService('cloudteste.myshopify.com', 'a9630467f0884fceaa3cfd150f836bbe');
 
         dd($shopifyService->getShopProducts());
     }
@@ -321,28 +322,28 @@ class TesteController extends Controller
 
         //
 
-         $saleModel = new Sale();
+        $saleModel = new Sale();
         $nservice  = new NotazzService();
 
         $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
-         $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+        $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
         //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-//        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
-//        $shopifyService->setThemeByRole('main');
-//        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
-//        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
+        //        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
+        //        $shopifyService->setThemeByRole('main');
+        //        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
+        //        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
 
-//        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
-//        if ($htmlBody) {
-//            //template do layout
-//
-//            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
-//        }
+        //        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+        //        if ($htmlBody) {
+        //            //template do layout
+        //
+        //            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+        //        }
 
         /*
         $nservice  = new NotazzService();
@@ -468,7 +469,8 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-        $checkoutModel = new Checkout();
+        /*Atualiza carrinho abandonado
+         * $checkoutModel = new Checkout();
 
         $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
@@ -483,9 +485,17 @@ class TesteController extends Controller
                                                                  'client_name'      => $abandonedCart->name,
                                                                  'client_telephone' => $abandonedCart->telephone,
                                                              ]);
+        }*/
+
+        /*$pixels = Pixel::where('platform', 'like', '%google%')->get();
+
+        foreach ($pixels as $pixel) {
+            $pixel->update([
+                               'platform' => 'google_adwords',
+                           ]);
         }
 
-        dd("heee");
+        dd($pixels);*/
     }
 
     /**
