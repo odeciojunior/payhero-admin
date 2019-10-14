@@ -267,9 +267,7 @@ $(document).ready(function () {
                                         },
                                         error: function error(response) {
                                             if (response.status === 422) {
-                                                for (error in response.errors) {
-                                                    alertCustom('error', String(response.errors[error]));
-                                                }
+                                                alertCustom('error', response.responseJSON.message);
                                             } else {
                                                 alertCustom('error', response.responseJSON.message);
                                             }
@@ -305,8 +303,8 @@ $(document).ready(function () {
                                 },
                                 error: function error(response) {
                                     if (response.status === 422) {
-                                        for (error in response.errors) {
-                                            alertCustom('error', String(response.errors[error]));
+                                        for (let i in response.responseJSON.errors) {
+                                            alertCustom('error', String(response.responseJSON.errors[i]));
                                         }
                                     } else {
                                         alertCustom('error', response.responseJSON.message);
