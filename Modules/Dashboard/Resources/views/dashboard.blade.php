@@ -33,6 +33,22 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                             <div class="font-size-14 gray-600">
+                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
+                                <span class="card-desc">Hoje</span>
+                            </div>
+                        </div>
+                        <div
+                            class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
+                            <span class="moeda">R$</span>
+                            <span id="antecipation_money" class="text-money"></span>
+                        </div>
+                        <div class="card-bottom orangered"></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <div class="card card-shadow bg-white">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
+                            <div class="font-size-14 gray-600">
                                 <img src="{{ asset('modules/global/img/svg/moeda-laranja.svg') }}" width="35px">
                                 <span class="card-desc">Pendente</span>
                             </div>
@@ -43,22 +59,6 @@
                             <span id="pending_money" class="text-money"></span>
                         </div>
                         <div class="card-bottom orange"></div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6 col-lg-3">
-                    <div class="card card-shadow bg-white">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
-                            <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
-                                <span class="card-desc">Antecipável</span>
-                            </div>
-                        </div>
-                        <div
-                            class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <span class="moeda">R$</span>
-                            <span id="antecipation_money" class="text-money"></span>
-                        </div>
-                        <div class="card-bottom orangered"></div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-3">
