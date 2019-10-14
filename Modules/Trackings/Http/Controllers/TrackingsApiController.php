@@ -4,13 +4,12 @@ namespace Modules\Trackings\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\TrackingHistory;
-use Modules\Core\Services\TrackingService;
+use Modules\Core\Services\PerfectLogService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -73,6 +72,9 @@ class TrackingsApiController extends Controller
                                                     ], 200);
                         }
                     }
+
+                    $perfectLogService = new PerfectLogService();
+                    $perfectLogService->track(Hashids::encode($productPlanSale->id), $data['tracking_code']);
                 }
             } else {
                 return response()->json([

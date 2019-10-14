@@ -2,6 +2,7 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -9,10 +10,10 @@ use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Services\PerfectLogService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 
 /**
  * Class PostBackShopifyController
@@ -22,7 +23,7 @@ class PostBackShopifyController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function postBackTracking(Request $request)
     {
@@ -54,8 +55,11 @@ class PostBackShopifyController extends Controller
                                    ->where('project_id', $project->id)
                                    ->first();
 
+                //venda encontrada
                 if ($sale) {
-                    //venda encontrada
+
+                    $perfectLogService = new PerfectLogService();
+
                     foreach ($requestData['fulfillments'] as $fulfillment) {
 
                         if (!empty($fulfillment["tracking_number"])) {
@@ -63,6 +67,7 @@ class PostBackShopifyController extends Controller
                                 $productPlanSale->update([
                                                              'tracking_code' => $fulfillment["tracking_number"],
                                                          ]);
+                                $perfectLogService->track(Hashids::encode($productPlanSale->id), $fulfillment["tracking_number"]);
                             }
                         }
                     }
@@ -93,7 +98,7 @@ class PostBackShopifyController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|string
+     * @return JsonResponse|string
      */
     public function postBackListener(Request $request)
     {
