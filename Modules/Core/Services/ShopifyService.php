@@ -977,6 +977,7 @@ class ShopifyService
 
         $storeProducts = $this->getShopProducts();
 
+        Log::warning('inicio integracao shopify');
         $page = 1;
         while (!empty($storeProducts)) {
 
@@ -994,8 +995,10 @@ class ShopifyService
             $page          += 1;
             $storeProducts = $this->getShopProducts($page);
         }
+        Log::warning('fim integracao shopify');
 
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
+
         /** @var Project $project */
         $project = $projectModel->find($projectId);
         /** @var User $user */
