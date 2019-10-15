@@ -84,7 +84,7 @@
                             <p class='info mt-5' style='font-size: 10px;'>
                                 <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                                 <br> Dimensões ideais: largura ou altura de no máximo 300 pixels. <br>
-                                <strong>Sem sobras no topo ou na parte inferior.</strong>
+                                <strong>Sem sobras em branco no topo ou na parte inferior.</strong>
                             </p>
                         </div>
                     </div>
@@ -103,8 +103,7 @@
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Email de Contato (checkout e email)</label>
-                        <input name="contact" value="" type="text" class="input-pad" id="contact" placeholder="Contato"
-                               maxlength='40'>
+                        <input name="contact" value="" type="text" class="input-pad" id="contact" placeholder="Contato" maxlength='40'>
                         <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
@@ -113,11 +112,10 @@
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Telefone para suporte</label>
-                        <input name="support_phone" value="" type="text" class="input-pad" id="support_phone"
-                               placeholder="Telefone" data-mask="(00) 00000-0000">
+                        <input name="support_phone" value="" type="text" class="input-pad" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000">
                         <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é encaminhada para esse número 
                         </p>
                         <span id='contact-error'></span>
                     </div>
