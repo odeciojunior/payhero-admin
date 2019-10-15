@@ -7,10 +7,6 @@ var statusInvite = {
 $(document).ready(function () {
     updateInvites();
 
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
-
     function updateInvites() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -58,12 +54,12 @@ $(document).ready(function () {
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
                         if (value.status != '2') {
-                            dados += "<td><button class='btn pointer resend-invitation' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gray gradient'> sync </i></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gradient'>delete</i></button></td>";
+                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gray gradient'> sync </i></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gradient'>delete</i></button></td>";
 
                         } else {
-                            dados += "<td><button class='btn pointer resend-invitation' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gray gradient'> sync </i></button></td>";
-                            dados += "<td><button class='btn pointer delete-invitation' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gradient'>delete</i></button></td>";
+                            dados += "<td><button class='btn pointer resend-invitation' title='Reenviar convite' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gray gradient'> sync </i></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' title='Excluir' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gradient'>delete</i></button></td>";
                         }
                         dados += '</tr>';
                         $("#table-body-invites").append(dados);
@@ -226,7 +222,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: (response) =>{
+            error: (response) => {
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
@@ -256,6 +252,7 @@ $(document).ready(function () {
                 $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
                 $("#commission_paid").html('' + response.data.commission_paid + '');
                 $("#commission_pending").html('' + response.data.commission_pending + '');
+                $("#invitations_amount").html('' + response.data.invitations_available);
             }
         });
     }
@@ -331,7 +328,7 @@ $(document).ready(function () {
     //ALTERAÇÃO DE HTML
 
     function modalNotCompanies() {
-        $('#mainModalBody').html('<div id="modal-not-companies" class="modal-content p-10">' + '<div class="header-modal simple-border-bottom">' + '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2></div>' + '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' + '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' + '<span class="swal2-x-mark">' + '<span class="swal2-x-mark-line-left"></span>' + '<span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' + '<h5 align="center">Deseja cadastrar uma empresa?' + '<a class="red pointer" href="/companies" target="_blank">clique aqui</a></h5></div>' + '<div style="width:100%; text-align:center; padding-top:3%;">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' + '</div></div>');
+        $('#mainModalBody').html('<div id="modal-not-companies" class="modal-content p-10">' + '<div class="header-modal simple-border-bottom">' + '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2></div>' + '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' + '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' + '<span class="swal2-x-mark">' + '<span class="swal2-x-mark-line-left"></span>' + '<span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' + '<h5 align="center">Deseja cadastrar uma empresa?' + '<a class="red pointer" href="/companies">clique aqui</a></h5></div>' + '<div style="width:100%; text-align:center; padding-top:3%;">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' + '</div></div>');
     }
 
     function modalThenCompanies() {

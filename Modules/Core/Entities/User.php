@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Events\ResetPasswordEvent;
@@ -49,6 +50,8 @@ use Modules\Core\Presenters\UserPresenter;
  * @property int $release_money_days
  * @property int $percentage_antecipable
  * @property int $antecipation_tax
+ * @property int $invites_amount
+ * @property string installment_tax
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
@@ -64,7 +67,7 @@ use Modules\Core\Presenters\UserPresenter;
  */
 class User extends Authenticable
 {
-    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait;
+    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait, FoxModelTrait;
     /**
      * @var string
      */
@@ -103,6 +106,12 @@ class User extends Authenticable
         'release_money_days',
         'percentage_antecipable',
         'antecipation_tax',
+        'invites_amount',
+        'installment_tax',
+        'credit_card_release_money_days',
+        'boleto_release_money_days',
+        'boleto_tax',
+        'credit_card_tax',
         'created_at',
         'updated_at',
         'deleted_at',

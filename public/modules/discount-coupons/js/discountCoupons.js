@@ -30,7 +30,7 @@ $(function () {
         $("#btn-modal").hide();
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon,
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -57,7 +57,7 @@ $(function () {
         let coupon = $(this).attr('coupon');
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon + "/edit",
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon + "/edit",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -111,6 +111,7 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success() {
@@ -141,6 +142,7 @@ $(function () {
             contentType: false,
             cache: false,
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: function success(data) {
@@ -152,7 +154,7 @@ $(function () {
     });
 
     //deletar cupom
-    $('#modal-delete-coupon .btn-delete').on('click',  function () {
+    $('#modal-delete-coupon .btn-delete').on('click', function () {
         let coupon = $(this).attr('coupon');
         loadingOnScreen();
         $.ajax({
@@ -176,10 +178,19 @@ $(function () {
     });
 
     function atualizarCoupon() {
+
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (link == null) {
+            link = '/api/project/' + projectId + '/couponsdiscounts';
+        } else {
+            link = '/api/project/' + projectId + '/couponsdiscounts' + link;
+        }
+
         loadOnTable('#data-table-coupon', '#tabela-coupom');
         $.ajax({
             method: "GET",
-            url: "/api/project/" + projectId + "/couponsdiscounts",
+            url: link,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -204,9 +215,9 @@ $(function () {
                                 <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
-                                <a role="button" class="mg-responsive details-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">remove_red_eye</i></a>
-                                <a role="button" class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                <a role="button" class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
+                                <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">remove_red_eye</i></a>
+                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
                             </td>
                         </tr>`;
 
@@ -225,75 +236,75 @@ $(function () {
         $('.coupon-code').val('');
 
     }
-    function pagination(response) {
-        if (response.meta.last_page == 1) {
-            $("#primeira_pagina_pixel").hide();
-            $("#ultima_pagina_pixel").hide();
-        } else {
-
-            $("#pagination-coupons").html("");
-
-            let primeira_pagina_pixel = "<button id='primeira_pagina_coupons' class='btn nav-btn'>1</button>";
-
-            $("#pagination-coupons").append(primeira_pagina_pixel);
-
-            if (response.meta.current_page == '1') {
-                $("#primeira_pagina_coupons").attr('disabled', true);
-                $("#primeira_pagina_coupons").addClass('nav-btn');
-                $("#primeira_pagina_coupons").addClass('active');
-            }
-
-            $('#primeira_pagina_coupons').on("click", function () {
-                atualizarCoupon('?page=1');
-            });
-
-            for (x = 3; x > 0; x--) {
-                if (response.meta.current_page - x <= 1) {
-                    continue;
-                }
-                $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-                $('#pagina_coupons_' + (response.meta.current_page - x)).on("click", function () {
-                    atualizarCoupon('?page=' + $(this).html());
-                });
-            }
-
-            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                let pagina_atual_coupons = "<button id='pagina_atual_coupons' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-                $("#pagination-coupons").append(pagina_atual_coupons);
-
-                $("#pagina_atual_coupons").attr('disabled', true);
-                $("#pagina_atual_coupons").addClass('nav-btn');
-                $("#pagina_atual_coupons").addClass('active');
-            }
-            for (x = 1; x < 4; x++) {
-
-                if (response.meta.current_page + x >= response.meta.last_page) {
-                    continue;
-                }
-
-                $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-                $('#pagina_coupons_' + (response.meta.current_page + x)).on("click", function () {
-                    atualizarCoupon('?page=' + $(this).html());
-                });
-            }
-
-            if (response.meta.last_page != '1') {
-                let ultima_pagina_coupons = "<button id='ultima_pagina_coupons' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
-                $("#pagination-coupons").append(ultima_pagina_coupons);
-
-                if (response.meta.current_page == response.meta.last_page) {
-                    $("#ultima_pagina_coupons").attr('disabled', true);
-                    $("#ultima_pagina_coupons").addClass('nav-btn');
-                    $("#ultima_pagina_coupons").addClass('active');
-                }
-
-                $('#ultima_pagina_coupons').on("click", function () {
-                    atualizarCoupon('?page=' + response.meta.last_page);
-                });
-            }
-        }
-    }
+    // function pagination(response) {
+    //     if (response.meta.last_page == 1) {
+    //         $("#primeira_pagina_pixel").hide();
+    //         $("#ultima_pagina_pixel").hide();
+    //     } else {
+    //
+    //         $("#pagination-coupons").html("");
+    //
+    //         let primeira_pagina_pixel = "<button id='primeira_pagina_coupons' class='btn nav-btn'>1</button>";
+    //
+    //         $("#pagination-coupons").append(primeira_pagina_pixel);
+    //
+    //         if (response.meta.current_page == '1') {
+    //             $("#primeira_pagina_coupons").attr('disabled', true);
+    //             $("#primeira_pagina_coupons").addClass('nav-btn');
+    //             $("#primeira_pagina_coupons").addClass('active');
+    //         }
+    //
+    //         $('#primeira_pagina_coupons').on("click", function () {
+    //             atualizarCoupon('?page=1');
+    //         });
+    //
+    //         for (x = 3; x > 0; x--) {
+    //             if (response.meta.current_page - x <= 1) {
+    //                 continue;
+    //             }
+    //             $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+    //             $('#pagina_coupons_' + (response.meta.current_page - x)).on("click", function () {
+    //                 atualizarCoupon('?page=' + $(this).html());
+    //             });
+    //         }
+    //
+    //         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+    //             let pagina_atual_coupons = "<button id='pagina_atual_coupons' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+    //
+    //             $("#pagination-coupons").append(pagina_atual_coupons);
+    //
+    //             $("#pagina_atual_coupons").attr('disabled', true);
+    //             $("#pagina_atual_coupons").addClass('nav-btn');
+    //             $("#pagina_atual_coupons").addClass('active');
+    //         }
+    //         for (x = 1; x < 4; x++) {
+    //
+    //             if (response.meta.current_page + x >= response.meta.last_page) {
+    //                 continue;
+    //             }
+    //
+    //             $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+    //
+    //             $('#pagina_coupons_' + (response.meta.current_page + x)).on("click", function () {
+    //                 atualizarCoupon('?page=' + $(this).html());
+    //             });
+    //         }
+    //
+    //         if (response.meta.last_page != '1') {
+    //             let ultima_pagina_coupons = "<button id='ultima_pagina_coupons' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+    //
+    //             $("#pagination-coupons").append(ultima_pagina_coupons);
+    //
+    //             if (response.meta.current_page == response.meta.last_page) {
+    //                 $("#ultima_pagina_coupons").attr('disabled', true);
+    //                 $("#ultima_pagina_coupons").addClass('nav-btn');
+    //                 $("#ultima_pagina_coupons").addClass('active');
+    //             }
+    //
+    //             $('#ultima_pagina_coupons').on("click", function () {
+    //                 atualizarCoupon('?page=' + response.meta.last_page);
+    //             });
+    //         }
+    //     }
+    // }
 });

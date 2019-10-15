@@ -18,15 +18,17 @@ $(document).ready(function () {
 
     $("#notification").on('click', function () {
         getNotifications();
+        updateUnreadNotificationsAmount();
     });
 
     // autaliza status das notificações para lidas
     function markNotificationsAsRead() {
         $.ajax({
             method: 'POST',
-            url: '/api/notifications/markasread/',
+            url: '/api/notifications/markasread',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -43,7 +45,8 @@ $(document).ready(function () {
             method: 'GET',
             url: '/api/notifications/unreadamount',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -62,7 +65,8 @@ $(document).ready(function () {
             method: 'GET',
             url: '/api/notifications/unread',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 //
@@ -102,10 +106,9 @@ $(document).ready(function () {
     function getNotificationData(data){
 
         var message = '', iconClass = '', link = '';
-
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
-                message   = data.message + (data.message > 1) ? ' boletos compensados' : ' boleto compensado';
+                message   = data.message + (data.message > 1 ? ' boletos compensados' : ' boleto compensado');
                 iconClass = 'money-success';
                 link      = '/sales';
                 break;
@@ -120,7 +123,7 @@ $(document).ready(function () {
                 link      = '/finances';
                 break;
             case 'SaleNotification' :
-                message   = data.message + (data.message > 1) ? ' novas vendas' : ' nova venda';
+                message   = data.message + (data.message > 1 ? ' novas vendas' : ' nova venda');
                 iconClass = 'money-success';
                 link      = '/sales';
                 break;
@@ -129,8 +132,8 @@ $(document).ready(function () {
                 iconClass = 'shopify-success';
                 link      = '/projects';
                 break;
-            case 'UserShopifyIntegrationStroreNotification' :
-                message   = data.success;
+            case 'UserShopifyIntegrationStoreNotification' :
+                message   = data.message;
                 iconClass = 'shopify-success';
                 link      = '/projects';
                 break;

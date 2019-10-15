@@ -30,11 +30,11 @@ class RegisterApiController extends Controller
             $companyModel = new Company();
 
             $requestData['password']                            = bcrypt($requestData['password']);
-            $requestData['percentage_rate']                     = '6.5';
+            $requestData['percentage_rate']                     = '5.9';
             $requestData['transaction_rate']                    = '1.00';
             $requestData['balance']                             = '0';
             $requestData['foxcoin']                             = '0';
-            $requestData['credit_card_antecipation_money_days'] = '15';
+            $requestData['credit_card_antecipation_money_days'] = '30';
             $requestData['release_money_days']                  = '30';
             $requestData['boleto_antecipation_money_days']      = '2';
             $requestData['antecipation_tax']                    = '0';
@@ -50,7 +50,8 @@ class RegisterApiController extends Controller
 
             auth()->loginUsingId($user->id, true);
 
-            $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
+            $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
+            $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
             if ($invite) {
                 $invite->update([
@@ -60,13 +61,17 @@ class RegisterApiController extends Controller
                                     'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
                                     'email_invited'   => $requestData['email'],
                                 ]);
-            } else {
 
-                $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
+                if (empty($invite->invite)) {
+                    $invite->update([
+                                        'invite' => $company->user_id,
+                                    ]);
+                }
+            } else {
 
                 if ($company) {
                     $inviteModel->create([
-                                             'invite'          => null,
+                                             'invite'          => $company->user_id,
                                              'user_invited'    => $user->id,
                                              'status'          => '1',
                                              'company'         => $company->id,

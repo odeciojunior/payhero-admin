@@ -21,11 +21,6 @@ class TransactionResource extends Resource
         } else {
             $flag = 'boleto';
         }
-      /*  if ($sale->checkout->status == 'abandoned cart') {
-            $status = 'Não recuperado';
-        } else if ($sale->checkout->status == 'recovered') {
-            $status = 'Recuperado';
-        }*/
 
         return [
             'sale_code'        => '#' . Hashids::connection('sale_id')->encode($sale->id),
@@ -42,10 +37,11 @@ class TransactionResource extends Resource
             'end_date'         => $sale->end_date ? with(new Carbon($sale->end_date))->format('d/m/Y H:i:s') : '',
             'total_paid'       => ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
             'brand'            => $flag,
-            'email_status'     => $sale->checkout->present()->getEmailSentAmount(),
-            'sms_status'       => $sale->checkout->present()->getSmsSentAmount(),
+            'email_status'     => $sale->checkout->present()->getEmailSentAmount() ?? 'Não enviado',
+            'sms_status'       => $sale->checkout->present()->getSmsSentAmount() ?? 'Não enviado',
             'recovery_status'  => $sale->checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado',
             'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber(preg_replace('/\D/', '', $sale->client->telephone)) . '&text=Olá ' . explode(' ', preg_replace('/\D/', '', $sale->client->name))[0],
+            'total',
         ];
     }
 }

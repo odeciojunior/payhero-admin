@@ -30,7 +30,7 @@ class SalesRecoveryService
      */
     public function verifyType(string $type, string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
-         if ($type == 2) {
+        if ($type == 2) {
             $paymentMethod = 2; // boleto
             $status        = [3, 5]; // expired
 
@@ -53,7 +53,7 @@ class SalesRecoveryService
      * @return AnonymousResourceCollection
      *  Monta Tabela quando for boleto expirado ou cartão recusado
      */
-    public function getSaleExpiredOrRefused(string $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, array $status, string $client = null)
+    public function getSaleExpiredOrRefused(int $paymentMethod, array $status, string $projectId, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
         $salesModel        = new Sale();
         $userProjectsModel = new UserProject();
@@ -108,7 +108,7 @@ class SalesRecoveryService
             }
         }
 
-        return SalesRecoveryCardRefusedResource::collection($salesExpired->orderBy('sales.id', 'desc')->paginate(10));
+        return $salesExpired->orderBy('sales.id', 'desc')->paginate(10);
     }
 
     /**
@@ -170,7 +170,7 @@ class SalesRecoveryService
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {
-            $link = 'Dominio removido';
+            $link = 'Domínio removido';
         }
         $checkout->id = '';
         $log->id      = '';
@@ -188,7 +188,7 @@ class SalesRecoveryService
     /**
      * @param Sale $sale
      * @return array
-     * @throws PresenterException
+     * @throws \Exception
      * Modal detalhes quando for cartão recusado ou boleto
      */
     public function getSalesCartOrBoletoDetails(Sale $sale)
@@ -196,6 +196,7 @@ class SalesRecoveryService
         $checkoutModel = new checkout();
         $logModel      = new CheckoutLog();
         $domainModel   = new Domain();
+        $saleService   = new SaleService();
 
         $checkout = $checkoutModel->find($sale->checkout_id);
         $delivery = $sale->delivery()->first();
@@ -258,10 +259,10 @@ class SalesRecoveryService
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {
-            $link = 'Dominio removido';
+            $link = 'Domínio removido';
         }
 
-        $products = $sale->present()->getProducts();
+        $products = $saleService->getProducts($sale->id);
 
         $client->document = FoxUtils::getDocument($client->document);
 

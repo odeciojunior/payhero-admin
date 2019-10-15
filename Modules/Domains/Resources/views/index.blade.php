@@ -106,7 +106,7 @@
                             <input id='value-record' name='value-record' class='input-pad' placeholder='Valor'>
                         </div>
                         <div class='col-lg-1'>
-                            <button class='btn btn-primary' id='bt-add-record'>
+                            <button class='btn btn-primary' id='bt-add-record' title='Adicionar novo registro dns'>
                                 <i class='fa fa-plus'></i>
                             </button>
                         </div>

@@ -38,7 +38,7 @@ $(document).ready(function () {
             }, success: function (response) {
                 $("#domain-table-body").html('');
                 if (response.data == '') {
-                    $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>")
+                    $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum domínio encontrado</td></tr>")
                 } else {
                     $.each(response.data, function (index, value) {
                         tableDomains(value);
@@ -141,9 +141,9 @@ $(document).ready(function () {
         dados += '<td class="text-center">' + value.domain + '</td>';
         dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
         dados += "<td style='text-align:center;'>"
-        dados += "<a role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i> </a>"
-        dados += "<a role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
-        dados += "<a role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
+        dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i> </a>"
+        dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
+        dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
         dados += "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);
@@ -173,7 +173,7 @@ $(document).ready(function () {
         btnAddDomainModal.on('click', function () {
 
             if ($.trim($(".name-domain").val()).length === 0) {
-                infoDomain.addClass('text-danger').html('Preencha corretamente o dominio').show();
+                infoDomain.addClass('text-danger').html('Preencha corretamente o domínio').show();
             } else {
                 $(".info-domain").html('');
                 addNewDomain();
@@ -324,7 +324,7 @@ $(document).ready(function () {
             data: formData,
             dataType: "json",
             error: function (response) {
-                $(".swal2-container, #modal-backdrop").remove();
+                $(".swal2-container, #modal-backdrop, #loaderLine").remove();
                 removeLoad();
                 errorAjaxResponse(response);
             },
@@ -438,14 +438,14 @@ $(document).ready(function () {
                     '<span class="slider round"></span>' +
                     '</label>' +
                     '</div></td>';
-                data += "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
+                data += "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
 
             } else {
                 cont++;
                 let enabledA = '';
                 let enabledEntrada = 'disabled';
-                if (value.type === 'A' && value.name === value.domain_name) {
-                    enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
+                if ((value.type === 'A' && value.name === value.domain_name) || (value.type === 'CNAME' && value.name === 'www')) {
+                    enabledA = "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
                 } else {
                     enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " + enabledEntrada + "><i class='material-icons gradient' >delete_outline</i> </a></td>";
                 }

@@ -25,7 +25,12 @@
                                 Documentos
                             </a>
                         </li>
-                    </ul>
+                        <li class="nav-item" role="presentation" id="nav_taxs">
+                            <a class="nav-link" data-toggle="tab" href="#tab_taxs" aria-controls="tab_taxs" role="tab">
+                                Tarifas e Prazos
+                            </a>
+                        </li>
+                    </ul> 
                     <div class="p-30 pt-20">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab_user" role="tabpanel">
@@ -73,7 +78,7 @@
                                                 <div style="margin: 20px 0 0 30px;">
                                                     <img src="" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
                                                 </div>
-                                                <input type="hidden" name="photo_x1"/> 
+                                                <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>
                                                 <input type="hidden" name="photo_w"/>
                                                 <input type="hidden" name="photo_h"/>
@@ -173,6 +178,60 @@
                                         <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto)
                                             <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
                                         </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='tab-pane fade' id='tab_taxs' role='tabpanel'>
+                                <div class='row' style='padding:0 30px 0 30px'>
+                                    <div class='col-lg-12'>
+                                        <h6 class='title-pad'>Cartão de crédito:</h6>
+                                    </div>
+                                    <div class='col'></div>
+                                    <div class='row mt-15 col-xl-12'>
+                                        <div class='form-group col-xl-5'>
+                                            <label for='credit-card-tax'>Por venda (porcentagem):</label>
+                                            <input id='credit-card-tax' disabled='disabled' class="form-control">
+                                        </div>
+                                        <div class='form-group col-xl-5'>
+                                            <div class='form-group'>
+                                                <label for='credit-card-release'>Dias para liberação:</label>
+                                                <select id="credit-card-release" class="form-control">
+                                                    <option value="plan-30">30 dias (taxa de 5.9%)</option>
+                                                    <option value="plan-15">15 dias (taxa de 6.5%)</option>
+                                                    <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-12'>
+                                        <h6 class='title-pad'>Boleto:</h6>
+                                    </div>
+                                    <div class='col'></div>
+                                    <div class='row mt-15 col-xl-12'>
+                                        <div class='form-group col-xl-5'>
+                                            <label for='boleto-tax'>Por venda (porcentagem):</label>
+                                            <input id='boleto-tax' disabled='disabled' class="form-control">
+                                        </div>
+                                        <div class='form-group col-xl-5'>
+                                            <div class='form-group'>
+                                                <label for='boleto-release'>Dias para liberação:</label>
+                                                <input id='boleto-release' disabled='disabled' class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class='info' style='font-size: 10px; margin-top: -10px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de R$ <label id="installment-tax" style="color: gray"></label>%.
+                                            </p>
+                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$ <label style="color: gray" id="transaction-tax"></label> por transação.
+                                            </p>
+                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">Atualizar taxas</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

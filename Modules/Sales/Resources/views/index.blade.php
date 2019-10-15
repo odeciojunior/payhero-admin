@@ -6,21 +6,13 @@
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <style type='text/css'>
-            .ellipsis {
-                display: inline-block;
-                width: 100px;
-                white-space: nowrap;
-                overflow: hidden !important;
-                text-overflow: ellipsis;
-            }
-        </style>
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
     @endpush
 
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
-            <div class="row align-items-center justify-content-between">
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
                     <h1 class="page-title">Vendas</h1>
                 </div>
@@ -40,6 +32,7 @@
             </div>
         </div>
         <div class="page-content container" style="display:none">
+            <!-- Filtro -->
             <div class="fixhalf"></div>
             <form id='filter_form'>
                 <div id="" class="card shadow p-20">
@@ -81,7 +74,6 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="date_type">Data</label>
                             <select name='date_type' id="date_type" class="form-control select-pad">
-                                <option value="">Não aplicar</option>
                                 <option value="start_date">Data do pedido</option>
                                 <option value="end_date">Data do pagamento</option>
                             </select>
@@ -99,6 +91,28 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Resumo -->
+            <div class="fixhalf"></div>
+            <div class="card shadow p-20" style='display:block;'>
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas</h6>
+                        <h4 id="total-sales" class="number text-center green-gradient"></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão </h6>
+                        <h4 id="comission" class="number text-center orange-gradient"></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > trending_up </i> Total </h6>
+                        <h4 id="total" class="number text-center green-gradient"></i>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
@@ -126,16 +140,17 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
+
             <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
-        <div class="content-error text-center" style="display:none">
-            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
-            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
-            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
-            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
-        </div>
+{{--        <div class="content-error text-center" style="display:none">--}}
+{{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
+{{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
+{{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
+{{--            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>--}}
+{{--        </div>--}}
     </div>
 
     <!-- Modal regerar boleto-->

@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     index();
-    function index(){
+    function index() {
         $.ajax({
             method: "GET",
             url: "/api/apps/hotzapp/",
@@ -14,20 +14,27 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                $('#content').html("");
-                $('.select-pad').html("");
-                let projects = response.projects;
-                for (let i = 0; i < projects.length; i++) {
-                    $('.select-pad').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
-                }
-                if(Object.keys(response.integrations).length === 0){
-                    $("#no-integration-found").show();
+                if (isEmpty(response.projects)) {
+                    $('#project-empty').show();
+                    $('#integration-actions').hide();
                 } else {
-                    let integrations = response.integrations;
-                    for (let i = 0; i < integrations.length; i++) {
-                        renderIntegration(integrations[i]);
+                    $('.select-pad').html("");
+                    let projects = response.projects;
+                    for (let i = 0; i < projects.length; i++) {
+                        $('.select-pad').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
                     }
-                    $("#no-integration-found").hide();
+                    if (isEmpty(response.integrations)) {
+                        $("#no-integration-found").show();
+                    } else {
+                        $('#content').html("");
+                        let integrations = response.integrations;
+                        for (let i = 0; i < integrations.length; i++) {
+                            renderIntegration(integrations[i]);
+                        }
+                        $("#no-integration-found").hide();
+                    }
+                    $('#project-empty').hide();
+                    $('#integration-actions').show();
                 }
             }
         });
@@ -43,14 +50,14 @@ $(document).ready(function () {
     });
 
     //reset the intergation modal
-    function clearForm(){
+    function clearForm() {
         $(':text').val('')
         $(':checkbox').prop('checked', true).val(1);
         $('.select-pad').prop("selectedIndex", 0).change();
     }
 
     //draw the integration cards
-    function renderIntegration(data){
+    function renderIntegration(data) {
         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` + data.id + ` style='cursor:pointer;'>
@@ -62,7 +69,7 @@ $(document).ready(function () {
                                                 <p class="card-text sm">Criado em ` + data.created_at + `</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
+                                                <a role='button' title='Excluir' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
                                                     <i class='material-icons gradient'>delete_outline</i>
                                                 </a>
                                             </div>
@@ -74,7 +81,7 @@ $(document).ready(function () {
     }
 
     //create
-    $('#btn-add-integration').on('click', function(){
+    $('#btn-add-integration').on('click', function () {
         $(".modal-title").html('Adicionar nova Integração com HotZapp');
         $("#bt_integration").addClass('btn-save');
         $("#bt_integration").removeClass('btn-update');
@@ -103,11 +110,10 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error:  (response) => {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                console.log(response)
                 $("#select_projects_edit").val(response.data.project_id);
                 $('#integration_id').val(response.data.id);
                 $("#link_edit").val(response.data.link);
@@ -182,7 +188,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: (response) => {
-               errorAjaxResponse(response);
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 index();

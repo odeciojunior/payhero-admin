@@ -44,6 +44,8 @@ class BoletoService
         try {
             /** @var Sale $saleModel */
             $saleModel = new Sale();
+            /** @var SaleService $saleService */
+            $saleService = new SaleService();
             /** @var Project $projectModel */
             $projectModel = new Project();
             /** @var Domain $domainModel */
@@ -64,7 +66,7 @@ class BoletoService
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
 
-                    $subTotal = $boleto->present()->getSubTotal();
+                    $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
                     $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
 
@@ -84,7 +86,7 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
-                    $products = $boleto->present()->getProducts();
+                    $products = $saleService->getProducts($boleto->id);
                     $project  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
@@ -103,7 +105,7 @@ class BoletoService
                     if (!empty($link) && !empty($telephoneValidated)) {
                         $zenviaSms = new ZenviaSmsService();
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
-                        $checkout->newQuery()->increment('sms_sent_amount');
+                        $checkout->increment('sms_sent_amount');
                     }
 
                     $data           = [
@@ -124,7 +126,7 @@ class BoletoService
                     if ($emailValidated) {
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
 
-                        $checkout->newQuery()->increment('email_sent_amount');
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
@@ -145,6 +147,8 @@ class BoletoService
         try {
             /** @var Sale $saleModel */
             $saleModel = new Sale();
+            /** @var SaleService $saleService */
+            $saleService = new SaleService();
             /** @var SendgridService $sendEmail */
             $sendEmail = new SendgridService();
             /** @var Checkout $checkoutModel */
@@ -172,7 +176,7 @@ class BoletoService
                     $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $subTotal    = $boleto->present()->getSubTotal();
+                    $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
                     $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
@@ -189,7 +193,7 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $boleto->present()->getProducts();
+                    $products                 = $saleService->getProducts($boleto->id);
                     $project                  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
                     $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -218,7 +222,7 @@ class BoletoService
                     if ($emailValidated) {
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
 
-                        $checkout->increment('email_sent_amount', 1);
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boletos par e-mail no foreach - Já separamos seu pedido');
@@ -239,6 +243,8 @@ class BoletoService
         try {
             /** @var Sale $saleModel */
             $saleModel = new Sale();
+            /** @var SaleService $saleService */
+            $saleService = new SaleService();
             /** @var Project $projectModel */
             $projectModel = new Project();
             /** @var Domain $domainModel */
@@ -246,11 +252,10 @@ class BoletoService
             /** @var Checkout $checkoutModel */
             $checkoutModel = new Checkout();
             /** @var Carbon $startDate */
-            $startDate = now()->startOfDay()->subDay();
+            $startDate = now()->startOfDay()->subDays(2);
             /** @var Carbon $endDate */
-            $endDate = now()->endOfDay()->subDay();
-            $boletos = $saleModel->newQuery()
-                                 ->with('client', 'plansSales.plan.products')
+            $endDate = now()->endOfDay()->subDays(2);
+            $boletos = $saleModel->with('client', 'plansSales.plan.products')
                                  ->whereBetween('start_date', [$startDate, $endDate])
                                  ->where(
                                      [
@@ -258,16 +263,16 @@ class BoletoService
                                          ['status', '=', '2'],
                                      ]
                                  )->get();
+
             /** @var Sale $boleto */
             foreach ($boletos as $boleto) {
                 try {
-                    /** @var Checkout $checkout */
                     $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $subTotal    = $boleto->present()->getSubTotal();
-                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+                    $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
+                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
                         $iof = '';
                     } else {
@@ -282,7 +287,7 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $boleto->present()->getProducts();
+                    $products                 = $saleService->getProducts($boleto->id);
                     $project                  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
@@ -312,7 +317,7 @@ class BoletoService
                         $sendEmail = new SendgridService();
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
-                        $checkout->newQuery()->increment('email_sent_amount');
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');

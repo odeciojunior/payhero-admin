@@ -148,7 +148,13 @@ $(() => {
     //carrega detalhes do projeto
     function show() {
 
-        loadOnAny('#tab_info_geral .card');
+        loadOnAny('#tab_info_geral .card', false,{
+            styles: {
+                container: {
+                    minHeight: '250px'
+                }
+            }
+        });
 
         $.ajax({
             url: '/api/projects/' + projectId,
@@ -160,7 +166,6 @@ $(() => {
             success: (response) => {
 
                 let project = response.data;
-
                 $('.page-title, .title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
                 $('#created_at').text('Criado em ' + project.created_at);
@@ -169,7 +174,7 @@ $(() => {
                 } else {
                     $('#show-visibility').text('Privado').addClass('badge-danger');
                 }
-                if (project.status) {
+                if (project.status == '1') {
                     $('#show-status').text('Ativo').addClass('badge-primary');
                 } else {
                     $('#show-status').text('Inativo').addClass('badge-danger');

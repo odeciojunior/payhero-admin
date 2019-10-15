@@ -33,9 +33,9 @@ class PostBackShopifyController extends Controller
         $requestData = $request->all();
 
         $postBackLogModel->create([
-                                      'origin'      => 3,
+                                      'origin'      => 5,
                                       'data'        => json_encode($requestData),
-                                      'description' => 'shopify',
+                                      'description' => 'shopify-tracking',
                                   ]);
 
         $projectId = current(Hashids::decode($request->project_id));
@@ -67,7 +67,7 @@ class PostBackShopifyController extends Controller
                         }
                     }
 
-                    event(new TrackingCodeUpdatedEvent($sale));
+                    // event(new TrackingCodeUpdatedEvent($sale));
 
                     return response()->json([
                                                 'message' => 'success',

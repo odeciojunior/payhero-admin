@@ -60,8 +60,7 @@
                             <div class="info" style="font-size: 10px;">
                                 <p class="ml-5">
                                     <b> Público: </b> visível na vitrine e disponível para afiliações (em breve). <br>
-                                    <b> Privado: </b> completamente invisivel para outros usuários, afiliações somente
-                                    por convite
+                                    <b> Privado: </b> completamente invisivel para outros usuários, afiliações somente por convite
                                 </p>
                             </div>
                         </div>
@@ -78,14 +77,12 @@
                     <div class="col-12">
                         <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
                             <input name='logo' type='file' class='form-control' id='photo-logo-email'
-                                   style='display:none;'>
-                            <img id='image-logo-email' alt='Selecione a foto do projeto'
-                                 src='{{asset('modules/global/img/projeto.png')}}'
-                                 style='max-height:250px;max-width:250px;margin:auto'>
+                                   style='display:none;'> <img id='image-logo-email' alt='Selecione a foto do projeto'
+                                                               src='{{asset('modules/global/img/projeto.png')}}'
+                                                               style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>
-                                <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no
-                                formato JPG, JPEG ou PNG.
+                                <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                                 <br> Dimensões ideais: largura ou altura de no máximo 300 pixels. <br>
                                 <strong>Sem sobras no topo ou na parte inferior.</strong>
                             </p>
@@ -110,8 +107,7 @@
                                maxlength='40'>
                         <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout
-                            e nos emails
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
                         </p>
                         <span id='contact-error'></span>
                     </div>
@@ -147,17 +143,14 @@
                                id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>
                         <span id='invoice-description-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na fatura do
-                            cartão de crédito
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na fatura do cartão de crédito
                         </p>
                     </div>
                     <div class='form-group col-6 col-xs-12'>
                         <label for='company'>Empresa responsável</label>
-                        <select id='companies' name='company_id' class="form-control select-pad">
-                        </select>
+                        <select id='companies' name='company_id' class="form-control select-pad"> </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Empresa responsável pelo faturamento
-                            das vendas
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Empresa responsável pelo faturamento das vendas
                         </p>
                     </div>
                 </div>
@@ -180,29 +173,27 @@
                             <option value="12">12</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade máxima de parcelas
-                            oferecidas no checkout
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade máxima de parcelas oferecidas no checkout
                         </p>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
+                            <option value="2" disabled>2</option>
+                            <option value="3" disabled>3</option>
+                            <option value="4" disabled>4</option>
+                            <option value="5" disabled>5</option>
+                            <option value="6" disabled>6</option>
+                            <option value="7" disabled>7</option>
+                            <option value="8" disabled>8</option>
+                            <option value="9" disabled>9</option>
+                            <option value="10" disabled>10</option>
+                            <option value="11" disabled>11</option>
+                            <option value="12" disabled>12</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas oferecidas sem
-                            juros (se oferecida mais de uma a taxa de juros é descontada do produtor)
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do produtor)
                         </p>
                         <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
                     </div>
@@ -213,8 +204,7 @@
                             <option value='0'>Não</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com
-                            boleto no checkout
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com boleto no checkout
                         </p>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
@@ -235,10 +225,8 @@
                                placeholder='URL' maxlength='60'>
                     </div>
                     <p class="info mt-5 col-12" style="font-size: 10px;">
-                        <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu
-                        cliente para paginas de obrigado propias, informe a
-                        <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a
-                        pagina de obrigado padrão do cloudfox.
+                        <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
+                        <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
                     </p>
                 </div>
             </div>
@@ -309,7 +297,6 @@
             </div>
         </div>
     </form>
-
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-project" aria-hidden="true" role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
@@ -331,5 +318,5 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
-

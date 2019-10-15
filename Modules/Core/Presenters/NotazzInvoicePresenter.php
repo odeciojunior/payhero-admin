@@ -28,6 +28,12 @@ class NotazzInvoicePresenter extends Presenter
                     return 'error';
                 case 5:
                     return 'in_process';
+                case 6:
+                    return 'error_max_attempts';
+                case 7:
+                    return 'canceled';
+                case 8:
+                    return 'rejected';
             }
 
             return '';
@@ -43,6 +49,12 @@ class NotazzInvoicePresenter extends Presenter
                     return 4;
                 case 'in_process':
                     return 5;
+                case 'error_max_attempts':
+                    return 6;
+                case 'canceled':
+                    return 7;
+                case 'rejected':
+                    return 8;
             }
 
             return '';

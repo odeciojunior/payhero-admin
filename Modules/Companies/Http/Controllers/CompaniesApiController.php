@@ -7,7 +7,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -247,50 +246,60 @@ class CompaniesApiController extends Controller
                 );
                 if (($dataForm["document_type"] ?? '') == $company->present()
                                                                   ->getDocumentType('bank_document_status')) {
-                    $company->update([
-                                         'bank_document_status' => $company->present()
-                                                                           ->getBankDocumentStatus('analyzing'),
-                                     ]);
+                    $company->update(
+                        [
+                            'bank_document_status' => $company->present()
+                                                              ->getBankDocumentStatus('analyzing'),
+                        ]
+                    );
                 }
                 if (($dataForm["document_type"] ?? '') == $company->present()
                                                                   ->getDocumentType('address_document_status')) {
-                    $company->update([
-                                         'address_document_status' => $company->present()
-                                                                              ->getAddressDocumentStatus('analyzing'),
-                                     ]);
+                    $company->update(
+                        [
+                            'address_document_status' => $company->present()
+                                                                 ->getAddressDocumentStatus('analyzing'),
+                        ]
+                    );
                 }
                 if (($dataForm["document_type"] ?? '') == $company->present()
                                                                   ->getDocumentType('contract_document_status')) {
-                    $company->update([
-                                         'contract_document_status' => $company->present()
-                                                                               ->getContractDocumentStatus('analyzing'),
-                                     ]);
+                    $company->update(
+                        [
+                            'contract_document_status' => $company->present()
+                                                                  ->getContractDocumentStatus('analyzing'),
+                        ]
+                    );
                 }
 
-                return response()->json([
-                                            'message' => 'Arquivo enviado com sucesso.',
-                                            'data'    => [
-                                                'bank_document_translate'     => [
-                                                    'status'  => $company->bank_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                                                ->getBankDocumentStatus($company->bank_document_status)),
-                                                ],
-                                                'address_document_translate'  => [
-                                                    'status'  => $company->address_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                                                ->getAddressDocumentStatus($company->address_document_status)),
-                                                ],
-                                                'contract_document_translate' => [
-                                                    'status'  => $company->contract_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                                                ->getContractDocumentStatus($company->contract_document_status)),
-                                                ],
-                                            ],
-                                        ], Response::HTTP_OK);
+                return response()->json(
+                    [
+                        'message' => 'Arquivo enviado com sucesso.',
+                        'data'    => [
+                            'bank_document_translate'     => [
+                                'status'  => $company->bank_document_status,
+                                'message' => Lang::get('definitions.enum.status.' . $company->present()
+                                                                                            ->getBankDocumentStatus($company->bank_document_status)),
+                            ],
+                            'address_document_translate'  => [
+                                'status'  => $company->address_document_status,
+                                'message' => Lang::get('definitions.enum.status.' . $company->present()
+                                                                                            ->getAddressDocumentStatus($company->address_document_status)),
+                            ],
+                            'contract_document_translate' => [
+                                'status'  => $company->contract_document_status,
+                                'message' => Lang::get('definitions.enum.status.' . $company->present()
+                                                                                            ->getContractDocumentStatus($company->contract_document_status)),
+                            ],
+                        ],
+                    ], Response::HTTP_OK
+                );
             } else {
-                return response()->json([
-                                            'message' => 'Sem permissão para enviar documentos para a empresa',
-                                        ], Response::HTTP_FORBIDDEN);
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para enviar documentos para a empresa',
+                    ], Response::HTTP_FORBIDDEN
+                );
             }
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');
@@ -307,15 +316,17 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+            $companies    = $companyModel->newQuery()->where('user_id', auth()->id())->get();
 
             return CompaniesSelectResource::collection($companies);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao tentar buscar dados, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao tentar buscar dados, tente novamente mais tarde',
+                ], 400
+            );
         }
     }
 }

@@ -32,4 +32,17 @@ class ImportShopifyStoreListener implements ShouldQueue
             report($e);
         }
     }
+
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  \App\Events\OrderShipped  $event
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function failed($event, $exception)
+    {
+        report($exception);
+    }
 }

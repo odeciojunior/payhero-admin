@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    @if(getenv('APP_ENV') === 'production')
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    @endif
+
     <title>Cadastro | CloudFox </title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('modules/register/css/bootstrap.min.css')}}">
@@ -50,7 +55,7 @@
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
 </head>
-<body style='padding-top:0px;'>
+<body id='register-body' style='padding-top:0px;'>
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
 </div>
 <section class="topbar" style=''>
@@ -588,11 +593,14 @@
     </div>
 </footer>
 <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
+{{--<script src="{{asset('modules/global/js/global.js')}}"></script>--}}
+<script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
-<script src="{{asset('modules/register/js/register.js?v=1')}}"></script>
+<script src="{{asset('modules/register/js/register.js?v=2')}}"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
+{{--<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>--}}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
@@ -612,8 +620,12 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
+{{--<script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>--}}
+{{--<script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>--}}
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js') }}"></script>
+{{--<script src="https://js.pusher.com/4.4/pusher.min.js"></script>--}}
+{{--<script src="{{ asset('modules/global/js/notifications.js') }}"></script>--}}
 </body>
 </html>
 

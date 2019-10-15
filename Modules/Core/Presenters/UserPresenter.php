@@ -6,22 +6,31 @@ use Laracasts\Presenter\Presenter;
 
 class UserPresenter extends Presenter
 {
-    public function getAddressDocumentStatus($status) {
+    /**
+     * @return string
+     */
+    public function getTransactionRate()
+    {
+        return number_format($this->transaction_rate, 2, ',', '.');
+    }
 
-        if(is_numeric($status)){
+    public function getAddressDocumentStatus($status)
+    {
+
+        if (is_numeric($status)) {
             switch ($status) {
                 case 1:
                     return 'pending';
                 case 2:
                     return 'analyzing';
-                case 3: 
+                case 3:
                     return 'approved';
                 case 4:
                     return 'refused';
             }
+
             return '';
-        }
-        else{
+        } else {
             switch ($status) {
                 case 'pending':
                     return 1;
@@ -32,27 +41,28 @@ class UserPresenter extends Presenter
                 case 'refused':
                     return 4;
             }
+
             return '';
         }
-
     }
 
-    public function getPersonalDocumentStatus($status) {
+    public function getPersonalDocumentStatus($status)
+    {
 
-        if(is_numeric($status)){
+        if (is_numeric($status)) {
             switch ($status) {
                 case 1:
                     return 'pending';
                 case 2:
-                    return 'analyzing'; 
-                case 3: 
+                    return 'analyzing';
+                case 3:
                     return 'approved';
                 case 4:
                     return 'refused';
             }
+
             return '';
-        }
-        else{
+        } else {
             switch ($status) {
                 case 'pending':
                     return 1;
@@ -63,30 +73,32 @@ class UserPresenter extends Presenter
                 case 'refused':
                     return 4;
             }
+
             return '';
         }
     }
 
-    public function getDocumentType($type){
+    public function getDocumentType($type)
+    {
 
-        if(is_numeric($type)){
+        if (is_numeric($type)) {
             switch ($type) {
                 case 1:
                     return 'personal_document';
                 case 2:
                     return 'address_document';
             }
+
             return '';
-        }
-        else{
+        } else {
             switch ($type) {
                 case 'personal_document':
                     return 1;
                 case 'address_document':
                     return 2;
             }
+
             return '';
         }
     }
-
 }

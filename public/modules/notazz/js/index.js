@@ -2,36 +2,37 @@ $(document).ready(function () {
 
     index();
 
-    function index(){
+    function index() {
         $.ajax({
             method: "GET",
-            url: "/api/apps/notazz",
+            url: "/api/apps/notazz/",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
+            dataType: "json",
+            error: function error(response) {
                 // loadingOnScreenRemove();
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
                 $('#content').html("");
-                if(Object.keys(response.data).length === 0){
+                if (Object.keys(response.data).length === 0) {
                     $("#no-integration-found").show();
-                }
-                else{
-                    $(response.data).each(function(index, data){
+                } else {
+                    $(response.data).each(function (index, data) {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                <div class="card shadow card-edit" project=` + data.id +` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo +` onerror="this.onerror=null;this.src='modules/global/img/produto.png';" alt="'modules/global/img/produto.png'"/>
+                                <div class="card shadow card-edit" integration=` + data.id + ` style='cursor:pointer;'>
+                                    <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"/>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
-                                                <h4 class="card-title">` + data.project_name +`</h4>
+                                                <h4 class="card-title">` + data.project_name + `</h4>
                                                 <p class="card-text sm">Criado em ` + data.created_at + `</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' class='delete-integration pointer float-right mt-35' project=` + data.id +` data-toggle='modal' data-target='#modal-delete' type='a'>
+                                                <a role='button' class='delete-integration pointer float-right mt-35' integration=` + data.id + ` data-toggle='modal' data-target='#modal-delete' type='a'>
                                                     <i class='material-icons gradient'>delete_outline</i>
                                                 </a>
                                             </div>
@@ -45,15 +46,17 @@ $(document).ready(function () {
                     $(".delete-integration").unbind('click');
                     $('.delete-integration').on('click', function (e) {
                         e.preventDefault();
-                        var project_id = $(this).attr('project');
+                        var integration_id = $(this).attr('integration');
                         var card = $(this).parent().parent().parent().parent().parent();
                         card.find('.card-edit').unbind('click');
                         $.ajax({
                             method: "DELETE",
-                            url: "/api/apps/notazz/" + project_id,
+                            url: "/api/apps/notazz/" + integration_id,
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
+                            dataType: "json",
                             error: function (_error2) {
                                 function error(_x2) {
                                     return _error2.apply(this, arguments);
@@ -82,56 +85,46 @@ $(document).ready(function () {
 
                     $(".card-edit").unbind('click');
                     $('.card-edit').on('click', function () {
-                        var project_id = $(this).attr('project');
+                        var integration_id = $(this).attr('integration');
                         $.ajax({
                             method: "GET",
-                            url: "/api/projects/user-projects",
+                            url: "/api/projects?select=true",
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
-                            error: function error() {
+                            dataType: "json",
+                            error: function error(response) {
                                 alertCustom('error', 'Ocorreu algum erro');
                             },
                             success: function success(response) {
                                 $("#select_projects_edit").html('');
-                                $(response.data).each(function(index, data){
+                                $(response.data).each(function (index, data) {
                                     $("#select_projects_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
                                 });
 
-                                $(".modal-title").html("Editar Integração com ConvertaX");
+                                $(".modal-title").html("Editar Integração com Notazz");
 
                                 $.ajax({
                                     method: "GET",
-                                    url: "/api/apps/notazz/" + project_id,
+                                    url: "/api/apps/notazz/" + integration_id,
                                     headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                                        'Accept': 'application/json',
                                     },
-                                    error: function error() {
+                                    dataType: "json",
+                                    error: function error(response) {
                                         //
                                     },
                                     success: function success(response) {
 
-                                        // alert(response.toSource());
                                         $("#select_projects_edit").val(response.data.project_id);
+                                        $("#select_invoice_type_edit").val(response.data.invoice_type);
                                         $('#integration_id').val(response.data.id);
-                                        $("#link_edit").val(response.data.link);
-                                        $("#value_edit").val(response.data.value);
-                                        $('#value_edit').mask('#.###,#0', {reverse: true});
-
-                                        $("#boleto_generated_edit").val(response.data.boleto_generated);
-                                        $("#boleto_generated_edit").val() == '1' ? $("#boleto_generated_edit").attr('checked','checked') : $("#boleto_generated_edit").attr('');
-
-                                        $("#boleto_paid_edit").val(response.data.boleto_paid);
-                                        $("#boleto_paid_edit").val() == '1' ? $("#boleto_paid_edit").attr('checked','checked') : $("#boleto_paid_edit").attr('');
-
-                                        $("#credit_card_refused_edit").val(response.data.credit_card_refused);
-                                        $("#credit_card_refused_edit").val() == '1' ? $("#credit_card_refused_edit").attr('checked','checked') : $("#credit_card_refused_edit").attr('');
-
-                                        $("#credit_card_paid_edit").val(response.data.credit_card_paid);
-                                        $("#credit_card_paid_edit").val() == '1' ? $("#credit_card_paid_edit").attr('checked','checked') : $("#credit_card_paid_edit").attr('');
-
-                                        $("#abandoned_cart_edit").val(response.data.abandoned_cart);
-                                        $("#abandoned_cart_edit").val() == '1' ? $("#abandoned_cart_edit").attr('checked','checked') : $("#abandoned_cart_edit").attr('');
+                                        $('#token_api_edit').val(response.data.token_api);
+                                        $('#token_webhook_edit').val(response.data.token_webhook);
+                                        $('#token_logistics_edit').val(response.data.token_logistics);
+                                        $('#start_date_edit').val(response.data.start_date);
 
                                         $("#modal_add_integracao").modal('show');
                                         $("#form_add_integration").hide();
@@ -142,20 +135,8 @@ $(document).ready(function () {
                                         $("#bt_integration").text('Atualizar');
                                         $("#btn-modal").show();
 
-                                        $('.check').on('click', function () {
-                                            if ($(this).is(':checked')) {
-                                                $(this).val(1);
-                                            } else {
-                                                $(this).val(0);
-                                            }
-                                        });
-
                                         $(".btn-update").unbind('click');
                                         $(".btn-update").on('click', function () {
-                                            if ($('#link_edit').val() == '' || $('#value_edit').val() == '') {
-                                                alertCustom('error', 'Dados informados inválidos');
-                                                return false;
-                                            }
 
                                             var integrationId = $('#integration_id').val();
                                             var form_data = new FormData(document.getElementById('form_update_integration'));
@@ -164,8 +145,10 @@ $(document).ready(function () {
                                                 method: "POST",
                                                 url: "/api/apps/notazz/" + integrationId,
                                                 headers: {
-                                                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                                    'Accept': 'application/json',
                                                 },
+                                                dataType: "json",
                                                 processData: false,
                                                 contentType: false,
                                                 cache: false,
@@ -205,15 +188,17 @@ $(document).ready(function () {
         });
     }
 
-    function create(){
+    function create() {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects/user-projects",
+            url: "/api/projects?select=true",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
+            dataType: "json",
+            error: function error(response) {
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
             },
@@ -225,65 +210,113 @@ $(document).ready(function () {
                     $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' + '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
-                    $(response.data).each(function(index, data){
-                        $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                    $("#select_projects_create").html('');
+                    $(response.data).each(function (index, data) {
+                        $("#select_projects_create").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
-                    $(".modal-title").html('Adicionar nova Integração com ConvertaX');
+                    $(".modal-title").html('Adicionar nova Integração com Notazz');
                     $("#bt_integration").addClass('btn-save');
                     $("#bt_integration").text('Adicionar integração');
                     $("#modal_add_integracao").modal('show');
                     $("#form_update_integration").hide();
                     $("#form_add_integration").show();
 
-                    $('#value').mask('#.###,#0', {reverse: true});
-
-                    $('.check').on('click', function () {
-                        if ($(this).is(':checked')) {
-                            $(this).val(1);
-                        } else {
-                            $(this).val(0);
-                        }
-                    });
-
-                    if ($(':checkbox').is(':checked')) {
-                        $(':checkbox').val(1);
-                    } else {
-                        $(':checkbox').val(0);
-                    }
-
                     $(".btn-save").unbind('click');
                     $(".btn-save").on('click', function () {
-                        if ($('#link').val() == '' || $('#value').val() == '') {
-                            alertCustom('error', 'Dados informados inválidos');
+                        if ($('#token_api_create').val() == '') {
+                            alertCustom('error', 'Datos invalidos, o campo Token Api é obrigatorio.');
                             return false;
                         }
-                        var form_data = new FormData(document.getElementById('form_add_integration'));
 
-                        $.ajax({
-                            method: "POST",
-                            url: "/api/apps/notazz",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            processData: false,
-                            contentType: false,
-                            cache: false,
-                            data: form_data,
-                            error: function error(response) {
-                                if (response.status === 422) {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
-                                    }
+                        var select_projects_create = $('#select_projects_create').val();
+                        var select_invoice_type_create = $('#select_invoice_type_create').val();
+                        var token_api_create = $('#token_api_create').val();
+                        var token_webhook_create = $('#token_webhook_create').val();
+                        var token_logistics_create = $('#token_logistics_create').val();
+                        var start_date_create = $('#start_date_create').val();
+
+                        if ($('#start_date_create').val() != '') {
+                            swal({
+                                title: 'Data inicial de geração de notas fiscais foi definida.',
+                                type: 'warning',
+                                text: "Uma data inicial para geração de notas fiscais foi selecionada, será gerada as notas fiscais de todas as vendas aprovadas apartir da data selecionada, deseja continuar?",
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085D6',
+                                cancelButtonColor: '#DD3333',
+                                cancelButtonText: 'Cancelar',
+                                confirmButtonText: 'Continuar'
+                            }).then(function (data) {
+                                if (data.value) {
+                                    //ok
+
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "/api/apps/notazz",
+                                        headers: {
+                                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                                            'Accept': 'application/json',
+                                        },
+                                        dataType: "json",
+                                        data: {
+                                            select_projects_create: select_projects_create,
+                                            select_invoice_type_create: select_invoice_type_create,
+                                            token_api_create: token_api_create,
+                                            token_webhook_create: token_webhook_create,
+                                            token_logistics_create: token_logistics_create,
+                                            start_date_create: start_date_create
+                                        },
+                                        error: function error(response) {
+                                            if (response.status === 422) {
+                                                alertCustom('error', response.responseJSON.message);
+                                            } else {
+                                                alertCustom('error', response.responseJSON.message);
+                                            }
+                                        },
+                                        success: function success(response) {
+                                            $("#no-integration-found").hide();
+                                            index();
+                                            alertCustom('success', response.message);
+                                        }
+                                    });
+
                                 } else {
-                                    alertCustom('error', response.responseJSON.message);
+                                    //cancel
+
                                 }
-                            },
-                            success: function success(response) {
-                                $("#no-integration-found").hide();
-                                index();
-                                alertCustom('success', response.message);
-                            }
-                        });
+                            });
+                        } else {
+                            $.ajax({
+                                method: "POST",
+                                url: "/api/apps/notazz",
+                                headers: {
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
+                                },
+                                dataType: "json",
+                                data: {
+                                    select_projects_create: select_projects_create,
+                                    select_invoice_type_create: select_invoice_type_create,
+                                    token_api_create: token_api_create,
+                                    token_webhook_create: token_webhook_create,
+                                    token_logistics_create: token_logistics_create,
+                                    start_date_create: start_date_create
+                                },
+                                error: function error(response) {
+                                    if (response.status === 422) {
+                                        for (let i in response.responseJSON.errors) {
+                                            alertCustom('error', String(response.responseJSON.errors[i]));
+                                        }
+                                    } else {
+                                        alertCustom('error', response.responseJSON.message);
+                                    }
+                                },
+                                success: function success(response) {
+                                    $("#no-integration-found").hide();
+                                    index();
+                                    alertCustom('success', response.message);
+                                }
+                            });
+                        }
                     });
                 }
             }

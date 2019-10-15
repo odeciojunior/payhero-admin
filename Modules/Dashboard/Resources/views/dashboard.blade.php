@@ -8,12 +8,12 @@
     @endpush
 
     <div class="page">
-        <div class="page-content container" style="display:none">
+        <div class="page-header container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-lg-6">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
                         <div class="mr-10 text-lg-right">
                             Empresa:
@@ -25,9 +25,25 @@
                     </div>
                 </div>
             </div>
-            <div class="clearfix"></div>
+        </div>
+        <div class="page-content container" style="display:none">
             <!-- CARDS EXTRATO -->
             <div class="row" id="card-extrato">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <div class="card card-shadow bg-white">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
+                            <div class="font-size-14 gray-600">
+                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
+                                <span class="card-desc">Hoje</span>
+                            </div>
+                        </div>
+                        <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
+                            <span class="moeda">R$</span>
+                            <span id="today_money" class="text-money"></span>
+                        </div>
+                        <div class="card-bottom orangered"></div>
+                    </div>
+                </div>
                 <div class="col-sm-12 col-md-6 col-lg-3">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
@@ -42,22 +58,6 @@
                             <span id="pending_money" class="text-money"></span>
                         </div>
                         <div class="card-bottom orange"></div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6 col-lg-3">
-                    <div class="card card-shadow bg-white">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
-                            <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
-                                <span class="card-desc">Antecipável</span>
-                            </div>
-                        </div>
-                        <div
-                            class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                            <span class="moeda">R$</span>
-                            <span id="antecipation_money" class="text-money"></span>
-                        </div>
-                        <div class="card-bottom orangered"></div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-3">
@@ -94,8 +94,8 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-12" id="cardWelcome">
+            <div class="row" id="cardWelcome">
+                <div class="col-lg-12">
                     <div class="card shadow br15">
                         <a class="close-card pointer" id="closeWelcome" role="button">
                             <i class="material-icons md-16">close</i>
@@ -106,17 +106,7 @@
                 </div>
             </div>
         </div>
-
-        @push('css')
-            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-        @endpush
-        <div class="content-error text-center" style="display:none">
-            <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
-            <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
-            <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
-            <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>
-        </div>
-
+        @include('companies::empty')
     </div>
 
     @push('scripts')

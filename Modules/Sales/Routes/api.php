@@ -17,6 +17,11 @@ Route::group(
             'as'   => 'sales.export',
             'uses' => 'SalesApiController@export',
         ]);
+
+        Route::get('/resume', [
+            'as'   => 'sales.resume',
+            'uses' => 'SalesApiController@resume',
+        ]);
     }
 );
 

@@ -387,7 +387,7 @@ class ShopifyService
     /**
      * @param $htmlCart
      * @param $domain
-     * @return mixed|string
+     * @return string|string[]|null
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws CurlException
@@ -397,38 +397,49 @@ class ShopifyService
      */
     public function updateCartTemplateAjax($htmlCart, $domain)
     {
-        $dom = new Dom;
+        preg_match_all("/({%)[\s\S]+?(%})/", $htmlCart, $tokens, PREG_OFFSET_CAPTURE);
+        foreach ($tokens[0] as $key => $item) {
+            $from     = '/' . preg_quote($item[0], '/') . '/';
+            $htmlCart = preg_replace($from, 'fox-fox-fox', $htmlCart, 1);
+        }
 
+        preg_match_all("/({{)[\s\S]+?(}})/", $htmlCart, $tokens2, PREG_OFFSET_CAPTURE);
+        foreach ($tokens2[0] as $key => $item) {
+            $from     = '/' . preg_quote($item[0], '/') . '/';
+            $htmlCart = preg_replace($from, 'fox1-fox1-fox1', $htmlCart, 1);
+        }
+
+        $dom = new Dom;
         $dom->setOptions([
-                             'removeScripts' => false,
+                             'strict'             => false, // Set a global option to enable strict html parsing.
+                             'preserveLineBreaks' => true,
+                             'removeScripts'      => false,
                          ]);
 
         $dom->load($htmlCart);
 
-        $forms = $dom->find('script[id=cartTemplate]');
-        $x     = $forms->innerHtml();
-
-        //$dom2 = new Dom2;
-        $dom->load($x);
-
         $forms = $dom->find('form');
         foreach ($forms as $form) {
             $data = explode(' ', $form->getAttribute('class'));
-            if (in_array('cart', $data) || in_array('cart-form', $data)) {
+            if (in_array('ajaxcart', $data)) {
                 $cartForm = $form;
                 break;
             }
         }
 
         if ($cartForm) {
-            //if ($cartForm->getAttribute('id') != 'cart_form') {
 
-            //div Foxdata
-            $divFoxData = new Selector('#foxData', new Parser());
-            $divs       = $divFoxData->find($cartForm);
-            foreach ($divs as $div) {
-                $parent = $div->getParent();
-                $parent->removeChild($div->id());
+            $inputUpdate   = new Selector('button[name=checkout]', new Parser());
+            $inputsUpdates = $inputUpdate->find($cartForm);
+            foreach ($inputsUpdates as $item) {
+                $item->removeAttribute('name');
+
+                $buttonClass = $item->getAttribute('class');
+                $buttonClass = str_replace("cart__checkout", "", $buttonClass);
+                $item->setAttribute('class', $buttonClass);
+
+                $item->setAttribute('type', 'button');
+                $item->setAttribute('onclick', 'foxCheckout();');
             }
 
             //div FoxScript
@@ -439,133 +450,77 @@ class ShopifyService
                 $parent->removeChild($div->id());
             }
 
-            //update button
-            $inputUpdate   = new Selector('input[name=update]', new Parser());
-            $inputsUpdates = $inputUpdate->find($cartForm);
-            foreach ($inputsUpdates as $item) {
-                $parent = $item->getParent();
-                $parent->removeChild($item->id());
-            }
-
-            //update button
-            $inputUpdate   = new Selector('button[name=update]', new Parser());
-            $inputsUpdates = $inputUpdate->find($cartForm);
-            foreach ($inputsUpdates as $item) {
-                $parent = $item->getParent();
-                $parent->removeChild($item->id());
-            }
-            /*
-                        //disable quantity button
-                        $quantityButton   = new Selector('.cart__qty-input', new Parser());
-                        $quantityButtons = $quantityButton->find($cartForm);
-                        foreach ($quantityButtons as $item) {
-                            $parent = $item->getParent();
-                            $item->setAttribute('disabled', 'true');
-                        }
-
-                        */
-
-            $buttons = new Selector('[name=checkout]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $button->removeAttribute('name');
-            }
-
-            $buttons = new Selector('[name=goto_pp]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('[name=goto_gc]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.amazon-payments-pay-button', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.google-wallet-button-holder', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.additional-checkout-button', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $cartForm->setAttribute('action', 'https://checkout.' . $domain . '/');
-            $cartForm->setAttribute('id', 'cart_form');
-            $cartForm->setAttribute('data-fox', 'cart_form');
-
             $divFoxScript = new HtmlNode('div');
-
             $divFoxScript->setAttribute('id', 'foxScript');
             $script = new HtmlNode('script');
-            $script->setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
+
+            $script->addChild(new TextNode("function foxCheckout()
+      {
+        $.ajax({
+            method: 'GET',
+            url: '/cart.js',
+            dataType: 'json',
+            error: function error(response) {
+                
+            },
+            success: function success(response) {
+              var form = document.createElement('form');
+              form.method = 'POST';
+              form.action = 'https://checkout." . $domain . "/';   
+              
+              for(x=0;x < response.items.length;x++)
+              {
+                var product_id = document.createElement('input');
+                var variant_id = document.createElement('input');
+                var product_price = document.createElement('input');
+                var product_image = document.createElement('input');
+                var product_amount = document.createElement('input');
+                
+                product_id.name = 'product_id_' + (parseInt(x) + parseInt(1));
+                variant_id.name = 'variant_id_' + (parseInt(x) + parseInt(1));
+                product_price.name = 'product_price_' + (parseInt(x) + parseInt(1));
+                product_image.name = 'product_image_' + (parseInt(x) + parseInt(1));
+                product_amount.name = 'product_amount_' + (parseInt(x) + parseInt(1));
+                
+                product_id.value = response.items[x].id;
+                variant_id.value = response.items[x].variant_id;
+                product_price.value = response.items[x].price;
+                product_image.value = response.items[x].image;
+                product_amount.value = response.items[x].quantity;
+
+                form.appendChild(product_id);
+                form.appendChild(variant_id);
+                form.appendChild(product_price);
+                form.appendChild(product_image);
+                form.appendChild(product_amount);
+              }
+
+    	      document.body.appendChild(form);
+
+    		  form.submit();
+            }
+        });
+      }"));
+
             $divFoxScript->addChild($script);
-            $script = new HtmlNode('script');
-
-            $script->addChild(new TextNode("$(document).ready(function (){
-
-                    $(document).on('change', \"input.booster-quantity, input[name^='updates['], input[id^='updates_'], input[id^='Updates_']\", function(e) {
-                        e.preventDefault();
-                         $('[data-fox=cart_form]').attr('action', '/cart');
-                        $('[data-fox=cart_form]').submit();
-                      });
-                    
-                    $('[data-fox=cart_form]').submit(function(){
-                        var discount=0;
-                        $( '[data-integration-price-saved=1]' ).each(function( key, value ) {
-                            if(parseInt(value.innerText.replace(/[^0-9]/g,'')) > discount)
-                            {
-                                discount = parseInt(value.innerText.replace(/[^0-9]/g,''))
-                            }
-                        });
-                        $('#cart_form').append(\"<input type='hidden' name='value_discount' value='\"+discount+\"'>\");
-                    });
-
-                  });"));
-
-            $divFoxScript->addChild($script);
-
             $cartForm->addChild($divFoxScript);
 
-            $foxData = "
-                    <div id='foxData'>
-                    <input type='hidden' data-fox='1' name='product_id_{{ forloop.index }}' value='{{ item.id }}'>
-                    <input type='hidden' data-fox='2' name='variant_id_{{ forloop.index }}' value='{{ item.variant_id }}'>
-                    <input type='hidden' data-fox='3' name='product_price_{{ forloop.index }}' value='{{ item.price }}'>
-                    <input type='hidden' data-fox='4' name='product_image_{{ forloop.index }}' value='{{ item.image }}'>
-                    <input type='hidden' data-fox='5' name='product_amount_{{ forloop.index }}' value='{{ item.quantity }}'>
-                  </div>";
-
             $html = $dom->root->outerHtml();
-            preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
-            foreach ($tokens[0] as $key => $item) {
-                if ((stripos($item[0], 'for ') !== false) &&
-                    (stripos($item[0], ' in cart.items') !== false)) {
-                    $html = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
-                }
+
+            foreach ($tokens2[0] as $key => $item) {
+                $from = '/' . preg_quote('fox1-fox1-fox1', '/') . '/';
+                $html = preg_replace($from, $item[0], $html, 1);
             }
 
-            //}
+            foreach ($tokens[0] as $key => $item) {
+                $from = '/' . preg_quote('fox-fox-fox', '/') . '/';
+                $html = preg_replace($from, $item[0], $html, 1);
+            }
 
             return $html;
         } else {
             //thown parse error
+            return '';
         }
     }
 
@@ -813,6 +768,7 @@ class ShopifyService
         if (empty($storeProduct)) {
             return false;
         }
+
         foreach ($storeProduct->getVariants() as $variant) {
             $description = '';
             try {
@@ -836,6 +792,15 @@ class ShopifyService
                                     ->first();
             if ($product) {
                 //plano ja existe, atualiza o plano, produto, produtoplanos
+
+                //                $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())
+                //                    ->getCost();
+                //
+                //                if($productCost)
+                //                {
+                //
+                //                }
+
                 $product->update(
                     [
                         'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
@@ -849,14 +814,13 @@ class ShopifyService
                     ]
                 );
                 /** @var ProductPlan $productPlan */
-                $productPlan = $productPlanModel->newQuery()
-                                                ->where('product_id', $product->id)
+                $productPlan = $productPlanModel->where('product_id', $product->id)
                                                 ->where('amount', 1)
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
                 if (!empty($productPlan)) {
                     /** @var Plan $plan */
-                    $plan = $planModel->newQuery()->find($productPlan->plan_id);
+                    $plan = $planModel->find($productPlan->plan_id);
                     $plan->update(
                         [
                             'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
@@ -865,7 +829,7 @@ class ShopifyService
                             'status'      => '1',
                         ]
                     );
-                    Log::warning('plano atualizado');
+                    //Log::warning('plano atualizado');
                     $photo = '';
                     if (count($storeProduct->getVariants()) > 1) {
                         foreach ($storeProduct->getImages() as $image) {
@@ -882,77 +846,81 @@ class ShopifyService
                         }
                     }
                     if (empty($photo)) {
-                        $photo = $storeProduct->getImage()->getSrc();
+                        $image = $storeProduct->getImage();
+                        if (!empty($image)) {
+                            try {
+                                $photo = $image->getSrc();
+                            } catch (Exception $e) {
+                                Log::warning('Erro ao importar foto do shopify');
+                                report($e);
+                            }
+                        }
+                        //$photo = $storeProduct->getImage()->getSrc();
                     }
                     $product->update(['photo' => $photo]);
                 } else {
-                    $plan = $planModel->newQuery()
-                                      ->create(
-                                          [
-                                              'shopify_id'         => $storeProduct->getId(),
-                                              'shopify_variant_id' => $variant->getId(),
-                                              'project_id'         => $projectId,
-                                              'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                                              'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
-                                              'code'               => '',
-                                              'price'              => $variant->getPrice(),
-                                              'status'             => '1',
-                                          ]
-                                      );
+                    $plan = $planModel->create(
+                        [
+                            'shopify_id'         => $storeProduct->getId(),
+                            'shopify_variant_id' => $variant->getId(),
+                            'project_id'         => $projectId,
+                            'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                            'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                            'code'               => '',
+                            'price'              => $variant->getPrice(),
+                            'status'             => '1',
+                        ]
+                    );
 
-                    $productPlanModel->newQuery()
-                                     ->create(
-                                         [
-                                             'product_id' => $product->id,
-                                             'plan_id'    => $plan->id,
-                                             'amount'     => 1,
-                                         ]
-                                     );
+                    $productPlanModel->create(
+                        [
+                            'product_id' => $product->id,
+                            'plan_id'    => $plan->id,
+                            'amount'     => 1,
+                        ]
+                    );
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
             } else {
                 /** @var Product $product */
-                $product = $productModel->newQuery()
-                                        ->create(
-                                            [
-                                                'user_id'            => $userId,
-                                                'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                                                'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
-                                                'guarantee'          => '0',
-                                                'format'             => 1,
-                                                'category_id'        => '11',
-                                                'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                                             ->getCost(),
-                                                'shopify'            => true,
-                                                'price'              => '',
-                                                'shopify_id'         => $storeProduct->getId(),
-                                                'shopify_variant_id' => $variant->getId(),
-                                                'project_id'         => $projectId,
-                                            ]
-                                        );
+                $product = $productModel->create(
+                    [
+                        'user_id'            => $userId,
+                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'guarantee'          => '0',
+                        'format'             => 1,
+                        'category_id'        => '11',
+                        'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                     ->getCost(),
+                        'shopify'            => true,
+                        'price'              => '',
+                        'shopify_id'         => $storeProduct->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'project_id'         => $projectId,
+                    ]
+                );
                 /** @var Plan $plan */
-                $plan = $planModel->newQuery()
-                                  ->create(
-                                      [
-                                          'shopify_id'         => $storeProduct->getId(),
-                                          'shopify_variant_id' => $variant->getId(),
-                                          'project_id'         => $projectId,
-                                          'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                                          'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
-                                          'code'               => '',
-                                          'price'              => $variant->getPrice(),
-                                          'status'             => '1',
-                                      ]
-                                  );
+                $plan = $planModel->create(
+                    [
+                        'shopify_id'         => $storeProduct->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'project_id'         => $projectId,
+                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'code'               => '',
+                        'price'              => $variant->getPrice(),
+                        'status'             => '1',
+                    ]
+                );
                 $plan->update(['code' => Hashids::encode($plan->id)]);
-                $productPlanModel->newQuery()
-                                 ->create(
-                                     [
-                                         'product_id' => $product->id,
-                                         'plan_id'    => $plan->id,
-                                         'amount'     => '1',
-                                     ]
-                                 );
+                $productPlanModel->create(
+                    [
+                        'product_id' => $product->id,
+                        'plan_id'    => $plan->id,
+                        'amount'     => '1',
+                    ]
+                );
                 $photo = '';
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
@@ -969,7 +937,16 @@ class ShopifyService
                     }
                 }
                 if (empty($photo)) {
-                    $photo = $storeProduct->getImage()->getSrc();
+                    $image = $storeProduct->getImage();
+                    if (!empty($image)) {
+                        try {
+                            $photo = $image->getSrc();
+                        } catch (Exception $e) {
+                            Log::warning('Erro ao importar foto do shopify');
+                            report($e);
+                        }
+                    }
+                    //$photo = $storeProduct->getImage()->getSrc();
                 }
                 $product->update(['photo' => $photo]);
             }
@@ -991,28 +968,44 @@ class ShopifyService
         $userModel = new User();
         /** @var ShopifyIntegration $shopifyIntegrationModel */
         $shopifyIntegrationModel = new ShopifyIntegration();
-        $shopifyIntegrationModel->newQuery()
-                                ->where('project_id', $projectId)
+        $shopifyIntegrationModel->where('project_id', $projectId)
                                 ->update(
                                     [
                                         'status' => $shopifyIntegrationModel->present()->getStatus('pending'),
                                     ]
                                 );
-        /** @var \Slince\Shopify\Manager\Product\Product[] $storeProducts */
+
         $storeProducts = $this->getShopProducts();
-        /** @var \Slince\Shopify\Manager\Product\Product $shopifyProduct */
-        foreach ($storeProducts as $shopifyProduct) {
-            $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+
+        Log::warning('inicio integracao shopify');
+        $page = 1;
+        while (!empty($storeProducts)) {
+
+            $i = 0;
+            foreach ($storeProducts as $shopifyProduct) {
+                try {
+                    $i = $i + 1;
+                    $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+                } catch (Exception $e) {
+                    Log::warning('Erro ao importar produto do shopify');
+                    report($e);
+                }
+            }
+
+            $page          += 1;
+            $storeProducts = $this->getShopProducts($page);
         }
+        Log::warning('fim integracao shopify');
+
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
+
         /** @var Project $project */
-        $project = $projectModel->newQuery()->find($projectId);
+        $project = $projectModel->find($projectId);
         /** @var User $user */
-        $user = $userModel->newQuery()->find($userId);
+        $user = $userModel->find($userId);
         if (!empty($project) && !empty($user)) {
             event(new ShopifyIntegrationReadyEvent($user, $project));
-            $shopifyIntegrationModel->newQuery()
-                                    ->where('project_id', $projectId)
+            $shopifyIntegrationModel->where('project_id', $projectId)
                                     ->update(
                                         [
                                             'status' => $shopifyIntegrationModel->present()->getStatus('approved'),
@@ -1112,11 +1105,25 @@ class ShopifyService
     /**
      * @return array|\Slince\Shopify\Manager\Product\Product[]
      */
-    public function getShopProducts()
+    public function getShopProducts($page = null)
     {
         if (!empty($this->client)) {
+            if ($page) {
+                $filter = [
+                    'page'  => $page,
+                    'limit' => 250,
+                ];
+            } else {
+                $filter = [
+                    'limit' => 250,
+                ];
+            }
+
+//            $x = $this->client->getProductManager()
+//                              ->count();
+
             return $this->client->getProductManager()
-                                ->findAll([]);
+                                ->findAll($filter);
         } else {
             return [];
         }

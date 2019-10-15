@@ -27,10 +27,6 @@ class RegisterController extends Controller
 
         auth()->loginUsingId($userId);
 
-        $companyModel = new Company();
-
-        $companies = $companyModel->where('user_id',\Auth::user()->id)->get();
-
         return response()->redirectTo('/dashboard');
     }
 }

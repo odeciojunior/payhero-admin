@@ -20,7 +20,7 @@
     </div>
     <div class='row'>
         <div class='form-group col-12'>
-            <label for='information'>Tempo de entrega estimado Apresentada</label>
+            <label for='information'>Tempo de entrega apresentado</label>
             <input name='information' type='text' class='input-pad shipping-info' value='' placeholder='10 até 20 dias'
                    maxlength='30'>
         </div>

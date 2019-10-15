@@ -1,4 +1,15 @@
 $(document).ready(function () {
+    let user = '';
+
+    let maskOptions = {
+        onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
+            var masks = ['000.000.000-000', '00.000.000/0000-00'];
+            var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
+            $('#document').mask(mask, maskOptions);
+        }
+    };
+
+    $('#document').mask('000.000.000-000', maskOptions);
 
     getDataProfile();
     function getDataProfile() {
@@ -15,6 +26,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+
                 $('#email').val(response.data.email);
                 $('#name').val(response.data.name);
                 $('#document').val(response.data.document);
@@ -28,8 +40,8 @@ $(document).ready(function () {
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
                 $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function() {
-                    $(this).attr('src','/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
                 });
                 var valuecss = '';
 
@@ -58,7 +70,7 @@ $(document).ready(function () {
 
                 linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
                 $("#td_address_status").append(linha);
-
+                user = response.data.id_code;
             }
         });
     }
@@ -114,7 +126,6 @@ $(document).ready(function () {
                 } else {
                     if (img.naturalWidth < img.naturalHeight) {
                         x1 = Math.floor(img.naturalWidth / 100 * 10);
-                        ;
                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                         y2 = y1 + (x2 - x1);
@@ -176,7 +187,7 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "POST",
-                url: "/api/profile/changepassword",  
+                url: "/api/profile/changepassword",
                 dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -255,6 +266,62 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#nav_taxs").on('click', function () {
+        getTax();
+    });
+
+    function getTax() {
+        $.ajax({
+            method: "GET",
+            url: `/api/profile/${user}/tax`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                setValuesHtml(response.data);
+            }
+        });
+    }
+
+    function setValuesHtml(data) {
+        $("#credit-card-tax").val(data.credit_card_tax + '%');
+        $("#boleto-tax").val(data.boleto_tax + '%');
+        $("#credit-card-release").val('plan-' + data.credit_card_release_money);
+        $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
+        $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
+        $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
+    }
+
+    $("#update_taxes").on("click", function(){
+
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/updatetaxes',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: { plan : $("#credit-card-release").val() },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                alertCustom('success', response.message);
+                $("#credit-card-tax").val(response.data.new_tax_value);
+            }
+        });
+    });
+
 });
 
 Dropzone.options.dropzoneDocuments = {
@@ -263,7 +330,7 @@ Dropzone.options.dropzoneDocuments = {
         'Accept': 'application/json',
     },
     paramName: "file",
-    maxFilesize: 2, 
+    maxFilesize: 2,
     url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     accept: function accept(file, done) {
@@ -336,3 +403,5 @@ Dropzone.options.dropzoneDocuments = {
     }
 
 };
+
+

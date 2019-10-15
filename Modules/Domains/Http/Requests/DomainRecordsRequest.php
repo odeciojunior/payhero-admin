@@ -44,7 +44,7 @@ class DomainRecordsRequest extends FormRequest
             'name-register.string'   => 'O campo nome deve ser preenchido corretamente',
             'value-record.string'    => 'O campo valor deve ser preenchido corretamente',
             'project.required'       => 'Projeto nao encontrado',
-            'domain.required'        => 'Dominio nao econtrado',
+            'domain.required'        => 'Domínio nao econtrado',
         ];
     }
 }

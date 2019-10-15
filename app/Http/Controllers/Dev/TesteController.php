@@ -2,33 +2,36 @@
 
 namespace App\Http\Controllers\Dev;
 
-use App\Http\Controllers\Controller;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use Modules\Core\Entities\Pixel;
+use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Modules\Checkout\Classes\MP;
-use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\DomainRecord;
-use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\HotZappService;
-use Modules\Core\Services\NotazzService;
-use Slince\Shopify\Client;
-use Slince\Shopify\PublicAppCredential;
+use Modules\Checkout\Classes\MP;
+use Illuminate\Http\JsonResponse;
+use Modules\Core\Entities\Domain;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Product;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Transfer;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\Controller;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\DomainRecord;
+use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Services\NotazzService;
+use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\ShopifyService;
+use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Entities\HotZappIntegration;
+use Modules\Core\Entities\ShopifyIntegration;
 
 class TesteController extends Controller
 {
@@ -42,7 +45,15 @@ class TesteController extends Controller
      */
     public function __construct()
     {
-        ///
+        //
+    }
+
+    public function code($code)
+    {
+        $id       = current(Hashids::decode($code));
+        $idSale   = current(Hashids::connection('sale_id')->decode($code));
+        $idPusher = current(Hashids::connection('pusher_connection')->decode($code));
+        dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
     }
 
     /**
@@ -254,24 +265,33 @@ class TesteController extends Controller
         return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
     }
 
+    public function jeanFunction()
+    {
+        //update sem where!
+        try {
+            DB::beginTransaction();
+
+            DB::statement('update sales s
+            set s.sub_total = 
+            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
+            from plans_sales ps
+            where ps.sale_id = s.id) where 1=1');
+
+            DB::commit();
+
+            return "Ok!";
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
+
     public function julioFunction()
     {
 
-        $plans = Plan::whereNotNull('shopify_variant_id')->get();
+        $shopifyService = new ShopifyService('cloudteste.myshopify.com', 'a9630467f0884fceaa3cfd150f836bbe');
 
-        foreach ($plans as $plan) {
-
-            $product = $plan->products->first();
-
-            if (!empty($product)) {
-                $product->update([
-                                     'shopify_id'         => $plan->shopify_id,
-                                     'shopify_variant_id' => $plan->shopify_variant_id,
-                                 ]);
-            }
-        }
-
-        dd('heyy');
+        dd($shopifyService->getShopProducts());
     }
 
     public function parseToArray($xpath, $class)
@@ -300,20 +320,24 @@ class TesteController extends Controller
     {
         //nada
 
+        //
+
         $saleModel = new Sale();
         $nservice  = new NotazzService();
 
         $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
-        // $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+        $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
-        dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
+        //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-        //        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
-        //
+        //        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
         //        $shopifyService->setThemeByRole('main');
+        //        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
+        //        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
+
         //        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
         //        if ($htmlBody) {
         //            //template do layout
@@ -404,6 +428,9 @@ class TesteController extends Controller
                                                                     ]);*/
     }
 
+    /**
+     * Funcao para remover caracteres especiais de produtos shopify
+     */
     public function removeSpecialCharacter()
     {
         $productsModel = new Product();
@@ -442,21 +469,36 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
+        $pixels = Pixel::where('platform', 'like', '%google%')->get();
 
-        $checkoutModel = new Checkout();
+        foreach ($pixels as $pixel) {
+            $pixel->update([
+                               'platform' => 'google_adwords',
+                           ]);
+        }
 
-        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
-                                        ->leftjoin('logs', function($join) {
-                                            $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
-                                        })
-                                        ->whereIn('status', ['recovered', 'abandoned cart'])
-                                        ->get();
+        dd($pixels);
+    }
 
-        foreach ($abandonedCarts as $abandonedCart) {
-            $checkoutModel->find($abandonedCart->id)->update([
-                                                                 'client_name'      => $abandonedCart->name,
-                                                                 'client_telephone' => $abandonedCart->telephone,
-                                                             ]);
+    /**
+     * Funcao tracking code
+     */
+    public function trackingCodeFunction()
+    {
+        $saleModel            = new Sale();
+        $productPlanSaleModel = new ProductPlanSale();
+        $sales                = $saleModel->whereHas('delivery', function($query) {
+            $query->where('tracking_code', '!=', null);
+        })->with('delivery', 'productsPlansSale')->get();
+        foreach ($sales as $sale) {
+            foreach ($sale->productsPlansSale as $product) {
+                $product->update([
+
+                                     'tracking_status_enum' => $productPlanSaleModel->present()
+                                                                                    ->getStatusEnum('posted'),
+                                     'tracking_code'        => $sale->delivery->tracking_code,
+                                 ]);
+            }
         }
     }
 }
