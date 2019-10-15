@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
+use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Pixel;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
@@ -320,20 +321,39 @@ class TesteController extends Controller
     {
         //nada
 
+        //Sérgio Delmutti Ramos da Silva DPVYB34LEL3KzkJ
+
+        //         $saleModel = new Sale();
         //
+        //         $sales = $saleModel->whereHas('client', function($query){
+        //             $query->where('name','LIKE', 'UIARA VAZ');
+        //         })->get();
+        //         dd($sales);
 
-        $saleModel = new Sale();
-        $nservice  = new NotazzService();
-
-        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
-
-        $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+//        $notazzInvoice = new NotazzInvoice();
+//
+//        $invoice  = $notazzInvoice->whereHas('sale', function($querySale) {
+//            $querySale->whereHas('client', function($queryClient) {
+//                $queryClient->where('name', 'LIKE', 'UIARA VAZ');
+//            });
+//        })->get();
+//        dd($invoice);
+        $nservice = new NotazzService();
+        dd($nservice->consultNfse(459));
+        //
+        //        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
+        //
+        //         $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
         //dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-        //        $shopifyService = new ShopifyService('jumbotroninformatica.myshopify.com', '333873dadc466857875493cfb79602a1');
+        //$shopifyService = new ShopifyService('morena-orange.myshopify.com', '649e81ebe2c99f68ba4c7a3048bdaba4');
+        //$shopifyService->deleteShopWebhook();
+        //$shopifyService->createShopifyIntegrationWebhook(188, "https://app.cloudfox.net/postback/shopify/");
+        //dd($shopifyService->getShopWebhook());
+        //$shopifyService->importShopifyStore(154, auth()->user()->id);
         //        $shopifyService->setThemeByRole('main');
         //        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
         //        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);
