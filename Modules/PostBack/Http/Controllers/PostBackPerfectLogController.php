@@ -16,16 +16,14 @@ class PostBackPerfectLogController extends Controller
 {
     public function postBackListener(Request $request)
     {
-//        $requestValidated = $request->validate([
-//            'code' => 'required',
-//            'external_reference' => 'required',
-//            'logistic' => 'required',
-//            'tracking' => 'required',
-//            'updated_at' => 'required',
-//            'status' => 'required',
-//        ]);
-
-        $requestValidated = $request->all();
+        $requestValidated = $request->validate([
+            'code' => 'required',
+            'external_reference' => 'required',
+            'logistic' => 'required',
+            'tracking' => 'required',
+            'updated_at' => 'required',
+            'status' => 'required',
+        ]);
 
         Log::debug(json_encode($requestValidated, JSON_PRETTY_PRINT));
 
