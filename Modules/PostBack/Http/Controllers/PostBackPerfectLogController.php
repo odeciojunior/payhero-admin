@@ -4,8 +4,8 @@ namespace Modules\PostBack\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -16,14 +16,18 @@ class PostBackPerfectLogController extends Controller
 {
     public function postBackListener(Request $request)
     {
-        $requestValidated = $request->validate([
-            'code' => 'required',
-            'external_reference' => 'required',
-            'logistic' => 'required',
-            'tracking' => 'required',
-            'updated_at' => 'required',
-            'status' => 'required',
-        ]);
+//        $requestValidated = $request->validate([
+//            'code' => 'required',
+//            'external_reference' => 'required',
+//            'logistic' => 'required',
+//            'tracking' => 'required',
+//            'updated_at' => 'required',
+//            'status' => 'required',
+//        ]);
+
+        $requestValidated = $request->all();
+
+        Log::debug(json_encode($requestValidated, JSON_PRETTY_PRINT));
 
         $productPlanSaleModel = new ProductPlanSale();
 
@@ -33,7 +37,7 @@ class PostBackPerfectLogController extends Controller
 
             $status = 0;
 
-            switch ($requestValidated['status']){
+            switch ($requestValidated['status']) {
                 case 'sent':
                 case 'out_for_delivery':
                 case 'resend':
@@ -58,6 +62,8 @@ class PostBackPerfectLogController extends Controller
 
             //event(new TrackingCodeUpdatedEvent($sale));
         }
+
+        return response()->json(['message' => 'ok']);
     }
 }
 
