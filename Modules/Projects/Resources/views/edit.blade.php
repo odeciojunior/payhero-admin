@@ -180,17 +180,17 @@
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             <option value="1">1</option>
-                            <option value="2" disabled>2</option>
-                            <option value="3" disabled>3</option>
-                            <option value="4" disabled>4</option>
-                            <option value="5" disabled>5</option>
-                            <option value="6" disabled>6</option>
-                            <option value="7" disabled>7</option>
-                            <option value="8" disabled>8</option>
-                            <option value="9" disabled>9</option>
-                            <option value="10" disabled>10</option>
-                            <option value="11" disabled>11</option>
-                            <option value="12" disabled>12</option>
+                            <option value="2" >2</option>
+                            <option value="3" >3</option>
+                            <option value="4" >4</option>
+                            <option value="5" >5</option>
+                            <option value="6" >6</option>
+                            <option value="7" >7</option>
+                            <option value="8" >8</option>
+                            <option value="9" >9</option>
+                            <option value="10" >10</option>
+                            <option value="11" >11</option>
+                            <option value="12" >12</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do produtor)

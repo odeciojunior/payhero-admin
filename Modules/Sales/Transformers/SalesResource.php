@@ -42,6 +42,7 @@ class SalesResource extends Resource
             'convertax_value'       => $this->details->convertax_value ?? null,
             'taxa'                  => $this->details->taxa ?? null,
             'taxaReal'              => $this->details->taxaReal ?? null,
+            'installment_tax'       => $this->present()->getInstallmentValue,
         ];
     }
 }

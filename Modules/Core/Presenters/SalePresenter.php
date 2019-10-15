@@ -28,6 +28,11 @@ class SalePresenter extends Presenter
         return number_format($this->shipment_value, 2, ',', '.');
     }
 
+    public function getInstallmentValue()
+    {
+        return number_format(intval($this->installment_tax)/100, 2, ',', '.');
+    }
+
     /**
      * @return string
      */

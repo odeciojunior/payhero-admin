@@ -7,15 +7,7 @@ $(document).ready(function () {
     let dropzoneDocuments = $("#dropzoneDocuments");
     initLinks();
     initForm();
-    //mascara cnpj
-    var optionsCompanyDocument = {
-        onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-            var masks = ['000.000.000-000', '00.000.000/0000-00'];
-            var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-            $('#company_document').mask(mask, options);
-        }
-    };
-    $('#company_document').mask('000.000.000-000', optionsCompanyDocument);
+
     $(document).on("blur", '#routing_number', function () {
         $.ajax({
             method: "GET",
@@ -92,6 +84,17 @@ $(document).ready(function () {
                 $("#td_address_status").append("<span class='badge badge-" + getStatusBadge(company.address_document_status) + "'>" + company.address_document_translate + "</span>");
                 $("#td_contract_status").append("<span class='badge badge-" + getStatusBadge(company.contract_document_status) + "'>" + company.contract_document_translate + "</span>");
                 configSubmits();
+
+                //mascara cnpj
+                var optionsCompanyDocument = {
+                    onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
+
+                        var masks = ['000.000.000-000', '00.000.000/0000-00'];
+                        var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
+                        $('#company_document').mask(mask, options);
+                    }
+                };
+                $('#company_document').val().replace(/\D/g, '').length > 14 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-000', optionsCompanyDocument);
             }
         });
     }

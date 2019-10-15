@@ -151,6 +151,16 @@ $(() => {
             $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
         }
 
+
+        if (sale.installment_tax !== '0,00') {
+            $("#taxa-installment-value").html('R$ ' + sale.installment_tax);
+            $("#taxas-installment-free-label").show();
+            $("#taxa-installment-value").show();
+        } else {
+            $("#taxas-installment-free-label").hide();
+            $("#taxa-installment-value").hide();
+        }
+
         $("#desconto-value").html("R$ " + sale.discount);
         $("#total-value").html("R$ " + sale.total);
 
@@ -188,7 +198,7 @@ $(() => {
     }
 
     function getNotazz(invoices) {
-        if(!isEmpty(invoices)){
+        if (!isEmpty(invoices)) {
 
             let lastInvoice = invoices[invoices.length - 1];
 
@@ -245,7 +255,7 @@ $(() => {
                 var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
                 var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -270,7 +280,6 @@ $(() => {
 
                 var postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;
 
-
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -293,7 +302,7 @@ $(() => {
 
             if (invoice.date_canceled) {
 
-                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}

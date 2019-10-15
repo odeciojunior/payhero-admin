@@ -97,6 +97,7 @@ class Sale extends Model
         'shopify_discount',
         'dolar_quotation',
         'first_confirmation',
+        'installment_tax',
         'attempts',
         'created_at',
         'deleted_at',
