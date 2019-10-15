@@ -32,9 +32,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:pendingdomains')->hourly();
 
         //generate all sale approved invoices
-        //$schedule->command('generate:notazzinvoicessalesapproved')->hourly();
+        $schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
         //verify pending notazz invoices
-        //$schedule->command('verify:pendingnotazzinvoices')->hourly();
+        $schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
 
         // notify user to paid boletos
         $schedule->command('verify:boletopaid')->dailyAt('10:00');

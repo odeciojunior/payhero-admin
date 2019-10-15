@@ -102,7 +102,7 @@ class NotazzService
 
             $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-            $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+            $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
             $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
             $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
@@ -201,7 +201,7 @@ class NotazzService
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-                $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
                 $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
@@ -529,11 +529,12 @@ class NotazzService
                                              ])
             //->whereColumn('attempts', '<', 'max_attempts')
                                              ->where('schedule', '<', Carbon::now())
+                                             ->limit(40)
                                              ->get();
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
-            SendNotazzInvoiceJob::dispatch($notazzInvoice->id);
+            SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
         }
     }
 
@@ -563,13 +564,16 @@ class NotazzService
                                                              'notazz_integration_id' => $notazzIntegrationId,
                                                              'invoice_type'          => $invoiceType,
                                                              'notazz_id'             => null,
-                                                             'external_id'           => Hashids::encode($saleId),
+                                                             //'external_id'           => Hashids::encode($saleId),
                                                              'status'                => $notazzInvoiceModel->present()
                                                                                                            ->getStatus('pending'),
                                                              'canceled_flag'         => false,
                                                              'schedule'              => $schedule,
                                                              'date_pending'          => Carbon::now(),
                                                          ]);
+            $notazzInvoice->update([
+                                       'external_id' => $notazzInvoice->id,
+                                   ]);
 
             if ($notazzInvoice) {
                 return true;
