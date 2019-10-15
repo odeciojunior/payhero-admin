@@ -110,9 +110,16 @@ $(() => {
     }
 
     function renderSale(sale) {
+        console.log(sale.release_date);
         //Dados da venda
         $('#sale-code').text(sale.id);
         $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
+        if (sale.release_date != '') {
+            $('#release-date').text('Data de liberação: ' + sale.release_date);
+        }else{
+            $('#release-date').text('');
+        }
+
         //Status
         let status = $('.modal-body #status');
         status.html('');
@@ -150,7 +157,6 @@ $(() => {
             $('#cambio-value span').text('US$ ' + sale.taxa);
             $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
         }
-
 
         if (sale.installment_tax !== '0,00') {
             $("#taxa-installment-value").html('R$ ' + sale.installment_tax);
