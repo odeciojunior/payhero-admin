@@ -17,6 +17,7 @@
                     <h3 id="sale-code" class="text-uppercase"></h3>
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
+                    <p id='release-date'></p>
                     <div id="status" class="status d-inline">
                     </div>
                 </div>
@@ -212,6 +213,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js?v=2') }}"></script>
     @endpush
 </div>

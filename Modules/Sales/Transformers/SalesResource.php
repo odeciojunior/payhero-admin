@@ -43,6 +43,7 @@ class SalesResource extends Resource
             'taxa'                  => $this->details->taxa ?? null,
             'taxaReal'              => $this->details->taxaReal ?? null,
             'installment_tax'       => $this->present()->getInstallmentValue,
+            'release_date'          => $this->details->release_date,
         ];
     }
 }

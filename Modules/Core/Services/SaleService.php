@@ -189,6 +189,16 @@ class SaleService
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
 
+        if ($sale->payment_method == 2) {
+            $transaction->release_date = null;
+        } else {
+            if ($sale->status != 1) {
+                $transaction->release_date = null;
+            } else {
+                $transaction->release_date = Carbon::parse($transaction->release_date);
+            }
+        }
+
         //add details to sale
         $sale->details = (object) [
             //invoices
@@ -204,6 +214,7 @@ class SaleService
             'convertax_value'  => $convertaxValue,
             'taxa'             => number_format($taxa / 100, 2, ',', '.'),
             'taxaReal'         => $taxaReal,
+            'release_date'     => $transaction->release_date != null ? $transaction->release_date->format('d/m/Y') : '',
         ];
 
         return $sale;

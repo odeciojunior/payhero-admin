@@ -57,6 +57,7 @@ class SalesApiController extends Controller
             if (isset($id)) {
                 $sale = $saleService->getSaleWithDetails($id);
 
+
                 return new SalesResource($sale);
             }
 
