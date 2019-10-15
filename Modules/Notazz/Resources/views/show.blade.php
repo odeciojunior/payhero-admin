@@ -14,7 +14,7 @@
         <div class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
-                    <h1 class="page-title">Vendas</h1>
+                    <h1 class="page-title">Relatorios Notazz</h1>
                 </div>
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
@@ -38,20 +38,6 @@
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="projeto">Projeto</label>
-                            <select name='select_project' id="projeto" class="form-control select-pad">
-                                <option value="">Todos projetos</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="forma">Forma de pagamento</label>
-                            <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                <option value="">Boleto e cartão de crédito</option>
-                                <option value="1">Cartão de crédito</option>
-                                <option value="2">Boleto</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="status">Status</label>
                             <select name='sale_status' id="status" class="form-control select-pad">
                                 <option value="">Todos status</option>
@@ -65,24 +51,18 @@
                             <label for="comprador">Nome do cliente</label>
                             <input name='client' id="comprador" class="input-pad" placeholder="cliente">
                         </div>
-                    </div>
-                    <div class="row mt-15">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="comprador">Transação</label>
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="date_type">Data</label>
-                            <select name='date_type' id="date_type" class="form-control select-pad">
-                                <option value="start_date">Data do pedido</option>
-                                <option value="end_date">Data do pagamento</option>
-                            </select>
+                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
+                    </div>
+                    <div class="row mt-15">
+                        <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
+                            <button id="bt_filtro" class="btn btn-primary col-sm-12">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
                         </div>
@@ -91,27 +71,30 @@
                     </div>
                 </div>
             </form>
-
-            <!-- Resumo -->
-            <div class="fixhalf"></div>
-            <div class="card shadow p-20" style='display:block;'>
-                <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas</h6>
-                        <h4 id="total-sales" class="number text-center green-gradient"></h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão </h6>
-                        <h4 id="comission" class="number text-center orange-gradient"></h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > trending_up </i> Total </h6>
-                        <h4 id="total" class="number text-center green-gradient"></i>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-
+            <!-- Resumo  (PODE SE TORNAR UM RESUMO GERAL DA INTEGRAÇÃO NO FUTURO) -->
+        {{--            <div class="fixhalf"></div>
+                    <div class="card shadow p-20" style='display:block;'>
+                        <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                <h6 class="text-center green-gradient">
+                                    <i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas
+                                </h6>
+                                <h4 id="total-sales" class="number text-center green-gradient"></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="text-center orange-gradient">
+                                    <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão
+                                </h6>
+                                <h4 id="comission" class="number text-center orange-gradient"></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="text-center green-gradient">
+                                    <i class="material-icons align-middle green-gradient mr-1"> trending_up </i> Total </h6>
+                                <h4 id="total" class="number text-center green-gradient"></i>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>--}}
             <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
@@ -119,14 +102,11 @@
                     <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                         <thead>
                             <tr>
-                                <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                <td class="table-title">Projeto</td>
+                                <td class="table-title display-sm-none display-m-none display-lg-none">Transação</td>
                                 <td class="table-title">Descrição</td>
                                 <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title">Forma</td>
                                 <td class="table-title">Status</td>
                                 <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title display-sm-none">Pagamento</td>
                                 <td class="table-title">Comissão</td>
                                 <td class="table-title" width="80px;"> &nbsp;</td>
                             </tr>
@@ -140,7 +120,6 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
-
             <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
@@ -153,53 +132,53 @@
         {{--        </div>--}}
     </div>
 
-    <!-- Modal regerar boleto-->
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-lg d-flex justify-content-center">
-            <div class="modal-content w-450" id="conteudo_modal_add">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" style="font-weight: 700;">Regerar boleto</h4>
-                </div>
-                <div class="pt-10 pr-20 pl-20 modal_regerar_boleto_body">
-                    <div class="form-group">
-                        <label for="date">Data de vencimeto do boleto:</label>
-                        <input name='date' id="date" class="form-control input-pad" type="date">
-                        <input type='hidden' name='saleId' id='saleId'>
-                    </div>
-                    <div class="col-6">
-                        <div class="switch-holder">
-                            <label for="token" class='mb-10'>Aplicar desconto:</label>
-                            <br>
-                            <label class="switch">
-                                <input type="checkbox" value='1' id="apply_discount" class='check'>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row" id="div_discount" style="display:none">
-                        <div class="col-6">
-                            <label for="discount_type"> Tipo:</label>
-                            <select id="discount_type" class="form-control">
-                                <option value="percentage" selected>Porcentagem</option>
-                                <option value="value">Valor</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label id="label_discount_value" for="discount_value">Valor (ex: 20%)</label>
-                            <input id="discount_value" class="form-control" placeholder="Valor">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="margin-top: 15px">
-                    <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Modal regerar boleto (NAO ULTILIZADO POR ENQUANTO)-->
+    {{-- <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+         <div class="modal-dialog modal-lg d-flex justify-content-center">
+             <div class="modal-content w-450" id="conteudo_modal_add">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">×</span>
+                     </button>
+                     <h4 class="modal-title" style="font-weight: 700;">Regerar boleto</h4>
+                 </div>
+                 <div class="pt-10 pr-20 pl-20 modal_regerar_boleto_body">
+                     <div class="form-group">
+                         <label for="date">Data de vencimeto do boleto:</label>
+                         <input name='date' id="date" class="form-control input-pad" type="date">
+                         <input type='hidden' name='saleId' id='saleId'>
+                     </div>
+                     <div class="col-6">
+                         <div class="switch-holder">
+                             <label for="token" class='mb-10'>Aplicar desconto:</label>
+                             <br>
+                             <label class="switch">
+                                 <input type="checkbox" value='1' id="apply_discount" class='check'>
+                                 <span class="slider round"></span>
+                             </label>
+                         </div>
+                     </div>
+                     <div class="row" id="div_discount" style="display:none">
+                         <div class="col-6">
+                             <label for="discount_type"> Tipo:</label>
+                             <select id="discount_type" class="form-control">
+                                 <option value="percentage" selected>Porcentagem</option>
+                                 <option value="value">Valor</option>
+                             </select>
+                         </div>
+                         <div class="col-6">
+                             <label id="label_discount_value" for="discount_value">Valor (ex: 20%)</label>
+                             <input id="discount_value" class="form-control" placeholder="Valor">
+                         </div>
+                     </div>
+                 </div>
+                 <div class="modal-footer" style="margin-top: 15px">
+                     <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
+                     <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                 </div>
+             </div>
+         </div>
+     </div>--}}
     <!-- End Modal -->
 
     @push('scripts')
