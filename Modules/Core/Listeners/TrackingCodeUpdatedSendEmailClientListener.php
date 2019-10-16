@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Domain;
 use Illuminate\Queue\InteractsWithQueue;
 use Modules\Core\Services\SaleService;
@@ -21,6 +22,7 @@ class TrackingCodeUpdatedSendEmailClientListener
         $sendGridService = new SendgridService();
         $saleService     = new SaleService();
         $domainModel     = new Domain();
+
         $clientName      = $event->sale->client->name;
         $clientEmail     = $event->sale->client->email;
 
@@ -28,16 +30,18 @@ class TrackingCodeUpdatedSendEmailClientListener
         $projectContact  = $event->sale->project->contact;
         $clientNameExploded = explode(' ', $clientName);
         $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
-        $products           = $saleService->getProducts($event->sale->id);
+        //$products           = $saleService->getProducts($event->sale->id);
+
         $data = [
             'name'            => $clientNameExploded[0],
             'project_logo'    => $event->sale->project->logo,
-            'tracking_code'   => $event->sale->delivery()->first()->tracking_code,
+            'tracking_code'   => $event->productPlanSale->tracking_code,
             'project_contact' => $projectContact,
-            "products"        => $products,
+            "products"        => $event->products,
         ];
-        if (getenv('APP_ENV') != 'local') {
-            $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
-        }
+
+        Log::debug(json_encode($data, JSON_PRETTY_PRINT));
+
+        $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
     }
 }
