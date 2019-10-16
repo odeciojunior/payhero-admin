@@ -7,12 +7,14 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Products\Transformers\ProductsSaleResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -242,27 +244,19 @@ class SaleService
     }
 
     /**
-     * @return array
+     * @param null $saleId
+     * @return AnonymousResourceCollection|null
      */
     public function getProducts($saleId = null)
     {
         try {
-            $saleModel    = new Sale();
-            $productModel = new Product();
-
             if ($saleId) {
 
-                $sale = $saleModel->with([
-                                             'plansSales.plan.products',
-                                         ])->find($saleId);
+                $productService = new ProductService();
 
-                $plansIds = $sale->plansSales->pluck('plan_id')->toArray();
+                $products = $productService->getProductsBySale($saleId);
 
-                $products = $productModel->whereHas('productsPlans', function($query) use ($plansIds) {
-                    $query->whereIn('plan_id', $plansIds);
-                })->get();
-
-                return $products;
+                return ProductsSaleResource::collection($products);
             } else {
                 return null;
             }
