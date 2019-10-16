@@ -16,6 +16,7 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoveryService
 {
@@ -211,6 +212,8 @@ class SalesRecoveryService
             $client->telephone       = 'Numero Inválido';
         }
 
+        $checkout['sale_id'] = Hashids::connection('sale_id')->encode($sale->id);
+
         $checkout['hours']      = with(new Carbon($sale->created_at))->format('H:i:s');
         $checkout['date']       = with(new Carbon($sale->created_at))->format('d/m/Y');
         $checkout['total']      = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
@@ -262,7 +265,7 @@ class SalesRecoveryService
             $link = 'Domínio removido';
         }
 
-        $products = $saleService->getProducts($sale->id);
+        $products = $saleService->getProducts($checkout['sale_id']);
 
         $client->document = FoxUtils::getDocument($client->document);
 

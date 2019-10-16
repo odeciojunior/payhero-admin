@@ -94,7 +94,8 @@
                             </select>
                         </div>
                         <div class='form-group col-lg-10'>
-                            <input id='name-register' name='name-register' class='input-pad' placeholder='Nome'>
+                            <input id='name-register' name='name-register' class='input-pad' placeholder='Nome' required>
+                            <p id='error-name-register-dns' class='text-danger' style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                         <div class='form-group col-lg-3'>
                             <select id='proxy-select' name='proxy' class='input-pad'>
@@ -103,7 +104,8 @@
                             </select>
                         </div>
                         <div class='col-lg-8'>
-                            <input id='value-record' name='value-record' class='input-pad' placeholder='Valor'>
+                            <input id='value-record' name='value-record' class='input-pad' placeholder='Valor' required>
+                            <p id='error-value-record' class='text-danger' style='display:none;'>O campo valor é obrigatório</p>
                         </div>
                         <div class='col-lg-1'>
                             <button class='btn btn-primary' id='bt-add-record' title='Adicionar novo registro dns'>

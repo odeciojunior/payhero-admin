@@ -113,6 +113,12 @@ $(() => {
         //Dados da venda
         $('#sale-code').text(sale.id);
         $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
+        if (sale.release_date != '') {
+            $('#release-date').text('Data de liberação: ' + sale.release_date);
+        } else {
+            $('#release-date').text('');
+        }
+
         //Status
         let status = $('.modal-body #status');
         status.html('');
@@ -149,6 +155,15 @@ $(() => {
             $('#cambio-label span').text('Câmbio (1 $ = R$ ' + sale.dolar_quotation + '): ');
             $('#cambio-value span').text('US$ ' + sale.taxa);
             $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
+        }
+
+        if (sale.installment_tax !== '0,00') {
+            $("#taxa-installment-value").html('R$ ' + sale.installment_tax);
+            $("#taxas-installment-free-label").show();
+            $("#taxa-installment-value").show();
+        } else {
+            $("#taxas-installment-free-label").hide();
+            $("#taxa-installment-value").hide();
         }
 
         $("#desconto-value").html("R$ " + sale.discount);
@@ -188,7 +203,7 @@ $(() => {
     }
 
     function getNotazz(invoices) {
-        if(!isEmpty(invoices)){
+        if (!isEmpty(invoices)) {
 
             let lastInvoice = invoices[invoices.length - 1];
 
@@ -245,7 +260,7 @@ $(() => {
                 var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
                 var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -270,7 +285,6 @@ $(() => {
 
                 var postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;
 
-
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -293,7 +307,7 @@ $(() => {
 
             if (invoice.date_canceled) {
 
-                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}

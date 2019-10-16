@@ -102,7 +102,7 @@ class NotazzService
 
             $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-            $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+            $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
             $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
             $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
@@ -134,7 +134,7 @@ class NotazzService
                                       ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
 
                                       'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
-                                      'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
+                                      'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
                                       'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
                                       //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
                                       //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
@@ -201,7 +201,7 @@ class NotazzService
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-                $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
                 $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
@@ -234,7 +234,7 @@ class NotazzService
                                           ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
 
                                           'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
-                                          'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
+                                          'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
                                           'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
                                           //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
                                           //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
@@ -529,11 +529,12 @@ class NotazzService
                                              ])
             //->whereColumn('attempts', '<', 'max_attempts')
                                              ->where('schedule', '<', Carbon::now())
+                                             ->limit(40)
                                              ->get();
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
-            SendNotazzInvoiceJob::dispatch($notazzInvoice->id);
+            SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
         }
     }
 
@@ -563,13 +564,16 @@ class NotazzService
                                                              'notazz_integration_id' => $notazzIntegrationId,
                                                              'invoice_type'          => $invoiceType,
                                                              'notazz_id'             => null,
-                                                             'external_id'           => Hashids::encode($saleId),
+                                                             //'external_id'           => Hashids::encode($saleId),
                                                              'status'                => $notazzInvoiceModel->present()
                                                                                                            ->getStatus('pending'),
                                                              'canceled_flag'         => false,
                                                              'schedule'              => $schedule,
                                                              'date_pending'          => Carbon::now(),
                                                          ]);
+            $notazzInvoice->update([
+                                       'external_id' => $notazzInvoice->id,
+                                   ]);
 
             if ($notazzInvoice) {
                 return true;

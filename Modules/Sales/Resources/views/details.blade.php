@@ -17,6 +17,7 @@
                     <h3 id="sale-code" class="text-uppercase"></h3>
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
+                    <p id='release-date'></p>
                     <div id="status" class="status d-inline">
                     </div>
                 </div>
@@ -73,6 +74,12 @@
                         <div class='col-lg-4 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
+                        <div class='col-lg-8'>
+                            <span id="taxas-installment-free-label" style='display:none;' class='text-muted ft-12'>Taxa de parcelamento</span>
+                        </div>
+                        <div class='col-lg-4 text-right'>
+                            <span id="taxa-installment-value" style='display:none;' class='text-muted ft-12'></span>
+                        </div>
                         <div id="convertax-label" class='col-lg-8' style="display:none">
                             <span class='text-muted ft-12'>App ConvertaX: </span>
                         </div>
@@ -91,10 +98,12 @@
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                            role="tab"
-                           style="width:50%;">Cliente</a>
+                           style="width:50%;">Cliente
+                        </a>
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                            role="tab"
-                           style="width:50%;">Detalhes</a>
+                           style="width:50%;">Detalhes
+                        </a>
                     </div>
                 </div>
                 <div class="tab-content p-10" id="nav-tabContent">
@@ -121,15 +130,15 @@
                             <h4> Rastreio </h4>
                             <table class='table table-striped mt-15'>
                                 <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Rastreio</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Rastreio</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
                                 </thead>
                                 <tbody id='data-tracking-products'>
-                                {{-- js carregado--}}
+                                    {{-- js carregado--}}
                                 </tbody>
                             </table>
                         </div>
@@ -204,6 +213,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js?v=2') }}"></script>
     @endpush
 </div>

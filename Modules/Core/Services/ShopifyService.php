@@ -768,6 +768,7 @@ class ShopifyService
         if (empty($storeProduct)) {
             return false;
         }
+
         foreach ($storeProduct->getVariants() as $variant) {
             $description = '';
             try {
@@ -828,7 +829,7 @@ class ShopifyService
                             'status'      => '1',
                         ]
                     );
-                    Log::warning('plano atualizado');
+                    //Log::warning('plano atualizado');
                     $photo = '';
                     if (count($storeProduct->getVariants()) > 1) {
                         foreach ($storeProduct->getImages() as $image) {
@@ -847,7 +848,12 @@ class ShopifyService
                     if (empty($photo)) {
                         $image = $storeProduct->getImage();
                         if (!empty($image)) {
-                            $photo = $image->getSrc();
+                            try {
+                                $photo = $image->getSrc();
+                            } catch (Exception $e) {
+                                Log::warning('Erro ao importar foto do shopify');
+                                report($e);
+                            }
                         }
                         //$photo = $storeProduct->getImage()->getSrc();
                     }
@@ -933,7 +939,12 @@ class ShopifyService
                 if (empty($photo)) {
                     $image = $storeProduct->getImage();
                     if (!empty($image)) {
-                        $photo = $image->getSrc();
+                        try {
+                            $photo = $image->getSrc();
+                        } catch (Exception $e) {
+                            Log::warning('Erro ao importar foto do shopify');
+                            report($e);
+                        }
                     }
                     //$photo = $storeProduct->getImage()->getSrc();
                 }
@@ -963,13 +974,31 @@ class ShopifyService
                                         'status' => $shopifyIntegrationModel->present()->getStatus('pending'),
                                     ]
                                 );
-        /** @var \Slince\Shopify\Manager\Product\Product[] $storeProducts */
+
         $storeProducts = $this->getShopProducts();
-        /** @var \Slince\Shopify\Manager\Product\Product $shopifyProduct */
-        foreach ($storeProducts as $shopifyProduct) {
-            $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+
+        Log::warning('inicio integracao shopify');
+        $page = 1;
+        while (!empty($storeProducts)) {
+
+            $i = 0;
+            foreach ($storeProducts as $shopifyProduct) {
+                try {
+                    $i = $i + 1;
+                    $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
+                } catch (Exception $e) {
+                    Log::warning('Erro ao importar produto do shopify');
+                    report($e);
+                }
+            }
+
+            $page          += 1;
+            $storeProducts = $this->getShopProducts($page);
         }
+        Log::warning('fim integracao shopify');
+
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
+
         /** @var Project $project */
         $project = $projectModel->find($projectId);
         /** @var User $user */
@@ -1076,11 +1105,25 @@ class ShopifyService
     /**
      * @return array|\Slince\Shopify\Manager\Product\Product[]
      */
-    public function getShopProducts()
+    public function getShopProducts($page = null)
     {
         if (!empty($this->client)) {
+            if ($page) {
+                $filter = [
+                    'page'  => $page,
+                    'limit' => 250,
+                ];
+            } else {
+                $filter = [
+                    'limit' => 250,
+                ];
+            }
+
+//            $x = $this->client->getProductManager()
+//                              ->count();
+
             return $this->client->getProductManager()
-                                ->findAll([]);
+                                ->findAll($filter);
         } else {
             return [];
         }

@@ -91,11 +91,8 @@ $(document).ready(function () {
 
     function getFilters(urlParams = false) {
         let data = {
-            'project': $("#projeto").val(),
-            'payment_method': $("#forma").val(),
             'status': $("#status").val(),
             'client': $("#comprador").val(),
-            'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'transaction': $("#transaction").val(),
         };
@@ -181,16 +178,18 @@ $(document).ready(function () {
         });
     }
 
-    // Obtem lista de vendas
+    // Obtem lista de integrações notazz
     function atualizar(link = null) {
 
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + getFilters(true).substr(1);
+            link = '/apps/notazz/invoice/' + extractIdFromPathName();
         } else {
-            link = '/api/sales' + link + getFilters(true);
+            link = '/apps/notazz/invoice/' + link + getFilters(true);
         }
+
+        console.log(link)
 
         $.ajax({
             method: "GET",
