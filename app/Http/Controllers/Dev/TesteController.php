@@ -269,7 +269,7 @@ class TesteController extends Controller
 
     public function jeanFunction()
     {
-//        //update sem where!
+//        //update sem where! popula a coluno sub_total
 //        try {
 //            DB::beginTransaction();
 //
@@ -287,6 +287,7 @@ class TesteController extends Controller
 //            dd($e);
 //        }
 
+        //envia emails de atualizacao de tracking
         try {
             $salesModel = new Sale();
             $productPlanSaleModel = new ProductPlanSale();
