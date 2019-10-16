@@ -155,6 +155,10 @@ class FoxUtils
         return current(Hashids::decode($hash));
     }
 
+    /**
+     * @param $dateString
+     * @return bool|mixed
+     */
     public static function validateDateRange($dateString)
     {
         preg_match_all('/(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)[0-9]{2})/', $dateString, $matches);
@@ -167,5 +171,14 @@ class FoxUtils
         }
 
         return false;
+    }
+
+    /**
+     * @param $string
+     * @return string|string[]|null
+     */
+    public static function removeAccents($string)
+    {
+        return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
     }
 }
