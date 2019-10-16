@@ -84,7 +84,7 @@ class ShopifyApiController extends Controller
             $config = new \SocialiteProviders\Manager\Config(
                 env('SHOPIFY_KEY'),
                 env('SHOPIFY_SECRET'),
-                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' : 'http://1ed522bb.ngrok.io/apps/shopify/login/callback',
+                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' : 'http://873b2a90.ngrok.io/apps/shopify/login/callback',
                 ['subdomain' => $urlStore]
             );
 
@@ -150,7 +150,6 @@ class ShopifyApiController extends Controller
                                                                 'invoice_description'        => $shopifyName,
                                                                 'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
                                                                 'shopify_id'                 => $shopifyService->getShopId(),
-                                                                'status'                     => $projectModel->present()->getStatus('approved'),
                                                                  'visibility'                 => 'private',
                                                                  'percentage_affiliates'      => '0',
                                                                  'automatic_affiliation'      => false,
