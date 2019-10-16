@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
-use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProductService;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -18,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Transfer;
 use Vinkla\Hashids\Facades\Hashids;
@@ -268,19 +269,81 @@ class TesteController extends Controller
 
     public function jeanFunction()
     {
-        //update sem where!
+//        //update sem where!
+//        try {
+//            DB::beginTransaction();
+//
+//            DB::statement('update sales s
+//            set s.sub_total =
+//            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
+//            from plans_sales ps
+//            where ps.sale_id = s.id) where 1=1');
+//
+//            DB::commit();
+//
+//            return "Ok!";
+//        } catch (Exception $e) {
+//            DB::rollBack();
+//            dd($e);
+//        }
+
         try {
+            $salesModel = new Sale();
+            $productPlanSaleModel = new ProductPlanSale();
+            $productService = new ProductService();
+
             DB::beginTransaction();
 
-            DB::statement('update sales s
-            set s.sub_total = 
-            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
-            from plans_sales ps
-            where ps.sale_id = s.id) where 1=1');
+            $postbacks = PostbackLog::select('data')
+                ->where('description', 'shopify')
+                ->where('created_at', '>=', (new Carbon())->subDays(10))
+                ->whereRaw('JSON_EXTRACT(data, "$.fulfillments[0].tracking_number") IS NOT NULL')
+                ->get();
+            foreach ($postbacks as $postback) {
+                $json = json_decode($postback->data, true);
+
+                $shopifyOrder = $json['id'];
+
+                $sale = $salesModel->with(['productsPlansSale'])
+                    ->where('shopify_order', $shopifyOrder)
+                    ->first();
+
+                //venda encontrada
+                if ($sale) {
+                    //obtem os produtos da venda
+                    $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($sale->id));
+                    foreach ($json['fulfillments'] as $fulfillment) {
+                        if (!empty($fulfillment["tracking_number"])) {
+                            //percorre os produtos que vieram no postback
+                            foreach ($fulfillment["line_items"] as $line_item) {
+                                //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
+                                $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
+                                    ->where('amount', $line_item["quantity"]);
+                                if ($products->count()) {
+                                    foreach ($products as &$product) {
+                                        //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
+                                        //do que esta na tabela
+                                        $productPlanSale = $productPlanSaleModel->find($product->product_plan_sale_id);
+                                        if (isset($productPlanSale)) {
+                                            //caso seja diferente, atualiza o registro e dispara o e-mail
+                                            //if ($productPlanSale->tracking_code != $fulfillment["tracking_number"]) {
+                                                $productPlanSale->update(['tracking_code' => $fulfillment["tracking_number"]]);
+                                                //atualiza no array de produtos para enviar no email
+                                                $product->tracking_code = $fulfillment["tracking_number"];
+                                                event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                                            //}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             DB::commit();
 
-            return "Ok!";
+            return "Rodou paizao!";
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);
@@ -520,6 +583,7 @@ class TesteController extends Controller
                                  ]);
             }
         }
+        return 'Pronto!';
     }
 }
 
