@@ -57,11 +57,6 @@ class TesteController extends Controller
         dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
     public function index()
     {
         $this->tgFunction();
@@ -289,10 +284,24 @@ class TesteController extends Controller
 
     public function julioFunction()
     {
+        $checkoutModel = new Checkout();
 
-        $shopifyService = new ShopifyService('cloudteste.myshopify.com', 'a9630467f0884fceaa3cfd150f836bbe');
+        $checkouts = $checkoutModel->where('email_sent_amount', '>' , 10)->get();
 
-        dd($shopifyService->getShopProducts());
+        foreach($checkouts as $checkout){
+            $checkout->update([
+                'email_sent_amount' => '4'
+            ]);
+        }
+
+        $checkouts = $checkoutModel->where('sms_sent_amount', '>' , 10)->get();
+
+        foreach($checkouts as $checkout){
+            $checkout->update([
+                'sms_sent_amount' => '2'
+            ]);
+        }
+
     }
 
     public function parseToArray($xpath, $class)
@@ -331,7 +340,7 @@ class TesteController extends Controller
         //         dd($sales);
 
 //        $notazzInvoice = new NotazzInvoice();
-//
+
 //        $invoice  = $notazzInvoice->whereHas('sale', function($querySale) {
 //            $querySale->whereHas('client', function($queryClient) {
 //                $queryClient->where('name', 'LIKE', 'UIARA VAZ');
