@@ -2,12 +2,9 @@
 
 namespace Modules\Core\Listeners;
 
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Domain;
-use Illuminate\Queue\InteractsWithQueue;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 
 class TrackingCodeUpdatedSendEmailClientListener
@@ -15,7 +12,6 @@ class TrackingCodeUpdatedSendEmailClientListener
 
     /**
      * @param TrackingCodeUpdatedEvent $event
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function handle(TrackingCodeUpdatedEvent $event)
     {
@@ -30,7 +26,6 @@ class TrackingCodeUpdatedSendEmailClientListener
         $projectContact  = $event->sale->project->contact;
         $clientNameExploded = explode(' ', $clientName);
         $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
-        //$products           = $saleService->getProducts($event->sale->id);
 
         $data = [
             'name'            => $clientNameExploded[0],
