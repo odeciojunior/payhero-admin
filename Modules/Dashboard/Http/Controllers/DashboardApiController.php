@@ -65,9 +65,10 @@ class DashboardApiController extends Controller
                     , SUM(CASE WHEN t.status = 'paid' AND t.release_date > CURRENT_DATE THEN COALESCE(t.value, 0) ELSE 0 END) pending_transaction
                     , SUM(CASE WHEN t.status = 'anticipated' AND t.release_date > CURRENT_DATE THEN COALESCE(t.value, 0) - COALESCE(t.antecipable_value, 0) ELSE 0 END) anticipated_transaction
                     , SUM(CASE WHEN t.status = 'paid' AND t.release_date > CURRENT_DATE AND t.antecipation_date <= CURRENT_DATE THEN COALESCE(t.antecipable_value, 0) ELSE 0 END) antecipable_transaction
-                    , SUM(CASE WHEN t.status IN ('paid', 'pending') AND DATE(t.created_at) = CURRENT_DATE THEN COALESCE(t.value, 0) ELSE 0 END) today_transaction
+                    , SUM(CASE WHEN t.status = 'paid' AND DATE(s.end_date) = CURRENT_DATE THEN COALESCE(t.value, 0) ELSE 0 END) today_transaction
                     FROM companies c
                     LEFT JOIN transactions t ON t.company_id = c.id
+                    LEFT JOIN sales s ON s.id = t.sale_id
                     WHERE 1 = 1
                     AND c.user_id = '" . auth()->id() . "'
                     AND c.id IN (" . $companyFilter . ")

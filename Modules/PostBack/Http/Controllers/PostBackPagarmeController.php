@@ -172,11 +172,29 @@ class PostBackPagarmeController extends Controller
                                                        'user_id'     => $company->user_id,
                                                        'value'       => $transaction->value,
                                                        'type'        => 'out',
+                                                       'reason'      => 'chargedback'
                                                    ]);
 
                             $company->update([
                                                  'balance' => $company->balance -= $transaction->value,
                                              ]);
+                        }
+                        elseif($transaction->status == 'anticipated'){
+
+                            $company = $companyModel->find($transaction->company_id);
+
+                            $transferModel->create([
+                                                       'transaction' => $transaction->id,
+                                                       'user_id'     => $company->user_id,
+                                                       'value'       => $transaction->antecipable_value,
+                                                       'type'        => 'out',
+                                                       'reason'      => 'chargedback'
+                                                   ]);
+
+                            $company->update([
+                                                 'balance' => $company->balance -= $transaction->value,
+                                             ]);
+
                         }
 
                         $transaction->update([

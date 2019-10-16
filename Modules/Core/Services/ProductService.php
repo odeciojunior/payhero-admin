@@ -52,6 +52,7 @@ class ProductService
                     ->first()->productsPlanSales->where('sale_id', $sale->id)
                     ->first();
                 $product = $productPlan->product()->first();
+                $product['product_plan_sale_id'] = $productPlanSale->id;
                 $product['sale_status'] = $sale->status;
                 $product['amount'] = $productPlan->amount * $planSale->amount;
                 $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';

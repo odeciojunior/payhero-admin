@@ -110,13 +110,12 @@ $(() => {
     }
 
     function renderSale(sale) {
-        console.log(sale.release_date);
         //Dados da venda
         $('#sale-code').text(sale.id);
         $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
         if (sale.release_date != '') {
             $('#release-date').text('Data de liberação: ' + sale.release_date);
-        }else{
+        } else {
             $('#release-date').text('');
         }
 
