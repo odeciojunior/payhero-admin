@@ -77,9 +77,7 @@
                     <div class="col-12">
                         <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
                             <input name='logo' type='file' class='form-control' id='photo-logo-email'
-                                   style='display:none;'> <img id='image-logo-email' alt='Selecione a foto do projeto'
-                                                               src='{{asset('modules/global/img/projeto.png')}}'
-                                                               style='max-height:250px;max-width:250px;margin:auto'>
+                                   style='display:none;'> <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>
                                 <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
