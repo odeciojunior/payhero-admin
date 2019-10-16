@@ -394,6 +394,12 @@ class TesteController extends Controller
     {
         //nada
 
+        $shopifyIntegrationModel = new ShopifyIntegration();
+
+        $integrations = $shopifyIntegrationModel->has('project')->get();
+
+        dd($integrations);
+
         //Sérgio Delmutti Ramos da Silva DPVYB34LEL3KzkJ
 
         //         $saleModel = new Sale();
