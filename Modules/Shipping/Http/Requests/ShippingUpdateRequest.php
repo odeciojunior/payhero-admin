@@ -14,8 +14,8 @@ class ShippingUpdateRequest extends FormRequest
     {
         return [
             "type"            => "required|string",
-            "name"            => "required|string|max:100",
-            "information"     => "required|string|max:30",
+            "name"            => "required|string|max:60",
+            "information"     => "required|string|max:100",
             "value"           => "nullable|string|max:8",
             "zip_code_origin" => "nullable|string",
             "status"          => "nullable",

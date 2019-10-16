@@ -259,16 +259,16 @@ class ProjectService
                             } catch (Exception $e) {
                                 //remover integração do shopify
 
-                                $this->getShopifyIntegration()
-                                     ->where('project_id', $project->id)
-                                     ->delete();
+//                                $this->getShopifyIntegration()
+//                                     ->where('project_id', $project->id)
+//                                     ->delete();
 
-                                $shopifyIntegration->delete();
-
-                                $projectDeleted = $project->delete();
+//                                $shopifyIntegration->delete();
+//
+//                                $projectDeleted = $project->delete();
 
                                 //throwl
-                                throw new ServiceException('ProjectService - delete - erro ao mudar template ' . $e->getMessage(), $e->getCode(), $e);
+//                                throw new ServiceException('ProjectService - delete - erro ao mudar template ' . $e->getMessage(), $e->getCode(), $e);
                             }
                         }
                     }
