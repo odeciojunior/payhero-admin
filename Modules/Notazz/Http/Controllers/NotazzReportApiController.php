@@ -75,7 +75,6 @@ class NotazzReportApiController extends Controller
 
             if (Gate::allows('show', [$notazzIntegration])) {
                 dd($dataForm);
-
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar integração da Notazz (NotazzReportApiController - show)');
