@@ -810,6 +810,7 @@ class ShopifyService
                                                      ->getCost(),
                         'shopify_id'         => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
+                        'sku'                => $variant->getSku(),
                         'project_id'         => $projectId,
                     ]
                 );
@@ -897,6 +898,7 @@ class ShopifyService
                         'price'              => '',
                         'shopify_id'         => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
+                        'sku'                => $variant->getSku(),
                         'project_id'         => $projectId,
                     ]
                 );
