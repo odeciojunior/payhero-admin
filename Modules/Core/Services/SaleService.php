@@ -196,20 +196,7 @@ class SaleService
         } else {
             $transaction->release_date = null;
         }
-        /*
-                if ($sale->payment_method == 2) {
-                    if ($sale->status == 1) {
-                        $transaction->release_date = Carbon::parse($transaction->release_date);
-                    } else {
-                        $transaction->release_date = null;
-                    }
-                } else {
-                    if ($sale->status != 1) {
-                        $transaction->release_date = null;
-                    } else {
-                        $transaction->release_date = Carbon::parse($transaction->release_date);
-                    }
-                }*/
+
 
         //add details to sale
         $sale->details = (object) [
