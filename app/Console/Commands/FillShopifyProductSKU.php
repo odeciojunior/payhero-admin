@@ -62,9 +62,11 @@ class FillShopifyProductSKU extends Command
             foreach ($integrations as $integration){
                 $shopifyService = new ShopifyService($integration->url_store, $integration->token);
                 $products = $productsModel->where('shopify', 1)
+                    //->whereNull('sku')
                     ->whereNotNull('shopify_variant_id')
                     ->where('project_id', $integration->project_id)
                     ->get();
+                $this->line('Loja: "' . $integration->url_store . '" ' . $products->count() . ' produtos encontrados.');
                 foreach ($products as $product){
                     try {
                         $shopifyProduct = $shopifyService->getProductVariant($product->shopify_variant_id);
