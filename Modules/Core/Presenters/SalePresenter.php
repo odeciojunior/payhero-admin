@@ -30,7 +30,7 @@ class SalePresenter extends Presenter
 
     public function getInstallmentValue()
     {
-        return number_format(intval($this->installment_tax)/100, 2, ',', '.');
+        return number_format(intval($this->installment_tax_value) / 100, 2, ',', '.');
     }
 
     /**
