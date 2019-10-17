@@ -58,6 +58,7 @@ class FillShopifyProductSKU extends Command
             DB::beginTransaction();
 
             $integrations = $shopifyIntegrationsModel::all();
+            $count = 1;
             foreach ($integrations as $integration){
                 $shopifyService = new ShopifyService($integration->url_store, $integration->token);
                 $products = $productsModel->where('shopify', 1)
@@ -71,8 +72,9 @@ class FillShopifyProductSKU extends Command
                         $shopifyProduct = null;
                     }
                     if(isset($shopifyProduct) && $shopifyProduct->getSku()){
-                        $this->line('Adicionando SKU: "' . $shopifyProduct->getSku() . '" ao produto: "' . $product->name . '"');
+                        $this->line($count . '. Adicionando SKU: "' . $shopifyProduct->getSku() . '" ao produto: "' . $product->name . '"');
                         $product->update(['sku' => $shopifyProduct->getSku()]);
+                        $count++;
                     }
                 }
             }
