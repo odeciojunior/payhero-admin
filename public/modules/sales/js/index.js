@@ -97,7 +97,7 @@ $(document).ready(function () {
             'client': $("#comprador").val(),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
-            'transaction': $("#transaction").val(),
+            'transaction': $("#transaction").val().replace('#', ''),
         };
 
         if(urlParams){
@@ -105,7 +105,7 @@ $(document).ready(function () {
             for(let param in data){
                 params += '&' + param + '=' + data[param];
             }
-            return params;
+            return encodeURI(params);
         }else{
             return data;
         }

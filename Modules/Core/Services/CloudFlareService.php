@@ -576,7 +576,7 @@ class CloudFlareService
             $this->getSendgridService()->deleteLinkBrand($newZone->name);
             $linkBrandResponse = $this->getSendgridService()->createLinkBrand($newZone->name);
 
-            if ($linkBrandResponse) {
+            if (!empty($linkBrandResponse)) {
                 foreach ($linkBrandResponse->dns as $responseDns) {
                     $recordId = $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
                     $this->getDomainRecordModel()->create([

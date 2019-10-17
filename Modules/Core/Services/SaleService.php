@@ -7,12 +7,14 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Products\Transformers\ProductsSaleResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -189,6 +191,26 @@ class SaleService
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
 
+        if ($sale->status == 1) {
+            $transaction->release_date = Carbon::parse($transaction->release_date);
+        } else {
+            $transaction->release_date = null;
+        }
+        /*
+                if ($sale->payment_method == 2) {
+                    if ($sale->status == 1) {
+                        $transaction->release_date = Carbon::parse($transaction->release_date);
+                    } else {
+                        $transaction->release_date = null;
+                    }
+                } else {
+                    if ($sale->status != 1) {
+                        $transaction->release_date = null;
+                    } else {
+                        $transaction->release_date = Carbon::parse($transaction->release_date);
+                    }
+                }*/
+
         //add details to sale
         $sale->details = (object) [
             //invoices
@@ -204,6 +226,7 @@ class SaleService
             'convertax_value'  => $convertaxValue,
             'taxa'             => number_format($taxa / 100, 2, ',', '.'),
             'taxaReal'         => $taxaReal,
+            'release_date'     => $transaction->release_date != null ? $transaction->release_date->format('d/m/Y') : '',
         ];
 
         return $sale;
@@ -231,27 +254,19 @@ class SaleService
     }
 
     /**
-     * @return array
+     * @param null $saleId
+     * @return AnonymousResourceCollection|null
      */
     public function getProducts($saleId = null)
     {
         try {
-            $saleModel    = new Sale();
-            $productModel = new Product();
-
             if ($saleId) {
 
-                $sale = $saleModel->with([
-                                             'plansSales.plan.products',
-                                         ])->find($saleId);
+                $productService = new ProductService();
 
-                $plansIds = $sale->plansSales->pluck('plan_id')->toArray();
+                $products = $productService->getProductsBySale($saleId);
 
-                $products = $productModel->whereHas('productsPlans', function($query) use ($plansIds) {
-                    $query->whereIn('plan_id', $plansIds);
-                })->get();
-
-                return $products;
+                return ProductsSaleResource::collection($products);
             } else {
                 return null;
             }

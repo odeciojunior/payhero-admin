@@ -103,8 +103,9 @@ class BoletoService
                     $linkShortenerService = new LinkShortenerService();
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
                     if (!empty($link) && !empty($telephoneValidated)) {
-                        $zenviaSms = new ZenviaSmsService();
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
+                        DisparoProService::sendMessage($telephoneValidated, 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link);
+                       /* $zenviaSms = new ZenviaSmsService();
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
                         $checkout->increment('sms_sent_amount');
                     }
 
@@ -271,8 +272,8 @@ class BoletoService
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
                     $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
-                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
                         $iof = '';
                     } else {
@@ -480,25 +481,17 @@ class BoletoService
         }
     }
 
-    /**
-     * @return void
-     */
     public function changeBoletoPendingToCanceled()
     {
-        /** @var Sale $saleModel */
         $saleModel = new Sale();
-        /** @var Carbon $startDate */
-        $startDate = now()->startOfDay()->subDays('4');
-        /** @var Carbon $endDate */
-        $endDate = now()->endOfDay()->subDays('4');
-        $boletos = $saleModel->newQuery()
-                             ->whereBetween('boleto_due_date', [$startDate, $endDate])
-                             ->where(
-                                 [
-                                     ['payment_method', '=', '2'],
-                                     ['status', '=', '2'],
-                                 ]
-                             )->get();
+        $date      = Carbon::now()->subDay('4')->toDateString();
+
+        $boletos = $saleModel->where([
+                                         ['payment_method', '=', '2'],
+                                         ['status', '=', '2'],
+                                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', $date],
+                                     ])
+                             ->get();
         /** @var Sale $boleto */
         foreach ($boletos as $boleto) {
             $boleto->update(['status' => 5]);

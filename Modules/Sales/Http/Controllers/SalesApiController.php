@@ -57,6 +57,7 @@ class SalesApiController extends Controller
             if (isset($id)) {
                 $sale = $saleService->getSaleWithDetails($id);
 
+
                 return new SalesResource($sale);
             }
 
@@ -197,7 +198,7 @@ class SalesApiController extends Controller
             if ($transactions->count()) {
                 $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
                     //quantidade de vendas
-                    $carry['total_sales'] += $item->sale->plansSales->count();
+                    $carry['total_sales'] += 1;
                     //cria um item no array pra cada moeda inclusa nas vendas
                     $item->currency = $item->currency ?? 'real';
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];

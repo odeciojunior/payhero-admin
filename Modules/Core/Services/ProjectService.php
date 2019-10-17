@@ -247,14 +247,28 @@ class ProjectService
                                     $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                     $shopify->setThemeByRole('main');
-                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                    $shopifyIntegration->delete();
+                                    if (!empty($shopifyIntegration->theme_html)) {
+                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                    }
+                                    if (!empty($shopifyIntegration->layout_theme_html)) {
+                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                    }
+
+
                                 }
                             } catch (Exception $e) {
-                                //throwl
+                                //remover integração do shopify
 
-                                throw new ServiceException('ProjectService - delete - erro ao mudar template ' . $e->getMessage(), $e->getCode(), $e);
+//                                $this->getShopifyIntegration()
+//                                     ->where('project_id', $project->id)
+//                                     ->delete();
+
+//                                $shopifyIntegration->delete();
+//
+//                                $projectDeleted = $project->delete();
+
+                                //throwl
+//                                throw new ServiceException('ProjectService - delete - erro ao mudar template ' . $e->getMessage(), $e->getCode(), $e);
                             }
                         }
                     }

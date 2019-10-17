@@ -55,8 +55,8 @@ $(document).ready(function () {
     }
 
     $(".shipping-description").keyup(function () {
-        if ($(this).val().length > 30) {
-            $(this).parent().children("#shipping-name-error").html("O campo descrição permite apenas 30 caracteres");
+        if ($(this).val().length > 60) {
+            $(this).parent().children("#shipping-name-error").html("O campo descrição permite apenas 60 caracteres");
             return false;
         } else {
             $(this).parent().children("#shipping-name-error").html("");
@@ -64,8 +64,8 @@ $(document).ready(function () {
     });
 
     $(".shipping-info").keyup(function () {
-        if ($(this).val().length > 30) {
-            $(this).parent().children("#shipping-information-error").html("O campo tempo de entrega estimado permite apenas 30 caracteres");
+        if ($(this).val().length > 100) {
+            $(this).parent().children("#shipping-information-error").html("O campo tempo de entrega estimado permite apenas 100 caracteres");
             return false;
         } else {
             $(this).parent().children("#shipping-information-error").html("");
