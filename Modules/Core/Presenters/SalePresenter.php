@@ -69,8 +69,10 @@ class SalePresenter extends Presenter
      * @param $status
      * @return int|string
      */
-    public function getStatus($status)
+    public function getStatus($status = null)
     {
+        $status  = $status ?? $this->status;
+
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
