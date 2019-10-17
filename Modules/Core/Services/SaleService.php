@@ -5,13 +5,11 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -43,9 +41,6 @@ class SaleService
                                                     'sale.project',
                                                     'sale.client',
                                                     'sale.plansSales',
-                                                    'sale.plansSales.plan',
-                                                    'sale.plansSales.plan.products',
-                                                    'sale.plansSales.plan.project',
                                                     'sale.shipping',
                                                     'sale.checkout',
                                                     'sale.delivery',
