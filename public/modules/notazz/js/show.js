@@ -2,6 +2,14 @@ $(document).ready(function () {
 
     // COMPORTAMENTOS DA JANELA
 
+    $("#bt_get_csv").on("click", function () {
+        invoicesExport('csv');
+    });
+
+    $("#bt_get_xls").on("click", function () {
+        invoicesExport('xls');
+    });
+
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
             $("#div_filtros").slideUp();
@@ -14,6 +22,44 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+
+
+    function invoicesExport(fileFormat) {
+
+        $.ajax({
+            method: "GET",
+            url: '/api/apps/notazz/export/' + extractIdFromPathName() + '/?' + getFilters(true) + '&format=' + fileFormat,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, textStatus, request) {
+                downloadFile(response, request);
+            }
+        });
+    }
+
+    function downloadFile(response, request) {
+        let type = request.getResponseHeader("Content-Type");
+        // Get file name
+        let contentDisposition = request.getResponseHeader("Content-Disposition");
+        let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        fileName = fileName ? fileName[0].replace("filename=", "") : '';
+
+        var a = document.createElement("a");
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
+        a.setAttribute("download", fileName);
+        a.click();
+        window.URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+    }
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
