@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar(getFilters(true));
+        atualizar();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -75,7 +75,9 @@ $(document).ready(function () {
         if (urlParams) {
             let params = "";
             for (let param in data) {
-                params += '&' + param + '=' + data[param];
+                dataValue = data[param];
+                dataValue = dataValue.replace("#", "");
+                params += '&' + param + '=' + dataValue;
             }
             return params;
         } else {
@@ -88,26 +90,17 @@ $(document).ready(function () {
     loadOnAny('.page-content', true);
     atualizar();
 
-    function atualizar() {
+    function atualizar(page) {
 
         loadOnTable('#dados_tabela', '#tabela_vendas');
-
-        // if (data == null) {
-        //     link = '/api/apps/notazz/report/' + extractIdFromPathName();
-        // } else {
-        //     link = '/api/apps/notazz/report/' + extractIdFromPathName() + '/';
-        // }
-
-        // let data = {
-        //     'status': $("#status").val(),
-        //     'client': $("#comprador").val(),
-        //     'date_range': $("#date_range").val(),
-        //     'transaction': $("#transaction").val(),
-        // }
+        if(page == null)
+        {
+            page = '/?';
+        }
 
         $.ajax({
             method: "GET",
-            url: '/api/apps/notazz/report/' + extractIdFromPathName() + '/?' + getFilters(true),
+            url: '/api/apps/notazz/report/' + extractIdFromPathName() + page + getFilters(true),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -121,31 +114,32 @@ $(document).ready(function () {
                 $('#tabela_vendas').addClass('table-striped');
 
                 var statusArray = {
-                    1: 'success',
-                    6: 'primary',
-                    4: 'danger',
-                    3: 'danger',
-                    2: 'pendente'
+                    1: 'pending',
+                    2: 'send',
+                    3: 'completed',
+                    4: 'error',
+                    5: 'in_process',
+                    6: 'error_max_attempts',
+                    7: 'canceled',
+                    8: 'rejected'
                 };
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
-                                    <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
-                                    <td>${value.project}</td>
-                                    <td>${value.product}</td>
+                                    <td class='display-sm-none display-m-none display-lg-none'>#${value.sale_code}</td>
+                                    <td>${value.project}
+                                    <br>
+                                    <small>${value.product}</small>
+                                    </td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
-                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
+                                        <span class="badge badge-${statusArray[value.status]}">${value.status_translate}</span>
                                     </td>
+                                    <td class='display-sm-none display-m-none'>${value.updated_date}</td>
+                                    <td class='display-sm-none'>${value.value}</td>
                                     <td>
-                                        <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
-                                    </td>
-                                    <td class='display-sm-none display-m-none'>${value.start_date}</td>
-                                    <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        <a role='button' class='detalhes_venda pointer' sale="${value.sale_code}"><i class='material-icons gradient'>remove_red_eye</i></button></a>
                                     </td>
                                 </tr>`;
 
@@ -157,7 +151,7 @@ $(document).ready(function () {
                 } else {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
-                pagination(response, 'sales', atualizar);
+                pagination(response, 'invoices', atualizar);
                 $('#export-excel').show();
             }
         });
