@@ -70,7 +70,7 @@ Route::group(
 
         Route::get('/teste', 'TesteController@index');
 
-        Route::get('/julio', 'TesteController@julioFunction');
+        Route::get('/julio', 'JulioController@julioFunction');
         Route::get('/joao', 'TesteController@joaoLucasFunction');
         Route::get('/thales', 'TesteController@thalesFunction');
         Route::get('/jean', 'TesteController@jeanFunction');
