@@ -51,7 +51,7 @@
                                                 <div class="grad-border"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
+                                        {{-- <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                             <div class="price-holder antecipacao" id="pop-antecipacao">
                                                 <h6 class="label-price"> Disponível para antecipar </h6>
                                                 <h4 class="price align-items-baseline disponivelAntecipar"
@@ -90,7 +90,7 @@
                                                 </div>
                                                 <div class="grad-border purple"></div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                             <div id="div-available-money" class="price-holder pointer">
                                                 <h6 class="label-price"> Saldo Disponível </h6>
@@ -99,7 +99,7 @@
                                                 <div class="grad-border green"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
+                                        <div class="col-sm-12 col-md-12 col-lg-12 mb-15">
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo Total </h6>
                                                 <h4 class="price saltoTotal">
