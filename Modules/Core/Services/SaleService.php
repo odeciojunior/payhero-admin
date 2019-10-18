@@ -24,9 +24,10 @@ class SaleService
     /**
      * @param $filters
      * @param bool $paginate
+     * @param bool $withProducts
      * @return LengthAwarePaginator|Collection
      */
-    public function getSales($filters, $paginate = true)
+    public function getSales($filters, $paginate = true, $withProducts = true)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
@@ -40,7 +41,7 @@ class SaleService
                                                     'sale',
                                                     'sale.project',
                                                     'sale.client',
-                                                    'sale.plansSales',
+                                                    'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product.productsPlanSales' : ''),
                                                     'sale.shipping',
                                                     'sale.checkout',
                                                     'sale.delivery',
@@ -99,6 +100,30 @@ class SaleService
             $sales = $transactions->orderBy('id', 'DESC')->paginate(10);
         } else {
             $sales = $transactions->orderBy('id', 'DESC')->get();
+        }
+
+        if($withProducts){
+            $sales->map(function ($item){
+                $item->sale->products = collect();
+                $sale = $item->sale;
+                foreach ($sale->plansSales as &$planSale) {
+                    foreach ($planSale->plan->productsPlans as $productPlan) {
+                        $product = $productPlan->product;
+                        $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
+                            ->first();
+                        $product['product_plan_sale_id'] = $productPlanSale->id;
+                        $product['sale_status'] = $sale->status;
+                        $product['amount'] = $productPlan->amount * $planSale->amount;
+                        $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
+                        $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
+                            __('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSale->present()
+                                    ->getStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                        $item->sale->products->add($product);
+                    }
+                    $planSale->unsetRelation('plan');
+                }
+                return $item;
+            });
         }
 
         return $sales;
