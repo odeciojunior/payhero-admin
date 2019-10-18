@@ -77,7 +77,8 @@
                     <div class="col-12">
                         <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
                             <input name='logo' type='file' class='form-control' id='photo-logo-email'
-                                   style='display:none;'> <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
+                                   style='display:none;'>
+                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>
                                 <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
@@ -101,21 +102,39 @@
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Email de Contato (checkout e email)</label>
-                        <input name="contact" value="" type="text" class="input-pad" id="contact" placeholder="Contato" maxlength='40'>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_group_contact" id="addon-contact">
+                                </span>
+                            </div>
+                            <input name="contact" value="" type="text" class="input-pad form-control" id="contact" placeholder="Contato" maxlength='40' aria-describedby="addon-contact">
+                        </div>
                         <span id='contact-error' class='text-danger'></span>
+                        <small id="message_not_verified_contact" style='color:red; display:none;'>Email não verificado, clique
+                            <a href='#' id='btn_verify_contact' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_contact'>aqui</a>
+                            para verificá-lo!
+                        </small>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
                         </p>
-                        <span id='contact-error'></span>
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Telefone para suporte</label>
-                        <input name="support_phone" value="" type="text" class="input-pad" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_group_support_phone" id="addon-support_phone">
+                                </span>
+                            </div>
+                            <input name="support_phone" value="" type="text" class="input-pad form-control" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000" aria-describedby="addon-support_phone">
+                        </div>
                         <span id='contact-error' class='text-danger'></span>
+                        <small id="message_not_verified_support_phone" style='color:red; display:none;'>Telefone não verificado, clique
+                            <a href='#' id='btn_verify_support_phone' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_support_phone'>aqui</a>
+                            para verificá-lo!
+                        </small>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é encaminhada para esse número 
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é encaminhada para esse número
                         </p>
-                        <span id='contact-error'></span>
                     </div>
                 </div>
             </div>
@@ -176,17 +195,17 @@
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             <option value="1">1</option>
-                            <option value="2" >2</option>
-                            <option value="3" >3</option>
-                            <option value="4" >4</option>
-                            <option value="5" >5</option>
-                            <option value="6" >6</option>
-                            <option value="7" >7</option>
-                            <option value="8" >8</option>
-                            <option value="9" >9</option>
-                            <option value="10" >10</option>
-                            <option value="11" >11</option>
-                            <option value="12" >12</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do produtor)
@@ -311,6 +330,62 @@
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
                     <button type="button" class="col-4 btn btn-danger btn-delete" data-dismiss="modal" style="width: 20%;">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--Modal Verificação Celular--}}
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_support_phone" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" style="width: 100%; text-align:center">Verificar telefone de suporte</h4>
+                </div>
+                <div class="modal-body" style="margin-top: 10px">
+                    <span>Um código de verificação foi enviado para o seu celular, digite o código recebido no campo abaixo</span>
+                    <br>
+                    <form method="POST" enctype="multipart/form-data" id='match_support_phone_verifycode_form'>
+                        @csrf
+                        <label for="support_phone_verify_code" style="margin-top: 20px">Código de verificação</label>
+                        <input id="support_phone_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
+                        <button type='submit' class='btn btn-success mt-1'>
+                            <i class='fas fa-check'></i> Verificar
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--Modal Verificação Email--}}
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_contact" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" style="width: 100%; text-align:center">Verificar email de contato</h4>
+                </div>
+                <div class="modal-body" style="margin-top: 10px">
+                    <span>Um código de verificação foi enviado para o seu email, digite o código recebido no campo abaixo</span>
+                    <br>
+                    <form method="POST" enctype="multipart/form-data" id='match_contact_verifycode_form'>
+                        @csrf
+                        <label for="contact_verify_code" style="margin-top: 20px">Código de verificação</label>
+                        <input id="contact_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
+                        <button type='submit' class='btn btn-success mt-1'>
+                            <i class='fas fa-check'></i> Verificar
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>

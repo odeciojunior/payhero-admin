@@ -22,7 +22,9 @@ class UserResource extends Resource
             'id_code'                     => $this->id_code,
             'name'                        => $this->name,
             'email'                       => $this->email,
+            'email_verified'              => $this->email_verified,
             'cellphone'                   => $this->cellphone,
+            'cellphone_verified'          => $this->cellphone_verified,
             'document'                    => $this->document,
             'zip_code'                    => $this->zip_code,
             'country'                     => $this->country,
@@ -36,8 +38,10 @@ class UserResource extends Resource
             'date_birth'                  => $this->date_birth,
             'personal_document_status'    => $this->personal_document_status,
             'address_document_status'     => $this->address_document_status,
-            'personal_document_translate' => Lang::get('definitions.enum.personal_document_status.' .$this->present()->getPersonalDocumentStatus($this->personal_document_status)),
-            'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' .$this->present()->getPersonalDocumentStatus($this->address_document_status)),
+            'personal_document_translate' => Lang::get('definitions.enum.personal_document_status.' . $this->present()
+                                                                                                           ->getPersonalDocumentStatus($this->personal_document_status)),
+            'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' . $this->present()
+                                                                                                           ->getPersonalDocumentStatus($this->address_document_status)),
         ];
     }
 }

@@ -148,7 +148,7 @@ $(() => {
     //carrega detalhes do projeto
     function show() {
 
-        loadOnAny('#tab_info_geral .card', false,{
+        loadOnAny('#tab_info_geral .card', false, {
             styles: {
                 container: {
                     minHeight: '250px'
@@ -240,9 +240,175 @@ $(() => {
                     .show();
             }
         }
+
+        // Verificação de email de contato
+        if (project.contact_verified) {
+            contactVerified();
+        } else {
+            contactNotVerified();
+        }
+
+        // Verificação de telefone de suporte
+        if (project.support_phone_verified) {
+            supportphoneVerified();
+        } else {
+            supportphoneNotVerified();
+        }
     }
 
-    //carrega a tela de edicao do proejto
+    function supportphoneVerified() {
+        $("#message_not_verified_support_phone").css("display", "none");
+        $("#input_group_support_phone").css("border-color", "forestgreen");
+        $("#support_phone").css("border-color", "forestgreen");
+        $("#input_group_support_phone").append().html("<i class='fas fa-check' data-toggle='tooltip' data-placement='left' title='Telefone de suporte verificado!' style='color:forestgreen;'></i>");
+    }
+
+    function supportphoneNotVerified() {
+        $("#message_not_verified_support_phone").css("display", "");
+        $("#input_group_support_phone").css("border-color", "red");
+        $("#support_phone").css("border-color", "red");
+        $("#input_group_support_phone").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Telefone de suporte não verificado!' style='color:red;'></i>");
+    }
+
+    function contactVerified() {
+        $("#message_not_verified_contact").css("display", "none");
+        $("#input_group_contact").css("border-color", "forestgreen");
+        $("#contact").css("border-color", "forestgreen");
+        $("#input_group_contact").append().html("<i class='fas fa-check' data-toggle='tooltip' data-placement='left' title='Contato verificado!' style='color:forestgreen;'></i>");
+    }
+
+    function contactNotVerified() {
+        $("#message_not_verified_contact").css("display", "");
+        $("#input_group_contact").css("border-color", "red");
+        $("#contact").css("border-color", "red");
+        $("#input_group_contact").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Contato não verificado!' style='color:red;'></i>");
+    }
+
+    // Verificar email de contato
+    $("#btn_verify_support_phone").on("click", function () {
+        event.preventDefault();
+        let support_phone = $("#support_phone").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/projects/' + projectId + '/verifysupportphone',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                supportPhone: support_phone,
+            }, error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+
+            }, success: function (response) {
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+            }
+        });
+    });
+
+    $("#match_support_phone_verifycode_form").on("submit", function (event) {
+        event.preventDefault();
+        let verify_code = $("#support_phone_verify_code").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/projects/' + projectId + '/matchsupportphoneverifycode',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                verifyCode: verify_code
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                $('#modal_verify_support_phone').modal('hide');
+                $('#support_phone_verify_code').val('');
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                supportphoneVerified();
+            }
+        });
+    });
+
+    $("#match_contact_verifycode_form").on("submit", function (event) {
+        event.preventDefault();
+        let verify_code = $("#contact_verify_code").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/projects/' + projectId + '/matchcontactverifycode',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                verifyCode: verify_code
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                $('#modal_verify_contact').modal('hide');
+                $('#contact_verify_code').val('');
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                contactVerified();
+            }
+        });
+    });
+
+    // Verificar email de contato
+    $("#btn_verify_contact").on("click", function () {
+        event.preventDefault();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/projects/' + projectId + '/verifycontact',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {},
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+            }
+        });
+    });
+
+    //carrega a tela de edicao do projeto
     function updateConfiguracoes() {
         loadOnAny('#tab_configuration_project .card');
         $.ajax({
