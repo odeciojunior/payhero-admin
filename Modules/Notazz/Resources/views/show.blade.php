@@ -14,7 +14,10 @@
         <div class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
-                    <h1 class="page-title">Relatorios Notazz</h1>
+                    <h1 class="page-title">
+                        <a href='/apps/notazz' class='fa fa-arrow-circle-left' style='color:#e7714f'></a>
+                        Relatorios Notazz
+                    </h1>
                 </div>
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
@@ -121,19 +124,13 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
+            @include('notazz::details')
             <!-- End Modal -->
             </div>
             <ul id="pagination-invoices" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
-        {{--        <div class="content-error text-center" style="display:none">--}}
-        {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
-        {{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
-        {{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
-        {{--            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>--}}
-        {{--        </div>--}}
     </div>
 
     <!-- Modal regerar boleto (NAO ULTILIZADO POR ENQUANTO)-->
