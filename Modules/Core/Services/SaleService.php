@@ -24,10 +24,10 @@ class SaleService
     /**
      * @param $filters
      * @param bool $paginate
-     * @param bool $withProducts
+     * @param bool $withPlans
      * @return LengthAwarePaginator|Collection
      */
-    public function getSales($filters, $paginate = true, $withProducts = false)
+    public function getSales($filters, $paginate = true, $withPlans = false)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
@@ -41,7 +41,7 @@ class SaleService
                                                     'sale',
                                                     'sale.project',
                                                     'sale.client',
-                                                    'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product.productsPlanSales' : ''),
+                                                    'sale.plansSales' . ($withPlans ? '.plan.productsPlans.product' : ''),
                                                     'sale.shipping',
                                                     'sale.checkout',
                                                     'sale.delivery',
@@ -102,25 +102,26 @@ class SaleService
             $sales = $transactions->orderBy('id', 'DESC')->get();
         }
 
-        if($withProducts){
+        if($withPlans){
             $sales->map(function ($item){
                 $item->sale->products = collect();
                 $sale = $item->sale;
                 foreach ($sale->plansSales as &$planSale) {
-                    foreach ($planSale->plan->productsPlans as $productPlan) {
-                        $product = $productPlan->product;
-                        $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
-                            ->first();
-                        $product['product_plan_sale_id'] = $productPlanSale->id;
-                        $product['sale_status'] = $sale->status;
-                        $product['amount'] = $productPlan->amount * $planSale->amount;
-                        $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
-                        $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
-                            __('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSale->present()
-                                    ->getStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
-                        $item->sale->products->add($product);
+                    $plan = $planSale->plan;
+
+                    $products = collect();
+
+                    foreach ($plan->productsPlans as $productPlan) {
+                        $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
+                        $products->add($productPlan->product);
                     }
-                    $planSale->unsetRelation('plan');
+                    $planSale->plan->product_id = $products->map(function($item){
+                        return '#' . Hashids::encode($item->id);
+                    })->implode(' - ');
+                    $plan->shopify_id = $products->unique('shopify_id')->implode('shopify_id',' - ');
+                    $plan->shopify_variant_id = $products->implode('shopify_variant_id', ' - ');
+                    $plan->sku = $products->where('sku', '!=', null)->implode('sku', ' - ');
+                    $plan->amount = $products->implode('amount', ' - ');
                 }
                 return $item;
             });
@@ -141,7 +142,7 @@ class SaleService
 
         //get sale
         $sale = $saleModel->with([
-                                     'transactions',
+                                     'userTransaction',
                                      'notazzInvoices',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
