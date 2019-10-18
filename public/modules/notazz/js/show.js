@@ -97,6 +97,10 @@ $(document).ready(function () {
         endDate = end.format('YYYY-MM-DD');
     });
 
+    $('input[name="date_range"]').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+    });
+
     $(document).on({
             mouseenter: function () {
                 $(this).css('cursor', 'pointer').text('Regerar');
