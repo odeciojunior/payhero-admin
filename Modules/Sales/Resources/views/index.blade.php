@@ -203,7 +203,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=3') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

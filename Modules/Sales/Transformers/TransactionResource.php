@@ -33,8 +33,8 @@ class TransactionResource extends Resource
             'status'           => $sale->status,
             'status_translate' => Lang::get('definitions.enum.sale.status.' . $sale->present()
                                                                                    ->getStatus($sale->status)),
-            'start_date'       => $sale->start_date ? with(new Carbon($sale->start_date))->format('d/m/Y H:i:s') : '',
-            'end_date'         => $sale->end_date ? with(new Carbon($sale->end_date))->format('d/m/Y H:i:s') : '',
+            'start_date'       => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
+            'end_date'         => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
             'total_paid'       => ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
             'brand'            => $flag,
             'email_status'     => $sale->checkout ? $sale->checkout->present()->getEmailSentAmount() : 'Não enviado',

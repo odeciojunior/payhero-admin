@@ -279,6 +279,29 @@ $(() => {
                 $('#data-notazz-invoices').append(data);
             }
 
+            if (invoice.date_error) {
+                var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
+
+                let data = `<tr>
+                                <td>
+                                    ${invoice.date_error}
+                                </td>
+                                <td>
+                                    ${status}
+                                </td>
+                                <td>
+                                    ${invoice.return_http_code}
+                                </td>
+                                <td>
+                                    ${invoice.return_message}
+                                </td>
+                                <td>
+                                    
+                                </td>
+                            </tr>`;
+                $('#data-notazz-invoices').append(data);
+            }
+
             if (invoice.date_rejected) {
 
                 var postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;

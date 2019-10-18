@@ -89,6 +89,7 @@ class SalesApiController extends Controller
             );
 
             $header = [
+                //sale
                 'Projeto',
                 'Código da Venda',
                 'Forma de Pagamento',
@@ -107,6 +108,7 @@ class SalesApiController extends Controller
                 'Valor do Frete',
                 'Cotação do dolar',
                 'Valor Total Venda',
+                //client
                 'Nome do Cliente',
                 'Telefone do Cliente',
                 'Email do Cliente',
@@ -119,6 +121,7 @@ class SalesApiController extends Controller
                 'Cidade',
                 'Estado',
                 'País',
+                //track
                 'src',
                 'utm_source',
                 'utm_medium',
@@ -131,6 +134,7 @@ class SalesApiController extends Controller
             $saleData = collect();
             foreach ($salesResult as $sale) {
                 $saleArray = [
+                    //sale
                     'project_name' => $sale->project->name ?? '',
                     'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
                             ->encode($sale->id)),
@@ -150,6 +154,7 @@ class SalesApiController extends Controller
                     'shipping_value' => $sale->shipping->value ?? '',
                     'dolar_quotation' => $sale->dolar_quotation ?? '',
                     'total_paid' => $sale->total_paid_value ?? '',
+                    //client
                     'client_name' => $sale->client->name ?? '',
                     'client_telephone' => $sale->client->telephone ?? '',
                     'client_email' => $sale->client->email ?? '',
@@ -162,6 +167,7 @@ class SalesApiController extends Controller
                     'client_city' => $sale->delivery->city ?? '',
                     'client_state' => $sale->delivery->state ?? '',
                     'client_country' => $sale->delivery->country ?? '',
+                    //track
                     'src' => $sale->checkout->src ?? '',
                     'utm_source' => $sale->checkout->utm_source ?? '',
                     'utm_medium' => $sale->checkout->utm_medium ?? '',

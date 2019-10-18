@@ -184,12 +184,14 @@ $(document).ready(function () {
     // Obtem lista de vendas
     function atualizar(link = null) {
 
+        let updateResume = true;
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
             link = '/api/sales?' + getFilters(true).substr(1);
         } else {
             link = '/api/sales' + link + getFilters(true);
+            updateResume = false;
         }
 
         $.ajax({
@@ -249,7 +251,9 @@ $(document).ready(function () {
             }
         });
 
-        salesResume();
+        if(updateResume){
+            salesResume();
+        }
     }
 
     // Download do relatorio
