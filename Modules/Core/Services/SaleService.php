@@ -264,4 +264,27 @@ class SaleService
             report($ex);
         }
     }
+
+    /**
+     * @param null $saleId
+     * @return AnonymousResourceCollection|null
+     */
+    public function getProductsBySaleId($saleId = null)
+    {
+        try {
+            if ($saleId) {
+
+                $productService = new ProductService();
+
+                $products = $productService->getProductsBySaleId($saleId);
+
+                return ProductsSaleResource::collection($products);
+            } else {
+                return null;
+            }
+        } catch (Exception $ex) {
+            Log::warning('Erro ao buscar produtos - SaleService - getProducts');
+            report($ex);
+        }
+    }
 }

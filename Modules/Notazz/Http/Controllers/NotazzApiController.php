@@ -214,20 +214,26 @@ class NotazzApiController extends Controller
             if ($integrationId) {
                 //hash ok
 
-                $integration = $notazzIntegrationModel->find($integrationId);
+                $integration = $notazzIntegrationModel->with(['invoices'])->find($integrationId);
                 if ($integration) {
 
-                    $integrationDeleted = $integration->delete();
-                    if ($integrationDeleted) {
-                        //integracao removida
+                    if (count($integration->invoices) == 0) {
+                        $integrationDeleted = $integration->delete();
+                        if ($integrationDeleted) {
+                            //integracao removida
 
-                        return response()->json([
-                                                    'message' => 'Integração removida com sucesso.',
-                                                ], 200);
+                            return response()->json([
+                                                        'message' => 'Integração removida com sucesso.',
+                                                    ], 200);
+                        } else {
+                            //erro ao remover integracao
+                            return response()->json([
+                                                        'message' => 'Erro ao remover integração',
+                                                    ], 400);
+                        }
                     } else {
-                        //erro ao remover integracao
                         return response()->json([
-                                                    'message' => 'Erro ao remover integração',
+                                                    'message' => 'Não é possivel remover a integração, pois o já existem notas fiscais geradas ',
                                                 ], 400);
                     }
                 } else {
