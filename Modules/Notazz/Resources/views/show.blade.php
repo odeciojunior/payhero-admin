@@ -4,9 +4,19 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+        <style>
+            .fas {
+                color: #9c47fc;
+                background: -webkit-linear-gradient(77deg, #e6774c, rgb(249, 34, 120));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                cursor: pointer;
+            }
+        </style>
     @endpush
 
     <!-- Page -->
@@ -14,7 +24,10 @@
         <div class="page-header container">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
-                    <h1 class="page-title">Relatorios Notazz</h1>
+                    <h1 class="page-title">
+                        <a href='/apps/notazz'><i class='fas fa-arrow-circle-left'></i></a>
+                        Relatorios Notazz
+                    </h1>
                 </div>
                 <div class="col-6 text-right">
                     <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
