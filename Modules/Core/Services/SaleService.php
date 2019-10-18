@@ -27,7 +27,7 @@ class SaleService
      * @param bool $withProducts
      * @return LengthAwarePaginator|Collection
      */
-    public function getSales($filters, $paginate = true, $withProducts = true)
+    public function getSales($filters, $paginate = true, $withProducts = false)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
