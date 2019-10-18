@@ -3,11 +3,11 @@ $(document).ready(function () {
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
-        salesExport('csv');
+        invoicesExport('csv');
     });
 
     $("#bt_get_xls").on("click", function () {
-        salesExport('xls');
+        invoicesExport('xls');
     });
 
     $("#filtros").on("click", function () {
@@ -22,6 +22,44 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+
+
+    function invoicesExport(fileFormat) {
+
+        $.ajax({
+            method: "GET",
+            url: '/api/apps/notazz/export/' + extractIdFromPathName() + '/?' + getFilters(true) + '&format=' + fileFormat,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, textStatus, request) {
+                downloadFile(response, request);
+            }
+        });
+    }
+
+    function downloadFile(response, request) {
+        let type = request.getResponseHeader("Content-Type");
+        // Get file name
+        let contentDisposition = request.getResponseHeader("Content-Disposition");
+        let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        fileName = fileName ? fileName[0].replace("filename=", "") : '';
+
+        var a = document.createElement("a");
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
+        a.setAttribute("download", fileName);
+        a.click();
+        window.URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+    }
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     let endDate = moment().format('YYYY-MM-DD');
@@ -72,23 +110,6 @@ $(document).ready(function () {
         }, '.boleto-pending'
     );
 
-    function downloadFile(response, request) {
-        let type = request.getResponseHeader("Content-Type");
-        // Get file name
-        let contentDisposition = request.getResponseHeader("Content-Disposition");
-        let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-        fileName = fileName ? fileName[0].replace("filename=", "") : '';
-
-        var a = document.createElement("a");
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
-        a.setAttribute("download", fileName);
-        a.click();
-        window.URL.revokeObjectURL(a.href);
-        document.body.removeChild(a);
-    }
-
     function getFilters(urlParams = false) {
         let data = {
             'status': $("#status").val(),
@@ -97,103 +118,35 @@ $(document).ready(function () {
             'transaction': $("#transaction").val(),
         };
 
-        if(urlParams){
+        if (urlParams) {
             let params = "";
-            for(let param in data){
-                params += '&' + param + '=' + data[param];
+            for (let param in data) {
+                dataValue = data[param];
+                dataValue = dataValue.replace("#", "");
+                params += '&' + param + '=' + dataValue;
             }
             return params;
-        }else{
+        } else {
             return data;
         }
     }
 
     // FIM - COMPORTAMENTOS DA JANELA
 
-    getProjects();
+    loadOnAny('.page-content', true);
+    atualizar();
 
-    //Carrega o modal para regerar boleto
-    $(document).on('click', '.boleto-pending', function () {
-
-        let saleId = $(this).attr('sale');
-        $('#modal_regerar_boleto #bt_send').attr('sale', saleId);
-
-        $('#modal_regerar_boleto').modal('show');
-    });
-
-    //Salvar boleto regerado
-    $('#bt_send').on('click', function () {
-        loadingOnScreen();
-        let saleId = $(this).attr('sale');
-        $.ajax({
-            method: "POST",
-            url: "/api/recovery/regenerateboleto",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: {
-                saleId: saleId,
-                date: $('#date').val(),
-                discountType: $("#discount_type").val(),
-                discountValue: $("#discount_value").val()
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                loadingOnScreenRemove();
-                $(".loading").css("visibility", "hidden");
-                window.location = '/sales';
-            }
-        });
-    });
-
-    // Obtem o os campos dos filtros
-    function getProjects() {
-        loadOnAny('.page-content');
-        $.ajax({
-            method: "GET",
-            url: "/api/projects/user-projects",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                loadOnAny('.page-content', true);
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $.each(response.data, function (index, project) {
-                        $('#projeto').append('<option value="' + project.id + '">' + project.name + '</option>')
-                    });
-                }
-                loadOnAny('.page-content', true);
-                atualizar();
-            }
-        });
-    }
-
-    // Obtem lista de integrações notazz
-    function atualizar(link = null) {
+    function atualizar(page) {
 
         loadOnTable('#dados_tabela', '#tabela_vendas');
-
-        if (link == null) {
-            link = '/apps/notazz/invoice/' + extractIdFromPathName();
-        } else {
-            link = '/apps/notazz/invoice/' + link + getFilters(true);
+        if(page == null)
+        {
+            page = '/?';
         }
-
-        console.log(link)
 
         $.ajax({
             method: "GET",
-            url: link,
+            url: '/api/apps/notazz/report/' + extractIdFromPathName() + page + getFilters(true),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -207,31 +160,32 @@ $(document).ready(function () {
                 $('#tabela_vendas').addClass('table-striped');
 
                 var statusArray = {
-                    1: 'success',
-                    6: 'primary',
-                    4: 'danger',
-                    3: 'danger',
-                    2: 'pendente'
+                    1: 'pending',
+                    2: 'send',
+                    3: 'completed',
+                    4: 'error',
+                    5: 'in_process',
+                    6: 'error_max_attempts',
+                    7: 'canceled',
+                    8: 'rejected'
                 };
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
-                                    <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
-                                    <td>${value.project}</td>
-                                    <td>${value.product}</td>
+                                    <td class='display-sm-none display-m-none display-lg-none'>#${value.sale_code}</td>
+                                    <td>${value.project}
+                                    <br>
+                                    <small>${value.product}</small>
+                                    </td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
-                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
+                                        <span class="badge badge-${statusArray[value.status]}">${value.status_translate}</span>
                                     </td>
+                                    <td class='display-sm-none display-m-none'>${value.updated_date}</td>
+                                    <td class='display-sm-none'>${value.value}</td>
                                     <td>
-                                        <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
-                                    </td>
-                                    <td class='display-sm-none display-m-none'>${value.start_date}</td>
-                                    <td class='display-sm-none'>${value.end_date}</td>
-                                    <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                                    <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        <a role='button' class='detalhes_venda pointer' sale="${value.sale_code}"><i class='material-icons gradient'>remove_red_eye</i></button></a>
                                     </td>
                                 </tr>`;
 
@@ -243,86 +197,11 @@ $(document).ready(function () {
                 } else {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
-                pagination(response, 'sales', atualizar);
+                pagination(response, 'invoices', atualizar);
                 $('#export-excel').show();
             }
         });
 
-        salesResume();
     }
 
-    // Download do relatorio
-    function salesExport(fileFormat) {
-
-        let data = getFilters();
-        data['format'] = fileFormat;
-        $.ajax({
-            method: "POST",
-            url: '/api/sales/export',
-            xhrFields: {
-                responseType: 'blob'
-            },
-            data: data,
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response, textStatus, request) {
-                downloadFile(response, request);
-            }
-        });
-    }
-
-    // Resumo
-    function salesResume() {
-
-        loadOnAny('.number', false, {
-            styles: {
-                container: {
-                    minHeight: '32px',
-                    height: 'auto'
-                },
-                loader: {
-                    width: '20px',
-                    height: '20px',
-                    borderWidth: '4px'
-                },
-            }
-        });
-
-        $.ajax({
-            method: "GET",
-            url: '/api/sales/resume',
-            data: getFilters(),
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                loadOnAny('.number' ,true);
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                loadOnAny('.number' ,true);
-                $('#total-sales').text('0');
-                $('#comission, #total').text('R$ 0,00');
-                if(response.total_sales){
-                    $('#total-sales, #comission, #total').text('');
-                    $('#total-sales').text(response.total_sales);
-                    if(!isEmpty(response.real)){
-                        $('#comission').append(`<div>R$ ${response.real.comission}</div>`);
-                        $('#total').append(`<div>R$ ${response.real.total}</div>`);
-                    }
-                    if(!isEmpty(response.dolar)){
-                        $('#comission').append(`<div>$ ${response.dolar.comission}</div>`);
-                        $('#total').append(`<div>$ ${response.dolar.total}</div>`);
-                    }
-                }
-
-            }
-        });
-    }
 });

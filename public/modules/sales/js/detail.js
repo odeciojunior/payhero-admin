@@ -157,19 +157,17 @@ $(() => {
             $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
         }
 
-        if (sale.installment_tax !== '0,00') {
-            $("#taxa-installment-value").html('R$ ' + sale.installment_tax);
+        $("#taxas-installment-free-label, #taxa-installment-value").hide();
+        if (sale.installment_tax_value !== '0,00') {
+            $("#taxa-installment-value").html('R$ ' + sale.installment_tax_value);
             $("#taxas-installment-free-label").show();
             $("#taxa-installment-value").show();
-        } else {
-            $("#taxas-installment-free-label").hide();
-            $("#taxa-installment-value").hide();
         }
 
         $("#desconto-value").html("R$ " + sale.discount);
         $("#total-value").html("R$ " + sale.total);
 
-        $('#taxas-label').text('Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ');
+        $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
         $('#taxareal-value').text(sale.taxaReal ? sale.taxaReal : '');
 
         $('#convertax-label, #convertax-value').hide();

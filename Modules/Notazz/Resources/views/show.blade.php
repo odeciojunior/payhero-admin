@@ -54,10 +54,14 @@
                             <label for="status">Status</label>
                             <select name='sale_status' id="status" class="form-control select-pad">
                                 <option value="">Todos status</option>
-                                <option value="1">Aprovado</option>
-                                <option value="2">Aguardando pagamento</option>
-                                <option value="4">Estornada</option>
-                                <option value="6">Em análise</option>
+                                <option value="1">Pendente</option>
+                                <option value="2">Enviado</option>
+                                <option value="3">Finalizado</option>
+                                <option value="4">Erro</option>
+                                <option value="5">Em processamento</option>
+                                <option value="6">Maximo de tentativas</option>
+                                <option value="7">Cancelado</option>
+                                <option value="8">Rejeitado</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -120,7 +124,7 @@
                                 <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                 <td class="table-title">Status</td>
                                 <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title">Comissão</td>
+                                <td class="table-title">Valor</td>
                                 <td class="table-title" width="80px;"> &nbsp;</td>
                             </tr>
                         </thead>
@@ -133,7 +137,7 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
-            <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-invoices" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>

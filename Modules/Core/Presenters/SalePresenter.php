@@ -30,7 +30,7 @@ class SalePresenter extends Presenter
 
     public function getInstallmentValue()
     {
-        return number_format(intval($this->installment_tax)/100, 2, ',', '.');
+        return number_format(intval($this->installment_tax_value) / 100, 2, ',', '.');
     }
 
     /**
@@ -69,8 +69,10 @@ class SalePresenter extends Presenter
      * @param $status
      * @return int|string
      */
-    public function getStatus($status)
+    public function getStatus($status = null)
     {
+        $status  = $status ?? $this->status;
+
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:

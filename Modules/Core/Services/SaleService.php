@@ -178,7 +178,9 @@ class SaleService
         if ($sale->dolar_quotation != 0) {
             $taxa     = intval($total / $sale->dolar_quotation);
             $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-            $total    += preg_replace('/[^0-9]/', '', $sale->iof);
+            $iof      =  preg_replace('/[^0-9]/', '', $sale->iof);
+            $total    += $iof;
+            $sale->iof = number_format($iof / 100, 2, ',', '.');
         } else {
             $taxa     = 0;
             $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
@@ -196,20 +198,7 @@ class SaleService
         } else {
             $transaction->release_date = null;
         }
-        /*
-                if ($sale->payment_method == 2) {
-                    if ($sale->status == 1) {
-                        $transaction->release_date = Carbon::parse($transaction->release_date);
-                    } else {
-                        $transaction->release_date = null;
-                    }
-                } else {
-                    if ($sale->status != 1) {
-                        $transaction->release_date = null;
-                    } else {
-                        $transaction->release_date = Carbon::parse($transaction->release_date);
-                    }
-                }*/
+
 
         //add details to sale
         $sale->details = (object) [
@@ -217,7 +206,7 @@ class SaleService
             'invoices'         => $invoices,
             //transaction
             'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $transaction->transaction_rate) / 100, 2, ',', '.'),
-            'percentage_rate'  => $transaction->percentage_rate,
+            'percentage_rate'  => $transaction->percentage_rate ?? 0,
             //extra info
             'total'            => number_format(intval($total) / 100, 2, ',', '.'),
             'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),

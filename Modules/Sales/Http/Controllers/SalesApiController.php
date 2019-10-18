@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -90,8 +91,6 @@ class SalesApiController extends Controller
             $header = [
                 'Projeto',
                 'Código da Venda',
-                'Dono do Projeto',
-                'Afiliado',
                 'Forma de Pagamento',
                 'Número de Parcelas',
                 'Bandeira do Cartão',
@@ -102,7 +101,6 @@ class SalesApiController extends Controller
                 'Data Final do Pagamento',
                 'Data da Criação da  Venda',
                 'Status',
-                'Gateway Status',
                 'Iof',
                 'Desconto Shopify',
                 'Frete',
@@ -136,19 +134,16 @@ class SalesApiController extends Controller
                     'project_name' => $sale->project->name ?? '',
                     'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
                             ->encode($sale->id)),
-                    'owner' => $sale->user->name ?? '',
-                    'affiliate' => null,
-                    'payment_form' => $sale->payment_form ?? '',
+                    'payment_form' => $sale->payment_method == 2 ? 'Boleto' : ($sale->payment_method == 1 ? 'Cartão' : ''),
                     'installments_amount' => $sale->installments_amount ?? '',
                     'flag' => $sale->flag ?? '',
                     'boleto_link' => $sale->boleto_link ?? '',
                     'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
-                    'boleto_due_date' => $sale->boleto_due_date ?? '',
-                    'start_date' => $sale->start_date ?? '',
-                    'end_date' => $sale->end_date ?? '',
-                    'created_at' => $sale->created_at ?? '',
-                    'status' => $sale->status ?? '',
-                    'gateway_status' => $sale->gateway_status ?? '',
+                    'boleto_due_date' => $sale->boleto_due_date ? Carbon::parse($sale->boleto_due_date)->format('d/m/Y') : '',
+                    'start_date' => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
+                    'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
+                    'created_at' => $sale->created_at ? Carbon::parse($sale->created_at)->format('d/m/Y H:i:s') : '',
+                    'status' => $sale->present()->getStatus(),
                     'iof' => $sale->iof ?? '',
                     'shopify_discount' => $sale->shopify_discount ?? '',
                     'shipping' => $sale->shipping->name ?? '',
@@ -198,7 +193,7 @@ class SalesApiController extends Controller
             if ($transactions->count()) {
                 $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
                     //quantidade de vendas
-                    $carry['total_sales'] += $item->sale->plansSales->count();
+                    $carry['total_sales'] += 1;
                     //cria um item no array pra cada moeda inclusa nas vendas
                     $item->currency = $item->currency ?? 'real';
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];

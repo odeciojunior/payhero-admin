@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
-use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProductService;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -18,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Transfer;
 use Vinkla\Hashids\Facades\Hashids;
@@ -57,11 +58,6 @@ class TesteController extends Controller
         dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
     public function index()
     {
         $this->tgFunction();
@@ -268,31 +264,45 @@ class TesteController extends Controller
 
     public function jeanFunction()
     {
-        //update sem where!
-        try {
-            DB::beginTransaction();
-
-            DB::statement('update sales s
-            set s.sub_total = 
-            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
-            from plans_sales ps
-            where ps.sale_id = s.id) where 1=1');
-
-            DB::commit();
-
-            return "Ok!";
-        } catch (Exception $e) {
-            DB::rollBack();
-            dd($e);
-        }
+//        //update sem where! popula a coluno sub_total
+//        try {
+//            DB::beginTransaction();
+//
+//            DB::statement('update sales s
+//            set s.sub_total =
+//            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
+//            from plans_sales ps
+//            where ps.sale_id = s.id) where 1=1');
+//
+//            DB::commit();
+//
+//            return "Ok!";
+//        } catch (Exception $e) {
+//            DB::rollBack();
+//            dd($e);
+//        }
     }
 
     public function julioFunction()
     {
+        $checkoutModel = new Checkout();
 
-        $shopifyService = new ShopifyService('cloudteste.myshopify.com', 'a9630467f0884fceaa3cfd150f836bbe');
+        $checkouts = $checkoutModel->where('email_sent_amount', '>' , 10)->get();
 
-        dd($shopifyService->getShopProducts());
+        foreach($checkouts as $checkout){
+            $checkout->update([
+                'email_sent_amount' => '4'
+            ]);
+        }
+
+        $checkouts = $checkoutModel->where('sms_sent_amount', '>' , 10)->get();
+
+        foreach($checkouts as $checkout){
+            $checkout->update([
+                'sms_sent_amount' => '2'
+            ]);
+        }
+
     }
 
     public function parseToArray($xpath, $class)
@@ -321,6 +331,12 @@ class TesteController extends Controller
     {
         //nada
 
+        $shopifyIntegrationModel = new ShopifyIntegration();
+
+        $integrations = $shopifyIntegrationModel->has('project')->get();
+
+        dd($integrations);
+
         //Sérgio Delmutti Ramos da Silva DPVYB34LEL3KzkJ
 
         //         $saleModel = new Sale();
@@ -331,7 +347,7 @@ class TesteController extends Controller
         //         dd($sales);
 
 //        $notazzInvoice = new NotazzInvoice();
-//
+
 //        $invoice  = $notazzInvoice->whereHas('sale', function($querySale) {
 //            $querySale->whereHas('client', function($queryClient) {
 //                $queryClient->where('name', 'LIKE', 'UIARA VAZ');
@@ -520,6 +536,7 @@ class TesteController extends Controller
                                  ]);
             }
         }
+        return 'Pronto!';
     }
 }
 
