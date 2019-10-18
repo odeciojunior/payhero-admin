@@ -72,7 +72,7 @@ $(() => {
 
     // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
-        var sale = $(this).attr('venda');
+        var sale = $(this).attr('sale');
 
         loadOnAny('#modal-saleDetails');
         $('#modal_detalhes').modal('show');
