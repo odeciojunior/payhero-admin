@@ -11,7 +11,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div class="page-header container badge-pending">
             <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
                     <h1 class="page-title">
