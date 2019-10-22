@@ -505,7 +505,6 @@ class ProjectsApiController extends Controller
                     ], 400);
             }
 
-            $contact = "faustogmjr@gmail.com";
             if (!FoxUtils::validateEmail($contact)) {
                 return response()->json(
                     [
