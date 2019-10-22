@@ -7,17 +7,21 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\DisparoProService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectService;
 use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Services\SendgridService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
@@ -277,7 +281,14 @@ class ProjectsApiController extends Controller
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
-                    $projectUpdate = $project->update($requestValidated);
+                    $projectUpdate  = $project->fill($requestValidated)->save();
+                    $projectChanges = $project->getChanges();
+                    if (isset($projectChanges["support_phone"])) {
+                        $project->fill(["support_phone_verified" => false])->save();
+                    }
+                    if (isset($projectChanges["contact"])) {
+                        $project->fill(["contact_verified" => false])->save();
+                    }
                     if ($projectUpdate) {
                         try {
                             $projectPhoto = $request->file('photo');
@@ -394,6 +405,180 @@ class ProjectsApiController extends Controller
             return response()->json([
                                         'message' => 'Ocorreu um erro, ao buscar dados das empresas',
                                     ], 400);
+        }
+    }
+
+    /**
+     * @param $projectId
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function verifySupportphone($projectId, Request $request)
+    {
+        try {
+            $project      = Project::find(Hashids::decode($projectId))->first();
+            $supportPhone = $project->support_phone ?? null;
+            if (empty($supportPhone)) {
+                return response()->json(
+                    [
+                        'message' => 'Telefone não pode ser vazio!',
+                    ], 400);
+            }
+            $supportPhone = FoxUtils::prepareCellPhoneNumber($supportPhone);
+
+            $verifyCode = random_int(100000, 999999);
+
+            /** @var DisparoProService $disparoPro */
+            $disparoPro = app(DisparoProService::class);
+            $disparoPro->sendMessage($supportPhone, "Código de verificação CloudFox - " . $verifyCode);
+
+            return response()->json(
+                [
+                    "message" => "Mensagem enviada com sucesso!",
+
+                ], 200)
+                             ->withCookie("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao enviar sms para o telefone informado!',
+                ], 400);
+        }
+    }
+
+    /**
+     * @param $projectId
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function matchSupportphoneVerifyCode($projectId, Request $request)
+    {
+        try {
+            $data       = $request->all();
+            $verifyCode = $data["verifyCode"] ?? null;
+            if (empty($verifyCode)) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação não pode ser vazio!',
+                    ], 400);
+            }
+            $cookie = Cookie::get("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId);
+            if ($verifyCode != $cookie) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação inválido!',
+                    ], 400);
+            }
+
+            Project::where("id", Hashids::decode($projectId))->update(["support_phone_verified" => true]);
+
+            return response()->json(
+                [
+                    "message" => "Telefone verificado com sucesso!",
+                ], 200)
+                             ->withCookie(Cookie::forget("supportphoneverifycode_" . Hashids::encode(auth()->id())) . $projectId);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao verificar código!',
+                ], 400);
+        }
+    }
+
+    /**
+     * @param $projectId
+     * @return JsonResponse
+     */
+    public function verifyContact($projectId)
+    {
+        try {
+            $project = Project::find(Hashids::decode($projectId))->first();
+            $contact = $project->contact ?? null;
+            if (empty($contact)) {
+                return response()->json(
+                    [
+                        'message' => 'Email não pode ser vazio!',
+                    ], 400);
+            }
+
+            $contact = "faustogmjr@gmail.com";
+            if (!FoxUtils::validateEmail($contact)) {
+                return response()->json(
+                    [
+                        'message' => 'Email inválido!',
+                    ], 400);
+            }
+
+            $verifyCode = random_int(100000, 999999);
+
+            $data = [
+                "verify_code" => $verifyCode,
+            ];
+
+            /** @var SendgridService $sendgridService */
+            $sendgridService = app(SendgridService::class);
+            $sendgridService->sendEmail(
+                'noreply@cloudfox.net', 'cloudfox', $contact, auth()->user()->name, "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac", $data
+            );
+
+            return response()->json(
+                [
+                    "message" => "Email enviado com sucesso!",
+
+                ], 200)
+                             ->withCookie("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, ao enviar o email com o código!',
+                ], 400);
+        }
+    }
+
+    /**
+     * @param $projectId
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function matchContactVerifyCode($projectId, Request $request)
+    {
+        try {
+            $data       = $request->all();
+            $verifyCode = $data["verifyCode"] ?? null;
+            if (empty($verifyCode)) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação não pode ser vazio!',
+                    ], 400);
+            }
+            $cookie = Cookie::get("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId);
+            if ($verifyCode != $cookie) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação inválido!',
+                    ], 400);
+            }
+
+            Project::where("id", Hashids::decode($projectId))->update(["contact_verified" => true]);
+
+            return response()->json(
+                [
+                    "message" => "Email verificado com sucesso!",
+                ], 200)
+                             ->withCookie(Cookie::forget("contactverifycode_" . Hashids::encode(auth()->id())) . $projectId);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao verificar código!',
+                ], 400);
         }
     }
 }

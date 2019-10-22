@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
+use Modules\Core\Entities\NotazzSentHistory;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
@@ -15,6 +16,8 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
 {
+    const NotazzUrlApi = 'https://app.notazz.com/api';
+
     /**
      * @param $projectId
      * @return bool
@@ -76,8 +79,9 @@ class NotazzService
      */
     public function sendNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel = new NotazzInvoice();
-        $saleService        = new SaleService();
+        $notazzInvoiceModel     = new NotazzInvoice();
+        $saleService            = new SaleService();
+        $notazzSentHistoryModel = new NotazzSentHistory();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -160,7 +164,18 @@ class NotazzService
                                            'date_last_attempt' => Carbon::now(),
                                        ]);
 
-                return $this->sendRequest($fields);
+                $result = $this->sendRequest($fields);
+
+                $notazzSentHistoryModel->create([
+                                                    'notazz_invoice_id' => $notazzInvoice->id,
+                                                    'sent_type_enum'    => $notazzSentHistoryModel->present()
+                                                                                                  ->getType('sent'),
+                                                    'url'               => self::NotazzUrlApi,
+                                                    'data_sent'         => $fields,
+                                                    'response'          => json_encode($result),
+                                                ]);
+
+                return $result;
             } else {
                 return false;
             }
@@ -176,8 +191,9 @@ class NotazzService
      */
     public function updateNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel = new NotazzInvoice();
-        $saleService        = new SaleService();
+        $notazzInvoiceModel     = new NotazzInvoice();
+        $saleService            = new SaleService();
+        $notazzSentHistoryModel = new NotazzSentHistory();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -259,7 +275,18 @@ class NotazzService
                                               'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será atualizado
                                           ]);
 
-                    return $this->sendRequest($fields);
+                    $result = $this->sendRequest($fields);
+
+                    $notazzSentHistoryModel->create([
+                                                        'notazz_invoice_id' => $notazzInvoice->id,
+                                                        'sent_type_enum'    => $notazzSentHistoryModel->present()
+                                                                                                      ->getType('update'),
+                                                        'url'               => self::NotazzUrlApi,
+                                                        'data_sent'         => $fields,
+                                                        'response'          => json_encode($result),
+                                                    ]);
+
+                    return $result;
                 } else {
                     return false;
                 }
@@ -279,7 +306,8 @@ class NotazzService
      */
     public function consultNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel = new NotazzInvoice();
+        $notazzInvoiceModel     = new NotazzInvoice();
+        $notazzSentHistoryModel = new NotazzSentHistory();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -306,7 +334,18 @@ class NotazzService
                                           'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será consultado
                                       ]);
 
-                return $this->sendRequest($fields);
+                $result = $this->sendRequest($fields);
+
+                $notazzSentHistoryModel->create([
+                                                    'notazz_invoice_id' => $notazzInvoice->id,
+                                                    'sent_type_enum'    => $notazzSentHistoryModel->present()
+                                                                                                  ->getType('consult'),
+                                                    'url'               => self::NotazzUrlApi,
+                                                    'data_sent'         => $fields,
+                                                    'response'          => json_encode($result),
+                                                ]);
+
+                return $result;
             } else {
                 //id do notazz nao existe
                 return false;

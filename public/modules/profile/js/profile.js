@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    $('[data-toggle="tooltip"]').tooltip();
+
     let user = '';
 
     let maskOptions = {
@@ -10,6 +13,66 @@ $(document).ready(function () {
     };
 
     $('#document').mask('000.000.000-000', maskOptions);
+
+    // Verificar número de celular
+    $("#btn_verify_cellphone").on("click", function () {
+        event.preventDefault();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/verifycellphone',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {},
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+            }
+        });
+    });
+
+    // Verificar email
+    $("#btn_verify_email").on("click", function () {
+        event.preventDefault();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/verifyemail',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {},
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+            }
+        });
+    });
 
     getDataProfile();
     function getDataProfile() {
@@ -55,6 +118,22 @@ $(document).ready(function () {
                     valuecss = 'danger';
                 }
 
+                // Verificação de telefone
+
+                if (response.data.cellphone_verified) {
+                    cellphoneVerified();
+                } else {
+                    cellphoneNotVerified();
+                }
+
+                // Verificação de email
+
+                if (response.data.email_verified) {
+                    emailVerified();
+                } else {
+                    emailNotVerified();
+                }
+
                 var linha = '<span class="badge badge-' + valuecss + '" id="personal_document_badge">' + response.data.personal_document_translate + '</span>';
                 $("#td_personal_status").append(linha);
 
@@ -73,6 +152,34 @@ $(document).ready(function () {
                 user = response.data.id_code;
             }
         });
+    }
+
+    function cellphoneVerified() {
+        $("#message_not_verified_cellphone").css("display", "none");
+        $("#input_group_cellphone").css("border-color", "forestgreen");
+        $("#cellphone").css("border-color", "forestgreen");
+        $("#input_group_cellphone").append().html("<i class='fas fa-check' data-toggle='tooltip' data-placement='left' title='Celular verificado!' style='color:forestgreen;'></i>");
+    }
+
+    function cellphoneNotVerified() {
+        $("#message_not_verified_cellphone").css("display", "");
+        $("#input_group_cellphone").css("border-color", "red");
+        $("#cellphone").css("border-color", "red");
+        $("#input_group_cellphone").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Celular não verificado!' style='color:red;'></i>");
+    }
+
+    function emailVerified() {
+        $("#message_not_verified_email").css("display", "none");
+        $("#input_group_email").css("border-color", "forestgreen");
+        $("#email").css("border-color", "forestgreen");
+        $("#input_group_email").append().html("<i class='fas fa-check' data-toggle='tooltip' data-placement='left' title='Email verificado!' style='color:forestgreen;'></i>");
+    }
+
+    function emailNotVerified() {
+        $("#message_not_verified_email").css("display", "");
+        $("#input_group_email").css("border-color", "red");
+        $("#email").css("border-color", "red");
+        $("#input_group_email").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Email não verificado!' style='color:red;'></i>");
     }
 
     $("#profile_update_form").on("submit", function (event) {
@@ -101,6 +208,77 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 $("#progress-bar-register").css('width', '66%');
                 $("#jump").show();
+                getDataProfile();
+            }
+        });
+    });
+
+    $("#match_cellphone_verifycode_form").on("submit", function (event) {
+        event.preventDefault();
+        let verify_code = $("#cellphone_verify_code").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/matchcellphoneverifycode',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                verifyCode: verify_code
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                $('#modal_verify_cellphone').modal('hide');
+                $('#cellphone_verify_code').val('');
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+                cellphoneVerified();
+            }
+        });
+    });
+
+    $("#match_email_verifycode_form").on("submit", function (event) {
+        event.preventDefault();
+        let verify_code = $("#email_verify_code").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/matchemailverifycode',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                verifyCode: verify_code
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                $('#modal_verify_email').modal('hide');
+                $('#email_verify_code').val('');
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+                emailVerified();
             }
         });
     });
@@ -301,7 +479,7 @@ $(document).ready(function () {
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
     }
 
-    $("#update_taxes").on("click", function(){
+    $("#update_taxes").on("click", function () {
 
         $.ajax({
             method: "POST",
@@ -311,7 +489,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: { plan : $("#credit-card-release").val() },
+            data: {plan: $("#credit-card-release").val()},
             error: function (response) {
                 errorAjaxResponse(response);
             },

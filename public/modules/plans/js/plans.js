@@ -6,7 +6,10 @@ $(function () {
     var projectId = $(window.location.pathname.split('/')).get(-1);
     var form_register_plan = $("#form-register-plan").html();
     var form_update_plan = $("#form-update-plan").html();
+
     $('#tab_plans').on('click', function () {
+        $("#previewimage").imgAreaSelect({remove: true});
+
         index();
     });
 
