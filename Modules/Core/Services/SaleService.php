@@ -45,6 +45,7 @@ class SaleService
                                                     'sale.shipping',
                                                     'sale.checkout',
                                                     'sale.delivery',
+                                                    'sale.transactions',
                                                 ])->whereIn('company_id', $userCompanies)
                                          ->whereNull('invitation_id');
 
@@ -103,10 +104,12 @@ class SaleService
         }
 
         if($withProducts){
-            $sales->map(function ($item){
+            $userCompanies = $sales->pluck('company_id');
+            $sales->map(function ($item) use ($userCompanies){
                 $item->sale->products = collect();
                 foreach ($item->sale->plansSales as &$planSale) {
                     $plan = $planSale->plan;
+                    $this->getDetails($item->sale, $userCompanies);
                     foreach ($plan->productsPlans as $productPlan) {
                         $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
                         $item->sale->products->add($productPlan->product);
@@ -131,8 +134,28 @@ class SaleService
 
         //get sale
         $sale = $saleModel->with([
+                                     'transactions',
                                      'notazzInvoices',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
+
+        //add details to sale
+        $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
+        $this->getDetails($sale, $userCompanies);
+
+        //invoices
+        $invoices = [];
+        foreach ($sale->notazzInvoices as $notazzInvoice) {
+            $invoices[] = Hashids::encode($notazzInvoice->id);
+        }
+        $sale->details->invoices = $invoices;
+
+        return $sale;
+    }
+
+
+    public function getDetails($sale, $userCompanies){
+
+        $userTransaction = $sale->transactions->whereIn('company_id', $userCompanies)->first();
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -151,25 +174,19 @@ class SaleService
         }
 
         //calcule fees
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-
-        $transaction = $sale->transactions->whereIn('company_id', $userCompanies)
-                                          ->first();
-
-
         $transactionConvertax = $sale->transactions
             ->where('company_id', 29)
             ->first();
 
         if (!empty($transactionConvertax)) {
-            $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
+            $convertaxValue = ($userTransaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
         } else {
             $convertaxValue = '0,00';
         }
 
-        $value = $transaction->value;
+        $value = $userTransaction->value;
 
-        $comission = ($transaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         if ($sale->dolar_quotation != 0) {
             $taxa     = intval($total / $sale->dolar_quotation);
@@ -179,7 +196,7 @@ class SaleService
             $sale->iof = number_format($iof / 100, 2, ',', '.');
         } else {
             $taxa     = 0;
-            $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
+            $taxaReal = ($total / 100) * $userTransaction->percentage_rate + 100;
             $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
         }
 
@@ -198,24 +215,16 @@ class SaleService
         }
 
         if ($sale->status == 1) {
-            $transaction->release_date = Carbon::parse($transaction->release_date);
+            $userTransaction->release_date = Carbon::parse($userTransaction->release_date);
         } else {
-            $transaction->release_date = null;
-        }
-
-        //invoices
-        $invoices = [];
-        foreach ($sale->notazzInvoices as $notazzInvoice) {
-            $invoices[] = Hashids::encode($notazzInvoice->id);
+            $userTransaction->release_date = null;
         }
 
         //add details to sale
         $sale->details = (object) [
-            //invoices
-            'invoices'         => $invoices,
             //transaction
-            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $transaction->transaction_rate) / 100, 2, ',', '.'),
-            'percentage_rate'  => $transaction->percentage_rate ?? 0,
+            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
+            'percentage_rate'  => $userTransaction->percentage_rate ?? 0,
             //extra info
             'total'            => number_format(intval($total) / 100, 2, ',', '.'),
             'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),
@@ -224,11 +233,10 @@ class SaleService
             'convertax_value'  => $convertaxValue,
             'taxa'             => number_format($taxa / 100, 2, ',', '.'),
             'taxaReal'         => $taxaReal,
-            'release_date'     => $transaction->release_date != null ? $transaction->release_date->format('d/m/Y') : '',
+            'release_date'     => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
         ];
-
-        return $sale;
     }
+
     /**
      * @param Sale $sale
      * @return array
