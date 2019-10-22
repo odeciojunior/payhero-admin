@@ -3,35 +3,36 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Illuminate\Support\Facades\Log;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\ProductPlan;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\User;
-use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use PHPHtmlParser\Dom;
+use Slince\Shopify\Client;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\User;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
-use PHPHtmlParser\Exceptions\ChildNotFoundException;
-use PHPHtmlParser\Exceptions\CircularException;
-use PHPHtmlParser\Exceptions\CurlException;
-use PHPHtmlParser\Exceptions\NotLoadedException;
-use PHPHtmlParser\Exceptions\StrictException;
-use PHPHtmlParser\Exceptions\UnknownChildTypeException;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Project;
 use PHPHtmlParser\Selector\Parser;
-use PHPHtmlParser\Selector\Selector;
-use Slince\Shopify\Client;
-use Slince\Shopify\Manager\Asset\Asset;
-use Slince\Shopify\Manager\InventoryItem\InventoryItem;
-use Slince\Shopify\Manager\ProductImage\Image;
-use Slince\Shopify\Manager\ProductVariant\Variant;
-use Slince\Shopify\Manager\Theme\Theme;
-use Slince\Shopify\Manager\Webhook\Webhook;
-use Slince\Shopify\PublicAppCredential;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
+use PHPHtmlParser\Selector\Selector;
+use Modules\Core\Entities\ProductPlan;
+use Slince\Shopify\Manager\Asset\Asset;
+use Slince\Shopify\Manager\Theme\Theme;
+use Slince\Shopify\PublicAppCredential;
+use PHPHtmlParser\Exceptions\CurlException;
+use Slince\Shopify\Manager\Webhook\Webhook;
+use Modules\Core\Entities\ShopifyIntegration;
+use PHPHtmlParser\Exceptions\StrictException;
+use Slince\Shopify\Manager\ProductImage\Image;
+use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\NotLoadedException;
+use Slince\Shopify\Manager\ProductVariant\Variant;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use Modules\Core\Events\ShopifyIntegrationReadyEvent;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use PHPHtmlParser\Exceptions\UnknownChildTypeException;
+use Slince\Shopify\Manager\InventoryItem\InventoryItem;
 
 class ShopifyService
 {
@@ -757,14 +758,15 @@ class ShopifyService
      */
     public function importShopifyProduct($projectId, $userId, $shopifyProductId)
     {
-        /** @var Plan $planModel */
+
         $planModel = new Plan();
-        /** @var Product $productModel */
+
         $productModel = new Product();
-        /** @var ProductPlan $productPlanModel */
+
         $productPlanModel = new ProductPlan();
-        /** @var \Slince\Shopify\Manager\Product\Product $storeProduct */
+
         $storeProduct = $this->getShopProduct($shopifyProductId);
+
         if (empty($storeProduct)) {
             return false;
         }
@@ -786,25 +788,15 @@ class ShopifyService
                 //
             }
             $product = $productModel->with('productsPlans')
-                //   ->where('project', $projectId)
                                     ->where('shopify_id', $storeProduct->getId())
                                     ->where('shopify_variant_id', $variant->getId())
                                     ->first();
             if ($product) {
-                //plano ja existe, atualiza o plano, produto, produtoplanos
-
-                //                $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())
-                //                    ->getCost();
-                //
-                //                if($productCost)
-                //                {
-                //
-                //                }
 
                 $product->update(
                     [
-                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
+                        'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                         'weight'             => $variant->getWeight(),
                         'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
                                                      ->getCost(),
@@ -814,23 +806,23 @@ class ShopifyService
                         'project_id'         => $projectId,
                     ]
                 );
-                /** @var ProductPlan $productPlan */
+
                 $productPlan = $productPlanModel->where('product_id', $product->id)
                                                 ->where('amount', 1)
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
                 if (!empty($productPlan)) {
-                    /** @var Plan $plan */
+
                     $plan = $planModel->find($productPlan->plan_id);
                     $plan->update(
                         [
-                            'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                            'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                            'name'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
+                            'description' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                             'price'       => $variant->getPrice(),
                             'status'      => '1',
                         ]
                     );
-                    //Log::warning('plano atualizado');
+
                     $photo = '';
                     if (count($storeProduct->getVariants()) > 1) {
                         foreach ($storeProduct->getImages() as $image) {
@@ -856,7 +848,7 @@ class ShopifyService
                                 report($e);
                             }
                         }
-                        //$photo = $storeProduct->getImage()->getSrc();
+
                     }
                     $product->update(['photo' => $photo]);
                 } else {
@@ -865,8 +857,8 @@ class ShopifyService
                             'shopify_id'         => $storeProduct->getId(),
                             'shopify_variant_id' => $variant->getId(),
                             'project_id'         => $projectId,
-                            'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                            'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                            'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
+                            'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                             'code'               => '',
                             'price'              => $variant->getPrice(),
                             'status'             => '1',
@@ -883,12 +875,12 @@ class ShopifyService
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
             } else {
-                /** @var Product $product */
+
                 $product = $productModel->create(
                     [
                         'user_id'            => $userId,
-                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
+                        'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                         'guarantee'          => '0',
                         'format'             => 1,
                         'category_id'        => '11',
@@ -902,14 +894,14 @@ class ShopifyService
                         'project_id'         => $projectId,
                     ]
                 );
-                /** @var Plan $plan */
+
                 $plan = $planModel->create(
                     [
                         'shopify_id'         => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
                         'project_id'         => $projectId,
-                        'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
-                        'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
+                        'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
+                        'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                         'code'               => '',
                         'price'              => $variant->getPrice(),
                         'status'             => '1',
@@ -964,11 +956,11 @@ class ShopifyService
      */
     public function importShopifyStore($projectId, $userId)
     {
-        /** @var Project $projectModel */
+
         $projectModel = new Project();
-        /** @var User $userModel */
+
         $userModel = new User();
-        /** @var ShopifyIntegration $shopifyIntegrationModel */
+
         $shopifyIntegrationModel = new ShopifyIntegration();
         $shopifyIntegrationModel->where('project_id', $projectId)
                                 ->update(
@@ -979,7 +971,6 @@ class ShopifyService
 
         $storeProducts = $this->getShopProducts();
 
-        Log::warning('inicio integracao shopify');
         $page = 1;
         while (!empty($storeProducts)) {
 
@@ -997,7 +988,6 @@ class ShopifyService
             $page          += 1;
             $storeProducts = $this->getShopProducts($page);
         }
-        Log::warning('fim integracao shopify');
 
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
 
