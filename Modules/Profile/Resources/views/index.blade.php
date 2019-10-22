@@ -3,6 +3,7 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
 @endpush
 
 @section('content')
@@ -28,6 +29,11 @@
                         <li class="nav-item" role="presentation" id="nav_taxs">
                             <a class="nav-link" data-toggle="tab" href="#tab_taxs" aria-controls="tab_taxs" role="tab">
                                 Tarifas e Prazos
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation" id="nav_notifications">
+                            <a class="nav-link" data-toggle="tab" href="#tab_notifications" aria-controls="tab_notifications" role="tab">
+                                Notificações
                             </a>
                         </li>
                     </ul>
@@ -255,6 +261,26 @@
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
                                             <button id="update_taxes" type="button" class="btn btn-success mr-100">Atualizar taxas</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='tab-pane fade' id='tab_notifications' role='tabpanel'>
+                                <div class='row' style='padding:0 30px 0 30px'>
+                                    <div class='col-12'>
+                                        <h6 class='title-pad'>Notificações a receber</h6>
+                                        <p class="sub-pad"> Defina quais notificações deseja receber </p>
+                                    </div>
+                                    <div class='row mt-15 col-12'>
+                                        <div class="col-6">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Notificação de venda:</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" name="on_sale" class="check notification-on-sale" value="1">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
