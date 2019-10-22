@@ -30,6 +30,7 @@ class ProjectUpdateRequest extends FormRequest
             "installments_amount"        => "nullable",
             "installments_interest_free" => "nullable",
             "boleto"                     => "nullable",
+            "boleto_due_days"            => "nullable",
             "logo_x1"                    => "nullable",
             "logo_y1"                    => "nullable",
             "logo_w"                     => "nullable",

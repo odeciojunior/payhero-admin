@@ -152,6 +152,7 @@ $(document).ready(function () {
                 var toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
                 var availableBalance = parseInt(availableBalanceText);
                 var toTransfer = parseFloat(toTransferText);
+
                 if (toTransfer > availableBalance) {
                     alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
                     toTransferText = $('#custom-input-addon').val();
@@ -200,9 +201,16 @@ $(document).ready(function () {
                                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
 
                                 } else {
+                                    let tax = "0,00";
+                                    if (toTransfer < 50000) {
+                                        tax = "10,00";
+                                    }
+
                                     $('#modal-withdrawal').modal('show');
                                     $('#modal-withdrawal-title').text("Confirmar Saque");
-                                    $('#modal_body').html('<div>' + '<h5>Verifique os dados da conta:</h5>' + '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' + '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' + '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' + '<h4>Documento:<span id="modal-withdrawal-document"></span></h4>' + '<hr>' + '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span>' + '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$3,80</span>' + '</h3>' + '</div>');
+                                    $('#modal_body').html('<div>' + '<h5>Verifique os dados da conta:</h5>' + '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' + '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' + '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' + '<h4>Documento:<span id="modal-withdrawal-document"></span></h4>' + '<hr>' + '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span>' + '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$' + tax + ' (taxa)</span>' + '</h3>' + '<div class="alert alert-danger text-center">\n' +
+                                        '<p><b>Atenção! A taxa para saques é gratuita para saques iguais ou superiores a R$500,00. Qualquer valor abaixo disso a taxa cobrada é R$10,00</b></p>\n' +
+                                        '</div></div>');
                                     $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' + '<strong>Confirmar</strong></button>' + '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' + '<strong>Cancelar</strong></button>');
 
                                     $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
