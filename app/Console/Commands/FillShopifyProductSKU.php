@@ -75,7 +75,8 @@ class FillShopifyProductSKU extends Command
                     }
                     if(isset($shopifyProduct) && $shopifyProduct->getSku()){
                         $this->line($count . '. Adicionando SKU: "' . $shopifyProduct->getSku() . '" ao produto: "' . $product->name . '"');
-                        $product->update(['sku' => $shopifyProduct->getSku()]);
+                        $product->sku = $shopifyProduct->getSku();
+                        $product->save();
                         $count++;
                     }
                 }
