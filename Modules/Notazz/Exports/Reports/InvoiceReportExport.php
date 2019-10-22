@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Sales\Exports\Reports;
+namespace Modules\Notazz\Exports\Reports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents
+class InvoiceReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents
 {
     /**
      * @var array
@@ -52,7 +52,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AS1'; // All headers
+                $cellRange = 'A1:W1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize($this->fontSize);
             },
         ];

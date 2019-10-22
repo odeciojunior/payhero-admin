@@ -264,45 +264,44 @@ class TesteController extends Controller
 
     public function jeanFunction()
     {
-//        //update sem where! popula a coluno sub_total
-//        try {
-//            DB::beginTransaction();
-//
-//            DB::statement('update sales s
-//            set s.sub_total =
-//            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
-//            from plans_sales ps
-//            where ps.sale_id = s.id) where 1=1');
-//
-//            DB::commit();
-//
-//            return "Ok!";
-//        } catch (Exception $e) {
-//            DB::rollBack();
-//            dd($e);
-//        }
+        //        //update sem where! popula a coluno sub_total
+        //        try {
+        //            DB::beginTransaction();
+        //
+        //            DB::statement('update sales s
+        //            set s.sub_total =
+        //            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
+        //            from plans_sales ps
+        //            where ps.sale_id = s.id) where 1=1');
+        //
+        //            DB::commit();
+        //
+        //            return "Ok!";
+        //        } catch (Exception $e) {
+        //            DB::rollBack();
+        //            dd($e);
+        //        }
     }
 
     public function julioFunction()
     {
         $checkoutModel = new Checkout();
 
-        $checkouts = $checkoutModel->where('email_sent_amount', '>' , 10)->get();
+        $checkouts = $checkoutModel->where('email_sent_amount', '>', 10)->get();
 
-        foreach($checkouts as $checkout){
+        foreach ($checkouts as $checkout) {
             $checkout->update([
-                'email_sent_amount' => '4'
-            ]);
+                                  'email_sent_amount' => '4',
+                              ]);
         }
 
-        $checkouts = $checkoutModel->where('sms_sent_amount', '>' , 10)->get();
+        $checkouts = $checkoutModel->where('sms_sent_amount', '>', 10)->get();
 
-        foreach($checkouts as $checkout){
+        foreach ($checkouts as $checkout) {
             $checkout->update([
-                'sms_sent_amount' => '2'
-            ]);
+                                  'sms_sent_amount' => '2',
+                              ]);
         }
-
     }
 
     public function parseToArray($xpath, $class)
@@ -346,14 +345,14 @@ class TesteController extends Controller
         //         })->get();
         //         dd($sales);
 
-//        $notazzInvoice = new NotazzInvoice();
+        //        $notazzInvoice = new NotazzInvoice();
 
-//        $invoice  = $notazzInvoice->whereHas('sale', function($querySale) {
-//            $querySale->whereHas('client', function($queryClient) {
-//                $queryClient->where('name', 'LIKE', 'UIARA VAZ');
-//            });
-//        })->get();
-//        dd($invoice);
+        //        $invoice  = $notazzInvoice->whereHas('sale', function($querySale) {
+        //            $querySale->whereHas('client', function($queryClient) {
+        //                $queryClient->where('name', 'LIKE', 'UIARA VAZ');
+        //            });
+        //        })->get();
+        //        dd($invoice);
         $nservice = new NotazzService();
         dd($nservice->consultNfse(459));
         //
@@ -536,7 +535,24 @@ class TesteController extends Controller
                                  ]);
             }
         }
+
         return 'Pronto!';
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function faustoFunction(Request $request)
+    {
+        dump(__METHOD__);
+        try {
+            $user       = auth()->user();
+            $user->fill(["email" => "healthlab" . random_int(1, 1000) . "@mail.com"])->save();
+
+            dd($user->getChanges());
+        } catch (Exception $ex) {
+            dd($ex);
+        }
     }
 }
 

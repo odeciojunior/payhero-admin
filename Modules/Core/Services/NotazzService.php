@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
+use Modules\Core\Entities\NotazzSentHistory;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
@@ -15,6 +16,8 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
 {
+    const NotazzUrlApi = 'https://app.notazz.com/api';
+
     /**
      * @param $projectId
      * @return bool
@@ -76,8 +79,9 @@ class NotazzService
      */
     public function sendNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel = new NotazzInvoice();
-        $saleService        = new SaleService();
+        $notazzInvoiceModel     = new NotazzInvoice();
+        $saleService            = new SaleService();
+        $notazzSentHistoryModel = new NotazzSentHistory();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -92,107 +96,9 @@ class NotazzService
         if ($sale) {
             //venda encontrada
 
-            $products = $saleService->getProducts($sale->id);
+            $products = $saleService->getProductsBySaleId($sale->id);
 
-            $costTotal = 0;
-            foreach ($products as $product) {
-
-                $costTotal += $product->cost;
-            }
-
-            $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-
-            $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
-            $baseValue = ($subTotal + $shippingCost) - $costTotal;
-
-            $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
-
-            $tokenApi = $sale->project->notazzIntegration->token_api;
-
-            $fields = json_encode([
-                                      'METHOD'                 => 'create_nfse',//Método a ser utilizado
-                                      'API_KEY'                => $tokenApi,
-                                      'DESTINATION_NAME'       => $sale->client->name,// Nome completo do cliente
-                                      'DESTINATION_TAXID'      => $sale->client->document,//CPF ou CNPJ, somente números
-                                      //'DESTINATION_IE'         => '',//Inscrição Estadual (opcional), somente números
-                                      //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
-                                      'DESTINATION_TAXTYPE'    => 'F',//F = Física, J = Jurídica, E = Estrangeiro
-                                      'DESTINATION_STREET'     => $sale->delivery->street,//Rua do cliente
-                                      'DESTINATION_NUMBER'     => (($sale->delivery->number ?? 'S/N') == 0) ? 'S/N' : $sale->delivery->number,//Número
-                                      'DESTINATION_COMPLEMENT' => $sale->delivery->complement,//Complemento
-                                      'DESTINATION_DISTRICT'   => $sale->delivery->neighborhood,//Bairro
-                                      'DESTINATION_CITY'       => $sale->delivery->city,//Cidade, informar corretamente o nome da cidade sem abreviações
-                                      'DESTINATION_UF'         => $sale->delivery->state,//Sigla do estado
-                                      'DESTINATION_ZIPCODE'    => $sale->delivery->zip_code,//CEP, somente números
-                                      'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
-                                      'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
-
-                                      'DESTINATION_EMAIL_SEND' => [
-                                          '1' => [
-                                              'EMAIL' => $sale->client->email,
-                                          ],
-                                      ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
-
-                                      'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
-                                      'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
-                                      'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
-                                      //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
-                                      //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
-                                      //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
-                                      //'CITY_SERVICE_CODE'    => '12345', // Código de serviço do município (opcional), somente números. Se não seja informado será utilizado o padrão da empresa
-                                      /*
-                                                                            'ALIQUOTAS' => [
-                                                                                'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                                                                'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                                                                'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                                                                'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                                                                'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                                                                'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                                                            ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
-                                      */
-                                      'EXTERNAL_ID'          => $notazzInvoice->external_id, // ID externo do documento que será enviado
-                                  ]);
-
-            $notazzInvoice->update([
-                                       'attempts'          => $notazzInvoice->attempts + 1,
-                                       'data_json'         => $fields,
-                                       'date_last_attempt' => Carbon::now(),
-                                   ]);
-
-            return $this->sendRequest($fields);
-        } else {
-            //venda nao encontrada
-            return false;
-        }
-    }
-
-    /**
-     * @param $notazzInvoiceId
-     * @return bool|mixed
-     */
-    public function updateNfse($notazzInvoiceId)
-    {
-        $notazzInvoiceModel = new NotazzInvoice();
-        $saleService        = new SaleService();
-
-        $notazzInvoice = $notazzInvoiceModel->with([
-                                                       'sale',
-                                                       'sale.client',
-                                                       'sale.delivery',
-                                                       'sale.shipping',
-                                                       'sale.plansSales.plan.products',
-                                                       'sale.project.notazzIntegration',
-                                                   ])->find($notazzInvoiceId);
-
-        $sale = $notazzInvoice->sale;
-        if ($sale) {
-            //venda encontrada
-
-            if (!empty($notazzInvoice->notazz_id)) {
-                //id do notazz existe
-
-                $products = $saleService->getProducts($sale->id);
-
+            if ($products) {
                 $costTotal = 0;
                 foreach ($products as $product) {
 
@@ -209,8 +115,7 @@ class NotazzService
                 $tokenApi = $sale->project->notazzIntegration->token_api;
 
                 $fields = json_encode([
-
-                                          'METHOD'                 => 'update_nfse',//Método a ser utilizado
+                                          'METHOD'                 => 'create_nfse',//Método a ser utilizado
                                           'API_KEY'                => $tokenApi,
                                           'DESTINATION_NAME'       => $sale->client->name,// Nome completo do cliente
                                           'DESTINATION_TAXID'      => $sale->client->document,//CPF ou CNPJ, somente números
@@ -218,7 +123,7 @@ class NotazzService
                                           //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
                                           'DESTINATION_TAXTYPE'    => 'F',//F = Física, J = Jurídica, E = Estrangeiro
                                           'DESTINATION_STREET'     => $sale->delivery->street,//Rua do cliente
-                                          'DESTINATION_NUMBER'     => $sale->delivery->number,//Número
+                                          'DESTINATION_NUMBER'     => (($sale->delivery->number ?? 'S/N') == 0) ? 'S/N' : $sale->delivery->number,//Número
                                           'DESTINATION_COMPLEMENT' => $sale->delivery->complement,//Complemento
                                           'DESTINATION_DISTRICT'   => $sale->delivery->neighborhood,//Bairro
                                           'DESTINATION_CITY'       => $sale->delivery->city,//Cidade, informar corretamente o nome da cidade sem abreviações
@@ -240,21 +145,151 @@ class NotazzService
                                           //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
                                           //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
                                           //'CITY_SERVICE_CODE'    => '12345', // Código de serviço do município (opcional), somente números. Se não seja informado será utilizado o padrão da empresa
-
-                                          /*'ALIQUOTAS' => [
-                                              'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                              'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                              'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                              'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                              'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                              'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
-                                          ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa*/
-
-                                          'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será atualizado
+                                          /*
+                                                                                'ALIQUOTAS' => [
+                                                                                    'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                    'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                    'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                    'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                    'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                    'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                                                ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
+                                          */
+                                          'EXTERNAL_ID'          => $notazzInvoice->external_id, // ID externo do documento que será enviado
                                       ]);
 
-                return $this->sendRequest($fields);
+                $notazzInvoice->update([
+                                           'attempts'          => $notazzInvoice->attempts + 1,
+                                           'data_json'         => $fields,
+                                           'date_last_attempt' => Carbon::now(),
+                                       ]);
+
+                $result = $this->sendRequest($fields);
+
+                $notazzSentHistoryModel->create([
+                                                    'notazz_invoice_id' => $notazzInvoice->id,
+                                                    'sent_type_enum'    => $notazzSentHistoryModel->present()
+                                                                                                  ->getType('sent'),
+                                                    'url'               => self::NotazzUrlApi,
+                                                    'data_sent'         => $fields,
+                                                    'response'          => json_encode($result),
+                                                ]);
+
+                return $result;
+            } else {
+                return false;
+            }
+        } else {
+            //venda nao encontrada
+            return false;
+        }
+    }
+
+    /**
+     * @param $notazzInvoiceId
+     * @return bool|mixed
+     */
+    public function updateNfse($notazzInvoiceId)
+    {
+        $notazzInvoiceModel     = new NotazzInvoice();
+        $saleService            = new SaleService();
+        $notazzSentHistoryModel = new NotazzSentHistory();
+
+        $notazzInvoice = $notazzInvoiceModel->with([
+                                                       'sale',
+                                                       'sale.client',
+                                                       'sale.delivery',
+                                                       'sale.shipping',
+                                                       'sale.plansSales.plan.products',
+                                                       'sale.project.notazzIntegration',
+                                                   ])->find($notazzInvoiceId);
+
+        $sale = $notazzInvoice->sale;
+        if ($sale) {
+            //venda encontrada
+
+            if (!empty($notazzInvoice->notazz_id)) {
+                //id do notazz existe
+
+                $products = $saleService->getProductsBySaleId($sale->id);
+
+                if ($products) {
+                    $costTotal = 0;
+                    foreach ($products as $product) {
+
+                        $costTotal += $product->cost;
+                    }
+
+                    $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+
+                    $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
+                    $baseValue = ($subTotal + $shippingCost) - $costTotal;
+
+                    $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
+
+                    $tokenApi = $sale->project->notazzIntegration->token_api;
+
+                    $fields = json_encode([
+
+                                              'METHOD'                 => 'update_nfse',//Método a ser utilizado
+                                              'API_KEY'                => $tokenApi,
+                                              'DESTINATION_NAME'       => $sale->client->name,// Nome completo do cliente
+                                              'DESTINATION_TAXID'      => $sale->client->document,//CPF ou CNPJ, somente números
+                                              //'DESTINATION_IE'         => '',//Inscrição Estadual (opcional), somente números
+                                              //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
+                                              'DESTINATION_TAXTYPE'    => 'F',//F = Física, J = Jurídica, E = Estrangeiro
+                                              'DESTINATION_STREET'     => $sale->delivery->street,//Rua do cliente
+                                              'DESTINATION_NUMBER'     => $sale->delivery->number,//Número
+                                              'DESTINATION_COMPLEMENT' => $sale->delivery->complement,//Complemento
+                                              'DESTINATION_DISTRICT'   => $sale->delivery->neighborhood,//Bairro
+                                              'DESTINATION_CITY'       => $sale->delivery->city,//Cidade, informar corretamente o nome da cidade sem abreviações
+                                              'DESTINATION_UF'         => $sale->delivery->state,//Sigla do estado
+                                              'DESTINATION_ZIPCODE'    => $sale->delivery->zip_code,//CEP, somente números
+                                              'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
+                                              'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
+
+                                              'DESTINATION_EMAIL_SEND' => [
+                                                  '1' => [
+                                                      'EMAIL' => $sale->client->email,
+                                                  ],
+                                              ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
+
+                                              'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
+                                              'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
+                                              'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
+                                              //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
+                                              //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
+                                              //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
+                                              //'CITY_SERVICE_CODE'    => '12345', // Código de serviço do município (opcional), somente números. Se não seja informado será utilizado o padrão da empresa
+
+                                              /*'ALIQUOTAS' => [
+                                                  'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                  'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                  'INSS'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                  'IR'     => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                  'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                                  'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
+                                              ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa*/
+
+                                              'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
+                                              'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será atualizado
+                                          ]);
+
+                    $result = $this->sendRequest($fields);
+
+                    $notazzSentHistoryModel->create([
+                                                        'notazz_invoice_id' => $notazzInvoice->id,
+                                                        'sent_type_enum'    => $notazzSentHistoryModel->present()
+                                                                                                      ->getType('update'),
+                                                        'url'               => self::NotazzUrlApi,
+                                                        'data_sent'         => $fields,
+                                                        'response'          => json_encode($result),
+                                                    ]);
+
+                    return $result;
+                } else {
+                    return false;
+                }
             } else {
                 //id do notazz nao existe
                 return false;
@@ -271,7 +306,8 @@ class NotazzService
      */
     public function consultNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel = new NotazzInvoice();
+        $notazzInvoiceModel     = new NotazzInvoice();
+        $notazzSentHistoryModel = new NotazzSentHistory();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -298,7 +334,18 @@ class NotazzService
                                           'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será consultado
                                       ]);
 
-                return $this->sendRequest($fields);
+                $result = $this->sendRequest($fields);
+
+                $notazzSentHistoryModel->create([
+                                                    'notazz_invoice_id' => $notazzInvoice->id,
+                                                    'sent_type_enum'    => $notazzSentHistoryModel->present()
+                                                                                                  ->getType('consult'),
+                                                    'url'               => self::NotazzUrlApi,
+                                                    'data_sent'         => $fields,
+                                                    'response'          => json_encode($result),
+                                                ]);
+
+                return $result;
             } else {
                 //id do notazz nao existe
                 return false;
@@ -714,7 +761,7 @@ class NotazzService
         if ($notazzInvoice->attempts < $notazzInvoice->max_attempts) {
             //ainda nao chegou no maximo de tentativas
 
-            $products = $saleService->getProducts($notazzInvoice->sale->id);
+            $products = $saleService->getProductsBySaleId($notazzInvoice->sale->id);
 
             $hasCostNull = false;
             foreach ($products as $product) {

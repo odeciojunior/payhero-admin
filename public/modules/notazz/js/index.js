@@ -24,7 +24,7 @@ $(document).ready(function () {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow show-integration" integration=` + data.id + `>
-                                    <a href='${data.id}' class=''>           
+                                    <a href='/apps/notazz/${data.id}' class=''>           
                                         <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}" style='cursor:pointer'/>
                                     </a>
                                     <div class="card-body">
@@ -78,7 +78,7 @@ $(document).ready(function () {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 } else {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                    alertCustom('error', String(response.responseJSON.message));
                                 }
                             }),
                             success: function success(response) {

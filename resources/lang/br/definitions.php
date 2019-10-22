@@ -66,15 +66,27 @@ return [
                 "disabled" => "Desativado",
             ],
         ],
-        "sale"                     => [
+        "sale"            => [
             "status" => [
                 "approved"     => "Aprovado",
                 "canceled"     => "Cancelado",
                 "charge_back"  => "Chargeback",
-                'in_proccess'   => "Em análise",
+                'in_proccess'  => "Em análise",
                 "pending"      => "Pendente",
                 "refused"      => "Recusado",
                 "system_error" => "Erro de sistema",
+            ],
+        ],
+        "invoices"        => [
+            "status" => [
+                "pending"            => "Pendente",
+                "send"               => "Enviado",
+                "completed"          => "Finalizado",
+                'error'              => "Erro",
+                "in_process"         => "Em processamento",
+                "error_max_attempts" => "Maximo de tentativas",
+                "canceled"           => "Cancelado",
+                "rejected"           => "Rejeitado",
             ],
         ],
     ],

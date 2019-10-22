@@ -81,10 +81,12 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Erro! Integração já existe!'], Response::HTTP_BAD_REQUEST);
             }
 
+            //TODO: ajustar
             $config = new \SocialiteProviders\Manager\Config(
                 env('SHOPIFY_KEY'),
                 env('SHOPIFY_SECRET'),
-                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' : 'http://873b2a90.ngrok.io/apps/shopify/login/callback',
+                env('APP_ENV') == 'production' ? 'https://app.cloudfox.net/apps/shopify/login/callback' :
+                    env('APP_URL') ?? 'http://3b52cfbd.ngrok.io/apps/shopify/login/callback',
                 ['subdomain' => $urlStore]
             );
 
@@ -102,7 +104,7 @@ class ShopifyApiController extends Controller
                                                 'write_product_listings',
                                                 'read_product_listings',
                                                 'write_products',
-                                                'read_products', 
+                                                'read_products',
                                                 'write_themes',
                                                 'read_themes',
                                                 'write_fulfillments',
@@ -135,7 +137,7 @@ class ShopifyApiController extends Controller
         $integrationToken = Socialite::driver('shopify')->stateless()->user()->token;
 
         $projectModel            = new Project();
-        $userProjectModel        = new UserProject(); 
+        $userProjectModel        = new UserProject();
         $shopifyIntegrationModel = new ShopifyIntegration();
         $shippingModel           = new Shipping();
         $shopifyService          = new ShopifyService($request->shop, $integrationToken);
@@ -198,10 +200,10 @@ class ShopifyApiController extends Controller
                             $shipping->delete();
                             $shopifyIntegration->delete();
                             $project->delete();
-                
+
                             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                         }
- 
+
                         return response()->redirectTo('/apps/shopify');
 
                     } else {
