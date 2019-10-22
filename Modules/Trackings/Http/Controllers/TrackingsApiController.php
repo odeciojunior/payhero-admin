@@ -35,7 +35,7 @@ class TrackingsApiController extends Controller
                         $trackingCodeupdated = $productPlanSale->update([
                                                                             'tracking_code'        => $data['tracking_code'],
                                                                             'tracking_status_enum' => $productPlanSaleModel->present()
-                                                                                                                           ->getStatusEnum('posted'),
+                                                                                                                           ->getTrackingStatusEnum('posted'),
                                                                         ]);
                         if ($trackingCodeupdated) {
 
@@ -49,7 +49,7 @@ class TrackingsApiController extends Controller
                                                         'data'    => [
                                                             'tracking_code'   => $productPlanSale->tracking_code,
                                                             'tracking_status' => Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                                                                                                                                                                             ->getStatusEnum($productPlanSale->tracking_status_enum)),
+                                                                                                                                                                             ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)),
                                                         ],
                                                     ], 200);
                         } else {
@@ -85,7 +85,7 @@ class TrackingsApiController extends Controller
                                                         'data'    => [
                                                             'tracking_code'   => $productPlanSale->tracking_code,
                                                             'tracking_status' => Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                                                                                                                                                                             ->getStatusEnum($productPlanSale->tracking_status_enum)),
+                                                                                                                                                                             ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)),
                                                         ],
                                                     ], 200);
                         }

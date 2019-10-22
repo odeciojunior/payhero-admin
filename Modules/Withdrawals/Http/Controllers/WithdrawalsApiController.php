@@ -155,9 +155,35 @@ class WithdrawalsApiController extends Controller
                     ], 200
                 );
             }
+
+            if (!$user->email_verified) {
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'email_verified' => 'false',
+                        ],
+                    ], 200
+                );
+            }
+
+            if (!$user->cellphone_verified) {
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'cellphone_verified' => 'false',
+                        ],
+                    ], 200
+                );
+            }
+
             if ($company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') &&
                 $company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') &&
                 $company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
+
+                // Verificar se telefone e e-mail estão verificados
+
                 return response()->json(
                     [
                         'message' => 'success',
