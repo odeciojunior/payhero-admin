@@ -52,7 +52,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AO1'; // All headers
+                $cellRange = 'A1:AS1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize($this->fontSize);
             },
         ];
