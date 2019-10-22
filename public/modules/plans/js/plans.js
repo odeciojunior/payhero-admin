@@ -345,13 +345,12 @@ $(function () {
                                                     <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                                 </div>
                                              
-                                                 <div class="form-group switch-holder col-sm-4 col-md-3 col-lg3">
-                                                    <label for="checkbox" class='mb-10'>Dólaar:</label>
-                                                    <br>
-                                                    <label class="switch">
-                                                        <input type="checkbox" name="status[]" class='check shipping-status' value='0'>
-                                                        <span class="slider round"></span>
-                                                    </label>
+                                                 <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                    <label>Moeda:</label>
+                                                    <select class='form-control' name='status[]'>
+                                                        <option>BRL</option>
+                                                        <option>USD</option>
+                                                    </select>
                                                 </div>
                                                 
                                                 <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
@@ -388,14 +387,13 @@ $(function () {
                                                 <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                             </div>
                                          
-                                             <div class="form-group switch-holder col-sm-4 col-md-3 col-lg3">
-                                                <label for="checkbox" class='mb-10'>Dólar:</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" name="status[]" class='check shipping-status' value='0'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                             </div>
+                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <label>Moeda:</label>
+                                                <select class='form-control' name='status[]'>
+                                                    <option>BRL</option>
+                                                    <option>USD</option>
+                                                </select>
+                                            </div>
                                              <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                                                  <button class='btn btn-outline btn-danger btnDelete form-control'>
                                                     <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i></button>

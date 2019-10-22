@@ -19,6 +19,9 @@ class PlanUpdateRequest extends FormRequest
             'description'     => 'nullable|max:200',
             'products'        => 'required|array',
             'product_amounts' => 'required|array',
+            'product_cost'    => 'required|array',
+            'product_total'   => 'required|array',
+            'status'          => 'required|array',
         ];
     }
 

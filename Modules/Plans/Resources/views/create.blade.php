@@ -45,14 +45,25 @@
                             <label>Custo Total:</label>
                             <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Total" readonly>
                         </div>
-                        <div class="switch-holder col-sm-4 col-md-3 col-lg3">
-                            <label for="token" class='mb-10'>Dólar:</label>
-                            <br>
-                            <label class="switch ">
-                                <input type="checkbox" name="status" class='check shipping-status' value='0'>
-                                <span class="slider round"></span>
-                            </label>
+                        <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                            <label>Moeda:</label>
+                            <select class='form-control' name='status[]'>
+                                <option>BRL</option>
+                                <option>USD</option>
+                            </select>
                         </div>
+                        {{--                        <div class="switch-holder col-sm-4 col-md-3 col-lg3">--}}
+                        {{--                            <select class='form-control' name='status[]'>--}}
+                        {{--                                <option>Ativo</option>--}}
+                        {{--                            </select>--}}
+                        {{--                            <label for="token" class='mb-10'>Dólar:</label>--}}
+                        {{--                            <br>--}}
+                        {{--                            <label class="switch">--}}
+                        {{--                                <input type="checkbox" id="status" name="status" class='check shipping-status' value='0'>--}}
+                        {{--                                <span class="slider round"></span>--}}
+                        {{--                                <input type='hidden' name='status[]' id='status-input'>--}}
+                        {{--                            </label>--}}
+                        {{--                        </div>--}}
                         <div class='col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                             {{--                            <label class="display-xsm-none">Remover:</label>--}}
                             <button class='btn btn-outline btn-danger btnDelete form-control'>

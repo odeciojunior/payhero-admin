@@ -20,6 +20,9 @@ class PlanStoreRequest extends FormRequest
             'description'     => 'nullable|max:50',
             'products'        => 'required|array',
             'product_amounts' => 'required|array',
+            'product_cost'    => 'required|array',
+            'product_total'   => 'required|array',
+            'status'          => 'required|array',
         ];
     }
 
