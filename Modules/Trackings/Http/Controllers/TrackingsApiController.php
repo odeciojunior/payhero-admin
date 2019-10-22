@@ -40,9 +40,9 @@ class TrackingsApiController extends Controller
                         if ($trackingCodeupdated) {
 
                             //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                            $sale = $saleModel->find($saleId);
+                            $saleProducts = $productService->getProductsBySale($data['sale_id']);
+                            event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
 
                             return response()->json([
                                                         'message' => 'Código de rastreio salvo',
@@ -76,9 +76,9 @@ class TrackingsApiController extends Controller
                                                           ]);
 
                             //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                            $sale = $saleModel->find($saleId);
+                            $saleProducts = $productService->getProductsBySale($data['sale_id']);
+                            event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
 
                             return response()->json([
                                                         'message' => 'Código de rastreio alterado',
