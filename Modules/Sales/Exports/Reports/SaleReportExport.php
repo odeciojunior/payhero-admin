@@ -18,23 +18,16 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
      * @var array
      */
     private $collection = [];
-    /**
-     * @var int|null
-     */
-    private $fontSize = 12;
 
     /**
      * SaleReportExport constructor.
      * @param $collection
      * @param $headings
-     * @param null $fontSize
      */
-    public function __construct($collection, $headings, $fontSize = null)
+    public function __construct($collection, $headings)
     {
         $this->collection = $collection; // Collection
         $this->headings   = $headings; // Array
-        if ($fontSize !== null) // Number
-            $this->fontSize = $fontSize;
     }
 
     /**
@@ -53,7 +46,34 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
         return [
             AfterSheet::class => function(AfterSheet $event) {
                 $cellRange = 'A1:AS1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize($this->fontSize);
+                $event->sheet->getDelegate()->getStyle($cellRange)
+                    ->getFill()
+                    ->setFillType('solid')
+                    ->getStartColor()
+                    ->setRGB('E16A0A');
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
+                    'color' => ['rgb' => 'ffffff'],
+                    'size' => 16
+                ]);
+
+                $lastRow = $event->sheet->getDelegate()->getHighestRow();
+                $setGray = false;
+                $lastSale = null;
+                for ($row = 2; $row <= $lastRow; $row++) {
+                    $currentSale = $this->collection()->get($row - 1)['sale_code'];
+                    if($setGray){
+                            $event->sheet->getDelegate()
+                                ->getStyle('A' . $row . ':AS' . $row)
+                                ->getFill()
+                                ->setFillType('solid')
+                                ->getStartColor()
+                                ->setRGB('e5e5e5');
+                    }
+                    if ($currentSale != $lastSale) {
+                        $setGray = !$setGray;
+                    }
+                    $lastSale = $currentSale;
+                }
             },
         ];
     }
