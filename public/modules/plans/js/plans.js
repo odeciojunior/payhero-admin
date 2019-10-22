@@ -345,11 +345,11 @@ $(function () {
                                                     <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                                 </div>
                                              
-                                                 <div class="switch-holder col-sm-4 col-md-3 col-lg3">
-                                                    <label for="token" class='mb-10'>Dólar:</label>
+                                                 <div class="form-group switch-holder col-sm-4 col-md-3 col-lg3">
+                                                    <label for="checkbox" class='mb-10'>Dólaar:</label>
                                                     <br>
                                                     <label class="switch">
-                                                        <input type="checkbox" name="status" class='check shipping-status' value='0'>
+                                                        <input type="checkbox" name="status[]" class='check shipping-status' value='0'>
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>
@@ -388,11 +388,11 @@ $(function () {
                                                 <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                             </div>
                                          
-                                             <div class="switch-holder col-sm-4 col-md-3 col-lg3">
-                                                <label for="token" class='mb-10'>Dólar:</label>
+                                             <div class="form-group switch-holder col-sm-4 col-md-3 col-lg3">
+                                                <label for="checkbox" class='mb-10'>Dólar:</label>
                                                 <br>
                                                 <label class="switch">
-                                                    <input type="checkbox" name="status" class='check shipping-status' value='0'>
+                                                    <input type="checkbox" name="status[]" class='check shipping-status' value='0'>
                                                     <span class="slider round"></span>
                                                 </label>
                                              </div>
