@@ -48,7 +48,7 @@
                         <div class="switch-holder col-sm-4 col-md-3 col-lg3">
                             <label for="token" class='mb-10'>Dólar:</label>
                             <br>
-                            <label class="switch">
+                            <label class="switch ">
                                 <input type="checkbox" name="status" class='check shipping-status' value='0'>
                                 <span class="slider round"></span>
                             </label>
