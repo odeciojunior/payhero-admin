@@ -56,7 +56,7 @@ class ProductService
                 $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
                 $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
                     __('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSale->present()
-                            ->getStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                            ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
                 $productsSale->add($product);
             }
         }
@@ -91,7 +91,7 @@ class ProductService
                 $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
                 $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
                     Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                                                                                                                ->getStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                                                                                                                ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
                 $productsSale->add($product);
             }
         }

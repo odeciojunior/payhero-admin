@@ -530,7 +530,7 @@ class TesteController extends Controller
                 $product->update([
 
                                      'tracking_status_enum' => $productPlanSaleModel->present()
-                                                                                    ->getStatusEnum('posted'),
+                                                                                    ->getTrackingStatusEnum('posted'),
                                      'tracking_code'        => $sale->delivery->tracking_code,
                                  ]);
             }
