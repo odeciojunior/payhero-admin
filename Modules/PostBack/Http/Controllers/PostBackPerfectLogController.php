@@ -36,25 +36,30 @@ class PostBackPerfectLogController extends Controller
             $status = 0;
 
             switch ($requestValidated['status']) {
+                //case 'preparation':
                 case 'sent':
-                case 'out_for_delivery':
                 case 'resend':
-                    $status = $productPlanSale->present()->getStatusEnum('dispatched');
+                    $status = $productPlanSaleModel->present()->getStatusEnum('dispatched');
                     break;
                 case 'delivered':
-                    $status = $productPlanSale->present()->getStatusEnum('delivered');
+                    $status = $productPlanSaleModel->present()->getStatusEnum('delivered');
                     break;
-                //case 'preparation':
-                //case 'canceled':
-                //case 'pending':
-                //case 'erro_fiscal':
-                //case 'returned':
-                default:
-                    $status = $productPlanSale->present()->getStatusEnum('posted');
+                case 'out_for_delivery':
+                    $status = $productPlanSaleModel->present()->getStatusEnum('out_for_delivery');
+                    break;
+                case 'canceled':
+                case 'pending':
+                case 'erro_fiscal':
+                case 'returned':
+                    $status = $productPlanSaleModel->present()->getStatusEnum('exception');
                     break;
             }
 
             //ATUALIZAR O STATUS
+            $productPlanSale->update([
+                'tracking_code' => $requestValidated['tracking'],
+                'tracking_status_enum' => $status,
+            ]);
 
             //NOTIFICAR O USUARIO
 

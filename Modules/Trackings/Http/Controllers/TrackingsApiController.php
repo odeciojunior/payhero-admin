@@ -43,6 +43,8 @@ class TrackingsApiController extends Controller
                             //$sale = $saleModel->find($saleId);
                             //$saleProducts = $productService->getProductsBySale($data['sale_id']);
                             //event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                            $perfectLogService = new PerfectLogService();
+                            $perfectLogService->track(Hashids::encode($productPlanSale->id), $data['tracking_code']);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio salvo',
@@ -79,6 +81,8 @@ class TrackingsApiController extends Controller
                             //$sale = $saleModel->find($saleId);
                             //$saleProducts = $productService->getProductsBySale($data['sale_id']);
                             //event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                            $perfectLogService = new PerfectLogService();
+                            $perfectLogService->track(Hashids::encode($productPlanSale->id), $data['tracking_code']);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio alterado',
@@ -90,9 +94,6 @@ class TrackingsApiController extends Controller
                                                     ], 200);
                         }
                     }
-
-                    $perfectLogService = new PerfectLogService();
-                    $perfectLogService->track(Hashids::encode($productPlanSale->id), $data['tracking_code']);
                 }
             } else {
                 return response()->json([
