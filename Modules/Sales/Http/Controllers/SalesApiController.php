@@ -102,15 +102,17 @@ class SalesApiController extends Controller
                 'Data Inicial do Pagamento',
                 'Data Final do Pagamento',
                 'Status',
-                'Desconto Shopify',
                 'Frete',
                 'Valor do Frete',
+                'Desconto Shopify',
                 'Valor Total Venda',
                 //plan
-                'Código do produto',
-                'Codigo do Shopify',
-                'Codigo da Variante Shopify',
-                'Quantidade',
+                'Plano',
+                'Código dos produtos',
+                'Produtos',
+                'Codigos do Shopify',
+                'Codigos dsa Variantes Shopify',
+                'Quantidade dos Produtos',
                 'Preço',
                 'SKU',
                 //client
@@ -138,8 +140,18 @@ class SalesApiController extends Controller
 
             $saleData = collect();
             foreach ($salesResult as $sale) {
+
                 foreach ($sale->plansSales as $planSale) {
-                    $amount = $planSale->plan->productsPlans->sum('amount');
+
+                    $product_id = $sale->products->map(function($item){
+                        return '#' . Hashids::encode($item->id);
+                    })->implode(' - ');
+                    $product_name= $sale->products->unique('name')->implode('name',' - ');
+                    $shopify_id = $sale->products->unique('shopify_id')->implode('shopify_id',' - ');
+                    $shopify_variant_id = $sale->products->implode('shopify_variant_id', ' - ');
+                    $sku = $sale->products->where('sku', '!=', null)->implode('sku', ' - ');
+                    $amount = $sale->products->implode('amount', ' - ');
+
                     $saleArray = [
                         //sale
                         'project_name' => $sale->project->name ?? '',
@@ -155,17 +167,19 @@ class SalesApiController extends Controller
                         'start_date' => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
                         'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
                         'status' => $sale->present()->getStatus(),
-                        'shopify_discount' => $sale->shopify_discount ?? '',
                         'shipping' => $sale->shipping->name ?? '',
                         'shipping_value' => $sale->shipping->value ?? '',
+                        'shopify_discount' => $sale->shopify_discount ?? '',
                         'total_paid' => $sale->total_paid_value ?? '',
                         //plan
-                        'product_id' => '#' . $planSale->plan->product_id,
-                        'product_shopify_id' => $planSale->plan->shopify_id,
-                        'product_shopify_variant_id' => $planSale->plan->shopify_variant_id,
-                        'amount' => $planSale->plan->amount,
+                        'plan'=> $planSale->plan->name,
+                        'product_id' => $product_id,
+                        'products' => $product_name,
+                        'product_shopify_id' => $shopify_id,
+                        'product_shopify_variant_id' => $shopify_variant_id,
+                        'amount' => $amount,
                         'price' => $planSale->plan->price,
-                        'sku' => $planSale->plan->sku,
+                        'sku' => $sku,
                         //client
                         'client_name' => $sale->client->name ?? '',
                         'client_telephone' => $sale->client->telephone ?? '',

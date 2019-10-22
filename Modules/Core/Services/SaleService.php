@@ -24,10 +24,10 @@ class SaleService
     /**
      * @param $filters
      * @param bool $paginate
-     * @param bool $withPlans
+     * @param bool $withProducts
      * @return LengthAwarePaginator|Collection
      */
-    public function getSales($filters, $paginate = true, $withPlans = false)
+    public function getSales($filters, $paginate = true, $withProducts = false)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
@@ -41,7 +41,7 @@ class SaleService
                                                     'sale',
                                                     'sale.project',
                                                     'sale.client',
-                                                    'sale.plansSales' . ($withPlans ? '.plan.productsPlans.product' : ''),
+                                                    'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
                                                     'sale.shipping',
                                                     'sale.checkout',
                                                     'sale.delivery',
@@ -102,26 +102,15 @@ class SaleService
             $sales = $transactions->orderBy('id', 'DESC')->get();
         }
 
-        if($withPlans){
+        if($withProducts){
             $sales->map(function ($item){
                 $item->sale->products = collect();
-                $sale = $item->sale;
-                foreach ($sale->plansSales as &$planSale) {
+                foreach ($item->sale->plansSales as &$planSale) {
                     $plan = $planSale->plan;
-
-                    $products = collect();
-
                     foreach ($plan->productsPlans as $productPlan) {
                         $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
-                        $products->add($productPlan->product);
+                        $item->sale->products->add($productPlan->product);
                     }
-                    $planSale->plan->product_id = $products->map(function($item){
-                        return '#' . Hashids::encode($item->id);
-                    })->implode(' - ');
-                    $plan->shopify_id = $products->unique('shopify_id')->implode('shopify_id',' - ');
-                    $plan->shopify_variant_id = $products->implode('shopify_variant_id', ' - ');
-                    $plan->sku = $products->where('sku', '!=', null)->implode('sku', ' - ');
-                    $plan->amount = $products->implode('amount', ' - ');
                 }
                 return $item;
             });
@@ -142,23 +131,8 @@ class SaleService
 
         //get sale
         $sale = $saleModel->with([
-                                     'userTransaction',
                                      'notazzInvoices',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
-
-        //format dates
-        $sale->hours      = (new Carbon($sale->start_date))->format('H:m:s');
-        $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y');
-        if (isset($sale->boleto_due_date)) {
-            $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
-        }
-
-        //set flag
-        if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
-            $sale->flag = 'generico';
-        } else if (!$sale->flag || empty($sale->flag)) {
-            $sale->flag = 'boleto';
-        }
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -181,6 +155,7 @@ class SaleService
 
         $transaction = $sale->transactions->whereIn('company_id', $userCompanies)
                                           ->first();
+
 
         $transactionConvertax = $sale->transactions
             ->where('company_id', 29)
@@ -208,10 +183,18 @@ class SaleService
             $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
         }
 
-        //invoices
-        $invoices = [];
-        foreach ($sale->notazzInvoices as $notazzInvoice) {
-            $invoices[] = Hashids::encode($notazzInvoice->id);
+        //set flag
+        if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
+            $sale->flag = 'generico';
+        } else if (!$sale->flag || empty($sale->flag)) {
+            $sale->flag = 'boleto';
+        }
+
+        //format dates
+        $sale->hours      = (new Carbon($sale->start_date))->format('H:m:s');
+        $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y');
+        if (isset($sale->boleto_due_date)) {
+            $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
         }
 
         if ($sale->status == 1) {
@@ -220,6 +203,11 @@ class SaleService
             $transaction->release_date = null;
         }
 
+        //invoices
+        $invoices = [];
+        foreach ($sale->notazzInvoices as $notazzInvoice) {
+            $invoices[] = Hashids::encode($notazzInvoice->id);
+        }
 
         //add details to sale
         $sale->details = (object) [
@@ -241,7 +229,6 @@ class SaleService
 
         return $sale;
     }
-
     /**
      * @param Sale $sale
      * @return array
