@@ -105,7 +105,12 @@ class WithdrawalsApiController extends Controller
                                         ], 400);
             }
             $company->update(['balance' => $company->balance -= $withdrawalValue]);
-            $withdrawalValue -= 380;
+
+            /** Saque abaixo de R$500,00 a taxa cobrada é R$10,00, acima disso a taxa é gratuita */
+            if($withdrawalValue < 50000) {
+                $withdrawalValue -= 1000;
+            }
+
             $withdrawal      = $withdrawalModel->newQuery()->create(
                 [
                     'value'         => $withdrawalValue,

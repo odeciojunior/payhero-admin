@@ -217,7 +217,9 @@ $(() => {
             $('#update-project #boleto').prop('selectedIndex', 0).change();
         } else {
             $('#update-project #boleto').prop('selectedIndex', 1).change();
+
         }
+        $('#boleto_due_days').val(project.boleto_due_days);
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);

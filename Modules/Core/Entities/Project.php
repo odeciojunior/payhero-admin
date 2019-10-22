@@ -97,6 +97,7 @@ class Project extends Model
         'contact_verified',
         'logo',
         'boleto',
+        'boleto_due_days',
         'boleto_redirect',
         'card_redirect',
         'analyzing_redirect',

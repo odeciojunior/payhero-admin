@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="page-content container" style="display:none" >
+        <div class="page-content container" style="display:none">
             <div class="card shadow">
                 <nav class="pt-20">
                     <div class="nav-tabs-horizontal">
@@ -115,8 +115,7 @@
                                             <div class="input-holder">
                                                 <label for="company"> Empresa</label>
                                                 <select class="form-control select-pad" name="company"
-                                                        id="transfers_company_select">
-                                                </select>
+                                                        id="transfers_company_select"> </select>
                                             </div>
                                         </div>
                                         <div class="col-12 mb-3">
@@ -127,7 +126,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="basic-addon1 custom-addon"
                                                               style="height: auto; border: 1px solid #ddd;"><span
-                                                                class="currency">$</span></span>
+                                                                    class="currency">$</span></span>
                                                     </div>
                                                     <input id="custom-input-addon" type="text"
                                                            class="form-control input-pad withdrawal-value"
@@ -141,15 +140,15 @@
                                                          xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                          viewBox="0 0 24 24">
                                                         <path
-                                                            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                                d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                     </svg>
                                                     Sacar dinheiro
                                                 </button>
                                             </div>
-                                            <small class="text-muted">Cada saque acarreta uma taxa de
-                                                <span class="currency">R$</span>
-                                                03,80*
-                                            </small>
+                                            {{--                                            <small class="text-muted">Cada saque acarreta uma taxa de--}}
+                                            {{--                                                <span class="currency">R$</span>--}}
+                                            {{--                                                03,80*--}}
+                                            {{--                                            </small>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -159,13 +158,13 @@
                                 <div class="col-12">
                                     <table id='withdrawalsTable' class="table table-striped table-condensed unify">
                                         <thead>
-                                        <tr>
-                                            <th scope="col">Conta</th>
-                                            <th scope="col">Solicitação</th>
-                                            <th scope="col">Liberação</th>
-                                            <th scope="col">Valor</th>
-                                            <th scope="col">Status</th>
-                                        </tr>
+                                            <tr>
+                                                <th scope="col">Conta</th>
+                                                <th scope="col">Solicitação</th>
+                                                <th scope="col">Liberação</th>
+                                                <th scope="col">Valor</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
                                         </tbody>
@@ -203,8 +202,7 @@
                                             <div class="input-holder">
                                                 <label for="company"> Empresa</label>
                                                 <select class="form-control select-pad" name="company"
-                                                        id="extract_company_select">
-                                                </select>
+                                                        id="extract_company_select"> </select>
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -214,11 +212,11 @@
                                 <div class="col-12 mt-3">
                                     <table id='transfersTable' class="table table-striped table-condensed unify">
                                         <thead>
-                                        <tr>
-                                            <th scope="col" class='headCenter' style='width:33%'>Razão</th>
-                                            <th scope="col" class='headCenter' style='width:33%'>Data</th>
-                                            <th scope="col" class='headCenter' style='width:34%'>Valor</th>
-                                        </tr>
+                                            <tr>
+                                                <th scope="col" class='headCenter' style='width:33%'>Razão</th>
+                                                <th scope="col" class='headCenter' style='width:33%'>Data</th>
+                                                <th scope="col" class='headCenter' style='width:34%'>Valor</th>
+                                            </tr>
                                         </thead>
                                         <tbody id="table-transfers-body" class="custom-t-body">
                                         </tbody>
