@@ -89,8 +89,17 @@ class SalesApiController extends Controller
             );
 
             $header = [
-                //sale
+                //plan
                 'Projeto',
+                'Plano',
+                'Código dos produtos',
+                'Produtos',
+                'Id do Shopify',
+                'Id da Variante do Shopify',
+                'Quantidade dos Produtos',
+                'Preço',
+                'SKU',
+                //sale
                 'Código da Venda',
                 'Pedido do Shopify',
                 'Forma de Pagamento',
@@ -108,15 +117,6 @@ class SalesApiController extends Controller
                 'Desconto Shopify',
                 'Taxas',
                 'Comissão',
-                //plan
-                'Plano',
-                'Código dos produtos',
-                'Produtos',
-                'Id do Shopify',
-                'Id da Variante do Shopify',
-                'Quantidade dos Produtos',
-                'Preço',
-                'SKU',
                 //client
                 'Nome do Cliente',
                 'Telefone do Cliente',
@@ -155,8 +155,17 @@ class SalesApiController extends Controller
                     $amount = $sale->products->implode('amount', ' - ');
 
                     $saleArray = [
-                        //sale
+                        //plan
                         'project_name' => $sale->project->name ?? '',
+                        'plan'=> $planSale->plan->name,
+                        'product_id' => $product_id,
+                        'products' => $product_name,
+                        'product_shopify_id' => $shopify_id,
+                        'product_shopify_variant_id' => $shopify_variant_id,
+                        'amount' => $amount,
+                        'price' => $planSale->plan->price,
+                        'sku' => $sku,
+                        //sale
                         'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
                                 ->encode($sale->id)),
                         'shopify_order' => strval($sale->shopify_order),
@@ -175,15 +184,6 @@ class SalesApiController extends Controller
                         'shopify_discount' => $sale->shopify_discount ?? '',
                         'fee' => $sale->details->taxaReal,
                         'comission' => $sale->details->comission,
-                        //plan
-                        'plan'=> $planSale->plan->name,
-                        'product_id' => $product_id,
-                        'products' => $product_name,
-                        'product_shopify_id' => $shopify_id,
-                        'product_shopify_variant_id' => $shopify_variant_id,
-                        'amount' => $amount,
-                        'price' => $planSale->plan->price,
-                        'sku' => $sku,
                         //client
                         'client_name' => $sale->client->name ?? '',
                         'client_telephone' => $sale->client->telephone ?? '',
