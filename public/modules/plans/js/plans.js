@@ -324,7 +324,7 @@ $(function () {
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
                                     $('.products_row_edit').append(`
-                                        <div class='card container'>
+                                        <div class='card container '>
                                             <div id="products_div_edit" class="row">
                                                 <div class="form-group col-sm-12 col-md-12 col-lg-12">
                                                     <label>Produtos do plano:</label>
