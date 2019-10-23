@@ -69,7 +69,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                                 ->getStartColor()
                                 ->setRGB('e5e5e5');
                     }
-                    if ($currentSale != $lastSale) {
+                    if ($currentSale != $lastSale && isset($lastSale)) {
                         $setGray = !$setGray;
                     }
                     $lastSale = $currentSale;

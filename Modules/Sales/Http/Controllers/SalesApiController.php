@@ -142,7 +142,7 @@ class SalesApiController extends Controller
             $saleData = collect();
             foreach ($salesResult as $sale) {
                 foreach ($sale->plansSales as $planSale) {
-                    foreach ($sale->products as $product) {
+                    foreach ($sale->plansSales->products as $product) {
                         $saleArray = [
                             //sale
                             'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
