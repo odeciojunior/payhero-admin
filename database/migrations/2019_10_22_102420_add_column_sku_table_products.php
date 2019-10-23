@@ -14,7 +14,7 @@ class AddColumnSkuTableProducts extends Migration
     public function up()
     {
         Schema::table('products', function(Blueprint $table) {
-            $table->decimal('sku', 8, 2)->nullable()->after('shopify_variant_id');
+            $table->string('sku')->nullable()->after('shopify_variant_id');
         });
     }
 

@@ -55,7 +55,7 @@ class FillShopifyProductSKU extends Command
             $shopifyIntegrationsModel = new ShopifyIntegration();
             $productsModel = new Product();
 
-            DB::beginTransaction();
+            //DB::beginTransaction();
 
             $integrations = $shopifyIntegrationsModel::all();
             $count = 1;
@@ -75,13 +75,14 @@ class FillShopifyProductSKU extends Command
                     }
                     if(isset($shopifyProduct) && $shopifyProduct->getSku()){
                         $this->line($count . '. Adicionando SKU: "' . $shopifyProduct->getSku() . '" ao produto: "' . $product->name . '"');
-                        $product->update(['sku' => $shopifyProduct->getSku()]);
+                        $product->sku = $shopifyProduct->getSku();
+                        $product->save();
                         $count++;
                     }
                 }
             }
 
-            DB::commit();
+            //DB::commit();
 
             $this->line(date('Y-m-d H:i:s') . ' Funcionou paizao!');
         } catch (Exception $e) {
