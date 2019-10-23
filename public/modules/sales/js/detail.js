@@ -128,22 +128,22 @@ $(() => {
 
         switch (sale.status) {
             case 1:
-                status.append("<span class='badge badge-success'>Aprovada</span>");
+                status.append("<span class='ml-2 badge badge-success'>Aprovada</span>");
                 break;
             case 2:
-                status.append("<span class='badge badge-pendente'>Pendente</span>");
+                status.append("<span class='ml-2 badge badge-pendente'>Pendente</span>");
                 break;
             case 3:
-                status.append("<span class='badge badge-danger'>Recusada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Recusada</span>");
                 break;
             case 4:
-                status.append("<span class='badge badge-danger'>Estornada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Estornada</span>");
                 break;
             case 6:
-                status.append("<span class='badge badge-primary'>Em análise</span>");
+                status.append("<span class='ml-2 badge badge-primary'>Em análise</span>");
                 break;
             default:
-                status.append("<span class='badge badge-primary'>" + sale.status + "</span>");
+                status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
 
