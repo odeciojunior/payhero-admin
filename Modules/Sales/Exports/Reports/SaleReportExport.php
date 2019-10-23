@@ -45,7 +45,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AS1'; // All headers
+                $cellRange = 'A1:AR1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)
                     ->getFill()
                     ->setFillType('solid')
@@ -63,7 +63,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                     $currentSale = $this->collection()->get($row - 1)['sale_code'];
                     if($setGray){
                             $event->sheet->getDelegate()
-                                ->getStyle('A' . $row . ':AS' . $row)
+                                ->getStyle('A' . $row . ':AR' . $row)
                                 ->getFill()
                                 ->setFillType('solid')
                                 ->getStartColor()
