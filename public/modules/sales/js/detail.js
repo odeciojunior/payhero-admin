@@ -43,29 +43,31 @@ $(() => {
     //Codigo de rastreio
     $(document).on('click', '.btn-edit-trackingcode', function () {
         var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
         var btnEdit = $(this);
         var btnSave = btnEdit.parent().find('.btn-save-trackingcode');
         var btnClose = $(this).parent().find('.btn-close-tracking');
-        btnEdit.hide('fast');
+        btnEdit.hide();
         btnSave.show('fast');
         btnClose.show('fast');
-        trackingCodeSpan.hide('fast');
-        trackingInput.show('fast');
+        trackingInput.css({
+            borderColor: '',
+            backgroundColor: ''
+        }).prop('readonly', false);
     });
 
     //Botão para ocultar campos rastreio
     $(document).on('click', '.btn-close-tracking', function () {
         var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
         var btnEdit = $(this).parent().find('.btn-edit-trackingcode');
         var btnSave = $(this).parent().find('.btn-save-trackingcode');
 
-        $(this).hide('fast');
-        btnSave.hide('fast');
-        trackingInput.hide('fast');
+        $(this).hide();
+        btnSave.hide();
+        trackingInput.css({
+            borderColor: 'transparent',
+            backgroundColor: 'transparent'
+        }).prop('readonly', true);
         btnEdit.show('fast');
-        trackingCodeSpan.show('fast');
     });
 
     // FIM - COMPORTAMENTOS DA JANELA
@@ -435,16 +437,15 @@ $(() => {
                                     <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <span class='tracking-code-span small ellipsis'>${value.tracking_code}</span>
-                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
+                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}'  readonly style="border-color: transparent; background-color: transparent;"/>
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
-                                <td>
-                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' sale='${sale}' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
+                                <td class="text-center" style="padding: 0 !important;">
+                                    <a class='pointer btn-save-trackingcode' title='Salvar e notificar cliente' sale='${sale}' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                     <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
                                 </td>
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
@@ -540,18 +541,18 @@ $(() => {
             },
             success: (response) => {
                 var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
-                var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
                 var btnEdit = btnSave.parent().find('.btn-edit-trackingcode');
                 var btnClose = btnSave.parent().find('.btn-close-tracking');
 
-                trackingCodeSpan.html(response.data.tracking_code);
                 trackingStatusSPan.html(response.data.tracking_status);
                 trackingInput.val(response.data.tracking_code);
-                trackingInput.hide('fast');
-                trackingCodeSpan.show('fast');
-                btnSave.hide('fast');
+                trackingInput.css({
+                    borderColor: 'transparent',
+                    backgroundColor: 'transparent'
+                }).prop('readonly', true);
+                btnSave.hide();
                 btnEdit.show('fast');
-                btnClose.hide('fast');
+                btnClose.hide();
                 alertCustom('success', response.message);
             }
         });
