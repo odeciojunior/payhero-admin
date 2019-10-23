@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <hr class='display-lg-none display-xlg-none'>
-                <div id="products" class='card container'>
+                <div id="products" class='card p-10 card-products'>
                     <div id="products_div_1" class="row products_div_1 mb-4">
                         <div class='col-sm-12 col-md-12 col-lg-12'>
                             <div class="form-group">

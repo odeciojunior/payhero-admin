@@ -6,6 +6,9 @@ $(function () {
     var projectId = $(window.location.pathname.split('/')).get(-1);
     var form_register_plan = $("#form-register-plan").html();
     var form_update_plan = $("#form-update-plan").html();
+    var card_div_edit;
+    // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
+
     $('#tab_plans').on('click', function () {
         index();
     });
@@ -67,7 +70,6 @@ $(function () {
                         //remove o card container que fica sobrando
                         $('.card.container').each(function () {
                             if ($.trim($(this).html()) == '') {
-                                console.log('oi')
                                 $(this).remove();
                             }
                         })
@@ -94,7 +96,6 @@ $(function () {
                         var input = new_div.find('.products_amount');
 
                         input.addClass('products_amount');
-
                         div_products = new_div;
                         $('#products').after('<div class="card container">' + new_div.html() + '</div>');
 
@@ -133,6 +134,7 @@ $(function () {
                             contentType: false,
                             cache: false,
                             error: function error(response) {
+                                clearFields();
                                 loadingOnScreenRemove();
                                 errorAjaxResponse(response);
                             },
@@ -365,6 +367,7 @@ $(function () {
                                     `);
                                 });
                                 $('.products_cost').bind('keyup', calcularTotal)
+                                card_div_edit = $('.products_row_edit').find('#products_div_edit').first().clone();
                             } else {
                                 $('.products_row_edit').append(`
                                     <div id="products_div_edit" class='card' > 
@@ -470,7 +473,6 @@ $(function () {
                                 //remove o card container que fica sobrando
                                 $('.card.container').each(function () {
                                     if ($.trim($(this).html()) == '') {
-                                        console.log('oi')
                                         $(this).remove();
                                     }
                                 })
@@ -482,7 +484,7 @@ $(function () {
 
                             $('.add_product_plan_edit').on('click', function () {
                                 qtd_products++;
-                                var div_products = $('.products_row_edit').find('#products_div_edit').first().clone();
+                                var div_products = card_div_edit;
 
                                 var new_div = div_products.clone();
                                 var input = new_div.find('.products_amount');
