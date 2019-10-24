@@ -184,6 +184,8 @@ class SendgridService
      */
     public function createLinkBrand($domain)
     {
+        $this->deleteLinkBrand($domain);
+
         $request_body = json_decode('{
                  "default": false,
                  "domain": "' . $domain . '",
