@@ -11,6 +11,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
+use Modules\Core\Services\FoxUtils;
 use Modules\Dashboard\Transformers\DashboardResumeCollection;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -40,12 +41,15 @@ class DashboardApiController extends Controller
                                       ->when(!empty($company), function(Builder $query) use ($company) {
                                           return $query->where('id', $company);
                                       })->get();
-            if (empty($companies)) {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ], Response::HTTP_BAD_REQUEST
-                );
+
+            if (FoxUtils::isEmpty($companies)) {
+                return new DashboardResumeCollection(collect());
+
+//                return response()->json(
+//                    [
+//                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+//                    ], Response::HTTP_BAD_REQUEST
+//                );
             }
             $companyFilter = implode($companies->pluck('id')->toArray(), ",");
             $sql           = "
