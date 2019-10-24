@@ -206,7 +206,7 @@
                     </div>
                     <div class='form-group col-md-2 col-sm-6 col-xs-6'>
                         <label for="default_currency">Moeda padrão de custo</label>
-                        <select name='default_currency' class='form-control select-pad' id="default_currency">
+                        <select name='cost_currency_type' class='form-control select-pad' id="cost_currency_type">
                             <option value='BRL'>Real</option>
                             <option value='USD'>Dólar</option>
                         </select>

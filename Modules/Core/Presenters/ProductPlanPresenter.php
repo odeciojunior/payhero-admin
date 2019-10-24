@@ -11,13 +11,13 @@ use Laracasts\Presenter\Presenter;
 class ProductPlanPresenter extends Presenter
 {
     /**
-     * @param $status
+     * @param $currency
      * @return int|string
      */
-    public function getCurrency($status)
+    public function getCurrency($currency)
     {
-        if (is_numeric($status)) {
-            switch ($status) {
+        if (is_numeric($currency)) {
+            switch ($currency) {
                 case 1:
                     return 'BRL';
                 case 2:
@@ -26,7 +26,7 @@ class ProductPlanPresenter extends Presenter
 
             return '';
         } else {
-            switch ($status) {
+            switch ($currency) {
                 case 'BRL':
                     return 1;
                 case 'USD':

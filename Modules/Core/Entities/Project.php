@@ -100,6 +100,7 @@ class Project extends Model
         'card_redirect',
         'analyzing_redirect',
         'support_phone',
+        'cost_currency_type',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -196,6 +196,7 @@ $(() => {
 
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
         $('#update-project #name').val(project.name);
+        $('#cost_currency_type').val(project.cost_currency_type);
         $('#update-project #description').text(project.description);
         if (project.visibility === 'public') {
             $('#update-project #visibility').prop('selectedIndex', 0).change();

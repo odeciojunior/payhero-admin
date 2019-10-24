@@ -277,6 +277,8 @@ class ProjectsApiController extends Controller
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
+                    $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+
                     $projectUpdate = $project->update($requestValidated);
                     if ($projectUpdate) {
                         try {
