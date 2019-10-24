@@ -18,6 +18,8 @@ class UserResource extends Resource
      */
     public function toArray($request)
     {
+        $userNotification = $this->userNotification ?? collect();
+
         return [
             'id_code'                     => $this->id_code,
             'name'                        => $this->name,
@@ -42,6 +44,18 @@ class UserResource extends Resource
                                                                                                            ->getPersonalDocumentStatus($this->personal_document_status)),
             'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' . $this->present()
                                                                                                            ->getPersonalDocumentStatus($this->address_document_status)),
+            // Notificações
+            'new_affiliation'             => $userNotification->new_affiliation ?? false,
+            'new_affiliation_request'     => $userNotification->new_affiliation_request ?? false,
+            'approved_affiliation'        => $userNotification->approved_affiliation ?? false,
+            'boleto_compensated'          => $userNotification->boleto_compensated ?? false,
+            'sale_approved'               => $userNotification->sale_approved ?? false,
+            'notazz'                      => $userNotification->notazz ?? false,
+            'withdrawal_approved'         => $userNotification->withdrawal_approved ?? false,
+            'released_balance'            => $userNotification->released_balance ?? false,
+            'domain_approved'             => $userNotification->domain_approved ?? false,
+            'shopify'                     => $userNotification->shopify ?? false,
+            'billet_generated'            => $userNotification->billet_generated ?? false,
         ];
     }
 }

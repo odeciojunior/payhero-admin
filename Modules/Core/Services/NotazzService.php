@@ -16,6 +16,14 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
 {
+    /**
+     * @var string
+     * @description name of the column in user_notifications table to check if it will send
+     */
+    private $userNotification = "notazz";
+    /**
+     * @var string
+     */
     const NotazzUrlApi = 'https://app.notazz.com/api';
 
     /**
@@ -708,8 +716,12 @@ class NotazzService
                     'user'    => $integration->user->id,
                 ];
 
-                $pusherService->sendPusher($data);
-                $integration->user->notify(new RetroactiveNotazzNotification($data["message"]));
+                /** @var UserNotificationService $userNotificationService */
+                $userNotificationService = app(UserNotificationService::class);
+                if ($userNotificationService->verifyUserNotification($integration->user, $this->userNotification)) {
+                    $pusherService->sendPusher($data);
+                    $integration->user->notify(new RetroactiveNotazzNotification($data["message"]));
+                }
             }
         } catch (Exception $e) {
             Log::warning('NotazzService - generateRetroactiveInvoices - error');

@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\SentEmail;
 use SendGrid;
 
 /**
@@ -31,6 +32,7 @@ class SendgridService
 
     /**
      * @param $domain
+     * @param bool $autoSet
      * @return mixed
      */
     public function addZone($domain, $autoSet = false)
@@ -309,14 +311,67 @@ class SendgridService
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
             try {
-                $this->sendgrid->send($email);
+                $response   = $this->sendgrid->send($email);
+                $statusCode = $response->statusCode();
+                $body       = $response->body();
+
+                if (in_array($statusCode, [200, 201, 202])) {
+                    $status = "success";
+                } else {
+                    $status = "error";
+                }
+
+                SentEmail::create(
+                    [
+                        'from_email'    => $fromEmail,
+                        'from_name'     => $fromName,
+                        'to_email'      => $toEmail,
+                        'to_name'       => $toName,
+                        'template_id'   => $templateId,
+                        'template_data' => json_encode($data),
+                        'status_code'   => $statusCode,
+                        'status'        => $status,
+                        'log_error'     => $body,
+                    ]
+                );
 
                 return true;
             } catch (Exception $e) {
                 Log::warning('Caught exception: ' . $e->getMessage());
+
+                SentEmail::create(
+                    [
+                        'from_email'    => $fromEmail,
+                        'from_name'     => $fromName,
+                        'to_email'      => $toEmail,
+                        'to_name'       => $toName,
+                        'template_id'   => $templateId,
+                        'template_data' => json_encode($data),
+                        'status_code'   => 400,
+                        'status'        => "error",
+                        'log_error'     => $e->getMessage(),
+                    ]
+                );
+
+                return false;
             }
         } catch (Exception $e) {
             report($e);
+            SentEmail::create(
+                [
+                    'from_email'    => $fromEmail,
+                    'from_name'     => $fromName,
+                    'to_email'      => $toEmail,
+                    'to_name'       => $toName,
+                    'template_id'   => $templateId,
+                    'template_data' => json_encode($data),
+                    'status_code'   => 400,
+                    'status'        => "error",
+                    'log_error'     => $e->getMessage(),
+                ]
+            );
+
+            return false;
         }
 
         return false;

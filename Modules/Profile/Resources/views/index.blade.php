@@ -272,16 +272,126 @@
                                         <p class="sub-pad"> Defina quais notificações deseja receber </p>
                                     </div>
                                     <div class='row mt-15 col-12'>
-                                        <div class="col-6">
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Nova afiliação</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="new_affiliation_switch" name="new_affiliation" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Pedido de afiliação</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="new_affiliation_request_switch" name="new_affiliation_request" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Afiliação aprovada</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="approved_affiliation_switch" name="approved_affiliation" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Notificação de venda:</label>
+                                                <label for="token" class="mb-10">Boleto gerado</label>
                                                 <br>
                                                 <label class="switch">
-                                                    <input type="checkbox" name="on_sale" class="check notification-on-sale" value="1">
+                                                    <input type="checkbox" id="billet_generated_switch" name="billet_generated" class="check notification_switch" value='1'>
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
                                         </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Boleto compensado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="boleto_compensated_switch" name="boleto_compensated" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Venda aprovada</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="sale_approved_switch" name="sale_approved" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Notificação de Nota Fiscal</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="notazz_switch" name="notazz" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Saque Aprovado</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="withdrawal_approved_switch" name="withdrawal_approved" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Saldo liberado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="released_balance_switch" name="released_balance" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Domínio Aprovado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="domain_approved_switch" name="domain_approved" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="token" class="mb-10">Shopify</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="shopify_switch" name="shopify" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Integração com shopify</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="user_shopify_integration_store_switch" name="user_shopify_integration_store" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>

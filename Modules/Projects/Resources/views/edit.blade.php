@@ -224,9 +224,13 @@
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
-                        <input type='number' min='3' max='28' id='boleto_due_days' name='boleto_due_days'>
+                        <select class='form-control' id='boleto_due_days' name='boleto_due_days'>
+                            @for($x = 1; $x <= 28; $x++)
+                                <option value='{{ $x }}'>{{ $x . ($x == 1 ? " dia" : " dias") }}</option>
+                            @endfor
+                        </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aumentar ou diminuir a quantidade de dias para vencimento do boleto
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aumentar ou diminuir a quantidade de dias para vencimento do boleto (padrão 3 dias)
                         </p>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
