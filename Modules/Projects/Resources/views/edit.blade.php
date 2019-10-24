@@ -212,7 +212,7 @@
                         </p>
                         <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
                     </div>
-                    <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                    <div class='form-group col-md-2 col-sm-6 col-xs-6'>
                         <label for="parcelas_sem_juros">Boleto no checkout</label>
                         <select name='boleto' class='form-control select-pad' id="boleto">
                             <option value='1'>Sim</option>
@@ -222,11 +222,25 @@
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com boleto no checkout
                         </p>
                     </div>
+                    <div class='form-group col-md-2 col-sm-6 col-xs-6'>
+                        <label for="default_currency">Moeda padrão de custo</label>
+                        <select name='cost_currency_type' class='form-control select-pad' id="cost_currency_type">
+                            <option value='BRL'>Real</option>
+                            <option value='USD'>Dólar</option>
+                        </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos.
+                        </p>
+                    </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
-                        <input type='number' min='3' max='28' id='boleto_due_days' name='boleto_due_days'>
+                        <select class='form-control' id='boleto_due_days' name='boleto_due_days'>
+                            @for($x = 1; $x <= 28; $x++)
+                                <option value='{{ $x }}'>{{ $x . ($x == 1 ? " dia" : " dias") }}</option>
+                            @endfor
+                        </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aumentar ou diminuir a quantidade de dias para vencimento do boleto
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aumentar ou diminuir a quantidade de dias para vencimento do boleto (padrão 3 dias)
                         </p>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>

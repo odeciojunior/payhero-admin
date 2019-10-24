@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -183,4 +184,24 @@ class FoxUtils
         return preg_replace('/[^\x00-\x7F]+/', "", $string);
     }
 
+    /**
+     * @param mixed $var
+     * @return bool
+     */
+    public static function isEmpty($var)
+    {
+        if (!isset($var)) {
+            return true;
+        } else if (empty($var)) {
+            return true;
+        } else if (is_string($var) && trim($var) == '') {
+            return true;
+        } else if (is_array($var) && count($var) == 0) {
+            return true;
+        } else if (is_object($var) && ($var instanceof Collection) && count($var) == 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

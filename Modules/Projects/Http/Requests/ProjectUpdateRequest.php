@@ -39,6 +39,7 @@ class ProjectUpdateRequest extends FormRequest
             "photo"                      => 'nullable',
             "logo"                       => 'nullable',
             "support_phone"              => 'nullable',
+            "cost_currency_type"         => 'required|string|max:5',
         ];
     }
 

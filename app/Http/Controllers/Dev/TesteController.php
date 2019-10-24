@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
+use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\SentEmail;
+use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
+use Modules\Core\Services\UserNotificationService;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -541,15 +546,124 @@ class TesteController extends Controller
 
     /**
      * @param Request $request
+     * @return int|string
      */
     public function faustoFunction(Request $request)
     {
+        if (isset($request->email)) {
+            dump(__METHOD__, "Email");
+            $email = $request->email ?? null;
+            if (FoxUtils::isEmpty($email)) {
+                dd("Email vazio.");
+            }
+
+            $sentEmails = SentEmail::where("to_email", 'LIKE', '%' . $email . '%')->get()->toArray();
+            dump($sentEmails);
+
+            dd("Fim");
+        }
+
+        $user = auth()->user() ?? null;
+        /** @var UserNotificationService $userNotificationService */
+        $userNotificationService = app(UserNotificationService::class);
+        dd($userNotificationService->verifyUserNotification($user, "shopify"));
+        dd(__FUNCTION__, __METHOD__, __CLASS__);
         dump(__METHOD__);
         try {
-            $user       = auth()->user();
-            $user->fill(["email" => "healthlab" . random_int(1, 1000) . "@mail.com"])->save();
+            $cardBrand = '';
 
-            dd($user->getChanges());
+            $cardNumber = preg_replace('/\D/', '', $request->cardNumber);
+
+            $brands = [
+                'visa'      => '/^4\d{12}(\d{3})?$/',
+                'master'    => '/^(5[1-5]\d{4}|677189)\d{10}$/',
+                'diners'    => '/^3(0[0-5]|[68]\d)\d{11}$/',
+                'discover'  => '/^6(?:011|5[0-9]{2})[0-9]{12}$/',
+                'elo'       => '/^(?:401178|636368|438935|504175|451416|636297|401179|431274|438935|451416|457393|457631|457632|504175|627780|636297|636368|
+                            655000|655001|651652|651653|651654|650485|650486|650487|650488|506699|5067[0-6][0-9]|
+                            50677[0-8]|509\d{3})\d{10}\d{0,10}|(((5067)|(4576)|(4011))\d{0,12})$/',
+                'amex'      => '/^3[47]\d{13}$/',
+                'jcb'       => '/^(?:2131|1800|35\d{3})\d{11}$/',
+                'aura'      => '/^(5078\d{2})(\d{2})(\d{11})$/',
+                'hipercard' => '/^(606282\d{10}(\d{3})?)|(3841\d{15})$/',
+                'maestro'   => '/^(?:5[0678]\d\d|6304|6390|67\d\d)\d{8,15}$/',
+            ];
+
+            foreach ($brands as $brand => $regex) {
+                if (preg_match($regex, $cardNumber)) {
+                    $cardBrand = $brand;
+                    break;
+                }
+            }
+
+            dd($cardBrand);
+
+            return $cardBrand;
+            $notazzIntegration = new NotazzIntegration();
+            $integrations      = $notazzIntegration->with([
+                                                              'project',
+                                                              'user',
+                                                          ])
+                                                   ->whereNotNull('start_date')
+                                                   ->whereNull('retroactive_generated_date')
+                                                   ->get();
+            dd($integrations);
+            $user = User::find(45);
+
+            $user->loadMissing(["userNotification"]);
+            $userNotification = $user->userNotification ?? null;
+            dd($userNotification->released_balance ?? true);
+            if ($userNotification->released_balance ?? true) {
+                dd('opa');
+            }
+            dd('saiu');
+
+            User::create(
+                [
+                    'name'                                => "Teste Maciel",
+                    'email'                               => "testemaciel" . random_int(10, 999999999) . "@gmail.com",
+                    'email_verified'                      => "1",
+                    'password'                            => bcrypt(123456789),
+                    'remember_token'                      => "",
+                    'cellphone'                           => "24999309321",
+                    'cellphone_verified'                  => "1",
+                    'document'                            => "",
+                    'zip_code'                            => "27521130",
+                    'country'                             => "BR",
+                    'state'                               => "Rio de Janeiro",
+                    'city'                                => "Resende",
+                    'neighborhood'                        => "",
+                    'street'                              => "",
+                    'number'                              => "",
+                    'complement'                          => "",
+                    'photo'                               => "",
+                    'date_birth'                          => "1997-08-14",
+                    'address_document_status'             => "3",
+                    'personal_document_status'            => "3",
+                    'score'                               => "",
+                    'sms_zenvia_amount'                   => "1",
+                    'percentage_rate'                     => "",
+                    'transaction_rate'                    => "",
+                    'foxcoin'                             => "",
+                    'email_amount'                        => "",
+                    'call_amount'                         => "",
+                    'boleto_antecipation_money_days'      => "1",
+                    'credit_card_antecipation_money_days' => "1",
+                    'release_money_days'                  => "1",
+                    'percentage_antecipable'              => "1",
+                    'antecipation_tax'                    => "1",
+                    'invites_amount'                      => "1",
+                    'installment_tax'                     => "1",
+                    'credit_card_release_money_days'      => "1",
+                    'boleto_release_money_days'           => "1",
+                    'boleto_tax'                          => "1",
+                    'credit_card_tax'                     => "1",
+                ]
+            );
+            $user = auth()->user();
+            $user->load(["userNotification"]);
+
+            dd($user);
         } catch (Exception $ex) {
             dd($ex);
         }
