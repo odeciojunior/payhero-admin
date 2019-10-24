@@ -304,7 +304,7 @@
                                         {{--                                        </div>--}}
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Boleto gerado</label>
+                                                <label for="billet_generated" class="mb-10">Boleto gerado</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="billet_generated_switch" name="billet_generated" class="check notification_switch" value='1'>
@@ -314,7 +314,7 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Boleto compensado</label>
+                                                <label for="boleto_compensated" class="mb-10">Boleto compensado</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="boleto_compensated_switch" name="boleto_compensated" class="check notification_switch" value='1'>
@@ -324,7 +324,17 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Venda aprovada</label>
+                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo (Cartão)</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="credit_card_in_proccess_switch" name="credit_card_in_proccess" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="sale_approved" class="mb-10">Venda aprovada</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="sale_approved_switch" name="sale_approved" class="check notification_switch" value='1'>
@@ -334,7 +344,7 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Notificação de Nota Fiscal</label>
+                                                <label for="notazz" class="mb-10">Notificação de Nota Fiscal</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="notazz_switch" name="notazz" class="check notification_switch" value='1'>
@@ -354,7 +364,7 @@
                                         {{--                                        </div>--}}
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Saldo liberado</label>
+                                                <label for="released_balance" class="mb-10">Saldo liberado</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="released_balance_switch" name="released_balance" class="check notification_switch" value='1'>
@@ -364,7 +374,7 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Domínio Aprovado</label>
+                                                <label for="domain_approved" class="mb-10">Domínio Aprovado</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="domain_approved_switch" name="domain_approved" class="check notification_switch" value='1'>
@@ -374,7 +384,7 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="token" class="mb-10">Shopify</label>
+                                                <label for="shopify" class="mb-10">Shopify</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="shopify_switch" name="shopify" class="check notification_switch" value='1'>

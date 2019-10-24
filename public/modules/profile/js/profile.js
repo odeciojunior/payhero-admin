@@ -188,6 +188,9 @@ $(document).ready(function () {
                 if (response.data.billet_generated) {
                     $("#billet_generated_switch").attr("checked", "checked");
                 }
+                if (response.data.credit_card_in_proccess) {
+                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
+                }
 
                 // Verificação de telefone
 

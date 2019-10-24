@@ -56,6 +56,7 @@ class UserResource extends Resource
             'domain_approved'             => $userNotification->domain_approved ?? false,
             'shopify'                     => $userNotification->shopify ?? false,
             'billet_generated'            => $userNotification->billet_generated ?? false,
+            'credit_card_in_proccess'     => $userNotification->credit_card_in_proccess ?? false,
         ];
     }
 }

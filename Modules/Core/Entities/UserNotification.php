@@ -44,6 +44,7 @@ class UserNotification extends Model
         'domain_approved',
         'shopify',
         'billet_generated',
+        'credit_card_in_proccess',
     ];
 
     /**

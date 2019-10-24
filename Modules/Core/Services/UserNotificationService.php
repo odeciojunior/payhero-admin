@@ -26,7 +26,8 @@ class UserNotificationService
         "notazz",
         "sale_approved",
         "shopify",
-        "checkout_sales",
+        "billet_generated",
+        "credit_card_in_proccess",
     ];
 
     /**

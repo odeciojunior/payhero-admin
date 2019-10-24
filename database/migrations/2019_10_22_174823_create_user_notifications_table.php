@@ -22,6 +22,7 @@ class CreateUserNotificationsTable extends Migration
             $table->boolean('approved_affiliation')->default(true);
             $table->boolean('boleto_compensated')->default(true);
             $table->boolean('billet_generated')->default(true);
+            $table->boolean('credit_card_in_proccess')->default(true);
             $table->boolean('sale_approved')->default(true);
             $table->boolean('notazz')->default(true);
             $table->boolean('withdrawal_approved')->default(true);
