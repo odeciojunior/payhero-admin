@@ -7,6 +7,9 @@ $(function () {
     var form_register_plan = $("#form-register-plan").html();
     var form_update_plan = $("#form-update-plan").html();
 
+    var card_div_edit;
+    // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
+
     $('#tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
 
@@ -67,6 +70,12 @@ $(function () {
                     $(document).on('click', '.btnDelete', function (event) {
                         event.preventDefault();
                         $(this).parent().parent().remove();
+                        //remove o card container que fica sobrando
+                        $('.card.container').each(function () {
+                            if ($.trim($(this).html()) == '') {
+                                $(this).remove();
+                            }
+                        })
                     });
 
                     //product
@@ -83,15 +92,16 @@ $(function () {
                         qtd_products++;
 
                         var new_div = div_products.clone();
+                        var new_product = $('#products').clone();
                         // var opt = new_div.find('option:selected');
                         // opt.remove();
                         // var select = new_div.find('select');
                         var input = new_div.find('.products_amount');
 
                         input.addClass('products_amount');
-
                         div_products = new_div;
-                        $('#products').append('<div class="">' + new_div.html() + '</div>');
+                        $('#products').after('<div class="card container">' + new_div.html() + '</div>');
+                        $('.products_cost').mask('#.###,#0', {reverse: true});
 
                         $('.products_amount').mask('0#');
                     });
@@ -128,6 +138,7 @@ $(function () {
                             contentType: false,
                             cache: false,
                             error: function error(response) {
+                                clearFields();
                                 loadingOnScreenRemove();
                                 errorAjaxResponse(response);
                             },
@@ -316,52 +327,97 @@ $(function () {
                             $('#plan-description_edit').val(response.data.description);
                             $('#plan-price_edit').mask('#.###,#0', {reverse: true});
 
-                            if (response.data.products != '') {
+                            if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
-
+                                    var product_total = value.product_cost * value.amount;
                                     $('.products_row_edit').append(`
-                                        <div id="products_div_edit" class="row">
-                                            <div class="form-group col-sm-8 col-md-7 col-lg-7">
-                                            <label>Produtos do plano:</label>
-                                            <select id="product_1" name="products[]" class="form-control products_edit">
-                                                <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
-                                             </select>
-                                            </div>
-                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
-                                            <label>Quantidade:</label>
-                                            <input value="` + value.amount + `" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
-                                            </div>
-                                            <div class='form-group col-sm-12 col-md-2 col-lg-2'>
-                                                <label class="display-xsm-none">Remover:</label>
-                                               <button class='btn btn-outline btn-danger btnDelete form-control'>
-                                                    <i class='icon wb-trash' aria-hidden='true'></i></button>
-                                                </button>
+                                        <div class='card container '>
+                                            <div id="products_div_edit" class="row">
+                                                <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                                                    <label>Produtos do plano:</label>
+                                                    <select id="product_${index}" name="products[]" class="form-control products_edit">
+                                                        <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
+                                                     </select>
+                                                </div>
+                                                <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                    <label>Quantidade:</label>
+                                                    <input value="` + value.amount + `" id="product_amount_${index}" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                                </div>
+                                                <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                    <label>Custo (<b>Un</b>):</label>
+                                                    <input id="product_cost_${index}" class="form-control products_cost products_cost_update" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${value.product_cost}">
+                                                </div>
+                                                <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                    <label>Custo Total:</label>
+                                                    <input value="${product_total}" id="product_total_${index}" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
+                                                </div>
+                                             
+                                                 <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                    <label>Moeda:</label>
+                                                    <select id='select_currency_${index}' class='form-control' name='currency[]'>
+                                                        <option value='BRL' >BRL</option>
+                                                        <option value='USD' >USD</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
+                                                   <!--<label class="display-xsm-none">Remover:</label>-->
+                                                   <button class='btn btn-outline btn-danger btnDelete form-control'>
+                                                        <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i></button>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
                                 });
+                                $.each(response.data.products, function (index, value) {
+                                    $('#select_currency_' + index).val(value.currency);
+                                });
+                                $('.products_cost').bind('keyup', calcularTotal)
+                                card_div_edit = $('.products_row_edit').find('#products_div_edit').first().clone();
                             } else {
                                 $('.products_row_edit').append(`
-                                        <div id="products_div_edit" class="row">
-                                            <div class="form-group col-sm-8 col-md-7 col-lg-7">
-                                            <label>Produtos do plano:</label>
-                                            <select id="product_1" name="products[]" class="form-control products_edit">
-                                             </select>
+                                    <div id="products_div_edit" class='card' > 
+                                        <div  class="row">
+                                            <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                                                <label>Produtos do plano:</label>
+                                                <select id="product_${index}" name="products[]" class="form-control products_edit">
+                                                 </select>
                                             </div>
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
-                                            <label>Quantidade:</label>
-                                            <input value="" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                                <label>Quantidade:</label>
+                                                <input value="1" id="product_amount_${index}" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
                                             </div>
-                                            <div class='form-group col-sm-12 col-md-2 col-lg-2'>
-                                                <label class="display-xsm-none">Remover:</label>
-                                               <button class='btn btn-outline btn-danger btnDelete form-control'>
-                                                    <i class='icon wb-trash' aria-hidden='true'></i></button>
-                                                </button>
+                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <label>Custo (<b>Un</b>):</label>
+                                                <input id="product_cost_${index}" class="form-control products_cost products_cost_update" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${value.product_cost}">
+                                            </div>
+                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <label>Custo Total:</label>
+                                                <input value="" id="product_total_${index}" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
+                                            </div>
+                                         
+                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <label>Moeda:</label>
+                                                <select id='select_currency' class='form-control' name='currency[]'>
+                                                    <option value='BRL' >BRL</option>
+                                                    <option value='USD' >USD</option>
+                                                </select>
+                                            </div>
+                                             <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
+                                                 <button class='btn btn-outline btn-danger btnDelete form-control'>
+                                                    <b>Remover </b><i class='icon wb-trash' aria-hidden='true'></i></button>
+                                                 </button>
                                             </div>
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
-                                    `);
+                                    </div>
+                                `);
+                                $.each(response.data.products, function (index, value) {
+                                    $('#select_currency_' + index).val(value.currency);
+                                });
+                                $('.products_cost').bind('keyup', calcularTotal)
                                 $.ajax({
                                     method: "POST",
                                     url: "/api/products/userproducts",
@@ -384,6 +440,7 @@ $(function () {
                                     }
                                 });
                             }
+                            $('.products_cost').mask('#.###,#0', {reverse: true});
                             $.ajax({
                                 method: "POST",
                                 url: "/api/products/userproducts",
@@ -425,6 +482,12 @@ $(function () {
                             $(document).on('click', '.btnDelete', function (event) {
                                 event.preventDefault();
                                 $(this).parent().parent().remove();
+                                //remove o card container que fica sobrando
+                                $('.card.container').each(function () {
+                                    if ($.trim($(this).html()) == '') {
+                                        $(this).remove();
+                                    }
+                                })
                             });
 
                             //product
@@ -433,7 +496,7 @@ $(function () {
 
                             $('.add_product_plan_edit').on('click', function () {
                                 qtd_products++;
-                                var div_products = $('.products_row_edit').find('#products_div_edit').first().clone();
+                                var div_products = card_div_edit;
 
                                 var new_div = div_products.clone();
                                 var input = new_div.find('.products_amount');
@@ -442,7 +505,8 @@ $(function () {
 
                                 div_products = new_div;
 
-                                $('.products_row_edit').append('<div class="row">' + new_div.html() + '</div>');
+                                $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
+                                $('.products_cost').mask('#.###,#0', {reverse: true});
                                 $('.products_amount').mask('0#');
                             });
 
@@ -454,6 +518,11 @@ $(function () {
                                 var hasNoValue;
                                 $('.products_amount').each(function () {
                                     if ($(this).val() == '' || $(this).val() == 0) {
+                                        hasNoValue = true;
+                                    }
+                                });
+                                $('.products_cost_update').each(function () {
+                                    if ($(this).val() == '') {
                                         hasNoValue = true;
                                     }
                                 });
@@ -560,5 +629,26 @@ $(function () {
             alertCustom('success', 'Link copiado!');
         });
     }
+
+    function calcularTotal() {
+        $('.products_cost, .products_amount_create').keyup(function () {
+            let quantidade = $(this).parent().parent().find('.products_amount_create').val()
+            if (quantidade == undefined) {
+                quantidade = $(this).parent().parent().find('.products_amount').val()
+            }
+            let valor = $(this).parent().parent().find('.products_cost').val()
+            $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
+        })
+    }
+
+    $('.products_cost, .products_amount_create').keyup(function () {
+        let quantidade = $(this).parent().parent().find('.products_amount_create').val()
+        let valor = $(this).parent().parent().find('.products_cost').val()
+        $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
+    })
+
+    $('.products_cost').mask('#.###,#0', {reverse: true});
+
+
 })
 ;

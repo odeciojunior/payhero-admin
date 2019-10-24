@@ -28,5 +28,8 @@ Route::group(
         Route::post('/profile/updatetaxes', 'ProfileApiController@updateTaxes');
 
         Route::get('/profile/{usercode}/tax', 'ProfileApiController@getTax');
+
+        // Atualização da userNotification
+        Route::post('/profile/updatenotification', 'ProfileApiController@updateUserNotification');
     }
 );

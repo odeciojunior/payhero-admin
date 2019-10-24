@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -180,5 +181,26 @@ class FoxUtils
     public static function removeAccents($string)
     {
         return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
+    }
+
+    /**
+     * @param mixed $var
+     * @return bool
+     */
+    public static function isEmpty($var)
+    {
+        if (!isset($var)) {
+            return true;
+        } else if (empty($var)) {
+            return true;
+        } else if (is_string($var) && trim($var) == '') {
+            return true;
+        } else if (is_array($var) && count($var) == 0) {
+            return true;
+        } else if (is_object($var) && ($var instanceof Collection) && count($var) == 0) {
+            return true;
+        }
+
+        return false;
     }
 }
