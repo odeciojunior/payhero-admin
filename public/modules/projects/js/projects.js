@@ -301,7 +301,7 @@ $(() => {
                 'Accept': 'application/json',
             },
             data: {
-                supportPhone: support_phone,
+                support_phone: support_phone,
             }, error: function (response) {
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();
@@ -387,6 +387,7 @@ $(() => {
     $("#btn_verify_contact").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
+        let contact = $("#contact").val();
         $.ajax({
             method: "POST",
             url: '/api/projects/' + projectId + '/verifycontact',
@@ -395,7 +396,9 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {},
+            data: {
+                contact: contact
+            },
             error: function (response) {
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();
