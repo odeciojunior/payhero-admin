@@ -22,7 +22,7 @@ class PlanStoreRequest extends FormRequest
             'product_amounts' => 'required|array',
             'product_cost'    => 'required|array',
             'product_total'   => 'required|array',
-            'status'          => 'required|array',
+            'currency'        => 'required|array',
         ];
     }
 

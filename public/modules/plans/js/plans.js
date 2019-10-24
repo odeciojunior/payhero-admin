@@ -325,33 +325,34 @@ $(function () {
 
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
+                                    var product_total = value.product_cost * value.amount;
                                     $('.products_row_edit').append(`
                                         <div class='card container '>
                                             <div id="products_div_edit" class="row">
                                                 <div class="form-group col-sm-12 col-md-12 col-lg-12">
                                                     <label>Produtos do plano:</label>
-                                                    <select id="product_1" name="products[]" class="form-control products_edit">
+                                                    <select id="product_${index}" name="products[]" class="form-control products_edit">
                                                         <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
                                                      </select>
                                                 </div>
                                                 <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                     <label>Quantidade:</label>
-                                                    <input value="` + value.amount + `" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                                    <input value="` + value.amount + `" id="product_amount_${index}" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
                                                 </div>
                                                 <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                     <label>Custo (<b>Un</b>):</label>
-                                                    <input value="" id="product_cost_1" class="form-control products_cost" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario">
+                                                    <input id="product_cost_${index}" class="form-control products_cost products_cost_update" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${value.product_cost}">
                                                 </div>
                                                 <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                     <label>Custo Total:</label>
-                                                    <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
+                                                    <input value="${product_total}" id="product_total_${index}" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                                 </div>
                                              
                                                  <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                     <label>Moeda:</label>
-                                                    <select class='form-control' name='status[]'>
-                                                        <option>BRL</option>
-                                                        <option>USD</option>
+                                                    <select id='select_currency_${index}' class='form-control' name='currency[]'>
+                                                        <option value='BRL' >BRL</option>
+                                                        <option value='USD' >USD</option>
                                                     </select>
                                                 </div>
                                                 
@@ -366,6 +367,9 @@ $(function () {
                                         </div>
                                     `);
                                 });
+                                $.each(response.data.products, function (index, value) {
+                                    $('#select_currency_' + index).val(value.currency);
+                                });
                                 $('.products_cost').bind('keyup', calcularTotal)
                                 card_div_edit = $('.products_row_edit').find('#products_div_edit').first().clone();
                             } else {
@@ -374,27 +378,27 @@ $(function () {
                                         <div  class="row">
                                             <div class="form-group col-sm-12 col-md-12 col-lg-12">
                                                 <label>Produtos do plano:</label>
-                                                <select id="product_1" name="products[]" class="form-control products_edit">
+                                                <select id="product_${index}" name="products[]" class="form-control products_edit">
                                                  </select>
                                             </div>
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                 <label>Quantidade:</label>
-                                                <input value="1" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                                <input value="1" id="product_amount_${index}" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
                                             </div>
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                 <label>Custo (<b>Un</b>):</label>
-                                                <input value="" id="product_cost_1" class="form-control products_cost" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario">
+                                                <input id="product_cost_${index}" class="form-control products_cost products_cost_update" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${value.product_cost}">
                                             </div>
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                 <label>Custo Total:</label>
-                                                <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
+                                                <input value="" id="product_total_${index}" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                             </div>
                                          
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                 <label>Moeda:</label>
-                                                <select class='form-control' name='status[]'>
-                                                    <option>BRL</option>
-                                                    <option>USD</option>
+                                                <select id='select_currency' class='form-control' name='currency[]'>
+                                                    <option value='BRL' >BRL</option>
+                                                    <option value='USD' >USD</option>
                                                 </select>
                                             </div>
                                              <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
@@ -406,6 +410,9 @@ $(function () {
                                         </div>
                                     </div>
                                 `);
+                                $.each(response.data.products, function (index, value) {
+                                    $('#select_currency_' + index).val(value.currency);
+                                });
                                 $('.products_cost').bind('keyup', calcularTotal)
                                 $.ajax({
                                     method: "POST",
@@ -506,6 +513,11 @@ $(function () {
                                 var hasNoValue;
                                 $('.products_amount').each(function () {
                                     if ($(this).val() == '' || $(this).val() == 0) {
+                                        hasNoValue = true;
+                                    }
+                                });
+                                $('.products_cost_update').each(function () {
+                                    if ($(this).val() == '') {
                                         hasNoValue = true;
                                     }
                                 });

@@ -47,7 +47,7 @@
                         </div>
                         <div class="form-group col-sm-4 col-md-3 col-lg-3">
                             <label>Moeda:</label>
-                            <select class='form-control' name='status[]'>
+                            <select id="select_currency" class='form-control' name='currency[]'>
                                 <option>BRL</option>
                                 <option>USD</option>
                             </select>
