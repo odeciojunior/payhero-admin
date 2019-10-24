@@ -101,9 +101,9 @@ $(function () {
                         input.addClass('products_amount');
                         div_products = new_div;
                         $('#products').after('<div class="card container">' + new_div.html() + '</div>');
-                        $('.products_cost').mask('#.###,#0', {reverse: true});
-
+                        $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
                         $('.products_amount').mask('0#');
+                        bindModalKeys();
                     });
 
                     /**
@@ -417,6 +417,7 @@ $(function () {
                                 $.each(response.data.products, function (index, value) {
                                     $('#select_currency_' + index).val(value.currency);
                                 });
+                                bindModalKeys();
                                 $('.products_cost').bind('keyup', calcularTotal)
                                 $.ajax({
                                     method: "POST",
@@ -440,7 +441,7 @@ $(function () {
                                     }
                                 });
                             }
-                            $('.products_cost').mask('#.###,#0', {reverse: true});
+                            $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
 
                             $.ajax({
                                 method: "POST",
@@ -507,9 +508,10 @@ $(function () {
                                 div_products = new_div;
 
                                 $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
-                                $('.products_cost').mask('#.###,#0', {reverse: true});
+                                $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
 
                                 $('.products_amount').mask('0#');
+                                bindModalKeys();
                             });
 
                             /**
@@ -674,7 +676,19 @@ $(function () {
         $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
     })
 
-    $('.products_cost').mask('#.###,#0', {reverse: true});
+    $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+
+    function bindModalKeys() {
+
+        $('.products_cost').bind('keyup')
+        $('.products_cost').bind('keydown')
+        $('.products_cost').bind('click')
+
+        $('.products_amount_create').bind('keyup')
+        $('.products_amount_create').bind('keydown')
+        $('.products_amount_create').bind('click')
+
+    }
 
 })
 ;
