@@ -207,7 +207,9 @@ class SendgridService
      */
     public function getLinkBrand($domain)
     {
-        $response = $this->sendgrid->client->whitelabel()->links()->get(null, null);
+        $queryParameters = json_decode('{"domain": "' . $domain . '"}');
+
+        $response = $this->sendgrid->client->whitelabel()->links()->get(null, $queryParameters);
 
         $links = json_decode($response->body());
 
