@@ -115,8 +115,8 @@ class PlansApiController extends Controller
                                 $productPlan->create([
                                                          'product_id'         => $requestData['products'][$keyProduct],
                                                          'plan_id'            => $plan->id,
-                                                         'amount'             => $requestData['product_amounts'][$keyProduct],
-                                                         'cost'               => $requestData['product_cost'][$keyProduct],
+                                                         'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                                         'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
                                                          'currency_type_enum' => $productPlan->present()
                                                                                              ->getCurrency($requestData['currency'][$keyProduct]),
                                                      ]);

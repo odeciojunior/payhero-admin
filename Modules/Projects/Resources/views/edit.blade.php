@@ -77,7 +77,8 @@
                     <div class="col-12">
                         <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
                             <input name='logo' type='file' class='form-control' id='photo-logo-email'
-                                   style='display:none;'> <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
+                                   style='display:none;'>
+                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>
                                 <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
@@ -113,7 +114,7 @@
                         <input name="support_phone" value="" type="text" class="input-pad" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000">
                         <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é encaminhada para esse número 
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é encaminhada para esse número
                         </p>
                         <span id='contact-error'></span>
                     </div>
@@ -176,17 +177,17 @@
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             <option value="1">1</option>
-                            <option value="2" >2</option>
-                            <option value="3" >3</option>
-                            <option value="4" >4</option>
-                            <option value="5" >5</option>
-                            <option value="6" >6</option>
-                            <option value="7" >7</option>
-                            <option value="8" >8</option>
-                            <option value="9" >9</option>
-                            <option value="10" >10</option>
-                            <option value="11" >11</option>
-                            <option value="12" >12</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do produtor)
@@ -206,8 +207,8 @@
                     <div class='form-group col-md-2 col-sm-6 col-xs-6'>
                         <label for="default_currency">Moeda padrão de custo</label>
                         <select name='default_currency' class='form-control select-pad' id="default_currency">
-                            <option value='0'>Real</option>
-                            <option value='1'>Dólar</option>
+                            <option value='BRL'>Real</option>
+                            <option value='USD'>Dólar</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos.
