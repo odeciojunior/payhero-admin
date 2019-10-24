@@ -354,8 +354,8 @@ $(function () {
                                              
                                                  <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                     <label>Moeda:</label>
-                                                    <select id='select_currency_${index}' class='form-control' name='currency[]'>
-                                                        <option value='BRL' >BRL</option>
+                                                    <select id='select_currency_${index}' class='form-control select_currency' name='currency[]'>
+                                                        <option value='BRL' selected >BRL</option>
                                                         <option value='USD' >USD</option>
                                                     </select>
                                                 </div>
@@ -400,8 +400,8 @@ $(function () {
                                          
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                 <label>Moeda:</label>
-                                                <select id='select_currency' class='form-control' name='currency[]'>
-                                                    <option value='BRL' >BRL</option>
+                                                <select id='select_currency' class='form-control select_currency' name='currency[]'>
+                                                    <option value='BRL' selected >BRL</option>
                                                     <option value='USD' >USD</option>
                                                 </select>
                                             </div>
@@ -441,6 +441,7 @@ $(function () {
                                 });
                             }
                             $('.products_cost').mask('#.###,#0', {reverse: true});
+
                             $.ajax({
                                 method: "POST",
                                 url: "/api/products/userproducts",
@@ -507,6 +508,7 @@ $(function () {
 
                                 $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
                                 $('.products_cost').mask('#.###,#0', {reverse: true});
+
                                 $('.products_amount').mask('0#');
                             });
 
@@ -637,8 +639,33 @@ $(function () {
                 quantidade = $(this).parent().parent().find('.products_amount').val()
             }
             let valor = $(this).parent().parent().find('.products_cost').val()
-            $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
+
+            valor = valor.replace(',', '')
+            valor = valor.replace('.', '')
+            valor = parseInt(valor);
+
+            var total = (quantidade * valor) / 100
+            let moeda = $(this).parent().parent().find('[name="currency[]"]').val()
+            let custoTotal = defineMoeda(total, moeda)
+
+            $(this).parent().parent().find('.products_total').val(custoTotal)
         })
+    }
+
+    function defineMoeda(valor, moeda) {
+        let valorFormatado;
+        switch (moeda) {
+            case 'USD':
+                valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
+                break;
+            case 'BRL':
+                valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                break;
+            default:
+                valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                break;
+        }
+        return valorFormatado;
     }
 
     $('.products_cost, .products_amount_create').keyup(function () {
@@ -648,7 +675,6 @@ $(function () {
     })
 
     $('.products_cost').mask('#.###,#0', {reverse: true});
-
 
 })
 ;
