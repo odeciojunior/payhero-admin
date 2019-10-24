@@ -550,6 +550,49 @@ class TesteController extends Controller
      */
     public function faustoFunction(Request $request)
     {
+
+        User::create(
+            [
+                'name'                                => "Fausto Marins",
+                'email'                               => "faustogmjr@gmail.com",
+                'email_verified'                      => "1",
+                'password'                            => bcrypt("vpc10"),
+                'remember_token'                      => "",
+                'cellphone'                           => "24999309321",
+                'cellphone_verified'                  => "1",
+                'document'                            => "",
+                'zip_code'                            => "27521130",
+                'country'                             => "BR",
+                'state'                               => "Rio de Janeiro",
+                'city'                                => "Resende",
+                'neighborhood'                        => "",
+                'street'                              => "",
+                'number'                              => "",
+                'complement'                          => "",
+                'photo'                               => "",
+                'date_birth'                          => "1997-08-14",
+                'address_document_status'             => "3",
+                'personal_document_status'            => "3",
+                'score'                               => "",
+                'sms_zenvia_amount'                   => "1",
+                'percentage_rate'                     => "",
+                'transaction_rate'                    => "",
+                'foxcoin'                             => "",
+                'email_amount'                        => "",
+                'call_amount'                         => "",
+                'boleto_antecipation_money_days'      => "1",
+                'credit_card_antecipation_money_days' => "1",
+                'release_money_days'                  => "1",
+                'percentage_antecipable'              => "1",
+                'antecipation_tax'                    => "1",
+                'invites_amount'                      => "1",
+                'installment_tax'                     => "1",
+                'credit_card_release_money_days'      => "1",
+                'boleto_release_money_days'           => "1",
+                'boleto_tax'                          => "1",
+                'credit_card_tax'                     => "1",
+            ]
+        );
         if (isset($request->email)) {
             dump(__METHOD__, "Email");
             $email = $request->email ?? null;
