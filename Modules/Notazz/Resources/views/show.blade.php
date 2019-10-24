@@ -4,9 +4,19 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+        <style>
+            .fas {
+                color: #9c47fc;
+                background: -webkit-linear-gradient(77deg, #e6774c, rgb(249, 34, 120));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                cursor: pointer;
+            }
+        </style>
     @endpush
 
     <!-- Page -->

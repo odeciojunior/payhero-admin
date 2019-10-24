@@ -111,16 +111,15 @@ class PlansApiController extends Controller
                         if (!empty($plan)) {
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
-                                foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
-                                    if ($keyProduct == $keyAmount) {
-                                        $dataProductPlan = [
-                                            'product_id' => $product,
-                                            'plan_id'    => $plan->id,
-                                            'amount'     => $productAmount,
-                                        ];
-                                        $productPlan->create($dataProductPlan);
-                                    }
-                                }
+
+                                $productPlan->create([
+                                                         'product_id'         => $requestData['products'][$keyProduct],
+                                                         'plan_id'            => $plan->id,
+                                                         'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                                         'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                                         'currency_type_enum' => $productPlan->present()
+                                                                                             ->getCurrency($requestData['currency'][$keyProduct]),
+                                                     ]);
                             }
                         } else {
                             return response()->json([
@@ -241,7 +240,14 @@ class PlansApiController extends Controller
                     $requestData['price'] = $this->getValue($requestData['price']);
 
                     $plan = $planModel->where('id', $planId)->first();
-                    $plan->update($requestData);
+
+                    $plan->update([
+                                      'name'        => $requestData["name"],
+                                      'description' => $requestData["description"],
+                                      'code'        => $id,
+                                      'price'       => $requestData["price"],
+                                      'status'      => $planModel->present()->getStatus('active'),
+                                  ]);
 
                     $productPlans = $productPlan->where('plan_id', $plan->id)->get();
                     if (count($productPlans) > 0) {
@@ -251,15 +257,15 @@ class PlansApiController extends Controller
                     }
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
-                            foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
-                                if ($keyProduct == $keyAmount) {
-                                    $productPlan->create([
-                                                             'product_id' => $product,
-                                                             'plan_id'    => $plan->id,
-                                                             'amount'     => $productAmount,
-                                                         ]);
-                                }
-                            }
+
+                            $productPlan->create([
+                                                     'product_id'         => $requestData['products'][$keyProduct],
+                                                     'plan_id'            => $plan->id,
+                                                     'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                                     'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                                     'currency_type_enum' => $productPlan->present()
+                                                                                         ->getCurrency($requestData['currency'][$keyProduct]),
+                                                 ]);
                         }
                     }
 
