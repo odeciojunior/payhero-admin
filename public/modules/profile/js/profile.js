@@ -18,6 +18,7 @@ $(document).ready(function () {
     $("#btn_verify_cellphone").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
+        let cellphone = $("#cellphone").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifycellphone',
@@ -26,7 +27,9 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {},
+            data: {
+                cellphone: cellphone
+            },
             error: function (response) {
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();
@@ -48,6 +51,7 @@ $(document).ready(function () {
     $("#btn_verify_email").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
+        let email = $("#email").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifyemail',
@@ -56,7 +60,9 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {},
+            data: {
+                email: email
+            },
             error: function (response) {
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();

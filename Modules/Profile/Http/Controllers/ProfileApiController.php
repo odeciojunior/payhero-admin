@@ -204,20 +204,26 @@ class ProfileApiController
     public function verifyCellphone(Request $request)
     {
         try {
-            $cellphone = auth()->user()->cellphone ?? null;
-            if (empty($cellphone)) {
+            $data      = $request->all();
+            $cellphone = $data["cellphone"] ?? null;
+            if (FoxUtils::isEmpty($cellphone)) {
                 return response()->json(
                     [
                         'message' => 'Telefone não pode ser vazio!',
                     ], 400);
             }
-            $cellphone = FoxUtils::prepareCellPhoneNumber($cellphone);
+
+            $user = auth()->user();
+            if ($cellphone != $user->cellphone) {
+                $user->cellphone = $cellphone;
+                $user->save();
+            }
 
             $verifyCode = random_int(100000, 999999);
 
             /** @var DisparoProService $disparoPro */
             $disparoPro = app(DisparoProService::class);
-            $disparoPro->sendMessage($cellphone, "Código de verificação CloudFox - " . $verifyCode);
+            $disparoPro->sendMessage(FoxUtils::prepareCellPhoneNumber($cellphone), "Código de verificação CloudFox - " . $verifyCode);
 
             return response()->json(
                 [
@@ -274,19 +280,24 @@ class ProfileApiController
     public function verifyEmail(Request $request)
     {
         try {
-            $email = auth()->user()->email ?? null;
-            if (empty($email)) {
+            $data  = $request->all();
+            $email = $data["email"] ?? null;
+            if (FoxUtils::isEmpty($email)) {
                 return response()->json(
                     [
                         'message' => 'Email não pode ser vazio!',
                     ], 400);
-            }
-
-            if (!FoxUtils::validateEmail($email)) {
+            } else if (!FoxUtils::validateEmail($email)) {
                 return response()->json(
                     [
                         'message' => 'Email inválido!',
                     ], 400);
+            }
+
+            $user = auth()->user();
+            if ($email != $user->email) {
+                $user->email = $email;
+                $user->save();
             }
 
             $verifyCode = random_int(100000, 999999);

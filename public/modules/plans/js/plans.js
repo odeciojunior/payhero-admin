@@ -101,6 +101,7 @@ $(function () {
                         input.addClass('products_amount');
                         div_products = new_div;
                         $('#products').after('<div class="card container">' + new_div.html() + '</div>');
+                        $('.products_cost').mask('#.###,#0', {reverse: true});
 
                         $('.products_amount').mask('0#');
                     });
@@ -439,6 +440,7 @@ $(function () {
                                     }
                                 });
                             }
+                            $('.products_cost').mask('#.###,#0', {reverse: true});
                             $.ajax({
                                 method: "POST",
                                 url: "/api/products/userproducts",
@@ -504,7 +506,7 @@ $(function () {
                                 div_products = new_div;
 
                                 $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
-
+                                $('.products_cost').mask('#.###,#0', {reverse: true});
                                 $('.products_amount').mask('0#');
                             });
 
@@ -644,5 +646,9 @@ $(function () {
         let valor = $(this).parent().parent().find('.products_cost').val()
         $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
     })
+
+    $('.products_cost').mask('#.###,#0', {reverse: true});
+
+
 })
 ;
