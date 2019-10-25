@@ -146,6 +146,7 @@ $(function () {
                                 loadingOnScreenRemove();
                                 index();
                                 clearFields();
+                                bindModalKeys();
                                 alertCustom("success", "Plano Adicionado!");
                             }
                         });
@@ -692,7 +693,6 @@ $(function () {
         let quantidade = $(element).parent().parent().find('.products_amount_edit')
 
         calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-
         // console.log(custoUnitario.val() + ' -- ' + custoTotal.val() + ' -- ' + moeda.val() + ' -- ' + quantidade.val())
     }
     function getElementsCreate(element) {
@@ -702,8 +702,14 @@ $(function () {
         let quantidade = $(element).parent().parent().find('.products_amount_create')
 
         calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-
         // console.log(custoUnitario.val() + ' -- ' + custoTotal.val() + ' -- ' + moeda.val() + ' -- ' + quantidade.val())
+    }
+    function clickElementEdit(element) {
+        $(element).parent().parent().find('.products_cost_edit').focus();
+    }
+    function clickElementCreate(element) {
+        $(element).parent().parent().find('.products_cost_create').focus();
+        console.log($(element).parent().parent().find('.products_cost_create'))
     }
 
     function calculateTotal(custoUnitario, custoTotal, moeda, quantidade) {
@@ -745,10 +751,19 @@ $(function () {
 
     function bindModalKeys() {
 
-        $(document).on('change', '.products_cost_create, .products_total_create, .select_currency_create', function () {
+        $(document).on('change', '.select_currency_create', function () {
+            getElementsCreate(this)
+            clickElementCreate(this)
+        })
+        $(document).on('keyup', '.products_cost_create, .products_total_create', function () {
             getElementsCreate(this)
         })
-        $(document).on('change', '.products_cost_edit, .products_total_edit, .select_currency_edit', function () {
+        $(document).on('change', '.select_currency_edit', function () {
+            getElementsEdit(this)
+            clickElementEdit(this)
+        })
+
+        $(document).on('keyup', '.products_cost_edit, .products_total_edit', function () {
             getElementsEdit(this)
         })
 
@@ -760,12 +775,16 @@ $(function () {
             getElementsEdit($(this).parent())
         })
 
+        //quando um novo registro for inserido na tela e for necessario a edição, esta funçao sera necessaria para vincular o bindModalkeys() aos campos da modal
+        $(document).on('click', '.edit-plan', function () {
+            bindModalKeys();
+        })
+
         $('.products_cost_create, .products_cost_edit').maskMoney({thousands: ',', decimal: '.', allowZero: true});
+        $('#plan-price_edit, #price').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: 'R$'});
         if ($('.products_cost_create, .products_cost_edit').val() == undefined || $('.products_cost_create, .products_cost_edit').val() == null) {
             $('.products_cost_create, .products_cost_edit').maskMoney('mask', 0.00);
         }
-
-
     }
 })
 ;
