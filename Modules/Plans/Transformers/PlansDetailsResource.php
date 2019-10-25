@@ -16,6 +16,8 @@ class PlansDetailsResource extends Resource
                 'product_id'   => $productsPlan->product_id,
                 'product_name' => $productsPlan->product->name,
                 'amount'       => $productsPlan->amount,
+                'product_cost' => $productsPlan->cost,
+                'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
             ];
         }
 

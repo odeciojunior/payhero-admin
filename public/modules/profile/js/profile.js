@@ -18,6 +18,7 @@ $(document).ready(function () {
     $("#btn_verify_cellphone").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
+        let cellphone = $("#cellphone").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifycellphone',
@@ -26,7 +27,9 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {},
+            data: {
+                cellphone: cellphone
+            },
             error: function (response) {
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();
@@ -48,6 +51,7 @@ $(document).ready(function () {
     $("#btn_verify_email").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
+        let email = $("#email").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifyemail',
@@ -56,7 +60,9 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {},
+            data: {
+                email: email
+            },
             error: function (response) {
                 errorAjaxResponse(response);
                 loadingOnScreenRemove();
@@ -70,6 +76,40 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 $("#progress-bar-register").css('width', '66%');
                 $("#jump").show();
+            }
+        });
+    });
+
+    $(".notification_switch").on("click", function () {
+        let object = this;
+        if (object.getAttribute("checked")) {
+            object.removeAttribute("checked");
+            object.value = 0;
+        } else {
+            object.setAttribute("checked", "checked");
+            object.value = 1;
+        }
+
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/updatenotification',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                column: object.name,
+                value: object.value
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
             }
         });
     });
@@ -116,6 +156,46 @@ $(document).ready(function () {
                     valuecss = 'success';
                 } else {
                     valuecss = 'danger';
+                }
+
+                // if (response.data.new_affiliation) {
+                //     $("#new_affiliation_switch").attr("checked", "checked");
+                // }
+                // if (response.data.new_affiliation_request) {
+                //     $("#new_affiliation_request_switch").attr("checked", "checked");
+                // }
+                // if (response.data.approved_affiliation) {
+                //     $("#approved_affiliation_switch").attr("checked", "checked");
+                // }
+                if (response.data.boleto_compensated) {
+                    $("#boleto_compensated_switch").attr("checked", "checked");
+                }
+                if (response.data.sale_approved) {
+                    $("#sale_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.notazz) {
+                    $("#notazz_switch").attr("checked", "checked");
+                }
+                // if (response.data.withdrawal_approved) {
+                //     $("#withdrawal_approved_switch").attr("checked", "checked");
+                // }
+                if (response.data.released_balance) {
+                    $("#released_balance_switch").attr("checked", "checked");
+                }
+                if (response.data.domain_approved) {
+                    $("#domain_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.shopify) {
+                    $("#shopify_switch").attr("checked", "checked");
+                }
+                // if (response.data.user_shopify_integration_store) {
+                //     $("#user_shopify_integration_store_switch").attr("checked", "checked");
+                // }
+                if (response.data.billet_generated) {
+                    $("#billet_generated_switch").attr("checked", "checked");
+                }
+                if (response.data.credit_card_in_proccess) {
+                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
                 }
 
                 // Verificação de telefone

@@ -41,6 +41,7 @@ class ProfileApiController
             $user = auth()->user();
 
             if (Gate::allows('view', [$user])) {
+                $user->load(["userNotification"]);
                 $userResource = new UserResource($user);
 
                 return new UserResource($userResource);
@@ -203,20 +204,26 @@ class ProfileApiController
     public function verifyCellphone(Request $request)
     {
         try {
-            $cellphone = auth()->user()->cellphone ?? null;
-            if (empty($cellphone)) {
+            $data      = $request->all();
+            $cellphone = $data["cellphone"] ?? null;
+            if (FoxUtils::isEmpty($cellphone)) {
                 return response()->json(
                     [
                         'message' => 'Telefone não pode ser vazio!',
                     ], 400);
             }
-            $cellphone = FoxUtils::prepareCellPhoneNumber($cellphone);
+
+            $user = auth()->user();
+            if ($cellphone != $user->cellphone) {
+                $user->cellphone = $cellphone;
+                $user->save();
+            }
 
             $verifyCode = random_int(100000, 999999);
 
             /** @var DisparoProService $disparoPro */
             $disparoPro = app(DisparoProService::class);
-            $disparoPro->sendMessage($cellphone, "Código de verificação CloudFox - " . $verifyCode);
+            $disparoPro->sendMessage(FoxUtils::prepareCellPhoneNumber($cellphone), "Código de verificação CloudFox - " . $verifyCode);
 
             return response()->json(
                 [
@@ -273,19 +280,24 @@ class ProfileApiController
     public function verifyEmail(Request $request)
     {
         try {
-            $email = auth()->user()->email ?? null;
-            if (empty($email)) {
+            $data  = $request->all();
+            $email = $data["email"] ?? null;
+            if (FoxUtils::isEmpty($email)) {
                 return response()->json(
                     [
                         'message' => 'Email não pode ser vazio!',
                     ], 400);
-            }
-
-            if (!FoxUtils::validateEmail($email)) {
+            } else if (!FoxUtils::validateEmail($email)) {
                 return response()->json(
                     [
                         'message' => 'Email inválido!',
                     ], 400);
+            }
+
+            $user = auth()->user();
+            if ($email != $user->email) {
+                $user->email = $email;
+                $user->save();
             }
 
             $verifyCode = random_int(100000, 999999);
@@ -296,16 +308,22 @@ class ProfileApiController
 
             /** @var SendgridService $sendgridService */
             $sendgridService = app(SendgridService::class);
-            $sendgridService->sendEmail(
+            if ($sendgridService->sendEmail(
                 'noreply@cloudfox.net', 'cloudfox', $email, auth()->user()->name, "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac", $data
-            );
+            )) {
+                return response()->json(
+                    [
+                        "message" => "Email enviado com sucesso!",
+
+                    ], 200)
+                                 ->withCookie("emailverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
+            }
 
             return response()->json(
                 [
-                    "message" => "Email enviado com sucesso!",
+                    "message" => "Erro ao enviar email, tente novamente mais tarde!",
 
-                ], 200)
-                             ->withCookie("emailverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
+                ], 400);
         } catch (Exception $e) {
             Log::warning('ProfileController verifyEmail');
             report($e);
@@ -436,6 +454,53 @@ class ProfileApiController
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar dados taxas do usuario (ProfileApiController - getTax)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateUserNotification(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $user = auth()->user();
+            $user->load(["userNotification"]);
+            $userNotification = $user->userNotification ?? null;
+            if (FoxUtils::isEmpty($userNotification)) {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
+                                        ], 400);
+            }
+
+            $column = $data["column"] ?? null;
+            $value  = $data["value"] ?? null;
+
+            if (FoxUtils::isEmpty($column) || is_null($value)) {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
+                                        ], 400);
+            }
+
+            $userNotification->$column = $value;
+            if ($userNotification->save()) {
+                return response()->json(
+                    [
+                        "message" => "Salvo com sucesso!",
+
+                    ], 200);
+            }
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
+        } catch (Exception $ex) {
+            report($ex);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',

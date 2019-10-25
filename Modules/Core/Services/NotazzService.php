@@ -5,10 +5,14 @@ namespace Modules\Core\Services;
 use App\Jobs\SendNotazzInvoiceJob;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\NotazzSentHistory;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
@@ -16,6 +20,14 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
 {
+    /**
+     * @var string
+     * @description name of the column in user_notifications table to check if it will send
+     */
+    private $userNotification = "notazz";
+    /**
+     * @var string
+     */
     const NotazzUrlApi = 'https://app.notazz.com/api';
 
     /**
@@ -82,6 +94,8 @@ class NotazzService
         $notazzInvoiceModel     = new NotazzInvoice();
         $saleService            = new SaleService();
         $notazzSentHistoryModel = new NotazzSentHistory();
+        $saleModel              = new Sale();
+        $productPlanSaleModel   = new ProductPlanSale();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -96,13 +110,36 @@ class NotazzService
         if ($sale) {
             //venda encontrada
 
-            $products = $saleService->getProductsBySaleId($sale->id);
+            $sale = $saleModel->with(['plansSales'])->find($sale->id);
+
+            $productsSale = collect();
+            /** @var PlanSale $planSale */
+            foreach ($sale->plansSales as $planSale) {
+                /** @var ProductPlan $productPlan */
+                foreach ($planSale->plan->productsPlans as $productPlan) {
+                    $productPlanSale                 = $productPlan->product()
+                                                                   ->first()->productsPlanSales->where('sale_id', $sale->id)
+                                                                                               ->first();
+                    $product                         = $productPlan->product()->first();
+                    $product['product_cost']         = $productPlan->cost ?? $product->cost;
+                    $product['product_plan_sale_id'] = $productPlanSale->id;
+                    $product['sale_status']          = $sale->status;
+                    $product['amount']               = $productPlan->amount * $planSale->amount;
+                    $product['tracking_code']        = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
+                    $product['tracking_status_enum'] = $productPlanSale ? $productPlanSale->tracking_status_enum != null ?
+                        Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
+                                                                                                                    ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                    $productsSale->add($product);
+                }
+            }
+
+            $products = $productsSale;
 
             if ($products) {
                 $costTotal = 0;
                 foreach ($products as $product) {
 
-                    $costTotal += $product->cost;
+                    $costTotal += $product['product_cost'];
                 }
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
@@ -611,7 +648,6 @@ class NotazzService
                                                              'notazz_integration_id' => $notazzIntegrationId,
                                                              'invoice_type'          => $invoiceType,
                                                              'notazz_id'             => null,
-                                                             //'external_id'           => Hashids::encode($saleId),
                                                              'status'                => $notazzInvoiceModel->present()
                                                                                                            ->getStatus('pending'),
                                                              'canceled_flag'         => false,
@@ -708,8 +744,12 @@ class NotazzService
                     'user'    => $integration->user->id,
                 ];
 
-                $pusherService->sendPusher($data);
-                $integration->user->notify(new RetroactiveNotazzNotification($data["message"]));
+                /** @var UserNotificationService $userNotificationService */
+                $userNotificationService = app(UserNotificationService::class);
+                if ($userNotificationService->verifyUserNotification($integration->user, $this->userNotification)) {
+                    $pusherService->sendPusher($data);
+                    $integration->user->notify(new RetroactiveNotazzNotification($data["message"]));
+                }
             }
         } catch (Exception $e) {
             Log::warning('NotazzService - generateRetroactiveInvoices - error');
@@ -760,16 +800,6 @@ class NotazzService
 
         if ($notazzInvoice->attempts < $notazzInvoice->max_attempts) {
             //ainda nao chegou no maximo de tentativas
-
-            $products = $saleService->getProductsBySaleId($notazzInvoice->sale->id);
-
-            $hasCostNull = false;
-            foreach ($products as $product) {
-                if (empty($product->cost)) {
-                    $hasCostNull = true;
-                    break;
-                }
-            }
 
             $notazzInvoice->update([
                                        'status' => $notazzInvoiceModel->present()

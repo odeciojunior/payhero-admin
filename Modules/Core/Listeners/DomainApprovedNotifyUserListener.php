@@ -7,11 +7,18 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\DomainApprovedEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Core\Services\UserNotificationService;
 use Modules\Notifications\Notifications\BoletoCompensatedNotification;
 use Modules\Notifications\Notifications\DomainApprovedNotification;
 
 class DomainApprovedNotifyUserListener
 {
+    /**
+     * @var string
+     * @description name of the column in user_notifications table to check if it will send
+     */
+    private $userNotification = "domain_approved";
+
     /**
      * Create the event listener.
      * @return void
@@ -36,7 +43,11 @@ class DomainApprovedNotifyUserListener
             foreach ($users as $user) {
                 $message = 'Domínio aprovado com sucesso para o projeto ' . $project->name . '.';
 
-                $user->notify(new DomainApprovedNotification($message, $project->id));
+                /** @var UserNotificationService $userNotificationService */
+                $userNotificationService = app(UserNotificationService::class);
+                if ($userNotificationService->verifyUserNotification($user, $this->userNotification)) {
+                    $user->notify(new DomainApprovedNotification($message, $project->id));
+                }
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar notificação dominio aprovado');

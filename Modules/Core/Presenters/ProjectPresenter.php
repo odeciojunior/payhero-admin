@@ -21,6 +21,10 @@ class ProjectPresenter extends Presenter
         return $projectModel->whereIn('id', $userProjects)->get();
     }
 
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getStatus($status)
     {
         if (is_numeric($status)) {
@@ -34,6 +38,33 @@ class ProjectPresenter extends Presenter
             switch ($status) {
                 case 'approved':
                     return 1;
+            }
+
+            return '';
+        }
+    }
+
+    /**
+     * @param $currency
+     * @return int|string
+     */
+    public function getCurrencyCost($currency)
+    {
+        if (is_numeric($currency)) {
+            switch ($currency) {
+                case 1:
+                    return 'BRL';
+                case 2:
+                    return 'USD';
+            }
+
+            return '';
+        } else {
+            switch ($currency) {
+                case 'BRL':
+                    return 1;
+                case 'USD':
+                    return 2;
             }
 
             return '';

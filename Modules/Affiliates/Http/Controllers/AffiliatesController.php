@@ -8,10 +8,13 @@ use App\Entities\Notification;
 use Carbon\Carbon;
 use App\Entities\Project;
 use App\Entities\Affiliate;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Entities\AffiliateRequest;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Services\UserNotificationService;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Notifications\Notifications\NewAffiliation;
@@ -26,7 +29,7 @@ class AffiliatesController extends Controller
 {
     /**
      * @param $projectId
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function create($projectId)
     {
@@ -62,7 +65,11 @@ class AffiliatesController extends Controller
                                           'data' => json_encode(['qtd' => preg_replace("/[^0-9]/", "", $data->qtd) + 1]),
                                       ]);
             } else {
-                $user->notify(new NewAffiliationRequest());
+                /** @var UserNotificationService $userNotificationService */
+                $userNotificationService = app(UserNotificationService::class);
+                if ($userNotificationService->verifyUserNotification($user, "new_affiliation_request")) {
+                    $user->notify(new NewAffiliationRequest());
+                }
             }
 
             $affiliateRequestModel->create([
@@ -98,7 +105,11 @@ class AffiliatesController extends Controller
                                       'data' => json_encode(['qtd' => preg_replace("/[^0-9]/", "", $data->qtd) + 1]),
                                   ]);
         } else {
-            $user->notify(new NewAffiliation());
+            /** @var UserNotificationService $userNotificationService */
+            $userNotificationService = app(UserNotificationService::class);
+            if ($userNotificationService->verifyUserNotification($user, "new_affiliation")) {
+                $user->notify(new NewAffiliation());
+            }
         }
 
         return redirect()->route('affiliates.minhasafiliacoes');
@@ -106,7 +117,7 @@ class AffiliatesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function confirmAffiliation(Request $request)
     {
@@ -152,7 +163,11 @@ class AffiliatesController extends Controller
                                       'data' => json_encode(['qtd' => preg_replace("/[^0-9]/", "", $data->qtd) + 1]),
                                   ]);
         } else {
-            $user->notify(new ApprovedAffiliation());
+            /** @var UserNotificationService $userNotificationService */
+            $userNotificationService = app(UserNotificationService::class);
+            if ($userNotificationService->verifyUserNotification($user, "approved_affiliation")) {
+                $user->notify(new ApprovedAffiliation());
+            }
         }
 
         return response()->json('Sucesso');
@@ -160,7 +175,7 @@ class AffiliatesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function delete(Request $request)
     {
@@ -382,7 +397,7 @@ class AffiliatesController extends Controller
 
     /**
      * @param $projectId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Throwable
      */
     public function projectAffiliations($projectId)
@@ -410,7 +425,7 @@ class AffiliatesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function setAffiliationCompany(Request $request)
     {
@@ -426,7 +441,7 @@ class AffiliatesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function cancelRequest(Request $request)
     {
@@ -442,7 +457,7 @@ class AffiliatesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function denyRequest(Request $request)
     {

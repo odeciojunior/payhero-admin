@@ -103,6 +103,7 @@ class Project extends Model
         'analyzing_redirect',
         'support_phone',
         'support_phone_verified',
+        'cost_currency_type',
         'created_at',
         'updated_at',
         'deleted_at',

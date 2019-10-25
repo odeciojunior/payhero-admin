@@ -43,6 +43,7 @@ class RegisterApiController extends Controller
             $requestData['call_amount']                         = '0';
             $requestData['score']                               = '0';
             $requestData['sms_zenvia_amount']                   = '0';
+            $requestData['invites_amount']                      = 1;
 
             $user = $userModel->create($requestData);
 
