@@ -6,8 +6,7 @@
             <div class="row">
                 <div class="form-group col-xl-12 mt-4">
                     <label for="name">Descrição</label>
-                    <input value="" name="name" type="text" class="input-pad pixel-description" placeholder="Descrição"
-                           maxlength='30'>
+                    <input value="" name="name" type="text" class="input-pad pixel-description" placeholder="Descrição" maxlength='30'>
                 </div>
                 <div class="form-group col-6">
                     <label for="platform">Plataforma</label>
@@ -15,8 +14,8 @@
                         <option value="facebook">Facebook</option>
                         <option value="google_adwords">Google Adwords</option>
                         <option value="google_analytics">Google Analytics</option>
-                        <option value="null" disabled='disabled'>Taboola (em breve)</option>
-                        <option value="null" disabled='disabled'>Outbrain (em breve)</option>
+                        <option value="taboola">Taboola</option>
+                        <option value="outbrain">Outbrain</option>
                     </select>
                 </div>
                 <div class="form-group col-6">
@@ -28,8 +27,7 @@
                 </div>
                 <div class="form-group col-xl-12">
                     <label for="code">Código</label>
-                    <input value="" name="code" type="text" class="input-pad pixel-code" placeholder="Código"
-                           maxlength='30'>
+                    <input value="" name="code" type="text" class="input-pad pixel-code" placeholder="Código" maxlength='30'>
                 </div>
             </div>
             <div class='mb-1'>
