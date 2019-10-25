@@ -239,6 +239,7 @@ class PlansApiController extends Controller
 
                     unset($requestData['project_id']);
                     $planId               = Hashids::decode($id)[0];
+                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
 
                     $plan = $planModel->where('id', $planId)->first();
