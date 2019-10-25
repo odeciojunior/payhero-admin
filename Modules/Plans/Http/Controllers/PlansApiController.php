@@ -112,6 +112,13 @@ class PlansApiController extends Controller
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
+                                if(strlen($requestData['product_cost'][$keyProduct]) <= 2)
+                                {
+                                    //somente 2 digitos, adicionar 00 no final
+                                    $requestData['product_cost'][$keyProduct] .= '00';
+
+                                }
+
                                 $productPlan->create([
                                                          'product_id'         => $requestData['products'][$keyProduct],
                                                          'plan_id'            => $plan->id,
