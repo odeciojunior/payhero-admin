@@ -112,7 +112,9 @@ class PlansApiController extends Controller
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
-                                $requestData['product_cost'][$keyProduct] = $this->getValue($requestData['product_cost'][$keyProduct]);
+                                $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
+
+                                //$this->getValue($requestData['product_cost'][$keyProduct]);
 
                                 $productPlan->create([
                                                          'product_id'         => $requestData['products'][$keyProduct],
@@ -260,7 +262,7 @@ class PlansApiController extends Controller
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
 
-                            $requestData['product_cost'][$keyProduct] = $this->getValue($requestData['product_cost'][$keyProduct]);
+                            $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
 
                             $productPlan->create([
                                                      'product_id'         => $requestData['products'][$keyProduct],
