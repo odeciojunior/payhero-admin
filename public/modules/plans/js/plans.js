@@ -331,7 +331,9 @@ $(function () {
 
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
-                                    var product_total = value.product_cost * value.amount;
+                                    let productCost = value.product_cost.split(' ')
+                                    var product_total = productCost[1] * value.amount;
+                                    console.log('CUSTO DO PRODUTO = ' + String(value.product_cost))
                                     $('.products_row_edit').append(`
                                         <div class='card container '>
                                             <div id="products_div_edit" class="row">
@@ -347,7 +349,7 @@ $(function () {
                                                 </div>
                                                 <div class="form-group col-sm-4 col-md-4 col-lg-4">
                                                     <label>Custo (<b>Un</b>):</label>
-                                                    <input id="product_cost_${index}" class="form-control products_cost products_cost_update products_cost_edit" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${value.product_cost}">
+                                                    <input id="product_cost_${index}" class="form-control products_cost products_cost_update products_cost_edit" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${productCost[1]}">
                                                 </div>
                                                 <div class="form-group col-sm-5 col-md-5 col-lg-5">
                                                     <label>Custo Total:</label>
@@ -444,7 +446,7 @@ $(function () {
                                     }
                                 });
                             }
-                            $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                            $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
                             $.ajax({
                                 method: "POST",
@@ -511,7 +513,7 @@ $(function () {
                                 div_products = new_div;
 
                                 $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
-                                $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                                $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
                                 $('.products_amount').mask('0#');
                                 bindModalKeys();

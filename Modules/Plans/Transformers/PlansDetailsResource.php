@@ -3,7 +3,6 @@
 namespace Modules\Plans\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
-use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 
 class PlansDetailsResource extends Resource
@@ -16,7 +15,7 @@ class PlansDetailsResource extends Resource
                 'product_id'   => $productsPlan->product_id,
                 'product_name' => $productsPlan->product->name,
                 'amount'       => $productsPlan->amount,
-                'product_cost' => number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
+                'product_cost' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
             ];
         }
