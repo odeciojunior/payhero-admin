@@ -21,12 +21,13 @@ class PlansDetailsResource extends Resource
             ];
         }
 
+        $x = 1;
         return [
             'id'                => Hashids::encode($this->id),
             'name'              => $this->name,
             'description'       => $this->description,
             'code'              => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado',
-            'price'             => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, '.', ','),
+            'price'             => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, '.', ','),
             'status'            => isset($this->project->domains[0]->name) ? 1 : 0,
             'status_translated' => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',
             'products'          => $products,

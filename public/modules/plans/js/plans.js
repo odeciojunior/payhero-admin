@@ -79,7 +79,7 @@ $(function () {
                     });
 
                     //product
-                    $('#price').mask('#.###,#0', {reverse: true});
+                    //$('#price').mask('#.###,#0', {reverse: true});
                     var qtd_products = '1';
 
                     var div_products = $('#products_div_' + qtd_products).parent().clone();
@@ -325,9 +325,9 @@ $(function () {
 
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
-                            $('#plan-price_edit').val(response.data.price.replace(/[^0-9]/g, ''));
+                            $('#plan-price_edit').val(response.data.price);
                             $('#plan-description_edit').val(response.data.description);
-                            $('#plan-price_edit').mask('#.###,#0', {reverse: true});
+                            //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
 
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
@@ -496,7 +496,7 @@ $(function () {
                             });
 
                             //product
-                            $('#plan-price').mask('#.###,#0', {reverse: true});
+                            //$('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_products = '1';
 
                             $('.add_product_plan_edit').on('click', function () {
