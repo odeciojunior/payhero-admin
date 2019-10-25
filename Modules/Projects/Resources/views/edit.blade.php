@@ -212,10 +212,9 @@
                         </p>
                         <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
                     </div>
-
                     <div class='form-group col-md-6 col-sm-12'>
                         <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
-                        <select class='form-control' id='boleto_due_days' name='boleto_due_days'>
+                        <select class='form-control select-pad' id='boleto_due_days' name='boleto_due_days'>
                             @for($x = 1; $x <= 28; $x++)
                                 <option value='{{ $x }}'>{{ $x . ($x == 1 ? " dia" : " dias") }}</option>
                             @endfor
@@ -224,7 +223,6 @@
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Dias para vencimento do boleto
                         </p>
                     </div>
-
                     <div class='form-group col-md-6 col-sm-12'>
                         <label for="parcelas_sem_juros">Boleto no checkout</label>
                         <select name='boleto' class='form-control select-pad' id="boleto">
@@ -235,7 +233,6 @@
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com boleto no checkout
                         </p>
                     </div>
-
                     <div class='form-group col-md-4 col-sm-12'>
                         <label for="default_currency">Moeda padrão de custo</label>
                         <select name='cost_currency_type' class='form-control select-pad' id="cost_currency_type">
@@ -243,11 +240,20 @@
                             <option value='USD'>Dólar</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos.
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais.
                         </p>
                     </div>
                     <div class='col-md-8'></div>
-
+{{--                    <div class='form-group col-md-6 col-sm-12'>--}}
+{{--                        <label for="credit_card">Cartão de crédito no checkout</label>--}}
+{{--                        <select name='credit_card' class='form-control select-pad' id="credit_card">--}}
+{{--                            <option value='1' class='credit_card_yes'>Sim</option>--}}
+{{--                            <option value='0' class='credit_card_no'>Não</option>--}}
+{{--                        </select>--}}
+{{--                        <p class='info pt-5' style='font-size: 10px;'>--}}
+{{--                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                         <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad' type='text'
@@ -260,11 +266,11 @@
                                placeholder='URL' maxlength='60'>
                         <span id='input-pad-error' class='text-danger'></span>
                     </div>
-{{--                    <div class='form-group col-md-4 col-sm-12 col-xs-12'>--}}
-{{--                        <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>--}}
-{{--                        <input id='analyzing_redirect' name='analyzing_redirect' value='' class='input-pad' type='text'--}}
-{{--                               placeholder='URL' maxlength='60'>--}}
-{{--                    </div>--}}
+                    {{--                    <div class='form-group col-md-4 col-sm-12 col-xs-12'>--}}
+                    {{--                        <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>--}}
+                    {{--                        <input id='analyzing_redirect' name='analyzing_redirect' value='' class='input-pad' type='text'--}}
+                    {{--                               placeholder='URL' maxlength='60'>--}}
+                    {{--                    </div>--}}
                     <p class="info mt-5 col-12" style="font-size: 10px;">
                         <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
                         <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.

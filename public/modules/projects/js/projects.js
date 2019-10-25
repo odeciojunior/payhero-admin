@@ -257,6 +257,13 @@ $(() => {
         } else {
             supportphoneNotVerified();
         }
+
+        //select cartão de credito no checkout
+        // if (project.credit_card == 1) {
+        //     $('#credit_card .credit_card_yes').attr('selected', true);
+        // } else {
+        //     $('#credit_card .credit_card_no').attr('selected', true);
+        // }
     }
 
     function supportphoneVerified() {
