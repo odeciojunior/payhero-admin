@@ -104,7 +104,7 @@ class PlansApiController extends Controller
                 $project = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
-
+                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         $plan = $planModel->create($requestData);
@@ -112,7 +112,7 @@ class PlansApiController extends Controller
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
-                                $requestData['product_cost'][$keyProduct] = $this->getValue($requestData['product_cost'][$keyProduct]);
+                                $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
 
                                 $productPlan->create([
                                                          'product_id'         => $requestData['products'][$keyProduct],
@@ -239,6 +239,7 @@ class PlansApiController extends Controller
 
                     unset($requestData['project_id']);
                     $planId               = Hashids::decode($id)[0];
+                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
 
                     $plan = $planModel->where('id', $planId)->first();
@@ -260,7 +261,7 @@ class PlansApiController extends Controller
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
 
-                            $requestData['product_cost'][$keyProduct] = $this->getValue($requestData['product_cost'][$keyProduct]);
+                            $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
 
                             $productPlan->create([
                                                      'product_id'         => $requestData['products'][$keyProduct],

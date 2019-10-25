@@ -23,7 +23,7 @@
                 <hr class='display-lg-none display-xlg-none'>
                 <div id="products" class='card p-10 card-products'>
                     <div id="products_div_1" class="row products_div_1 mb-4">
-                        <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class='col-sm-9 col-md-9 col-lg-9'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
                                 <select id="product_1" name="products[]" class="form-control plan_product">
@@ -31,23 +31,23 @@
                                 </select>
                             </div>
                         </div>
-                        <div class='col-sm-4 col-md-3 col-lg-3'>
+                        <div class='col-sm-3 col-md-3 col-lg-3'>
                             <div class="form-group">
                                 <label>Quantidade:</label>
                                 <input class="form-control products_amount_create" type="text" name="product_amounts[]" id="products_amount" placeholder="quantidade" data-mask="0#" value="1">
                             </div>
                         </div>
-                        <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                        <div class="form-group col-sm-4 col-md-4 col-lg-4">
                             <label>Custo (<b>Un</b>):</label>
-                            <input value="" id="product_cost_1" class="form-control products_cost" type="text" data-mask='0#' name="product_cost[]" placeholder="Unitario">
+                            <input value="" id="product_cost_1" class="form-control products_cost products_cost_create" type="text" data-mask='0#' name="product_cost[]" placeholder="Unitario">
                         </div>
-                        <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                        <div class="form-group col-sm-5 col-md-5 col-lg-5">
                             <label>Custo Total:</label>
-                            <input value="" id="product_total_1" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Total" readonly>
+                            <input value="" id="product_total_1" class="form-control products_total products_total_create" type="text" data-mask='0#' name="product_total[]" placeholder="Total" readonly>
                         </div>
-                        <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                        <div class="form-group col-sm-3 col-md-3 col-lg-3">
                             <label>Moeda:</label>
-                            <select id="select_currency" class='form-control' name='currency[]'>
+                            <select id="select_currency" class='form-control select_currency_create' name='currency[]'>
                                 <option>BRL</option>
                                 <option>USD</option>
                             </select>
