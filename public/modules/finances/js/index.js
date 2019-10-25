@@ -338,8 +338,8 @@ $(document).ready(function () {
         };
 
         function updateWithdrawalsTable(link = null) {
-            loadOnTable('withdrawals-table-data', 'transfersTable');
             $("#withdrawals-table-data").html("");
+            loadOnTable('#withdrawals-table-data', '#transfersTable');
             if (link == null) {
                 link = '/api/withdrawals';
             } else {
@@ -383,6 +383,61 @@ $(document).ready(function () {
                 }
             });
         }
+    }
+
+    /**
+     * Module Finances - tab extract
+     */
+    function updateTransfersTable(link = null) {
+        $("#table-transfers-body").html('');
+
+        loadOnTable('#table-transfers-body', '#transfersTable');
+        if (link == null) {
+            link = '/transfers';
+        } else {
+            link = '/transfers' + link;
+        }
+        $.ajax({
+            method: "GET",
+            url: link,
+            data: {company: $("#extract_company_select option:selected").val()},
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+
+                $("#table-transfers-body").html('');
+
+                if (response.data == '') {
+
+                    $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
+                    $("#pagination-transfers").html("");
+                } else {
+                    data = '';
+
+                    $.each(response.data, function (index, value) {
+                        data += '<tr >';
+                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>' + '</a></td>';
+                        data += '<td style="vertical-align: middle;">' + value.date + '</td>';
+                        if (value.type_enum === 1) {
+                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';
+                        } else {
+                            data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
+                        }
+                        data += '</tr>';
+                    });
+
+                    $("#table-transfers-body").html(data);
+
+                    paginationTransfersTable(response);
+                }
+            }
+        });
 
         function paginationTransfersTable(response) {
             $("#pagination-transfers").html("");
@@ -434,58 +489,5 @@ $(document).ready(function () {
             }
             $('table').addClass('table-striped');
         }
-    }
-
-    /**
-     * Module Finances
-     */
-    function updateTransfersTable(link = null) {
-        loadOnTable('#table-transfers-body', '#transfersTable');
-        if (link == null) {
-            link = '/transfers';
-        } else {
-            link = '/transfers' + link;
-        }
-        $.ajax({
-            method: "GET",
-            url: link,
-            data: {company: $("#extract_company_select option:selected").val()},
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-
-                $("#table-transfers-body").html('');
-
-                if (response.data == '') {
-
-                    $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
-                    $("#pagination-transfers").html("");
-                } else {
-                    data = '';
-
-                    $.each(response.data, function (index, value) {
-                        data += '<tr >';
-                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>' + '</a></td>';
-                        data += '<td style="vertical-align: middle;">' + value.date + '</td>';
-                        if (value.type_enum === 1) {
-                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';
-                        } else {
-                            data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
-                        }
-                        data += '</tr>';
-                    });
-
-                    $("#table-transfers-body").html(data);
-
-                    paginationTransfersTable(response);
-                }
-            }
-        });
     }
 });
