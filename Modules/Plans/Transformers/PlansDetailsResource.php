@@ -16,7 +16,7 @@ class PlansDetailsResource extends Resource
                 'product_id'   => $productsPlan->product_id,
                 'product_name' => $productsPlan->product->name,
                 'amount'       => $productsPlan->amount,
-                'product_cost' => $productsPlan->cost,
+                'product_cost' => number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency'     => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
             ];
         }

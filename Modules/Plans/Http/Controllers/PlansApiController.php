@@ -104,7 +104,7 @@ class PlansApiController extends Controller
                 $project = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
-
+                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         $plan = $planModel->create($requestData);
