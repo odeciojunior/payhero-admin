@@ -114,8 +114,6 @@ class PlansApiController extends Controller
 
                                 $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
 
-                                //$this->getValue($requestData['product_cost'][$keyProduct]);
-
                                 $productPlan->create([
                                                          'product_id'         => $requestData['products'][$keyProduct],
                                                          'plan_id'            => $plan->id,
