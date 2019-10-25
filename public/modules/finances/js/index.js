@@ -215,7 +215,7 @@ $(document).ready(function () {
 
                                 $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
                                 $("#modal-withdrawal-bank").html('  ' + response.data.bank);
-                                $("#modal-withdrawal-agency").html('  ' + response.data.account);
+                                $("#modal-withdrawal-agency").html('  ' + response.data.agency);
                                 if (response.data.agency_digit != '' && response.data.agency_digit != null) {
 
                                     $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
