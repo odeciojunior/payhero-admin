@@ -55,6 +55,7 @@ class ProjectsResource extends Resource
             'installments_amount'        => $this->installments_amount,
             'installments_interest_free' => $this->installments_interest_free,
             'boleto'                     => $this->boleto,
+            'credit_card'                => $this->credit_card,
             'boleto_due_days'            => $this->boleto_due_days,
             'boleto_redirect'            => $this->boleto_redirect,
             'card_redirect'              => $this->card_redirect,

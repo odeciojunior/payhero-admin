@@ -45,8 +45,8 @@
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
-                                            <label for="fantasy_name">Nome Fantasia</label>
-                                            <input name="fantasy_name" value="" type="text" class="input-pad" id="fantasy_name" placeholder="Nome Fantasia" maxlength='40'>
+                                            <label for="fantasy_name">Razão Social</label>
+                                            <input name="fantasy_name" value="" type="text" class="input-pad" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="company_document">CNPJ</label>

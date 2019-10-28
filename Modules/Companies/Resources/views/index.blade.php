@@ -23,7 +23,7 @@
                     <table id="companies_table" class="table table-striped" style="width:100%;">
                         <thead>
                             <tr>
-                                <td class="table-title"><b>Nome fantasia</b></td>
+                                <td class="table-title"><b>Razão Social</b></td>
                                 <td class="table-title"><b>Documento</b></td>
                                 <td class="table-title"><b>Status</b></td>
                                 <td class="table-title" style="width: 130px">

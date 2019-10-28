@@ -79,7 +79,7 @@ $(function () {
                     });
 
                     //product
-                    $('#price').mask('#.###,#0', {reverse: true});
+                    //$('#price').mask('#.###,#0', {reverse: true});
                     var qtd_products = '1';
 
                     var div_products = $('#products_div_' + qtd_products).parent().clone();
@@ -146,6 +146,7 @@ $(function () {
                                 loadingOnScreenRemove();
                                 index();
                                 clearFields();
+                                bindModalKeys();
                                 alertCustom("success", "Plano Adicionado!");
                             }
                         });
@@ -165,6 +166,7 @@ $(function () {
             clearFields();
             $('#modal_add_plan').removeAttr('data-backdrop');
         });
+        bindModalKeys();
     });
 
     $("#btn-search-plan").on('click', function () {
@@ -215,6 +217,8 @@ $(function () {
 
                 if (isEmpty(response.data)) {
                     $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $('#table-plans').addClass('table-striped');
+
                 } else {
 
                     $("#data-table-plan").html('');
@@ -323,38 +327,40 @@ $(function () {
 
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
-                            $('#plan-price_edit').val(response.data.price.replace(/[^0-9]/g, ''));
+                            $('#plan-price_edit').val(response.data.price);
                             $('#plan-description_edit').val(response.data.description);
-                            $('#plan-price_edit').mask('#.###,#0', {reverse: true});
+                            //$('#plan-price_edit').mask('#.###,#0', {reverse: true});
 
                             if (response.data.products != undefined) {
                                 $.each(response.data.products, function (index, value) {
-                                    var product_total = value.product_cost * value.amount;
+                                    let productCost = value.product_cost.split(' ')
+                                    var product_total = productCost[1] * value.amount;
+                                    console.log('CUSTO DO PRODUTO = ' + String(value.product_cost))
                                     $('.products_row_edit').append(`
                                         <div class='card container '>
                                             <div id="products_div_edit" class="row">
-                                                <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                                                <div class="form-group col-sm-9 col-md-9 col-lg-9">
                                                     <label>Produtos do plano:</label>
-                                                    <select id="product_${index}" name="products[]" class="form-control products_edit">
+                                                    <select id="product_${index}" name="products[]" class="form-control products_edit plan_product">
                                                         <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
                                                      </select>
                                                 </div>
-                                                <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <div class="form-group col-sm-3 col-md-3 col-lg-3">
                                                     <label>Quantidade:</label>
-                                                    <input value="` + value.amount + `" id="product_amount_${index}" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                                    <input value="` + value.amount + `" id="product_amount_${index}" class="form-control products_amount products_amount_edit" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
                                                 </div>
-                                                <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <div class="form-group col-sm-4 col-md-4 col-lg-4">
                                                     <label>Custo (<b>Un</b>):</label>
-                                                    <input id="product_cost_${index}" class="form-control products_cost products_cost_update" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${value.product_cost}">
+                                                    <input id="product_cost_${index}" class="form-control products_cost products_cost_update products_cost_edit" type="text" data-mask='0#' name="product_cost[]" placeholder="custo unitario" value="${productCost[1]}">
                                                 </div>
-                                                <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                <div class="form-group col-sm-5 col-md-5 col-lg-5">
                                                     <label>Custo Total:</label>
-                                                    <input value="${product_total}" id="product_total_${index}" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
+                                                    <input value="${product_total}" id="product_total_${index}" class="form-control products_total products_total_edit" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                                 </div>
                                              
-                                                 <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                                 <div class="form-group col-sm-3 col-md-3 col-lg-3">
                                                     <label>Moeda:</label>
-                                                    <select id='select_currency_${index}' class='form-control select_currency' name='currency[]'>
+                                                    <select id='select_currency_${index}' class='form-control select_currency select_currency_edit' name='currency[]'>
                                                         <option value='BRL' selected >BRL</option>
                                                         <option value='USD' >USD</option>
                                                     </select>
@@ -374,7 +380,8 @@ $(function () {
                                 $.each(response.data.products, function (index, value) {
                                     $('#select_currency_' + index).val(value.currency);
                                 });
-                                $('.products_cost').bind('keyup', calcularTotal)
+                                // $('.products_cost').bind('keyup', calcularTotal)
+                                bindModalKeys();
                                 card_div_edit = $('.products_row_edit').find('#products_div_edit').first().clone();
                             } else {
                                 $('.products_row_edit').append(`
@@ -418,7 +425,7 @@ $(function () {
                                     $('#select_currency_' + index).val(value.currency);
                                 });
                                 bindModalKeys();
-                                $('.products_cost').bind('keyup', calcularTotal)
+                                // $('.products_cost').bind('keyup', calcularTotal)
                                 $.ajax({
                                     method: "POST",
                                     url: "/api/products/userproducts",
@@ -441,7 +448,7 @@ $(function () {
                                     }
                                 });
                             }
-                            $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                            $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
                             $.ajax({
                                 method: "POST",
@@ -493,7 +500,7 @@ $(function () {
                             });
 
                             //product
-                            $('#plan-price').mask('#.###,#0', {reverse: true});
+                            //$('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_products = '1';
 
                             $('.add_product_plan_edit').on('click', function () {
@@ -508,7 +515,7 @@ $(function () {
                                 div_products = new_div;
 
                                 $('.products_row_edit').append('<div class="card container"><div class="row">' + new_div.html() + '</div></div>');
-                                $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                                $('.products_cost').maskMoney({thousands: ',', decimal: '.', allowZero: true});
 
                                 $('.products_amount').mask('0#');
                                 bindModalKeys();
@@ -634,61 +641,154 @@ $(function () {
         });
     }
 
-    function calcularTotal() {
-        $('.products_cost, .products_amount_create').keyup(function () {
-            let quantidade = $(this).parent().parent().find('.products_amount_create').val()
-            if (quantidade == undefined) {
-                quantidade = $(this).parent().parent().find('.products_amount').val()
-            }
-            let valor = $(this).parent().parent().find('.products_cost').val()
+    /* $('.products_cost, .products_amount, .products_amount_create').change(function () {
+         calcularTotal(this)
+     })
 
-            valor = valor.replace(',', '')
-            valor = valor.replace('.', '')
-            valor = parseInt(valor);
+     function calcularTotal(element) {
+         let quantidade = $(element).parent().parent().find('.products_amount_create').val()
+         if (quantidade == undefined) {
+             quantidade = $(element).parent().parent().find('.products_amount').val()
+         }
+         let valor = $(element).parent().parent().find('.products_cost').maskMoney('unmasked')[0];
 
-            var total = (quantidade * valor) / 100
-            let moeda = $(this).parent().parent().find('[name="currency[]"]').val()
-            let custoTotal = defineMoeda(total, moeda)
+         let moeda = $(element).parent().parent().find('[name="currency[]"]').val()
+         let custoTotal = defineMoeda(quantidade, valor, moeda, element)
+     }
 
-            $(this).parent().parent().find('.products_total').val(custoTotal)
-        })
+     function defineMoeda(quantidade, valor, moeda, element) {
+         let total = quantidade * valor;
+         let valorFormatado;
+         switch (moeda) {
+             case 'USD':
+                 valorFormatado = total.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
+                 valor = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
+                 $(element).parent().parent().find('.products_cost, .products_cost_update').maskMoney({prefix: 'US$'});
+                 break;
+             case 'BRL':
+                 valorFormatado = total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                 valor = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                 $(element).parent().parent().find('.products_cost, .products_cost_update').maskMoney({prefix: 'R$'});
+                 break;
+             default:
+                 valorFormatado = total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                 valor = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                 $(element).parent().parent().find('.products_cost, .products_cost_update').maskMoney({prefix: 'R$'});
+                 break;
+         }
+
+         $(element).parent().parent().find('.products_total').val(valorFormatado)
+         $(element).parent().parent().find('.products_cost').val(valor)
+         return valorFormatado;
+     }
+
+     $('.products_cost, .products_amount_create').keyup(function () {
+         let quantidade = $(this).parent().parent().find('.products_amount_create').val()
+         let valor = $(this).parent().parent().find('.products_cost').val()
+         $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
+     })*/
+
+    ////////////////////       NOVA LOGICA         ////////////////////////
+
+    function getElementsEdit(element) {
+        let custoUnitario = $(element).parent().parent().find('.products_cost_edit')
+        let custoTotal = $(element).parent().parent().find('.products_total_edit')
+        let moeda = $(element).parent().parent().find('.select_currency_edit')
+        let quantidade = $(element).parent().parent().find('.products_amount_edit')
+
+        calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
+        // console.log(custoUnitario.val() + ' -- ' + custoTotal.val() + ' -- ' + moeda.val() + ' -- ' + quantidade.val())
+    }
+    function getElementsCreate(element) {
+        let custoUnitario = $(element).parent().parent().find('.products_cost_create')
+        let custoTotal = $(element).parent().parent().find('.products_total_create')
+        let moeda = $(element).parent().parent().find('.select_currency_create')
+        let quantidade = $(element).parent().parent().find('.products_amount_create')
+
+        calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
+        // console.log(custoUnitario.val() + ' -- ' + custoTotal.val() + ' -- ' + moeda.val() + ' -- ' + quantidade.val())
+    }
+    function clickElementEdit(element) {
+        $(element).parent().parent().find('.products_cost_edit').focus();
+    }
+    function clickElementCreate(element) {
+        $(element).parent().parent().find('.products_cost_create').focus();
+        console.log($(element).parent().parent().find('.products_cost_create'))
     }
 
-    function defineMoeda(valor, moeda) {
-        let valorFormatado;
-        switch (moeda) {
+    function calculateTotal(custoUnitario, custoTotal, moeda, quantidade) {
+        let valorCusto = custoUnitario.maskMoney('unmasked')[0];
+        console.log(valorCusto)
+        let valorQuantidade = $(quantidade).val();
+        let valorTotal = valorCusto * valorQuantidade
+
+        setCurrency(custoUnitario, custoTotal, moeda, valorTotal)
+        // console.log(valorCusto + ' --- ' + valorQuantidade + ' --- ' + valorTotal);
+    }
+
+    function setCurrency(custoUnitario, custoTotal, moeda, valorTotal) {
+        let formatedValue;
+        let unitaryValue = custoUnitario.val();
+
+        switch (moeda.val()) {
             case 'USD':
-                valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
+                formatedValue = valorTotal.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
+                unitaryValue = unitaryValue.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
+                custoUnitario.maskMoney({prefix: 'US$'});
                 break;
             case 'BRL':
-                valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                formatedValue = valorTotal.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                unitaryValue = unitaryValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                custoUnitario.maskMoney({prefix: 'R$'});
                 break;
             default:
-                valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                formatedValue = valorTotal.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                unitaryValue = unitaryValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                custoUnitario.maskMoney({prefix: 'R$'});
                 break;
         }
-        return valorFormatado;
+
+        custoUnitario.val(unitaryValue)
+        custoTotal.val(formatedValue)
+
     }
-
-    $('.products_cost, .products_amount_create').keyup(function () {
-        let quantidade = $(this).parent().parent().find('.products_amount_create').val()
-        let valor = $(this).parent().parent().find('.products_cost').val()
-        $(this).parent().parent().find('.products_total').val(parseFloat(quantidade * valor))
-    })
-
-    $('.products_cost').maskMoney({thousands: '.', decimal: ',', allowZero: true});
 
     function bindModalKeys() {
 
-        $('.products_cost').bind('keyup')
-        $('.products_cost').bind('keydown')
-        $('.products_cost').bind('click')
+        $(document).on('change', '.select_currency_create', function () {
+            getElementsCreate(this)
+            clickElementCreate(this)
+        })
+        $(document).on('keyup', '.products_cost_create, .products_total_create', function () {
+            getElementsCreate(this)
+        })
+        $(document).on('change', '.select_currency_edit', function () {
+            getElementsEdit(this)
+            clickElementEdit(this)
+        })
 
-        $('.products_amount_create').bind('keyup')
-        $('.products_amount_create').bind('keydown')
-        $('.products_amount_create').bind('click')
+        $(document).on('keyup', '.products_cost_edit, .products_total_edit', function () {
+            getElementsEdit(this)
+        })
 
+        //o fluxo do product amount deve começar diferente ... algo no html faz com que o seletor o trate um pouco diferente dos outros inputs
+        $(document).on('change', '.products_amount_create', function () {
+            getElementsCreate($(this).parent())
+        })
+        $(document).on('change', '.products_amount_edit', function () {
+            getElementsEdit($(this).parent())
+        })
+
+        //quando um novo registro for inserido na tela e for necessario a edição, esta funçao sera necessaria para vincular o bindModalkeys() aos campos da modal
+        $(document).on('click', '.edit-plan', function () {
+            bindModalKeys();
+        })
+
+        $('.products_cost_create, .products_cost_edit').maskMoney({thousands: ',', decimal: '.', allowZero: true});
+        $('#plan-price_edit, #price').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: 'R$'});
+        if ($('.products_cost_create, .products_cost_edit').val() == undefined || $('.products_cost_create, .products_cost_edit').val() == null) {
+            $('.products_cost_create, .products_cost_edit').maskMoney('mask', 0.00);
+        }
     }
-
 })
 ;

@@ -14,8 +14,8 @@
                             <option value="facebook">Facebook</option>
                             <option value="google_adwords">Google Adwords</option>
                             <option value="google_analytics">Google Analytics</option>
-                            <option value="null" disabled='disabled'>Taboola (em breve)</option>
-                            <option value="null" disabled='disabled'>Outbrain (em breve)</option>
+                            <option value="taboola">Taboola</option>
+                            <option value="outbrain">Outbrain</option>
                         </select>
                     </div>
                     <div class="form-group col-6">
