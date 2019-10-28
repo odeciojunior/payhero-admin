@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -29,7 +31,8 @@ class PostBackPerfectLogController extends Controller
 
         $productPlanSaleModel = new ProductPlanSale();
 
-        $productPlanSale = $productPlanSaleModel->find(current(Hashids::decode($requestValidated['external_reference'])));
+        $productPlanSale = $productPlanSaleModel->with(['sale'])
+            ->find(current(Hashids::decode($requestValidated['external_reference'])));
 
         if(isset($productPlanSale)){
 
@@ -39,19 +42,19 @@ class PostBackPerfectLogController extends Controller
                 //case 'preparation':
                 case 'sent':
                 case 'resend':
-                    $status = $productPlanSaleModel->present()->getStatusEnum('dispatched');
+                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('dispatched');
                     break;
                 case 'delivered':
-                    $status = $productPlanSaleModel->present()->getStatusEnum('delivered');
+                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('delivered');
                     break;
                 case 'out_for_delivery':
-                    $status = $productPlanSaleModel->present()->getStatusEnum('out_for_delivery');
+                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('out_for_delivery');
                     break;
                 case 'canceled':
                 case 'pending':
                 case 'erro_fiscal':
                 case 'returned':
-                    $status = $productPlanSaleModel->present()->getStatusEnum('exception');
+                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('exception');
                     break;
             }
 
@@ -62,8 +65,10 @@ class PostBackPerfectLogController extends Controller
             ]);
 
             //NOTIFICAR O USUARIO
+            $productService = new ProductService();
+            $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($productPlanSale->sale->id));
+            event(new TrackingCodeUpdatedEvent($productPlanSale->sale, $productPlanSale, $saleProducts));
 
-            //event(new TrackingCodeUpdatedEvent($sale));
         }
 
         return response()->json(['message' => 'ok']);

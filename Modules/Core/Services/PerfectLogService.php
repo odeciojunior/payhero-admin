@@ -22,13 +22,13 @@ class PerfectLogService
     {
         $data = [
             'external_reference' => $productPlanSaleId,
-            'response_webhook_url' => 'http://dev.cloudfox.com.br/api/postback/perfectlog',
+            'response_webhook_url' => 'http://dev.cloudfox.com.br/postback/perfectlog',
             'tracking' => $trackingNumber,
             'token_user' => self::API_USER_TOKEN,
             'system' => self::API_SYSTEM_TOKEN,
         ];
 
-        $result = $this->call('/api/Ws/PerfectLog/PerfectLogWs/receivedWebhook', $data, 'POST');
+        $result = $this->call('/api/tracking', $data, 'POST');
 
         return json_decode($result);
     }
