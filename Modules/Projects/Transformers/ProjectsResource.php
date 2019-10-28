@@ -55,11 +55,12 @@ class ProjectsResource extends Resource
             'installments_amount'        => $this->installments_amount,
             'installments_interest_free' => $this->installments_interest_free,
             'boleto'                     => $this->boleto,
+            'credit_card'                => $this->credit_card,
             'boleto_due_days'            => $this->boleto_due_days,
             'boleto_redirect'            => $this->boleto_redirect,
             'card_redirect'              => $this->card_redirect,
             'analyzing_redirect'         => $this->analyzing_redirect,
-            'shopify_id'                 => $this->shopify_id,
+            'cost_currency_type'         => $this->present()->getCurrencyCost($this->cost_currency_type),
             'status'                     => isset($this->domains[0]->name) ? 1 : 0,
         ];
     }

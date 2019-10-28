@@ -207,9 +207,9 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="brasil_fantasy_name">Nome Fantasia</label>
+                                    <label for="brasil_fantasy_name">Razão Social</label>
                                     <p class='sm-tex text-danger' id='brasilFantasyNameError' style='display:none;'>Documeto inválido</p>
-                                    <input type="text" name="fantasy_name" id="brasil_fantasy_name" placeholder="Digite o nome fantasia" required>
+                                    <input type="text" name="fantasy_name" id="brasil_fantasy_name" placeholder="Digite a Razão Social" required>
                                 </div>
                             </div>
                         </div>

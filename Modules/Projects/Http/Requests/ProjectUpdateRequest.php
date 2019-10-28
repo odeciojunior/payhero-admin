@@ -30,6 +30,7 @@ class ProjectUpdateRequest extends FormRequest
             "installments_amount"        => "nullable",
             "installments_interest_free" => "nullable",
             "boleto"                     => "nullable",
+            "credit_card"                => "nullable",
             "boleto_due_days"            => "nullable",
             "logo_x1"                    => "nullable",
             "logo_y1"                    => "nullable",
@@ -39,6 +40,7 @@ class ProjectUpdateRequest extends FormRequest
             "photo"                      => 'nullable',
             "logo"                       => 'nullable',
             "support_phone"              => 'nullable',
+            "cost_currency_type"         => 'required|string|max:5',
         ];
     }
 

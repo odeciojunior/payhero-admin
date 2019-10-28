@@ -281,6 +281,8 @@ class ProjectsApiController extends Controller
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
+                    $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+
                     $projectUpdate  = $project->fill($requestValidated)->save();
                     $projectChanges = $project->getChanges();
                     if (isset($projectChanges["support_phone"])) {
@@ -416,21 +418,25 @@ class ProjectsApiController extends Controller
     public function verifySupportphone($projectId, Request $request)
     {
         try {
-            $project      = Project::find(Hashids::decode($projectId))->first();
-            $supportPhone = $project->support_phone ?? null;
-            if (empty($supportPhone)) {
+            $data         = $request->all();
+            $supportPhone = $data["support_phone"] ?? null;
+            if (FoxUtils::isEmpty($supportPhone)) {
                 return response()->json(
                     [
                         'message' => 'Telefone não pode ser vazio!',
                     ], 400);
             }
-            $supportPhone = FoxUtils::prepareCellPhoneNumber($supportPhone);
+            $project = Project::find(Hashids::decode($projectId))->first();
+            if ($supportPhone != $project->support_phone) {
+                $project->support_phone = $supportPhone;
+                $project->save();
+            }
 
             $verifyCode = random_int(100000, 999999);
 
             /** @var DisparoProService $disparoPro */
             $disparoPro = app(DisparoProService::class);
-            $disparoPro->sendMessage($supportPhone, "Código de verificação CloudFox - " . $verifyCode);
+            $disparoPro->sendMessage(FoxUtils::prepareCellPhoneNumber($supportPhone), "Código de verificação CloudFox - " . $verifyCode);
 
             return response()->json(
                 [
@@ -491,26 +497,25 @@ class ProjectsApiController extends Controller
 
     /**
      * @param $projectId
+     * @param Request $request
      * @return JsonResponse
      */
-    public function verifyContact($projectId)
+    public function verifyContact($projectId, Request $request)
     {
         try {
-            $project = Project::find(Hashids::decode($projectId))->first();
-            $contact = $project->contact ?? null;
-            if (empty($contact)) {
+            $data    = $request->all();
+            $contact = $data["contact"] ?? null;
+            if (FoxUtils::isEmpty($contact)) {
                 return response()->json(
                     [
                         'message' => 'Email não pode ser vazio!',
                     ], 400);
             }
 
-            $contact = "faustogmjr@gmail.com";
-            if (!FoxUtils::validateEmail($contact)) {
-                return response()->json(
-                    [
-                        'message' => 'Email inválido!',
-                    ], 400);
+            $project = Project::find(Hashids::decode($projectId))->first();
+            if ($contact != $project->contact) {
+                $project->contact = $contact;
+                $project->save();
             }
 
             $verifyCode = random_int(100000, 999999);

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\TrackingHistory;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\PerfectLogService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -40,9 +41,10 @@ class TrackingsApiController extends Controller
                         if ($trackingCodeupdated) {
 
                             //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                            $sale = $saleModel->find($saleId);
+                            $saleProducts = $productService->getProductsBySale($data['sale_id']);
+                            event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($productPlanSale->id), $data['tracking_code']);
 
@@ -78,9 +80,10 @@ class TrackingsApiController extends Controller
                                                           ]);
 
                             //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                            $sale = $saleModel->find($saleId);
+                            $saleProducts = $productService->getProductsBySale($data['sale_id']);
+                            event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($productPlanSale->id), $data['tracking_code']);
 

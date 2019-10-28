@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Core\Entities\PostbackLog;
@@ -41,23 +42,15 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-        $checkoutModel = new Checkout();
+        // $shoifyIntegrationModel = new ShopifyIntegration();
 
-        $checkouts = $checkoutModel->where('email_sent_amount', '>' , 10)->get();
+        // $shopifyService = new ShopifyService('howzeinsud.myshopify.com', '1d3690c109481a620361d6e9190cdb1f');
 
-        foreach($checkouts as $checkout){
-            $checkout->update([
-                'email_sent_amount' => '4'
-            ]);
-        }
+        // $shopifyService->createShopWebhook();
 
-        $checkouts = $checkoutModel->where('sms_sent_amount', '>' , 10)->get();
+        // dd($shopifyService->getShopWebhook());
 
-        foreach($checkouts as $checkout){
-            $checkout->update([
-                'sms_sent_amount' => '2'
-            ]);
-        }
+        $string = "Carregádor 4 em 1 Para Iphones , Android , Apple Watchs e Airpods.ɸ";
 
     }
 

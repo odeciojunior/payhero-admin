@@ -16,7 +16,6 @@ class TrackingCodeUpdatedSendEmailClientListener
     public function handle(TrackingCodeUpdatedEvent $event)
     {
         $sendGridService = new SendgridService();
-        $saleService     = new SaleService();
         $domainModel     = new Domain();
 
         $clientName      = $event->sale->client->name;
@@ -27,14 +26,16 @@ class TrackingCodeUpdatedSendEmailClientListener
         $clientNameExploded = explode(' ', $clientName);
         $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
 
-        $data = [
-            'name'            => $clientNameExploded[0],
-            'project_logo'    => $event->sale->project->logo,
-            'tracking_code'   => $event->productPlanSale->tracking_code,
-            'project_contact' => $projectContact,
-            "products"        => $event->products,
-        ];
+        if(isset($domain)){
+            $data = [
+                'name'            => $clientNameExploded[0],
+                'project_logo'    => $event->sale->project->logo,
+                'tracking_code'   => $event->productPlanSale->tracking_code,
+                'project_contact' => $projectContact,
+                "products"        => $event->products,
+            ];
 
-        $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+            $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+        }
     }
 }

@@ -89,16 +89,6 @@ class SalesApiController extends Controller
             );
 
             $header = [
-                //plan
-                'Projeto',
-                'Plano',
-                'Código dos produtos',
-                'Produtos',
-                'Id do Shopify',
-                'Id da Variante do Shopify',
-                'Quantidade dos Produtos',
-                'Preço',
-                'SKU',
                 //sale
                 'Código da Venda',
                 'Pedido do Shopify',
@@ -114,9 +104,18 @@ class SalesApiController extends Controller
                 'Valor Total Venda',
                 'Frete',
                 'Valor do Frete',
-                'Desconto Shopify',
                 'Taxas',
                 'Comissão',
+                //plan
+                'Projeto',
+                'Plano',
+                'Preço do Plano',
+                'Código dos produtos',
+                'Produto',
+                'Id do Shopify',
+                'Id da Variante do Shopify',
+                'Quantidade dos Produtos',
+                'SKU',
                 //client
                 'Nome do Cliente',
                 'Telefone do Cliente',
@@ -142,29 +141,8 @@ class SalesApiController extends Controller
 
             $saleData = collect();
             foreach ($salesResult as $sale) {
-
-                foreach ($sale->plansSales as $planSale) {
-
-                    $product_id = $sale->products->map(function($item){
-                        return '#' . Hashids::encode($item->id);
-                    })->implode(' - ');
-                    $product_name= $sale->products->unique('name')->implode('name',' - ');
-                    $shopify_id = $sale->products->unique('shopify_id')->implode('shopify_id',' - ');
-                    $shopify_variant_id = $sale->products->implode('shopify_variant_id', ' - ');
-                    $sku = $sale->products->where('sku', '!=', null)->implode('sku', ' - ');
-                    $amount = $sale->products->implode('amount', ' - ');
-
+                foreach ($sale->products as $product) {
                     $saleArray = [
-                        //plan
-                        'project_name' => $sale->project->name ?? '',
-                        'plan'=> $planSale->plan->name,
-                        'product_id' => $product_id,
-                        'products' => $product_name,
-                        'product_shopify_id' => $shopify_id,
-                        'product_shopify_variant_id' => $shopify_variant_id,
-                        'amount' => $amount,
-                        'price' => $planSale->plan->price,
-                        'sku' => $sku,
                         //sale
                         'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
                                 ->encode($sale->id)),
@@ -175,15 +153,24 @@ class SalesApiController extends Controller
                         'boleto_link' => $sale->boleto_link ?? '',
                         'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
                         'boleto_due_date' => $sale->boleto_due_date,
-                        'start_date' => $sale->start_date  . ' ' . $sale->hours,
+                        'start_date' => $sale->start_date . ' ' . $sale->hours,
                         'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
                         'status' => $sale->present()->getStatus(),
                         'total_paid' => $sale->total_paid_value ?? '',
                         'shipping' => $sale->shipping->name ?? '',
                         'shipping_value' => $sale->shipping->value ?? '',
-                        'shopify_discount' => $sale->shopify_discount ?? '',
                         'fee' => $sale->details->taxaReal,
                         'comission' => $sale->details->comission,
+                        //plan
+                        'project_name' => $sale->project->name ?? '',
+                        'plan' => $product->plan_name,
+                        'price' => $product->plan_price,
+                        'product_id' => '#'. Hashids::encode($product->id),
+                        'product' => $product->name . ($product->description ? ' (' . $product->description . ')' : ''),
+                        'product_shopify_id' => $product->shopify_id,
+                        'product_shopify_variant_id' => $product->shopify_variant_id,
+                        'amount' => $product->amount,
+                        'sku' => $product->sku,
                         //client
                         'client_name' => $sale->client->name ?? '',
                         'client_telephone' => $sale->client->telephone ?? '',
@@ -209,7 +196,7 @@ class SalesApiController extends Controller
                 }
             }
 
-            return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.' . $dataRequest['format']);
+            return Excel::download(new SaleReportExport($saleData, $header), 'export.' . $dataRequest['format']);
         } catch (Exception $e) {
             report($e);
 

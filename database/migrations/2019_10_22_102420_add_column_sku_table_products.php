@@ -13,9 +13,9 @@ class AddColumnSkuTableProducts extends Migration
      */
     public function up()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->decimal('sku', 8, 2)->nullable()->after('shopify_variant_id');
-        });
+//        Schema::table('products', function(Blueprint $table) {
+//            $table->string('sku')->nullable()->after('shopify_variant_id');
+//        });
     }
 
     /**
@@ -25,8 +25,8 @@ class AddColumnSkuTableProducts extends Migration
      */
     public function down()
     {
-        Schema::table('products', function(Blueprint $table) {
-            $table->dropColumn('sku');
-        });
+//        Schema::table('products', function(Blueprint $table) {
+//            $table->dropColumn('sku');
+//        });
     }
 }

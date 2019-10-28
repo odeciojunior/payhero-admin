@@ -107,11 +107,13 @@ class SaleService
             $userCompanies = $sales->pluck('company_id');
             $sales->map(function ($item) use ($userCompanies){
                 $item->sale->products = collect();
+                $this->getDetails($item->sale, $userCompanies);
                 foreach ($item->sale->plansSales as &$planSale) {
                     $plan = $planSale->plan;
-                    $this->getDetails($item->sale, $userCompanies);
                     foreach ($plan->productsPlans as $productPlan) {
                         $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
+                        $productPlan->product['plan_name'] = $plan->name;
+                        $productPlan->product['plan_price'] = $plan->price;
                         $item->sale->products->add($productPlan->product);
                     }
                 }
