@@ -335,7 +335,7 @@ $(function () {
                                 $.each(response.data.products, function (index, value) {
                                     let productCost = value.product_cost.split(' ')
                                     var product_total = productCost[1] * value.amount;
-                                    console.log('CUSTO DO PRODUTO = ' + String(value.product_cost))
+                                    // console.log('CUSTO DO PRODUTO = ' + String(value.product_cost))
                                     $('.products_row_edit').append(`
                                         <div class='card container '>
                                             <div id="products_div_edit" class="row">
@@ -713,12 +713,12 @@ $(function () {
     }
     function clickElementCreate(element) {
         $(element).parent().parent().find('.products_cost_create').focus();
-        console.log($(element).parent().parent().find('.products_cost_create'))
+        // console.log($(element).parent().parent().find('.products_cost_create'))
     }
 
     function calculateTotal(custoUnitario, custoTotal, moeda, quantidade) {
         let valorCusto = custoUnitario.maskMoney('unmasked')[0];
-        console.log(valorCusto)
+        // console.log(valorCusto)
         let valorQuantidade = $(quantidade).val();
         let valorTotal = valorCusto * valorQuantidade
 
