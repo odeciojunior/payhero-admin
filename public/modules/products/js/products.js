@@ -50,6 +50,12 @@ $(document).ready(function () {
 
                     $("#name").val(response.data.product.name);
                     $("#description").text(response.data.product.description);
+                    if(!isEmpty(response.data.product.sku)){
+                        $('#sku input').val(response.data.product.sku);
+                        $('#sku').show();
+                    }else{
+                        $('#sku').hide();
+                    }
                     $("#cost").unmask().val(response.data.product.cost).mask('000.000.000.000.000,00', {reverse: true});
                     $("#price").unmask().val(response.data.product.price).mask('000.000.000.000.000,00', {reverse: true});
                     $("#height").unmask().val(response.data.product.height);
