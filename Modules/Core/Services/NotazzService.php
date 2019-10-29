@@ -121,14 +121,15 @@ class NotazzService
                                                                    ->first()->productsPlanSales->where('sale_id', $sale->id)
                                                                                                ->first();
                     $product                         = $productPlan->product()->first();
+                    $tracking = $productPlanSale->trackings->last();
                     $product['product_cost']         = $productPlan->cost ?? $product->cost;
                     $product['product_plan_sale_id'] = $productPlanSale->id;
                     $product['sale_status']          = $sale->status;
                     $product['amount']               = $productPlan->amount * $planSale->amount;
-                    $product['tracking_code']        = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
-                    $product['tracking_status_enum'] = $productPlanSale ? $productPlanSale->tracking_status_enum != null ?
-                        Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                                                                                                                    ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                    $product['tracking_code']        = $tracking ? $tracking->tracking_code ?? '' : '';
+                    $product['tracking_status_enum'] = $tracking ? $tracking->tracking_status_enum != null ?
+                        Lang::get('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                                                                                                                    ->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado' : 'Não informado';
                     $productsSale->add($product);
                 }
             }

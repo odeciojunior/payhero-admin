@@ -12,11 +12,11 @@ class TrackingResource extends Resource
         return [
             'tracking_code' => $this->tracking_code,
             'tracking_status_enum' => $this->tracking_status_enum,
-            'tracking_status' => $this->tracking_status_enum ? __('definitions.enum.product_plan_sale.tracking_status_enum.' . $this->present()->getTrackingStatusEnum($this->tracking_status_enum)) : 'Não informado',
-            'sale' => Hashids::connection('sale_id')->encode($this->sale->id),
+            'tracking_status' => $this->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->present()->getTrackingStatusEnum($this->tracking_status_enum)) : 'Não informado',
+            'sale' => Hashids::connection('sale_id')->encode($this->productPlanSale->sale->id),
             'product' => [
-                'name' => $this->product->name,
-                'photo' => $this->product->photo,
+                'name' => $this->productPlanSale->product->name,
+                'photo' => $this->productPlanSale->product->photo,
             ]
         ];
     }

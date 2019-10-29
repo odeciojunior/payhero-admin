@@ -4,8 +4,8 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\Core\Entities\Delivery;
-use Modules\Core\Entities\PlanSale;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\TrackingPresenter;
 
 /**
  * @property integer $id
@@ -26,6 +26,9 @@ use Modules\Core\Entities\PlanSale;
  */
 class Tracking extends Model
 {
+    use PresentableTrait;
+    protected $presenter = TrackingPresenter::class;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -38,8 +41,8 @@ class Tracking extends Model
         'product_plan_sale_id',
         'plans_sale_id',
         'delivery_id',
-        'tracking_date',
-        'description',
+        'tracking_code',
+        'tracking_status_enum',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -67,5 +70,10 @@ class Tracking extends Model
     public function productPlanSale()
     {
         return $this->belongsTo(ProductPlanSale::class);
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(TrackingHistory::class);
     }
 }
