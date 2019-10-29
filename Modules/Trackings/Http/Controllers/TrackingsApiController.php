@@ -7,15 +7,56 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
+use Modules\Trackings\Transformers\TrackingResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
 {
+    public function index(Request $request){
+        try{
+            $productPlanSaleModel = new ProductPlanSale();
+            $companyModel = new Company();
+
+            $data = $request->all();
+
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                ->pluck('id')
+                ->toArray();
+
+            $productPlanSales = $productPlanSaleModel
+                ->with([
+                        'sale.transactions',
+                        'product'
+                    ])
+                ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
+                    $query->whereIn('company_id', $userCompanies);
+                })
+                ->whereNotNull('tracking_code');
+
+            if(isset($data['status'])){
+                $productPlanSales->where('tracking_status_enum', $productPlanSaleModel->present()->getTrackingStatusEnum($data['status']));
+            }
+
+            if(isset($data['tracking_code'])){
+                $productPlanSales->where('tracking_code', 'like', '%' . $data['tracking_code'] . '%');
+            }
+
+            return TrackingResource::collection($productPlanSales->orderBy('id', 'desc')->paginate(10));
+
+        }catch (Exception $e) {
+            Log::warning('Erro ao exibir códigos de rastreio (TrackingApiController - index)');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao exibir códigos de rastreio'], 400);
+        }
+    }
+
     public function store(Request $request)
     {
         try {

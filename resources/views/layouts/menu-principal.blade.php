@@ -130,6 +130,12 @@
             </ul>
         </li>
         <li class="site-menu-item has-sub">
+            <a href="/trackings" id="trackings-link">
+                <i class="material-icons">local_shipping</i>
+                <span class="site-menu-title">Rastreamentos</span>
+            </a>
+        </li>
+        <li class="site-menu-item has-sub">
             <a href="/projects" id="projects-link">
                 <i class="material-icons">style</i>
                 <span class="site-menu-title">Projetos</span>
