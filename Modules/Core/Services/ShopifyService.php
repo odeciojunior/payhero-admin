@@ -428,7 +428,7 @@ class ShopifyService
             }
         }
 
-        if ($cartForm) {
+        if ($cartForm ?? null) {
 
             $inputUpdate   = new Selector('button[name=checkout]', new Parser());
             $inputsUpdates = $inputUpdate->find($cartForm);
@@ -547,7 +547,7 @@ class ShopifyService
             }
         }
 
-        if ($cartForm) {
+        if ($cartForm ?? null) {
             //div Foxdata
             $divFoxData = new Selector('#foxData', new Parser());
             $divs       = $divFoxData->find($cartForm);
@@ -598,7 +598,7 @@ class ShopifyService
             }
         }
 
-        if ($cartForm) {
+        if ($cartForm ?? null) {
 
             //div Foxdata
             $divFoxData = new Selector('#foxData', new Parser());

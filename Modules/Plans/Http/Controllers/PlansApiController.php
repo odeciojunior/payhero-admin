@@ -113,6 +113,10 @@ class PlansApiController extends Controller
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
                                 $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
+                                if(empty($requestData['product_cost'][$keyProduct]))
+                                {
+                                    $requestData['product_cost'][$keyProduct] = 0;
+                                }
 
                                 $productPlan->create([
                                                          'product_id'         => $requestData['products'][$keyProduct],

@@ -106,6 +106,8 @@ return [
                 "posted"     => "Postado",
                 "dispatched" => "Despachado",
                 "delivered"  => "Entregue",
+                "out_for_delivery" => "Saiu para entrega",
+                "exception"        => "Problema na entrega"
             ],
         ],
         "invoices"        => [

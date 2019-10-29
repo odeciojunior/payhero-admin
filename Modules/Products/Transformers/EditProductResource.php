@@ -19,6 +19,7 @@ class EditProductResource extends Resource
             'name'        => $this->resource['product']->name,
             'photo'       => $this->resource['product']->photo ?? 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png',
             'description' => $this->resource['product']->description,
+            'sku'         => $this->resource['product']->sku,
             'category_id' => Hashids::encode($this->resource['product']->category_id),
             'shopify_id'  => $this->resource['product']->shopify_id,
             'cost'        => $this->resource['product']->cost,
