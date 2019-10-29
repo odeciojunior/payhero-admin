@@ -62,7 +62,8 @@ class BoletoService
                     /** @var Checkout $checkoutModel */
                     $checkoutModel = new Checkout();
                     /** @var Checkout $checkout */
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
+                    //                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->find($boleto->checkout_id);
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
 
@@ -87,8 +88,10 @@ class BoletoService
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $saleService->getProducts($boleto->id);
-                    $project  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project  = $projectModel->find($boleto->project_id);
+                    $domain   = $domainModel->where('project_id', $project->id)->where('status', $domainModel->present()
+                                                                                                             ->getStatus('approved'))
+                                            ->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -104,8 +107,8 @@ class BoletoService
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
                     if (!empty($link) && !empty($telephoneValidated)) {
                         DisparoProService::sendMessage($telephoneValidated, 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link);
-                       /* $zenviaSms = new ZenviaSmsService();
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
+                        /* $zenviaSms = new ZenviaSmsService();
+                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
                         $checkout->increment('sms_sent_amount');
                     }
 
