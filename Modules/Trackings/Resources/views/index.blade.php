@@ -36,7 +36,7 @@
                         <select name='status' id="status" class="form-control select-pad">
                             <option value="">Todos</option>
                             <option value="posted">Postado</option>
-                            <option value="dispatched">Despachado</option>
+                            <option value="dispatched">Em trânsito</option>
                             <option value="delivered">Entregue</option>
                             <option value="out_for_delivery">Saiu para entrega</option>
                             <option value="exception">Problema na entrega</option>
@@ -57,8 +57,8 @@
                     <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
                         <thead>
                         <tr>
-                            <td class="table-title">Produto</td>
                             <td class="table-title">Venda</td>
+                            <td class="table-title">Produto</td>
                             <td class="table-title">Rastreio</td>
                             <td class="table-title">Status</td>
                         </tr>

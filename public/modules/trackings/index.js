@@ -40,11 +40,11 @@ $(() => {
                 $('#tabela_trackings').addClass('table-striped');
                 $.each(response.data, function (index, tracking) {
                     let dados = `<tr>
+                                     <td class="detalhes_venda pointer" venda="${tracking.sale}">#${tracking.sale}</td>
                                      <td>
                                          <img style="width: 35px; margin-right: 10px;" src="${tracking.product.photo}"/>
                                          ${tracking.product.name}
                                      </td>
-                                     <td class="detalhes_venda pointer" venda="${tracking.sale}">#${tracking.sale}</td>
                                      <td class="copy pointer" title="Copiar código">${tracking.tracking_code}</td>
                                      <td>
                                         <span class="badge badge-${tracking.tracking_status_enum === 3 ? 'success': tracking.tracking_status_enum === 5 ? 'danger' : 'primary'}">${tracking.tracking_status}</span>
