@@ -254,16 +254,16 @@
                         </p>
                     </div>
                     <div class='col-md-8'></div>
-{{--                    <div class='form-group col-md-6 col-sm-12'>--}}
-{{--                        <label for="credit_card">Cartão de crédito no checkout</label>--}}
-{{--                        <select name='credit_card' class='form-control select-pad' id="credit_card">--}}
-{{--                            <option value='1' class='credit_card_yes'>Sim</option>--}}
-{{--                            <option value='0' class='credit_card_no'>Não</option>--}}
-{{--                        </select>--}}
-{{--                        <p class='info pt-5' style='font-size: 10px;'>--}}
-{{--                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for="credit_card">Cartão de crédito no checkout</label>
+                        <select name='credit_card' class='form-control select-pad' id="credit_card">
+                            <option value='1' class='credit_card_yes'>Sim</option>
+                            <option value='0' class='credit_card_no'>Não</option>
+                        </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout
+                        </p>
+                    </div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                         <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad' type='text'

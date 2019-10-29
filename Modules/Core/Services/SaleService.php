@@ -10,6 +10,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -103,20 +105,21 @@ class SaleService
             $sales = $transactions->orderBy('id', 'DESC')->get();
         }
 
-        if($withProducts){
+        if ($withProducts) {
             $userCompanies = $sales->pluck('company_id');
-            $sales->map(function ($item) use ($userCompanies){
+            $sales->map(function($item) use ($userCompanies) {
                 $item->sale->products = collect();
                 $this->getDetails($item->sale, $userCompanies);
                 foreach ($item->sale->plansSales as &$planSale) {
                     $plan = $planSale->plan;
                     foreach ($plan->productsPlans as $productPlan) {
-                        $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
-                        $productPlan->product['plan_name'] = $plan->name;
+                        $productPlan->product['amount']     = $productPlan->amount * $planSale->amount;
+                        $productPlan->product['plan_name']  = $plan->name;
                         $productPlan->product['plan_price'] = $plan->price;
                         $item->sale->products->add($productPlan->product);
                     }
                 }
+
                 return $item;
             });
         }
@@ -154,8 +157,8 @@ class SaleService
         return $sale;
     }
 
-
-    public function getDetails($sale, $userCompanies){
+    public function getDetails($sale, $userCompanies)
+    {
 
         $userTransaction = $sale->transactions->whereIn('company_id', $userCompanies)->first();
 
@@ -191,10 +194,10 @@ class SaleService
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         if ($sale->dolar_quotation != 0) {
-            $taxa     = intval($total / $sale->dolar_quotation);
-            $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-            $iof      =  preg_replace('/[^0-9]/', '', $sale->iof);
-            $total    += $iof;
+            $taxa      = intval($total / $sale->dolar_quotation);
+            $taxaReal  = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
+            $iof       = preg_replace('/[^0-9]/', '', $sale->iof);
+            $total     += $iof;
             $sale->iof = number_format($iof / 100, 2, ',', '.');
         } else {
             $taxa     = 0;
@@ -304,5 +307,30 @@ class SaleService
             Log::warning('Erro ao buscar produtos - SaleService - getProducts');
             report($ex);
         }
+    }
+
+    /**
+     * @param $saleId
+     * @return array
+     */
+    public function getEmailProducts($saleId)
+    {
+        $saleModel = new Sale();
+
+        $sale         = $saleModel->with(['plansSales.plan.productsPlans.product'])->find($saleId);
+        $productsSale = [];
+        if (!empty($sale)) {
+            /** @var PlanSale $planSale */
+            foreach ($sale->plansSales as $planSale) {
+                /** @var ProductPlan $productPlan */
+                foreach ($planSale->plan->productsPlans as $productPlan) {
+                    $product           = $productPlan->product->toArray();
+                    $product['amount'] = $productPlan->amount * $planSale->amount;
+                    $productsSale[]    = $product;
+                }
+            }
+        }
+
+        return $productsSale;
     }
 }

@@ -86,7 +86,7 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
-                    $products = $saleService->getProducts($boleto->id);
+                    $products = $saleService->getEmailProducts($boleto->id);
                     $project  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
@@ -104,8 +104,8 @@ class BoletoService
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
                     if (!empty($link) && !empty($telephoneValidated)) {
                         DisparoProService::sendMessage($telephoneValidated, 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link);
-                       /* $zenviaSms = new ZenviaSmsService();
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
+                        /* $zenviaSms = new ZenviaSmsService();
+                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
                         $checkout->increment('sms_sent_amount');
                     }
 
@@ -194,7 +194,7 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $saleService->getProducts($boleto->id);
+                    $products                 = $saleService->getEmailProducts($boleto->id);
                     $project                  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
                     $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -256,6 +256,7 @@ class BoletoService
             $startDate = now()->startOfDay()->subDays(2);
             /** @var Carbon $endDate */
             $endDate = now()->endOfDay()->subDays(2);
+
             $boletos = $saleModel->with('client', 'plansSales.plan.products')
                                  ->whereBetween('start_date', [$startDate, $endDate])
                                  ->where(
@@ -288,7 +289,7 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $saleService->getProducts($boleto->id);
+                    $products                 = $saleService->getEmailProducts($boleto->id);
                     $project                  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
