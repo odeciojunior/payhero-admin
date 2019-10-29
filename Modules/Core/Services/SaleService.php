@@ -10,8 +10,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -201,7 +199,7 @@ class SaleService
             $sale->iof = number_format($iof / 100, 2, ',', '.');
         } else {
             $taxa     = 0;
-            $taxaReal = ($total / 100) * $userTransaction->percentage_rate + 100;
+            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
             $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
         }
 
@@ -307,30 +305,5 @@ class SaleService
             Log::warning('Erro ao buscar produtos - SaleService - getProducts');
             report($ex);
         }
-    }
-
-    /**
-     * @param $saleId
-     * @return array
-     */
-    public function getEmailProducts($saleId)
-    {
-        $saleModel = new Sale();
-
-        $sale         = $saleModel->with(['plansSales.plan.productsPlans.product'])->find($saleId);
-        $productsSale = [];
-        if (!empty($sale)) {
-            /** @var PlanSale $planSale */
-            foreach ($sale->plansSales as $planSale) {
-                /** @var ProductPlan $productPlan */
-                foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $product           = $productPlan->product->toArray();
-                    $product['amount'] = $productPlan->amount * $planSale->amount;
-                    $productsSale[]    = $product;
-                }
-            }
-        }
-
-        return $productsSale;
     }
 }
