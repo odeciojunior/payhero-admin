@@ -62,8 +62,7 @@ class BoletoService
                     /** @var Checkout $checkoutModel */
                     $checkoutModel = new Checkout();
                     /** @var Checkout $checkout */
-                    //                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                    $checkout    = $checkoutModel->find($boleto->checkout_id);
+                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
 
@@ -87,11 +86,9 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
-                    $products = $saleService->getProducts($boleto->id);
-                    $project  = $projectModel->find($boleto->project_id);
-                    $domain   = $domainModel->where('project_id', $project->id)->where('status', $domainModel->present()
-                                                                                                             ->getStatus('approved'))
-                                            ->first();
+                    $products = $saleService->getEmailProducts($boleto->id);
+                    $project  = $projectModel->newQuery()->find($boleto->project_id);
+                    $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -197,7 +194,7 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $saleService->getProducts($boleto->id);
+                    $products                 = $saleService->getEmailProducts($boleto->id);
                     $project                  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
                     $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -259,6 +256,7 @@ class BoletoService
             $startDate = now()->startOfDay()->subDays(2);
             /** @var Carbon $endDate */
             $endDate = now()->endOfDay()->subDays(2);
+
             $boletos = $saleModel->with('client', 'plansSales.plan.products')
                                  ->whereBetween('start_date', [$startDate, $endDate])
                                  ->where(
@@ -291,7 +289,7 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $saleService->getProducts($boleto->id);
+                    $products                 = $saleService->getEmailProducts($boleto->id);
                     $project                  = $projectModel->newQuery()->find($boleto->project_id);
                     $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 

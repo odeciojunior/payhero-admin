@@ -233,8 +233,8 @@
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com boleto no checkout
                         </p>
                     </div>
-                    <div class='form-group col-md-4 col-sm-12'>
-                        <label for="default_currency">Moeda padrão de custo</label>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for="cost_currency_type">Moeda padrão de custo</label>
                         <select name='cost_currency_type' class='form-control select-pad' id="cost_currency_type">
                             <option value='BRL'>Real</option>
                             <option value='USD'>Dólar</option>
@@ -243,28 +243,38 @@
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais.
                         </p>
                     </div>
-                    <div class='col-md-8'></div>
-{{--                    <div class='form-group col-md-6 col-sm-12'>--}}
-{{--                        <label for="credit_card">Cartão de crédito no checkout</label>--}}
-{{--                        <select name='credit_card' class='form-control select-pad' id="credit_card">--}}
-{{--                            <option value='1' class='credit_card_yes'>Sim</option>--}}
-{{--                            <option value='0' class='credit_card_no'>Não</option>--}}
-{{--                        </select>--}}
-{{--                        <p class='info pt-5' style='font-size: 10px;'>--}}
-{{--                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-                    <div class='form-group col-md-6 col-sm-12 col-xs-12'>
-                        <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
-                        <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad' type='text'
-                               placeholder='URL' maxlength='60'>
-                        <span id='boleto_redirect-error' class='text-danger'></span>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for="credit_card">Cartão de crédito no checkout</label>
+                        <select name='credit_card' class='form-control select-pad' id="credit_card">
+                            <option value='1' class='credit_card_yes'>Sim</option>
+                            <option value='0' class='credit_card_no'>Não</option>
+                        </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout
+                        </p>
                     </div>
+                    <div class='form-group col-md-4 col-sm-12'>
+                        <label for="default_currency">Tipo de checkout</label>
+                        <select name='checkout_type' class='form-control select-pad' id="checkout_type">
+                            <option value='1'>Checkout de 3 etapas (recomendado)</option>
+                            <option value='2'>Checkout de 1 etapa</option>
+                        </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais.
+                        </p>
+                    </div>
+                    <div class='col-md-8'></div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                         <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text'
                                placeholder='URL' maxlength='60'>
                         <span id='input-pad-error' class='text-danger'></span>
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12 col-xs-12'>
+                        <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
+                        <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad' type='text'
+                               placeholder='URL' maxlength='60'>
+                        <span id='boleto_redirect-error' class='text-danger'></span>
                     </div>
                     {{--                    <div class='form-group col-md-4 col-sm-12 col-xs-12'>--}}
                     {{--                        <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>--}}

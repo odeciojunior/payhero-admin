@@ -62,6 +62,7 @@ class ProjectsResource extends Resource
             'analyzing_redirect'         => $this->analyzing_redirect,
             'cost_currency_type'         => $this->present()->getCurrencyCost($this->cost_currency_type),
             'status'                     => isset($this->domains[0]->name) ? 1 : 0,
+            'checkout_type'              => $this->checkout_type,
         ];
     }
 }

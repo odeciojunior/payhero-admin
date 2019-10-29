@@ -244,6 +244,8 @@ $(() => {
             }
         }
 
+        $("#checkout_type").val(project.checkout_type);
+
         // Verificação de email de contato
         if (project.contact_verified) {
             contactVerified();

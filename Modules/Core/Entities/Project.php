@@ -105,6 +105,7 @@ class Project extends Model
         'support_phone',
         'support_phone_verified',
         'cost_currency_type',
+        'checkout_type',
         'created_at',
         'updated_at',
         'deleted_at',
