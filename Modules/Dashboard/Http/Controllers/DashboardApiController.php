@@ -110,7 +110,7 @@ class DashboardApiController extends Controller
                                                           'transactions' => function($query) use ($userCompanies) {
                                                               $query->whereIn('company_id', $userCompanies);
                                                           },
-                                                      ])
+                                                      ])->where('status', '1')
                                                ->whereDate('end_date', Carbon::today()
                                                                              ->toDateString())->get();
                     if (count($sales)) {
