@@ -13,6 +13,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Trackings\Transformers\TrackingResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -47,6 +48,15 @@ class TrackingsApiController extends Controller
             if(isset($data['tracking_code'])){
                 $trackings->where('tracking_code', 'like', '%' . $data['tracking_code'] . '%');
             }
+
+            if(isset($data['project'])){
+                $trackings->whereHas('productPlanSale.product', function($query) use ($data){
+                   $query->where('project_id', current(Hashids::decode($data['project'])));
+                });
+            }
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($data["date_updated"]);
+            $trackings->whereBetween('updated_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
 
             return TrackingResource::collection($trackings->orderBy('id', 'desc')->paginate(10));
 

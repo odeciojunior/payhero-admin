@@ -16,19 +16,23 @@
                 </div>
             </div>
         </div>
-        <div class="page-content container">
+        <div class="page-content container" style="display:none">
             <!-- Filtro -->
             <div class="fixhalf"></div>
             <div id="" class="card shadow p-20">
-                <div class="row">
+                <div class="row mb-xl-3">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                        <label for="product">Produto</label>
-                        <select name='product' id="product" class="form-control select-pad">
+                        <label for="project-select">Projeto</label>
+                        <select name='project' id="project-select" class="form-control select-pad">
                             <option value="">Todos</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                        <label for="comprador">Código de rastreio</label>
+                        <label for="sale">Venda</label>
+                        <input name='sale' id="sale" class="input-pad" placeholder="Digite o código da venda">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="tracking_code">Código de rastreio</label>
                         <input name='tracking_code' id="tracking_code" class="input-pad" placeholder="Digite o código">
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -42,7 +46,13 @@
                             <option value="exception">Problema na entrega</option>
                         </select>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="date_updated">Data de atualização</label>
+                        <input name='date_updated' id="date_updated" class="select-pad" placeholder="Clique para editar..." readonly>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 offset-xl-6">
                         <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                             <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                         </button>
@@ -130,6 +140,8 @@
     <!-- End Modal -->
 
     @push('scripts')
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="{{ asset('/modules/trackings/index.js?v=1') }}"></script>
     @endpush
 
