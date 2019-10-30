@@ -259,9 +259,7 @@
                             <option value='1'>Checkout de 3 etapas (recomendado)</option>
                             <option value='2'>Checkout de 1 etapa</option>
                         </select>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais.
-                        </p>
+
                     </div>
                     <div class='col-md-8'></div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
