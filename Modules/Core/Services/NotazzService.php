@@ -5,14 +5,12 @@ namespace Modules\Core\Services;
 use App\Jobs\SendNotazzInvoiceJob;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\NotazzSentHistory;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
-use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
@@ -91,11 +89,11 @@ class NotazzService
      */
     public function sendNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel     = new NotazzInvoice();
-        $saleService            = new SaleService();
-        $notazzSentHistoryModel = new NotazzSentHistory();
-        $saleModel              = new Sale();
-        $productPlanSaleModel   = new ProductPlanSale();
+        $notazzInvoiceModel       = new NotazzInvoice();
+        $notazzSentHistoryModel   = new NotazzSentHistory();
+        $saleModel                = new Sale();
+        $productPlanModel         = new ProductPlan();
+        $currencyQuotationService = new CurrencyQuotationService();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -117,18 +115,14 @@ class NotazzService
             foreach ($sale->plansSales as $planSale) {
                 /** @var ProductPlan $productPlan */
                 foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $productPlanSale                 = $productPlan->product()
-                                                                   ->first()->productsPlanSales->where('sale_id', $sale->id)
-                                                                                               ->first();
-                    $product                         = $productPlan->product()->first();
-                    $product['product_cost']         = $productPlan->cost ?? $product->cost;
-                    $product['product_plan_sale_id'] = $productPlanSale->id;
-                    $product['sale_status']          = $sale->status;
-                    $product['amount']               = $productPlan->amount * $planSale->amount;
-                    $product['tracking_code']        = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
-                    $product['tracking_status_enum'] = $productPlanSale ? $productPlanSale->tracking_status_enum != null ?
-                        Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                                                                                                                    ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                    $productPlanSale               = $productPlan->product()
+                                                                 ->first()->productsPlanSales->where('sale_id', $sale->id)
+                                                                                             ->first();
+                    $product                       = $productPlan->product()->first();
+                    $product['product_cost']       = $productPlan->cost ?? $product->cost;
+                    $product['product_amount']     = $productPlan->amount;
+                    $product['currency_type_enum'] = $productPlan->currency_type_enum;
+
                     $productsSale->add($product);
                 }
             }
@@ -139,7 +133,13 @@ class NotazzService
                 $costTotal = 0;
                 foreach ($products as $product) {
 
-                    $costTotal += $product['product_cost'];
+                    if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
+                        //moeda USD
+                        $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
+                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
+                    }
+
+                    $costTotal += $product['product_cost'] * $product['product_amount'];
                 }
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
@@ -148,6 +148,10 @@ class NotazzService
                 $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
+
+                if ($totalValue <= 0) {
+                    $totalValue = 0;
+                }
 
                 $tokenApi = $sale->project->notazzIntegration->token_api;
 
@@ -228,9 +232,11 @@ class NotazzService
      */
     public function updateNfse($notazzInvoiceId)
     {
-        $notazzInvoiceModel     = new NotazzInvoice();
-        $saleService            = new SaleService();
-        $notazzSentHistoryModel = new NotazzSentHistory();
+        $notazzInvoiceModel       = new NotazzInvoice();
+        $notazzSentHistoryModel   = new NotazzSentHistory();
+        $saleModel                = new Sale();
+        $productPlanModel         = new ProductPlan();
+        $currencyQuotationService = new CurrencyQuotationService();
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
@@ -248,13 +254,39 @@ class NotazzService
             if (!empty($notazzInvoice->notazz_id)) {
                 //id do notazz existe
 
-                $products = $saleService->getProductsBySaleId($sale->id);
+                $sale = $saleModel->with(['plansSales'])->find($sale->id);
+
+                $productsSale = collect();
+                /** @var PlanSale $planSale */
+                foreach ($sale->plansSales as $planSale) {
+                    /** @var ProductPlan $productPlan */
+                    foreach ($planSale->plan->productsPlans as $productPlan) {
+                        $productPlanSale               = $productPlan->product()
+                                                                     ->first()->productsPlanSales->where('sale_id', $sale->id)
+                                                                                                 ->first();
+                        $product                       = $productPlan->product()->first();
+                        $product['product_cost']       = $productPlan->cost ?? $product->cost;
+                        $product['product_amount']     = $productPlan->amount;
+                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
+
+                        $productsSale->add($product);
+                    }
+                }
+
+                $products = $productsSale;
 
                 if ($products) {
                     $costTotal = 0;
+
                     foreach ($products as $product) {
 
-                        $costTotal += $product->cost;
+                        if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
+                            //moeda USD
+                            $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
+                            $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
+                        }
+
+                        $costTotal += $product['product_cost'] * $product['product_amount'];
                     }
 
                     $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
@@ -263,6 +295,10 @@ class NotazzService
                     $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                     $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
+
+                    if ($totalValue <= 0) {
+                        $totalValue = 0;
+                    }
 
                     $tokenApi = $sale->project->notazzIntegration->token_api;
 

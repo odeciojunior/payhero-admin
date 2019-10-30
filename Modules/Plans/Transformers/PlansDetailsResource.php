@@ -20,7 +20,6 @@ class PlansDetailsResource extends Resource
             ];
         }
 
-        $x = 1;
         return [
             'id'                => Hashids::encode($this->id),
             'name'              => $this->name,

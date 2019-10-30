@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dev;
 
+use App\Jobs\SendNotazzInvoiceJob;
 use Exception;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\Pixel;
@@ -9,6 +10,7 @@ use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\SentEmail;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SendgridService;
@@ -335,6 +337,24 @@ class TesteController extends Controller
     public function tgFunction()
     {
         //nada
+
+        $nservice  = new NotazzService();
+        $saleModel = new Sale();
+
+        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(7437);
+
+        SendNotazzInvoiceJob::dispatch(9)->delay(rand(1, 3));
+
+        //$nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+
+        dd('aaa');
+
+        $quotationService = new CurrencyQuotationService();
+
+        dd($quotationService->getLastUsdQuotation());
+
+        $nservice = new NotazzService();
+        dd($nservice->consultNfse(6));
 
         $shopifyService = new ShopifyService('chegou-brasil.myshopify.com', '89ce66f4c04be336bbe09efdf1093b50');
 
@@ -825,7 +845,7 @@ class TesteController extends Controller
      */
     public function heroFunction(Request $request)
     {
-        $tes=0;
+        $tes             = 0;
         $data            = [
             'name'        => 'Hero Produtor',
             'transaction' => 'nao tem', // code da venda
