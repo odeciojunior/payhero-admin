@@ -13,8 +13,15 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\BoletoPaidEvent;
 
+/**
+ * Class BoletoService
+ * @package Modules\Core\Services
+ */
 class BoletoService
 {
+    /**
+     *
+     */
     public function verifyBoletosExpired()
     {
         //        $date = now()->subDay('1')->toDateString();
@@ -42,28 +49,20 @@ class BoletoService
     public function verifyBoletosExpiring()
     {
         try {
-            /** @var Sale $saleModel */
-            $saleModel = new Sale();
-            /** @var SaleService $saleService */
-            $saleService = new SaleService();
-            /** @var Project $projectModel */
-            $projectModel = new Project();
-            /** @var Domain $domainModel */
+            $saleModel      = new Sale();
+            $saleService    = new SaleService();
+            $projectModel   = new Project();
             $domainModel    = new Domain();
             $boletoDueToday = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
                                         ->with('client', 'plansSales.plan.products')
                                         ->get();
-            /** @var Sale $boleto */
             foreach ($boletoDueToday as $boleto) {
                 try {
-                    /** @var SendgridService $sendEmail */
-                    $sendEmail = new SendgridService();
-                    /** @var Checkout $checkoutModel */
+                    $sendEmail     = new SendgridService();
                     $checkoutModel = new Checkout();
-                    /** @var Checkout $checkout */
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                    $clientName  = $boleto->client->name;
-                    $clientEmail = $boleto->client->email;
+                    $checkout      = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $clientName    = $boleto->client->name;
+                    $clientEmail   = $boleto->client->email;
 
                     $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
@@ -102,9 +101,9 @@ class BoletoService
                     $linkShortenerService = new LinkShortenerService();
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
                     if (!empty($link) && !empty($telephoneValidated)) {
-                        DisparoProService::sendMessage($telephoneValidated, 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link);
-                        /* $zenviaSms = new ZenviaSmsService();
-                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
+                        $message = 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link;
+                        SmsService::sendSms($message, $telephoneValidated);
+
                         $checkout->increment('sms_sent_amount');
                     }
 
@@ -145,21 +144,13 @@ class BoletoService
     public function verifyBoletoWaitingPayment()
     {
         try {
-            /** @var Sale $saleModel */
-            $saleModel = new Sale();
-            /** @var SaleService $saleService */
-            $saleService = new SaleService();
-            /** @var SendgridService $sendEmail */
-            $sendEmail = new SendgridService();
-            /** @var Checkout $checkoutModel */
-            $checkoutModel = new Checkout();
-            /** @var Project $projectModel */
-            $projectModel = new Project();
-            /** @var Domain $domainModel */
-            $domainModel = new Domain();
-            /** @var Carbon $startDate */
-            $startDate = now()->startOfDay()->subDay();
-            /** @var Carbon $endDate */
+            $saleModel            = new Sale();
+            $saleService          = new SaleService();
+            $sendEmail            = new SendgridService();
+            $checkoutModel        = new Checkout();
+            $projectModel         = new Project();
+            $domainModel          = new Domain();
+            $startDate            = now()->startOfDay()->subDay();
             $endDate              = now()->endOfDay()->subDay();
             $boletoWaitingPayment = $saleModel->with('client', 'plansSales.plan.products')
                                               ->whereBetween('start_date', [$startDate, $endDate])
@@ -169,7 +160,6 @@ class BoletoService
                                                       ['status', '=', '2'],
                                                   ]
                                               )->get();
-            /** @var Sale $boleto */
             foreach ($boletoWaitingPayment as $boleto) {
                 try {
                     $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
@@ -240,20 +230,13 @@ class BoletoService
     public function verifyBoleto2()
     {
         try {
-            /** @var Sale $saleModel */
-            $saleModel = new Sale();
-            /** @var SaleService $saleService */
-            $saleService = new SaleService();
-            /** @var Project $projectModel */
-            $projectModel = new Project();
-            /** @var Domain $domainModel */
-            $domainModel = new Domain();
-            /** @var Checkout $checkoutModel */
+            $saleModel     = new Sale();
+            $saleService   = new SaleService();
+            $projectModel  = new Project();
+            $domainModel   = new Domain();
             $checkoutModel = new Checkout();
-            /** @var Carbon $startDate */
-            $startDate = now()->startOfDay()->subDays(2);
-            /** @var Carbon $endDate */
-            $endDate = now()->endOfDay()->subDays(2);
+            $startDate     = now()->startOfDay()->subDays(2);
+            $endDate       = now()->endOfDay()->subDays(2);
 
             $boletos = $saleModel->with('client', 'plansSales.plan.products')
                                  ->whereBetween('start_date', [$startDate, $endDate])
@@ -264,7 +247,6 @@ class BoletoService
                                      ]
                                  )->get();
 
-            /** @var Sale $boleto */
             foreach ($boletos as $boleto) {
                 try {
                     $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
@@ -427,7 +409,6 @@ class BoletoService
     public function verifyBoletoPaid()
     {
         try {
-            /** @var User $userModel */
             $userModel   = new User();
             $sql         = 'SELECT u.id owner_id
                             , u.email
@@ -451,7 +432,6 @@ class BoletoService
             $boletosPaid = DB::select($sql);
             foreach ($boletosPaid as $boleto) {
                 try {
-                    /** @var User $user */
                     $user = $userModel->newQuery()->find($boleto->owner_id);
                     if ($boleto->boleto_count == 1) {
                         $message       = 'boleto foi compensado';

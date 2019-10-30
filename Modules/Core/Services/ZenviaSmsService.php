@@ -8,6 +8,7 @@
 
 namespace Modules\Core\Services;
 
+use DateTimeZone;
 use Exception;
 use Zenvia\Model\Sms;
 use Zenvia\Model\SmsFacade;
@@ -24,28 +25,29 @@ class ZenviaSmsService
 
     public function __construct()
     {
-        $this->smsFacade = new SmsFacade('healthlab.corp', 'hLQNVb7VQk');
+        $this->smsFacade = new SmsFacade(getenv('ZENVIA_EMAIL'), getenv('ZENVIA_PASSWORD'));
         $this->zenviaSms = new Sms();
     }
 
-    public function sendSms($msg, $to)
+    public function sendSms($number, $message)
     {
 
         try {
-            $this->zenviaSms->setTo($to);
-            $this->zenviaSms->setMsg($msg);
+            $this->zenviaSms->setTo(preg_replace("/[^0-9]/", "", $number));
+            $this->zenviaSms->setMsg($message);
             $smsId = uniqid();
             $this->zenviaSms->setId($smsId);
             $this->zenviaSms->setCallbackOption(Sms::CALLBACK_NONE);
+            $date = new \DateTime();
+            $date->setTimeZone(new DateTimeZone('America/Sao_Paulo'));
+            $schedule = $date->format("Y-m-d\TH:i:s");
+            $this->zenviaSms->setSchedule($schedule);
+
             try {
                 $response = $this->smsFacade->send($this->zenviaSms);
-                if ($response) {
-                    return true;
-                }
-
-                return false;
-            } catch (Exception $ex) {
-                return false;
+            } catch (Exception $e) {
+                Log::warning('Erro ao enviar sms ZenviaService - SendMessage');
+                report($e);
             }
         } catch (\Exception $e) {
             Log::warning('erro ao enviar sms para carrinho abandonado');
