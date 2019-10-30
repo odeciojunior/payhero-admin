@@ -50,8 +50,7 @@ class BoletoService
             $projectModel = new Project();
             /** @var Domain $domainModel */
             $domainModel    = new Domain();
-            $boletoDueToday = $saleModel->newQuery()
-                                        ->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
+            $boletoDueToday = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
                                         ->with('client', 'plansSales.plan.products')
                                         ->get();
             /** @var Sale $boleto */
@@ -62,7 +61,7 @@ class BoletoService
                     /** @var Checkout $checkoutModel */
                     $checkoutModel = new Checkout();
                     /** @var Checkout $checkout */
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
 
@@ -87,8 +86,8 @@ class BoletoService
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $saleService->getEmailProducts($boleto->id);
-                    $project  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project  = $projectModel->find($boleto->project_id);
+                    $domain   = $domainModel->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -162,8 +161,7 @@ class BoletoService
             $startDate = now()->startOfDay()->subDay();
             /** @var Carbon $endDate */
             $endDate              = now()->endOfDay()->subDay();
-            $boletoWaitingPayment = $saleModel->newQuery()
-                                              ->with('client', 'plansSales.plan.products')
+            $boletoWaitingPayment = $saleModel->with('client', 'plansSales.plan.products')
                                               ->whereBetween('start_date', [$startDate, $endDate])
                                               ->where(
                                                   [
@@ -174,7 +172,7 @@ class BoletoService
             /** @var Sale $boleto */
             foreach ($boletoWaitingPayment as $boleto) {
                 try {
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
                     $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
@@ -195,8 +193,8 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $saleService->getEmailProducts($boleto->id);
-                    $project                  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project                  = $projectModel->find($boleto->project_id);
+                    $domain                   = $domainModel->where('project_id', $project->id)->first();
                     $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value   = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
                     $boleto->shipment_value   = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
@@ -269,7 +267,7 @@ class BoletoService
             /** @var Sale $boleto */
             foreach ($boletos as $boleto) {
                 try {
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
                     $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
@@ -290,8 +288,8 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $saleService->getEmailProducts($boleto->id);
-                    $project                  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project                  = $projectModel->find($boleto->project_id);
+                    $domain                   = $domainModel->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
