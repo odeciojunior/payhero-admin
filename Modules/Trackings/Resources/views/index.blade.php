@@ -5,6 +5,7 @@
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
     @endpush
 
     <!-- Page -->
@@ -60,6 +61,25 @@
                 </div>
             </div>
 
+            <!-- Resumo -->
+            <div class="fixhalf"></div>
+            <div class="card shadow p-20" style='display:block;'>
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <h6 class="text-center text-success"><i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
+                        <h4 id="percentual-delivered" class="number text-center text-success"></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
+                        <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center text-danger"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
+                        <h4 id="percentual-exception" class="number text-center text-danger"></h4>
+                    </div>
+                </div>
+            </div>
+
             <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
@@ -71,6 +91,7 @@
                             <td class="table-title">Produto</td>
                             <td class="table-title">Rastreio</td>
                             <td class="table-title">Status</td>
+                            <td class="table-title" width="80px;"></td>
                         </tr>
                         </thead>
                         <tbody id="dados_tabela">

@@ -15,56 +15,47 @@ use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
+use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Transformers\TrackingResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
 {
-    public function index(Request $request){
-        try{
-            $trackingModel = new Tracking();
-            $companyModel = new Company();
+    public function index(Request $request)
+    {
+        try {
+            $trackingService = new TrackingService();
 
             $data = $request->all();
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                ->pluck('id')
-                ->toArray();
+            $trackings = $trackingService->getTrackings($data);
 
-            $trackings = $trackingModel
-                ->with([
-                        'productPlanSale.sale.transactions',
-                        'productPlanSale.product',
-                    ])
-                ->whereHas('productPlanSale.sale.transactions', function ($query) use ($userCompanies) {
-                    $query->whereIn('company_id', $userCompanies);
-                })
-                ->whereNotNull('tracking_code');
+            return TrackingResource::collection($trackings);
 
-            if(isset($data['status'])){
-                $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($data['status']));
-            }
-
-            if(isset($data['tracking_code'])){
-                $trackings->where('tracking_code', 'like', '%' . $data['tracking_code'] . '%');
-            }
-
-            if(isset($data['project'])){
-                $trackings->whereHas('productPlanSale.product', function($query) use ($data){
-                   $query->where('project_id', current(Hashids::decode($data['project'])));
-                });
-            }
-            //tipo da data e periodo obrigatorio
-            $dateRange = FoxUtils::validateDateRange($data["date_updated"]);
-            $trackings->whereBetween('updated_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-
-            return TrackingResource::collection($trackings->orderBy('id', 'desc')->paginate(10));
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             Log::warning('Erro ao exibir códigos de rastreio (TrackingApiController - index)');
             report($e);
 
             return response()->json(['message' => 'Erro ao exibir códigos de rastreio'], 400);
+        }
+    }
+
+    public function resume(Request $request)
+    {
+        try {
+            $trackingService = new TrackingService();
+
+            $data = $request->all();
+
+            $trackings = $trackingService->getResume($data);
+
+            return $trackings;
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir códigos de rastreio (TrackingApiController - resume)');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao resumo dos rastreamentos'], 400);
         }
     }
 

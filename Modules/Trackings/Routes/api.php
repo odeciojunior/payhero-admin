@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['middleware' => ['auth:api']], function() {
     Route::apiResource('tracking', 'TrackingsApiController')->only( 'index', 'store')->names('api.trackings');
+    Route::get('/tracking/resume', 'TrackingsApiController@resume');
 });
 
 //Route::middleware('auth:api')->get('/trackings', function (Request $request) {

@@ -9,8 +9,8 @@ $(() => {
         alertCustom('success', 'Código copiado!');
     });
 
-    $('#bt_filtro').on('click', function(){
-       index();
+    $('#bt_filtro').on('click', function () {
+        index();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -51,7 +51,7 @@ $(() => {
 
     getProducts();
 
-    function getProducts(){
+    function getProducts() {
 
         loadOnAny('.page-content');
 
@@ -68,11 +68,42 @@ $(() => {
                 loadOnAny('.page-content', true);
             },
             success: response => {
-                console.log(response)
                 $.each(response.data, function (index, project) {
                     $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
                 });
-                index();
+                getResume();
+            }
+        });
+    }
+
+    function getResume() {
+        $.ajax({
+            method: 'GET',
+            url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val(),
+            data: {
+
+            },
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+                loadOnAny('.page-content', true);
+            },
+            success: response => {
+                console.log(response)
+
+                if(isEmpty(response.data)){
+                    alertCustom('error', 'Erro ao carregar resumo dos rastreios');
+                } else {
+                    $('#percentual-delivered').text(response.data.delivered + '%');
+                    $('#percentual-dispatched').text(response.data.dispatched + '%');
+                    $('#percentual-exception').text(response.data.exception + '%');
+                    index();
+                }
                 loadOnAny('.page-content', true);
             }
         });
@@ -82,10 +113,10 @@ $(() => {
 
         if (link == null) {
             link = '/api/tracking?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                 + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
         } else {
             link = '/api/tracking' + link + '&tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                 + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
@@ -103,9 +134,9 @@ $(() => {
             success: response => {
                 $('#dados_tabela').html('');
                 $('#tabela_trackings').addClass('table-striped');
-                if(isEmpty(response.data)){
+                if (isEmpty(response.data)) {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
-                }else {
+                } else {
                     $.each(response.data, function (index, tracking) {
                         let badge;
                         switch (tracking.tracking_status_enum) {
@@ -132,7 +163,9 @@ $(() => {
                                      <td>
                                         <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                      </td>
-                                     <td></td>
+                                     <td>
+                                        <a role='button' class='detalhes_venda pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                    </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
                     });
