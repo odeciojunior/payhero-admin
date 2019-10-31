@@ -168,11 +168,12 @@ class PostBackPagarmeController extends Controller
                             $company = $companyModel->find($transaction->company_id);
 
                             $transferModel->create([
-                                                       'transaction' => $transaction->id,
-                                                       'user_id'     => $company->user_id,
-                                                       'value'       => $transaction->value,
-                                                       'type'        => 'out',
-                                                       'reason'      => 'chargedback'
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'value'          => $transaction->value,
+                                                       'type'           => 'out',
+                                                       'reason'         => 'chargedback',
+                                                       'company_id'     => $company->id,
                                                    ]);
 
                             $company->update([
@@ -184,11 +185,12 @@ class PostBackPagarmeController extends Controller
                             $company = $companyModel->find($transaction->company_id);
 
                             $transferModel->create([
-                                                       'transaction' => $transaction->id,
-                                                       'user_id'     => $company->user_id,
-                                                       'value'       => $transaction->antecipable_value,
-                                                       'type'        => 'out',
-                                                       'reason'      => 'chargedback'
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'value'          => $transaction->antecipable_value,
+                                                       'type'           => 'out',
+                                                       'reason'         => 'chargedback',
+                                                       'company_id'     => $company->id,
                                                    ]);
 
                             $company->update([
