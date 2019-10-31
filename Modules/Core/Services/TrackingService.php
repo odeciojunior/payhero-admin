@@ -20,10 +20,10 @@ class TrackingService
 
         $trackings = $trackingModel
             ->with([
-                'productPlanSale.sale.transactions',
-                'productPlanSale.product',
+                'sale.transactions',
+                'product',
             ])
-            ->whereHas('productPlanSale.sale.transactions', function ($query) use ($userCompanies) {
+            ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
                 $query->whereIn('company_id', $userCompanies);
             })
             ->whereNotNull('tracking_code');
@@ -37,7 +37,7 @@ class TrackingService
         }
 
         if (isset($data['project'])) {
-            $trackings->whereHas('productPlanSale.product', function ($query) use ($filters) {
+            $trackings->whereHas('product', function ($query) use ($filters) {
                 $query->where('project_id', current(Hashids::decode($filters['project'])));
             });
         }
@@ -58,7 +58,7 @@ class TrackingService
             ->toArray();
 
         $query = $trackingModel
-            ->whereHas('productPlanSale.sale.transactions', function ($query) use ($userCompanies) {
+            ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
                 $query->whereIn('company_id', $userCompanies);
             })
             ->whereNotNull('tracking_code');
@@ -72,7 +72,7 @@ class TrackingService
         }
 
         if (isset($data['project'])) {
-            $query->whereHas('productPlanSale.product', function ($query) use ($filters) {
+            $query->whereHas('product', function ($query) use ($filters) {
                 $query->where('project_id', current(Hashids::decode($filters['project'])));
             });
         }

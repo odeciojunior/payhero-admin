@@ -39,7 +39,9 @@ class Tracking extends Model
      */
     protected $fillable = [
         'product_plan_sale_id',
-        'plans_sale_id',
+        'sale_id',
+        'product_id',
+        'amount',
         'delivery_id',
         'tracking_code',
         'tracking_status_enum',
@@ -59,17 +61,17 @@ class Tracking extends Model
     /**
      * @return BelongsTo
      */
-    public function planSale()
-    {
-        return $this->belongsTo(PlanSale::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
     public function productPlanSale()
     {
         return $this->belongsTo(ProductPlanSale::class);
+    }
+
+    public function sale(){
+        return $this->belongsTo(Sale::class);
+    }
+
+    public function product(){
+        return $this->belongsTo(Product::class);
     }
 
     public function histories()

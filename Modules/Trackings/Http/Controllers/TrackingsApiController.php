@@ -40,6 +40,27 @@ class TrackingsApiController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $trackingModel = new Tracking();
+
+            $trackingId = current(Hashids::decode($id));
+
+            $tracking = $trackingModel->with([
+                'product',
+                'delivery',
+            ])->find($trackingId);
+
+            return response()->json($tracking->toArray());
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)');
+            report($e);
+            return response()->json(['message' => 'Erro ao exibir detalhes do código de rastreio'], 400);
+        }
+    }
+
     public function resume(Request $request)
     {
         try {
@@ -72,7 +93,7 @@ class TrackingsApiController extends Controller
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
                 $productId = current(Hashids::decode($data['product_id']));
                 if ($saleId && $productId) {
-                    $productPlanSale = $productPlanSaleModel->with(['trackings'])
+                    $productPlanSale = $productPlanSaleModel->with(['trackings', 'sale.plansSales', 'sale.delivery'])
                                                             ->where([['sale_id', $saleId], ['product_id', $productId]])
                                                             ->first();
 
@@ -81,7 +102,16 @@ class TrackingsApiController extends Controller
                     //create
                     if(!isset($tracking)){
 
+                        $planSale = $productPlanSale
+                            ->sale
+                            ->plansSales
+                            ->where('plan_id', $productPlanSale->plan_id)
+                            ->first();
+
                         $tracking = $trackingModel->create([
+                            'product_plan_sale_id' => $productPlanSale->id,
+                            'plans_sale_id' => $planSale->id,
+                            'delivery_id' => $productPlanSale->sale->delivery->id,
                             'tracking_code'        => $data['tracking_code'],
                             'tracking_status_enum' => $trackingModel->present()
                                 ->getTrackingStatusEnum('posted'),

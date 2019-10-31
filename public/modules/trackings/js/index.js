@@ -135,6 +135,7 @@ $(() => {
                 if (isEmpty(response.data)) {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
                 } else {
+                    console.log(response.data)
                     $.each(response.data, function (index, tracking) {
                         let badge;
                         switch (tracking.tracking_status_enum) {
@@ -153,7 +154,7 @@ $(() => {
                         }
                         let dados = `<tr>
                                      <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>
-                                     <td>${tracking.product.name}</td>
+                                     <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
                                      <td class="copy pointer" title="Copiar código">${tracking.tracking_code}</td>
                                      <td>
                                         <span class="badge badge-${badge}">${tracking.tracking_status}</span>
@@ -172,6 +173,23 @@ $(() => {
     }
 
     $(document).on('click', '.tracking-detail', function(){
+
+        $.ajax({
+            method: 'GET',
+            url: '/api/tracking/' + $(this).attr('tracking'),
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                console.log(response)
+            }
+        });
+
         $('#modal-tracking').modal('show')
     });
 });
