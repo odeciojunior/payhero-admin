@@ -16,7 +16,7 @@ class TrackingResource extends Resource
             'sale' => Hashids::connection('sale_id')->encode($this->productPlanSale->sale->id),
             'product' => [
                 'name' => $this->productPlanSale->product->name,
-                'photo' => $this->productPlanSale->product->photo,
+                'description' => $this->productPlanSale->product->description,
             ]
         ];
     }

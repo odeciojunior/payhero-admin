@@ -94,8 +94,6 @@ $(() => {
                 loadOnAny('.page-content', true);
             },
             success: response => {
-                console.log(response)
-
                 if(isEmpty(response.data)){
                     alertCustom('error', 'Erro ao carregar resumo dos rastreios');
                 } else {
@@ -154,17 +152,14 @@ $(() => {
                                 break;
                         }
                         let dados = `<tr>
-                                     <td class="detalhes_venda pointer" venda="${tracking.sale}">#${tracking.sale}</td>
-                                     <td>
-                                         <img style="width: 35px; margin-right: 10px;" src="${tracking.product.photo}"/>
-                                         ${tracking.product.name}
-                                     </td>
+                                     <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>
+                                     <td>${tracking.product.name}</td>
                                      <td class="copy pointer" title="Copiar código">${tracking.tracking_code}</td>
                                      <td>
                                         <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                      </td>
                                      <td>
-                                        <a role='button' class='detalhes_venda pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        <a role='button' class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
                                     </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
@@ -175,4 +170,8 @@ $(() => {
             }
         });
     }
+
+    $(document).on('click', '.tracking-detail', function(){
+        $('#modal-tracking').modal('show')
+    });
 });

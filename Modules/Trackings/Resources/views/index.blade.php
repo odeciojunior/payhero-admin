@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css') }}">
     @endpush
 
     <!-- Page -->
@@ -108,6 +109,83 @@
             <!-- Modal detalhes da venda-->
             @include('sales::details')
             <!-- End Modal -->
+
+            <!-- Modal detalhes tracking -->
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-simple">
+                    <div id='modal-tracking-details' class="modal-content">
+                        <div class="modal-header simple-border-bottom mb-10">
+                            <h4 class="modal-title" id="modal-title">Detalhes do rastreamento</h4>
+                            <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                                <i class="material-icons md-16">close</i>
+                            </a>
+                        </div>
+                        <div class="modal-body">
+                            <h3 id="tracking-code" class="text-uppercase">LO306849181CN</h3>
+                            <div class="p-10">
+                                <div class="row">
+                                    <div class="col-lg-10 col-9"><p class="table-title"> Produto </p></div>
+                                    <div class="col-lg-2 col-3 text-center"><p class="table-title"> Qtde </p></div>
+                                </div>
+                                <div class="row align-items-center mb-20">
+                                    <div class="col-lg-10 col-9">
+                                        <div class="row align-items-center pl-10">
+                                            <img src="https://cdn.shopify.com/s/files/1/0265/9559/0241/products/caution_radioactive_material_label_halloween_props_igloo_cool_box-rdbb0bbb6843749348f15ea60ab07ddaa_zvmcr_540.jpg?v=1571163258" width="50px" style="border-radius: 6px;">
+                                            <h4 class="table-title ml-10 ellipsis">Bomba caseira</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-3 text-center">
+                                        <span class="sm-text text-muted">5x</span>
+                                    </div>
+                                </div>
+                                <div class="tracking-timeline">
+                                    <div class="tracking-timeline-row">
+                                        <div class="timeline-status-item active">31/10/2019</div>
+                                        <div class="timeline-status-item active">01/11/2019</div>
+                                        <div class="timeline-status-item">02/11/2019</div>
+                                        <div class="timeline-status-item">03/11/2019</div>
+                                    </div>
+                                    <div class="tracking-timeline-row">
+                                        <div class="timeline-step active">
+                                            <span class="timeline-line"></span>
+                                            <span class="timeline-mark"></span>
+                                            <span class="timeline-line"></span>
+                                        </div>
+                                        <div class="timeline-step active">
+                                            <span class="timeline-line"></span>
+                                            <span class="timeline-mark"></span>
+                                            <span class="timeline-line"></span>
+                                        </div>
+                                        <div class="timeline-step">
+                                            <span class="timeline-line"></span>
+                                            <span class="timeline-mark"></span>
+                                            <span class="timeline-line"></span>
+                                        </div>
+                                        <div class="timeline-step">
+                                            <span class="timeline-line"></span>
+                                            <span class="timeline-mark"></span>
+                                            <span class="timeline-line"></span>
+                                        </div>
+                                    </div>
+                                    <div class="tracking-timeline-row">
+                                        <div class="timeline-status-item font-weight-bold active">Postado</div>
+                                        <div class="timeline-status-item font-weight-bold active">Em transito</div>
+                                        <div class="timeline-status-item font-weight-bold">Saiu para entrega</div>
+                                        <div class="timeline-status-item font-weight-bold">Entregue</div>
+                                    </div>
+                                </div>
+                                <h4 style="margin-top: 40px"> Destino </h4>
+                                <span id="tracking-delivery-address" class="table-title gray">Endereço: Avenida General Afonseca, 1475</span>
+                                <br>
+                                <span id="tracking-delivery-zipcode" class="table-title gray">CEP: 27520174</span>
+                                <br>
+                                <span id="tracking-delivery-city" class="table-title gray">Cidade: Resende/RJ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Nodal -->
         </div>
     </div>
 
@@ -163,7 +241,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection
