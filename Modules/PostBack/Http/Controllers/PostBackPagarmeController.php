@@ -172,7 +172,8 @@ class PostBackPagarmeController extends Controller
                                                        'user_id'     => $company->user_id,
                                                        'value'       => $transaction->value,
                                                        'type'        => 'out',
-                                                       'reason'      => 'chargedback'
+                                                       'reason'      => 'chargedback',
+                                                       'company_id'  => $company->id,
                                                    ]);
 
                             $company->update([
@@ -188,7 +189,8 @@ class PostBackPagarmeController extends Controller
                                                        'user_id'     => $company->user_id,
                                                        'value'       => $transaction->antecipable_value,
                                                        'type'        => 'out',
-                                                       'reason'      => 'chargedback'
+                                                       'reason'      => 'chargedback',
+                                                       'company_id'  => $company->id,
                                                    ]);
 
                             $company->update([
