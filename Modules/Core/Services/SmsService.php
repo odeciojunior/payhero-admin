@@ -16,10 +16,10 @@ class SmsService
      * @param $message
      * @return bool
      */
-    public static function sendSms($number, $message)
+    public function sendSms($number, $message)
     {
         try {
-            ZenviaSmsService::sendMessage($number, $message);
+            ZenviaSmsService::sendSms($number, $message);
 
             //            DisparoProService::sendMessage($number, $message);
 

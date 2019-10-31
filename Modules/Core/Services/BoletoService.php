@@ -101,8 +101,9 @@ class BoletoService
                     $linkShortenerService = new LinkShortenerService();
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
                     if (!empty($link) && !empty($telephoneValidated)) {
-                        $message = 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link;
-                        SmsService::sendSms($message, $telephoneValidated);
+                        $message    = 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link;
+                        $smsService = new SmsService();
+                        $smsService->sendSms($telephoneValidated, $message);
 
                         $checkout->increment('sms_sent_amount');
                     }
