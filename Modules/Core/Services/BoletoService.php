@@ -13,8 +13,15 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\BoletoPaidEvent;
 
+/**
+ * Class BoletoService
+ * @package Modules\Core\Services
+ */
 class BoletoService
 {
+    /**
+     *
+     */
     public function verifyBoletosExpired()
     {
         //        $date = now()->subDay('1')->toDateString();
@@ -42,29 +49,20 @@ class BoletoService
     public function verifyBoletosExpiring()
     {
         try {
-            /** @var Sale $saleModel */
-            $saleModel = new Sale();
-            /** @var SaleService $saleService */
-            $saleService = new SaleService();
-            /** @var Project $projectModel */
-            $projectModel = new Project();
-            /** @var Domain $domainModel */
+            $saleModel      = new Sale();
+            $saleService    = new SaleService();
+            $projectModel   = new Project();
             $domainModel    = new Domain();
-            $boletoDueToday = $saleModel->newQuery()
-                                        ->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
+            $boletoDueToday = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
                                         ->with('client', 'plansSales.plan.products')
                                         ->get();
-            /** @var Sale $boleto */
             foreach ($boletoDueToday as $boleto) {
                 try {
-                    /** @var SendgridService $sendEmail */
-                    $sendEmail = new SendgridService();
-                    /** @var Checkout $checkoutModel */
+                    $sendEmail     = new SendgridService();
                     $checkoutModel = new Checkout();
-                    /** @var Checkout $checkout */
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
-                    $clientName  = $boleto->client->name;
-                    $clientEmail = $boleto->client->email;
+                    $checkout      = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $clientName    = $boleto->client->name;
+                    $clientEmail   = $boleto->client->email;
 
                     $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
@@ -87,8 +85,8 @@ class BoletoService
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $saleService->getEmailProducts($boleto->id);
-                    $project  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project  = $projectModel->find($boleto->project_id);
+                    $domain   = $domainModel->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -103,9 +101,10 @@ class BoletoService
                     $linkShortenerService = new LinkShortenerService();
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
                     if (!empty($link) && !empty($telephoneValidated)) {
-                        DisparoProService::sendMessage($telephoneValidated, 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link);
-                        /* $zenviaSms = new ZenviaSmsService();
-                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);*/
+                        $message    = 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link;
+                        $smsService = new SmsService();
+                        $smsService->sendSms($telephoneValidated, $message);
+
                         $checkout->increment('sms_sent_amount');
                     }
 
@@ -146,24 +145,15 @@ class BoletoService
     public function verifyBoletoWaitingPayment()
     {
         try {
-            /** @var Sale $saleModel */
-            $saleModel = new Sale();
-            /** @var SaleService $saleService */
-            $saleService = new SaleService();
-            /** @var SendgridService $sendEmail */
-            $sendEmail = new SendgridService();
-            /** @var Checkout $checkoutModel */
-            $checkoutModel = new Checkout();
-            /** @var Project $projectModel */
-            $projectModel = new Project();
-            /** @var Domain $domainModel */
-            $domainModel = new Domain();
-            /** @var Carbon $startDate */
-            $startDate = now()->startOfDay()->subDay();
-            /** @var Carbon $endDate */
+            $saleModel            = new Sale();
+            $saleService          = new SaleService();
+            $sendEmail            = new SendgridService();
+            $checkoutModel        = new Checkout();
+            $projectModel         = new Project();
+            $domainModel          = new Domain();
+            $startDate            = now()->startOfDay()->subDay();
             $endDate              = now()->endOfDay()->subDay();
-            $boletoWaitingPayment = $saleModel->newQuery()
-                                              ->with('client', 'plansSales.plan.products')
+            $boletoWaitingPayment = $saleModel->with('client', 'plansSales.plan.products')
                                               ->whereBetween('start_date', [$startDate, $endDate])
                                               ->where(
                                                   [
@@ -171,10 +161,9 @@ class BoletoService
                                                       ['status', '=', '2'],
                                                   ]
                                               )->get();
-            /** @var Sale $boleto */
             foreach ($boletoWaitingPayment as $boleto) {
                 try {
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
                     $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
@@ -195,8 +184,8 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $saleService->getEmailProducts($boleto->id);
-                    $project                  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project                  = $projectModel->find($boleto->project_id);
+                    $domain                   = $domainModel->where('project_id', $project->id)->first();
                     $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value   = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
                     $boleto->shipment_value   = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
@@ -242,20 +231,13 @@ class BoletoService
     public function verifyBoleto2()
     {
         try {
-            /** @var Sale $saleModel */
-            $saleModel = new Sale();
-            /** @var SaleService $saleService */
-            $saleService = new SaleService();
-            /** @var Project $projectModel */
-            $projectModel = new Project();
-            /** @var Domain $domainModel */
-            $domainModel = new Domain();
-            /** @var Checkout $checkoutModel */
+            $saleModel     = new Sale();
+            $saleService   = new SaleService();
+            $projectModel  = new Project();
+            $domainModel   = new Domain();
             $checkoutModel = new Checkout();
-            /** @var Carbon $startDate */
-            $startDate = now()->startOfDay()->subDays(2);
-            /** @var Carbon $endDate */
-            $endDate = now()->endOfDay()->subDays(2);
+            $startDate     = now()->startOfDay()->subDays(2);
+            $endDate       = now()->endOfDay()->subDays(2);
 
             $boletos = $saleModel->with('client', 'plansSales.plan.products')
                                  ->whereBetween('start_date', [$startDate, $endDate])
@@ -266,10 +248,9 @@ class BoletoService
                                      ]
                                  )->get();
 
-            /** @var Sale $boleto */
             foreach ($boletos as $boleto) {
                 try {
-                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
                     $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
@@ -290,8 +271,8 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $saleService->getEmailProducts($boleto->id);
-                    $project                  = $projectModel->newQuery()->find($boleto->project_id);
-                    $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $project                  = $projectModel->find($boleto->project_id);
+                    $domain                   = $domainModel->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -429,7 +410,6 @@ class BoletoService
     public function verifyBoletoPaid()
     {
         try {
-            /** @var User $userModel */
             $userModel   = new User();
             $sql         = 'SELECT u.id owner_id
                             , u.email
@@ -453,7 +433,6 @@ class BoletoService
             $boletosPaid = DB::select($sql);
             foreach ($boletosPaid as $boleto) {
                 try {
-                    /** @var User $user */
                     $user = $userModel->newQuery()->find($boleto->owner_id);
                     if ($boleto->boleto_count == 1) {
                         $message       = 'boleto foi compensado';

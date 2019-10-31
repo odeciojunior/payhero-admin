@@ -14,22 +14,24 @@ use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Core\Services\DisparoProService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectService;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\SmsService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
-use Modules\Projects\Transformers\ProjectsSelectResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class ProjectsApiController
+ * @package Modules\Projects\Http\Controllers
+ */
 class ProjectsApiController extends Controller
 {
     /**
@@ -39,10 +41,19 @@ class ProjectsApiController extends Controller
     public function index(Request $request)
     {
         try {
+            $projectModel   = new Project();
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
 
-            return $projectService->getUserProjects($pagination);
+            if (!empty($request->input('status')) && $request->input('status') == 'active') {
+                $projectStatus = [$projectModel->present()->getStatus('active')];
+            } else {
+                $projectStatus = [
+                    $projectModel->present()->getStatus('active'), $projectModel->present()->getStatus('disabled'),
+                ];
+            }
+
+            return $projectService->getUserProjects($pagination, $projectStatus);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -226,17 +237,13 @@ class ProjectsApiController extends Controller
                 $projectService = new ProjectService();
 
                 if ($projectId) {
-                    if (!$projectService->hasSales($projectId)) {
-                        //n tem venda
-                        if ($projectService->delete($projectId)) {
-                            //projeto removido
-                            return response()->json('success', 200);
-                        } else {
-                            //erro ao remover projeto
-                            return response()->json('error', 400);
-                        }
+                    //n tem venda
+                    if ($projectService->delete($projectId)) {
+                        //projeto removido
+                        return response()->json('success', 200);
                     } else {
-                        return response()->json('Impossível remover projeto, possui vendas', 400);
+                        //erro ao remover projeto
+                        return response()->json('error', 400);
                     }
                 } else {
                     return response()->json('Projeto não encontrado', 400);
@@ -281,7 +288,8 @@ class ProjectsApiController extends Controller
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
-                    $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+                    $requestValidated['cost_currency_type'] = $project->present()
+                                                                      ->getCurrencyCost($requestValidated['cost_currency_type']);
 
                     $projectUpdate  = $project->fill($requestValidated)->save();
                     $projectChanges = $project->getChanges();
@@ -372,7 +380,8 @@ class ProjectsApiController extends Controller
 
                 $projectModel = new Project();
 
-                $project = $projectModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->where('id', current(Hashids::decode($id)))
+                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
 
                 if (Gate::allows('show', [$project])) {
                     return new ProjectsResource($project);
@@ -391,7 +400,7 @@ class ProjectsApiController extends Controller
     }
 
     /**
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function getProjects()
     {
@@ -434,9 +443,9 @@ class ProjectsApiController extends Controller
 
             $verifyCode = random_int(100000, 999999);
 
-            /** @var DisparoProService $disparoPro */
-            $disparoPro = app(DisparoProService::class);
-            $disparoPro->sendMessage(FoxUtils::prepareCellPhoneNumber($supportPhone), "Código de verificação CloudFox - " . $verifyCode);
+            $message    = "Código de verificação CloudFox - " . $verifyCode;
+            $smsService = new SmsService();
+            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($supportPhone), $message);
 
             return response()->json(
                 [

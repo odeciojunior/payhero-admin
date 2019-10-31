@@ -29,7 +29,6 @@
                         <p class="desc gray">Integre seus projetos com Notazz de forma totalmente automatizada!</p>
                     </div>
                 </div>
-
                 {{-- Modal add-edit integration --}}
                 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                     <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -52,13 +51,12 @@
                     </div>
                 </div>
                 {{-- End Modal  --}}
-
             </div>
         </div>
     </div>
 
     @push('scripts')
-        <script src="/modules/notazz/js/index.js?v=1"></script>
+        <script src="{{asset('modules/notazz/js/index.js?v=2')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection
