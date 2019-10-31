@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,10 +39,10 @@ class WithdrawalsApiController extends Controller
             $companyId    = current(Hashids::decode($request->company));
             if ($companyId) {
                 //id existe
-                $company = $companyModel->newQuery()->find($companyId);
+                $company = $companyModel->find($companyId);
                 if (Gate::allows('edit', [$company])) {
                     //se pode editar empresa pode visualizar os saques
-                    $withdrawals = $withdrawalModel->newQuery()->where('company_id', $companyId)
+                    $withdrawals = $withdrawalModel->where('company_id', $companyId)
                                                    ->orderBy('id', 'DESC');
 
                     return WithdrawalResource::collection($withdrawals->paginate(5));
@@ -79,7 +80,7 @@ class WithdrawalsApiController extends Controller
         /** @var Company $companyModel */
         $companyModel = new Company();
         /** @var Company $company */
-        $company = $companyModel->newQuery()->where('user_id', auth()->user()->id)
+        $company = $companyModel->where('user_id', auth()->user()->id)
                                 ->find(current(Hashids::decode($data['company_id'])));
         if (Gate::allows('edit', [$company])) {
             if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
@@ -94,6 +95,8 @@ class WithdrawalsApiController extends Controller
                                         ], 400);
             }
             $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+            $companyDocument = preg_replace("/[^0-9]/", "", $company->company_document);
+
             if ($withdrawalValue < 1000) {
                 return response()->json([
                                             'message' => 'Valor de saque precisa ser maior que R$ 10,00',
@@ -104,14 +107,32 @@ class WithdrawalsApiController extends Controller
                                             'message' => 'Valor informado inválido',
                                         ], 400);
             }
+
+            /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
+            if (strlen($companyDocument) == 11) {
+                $startDate  = Carbon::now()->startOfMonth();
+                $endDate    = Carbon::now()->endOfMonth();
+                $withdrawal = $withdrawalModel->where('company_id', $company->id)
+                                              ->where('status', $withdrawalModel->present()->getStatus('transfered'))
+                                              ->whereBetween('created_at', [$startDate, $endDate])->get();
+                if (count($withdrawal) > 0) {
+                    $withdrawalSum = $withdrawal->sum('value');
+                    if ($withdrawalSum + $withdrawalValue > 190000) {
+                        return response()->json([
+                                                    'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
+                                                ], 400);
+                    }
+                }
+            }
+
             $company->update(['balance' => $company->balance -= $withdrawalValue]);
 
             /** Saque abaixo de R$500,00 a taxa cobrada é R$10,00, acima disso a taxa é gratuita */
-            if($withdrawalValue < 50000) {
+            if ($withdrawalValue < 50000) {
                 $withdrawalValue -= 1000;
             }
 
-            $withdrawal      = $withdrawalModel->newQuery()->create(
+            $withdrawal = $withdrawalModel->create(
                 [
                     'value'         => $withdrawalValue,
                     'company_id'    => $company->id,
@@ -145,10 +166,10 @@ class WithdrawalsApiController extends Controller
         /** @var User $userModel */
         $userModel = new User();
         /** @var Company $company */
-        $company = $companyModel->newQuery()->find(current(Hashids::decode($companyId)));
+        $company = $companyModel->find(current(Hashids::decode($companyId)));
         if (Gate::allows('edit', [$company])) {
             /** @var User $user */
-            $user = $userModel->newQuery()->where('id', auth()->user()->id)->first();
+            $user = $userModel->where('id', auth()->user()->id)->first();
             if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
                 $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
                 return response()->json(
