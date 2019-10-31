@@ -385,13 +385,13 @@
                     <h4 class="modal-title" style="width: 100%; text-align:center">Verificar telefone de suporte</h4>
                 </div>
                 <div class="modal-body" style="margin-top: 10px">
-                    <span>Um código de verificação foi enviado para o seu celular, digite o código recebido no campo abaixo</span>
+                    <span>Um código de verificação foi enviado para o seu celular, digite o código recebido no campo abaixo (pode demorar alguns instantes, aguarde até receber o sms)</span>
                     <br>
                     <form method="POST" enctype="multipart/form-data" id='match_support_phone_verifycode_form'>
                         @csrf
                         <label for="support_phone_verify_code" style="margin-top: 20px">Código de verificação</label>
                         <input id="support_phone_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
-                        <button type='submit' class='btn btn-success mt-1'>
+                        <button type='submit' class='btn btn-success mt-20'>
                             <i class='fas fa-check'></i> Verificar
                         </button>
                     </form>
@@ -413,13 +413,13 @@
                     <h4 class="modal-title" style="width: 100%; text-align:center">Verificar email de contato</h4>
                 </div>
                 <div class="modal-body" style="margin-top: 10px">
-                    <span>Um código de verificação foi enviado para o seu email, digite o código recebido no campo abaixo</span>
+                    <span>Um código de verificação foi enviado para o seu email, digite o código recebido no campo abaixo (pode demorar alguns instantes, aguarde até receber o email)</span>
                     <br>
                     <form method="POST" enctype="multipart/form-data" id='match_contact_verifycode_form'>
                         @csrf
                         <label for="contact_verify_code" style="margin-top: 20px">Código de verificação</label>
                         <input id="contact_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
-                        <button type='submit' class='btn btn-success mt-1'>
+                        <button type='submit' class='btn btn-success mt-20'>
                             <i class='fas fa-check'></i> Verificar
                         </button>
                     </form>
