@@ -14,22 +14,24 @@ use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Core\Services\DisparoProService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectService;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\SmsService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
-use Modules\Projects\Transformers\ProjectsSelectResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class ProjectsApiController
+ * @package Modules\Projects\Http\Controllers
+ */
 class ProjectsApiController extends Controller
 {
     /**
@@ -281,7 +283,8 @@ class ProjectsApiController extends Controller
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
-                    $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+                    $requestValidated['cost_currency_type'] = $project->present()
+                                                                      ->getCurrencyCost($requestValidated['cost_currency_type']);
 
                     $projectUpdate  = $project->fill($requestValidated)->save();
                     $projectChanges = $project->getChanges();
@@ -434,9 +437,9 @@ class ProjectsApiController extends Controller
 
             $verifyCode = random_int(100000, 999999);
 
-            /** @var DisparoProService $disparoPro */
-            $disparoPro = app(DisparoProService::class);
-            $disparoPro->sendMessage(FoxUtils::prepareCellPhoneNumber($supportPhone), "Código de verificação CloudFox - " . $verifyCode);
+            $message    = "Código de verificação CloudFox - " . $verifyCode;
+            $smsService = new SmsService();
+            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($supportPhone), $message);
 
             return response()->json(
                 [
