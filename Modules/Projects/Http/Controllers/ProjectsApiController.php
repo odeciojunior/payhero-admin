@@ -41,10 +41,19 @@ class ProjectsApiController extends Controller
     public function index(Request $request)
     {
         try {
+            $projectModel   = new Project();
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
 
-            return $projectService->getUserProjects($pagination);
+            if (!empty($request->input('status')) && $request->input('status') == 'active') {
+                $projectStatus = [$projectModel->present()->getStatus('active')];
+            } else {
+                $projectStatus = [
+                    $projectModel->present()->getStatus('active'), $projectModel->present()->getStatus('disabled'),
+                ];
+            }
+
+            return $projectService->getUserProjects($pagination, $projectStatus);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -228,17 +237,13 @@ class ProjectsApiController extends Controller
                 $projectService = new ProjectService();
 
                 if ($projectId) {
-                    if (!$projectService->hasSales($projectId)) {
-                        //n tem venda
-                        if ($projectService->delete($projectId)) {
-                            //projeto removido
-                            return response()->json('success', 200);
-                        } else {
-                            //erro ao remover projeto
-                            return response()->json('error', 400);
-                        }
+                    //n tem venda
+                    if ($projectService->delete($projectId)) {
+                        //projeto removido
+                        return response()->json('success', 200);
                     } else {
-                        return response()->json('Impossível remover projeto, possui vendas', 400);
+                        //erro ao remover projeto
+                        return response()->json('error', 400);
                     }
                 } else {
                     return response()->json('Projeto não encontrado', 400);
@@ -375,7 +380,8 @@ class ProjectsApiController extends Controller
 
                 $projectModel = new Project();
 
-                $project = $projectModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->where('id', current(Hashids::decode($id)))
+                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
 
                 if (Gate::allows('show', [$project])) {
                     return new ProjectsResource($project);
@@ -394,7 +400,7 @@ class ProjectsApiController extends Controller
     }
 
     /**
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function getProjects()
     {

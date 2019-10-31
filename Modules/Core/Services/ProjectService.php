@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
@@ -151,6 +152,7 @@ class ProjectService
     public function delete($projectId)
     {
         try {
+            $projectModel = new Project();
 
             $project = $this->getProjectModel()
                             ->with([
@@ -167,124 +169,70 @@ class ProjectService
                             ->where('id', $projectId)->first();
 
             if ($project) {
-                //projeto encontrado
-                $countSales = $this->hasSales($project->id);
 
-                if ($countSales == 0) {
-                    //n tem vendas
+                if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
+                    foreach ($project->pixels as $pixel) {
+                        $pixel->delete();
+                    }
+                }
+
+                if (!empty($project->discountCoupons) && $project->discountCoupons->isNotEmpty()) {
+                    foreach ($project->discountCoupons as $discountCoupon) {
+                        $discountCoupon->delete();
+                    }
+                }
+
+                if (!empty($project->shippings) && $project->shippings->isNotEmpty()) {
+                    foreach ($project->shippings as $shipping) {
+                        $shipping->delete();
+                    }
+                }
+
+                foreach ($project->domains as $domain) {
+
+                    $this->getCloudFlareService()->deleteZoneById($domain->cloudflare_domain_id);
+                    //zona deletada
+                    $this->getSendgridService()->deleteLinkBrand($domain->name);
+                    $this->getSendgridService()->deleteZone($domain->name);
+
+                    $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
+                    $domainDeleted  = $domain->delete();
 
                     if (!empty($project->shopify_id)) {
+                        //se for shopify, voltar as integraçoes ao html padrao
+                        try {
 
-                        if (!empty($project->plans)) {
-                            foreach ($project->plans as $plan) {
-                                foreach ($plan->productsPlans as $productsPlan) {
-                                    if (!empty($productsPlan->product)) {
-                                        $productsPlan->product->delete();
-                                        $productsPlan->delete();
-                                    }
+                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                if (!empty($shopifyIntegration->theme_html)) {
+                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                }
+                                if (!empty($shopifyIntegration->layout_theme_html)) {
+                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
                                 }
                             }
-                        }
-                    } else {
-                        foreach ($project->plans as $plan) {
-                            foreach ($plan->productsPlans as $productsPlan) {
-                                $productsPlan->delete();
-                            }
+                        } catch (Exception $e) {
+                            Log::warning('Erro ao excluir dominio projeto ' . $project->id);
                         }
                     }
+                }
+                //remover integração do shopify
+                $this->getShopifyIntegration()
+                     ->where('project_id', $project->id)
+                     ->delete();
 
-                    if (!empty($project->plans) && $project->plans->isNotEmpty()) {
-                        foreach ($project->plans as $plan) {
-                            $plan->delete();
-                        }
-                    }
+                $projectUpdated = $project->update([
+                                                       'name'   => $project->name . ' (Excluído)',
+                                                       'status' => $projectModel->present()->getStatus('disabled'),
+                                                   ]);
 
-                    if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
-                        foreach ($project->pixels as $pixel) {
-                            $pixel->delete();
-                        }
-                    }
-
-                    if (!empty($project->discountCoupons) && $project->discountCoupons->isNotEmpty()) {
-                        foreach ($project->discountCoupons as $discountCoupon) {
-                            $discountCoupon->delete();
-                        }
-                    }
-
-                    if (!empty($project->zenviaSms) && $project->zenviaSms->isNotEmpty()) {
-                        foreach ($project->zenviaSms as $zenviaSms) {
-                            $zenviaSms->delete();
-                        }
-                    }
-
-                    if (!empty($project->shippings) && $project->shippings->isNotEmpty()) {
-                        foreach ($project->shippings as $shipping) {
-                            $shipping->delete();
-                        }
-                    }
-
-                    if (!empty($project->usersProjects) && $project->usersProjects->isNotEmpty()) {
-                        foreach ($project->usersProjects as $usersProject) {
-                            $usersProject->delete();
-                        }
-                    }
-
-                    foreach ($project->domains as $domain) {
-
-                        $this->getCloudFlareService()->deleteZoneById($domain->cloudflare_domain_id);
-                        //zona deletada
-                        $this->getSendgridService()->deleteLinkBrand($domain->name);
-                        $this->getSendgridService()->deleteZone($domain->name);
-
-                        $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
-                        $domainDeleted  = $domain->delete();
-
-                        if (!empty($project->shopify_id)) {
-                            //se for shopify, voltar as integraçoes ao html padrao
-                            try {
-
-                                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                                    $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                                    $shopify->setThemeByRole('main');
-                                    if (!empty($shopifyIntegration->theme_html)) {
-                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                    }
-                                    if (!empty($shopifyIntegration->layout_theme_html)) {
-                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                    }
-
-
-                                }
-                            } catch (Exception $e) {
-                                //remover integração do shopify
-
-//                                $this->getShopifyIntegration()
-//                                     ->where('project_id', $project->id)
-//                                     ->delete();
-
-//                                $shopifyIntegration->delete();
-//
-//                                $projectDeleted = $project->delete();
-
-                                //throwl
-//                                throw new ServiceException('ProjectService - delete - erro ao mudar template ' . $e->getMessage(), $e->getCode(), $e);
-                            }
-                        }
-                    }
-                    //remover integração do shopify
-                    $this->getShopifyIntegration()
-                         ->where('project_id', $project->id)
-                         ->delete();
-
-                    $projectDeleted = $project->delete();
-                    if ($projectDeleted) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                if ($projectUpdated) {
+                    return true;
                 } else {
-                    //tem venda
+                    Log::warning('Erro ao atualizar nome e status do projeto: id-> (' . $project->id . ')');
+
                     return false;
                 }
             } else {
@@ -299,15 +247,17 @@ class ProjectService
 
     /**
      * @param string $pagination
+     * @param string|null $status
      * @return AnonymousResourceCollection
      */
-    public function getUserProjects(string $pagination)
+    public function getUserProjects(string $pagination, array $status)
     {
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
         $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
-        $projects     = $projectModel->whereIn('id', $userProjects)->orderBy('id', 'DESC');
+        $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
+                             ->orderBy('id', 'DESC');
         if ($pagination) {
             return ProjectsSelectResource::collection($projects->get());
         } else {
