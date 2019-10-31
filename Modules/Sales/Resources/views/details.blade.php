@@ -14,7 +14,7 @@
             </div>
             <div class="modal-body">
                 <div class="transition-details">
-                    <h3 id="sale-code" class="text-uppercase"></h3>
+                    <h3 id="sale-code" class=""></h3>
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
                     <p id='release-date'></p>
