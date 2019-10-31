@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
@@ -222,6 +223,16 @@ class ProjectService
                 $this->getShopifyIntegration()
                      ->where('project_id', $project->id)
                      ->delete();
+
+                $products = Product::where('project_id', $project->id)->get();
+
+                foreach ($products as $product) {
+                    $product->update([
+                                         'shopify_variant_id' => '',
+                                         'shopify_id'         => '',
+
+                                     ]);
+                }
 
                 $projectUpdated = $project->update([
                                                        'name'   => $project->name . ' (Excluído)',
