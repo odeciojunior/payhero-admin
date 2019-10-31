@@ -78,6 +78,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/hotzapp/js/index.js?v=1"></script>
+        <script src="/modules/hotzapp/js/index.js?v=2"></script>
     @endpush
 @endsection
