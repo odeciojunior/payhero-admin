@@ -14,7 +14,8 @@ class AlterTableTrackingHistories extends Migration
      */
     public function up()
     {
-        Schema::table('tracking_histories', function($table){
+        Schema::table('tracking_histories', function(Blueprint $table){
+            $table->dropForeign(['product_plan_sale_id']);
             $table->dropColumn('product_plan_sale_id');
             $table->dropColumn('tracking_type_enum');
             $table->dropColumn('tracking_date');
@@ -30,7 +31,7 @@ class AlterTableTrackingHistories extends Migration
      */
     public function down()
     {
-        Schema::table('tracking_histories', function ($table) {
+        Schema::table('tracking_histories', function (Blueprint $table) {
             $table->unsignedBigInteger('product_plan_sale_id')->after('id');
             $table->integer('tracking_type_enum')->after('updated_at');
             $table->timestamp('tracking_date')->nullable()->after('tracking_status_enum');
