@@ -134,7 +134,7 @@
                                 <div class="row align-items-center mb-20">
                                     <div class="col-lg-10 col-9">
                                         <div class="row align-items-center pl-10">
-                                            <img id="tracking-product-image" src="https://cdn.entrypoint.directory/assets/46588/produtos/7054/produto_de_teste_2710_1_20180510113746.png" width="50px" style="border-radius: 6px;">
+                                            <img id="tracking-product-image" src="" width="50px" style="border-radius: 6px;">
                                             <h4 id="tracking-product-name" class="table-title ml-10 ellipsis" style="flex: 1">Produto Teste</h4>
                                         </div>
                                     </div>

@@ -1,5 +1,9 @@
 $(() => {
 
+    $('#tracking-product-image').on('error', function(){
+       $(this).attr('src', 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png')
+    });
+
     $(document).on('click', '.copy', function () {
         var temp = $("<input>");
         $("body").append(temp);
@@ -113,12 +117,11 @@ $(() => {
                 } else {
                     let {total, delivered, dispatched, exception} = response.data;
                     $('#total-trackings').text(total);
-                    $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
-                    $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
-                    $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
+                    $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                 }
                 loadOnAny('.number', true);
-
             }
         });
     }
