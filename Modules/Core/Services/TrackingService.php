@@ -32,11 +32,11 @@ class TrackingService
             $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
         }
 
-        if (isset($data['tracking_code'])) {
+        if (isset($filters['tracking_code'])) {
             $trackings->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
         }
 
-        if (isset($data['project'])) {
+        if (isset($filters['project'])) {
             $trackings->whereHas('product', function ($query) use ($filters) {
                 $query->where('project_id', current(Hashids::decode($filters['project'])));
             });
@@ -67,11 +67,11 @@ class TrackingService
             $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
         }
 
-        if (isset($data['tracking_code'])) {
+        if (isset($filters['tracking_code'])) {
             $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
         }
 
-        if (isset($data['project'])) {
+        if (isset($filters['project'])) {
             $query->whereHas('product', function ($query) use ($filters) {
                 $query->where('project_id', current(Hashids::decode($filters['project'])));
             });

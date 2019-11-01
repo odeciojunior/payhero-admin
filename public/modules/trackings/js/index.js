@@ -10,7 +10,7 @@ $(() => {
     });
 
     $('#bt_filtro').on('click', function () {
-        index();
+        getResume();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -96,9 +96,9 @@ $(() => {
                 } else {
                     let {total, delivered, dispatched, exception} = response.data;
                     $('#total-trackings').text(total);
-                    $('#percentual-delivered').text(delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)');
-                    $('#percentual-dispatched').text(dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)');
-                    $('#percentual-exception').text(exception + ' (' +((exception*100)/total).toFixed(2) + '%)');
+                    $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
+                    $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
+                    $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
                     index();
                 }
                 loadOnAny('.page-content', true);

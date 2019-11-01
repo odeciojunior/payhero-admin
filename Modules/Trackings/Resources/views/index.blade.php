@@ -67,7 +67,7 @@
             <div class="card shadow p-20" style='display:block;'>
                 <div class="row justify-content-center">
                     <div class="col-md-3">
-                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> check_circle </i> Total</h6>
+                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
                         <h4 id="total-trackings" class="number text-center text-info"></h4>
                     </div>
                     <div class="col-md-3">
