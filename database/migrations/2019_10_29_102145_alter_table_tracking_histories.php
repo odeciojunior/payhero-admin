@@ -21,6 +21,7 @@ class AlterTableTrackingHistories extends Migration
             $table->dropColumn('tracking_date');
             $table->dropColumn('description');
             $table->unsignedBigInteger('tracking_id')->after('id');
+            $table->foreign('tracking_id')->references('id')->on('trackings');
         });
     }
 
@@ -37,6 +38,7 @@ class AlterTableTrackingHistories extends Migration
             $table->integer('tracking_type_enum')->after('updated_at');
             $table->timestamp('tracking_date')->nullable()->after('tracking_status_enum');
             $table->string('description')->after('tracking_date');
+            $table->dropForeign(['tracking_id']);
             $table->dropColumn('tracking_id');
         });
     }
