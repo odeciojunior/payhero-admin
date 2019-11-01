@@ -81,9 +81,7 @@ $(() => {
             method: 'GET',
             url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
                 + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val(),
-            data: {
-
-            },
+            data: {},
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -94,7 +92,7 @@ $(() => {
                 loadOnAny('.page-content', true);
             },
             success: response => {
-                if(isEmpty(response.data)){
+                if (isEmpty(response.data)) {
                     alertCustom('error', 'Erro ao carregar resumo dos rastreios');
                 } else {
                     $('#percentual-delivered').text(response.data.delivered + '%');
@@ -135,7 +133,6 @@ $(() => {
                 if (isEmpty(response.data)) {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
                 } else {
-                    console.log(response.data)
                     $.each(response.data, function (index, tracking) {
                         let badge;
                         switch (tracking.tracking_status_enum) {
@@ -172,7 +169,7 @@ $(() => {
         });
     }
 
-    $(document).on('click', '.tracking-detail', function(){
+    $(document).on('click', '.tracking-detail', function () {
 
         $.ajax({
             method: 'GET',
@@ -186,10 +183,97 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: response => {
-                console.log(response)
+                //preenche os campos
+                $('#tracking-code').text(response.tracking_code);
+                $('#tracking-product-image').attr('src', response.product.photo);
+                $('#tracking-product-name').text(response.product.name + (response.product.description ? '(' + response.product.description + ')' : ''));
+                $('#tracking-product-amount').text(response.amount);
+                $('#tracking-delivery-address').text('Endereço: ' + response.delivery.street + ', ' + response.delivery.number);
+                $('#tracking-delivery-zipcode').text('CEP: ' + response.delivery.zip_code);
+                $('#tracking-delivery-city').text('Cidade: ' + response.delivery.city + '/' + response.delivery.state);
+
+                //GRAFICO DO STATUS DA ENTREGA
+
+                //reset modal
+                $('.tracking-timeline .date-item, .tracking-timeline .step-item, .tracking-timeline .status-item').removeClass('active');
+                $('.tracking-timeline .exception').remove();
+                $('.tracking-timeline .date-item').text('');
+
+                switch (response.tracking_status_enum) {
+                    case 1: // caso o status seja 'postado', marca o circulo inicial
+                        $('.tracking-timeline .date-item').eq(0).addClass('active').text(response.created_at);
+                        $('.tracking-timeline .step-item').eq(0).addClass('active');
+                        $('.tracking-timeline .status-item').eq(0).addClass('active');
+                        break;
+                    case 2: // caso o status seja 'em transito', marca o 2º e o anterior
+                        for (let i = 0; i < 2; i++) {
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .step-item').eq(i).addClass('active');
+                            $('.tracking-timeline .status-item').eq(i).addClass('active');
+                        }
+                        break;
+                    case 3: // caso o status seja 'entregue', marca o 4º e os anteriores
+                        for (let i = 0; i < 4; i++) {
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .step-item').eq(i).addClass('active');
+                            $('.tracking-timeline .status-item').eq(i).addClass('active');
+                        }
+                        break;
+                    case 4: // caso o status seja 'entregue', marca o 3º e os anteriores
+                        for (let i = 0; i < 3; i++) {
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .step-item').eq(i).addClass('active');
+                            $('.tracking-timeline .status-item').eq(i).addClass('active');
+                        }
+                        break;
+                    case 5: // caso o status seja 'problema na entrega'
+                        //verifica o ultimo status do historico e encontra sua posicao no grafico
+                        lastItem = response.history[response.history.length - 1];
+                        let index = 0;
+                        if (lastItem) {
+                            if (lastItem.tracking_status_enum === 2) {
+                                index = 1;
+                            }
+                            if (lastItem.tracking_status_enum === 3) {
+                                index = 2;
+                            }
+                        }
+
+                        //adiciona um circulo representando 'problema na entrega' apos o ultimo status do historico
+                        $('<div class="date-item exception">' + response.created_at + '</div>').insertAfter($('.tracking-timeline .date-item').eq(index));
+                        $('<div class="step-item exception"><span class="step-line"></span><span class="step-dot"></span><span class="step-line"></span></div>').insertAfter($('.tracking-timeline .step-item').eq(index));
+                        $('<div class="status-item exception">Problema na entrega</div>').insertAfter($('.tracking-timeline .status-item').eq(index));
+
+                        //marca todos os circulos anteriores
+                        for (let i = 0; i <= index; i++) {
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .step-item').eq(i).addClass('active');
+                            $('.tracking-timeline .status-item').eq(i).addClass('active');
+                        }
+                        break;
+                }
+
+                //verifica se registro no historico de atualizacoes do tracking, caso exista usa a data do registro
+                for (let register of response.history) {
+                    console.log(register)
+                    switch (register.tracking_status_enum) {
+                        case 1:
+                            $('.tracking-timeline .date-item').eq(0).text(register.created_at);
+                            break;
+                        case 2:
+                            $('.tracking-timeline .date-item').eq(1).text(register.created_at);
+                            break;
+                        case 4:
+                            $('.tracking-timeline .date-item').eq(2).text(register.created_at);
+                            break;
+                    }
+                }
+
+                //FIM - GRAFICO DO STATUS DA ENTREGA
+
+                $('#modal-tracking').modal('show')
             }
         });
 
-        $('#modal-tracking').modal('show')
     });
 });

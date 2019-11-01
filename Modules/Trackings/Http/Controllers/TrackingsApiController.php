@@ -50,6 +50,7 @@ class TrackingsApiController extends Controller
             $tracking = $trackingModel->with([
                 'product',
                 'delivery',
+                'history'
             ])->find($trackingId);
 
             return response()->json($tracking->toArray());

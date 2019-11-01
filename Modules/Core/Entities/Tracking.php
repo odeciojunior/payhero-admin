@@ -74,7 +74,7 @@ class Tracking extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function histories()
+    public function history()
     {
         return $this->hasMany(TrackingHistory::class);
     }

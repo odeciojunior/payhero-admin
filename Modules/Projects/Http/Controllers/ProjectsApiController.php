@@ -408,7 +408,7 @@ class ProjectsApiController extends Controller
 
             $projectService = new ProjectService();
 
-            return $projectService->getUserProjects(true);
+            return $projectService->getUserProjects(true, [1]);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);

@@ -1,42 +1,20 @@
-.timeline-line {
+.step-line {
     background: #758D96;
     height: 3px;
     flex: 1
 }
 
-.timeline-mark {
+.step-dot {
     background: #758D96;
     width: 20px;
     height: 20px;
     border-radius: 10px;
 }
 
-.timeline-status {
-    color: #758D96;
-}
-
-.timeline-step {
+.step-item {
     flex: 1;
     display: flex;
     align-items: center;
-}
-
-.timeline-step.active .timeline-mark,
-.timeline-step.active .timeline-line{
-    background: #17a2b8;
-}
-
-.timeline-status-item.active{
-    color: #17a2b8;
-}
-
-.timeline-step.exception .timeline-mark,
-.timeline-step.exception .timeline-line{
-    background: #dc3545;
-}
-
-.timeline-status-item.exception{
-    color: #dc3545;
 }
 
 .tracking-timeline-row {
@@ -44,7 +22,8 @@
     flex-direction: row;
 }
 
-.timeline-status-item{
+.tracking-timeline-row .date-item,
+.tracking-timeline-row .status-item{
     flex: 1;
     color: #758D96;
     display: flex;
@@ -53,10 +32,34 @@
     text-align: center;
 }
 
+.tracking-timeline-row .status-item{
+    font-weight: bold;
+}
+
 .tracking-timeline{
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.step-item.active .step-dot,
+.step-item.active .step-line{
+    background: #17a2b8;
+}
+
+.date-item.active,
+.status-item.active{
+    color: #17a2b8;
+}
+
+.step-item.exception .step-dot,
+.step-item.exception .step-line{
+    background: #dc3545;
+}
+
+.date-item.exception,
+.status-item.exception{
+    color: #dc3545;
 }
 
 @media (max-width: 768px) {
@@ -67,11 +70,11 @@
         flex-direction: column;
         flex: 1;
     }
-    .timeline-step{
+    .step-item{
         min-height: 50px;
         flex-direction: column;
     }
-    .timeline-line {
+    .step-line {
         width: 3px;
     }
 }

@@ -130,48 +130,48 @@
                                 <div class="row align-items-center mb-20">
                                     <div class="col-lg-10 col-9">
                                         <div class="row align-items-center pl-10">
-                                            <img src="https://cdn.shopify.com/s/files/1/0265/9559/0241/products/caution_radioactive_material_label_halloween_props_igloo_cool_box-rdbb0bbb6843749348f15ea60ab07ddaa_zvmcr_540.jpg?v=1571163258" width="50px" style="border-radius: 6px;">
-                                            <h4 class="table-title ml-10 ellipsis">Bomba caseira</h4>
+                                            <img id="tracking-product-image" src="https://cdn.entrypoint.directory/assets/46588/produtos/7054/produto_de_teste_2710_1_20180510113746.png" width="50px" style="border-radius: 6px;">
+                                            <h4 id="tracking-product-name" class="table-title ml-10 ellipsis" style="flex: 1">Produto Teste</h4>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-3 text-center">
-                                        <span class="sm-text text-muted">5x</span>
+                                        <span id="tracking-product-amount" class="sm-text text-muted">5x</span>
                                     </div>
                                 </div>
                                 <div class="tracking-timeline">
                                     <div class="tracking-timeline-row">
-                                        <div class="timeline-status-item active">31/10/2019</div>
-                                        <div class="timeline-status-item active">01/11/2019</div>
-                                        <div class="timeline-status-item">02/11/2019</div>
-                                        <div class="timeline-status-item">03/11/2019</div>
+                                        <div class="date-item">31/10/2019</div>
+                                        <div class="date-item">01/11/2019</div>
+                                        <div class="date-item">02/11/2019</div>
+                                        <div class="date-item">03/11/2019</div>
                                     </div>
                                     <div class="tracking-timeline-row">
-                                        <div class="timeline-step active">
-                                            <span class="timeline-line"></span>
-                                            <span class="timeline-mark"></span>
-                                            <span class="timeline-line"></span>
+                                        <div class="step-item">
+                                            <span class="step-line"></span>
+                                            <span class="step-dot"></span>
+                                            <span class="step-line"></span>
                                         </div>
-                                        <div class="timeline-step active">
-                                            <span class="timeline-line"></span>
-                                            <span class="timeline-mark"></span>
-                                            <span class="timeline-line"></span>
+                                        <div class="step-item">
+                                            <span class="step-line"></span>
+                                            <span class="step-dot"></span>
+                                            <span class="step-line"></span>
                                         </div>
-                                        <div class="timeline-step">
-                                            <span class="timeline-line"></span>
-                                            <span class="timeline-mark"></span>
-                                            <span class="timeline-line"></span>
+                                        <div class="step-item">
+                                            <span class="step-line"></span>
+                                            <span class="step-dot"></span>
+                                            <span class="step-line"></span>
                                         </div>
-                                        <div class="timeline-step">
-                                            <span class="timeline-line"></span>
-                                            <span class="timeline-mark"></span>
-                                            <span class="timeline-line"></span>
+                                        <div class="step-item">
+                                            <span class="step-line"></span>
+                                            <span class="step-dot"></span>
+                                            <span class="step-line"></span>
                                         </div>
                                     </div>
                                     <div class="tracking-timeline-row">
-                                        <div class="timeline-status-item font-weight-bold active">Postado</div>
-                                        <div class="timeline-status-item font-weight-bold active">Em transito</div>
-                                        <div class="timeline-status-item font-weight-bold">Saiu para entrega</div>
-                                        <div class="timeline-status-item font-weight-bold">Entregue</div>
+                                        <div class="status-item">Postado</div>
+                                        <div class="status-item">Em transito</div>
+                                        <div class="status-item">Saiu para entrega</div>
+                                        <div class="status-item">Entregue</div>
                                     </div>
                                 </div>
                                 <h4 style="margin-top: 40px"> Destino </h4>
@@ -188,55 +188,6 @@
             <!-- End Nodal -->
         </div>
     </div>
-
-    <!-- Modal regerar boleto-->
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-lg d-flex justify-content-center">
-            <div class="modal-content w-450" id="conteudo_modal_add">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" style="font-weight: 700;">Regerar boleto</h4>
-                </div>
-                <div class="pt-10 pr-20 pl-20 modal_regerar_boleto_body">
-                    <div class="form-group">
-                        <label for="date">Data de vencimeto do boleto:</label>
-                        <input name='date' id="date" class="form-control input-pad" type="date">
-                        <input type='hidden' name='saleId' id='saleId'>
-                    </div>
-                    <div class="col-6">
-                        <div class="switch-holder">
-                            <label for="token" class='mb-10'>Aplicar desconto:</label>
-                            <br>
-                            <label class="switch">
-                                <input type="checkbox" value='1' id="apply_discount" class='check'>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row" id="div_discount">
-                        <div class="col-6">
-                            <label for="discount_type"> Tipo:</label>
-                            <select id="discount_type" class="form-control">
-                                <option value="percentage" selected>Porcentagem</option>
-                                <option value="value">Valor</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label id="label_discount_value" for="discount_value">Valor (ex: 20%)</label>
-                            <input id="discount_value" class="form-control" placeholder="Valor">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="margin-top: 15px">
-                    <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Modal -->
 
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
