@@ -10,6 +10,7 @@ $(() => {
     });
 
     $('#bt_filtro').on('click', function () {
+        index();
         getResume();
     });
 
@@ -71,12 +72,28 @@ $(() => {
                 $.each(response.data, function (index, project) {
                     $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
                 });
+                loadOnAny('.page-content', true);
+                index();
                 getResume();
             }
         });
     }
 
     function getResume() {
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: '32px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '20px',
+                    height: '20px',
+                    borderWidth: '4px'
+                },
+            }
+        });
+
         $.ajax({
             method: 'GET',
             url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
@@ -88,7 +105,7 @@ $(() => {
             },
             error: response => {
                 errorAjaxResponse(response);
-                loadOnAny('.page-content', true);
+                loadOnAny('.number', true);
             },
             success: response => {
                 if (isEmpty(response.data)) {
@@ -99,9 +116,9 @@ $(() => {
                     $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
                     $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
                     $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00 %)');
-                    index();
                 }
-                loadOnAny('.page-content', true);
+                loadOnAny('.number', true);
+
             }
         });
     }
