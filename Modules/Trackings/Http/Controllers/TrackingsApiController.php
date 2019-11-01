@@ -17,6 +17,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Transformers\TrackingResource;
+use Modules\Trackings\Transformers\TrackingShowResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -53,7 +54,7 @@ class TrackingsApiController extends Controller
                 'history'
             ])->find($trackingId);
 
-            return response()->json($tracking->toArray());
+            return new TrackingShowResource($tracking);
 
         } catch (Exception $e) {
             Log::warning('Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)');

@@ -91,11 +91,12 @@ class TrackingService
         $exception = $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum('exception'))->count();
 
         return response()->json(['data' => [
-            'posted' => number_format(($posted * 100) / $total, 2),
-            'dispatched' => number_format(($dispatched * 100) / $total, 2),
-            'delivered' => number_format(($delivered * 100) / $total, 2),
-            'out_for_delivery' => number_format(($out_for_delivery * 100) / $total, 2),
-            'exception' => number_format(($exception * 100) / $total, 2),
+            'total' => $total,
+            'posted' => $posted,
+            'dispatched' => $dispatched,
+            'delivered' => $delivered,
+            'out_for_delivery' => $out_for_delivery,
+            'exception' => $exception,
         ]]);
     }
 }

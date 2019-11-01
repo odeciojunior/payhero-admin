@@ -81,7 +81,6 @@ $(() => {
             method: 'GET',
             url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
                 + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val(),
-            data: {},
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -95,9 +94,11 @@ $(() => {
                 if (isEmpty(response.data)) {
                     alertCustom('error', 'Erro ao carregar resumo dos rastreios');
                 } else {
-                    $('#percentual-delivered').text(response.data.delivered + '%');
-                    $('#percentual-dispatched').text(response.data.dispatched + '%');
-                    $('#percentual-exception').text(response.data.exception + '%');
+                    let {total, delivered, dispatched, exception} = response.data;
+                    $('#total-trackings').text(total);
+                    $('#percentual-delivered').text(delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)');
+                    $('#percentual-dispatched').text(dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)');
+                    $('#percentual-exception').text(exception + ' (' +((exception*100)/total).toFixed(2) + '%)');
                     index();
                 }
                 loadOnAny('.page-content', true);
@@ -183,14 +184,17 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: response => {
+
+                let tracking = response.data;
+
                 //preenche os campos
-                $('#tracking-code').text(response.tracking_code);
-                $('#tracking-product-image').attr('src', response.product.photo);
-                $('#tracking-product-name').text(response.product.name + (response.product.description ? '(' + response.product.description + ')' : ''));
-                $('#tracking-product-amount').text(response.amount);
-                $('#tracking-delivery-address').text('Endereço: ' + response.delivery.street + ', ' + response.delivery.number);
-                $('#tracking-delivery-zipcode').text('CEP: ' + response.delivery.zip_code);
-                $('#tracking-delivery-city').text('Cidade: ' + response.delivery.city + '/' + response.delivery.state);
+                $('#tracking-code').text(tracking.tracking_code);
+                $('#tracking-product-image').attr('src', tracking.product.photo);
+                $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
+                $('#tracking-product-amount').text(tracking.amount);
+                $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
+                $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
+                $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
 
                 //GRAFICO DO STATUS DA ENTREGA
 
@@ -199,36 +203,36 @@ $(() => {
                 $('.tracking-timeline .exception').remove();
                 $('.tracking-timeline .date-item').text('');
 
-                switch (response.tracking_status_enum) {
+                switch (tracking.tracking_status_enum) {
                     case 1: // caso o status seja 'postado', marca o circulo inicial
-                        $('.tracking-timeline .date-item').eq(0).addClass('active').text(response.created_at);
+                        $('.tracking-timeline .date-item').eq(0).addClass('active').text(tracking.created_at);
                         $('.tracking-timeline .step-item').eq(0).addClass('active');
                         $('.tracking-timeline .status-item').eq(0).addClass('active');
                         break;
                     case 2: // caso o status seja 'em transito', marca o 2º e o anterior
                         for (let i = 0; i < 2; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
                             $('.tracking-timeline .step-item').eq(i).addClass('active');
                             $('.tracking-timeline .status-item').eq(i).addClass('active');
                         }
                         break;
                     case 3: // caso o status seja 'entregue', marca o 4º e os anteriores
                         for (let i = 0; i < 4; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
                             $('.tracking-timeline .step-item').eq(i).addClass('active');
                             $('.tracking-timeline .status-item').eq(i).addClass('active');
                         }
                         break;
                     case 4: // caso o status seja 'entregue', marca o 3º e os anteriores
                         for (let i = 0; i < 3; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
                             $('.tracking-timeline .step-item').eq(i).addClass('active');
                             $('.tracking-timeline .status-item').eq(i).addClass('active');
                         }
                         break;
                     case 5: // caso o status seja 'problema na entrega'
                         //verifica o ultimo status do historico e encontra sua posicao no grafico
-                        lastItem = response.history[response.history.length - 1];
+                        lastItem = tracking.history[tracking.history.length - 1];
                         let index = 0;
                         if (lastItem) {
                             if (lastItem.tracking_status_enum === 2) {
@@ -240,13 +244,13 @@ $(() => {
                         }
 
                         //adiciona um circulo representando 'problema na entrega' apos o ultimo status do historico
-                        $('<div class="date-item exception">' + response.created_at + '</div>').insertAfter($('.tracking-timeline .date-item').eq(index));
+                        $('<div class="date-item exception">' + tracking.created_at + '</div>').insertAfter($('.tracking-timeline .date-item').eq(index));
                         $('<div class="step-item exception"><span class="step-line"></span><span class="step-dot"></span><span class="step-line"></span></div>').insertAfter($('.tracking-timeline .step-item').eq(index));
                         $('<div class="status-item exception">Problema na entrega</div>').insertAfter($('.tracking-timeline .status-item').eq(index));
 
                         //marca todos os circulos anteriores
                         for (let i = 0; i <= index; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(response.created_at);
+                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
                             $('.tracking-timeline .step-item').eq(i).addClass('active');
                             $('.tracking-timeline .status-item').eq(i).addClass('active');
                         }
@@ -254,8 +258,7 @@ $(() => {
                 }
 
                 //verifica se registro no historico de atualizacoes do tracking, caso exista usa a data do registro
-                for (let register of response.history) {
-                    console.log(register)
+                for (let register of tracking.history) {
                     switch (register.tracking_status_enum) {
                         case 1:
                             $('.tracking-timeline .date-item').eq(0).text(register.created_at);
