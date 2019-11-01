@@ -33,6 +33,7 @@ class AlterTableTrackingHistories extends Migration
     {
         Schema::table('tracking_histories', function (Blueprint $table) {
             $table->unsignedBigInteger('product_plan_sale_id')->after('id');
+            $table->foreign('product_plan_sale_id')->references('id')->on('products_plans_sales');
             $table->integer('tracking_type_enum')->after('updated_at');
             $table->timestamp('tracking_date')->nullable()->after('tracking_status_enum');
             $table->string('description')->after('tracking_date');
