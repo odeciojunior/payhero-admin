@@ -104,6 +104,8 @@ class ProjectsApiController extends Controller
                                                      'visibility'                 => 'private',
                                                      'automatic_affiliation'      => 0,
                                                      'boleto'                     => 1,
+                                                     'status'                     => $projectModel->present()
+                                                                                                  ->getStatus('active'),
                                                  ]);
                 if (!empty($project)) {
                     $shipping = $shippingModel->create([
