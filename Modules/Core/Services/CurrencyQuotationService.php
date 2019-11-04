@@ -79,6 +79,7 @@ class CurrencyQuotationService
         $currencyQuotationModel = new CurrencyQuotation();
         $currencyQuotationUsd   = $currencyQuotationModel->where('currency_type', $currencyQuotationModel->present()
                                                                                                          ->getCurrencyType('USD'))
+                                                         ->where('value','>','0')
                                                          ->latest('id')
                                                          ->first();
 
