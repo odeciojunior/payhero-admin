@@ -148,11 +148,11 @@
             </a>
         </li>
         <li class="site-menu-item has-sub  disabled">
-            <a href="javascript:void(0)" class="disabled">
-                <i class="material-icons">people</i>
-                <span class="site-menu-title">Afiliados (em breve)</span>
-                <span class="site-menu-arrow"></span>
-            </a>
+{{--            <a href="javascript:void(0)" class="disabled">--}}
+{{--                <i class="material-icons">people</i>--}}
+{{--                <span class="site-menu-title">Afiliados (em breve)</span>--}}
+{{--                <span class="site-menu-arrow"></span>--}}
+{{--            </a>--}}
             <ul class="site-menu-sub">
                 <li class="site-menu-item">
                     <a href="{!! route('afiliados.minhasafiliacoes') !!}">
@@ -194,6 +194,12 @@
             <a href="{{ route('invitations.index') }}">
                 <i class="material-icons">person_add</i>
                 <span class="site-menu-title">Convites</span>
+            </a>
+        </li>
+        <li class="site-menu-item has-sub">
+            <a href="{{ route('tools.index') }}">
+                <i class="material-icons">settings</i>
+                <span class="site-menu-title">Ferramentas</span>
             </a>
         </li>
     </ul>

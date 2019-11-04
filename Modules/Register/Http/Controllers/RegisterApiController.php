@@ -47,10 +47,11 @@ class RegisterApiController extends Controller
 
             $user = $userModel->create($requestData);
 
+            $user->update(['account_owner' => $user->id]);
+
             $user->assignRole('administrador empresarial');
 
             auth()->loginUsingId($user->id, true);
-
             $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
             $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
