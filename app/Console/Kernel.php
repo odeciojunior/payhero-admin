@@ -36,6 +36,9 @@ class Kernel extends ConsoleKernel
         //verify pending notazz invoices
         $schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
 
+        //pega as ultimas quotacoes das moedas
+        $schedule->command('update:currencyquotation')->dailyAt('12:00');
+
         // notify user to paid boletos
         $schedule->command('verify:boletopaid')->dailyAt('10:00');
 

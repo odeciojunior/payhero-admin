@@ -6,6 +6,9 @@ $(() => {
         loadOnAny('#data-table-projects');
         $.ajax({
             url: '/api/projects',
+            data: {
+                'status': 'active'
+            },
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

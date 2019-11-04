@@ -14,7 +14,7 @@
             </div>
             <div class="modal-body">
                 <div class="transition-details">
-                    <h3 id="sale-code" class="text-uppercase"></h3>
+                    <h3 id="sale-code" class=""></h3>
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
                     <p id='release-date'></p>
@@ -128,7 +128,7 @@
                         <span id="delivery-city" class="table-title gray"></span>
                         <div id='div_tracking_code' style='display:none;'>
                             <h4> Rastreio </h4>
-                            <small><i class='material-icons gradient mr-1 font-size-14' style="line-height: 1.5">warning</i> Ao cadastrar ou alterar um codigo de rastreio, <b>enviaremos um e-mail</b> notificando o cliente.</small>
+                            {{--<p class="font-size-10"><i class="icon wb-info-circle"></i> Ao cadastrar ou alterar um codigo de rastreio, <b>enviaremos um e-mail</b> notificando o cliente.</p>--}}
                             <table class='table table-striped mt-15'>
                                 <thead>
                                     <tr>

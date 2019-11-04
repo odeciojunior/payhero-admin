@@ -229,20 +229,26 @@ $(() => {
 
         if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
-            if (shopifyIntegrations[0].status !== 1) {
-                $('#bt-change-shopify-integration')
-                    .attr('integration-status', shopifyIntegrations[0].status)
-                    .show();
-                $('#bt-change-shopify-integration span').html(shopifyIntegrations[0].status === 2 ? 'Desfazer integração com shopify' : 'Integrar com shopify');
-            } else if (shopifyIntegrations[0].status === 1) {
-                $('#shopify-integration-pending').show();
+            if (shopifyIntegrations.length !== 0) {
+
+                if (shopifyIntegrations[0].status !== 1) {
+                    $('#bt-change-shopify-integration')
+                        .attr('integration-status', shopifyIntegrations[0].status)
+                        .show();
+                    $('#bt-change-shopify-integration span').html(shopifyIntegrations[0].status === 2 ? 'Desfazer integração com shopify' : 'Integrar com shopify');
+                } else if (shopifyIntegrations[0].status === 1) {
+                    $('#shopify-integration-pending').show();
+                }
+                if (shopifyIntegrations[0].status !== 3) {
+                    $('#bt-shopify-sincronization-product, #bt-shopify-sincronization-template')
+                        .attr('integration-status', shopifyIntegrations[0].status)
+                        .show();
+                }
             }
-            if (shopifyIntegrations[0].status !== 3) {
-                $('#bt-shopify-sincronization-product, #bt-shopify-sincronization-template')
-                    .attr('integration-status', shopifyIntegrations[0].status)
-                    .show();
-            }
+
         }
+
+        $("#checkout_type").val(project.checkout_type);
 
         // Verificação de email de contato
         if (project.contact_verified) {

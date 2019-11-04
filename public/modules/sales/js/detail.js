@@ -23,7 +23,7 @@ $(() => {
     });
 
     $(document).on("click", '#boleto-link .copy_link', function () {
-        var temp = $("<input>");
+        let temp = $("<input>");
         $("#nav-tabContent").append(temp);
         temp.val($(this).attr('link')).select();
         document.execCommand("copy");
@@ -32,7 +32,7 @@ $(() => {
     });
 
     $(document).on("click", '#boleto-digitable-line .copy_link', function () {
-        var temp = $("<input>");
+        let temp = $("<input>");
         $("#nav-tabContent").append(temp);
         temp.val($(this).attr('digitable-line')).select();
         document.execCommand("copy");
@@ -42,11 +42,13 @@ $(() => {
 
     //Codigo de rastreio
     $(document).on('click', '.btn-edit-trackingcode', function () {
-        var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var btnEdit = $(this);
-        var btnSave = btnEdit.parent().find('.btn-save-trackingcode');
-        var btnClose = $(this).parent().find('.btn-close-tracking');
+        let trackingInput = $(this).parent().parent().find('#tracking_code');
+        let btnEdit = $(this);
+        let btnNotify = btnEdit.parent().find('.btn-notify-trackingcode');
+        let btnSave = btnEdit.parent().find('.btn-save-trackingcode');
+        let btnClose = $(this).parent().find('.btn-close-tracking');
         btnEdit.hide();
+        btnNotify.hide();
         btnSave.show('fast');
         btnClose.show('fast');
         trackingInput.css({
@@ -57,9 +59,10 @@ $(() => {
 
     //Botão para ocultar campos rastreio
     $(document).on('click', '.btn-close-tracking', function () {
-        var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var btnEdit = $(this).parent().find('.btn-edit-trackingcode');
-        var btnSave = $(this).parent().find('.btn-save-trackingcode');
+        let trackingInput = $(this).parent().parent().find('#tracking_code');
+        let btnEdit = $(this).parent().find('.btn-edit-trackingcode');
+        let btnNotify = btnEdit.parent().find('.btn-notify-trackingcode');
+        let btnSave = $(this).parent().find('.btn-save-trackingcode');
 
         $(this).hide();
         btnSave.hide();
@@ -68,13 +71,14 @@ $(() => {
             backgroundColor: 'transparent'
         }).prop('readonly', true);
         btnEdit.show('fast');
+        btnNotify.show('fast');
     });
 
     // FIM - COMPORTAMENTOS DA JANELA
 
     // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
-        var sale = $(this).attr('venda');
+        let sale = $(this).attr('venda');
 
         loadOnAny('#modal-saleDetails');
         $('#modal_detalhes').modal('show');
@@ -257,10 +261,10 @@ $(() => {
 
             if (invoice.date_sent) {
 
-                var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
+                let return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
-                var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                let status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
+                let link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -282,7 +286,7 @@ $(() => {
             }
 
             if (invoice.date_error) {
-                var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
+                let status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
 
                 let data = `<tr>
                                 <td>
@@ -306,7 +310,7 @@ $(() => {
 
             if (invoice.date_rejected) {
 
-                var postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;
+                let postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;
 
                 let data = `<tr>
                                 <td>
@@ -330,7 +334,7 @@ $(() => {
 
             if (invoice.date_canceled) {
 
-                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                let link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -437,14 +441,17 @@ $(() => {
                                     <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}'  readonly style="border-color: transparent; background-color: transparent;"/>
+                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' readonly style="border-color: transparent; background-color: transparent;"/>
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
                                 <td class="text-center" style="padding: 0 !important;">
-                                    <a class='pointer btn-save-trackingcode' title='Salvar e notificar cliente' sale='${sale}' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                     <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-save-trackingcode' title='Salvar alterações' sale='${sale}' 
+                                    product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                    <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente' tracking="${value.tracking_id}"
+                                    style='margin-left: 10px; ${value.tracking_code ? '' : 'display:none;'}'><i class='icon wb-envelope' aria-hidden='true' style='color:#f1556f;'></i></a>
                                     <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
                                 </td>
                             </tr>`;
@@ -516,13 +523,13 @@ $(() => {
 
     // FIM - MODAL DETALHES DA VENDA
 
-    //Salvar Código de Rastreio
+    //Sallet Código de Rastreio
     $(document).on('click', '.btn-save-trackingcode', function () {
-        var btnSave = $(this);
-        var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var tracking_code = trackingInput.val();
-        var productId = $(this).attr('product-code');
-        var saleId = $(this).attr('sale');
+        let btnSave = $(this);
+        let trackingInput = $(this).parent().parent().find('#tracking_code');
+        let tracking_code = trackingInput.val();
+        let productId = $(this).attr('product-code');
+        let saleId = $(this).attr('sale');
         if (tracking_code == '') {
             alertCustom('error', 'Dados informados inválidos');
             return false;
@@ -540,9 +547,9 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
-                var btnEdit = btnSave.parent().find('.btn-edit-trackingcode');
-                var btnClose = btnSave.parent().find('.btn-close-tracking');
+                let trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
+                let btnEdit = btnSave.parent().find('.btn-edit-trackingcode');
+                let btnClose = btnSave.parent().find('.btn-close-tracking');
 
                 trackingStatusSPan.html(response.data.tracking_status);
                 trackingInput.val(response.data.tracking_code);
@@ -557,4 +564,25 @@ $(() => {
             }
         });
     });
+
+    //enviar e-mail com o codigo de rastreio
+    $(document).on('click', '.btn-notify-trackingcode', function(){
+        let tracking_id = $(this).attr('tracking');
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking/notify/' + tracking_id,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: () => {
+                alertCustom('success', 'Notificação enviada com sucesso');
+            }
+        });
+    });
+
 });

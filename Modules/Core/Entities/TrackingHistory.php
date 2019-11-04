@@ -30,16 +30,10 @@ class TrackingHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'delivery_id',
-        'plans_sale_id',
-        'product_plan_sale_id',
-        'tracking_code',
+        'tracking_id',
         'created_at',
         'updated_at',
-        'tracking_type_enum',
         'tracking_status_enum',
-        'tracking_date',
-        'description',
         'deleted_at',
     ];
 

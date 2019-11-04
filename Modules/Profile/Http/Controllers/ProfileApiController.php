@@ -5,13 +5,12 @@ namespace Modules\Profile\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\DisparoProService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\SmsService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -221,9 +220,9 @@ class ProfileApiController
 
             $verifyCode = random_int(100000, 999999);
 
-            /** @var DisparoProService $disparoPro */
-            $disparoPro = app(DisparoProService::class);
-            $disparoPro->sendMessage(FoxUtils::prepareCellPhoneNumber($cellphone), "Código de verificação CloudFox - " . $verifyCode);
+            $message    = "Código de verificação CloudFox - " . $verifyCode;
+            $smsService = new SmsService();
+            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($cellphone), $message);
 
             return response()->json(
                 [
@@ -382,9 +381,6 @@ class ProfileApiController
                 $userDocument            = new UserDocument();
 
                 $dataForm = $request->validated();
-
-                $digitalOceanService = app(DigitalOceanFileService::class);
-                $userDocuments       = new UserDocument();
 
                 $document = $request->file('file');
 
