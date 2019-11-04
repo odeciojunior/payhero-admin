@@ -36,7 +36,6 @@ class InvitesApiController extends Controller
             $invites = $invitationModel->newQuery()->where('invite', auth()->user()->id)->with('company');
 
             return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(5));
-
         } catch (Exception $e) {
             Log::warning('Erro ao tentar listar convites (InvitesApiController - index)');
             report($e);
@@ -174,7 +173,7 @@ class InvitesApiController extends Controller
             $invitationModel = new Invitation();
             $invitationId    = current(Hashids::decode($id));
             if ($invitationId) {
-                $invitation        = $invitationModel->newQuery()->find($invitationId);
+                $invitation        = $invitationModel->find($invitationId);
                 $invitationDeleted = $invitation->delete();
                 if ($invitationDeleted) {
                     return response()->json(

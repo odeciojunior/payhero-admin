@@ -23,8 +23,10 @@ $(document).ready(function () {
                     $(response.data).each(function (index, data) {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                <div class="card shadow card-edit" integration=` + data.id + ` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"/>
+                                <div class="card shadow show-integration" integration=` + data.id + `>
+                                    <a href='/apps/notazz/${data.id}' class=''>           
+                                        <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}" style='cursor:pointer'/>
+                                    </a>
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-10'>
@@ -32,7 +34,10 @@ $(document).ready(function () {
                                                 <p class="card-text sm">Criado em ` + data.created_at + `</p>
                                             </div>
                                             <div class='col-md-2'>
-                                                <a role='button' class='delete-integration pointer float-right mt-35' integration=` + data.id + ` data-toggle='modal' data-target='#modal-delete' type='a'>
+                                                <a role='button' class='edit-integration pointer float-right' integration=` + data.id + ` data-toggle='modal' data-target='#modal-edit' type='a'>
+                                                    <i class='material-icons gradient'>edit</i>
+                                                </a>
+                                                 <a role='button' class='delete-integration pointer float-right mt-10' integration=` + data.id + ` data-toggle='modal' data-target='#modal-delete' type='a'>
                                                     <i class='material-icons gradient'>delete_outline</i>
                                                 </a>
                                             </div>
@@ -48,7 +53,7 @@ $(document).ready(function () {
                         e.preventDefault();
                         var integration_id = $(this).attr('integration');
                         var card = $(this).parent().parent().parent().parent().parent();
-                        card.find('.card-edit').unbind('click');
+                        card.find('.edit-integration').unbind('click');
                         $.ajax({
                             method: "DELETE",
                             url: "/api/apps/notazz/" + integration_id,
@@ -73,7 +78,7 @@ $(document).ready(function () {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 } else {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                    alertCustom('error', String(response.responseJSON.message));
                                 }
                             }),
                             success: function success(response) {
@@ -83,8 +88,8 @@ $(document).ready(function () {
                         });
                     });
 
-                    $(".card-edit").unbind('click');
-                    $('.card-edit').on('click', function () {
+                    $(".edit-integration").unbind('click');
+                    $('.edit-integration').on('click', function () {
                         var integration_id = $(this).attr('integration');
                         $.ajax({
                             method: "GET",
@@ -193,6 +198,9 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
+            data: {
+                'status': 'active'
+            },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',

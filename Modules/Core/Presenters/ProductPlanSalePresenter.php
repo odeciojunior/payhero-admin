@@ -6,7 +6,7 @@ use Laracasts\Presenter\Presenter;
 
 class ProductPlanSalePresenter extends Presenter
 {
-    public function getStatusEnum($status)
+    public function getTrackingStatusEnum($status)
     {
 
         if (is_numeric($status)) {

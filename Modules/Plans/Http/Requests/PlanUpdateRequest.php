@@ -14,11 +14,14 @@ class PlanUpdateRequest extends FormRequest
     {
         return [
             'project_id'      => 'nullable',
-            'name'            => 'required|max:50',
+            'name'            => 'required|max:200',
             'price'           => 'required',
-            'description'     => 'nullable|max:50',
+            'description'     => 'nullable|max:200',
             'products'        => 'required|array',
             'product_amounts' => 'required|array',
+            'product_cost'    => 'required|array',
+            'product_total'   => 'required|array',
+            'currency'        => 'required|array',
         ];
     }
 

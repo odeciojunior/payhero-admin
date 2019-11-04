@@ -8,4 +8,10 @@ Route::group(['middleware' => ['auth:api']], function() {
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
 
     Route::get('apps/notazz/invoice/{id}', 'NotazzApiController@getInvoice');
+
+    Route::apiResource('apps/notazz/report', 'NotazzReportApiController')
+         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+
+    Route::get('apps/notazz/export/{id}/', 'NotazzReportApiController@invoicesExport');
+
 });

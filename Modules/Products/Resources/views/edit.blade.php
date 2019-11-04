@@ -66,7 +66,12 @@
                                             <div class="form-group col-lg-12">
                                                 <label for="description">Descrição</label>
                                                 <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
-                                                <p> Máximo 30 caracteres. </p>
+                                                <p class="mb-0"> Máximo 30 caracteres. </p>
+                                            </div>
+                                            <div class="form-group col-lg-12" id="sku" style="display: none">
+                                                <label>SKU</label>
+                                                <input type="text" class="input-pad gray mb-2" readonly />
+                                                <p> Editável somente no Shopify. </p>
                                             </div>
                                             <div class="form-group col-lg-6">
                                                 <label for="name">Tipo</label>
@@ -187,7 +192,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=1') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=2') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

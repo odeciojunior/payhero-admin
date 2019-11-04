@@ -106,6 +106,20 @@ return [
                 "posted"     => "Postado",
                 "dispatched" => "Despachado",
                 "delivered"  => "Entregue",
+                "out_for_delivery" => "Saiu para entrega",
+                "exception"        => "Problema na entrega"
+            ],
+        ],
+        "invoices"        => [
+            "status" => [
+                "pending"            => "Pendente",
+                "send"               => "Enviado",
+                "completed"          => "Finalizado",
+                'error'              => "Erro",
+                "in_process"         => "Em processamento",
+                "error_max_attempts" => "Maximo de tentativas",
+                "canceled"           => "Cancelado",
+                "rejected"           => "Rejeitado",
             ],
         ],
     ],

@@ -55,3 +55,11 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.badge-pending {
+    background: rgb(255, 157, 0);
+}
+
+.badge-approved {
+    background: #44A44B;
+}

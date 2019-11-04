@@ -43,29 +43,31 @@ $(() => {
     //Codigo de rastreio
     $(document).on('click', '.btn-edit-trackingcode', function () {
         var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
         var btnEdit = $(this);
         var btnSave = btnEdit.parent().find('.btn-save-trackingcode');
         var btnClose = $(this).parent().find('.btn-close-tracking');
-        btnEdit.hide('fast');
+        btnEdit.hide();
         btnSave.show('fast');
         btnClose.show('fast');
-        trackingCodeSpan.hide('fast');
-        trackingInput.show('fast');
+        trackingInput.css({
+            borderColor: '',
+            backgroundColor: ''
+        }).prop('readonly', false);
     });
 
     //Botão para ocultar campos rastreio
     $(document).on('click', '.btn-close-tracking', function () {
         var trackingInput = $(this).parent().parent().find('#tracking_code');
-        var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
         var btnEdit = $(this).parent().find('.btn-edit-trackingcode');
         var btnSave = $(this).parent().find('.btn-save-trackingcode');
 
-        $(this).hide('fast');
-        btnSave.hide('fast');
-        trackingInput.hide('fast');
+        $(this).hide();
+        btnSave.hide();
+        trackingInput.css({
+            borderColor: 'transparent',
+            backgroundColor: 'transparent'
+        }).prop('readonly', true);
         btnEdit.show('fast');
-        trackingCodeSpan.show('fast');
     });
 
     // FIM - COMPORTAMENTOS DA JANELA
@@ -113,6 +115,12 @@ $(() => {
         //Dados da venda
         $('#sale-code').text(sale.id);
         $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
+        if (sale.release_date != '') {
+            $('#release-date').text('Data de liberação: ' + sale.release_date);
+        } else {
+            $('#release-date').text('');
+        }
+
         //Status
         let status = $('.modal-body #status');
         status.html('');
@@ -120,22 +128,22 @@ $(() => {
 
         switch (sale.status) {
             case 1:
-                status.append("<span class='badge badge-success'>Aprovada</span>");
+                status.append("<span class='ml-2 badge badge-success'>Aprovada</span>");
                 break;
             case 2:
-                status.append("<span class='badge badge-pendente'>Pendente</span>");
+                status.append("<span class='ml-2 badge badge-pendente'>Pendente</span>");
                 break;
             case 3:
-                status.append("<span class='badge badge-danger'>Recusada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Recusada</span>");
                 break;
             case 4:
-                status.append("<span class='badge badge-danger'>Estornada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Estornada</span>");
                 break;
             case 6:
-                status.append("<span class='badge badge-primary'>Em análise</span>");
+                status.append("<span class='ml-2 badge badge-primary'>Em análise</span>");
                 break;
             default:
-                status.append("<span class='badge badge-primary'>" + sale.status + "</span>");
+                status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
 
@@ -151,10 +159,17 @@ $(() => {
             $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
         }
 
+        $("#taxas-installment-free-label, #taxa-installment-value").hide();
+        if (sale.installment_tax_value !== '0,00') {
+            $("#taxa-installment-value").html('R$ ' + sale.installment_tax_value);
+            $("#taxas-installment-free-label").show();
+            $("#taxa-installment-value").show();
+        }
+
         $("#desconto-value").html("R$ " + sale.discount);
         $("#total-value").html("R$ " + sale.total);
 
-        $('#taxas-label').text('Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ');
+        $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
         $('#taxareal-value').text(sale.taxaReal ? sale.taxaReal : '');
 
         $('#convertax-label, #convertax-value').hide();
@@ -188,7 +203,7 @@ $(() => {
     }
 
     function getNotazz(invoices) {
-        if(!isEmpty(invoices)){
+        if (!isEmpty(invoices)) {
 
             let lastInvoice = invoices[invoices.length - 1];
 
@@ -245,7 +260,7 @@ $(() => {
                 var return_message = (invoice.return_message == null) ? 'Sucesso' : invoice.return_message;
 
                 var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
-                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -266,10 +281,32 @@ $(() => {
                 $('#data-notazz-invoices').append(data);
             }
 
+            if (invoice.date_error) {
+                var status = (invoice.return_message) ? 'Erro ao enviar para Notazz' : 'Enviado para Notazz';
+
+                let data = `<tr>
+                                <td>
+                                    ${invoice.date_error}
+                                </td>
+                                <td>
+                                    ${status}
+                                </td>
+                                <td>
+                                    ${invoice.return_http_code}
+                                </td>
+                                <td>
+                                    ${invoice.return_message}
+                                </td>
+                                <td>
+                                    
+                                </td>
+                            </tr>`;
+                $('#data-notazz-invoices').append(data);
+            }
+
             if (invoice.date_rejected) {
 
                 var postback_message = (invoice.postback_message == null) ? 'Rejeitado' : invoice.postback_message;
-
 
                 let data = `<tr>
                                 <td>
@@ -293,7 +330,7 @@ $(() => {
 
             if (invoice.date_canceled) {
 
-                var link = (invoice.pdf) ? "<a href='"+invoice.pdf+"' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
+                var link = (invoice.pdf) ? "<a href='" + invoice.pdf + "' class='copy_link' style='cursor:pointer;' target='_blank'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a>" : '';
                 let data = `<tr>
                                 <td>
                                     ${invoice.date_sent}
@@ -400,16 +437,15 @@ $(() => {
                                     <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <span class='tracking-code-span small ellipsis'>${value.tracking_code}</span>
-                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
+                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}'  readonly style="border-color: transparent; background-color: transparent;"/>
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
-                                <td>
-                                    <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' sale='${sale}' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
+                                <td class="text-center" style="padding: 0 !important;">
+                                    <a class='pointer btn-save-trackingcode' title='Salvar e notificar cliente' sale='${sale}' product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                     <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
                                 </td>
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
@@ -505,18 +541,18 @@ $(() => {
             },
             success: (response) => {
                 var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
-                var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
                 var btnEdit = btnSave.parent().find('.btn-edit-trackingcode');
                 var btnClose = btnSave.parent().find('.btn-close-tracking');
 
-                trackingCodeSpan.html(response.data.tracking_code);
                 trackingStatusSPan.html(response.data.tracking_status);
                 trackingInput.val(response.data.tracking_code);
-                trackingInput.hide('fast');
-                trackingCodeSpan.show('fast');
-                btnSave.hide('fast');
+                trackingInput.css({
+                    borderColor: 'transparent',
+                    backgroundColor: 'transparent'
+                }).prop('readonly', true);
+                btnSave.hide();
                 btnEdit.show('fast');
-                btnClose.hide('fast');
+                btnClose.hide();
                 alertCustom('success', response.message);
             }
         });

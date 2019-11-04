@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -57,6 +58,7 @@ class SalesApiController extends Controller
             if (isset($id)) {
                 $sale = $saleService->getSaleWithDetails($id);
 
+
                 return new SalesResource($sale);
             }
 
@@ -80,17 +82,16 @@ class SalesApiController extends Controller
 
             $saleService = new SaleService();
 
-            $salesResult = $saleService->getSales($dataRequest, false)->map(
+            $salesResult = $saleService->getSales($dataRequest, false, true)->map(
                 function ($transaction) {
                     return $transaction->sale;
                 }
             );
 
             $header = [
-                'Projeto',
+                //sale
                 'Código da Venda',
-                'Dono do Projeto',
-                'Afiliado',
+                'Pedido do Shopify',
                 'Forma de Pagamento',
                 'Número de Parcelas',
                 'Bandeira do Cartão',
@@ -99,15 +100,23 @@ class SalesApiController extends Controller
                 'Data de Vencimento do Boleto',
                 'Data Inicial do Pagamento',
                 'Data Final do Pagamento',
-                'Data da Criação da  Venda',
                 'Status',
-                'Gateway Status',
-                'Iof',
-                'Desconto Shopify',
+                'Valor Total Venda',
                 'Frete',
                 'Valor do Frete',
-                'Cotação do dolar',
-                'Valor Total Venda',
+                'Taxas',
+                'Comissão',
+                //plan
+                'Projeto',
+                'Plano',
+                'Preço do Plano',
+                'Código dos produtos',
+                'Produto',
+                'Id do Shopify',
+                'Id da Variante do Shopify',
+                'Quantidade dos Produtos',
+                'SKU',
+                //client
                 'Nome do Cliente',
                 'Telefone do Cliente',
                 'Email do Cliente',
@@ -120,6 +129,7 @@ class SalesApiController extends Controller
                 'Cidade',
                 'Estado',
                 'País',
+                //track
                 'src',
                 'utm_source',
                 'utm_medium',
@@ -131,53 +141,62 @@ class SalesApiController extends Controller
 
             $saleData = collect();
             foreach ($salesResult as $sale) {
-                $saleArray = [
-                    'project_name' => $sale->project->name ?? '',
-                    'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
-                            ->encode($sale->id)),
-                    'owner' => $sale->user->name ?? '',
-                    'affiliate' => null,
-                    'payment_form' => $sale->payment_form ?? '',
-                    'installments_amount' => $sale->installments_amount ?? '',
-                    'flag' => $sale->flag ?? '',
-                    'boleto_link' => $sale->boleto_link ?? '',
-                    'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
-                    'boleto_due_date' => $sale->boleto_due_date ?? '',
-                    'start_date' => $sale->start_date ?? '',
-                    'end_date' => $sale->end_date ?? '',
-                    'created_at' => $sale->created_at ?? '',
-                    'status' => $sale->status ?? '',
-                    'gateway_status' => $sale->gateway_status ?? '',
-                    'iof' => $sale->iof ?? '',
-                    'shopify_discount' => $sale->shopify_discount ?? '',
-                    'shipping' => $sale->shipping->name ?? '',
-                    'shipping_value' => $sale->shipping->value ?? '',
-                    'dolar_quotation' => $sale->dolar_quotation ?? '',
-                    'total_paid' => $sale->total_paid_value ?? '',
-                    'client_name' => $sale->client->name ?? '',
-                    'client_telephone' => $sale->client->telephone ?? '',
-                    'client_email' => $sale->client->email ?? '',
-                    'client_document' => $sale->client->document ?? '',
-                    'client_street' => $sale->delivery->street ?? '',
-                    'client_number' => $sale->delivery->number ?? '',
-                    'client_complement' => $sale->delivery->complement ?? '',
-                    'client_neighborhood' => $sale->delivery->neighborhood ?? '',
-                    'client_zip_code' => $sale->delivery->zip_code ?? '',
-                    'client_city' => $sale->delivery->city ?? '',
-                    'client_state' => $sale->delivery->state ?? '',
-                    'client_country' => $sale->delivery->country ?? '',
-                    'src' => $sale->checkout->src ?? '',
-                    'utm_source' => $sale->checkout->utm_source ?? '',
-                    'utm_medium' => $sale->checkout->utm_medium ?? '',
-                    'utm_campaign' => $sale->checkout->utm_campaign ?? '',
-                    'utm_term' => $sale->checkout->utm_term ?? '',
-                    'utm_content' => $sale->checkout->utm_content ?? '',
-                ];
-
-                $saleData->push(collect($saleArray));
+                foreach ($sale->products as $product) {
+                    $saleArray = [
+                        //sale
+                        'sale_code' => '#' . strtoupper(Hashids::connection('sale_id')
+                                ->encode($sale->id)),
+                        'shopify_order' => strval($sale->shopify_order),
+                        'payment_form' => $sale->payment_method == 2 ? 'Boleto' : ($sale->payment_method == 1 ? 'Cartão' : ''),
+                        'installments_amount' => $sale->installments_amount ?? '',
+                        'flag' => $sale->flag ?? '',
+                        'boleto_link' => $sale->boleto_link ?? '',
+                        'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
+                        'boleto_due_date' => $sale->boleto_due_date,
+                        'start_date' => $sale->start_date . ' ' . $sale->hours,
+                        'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
+                        'status' => $sale->present()->getStatus(),
+                        'total_paid' => $sale->total_paid_value ?? '',
+                        'shipping' => $sale->shipping->name ?? '',
+                        'shipping_value' => $sale->shipping->value ?? '',
+                        'fee' => $sale->details->taxaReal,
+                        'comission' => $sale->details->comission,
+                        //plan
+                        'project_name' => $sale->project->name ?? '',
+                        'plan' => $product->plan_name,
+                        'price' => $product->plan_price,
+                        'product_id' => '#'. Hashids::encode($product->id),
+                        'product' => $product->name . ($product->description ? ' (' . $product->description . ')' : ''),
+                        'product_shopify_id' => $product->shopify_id,
+                        'product_shopify_variant_id' => $product->shopify_variant_id,
+                        'amount' => $product->amount,
+                        'sku' => $product->sku,
+                        //client
+                        'client_name' => $sale->client->name ?? '',
+                        'client_telephone' => $sale->client->telephone ?? '',
+                        'client_email' => $sale->client->email ?? '',
+                        'client_document' => $sale->client->document ?? '',
+                        'client_street' => $sale->delivery->street ?? '',
+                        'client_number' => $sale->delivery->number ?? '',
+                        'client_complement' => $sale->delivery->complement ?? '',
+                        'client_neighborhood' => $sale->delivery->neighborhood ?? '',
+                        'client_zip_code' => $sale->delivery->zip_code ?? '',
+                        'client_city' => $sale->delivery->city ?? '',
+                        'client_state' => $sale->delivery->state ?? '',
+                        'client_country' => $sale->delivery->country ?? '',
+                        //track
+                        'src' => $sale->checkout->src ?? '',
+                        'utm_source' => $sale->checkout->utm_source ?? '',
+                        'utm_medium' => $sale->checkout->utm_medium ?? '',
+                        'utm_campaign' => $sale->checkout->utm_campaign ?? '',
+                        'utm_term' => $sale->checkout->utm_term ?? '',
+                        'utm_content' => $sale->checkout->utm_content ?? '',
+                    ];
+                    $saleData->push(collect($saleArray));
+                }
             }
 
-            return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.' . $dataRequest['format']);
+            return Excel::download(new SaleReportExport($saleData, $header), 'export.' . $dataRequest['format']);
         } catch (Exception $e) {
             report($e);
 
@@ -197,7 +216,7 @@ class SalesApiController extends Controller
             if ($transactions->count()) {
                 $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
                     //quantidade de vendas
-                    $carry['total_sales'] += $item->sale->plansSales->count();
+                    $carry['total_sales'] += 1;
                     //cria um item no array pra cada moeda inclusa nas vendas
                     $item->currency = $item->currency ?? 'real';
                     $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
