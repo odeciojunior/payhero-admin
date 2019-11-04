@@ -92,13 +92,20 @@
                                                     <option value="">Selecione</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-lg-6">
+                                            <div class='form-group col-lg-4'>
+                                                <label for="category">Moeda:</label>
+                                                <select name="currency_type_enum" class="form-control select-pad" id='select-currency'>
+                                                    <option class='select-currency-brl' value='BRL' selected>BRL</option>
+                                                    <option class='select-currency-usd' value='USD'>USD</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-lg-4">
                                                 <label for="cost">Custo
                                                     <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
                                                 </label>
                                                 <input name="cost" type="text" class="input-pad money" id="cost" value="" placeholder="Digite o custo" autocomplete="off">
                                             </div>
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-4">
                                                 <label for="price">Preço
                                                     <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
                                                 </label>
@@ -192,7 +199,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=2') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=3') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

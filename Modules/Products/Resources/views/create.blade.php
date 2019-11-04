@@ -85,11 +85,18 @@
                                                 <option value="">Selecione</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class='form-group col-lg-4'>
+                                            <label for="category">Moeda:</label>
+                                            <select name="currency_type_enum" class="form-control select-pad" id='select-currency-type-enum'>
+                                                <option value='BRL' selected>BRL</option>
+                                                <option value='USD'>USD</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-4">
                                             <label for="cost">Custo</label>
                                             <input name="cost" type="text" class="input-pad money" id="cost" value='' placeholder="Digite o custo" autocomplete="off">
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class="form-group col-lg-4">
                                             <label for="price">Preço</label>
                                             <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">
                                         </div>

@@ -50,10 +50,10 @@ $(document).ready(function () {
 
                     $("#name").val(response.data.product.name);
                     $("#description").text(response.data.product.description);
-                    if(!isEmpty(response.data.product.sku)){
+                    if (!isEmpty(response.data.product.sku)) {
                         $('#sku input').val(response.data.product.sku);
                         $('#sku').show();
-                    }else{
+                    } else {
                         $('#sku').hide();
                     }
                     $("#cost").unmask().val(response.data.product.cost).mask('000.000.000.000.000,00', {reverse: true});
@@ -61,6 +61,13 @@ $(document).ready(function () {
                     $("#height").unmask().val(response.data.product.height);
                     $("#width").unmask().val(response.data.product.width);
                     $("#weight").unmask().val(response.data.product.weight);
+
+                    //select moeda
+                    if (response.data.product.currency_type_enum == 1) {
+                        $('#select-currency .select-currency-brl').attr('selected', true);
+                    } else {
+                        $('#select-currency .select-currency-usd').attr('selected', true);
+                    }
 
                     var p = $("#previewimage");
                     $("#photo").on("change", function () {

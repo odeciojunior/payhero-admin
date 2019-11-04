@@ -13,20 +13,21 @@ class CreateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|max:100|string',
-            'description'   => 'required|max:100|string',
-            'format'        => 'nullable',
-            'category'      => 'nullable',
-            'cost'          => 'nullable',
-            'price'         => 'nullable',
-            'height'        => 'nullable',
-            'width'         => 'nullable',
-            'weight'        => 'nullable',
-            'product_photo' => 'nullable',
-            'photo_x1'      => 'nullable',
-            'photo_y1'      => 'nullable',
-            'photo_w'       => 'nullable',
-            'photo_h'       => 'nullable',
+            'name'               => 'required|max:100|string',
+            'description'        => 'required|max:100|string',
+            'format'             => 'nullable',
+            'category'           => 'nullable',
+            'cost'               => 'nullable',
+            'price'              => 'nullable',
+            'height'             => 'nullable',
+            'width'              => 'nullable',
+            'weight'             => 'nullable',
+            'product_photo'      => 'nullable',
+            'photo_x1'           => 'nullable',
+            'photo_y1'           => 'nullable',
+            'photo_w'            => 'nullable',
+            'photo_h'            => 'nullable',
+            'currency_type_enum' => 'nullable',
         ];
     }
 
@@ -50,8 +51,8 @@ class CreateProductRequest extends FormRequest
             'description.required' => 'A descrição do produto é obrigatória',
             'description.max'      => 'O campo Descrição permite apenas 100 caracteres',
             'name.max'             => 'O campo Nome permite apenas 100 caracteres',
-//            'name.regex'           => 'O nome contém caracteres inválidos',
-//            'description.regex'    => 'A descrição contém caracteres inválidos',
+            //            'name.regex'           => 'O nome contém caracteres inválidos',
+            //            'description.regex'    => 'A descrição contém caracteres inválidos',
 
         ];
     }

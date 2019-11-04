@@ -121,13 +121,14 @@ class ProductsApiController extends Controller
             $productModel  = new Product();
             $categoryModel = new Category();
 
-            $data            = $request->validated();
-            $data['shopify'] = 0;
-            $data['user']    = auth()->user()->id;
-            $data['price']   = preg_replace("/[^0-9]/", "", $data['price']);
-            $data['cost']    = preg_replace("/[^0-9]/", "", $data['cost']);
-            $data['user_id'] = auth()->user()->id;
-            $category        = $categoryModel->find(current(Hashids::decode($data['category'])));
+            $data                       = $request->validated();
+            $data['shopify']            = 0;
+            $data['user']               = auth()->user()->id;
+            $data['price']              = preg_replace("/[^0-9]/", "", $data['price']);
+            $data['cost']               = preg_replace("/[^0-9]/", "", $data['cost']);
+            $data['user_id']            = auth()->user()->id;
+            $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
+            $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
 
             if (empty($category)) {
                 $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
@@ -135,7 +136,6 @@ class ProductsApiController extends Controller
             } else {
                 $data['category_id'] = $category->id;
             }
-
             $product = $productModel->create($data);
 
             $productPhoto = $request->file('product_photo');
@@ -256,8 +256,7 @@ class ProductsApiController extends Controller
     public function update($id, UpdateProductRequest $request)
     {
         try {
-            $data = $request->validated();
-
+            $data          = $request->validated();
             $productModel  = new Product();
             $categoryModel = new Category();
 
@@ -269,8 +268,8 @@ class ProductsApiController extends Controller
             } else {
                 $data['category'] = $category->id;
             }
-
-            $productId = current(Hashids::decode($id));
+            $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
+            $productId                  = current(Hashids::decode($id));
             if (!empty($productId) && !empty($data['category'])) {
                 $product = $productModel->find($productId);
                 if (Gate::allows('update', [$product])) {
