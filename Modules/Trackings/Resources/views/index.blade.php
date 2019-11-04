@@ -173,7 +173,7 @@
                                     </div>
                                     <div class="tracking-timeline-row">
                                         <div class="status-item">Postado</div>
-                                        <div class="status-item">Em transito</div>
+                                        <div class="status-item">Em trânsito</div>
                                         <div class="status-item">Saiu para entrega</div>
                                         <div class="status-item">Entregue</div>
                                     </div>

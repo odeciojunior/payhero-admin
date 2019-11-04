@@ -3,17 +3,17 @@
 namespace Modules\Trackings\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Transformers\TrackingResource;
@@ -22,6 +22,10 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
     public function index(Request $request)
     {
         try {
@@ -41,6 +45,10 @@ class TrackingsApiController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse|TrackingShowResource
+     */
     public function show($id)
     {
         try {
@@ -63,6 +71,10 @@ class TrackingsApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function resume(Request $request)
     {
         try {
@@ -82,6 +94,10 @@ class TrackingsApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         try {
@@ -122,9 +138,9 @@ class TrackingsApiController extends Controller
                         if ($tracking) {
 
                             //send email
-                            $sale = $saleModel->find($saleId);
-                            $saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                            //$sale = $saleModel->find($saleId);
+                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
+                            //event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
 
                             return response()->json([
                                                         'message' => 'Código de rastreio salvo',
@@ -155,9 +171,9 @@ class TrackingsApiController extends Controller
                                                           ]);
 
                             //send email
-                            $sale = $saleModel->find($saleId);
-                            $saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                            //$sale = $saleModel->find($saleId);
+                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
+                            //event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
 
                             return response()->json([
                                                         'message' => 'Código de rastreio alterado',
@@ -182,5 +198,41 @@ class TrackingsApiController extends Controller
             return response()->json(['message' => 'Erro ao salvar código de rastreio'], 400);
         }
         return response()->json([], 200);
+    }
+
+    /**
+     * @param $trackingId
+     * @return JsonResponse
+     */
+    public function notifyClient($trackingId)
+    {
+        try {
+            $trackingModel = new Tracking();
+            $productService = new ProductService();
+
+            if (isset($trackingId)) {
+
+                $tracking = $trackingModel->with('sale')
+                    ->find(current(Hashids::decode($trackingId)));
+
+                if ($tracking && $tracking->sale) {
+
+                    $saleProducts = $productService->getProductsBySaleId($tracking->sale->id);
+                    event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
+
+                    return response()->json(['message' => 'Notificação enviada com sucesso']);
+                } else {
+                    return response()->json(['message' => 'Erro ao notificar cliente'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Erro ao notificar cliente'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao notificar cliente (TrackingApiController - notifyClient)');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao notificar cliente'], 400);
+        }
+
     }
 }

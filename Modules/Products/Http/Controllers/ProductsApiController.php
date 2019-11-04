@@ -425,7 +425,7 @@ class ProductsApiController extends Controller
                 return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar obter produtos (TrackingApiController - getTrackingProducts)');
+            Log::warning('Erro ao tentar obter produtos (ProductsApiController - getProductBySale)');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);

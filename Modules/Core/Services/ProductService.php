@@ -56,6 +56,7 @@ class ProductService
                     $product['product_plan_sale_id'] = $productPlanSale->id;
                     $product['sale_status'] = $sale->status;
                     $product['amount'] = $productPlan->amount * $planSale->amount;
+                    $product['tracking_id'] = $tracking ? Hashids::encode($tracking->id) : '';
                     $product['tracking_code'] = $tracking ? $tracking->tracking_code ?? '' : '';
                     $product['tracking_status_enum'] = $tracking ?  $tracking->tracking_status_enum != null ?
                         __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
