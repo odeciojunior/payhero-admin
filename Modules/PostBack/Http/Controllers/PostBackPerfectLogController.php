@@ -4,8 +4,7 @@ namespace Modules\PostBack\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -27,14 +26,14 @@ class PostBackPerfectLogController extends Controller
             'status' => 'required',
         ]);
 
-        Log::debug(json_encode($requestValidated, JSON_PRETTY_PRINT));
+        //Log::debug(json_encode($requestValidated, JSON_PRETTY_PRINT));
 
-        $productPlanSaleModel = new ProductPlanSale();
+        $trackingModel = new Tracking();
 
-        $productPlanSale = $productPlanSaleModel->with(['sale'])
+        $tracking = $trackingModel->with(['sale'])
             ->find(current(Hashids::decode($requestValidated['external_reference'])));
 
-        if(isset($productPlanSale)){
+        if(isset($tracking)){
 
             $status = 0;
 
@@ -42,32 +41,32 @@ class PostBackPerfectLogController extends Controller
                 //case 'preparation':
                 case 'sent':
                 case 'resend':
-                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('dispatched');
+                    $status = $trackingModel->present()->getTrackingStatusEnum('dispatched');
                     break;
                 case 'delivered':
-                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('delivered');
+                    $status = $trackingModel->present()->getTrackingStatusEnum('delivered');
                     break;
                 case 'out_for_delivery':
-                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('out_for_delivery');
+                    $status = $trackingModel->present()->getTrackingStatusEnum('out_for_delivery');
                     break;
                 case 'canceled':
                 case 'pending':
                 case 'erro_fiscal':
                 case 'returned':
-                    $status = $productPlanSaleModel->present()->getTrackingStatusEnum('exception');
+                    $status = $trackingModel->present()->getTrackingStatusEnum('exception');
                     break;
             }
 
             //ATUALIZAR O STATUS
-            $productPlanSale->update([
+            $tracking->update([
                 'tracking_code' => $requestValidated['tracking'],
                 'tracking_status_enum' => $status,
             ]);
 
             //NOTIFICAR O USUARIO
             $productService = new ProductService();
-            $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($productPlanSale->sale->id));
-            event(new TrackingCodeUpdatedEvent($productPlanSale->sale, $productPlanSale, $saleProducts));
+            $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($tracking->sale->id));
+            event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
 
         }
 
