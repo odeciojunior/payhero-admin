@@ -14,22 +14,22 @@ class AlterTableTrackings extends Migration
      */
     public function up()
     {
-        // Schema::table('trackings', function (Blueprint $table) {
+        Schema::table('trackings', function (Blueprint $table) {
 
-        //     $table->dropForeign(['plans_sale_id']);
+            $table->dropForeign(['plans_sale_id']);
 
-        //     $table->dropColumn('plans_sale_id');
-        //     $table->dropColumn('tracking_date');
-        //     $table->dropColumn('description');
+            $table->dropColumn('plans_sale_id');
+            $table->dropColumn('tracking_date');
+            $table->dropColumn('description');
 
-        //     $table->unsignedBigInteger('sale_id')->after('id');
-        //     $table->foreign('sale_id')->references('id')->on('sales');
-        //     $table->unsignedBigInteger('product_id')->after('sale_id');
-        //     $table->foreign('product_id')->references('id')->on('products');
-        //     $table->integer('amount')->after('product_id');
-        //     $table->string('tracking_code')->after('delivery_id');
-        //     $table->integer('tracking_status_enum')->after('tracking_code');
-        // });
+            $table->unsignedBigInteger('sale_id')->after('id');
+            $table->foreign('sale_id')->references('id')->on('sales');
+            $table->unsignedBigInteger('product_id')->after('sale_id');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->integer('amount')->after('product_id');
+            $table->string('tracking_code')->after('delivery_id');
+            $table->integer('tracking_status_enum')->after('tracking_code');
+        });
 
         Schema::table('trackings', function (Blueprint $table) {
             $table->integer('amount')->nullable()->change();
