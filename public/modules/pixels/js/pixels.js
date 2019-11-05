@@ -272,6 +272,8 @@ $(function () {
                 $("#data-table-pixel").html('');
                 if (response.data == '') {
                     $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $('#table-pixel').addClass('table-striped');
+
                 } else {
                     $.each(response.data, function (index, value) {
                         let data = `<tr>
@@ -289,7 +291,6 @@ $(function () {
                         $('#table-pixel').addClass('table-striped');
                     });
                 }
-
                 pagination(response, 'pixels', atualizarPixel);
             }
         });

@@ -507,12 +507,20 @@ font-size: 10px;
     width: 18px !important;
 }
 
-.badge-pendente {
+.badge-pendente, .badge-pending {
     background: rgb(255, 157, 0);
 }
 
-.badge-aprovado {
+.badge-aprovado, .badge-completed {
     background: #44a44b;
+}
+
+.badge-send, .badge-in_process {
+    background: #007BFF;
+}
+
+.badge-error, .badge-erro_max_attempts, .badge-canceled, .badge-rejected {
+    background: #DC3545;
 }
 
 .site-navbar {

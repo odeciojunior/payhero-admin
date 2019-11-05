@@ -64,9 +64,7 @@
                     </div>
                 </div>
             </div>
-
             @include('projects::empty')
-
             <div id="no-integration-found" class='row justify-content-center' style="display:none">
                 <div class="content-error text-center">
                     <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
@@ -78,6 +76,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/hotzapp/js/index.js?v=1"></script>
+        <script src="{{asset('modules/hotzapp/js/index.js?v=2')}}"></script>
     @endpush
 @endsection

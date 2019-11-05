@@ -1,6 +1,6 @@
 <div class="form-group col-xl-6">
-    <label id='fantay_name_label'>Nome da empresa</label>
-    <input name="fantasy_name" type="text" class="input-pad" id="fantasy_name" placeholder="Nome da empresa" maxlength='40' required>
+    <label id='fantay_name_label'>Razão Social</label>
+    <input name="fantasy_name" type="text" class="input-pad" id="fantasy_name" placeholder="Razão Social" maxlength='40' required>
 </div>
 <div class="form-group col-xl-6">
     <label id='company_document_label'>CPF/CNPJ</label>

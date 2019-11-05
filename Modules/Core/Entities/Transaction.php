@@ -34,15 +34,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     use SoftDeletes, PresentableTrait;
-
     protected $presenter = TransactionPresenter::class;
-
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -51,7 +48,6 @@ class Transaction extends Model
         'updated_at',
         'deleted_at',
     ];
-
     /**
      * @var array
      */
@@ -70,6 +66,7 @@ class Transaction extends Model
         'percentage_rate',
         'transaction_rate',
         'percentage_antecipable',
+        'installment_tax',
         'created_at',
         'updated_at',
     ];
@@ -109,9 +106,9 @@ class Transaction extends Model
     /**
      * @return BelongsTo
      */
-    public function invitations(){
+    public function invitations()
+    {
 
         return $this->belongsTo('Modules\Core\Entities\Invitation');
     }
-
 }

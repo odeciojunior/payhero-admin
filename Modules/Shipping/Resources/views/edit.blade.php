@@ -15,14 +15,14 @@
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
             <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='PAC'
-                   maxlength='30'>
+                   maxlength='60'>
         </div>
     </div>
     <div class='row'>
         <div class='form-group col-12'>
             <label for='information'>Tempo de entrega apresentado</label>
             <input name='information' type='text' class='input-pad shipping-info' value='' placeholder='10 até 20 dias'
-                   maxlength='30'>
+                   maxlength='100'>
         </div>
     </div>
     <div class='row value-shipping-row' style="display:none">

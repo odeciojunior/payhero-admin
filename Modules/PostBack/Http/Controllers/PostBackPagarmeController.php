@@ -91,7 +91,7 @@ class PostBackPagarmeController extends Controller
                         $transaction->update([
                                                  'status'            => 'paid',
                                                  'release_date'      => Carbon::now()
-                                                                              ->addDays($user['release_money_days'])
+                                                                              ->addDays($user['boleto_release_money_days'])
                                                                               ->format('Y-m-d'),
                                                  'antecipation_date' => Carbon::now()
                                                                               ->addDays($user['boleto_antecipation_money_days'])
@@ -168,15 +168,35 @@ class PostBackPagarmeController extends Controller
                             $company = $companyModel->find($transaction->company_id);
 
                             $transferModel->create([
-                                                       'transaction' => $transaction->id,
-                                                       'user_id'     => $company->user_id,
-                                                       'value'       => $transaction->value,
-                                                       'type'        => 'out',
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'value'          => $transaction->value,
+                                                       'type'           => 'out',
+                                                       'reason'         => 'chargedback',
+                                                       'company_id'     => $company->id,
                                                    ]);
 
                             $company->update([
                                                  'balance' => $company->balance -= $transaction->value,
                                              ]);
+                        }
+                        elseif($transaction->status == 'anticipated'){
+
+                            $company = $companyModel->find($transaction->company_id);
+
+                            $transferModel->create([
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'value'          => $transaction->antecipable_value,
+                                                       'type'           => 'out',
+                                                       'reason'         => 'chargedback',
+                                                       'company_id'     => $company->id,
+                                                   ]);
+
+                            $company->update([
+                                                 'balance' => $company->balance -= $transaction->value,
+                                             ]);
+
                         }
 
                         $transaction->update([

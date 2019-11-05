@@ -5,7 +5,9 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Core\Events\ResetPasswordEvent;
+use Modules\Core\Events\UserRegistrationEvent;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -75,12 +77,20 @@ class User extends Authenticable
     /**
      * @var array
      */
+    protected $dispatchesEvents = [
+        'created' => UserRegistrationEvent::class,
+    ];
+    /**
+     * @var array
+     */
     protected $fillable = [
         'name',
         'email',
+        'email_verified',
         'password',
         'remember_token',
         'cellphone',
+        'cellphone_verified',
         'document',
         'zip_code',
         'country',
@@ -256,5 +266,13 @@ class User extends Authenticable
     public function sendPasswordResetNotification($token)
     {
         event(new ResetPasswordEvent($token, $this));
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function userNotification()
+    {
+        return $this->hasOne(UserNotification::class);
     }
 }

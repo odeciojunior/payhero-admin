@@ -158,7 +158,6 @@ class CompaniesApiController extends Controller
                 if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
                     $company->bank_document_status = $companyModel->present()->getBankDocumentStatus('pending');
                 }
-                $requestData = array_filter($requestData);
                 $company->update($requestData);
 
                 return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);

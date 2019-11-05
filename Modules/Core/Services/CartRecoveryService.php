@@ -65,9 +65,9 @@ class CartRecoveryService
                          * Valida telefone
                          */
                         if (!empty($telephoneValidated)) {
-                            $zenviaSms = new ZenviaSmsService();
-
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                            $message    = 'Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link;
+                            $smsService = new SmsService();
+                            $smsService->sendSms($telephoneValidated, $message);
                             $abandonedCart->increment('sms_sent_amount');
                         } else {
                             Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar e-sms, numero telefone inválido : ' . $log['telephone']);
@@ -152,9 +152,9 @@ class CartRecoveryService
                          * Valida telefone
                          */
                         if (!empty($telephoneValidated)) {
-                            $zenviaSms = new ZenviaSmsService();
-
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                            $message    = 'Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link;
+                            $smsService = new SmsService();
+                            $smsService->sendSms($telephoneValidated, $message);
                             $abandonedCart->increment('sms_sent_amount');
                         } else {
                             Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar e-sms, numero telefone inválido : ' . $log['telephone']);
