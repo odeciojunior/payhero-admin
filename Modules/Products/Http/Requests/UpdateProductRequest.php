@@ -51,8 +51,8 @@ class UpdateProductRequest extends FormRequest
             'description.required' => 'A descrição do produto é obrigatória',
             'description.max'      => 'O campo Descrição permite apenas 100 caracteres',
             'name.max'             => 'O campo Nome permite apenas 100 caracteres',
-//            'name.regex'           => 'O nome contém caracteres inválidos',
-//            'description.regex'     => 'A descrição contém caracteres inválidos',
+            //            'name.regex'           => 'O nome contém caracteres inválidos',
+            //            'description.regex'     => 'A descrição contém caracteres inválidos',
 
         ];
     }
