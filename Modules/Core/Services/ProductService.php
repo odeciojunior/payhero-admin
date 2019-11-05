@@ -52,8 +52,8 @@ class ProductService
                     $product = $productPlan->product;
                     $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
                         ->first();
-                    $tracking = $productPlanSale->trackings->last();
-                    $product['product_plan_sale_id'] = $productPlanSale->id;
+                    $tracking = $productPlanSale ?  !empty($productPlanSale->trackings) ? $productPlanSale->trackings->last() : null : null;
+                    $product['product_plan_sale_id'] = $productPlanSale ? $productPlanSale->id ? $productPlanSale->id : 0 : 0;
                     $product['sale_status'] = $sale->status;
                     $product['amount'] = $productPlan->amount * $planSale->amount;
                     $product['tracking_id'] = $tracking ? Hashids::encode($tracking->id) : '';
