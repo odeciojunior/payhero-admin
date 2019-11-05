@@ -1,11 +1,7 @@
 $(function () {
-    var statusPlan = {
-        0: "danger",
-        1: "success",
-    }
-    var projectId = $(window.location.pathname.split('/')).get(-1);
-    var form_register_plan = $("#form-register-plan").html();
-    var form_update_plan = $("#form-update-plan").html();
+    var integrationId = $(window.location.pathname.split('/')).get(-1);
+    var form_register_event = $("#form-register-event").html();
+    var form_update_event = $("#form-update-event").html();
     $('#tab_events').on('click', function () {
         index();
     });
@@ -20,17 +16,15 @@ $(function () {
         return Object.keys(obj).length === 0;
     }
     function clearFields() {
-        $('#name').val('');
-        $('#price').val('');
-        $('#description').val('');
-        $("#form-register-plan").html('');
-        $("#form-register-plan").html(form_register_plan);
+        $("#form-register-event").html('');
+        $("#form-register-event").html(form_register_event);
     }
+
     function create() {
         $.ajax({
-            method: "POST",
-            url: "/api/products/userproducts",
-            data: {project: projectId},
+            method: "GET",
+            url: "/api/apps/activecampaignevent/create",
+            data: {integration: integrationId},
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -41,80 +35,69 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if (Object.keys(response.data).length === 0) {
-                    var route = '/products/create';
-                    $('#modal-title-plan-error').text("Oooppsssss!");
-                    $('#modal-add-plan-body-error').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não cadastrou nenhum produto</strong></h3>' + '<h5 align="center">Deseja cadastrar uma produto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-                    $('#modal-footer-plan-error').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                    $('#modal-error-plan').modal('show');
-                } else {
-                    $("#product_1").html('');
-                    $(response.data).each(function (index, data) {
-                        $("#product_1").append("<option value='" + data.id + "'>" + data.name + "</option>");
-                    });
-                    $("#modal-title-plan").html('<span class="ml-15">Adicionar Plano</span>');
-                    $("#btn-modal").addClass('btn-save-plan');
-                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
-                    $("#modal_add_plan").modal('show');
-                    $("#form-update-plan").hide();
-                    $("#form-register-plan").show();
-
-                    $('.products_amount').mask('0#');
-
-                    $(document).on('click', '.btnDelete', function (event) {
-                        event.preventDefault();
-                        $(this).parent().parent().remove();
+                    $("#events").html('');
+                    $(response.events).each(function (index, data) {
+                        $("#events").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
 
-                    //product
-                    $('#price').mask('#.###,#0', {reverse: true});
-                    var qtd_products = '1';
-
-                    var div_products = $('#products_div_' + qtd_products).parent().clone();
-
-                    /**
-                     * Add new product in array
-                     */
-                    $('#add_product_plan').on('click', function () {
-
-                        qtd_products++;
-
-                        var new_div = div_products.clone();
-                        // var opt = new_div.find('option:selected');
-                        // opt.remove();
-                        // var select = new_div.find('select');
-                        var input = new_div.find('.products_amount');
-
-                        input.addClass('products_amount');
-
-                        div_products = new_div;
-                        $('#products').append('<div class="">' + new_div.html() + '</div>');
-
-                        $('.products_amount').mask('0#');
-                    });
-
-                    /**
-                     * Save new Plan
-                     */
-                    $(".btn-save-plan").unbind('click');
-                    $(".btn-save-plan").on('click', function () {
-                        var hasNoValue;
-                        $('.products_amount_create').each(function () {
-                            if ($(this).val() == '' || $(this).val() == 0) {
-                                hasNoValue = true;
-                            }
+                    var lists = response.lists;
+                    $("#add_list").html('<option>Selecione a lista</option>');
+                    $("#remove_list").html('<option>Selecione a lista</option>');
+                    if(lists !== null) {
+                        $(lists.lists).each(function (index, data) {
+                            $("#add_list").append("<option value='" + data.id + ";" + data.name + "'>" + data.name + "</option>");
                         });
-                        if (hasNoValue) {
+                        
+                        $(lists.lists).each(function (index, data) {
+                            $("#remove_list").append("<option value='" + data.id + ";" + data.name + "'>" + data.name + "</option>");
+                        });
+                    }
+
+                    var tags = response.tags;
+                    $("#add_tags").html('<option>Selecione a(s) tag(s)</option>');
+                    $("#remove_tags").html('<option>Selecione a(s) tag(s)</option>');
+                    if(tags !== null) {
+                        $(tags.tags).each(function (index, data) {
+                            $("#add_tags").append("<option value='" + data.id + ";" + data.tag + "'>" + data.tag + "</option>");
+                        });
+                        
+                        $(tags.tags).each(function (index, data) {
+                            $("#remove_tags").append("<option value='" + data.id + ";" + data.tag + "'>" + data.tag + "</option>");
+                        });
+                    }
+
+                    // $('#add_tags').select2();
+
+                    $("#modal-title-event").html('<span class="ml-15">Adicionar Evento</span>');
+                    $("#btn-modal").addClass('btn-save-event');
+                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
+                    $("#modal_add_event").modal('show');
+                    $("#form-update-event").hide();
+                    $("#form-register-event").show();
+
+                    // $(document).on('click', '.btnDelete', function (event) {
+                    //     event.preventDefault();
+                    //     $(this).parent().parent().remove();
+                    // });
+
+
+                    /**
+                     * Save new Event
+                     */
+                    $(".btn-save-event").unbind('click');
+                    $(".btn-save-event").on('click', function () {
+
+                        if ($('#events').val() == '') {
                             alertCustom('error', 'Dados informados inválidos');
                             return false;
                         }
 
-                        var formData = new FormData(document.getElementById('form-register-plan'));
-                        formData.append("project_id", projectId);
+                        var formData = new FormData(document.getElementById('form-register-event'));
+                        formData.append("integration_id", integrationId);
                         loadingOnScreen();
                         $.ajax({
                             method: "POST",
-                            url: '/api/project/' + projectId + '/plans',
+                            url: '/api/apps/activecampaignevent',
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -132,40 +115,31 @@ $(function () {
                                 loadingOnScreenRemove();
                                 index();
                                 clearFields();
-                                alertCustom("success", "Plano Adicionado!");
+                                alertCustom("success", "Evento Adicionado!");
                             }
                         });
                     });
-                }
+                // }
             }
         });
     }
 
     /**
-     * Add new Plan
+     * Add new Event
      */
-    $("#add-plan").on('click', function () {
-        $('#modal_add_plan').attr('data-backdrop', 'static');
+    $("#add-event").on('click', function () {
+        $('#modal_add_event').attr('data-backdrop', 'static');
         create();
-        $('.btn-close-add-plan').on('click', function () {
+        $('.btn-close-add-event').on('click', function () {
             clearFields();
-            $('#modal_add_plan').removeAttr('data-backdrop');
+            $('#modal_add_event').removeAttr('data-backdrop');
         });
     });
 
     /**
-     * Update Table Plan
+     * Update Table Event
      */
     function index() {
-        // var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-        // loadOnTable('#data-table-event', '#table-events');
-        // if (link == null) {
-        //     link = '/api/project/' + projectId + '/plans';
-
-        // } else {
-        //     link = '/api/project/' + projectId + '/plans' + link;
-        // }
 
         var link = '/api/apps/activecampaignevent';
 
@@ -174,7 +148,7 @@ $(function () {
             url: link,
             dataType: "json",
             data: {
-                integration: projectId
+                integration: integrationId
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -204,8 +178,7 @@ $(function () {
                     $.each(response.data, function (index, value) {
                         data = '';
                         data += '<tr>';
-                        data += '<td id="" class="" style="vertical-align: middle;">' + value.product + '</td>';
-                        data += '<td id="" class="" style="vertical-align: middle;">' + value.plan + '</td>';
+                        data += '<td id="" class="" style="vertical-align: middle;">' + value.event_text + '</td>';
 
                         data += '<td id="" class="" style="vertical-align: middle;">';
                         $.each(value.add_tags, function (index2, value2) {
@@ -219,21 +192,33 @@ $(function () {
                         });
                         data += '</td>';
 
+                        let addList = (value.add_list != null) ? value.add_list.list : '';
+                        let rmList = (value.remove_list != null) ? value.remove_list.list : '';
+                        data += '<td id="" class="" style="vertical-align: middle;">' + addList + '</td>';
+                        data += '<td id="" class="" style="vertical-align: middle;">' + rmList + '</td>';
+
                         data += "<td style='text-align:center' class='mg-responsive'>"
                         data += "<a title='Visualizar' class='mg-responsive pointer details-event' event='" + value.id + "' role='button'><i class='material-icons gradient'>remove_red_eye</i></a>"
-                        data += "<a title='Editar' class='mg-responsive pointer edit-plan' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-content'><i class='material-icons gradient'>edit</i></a>"
-                        data += "<a title='Excluir' class='mg-responsive pointer delete-plan' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-delete'><i class='material-icons gradient'>delete_outline</i></a>";
+                        data += "<a title='Editar' class='mg-responsive pointer edit-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-content'><i class='material-icons gradient'>edit</i></a>"
+                        data += "<a title='Excluir' class='mg-responsive pointer delete-event' event='" + value.id + "' role='button'data-toggle='modal' data-target='#modal-delete'><i class='material-icons gradient'>delete_outline</i></a>";
                         data += "</td>";
                         data += '</tr>';
                         $("#data-table-event").append(data);
                         $('#table-events').addClass('table-striped');
                     });
 
-                    // pagination(response, 'plans', index);
+                    if(response.data.length < 5) {
+                        $('#add-event').removeClass('d-none');
+                        $('#add-event').addClass('d-flex');
+                    } else {
+                        $('#add-event').addClass('d-none');
+                        $('#add-event').removeClass('d-flex');
+                    }
+
                 }
 
                 /**
-                 * Details Plan
+                 * Details Event
                  */
                 $(".details-event").unbind('click');
                 $('.details-event').on('click', function () {
@@ -266,27 +251,28 @@ $(function () {
                                 alertCustom('error', 'Ocorreu um erro ao tentar buscar dados do evento!');
                             } else {
                                 $("#modal-title-details").html('Detalhes do Evento <br>');
-                                $('#plan_name').text(response.data.plan);
-                                $('#product_name').text(response.data.product);
 
-                                $('#add_list').text(response.data.add_list.list);
-                                $('#remove_list').text(response.data.remove_list.list);
+                                let addList = (response.data.add_list != null) ? response.data.add_list.list : '';
+                                let rmList = (response.data.remove_list != null) ? response.data.remove_list.list : '';
+
+                                $('#add_list_text').text(addList);
+                                $('#remove_list_text').text(rmList);
 
                                 data = '';
                                 $.each(response.data.add_tags, function (index, value) {
                                     data += value.tag + ', ';
                                 });
-                                $("#add_tags").text(data);
+                                $("#add_tags_text").text(data);
 
-                                $("#event_sale").text(response.data.event_sale); // TODO
+                                $("#event_sale").text(response.data.event_text);
 
                                 data = '';
                                 $.each(response.data.remove_tags, function (index, value) {
                                     data += value.tag + ', ';
                                 });
-                                $("#remove_tags").text(data);
+                                $("#remove_tags_text").text(data);
 
-                                $("#modal_details_plan").modal('show');
+                                $("#modal_details_event").modal('show');
                             }
                         }
                     });
@@ -295,16 +281,16 @@ $(function () {
                 /**
                  * Edit Event
                  */
-                $(".edit-plan").unbind('click');
-                $(".edit-plan").on('click', function () {
+                $(".edit-event").unbind('click');
+                $(".edit-event").on('click', function () {
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
-                    var plan = $(this).attr('plan');
-                    $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
+                    var eventId = $(this).attr('event');
+                    $("#modal-title-event").html('<span class="ml-15">Editar Evento</span>');
 
                     $.ajax({
                         method: "GET",
-                        url: '/api/project/' + projectId + '/plans/' + plan,
+                        url: '/api/apps/activecampaignevent/' + eventId + '/edit',
                         dataType: "json",
                         headers: {
                             'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -315,118 +301,70 @@ $(function () {
 
                             loadingOnScreenRemove()
                         }, success: function success(response) {
-                            $("#form-update-plan").html('');
-                            $("#form-update-plan").html(form_update_plan);
+                            $("#form-update-event").html('');
+                            $("#form-update-event").html(form_update_event);
 
-                            $('#plan_id').val(response.data.id);
-                            $('#plan-name_edit').val(response.data.name);
-                            $('#plan-price_edit').val(response.data.price.replace(/[^0-9]/g, ''));
-                            $('#plan-description_edit').val(response.data.description);
-                            $('#plan-price_edit').mask('#.###,#0', {reverse: true});
-
-                            if (response.data.products != '') {
-                                $.each(response.data.products, function (index, value) {
-
-                                    $('.products_row_edit').append(`
-                                        <div id="products_div_edit" class="row">
-                                            <div class="form-group col-sm-8 col-md-7 col-lg-7">
-                                            <label>Produtos do plano:</label>
-                                            <select id="product_1" name="products[]" class="form-control products_edit">
-                                                <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
-                                             </select>
-                                            </div>
-                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
-                                            <label>Quantidade:</label>
-                                            <input value="` + value.amount + `" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
-                                            </div>
-                                            <div class='form-group col-sm-12 col-md-2 col-lg-2'>
-                                                <label class="display-xsm-none">Remover:</label>
-                                               <button class='btn btn-outline btn-danger btnDelete form-control'>
-                                                    <i class='icon wb-trash' aria-hidden='true'></i></button>
-                                                </button>
-                                            </div>
-                                            <hr class='mb-30 display-lg-none display-xlg-none'>
-                                        </div>
-                                    `);
-                                });
-                            } else {
-                                $('.products_row_edit').append(`
-                                        <div id="products_div_edit" class="row">
-                                            <div class="form-group col-sm-8 col-md-7 col-lg-7">
-                                            <label>Produtos do plano:</label>
-                                            <select id="product_1" name="products[]" class="form-control products_edit">
-                                             </select>
-                                            </div>
-                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
-                                            <label>Quantidade:</label>
-                                            <input value="" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
-                                            </div>
-                                            <div class='form-group col-sm-12 col-md-2 col-lg-2'>
-                                                <label class="display-xsm-none">Remover:</label>
-                                               <button class='btn btn-outline btn-danger btnDelete form-control'>
-                                                    <i class='icon wb-trash' aria-hidden='true'></i></button>
-                                                </button>
-                                            </div>
-                                            <hr class='mb-30 display-lg-none display-xlg-none'>
-                                        </div>
-                                    `);
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/api/products/userproducts",
-                                    data: {project: projectId},
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                    error: function error() {
-                                        $("#modal-content").hide();
-                                        errorAjaxResponse(response);
-
-                                    },
-                                    success: function success(response) {
-                                        $("#products_edit").html('');
-                                        $(response.data).each(function (index, data) {
-                                            $("#products_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
-                                        });
+                            $('#event_id_edit').val(response.event.id);
+                            $('#event_name_edit').html(response.event.event_text);
+                            
+                            var lists = response.lists;
+                            $("#add_list_edit").html('<option>Selecione a lista</option>');
+                            $("#remove_list_edit").html('<option>Selecione a lista</option>');
+                            if(lists !== null) {
+                                $(lists.lists).each(function (index, data) {
+                                    let selected = '';
+                                    let idAddList = getIdAddList(response);
+                                    if(data.id == idAddList) {
+                                        selected = 'selected';
                                     }
+                                    $("#add_list_edit").append("<option value='" + data.id + ";" + data.name + "' " + selected + ">" + data.name + "</option>");
+                                });
+                                
+                                $(lists.lists).each(function (index, data) {
+                                    let selected = '';
+                                    let idRemoveList = getIdRemoveList(response);
+                                    if(data.id == idRemoveList) {
+                                        selected = 'selected';
+                                    }
+                                    $("#remove_list_edit").append("<option value='" + data.id + ";" + data.name + "' " + selected + ">" + data.name + "</option>");
                                 });
                             }
-                            $.ajax({
-                                method: "POST",
-                                url: "/api/products/userproducts",
-                                data: {project: projectId},
-                                dataType: "json",
-                                headers: {
-                                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                                    'Accept': 'application/json',
-                                },
-                                error: function error() {
-                                    $("#modal-content").hide();
-                                    errorAjaxResponse(response);
 
-                                },
-                                success: function success(response) {
-                                    $(".products_edit").each(function () {
-                                        var selectProduct = $(this);
-                                        $(response.data).each(function (index, data) {
-                                            if (data.id != selectProduct.val()) {
-                                                selectProduct.append("<option value='" + data.id + "' >" + data.name + "</option>");
-                                            }
-                                        });
+                            var tags = response.tags;
+                            $("#add_tags_edit").html('<option>Selecione a(s) tag(s)</option>');
+                            $("#remove_tags_edit").html('<option>Selecione a(s) tag(s)</option>');
+                            if(tags !== null) {
+                                let arrayTagsAdd = [];
+                                $(response.event.add_tags).each(function (index, data) {
+                                    arrayTagsAdd.push(data.id);
+                                });
+                                let arrayTagRemove = [];
+                                $(response.event.remove_tags).each(function (index, data) {
+                                    arrayTagRemove.push(data.id);
+                                });
 
-                                    });
-                                }
-                            });
-                            $("#modal_add_plan").modal('show');
-                            $("#form-register-plan").hide();
-                            $("#form-update-plan").show();
+                                $(tags.tags).each(function (index, data) {
+                                    let selectedAdd = '';
+                                    let selectedRemove = '';
+                                    if(arrayTagsAdd.indexOf(data.id) >= 0) {
+                                        selectedAdd = 'selected';
+                                    }
+                                    if(arrayTagRemove.indexOf(data.id) >= 0) {
+                                        selectedRemove = 'selected';
+                                    }
+                                    $("#add_tags_edit").append("<option value='" + data.id + ";" + data.tag + "' " + selectedAdd + ">" + data.tag + "</option>");
+                                    $("#remove_tags_edit").append("<option value='" + data.id + ";" + data.tag + "' " + selectedRemove + ">" + data.tag + "</option>");
+                                });
+                            }
 
-                            $("#btn-modal").removeClass('btn-save-plan');
-                            $("#btn-modal").addClass('btn-update-plan');
+                            $("#modal_add_event").modal('show');
+                            $("#form-register-event").hide();
+                            $("#form-update-event").show();
+
+                            $("#btn-modal").removeClass('btn-save-event');
+                            $("#btn-modal").addClass('btn-update-event');
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
-                            $('.products_amount').mask('0#');
 
                             loadingOnScreenRemove()
 
@@ -435,47 +373,17 @@ $(function () {
                                 $(this).parent().parent().remove();
                             });
 
-                            //product
-                            $('#plan-price').mask('#.###,#0', {reverse: true});
-                            var qtd_products = '1';
-
-                            $('.add_product_plan_edit').on('click', function () {
-                                qtd_products++;
-                                var div_products = $('.products_row_edit').find('#products_div_edit').first().clone();
-
-                                var new_div = div_products.clone();
-                                var input = new_div.find('.products_amount');
-
-                                input.addClass('products_amount');
-
-                                div_products = new_div;
-
-                                $('.products_row_edit').append('<div class="row">' + new_div.html() + '</div>');
-                                $('.products_amount').mask('0#');
-                            });
-
                             /**
-                             * Update Plan
+                             * Update Event
                              */
-                            $(".btn-update-plan").unbind('click');
-                            $(".btn-update-plan").on('click', function () {
-                                var hasNoValue;
-                                $('.products_amount').each(function () {
-                                    if ($(this).val() == '' || $(this).val() == 0) {
-                                        hasNoValue = true;
-                                    }
-                                });
-                                if (hasNoValue) {
-                                    alertCustom('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-                                var formData = new FormData(document.getElementById('form-update-plan'));
-                                formData.append("project_id", projectId);
+                            $(".btn-update-event").unbind('click');
+                            $(".btn-update-event").on('click', function () {
+                                var formData = new FormData(document.getElementById('form-update-event'));
+                                formData.append("integration_id", integrationId);
                                 loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
-                                    // url: "/api/plans/" + plan,
-                                    url: '/api/project/' + projectId + '/plans/' + plan,
+                                    url: '/api/apps/activecampaignevent/' + eventId,
                                     dataType: "json",
                                     headers: {
                                         'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -503,7 +411,7 @@ $(function () {
                                     }),
                                     success: function success(data) {
                                         loadingOnScreenRemove();
-                                        alertCustom("success", "Plano atualizado com sucesso");
+                                        alertCustom("success", "Evento atualizado com sucesso");
                                         index();
                                     }
                                 });
@@ -513,19 +421,20 @@ $(function () {
                 });
 
                 /**
-                 * Delete Plan
+                 * Delete Event
                  */
-                $('.delete-plan').on('click', function (event) {
+                $('.delete-event').on('click', function (event) {
                     event.preventDefault();
-                    var plan = $(this).attr('plan');
-                    $("#modal-delete-plan").modal('show');
-                    $("#btn-delete-plan").unbind('click');
-                    $("#btn-delete-plan").on('click', function () {
-                        $("#modal-delete-plan").modal('hide');
+                    var eventSale = $(this).attr('event');
+                    $("#modal-delete-event").modal('show');
+                    $("#btn-delete-event").unbind('click');
+                    $("#btn-delete-event").on('click', function () {
+                        $("#modal-delete-event").modal('hide');
                         loadingOnScreen();
+
                         $.ajax({
                             method: "DELETE",
-                            url: '/api/project/' + projectId + '/plans/' + plan,
+                            url: '/api/apps/activecampaignevent/' + eventSale,
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -561,3 +470,21 @@ $(function () {
     }
 })
 ;
+
+function getIdAddList(response) {
+    try {
+        let id = response.event.add_list.id;
+        return id;
+    } catch (e) {
+        return 0;
+    }
+}
+
+function getIdRemoveList(response) {
+    try {
+        let id = response.event.remove_list.id;
+        return id;
+    } catch (e) {
+        return 0;
+    }
+}

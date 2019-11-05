@@ -17,11 +17,8 @@ class ActivecampaignEventResource extends Resource
     {
         return [
             'id'          => Hashids::encode($this->id),
-            'product_id'  => Hashids::encode($this->product_id),
-            'plan_id'     => Hashids::encode($this->plan_id),
-            'plan'        => $this->plan->name ?? null,
-            'product'     => $this->product->name,
             'event_sale'  => $this->event_sale,
+            'event_text'  => $this->event_text,
             'add_tags'    => json_decode($this->add_tags, true),
             'remove_tags' => json_decode($this->remove_tags, true),
             'remove_list' => json_decode($this->remove_list, true),

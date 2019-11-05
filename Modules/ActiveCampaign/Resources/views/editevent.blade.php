@@ -1,36 +1,54 @@
-<form id="form-update-plan" method="PUT" action="/plans" enctype="multipart/form-data" style="display:none">
+<form id="form-update-event" method="PUT" action="/api/apps/activecampaignevent" enctype="multipart/form-data" style="display:none">
     @csrf
     @method('PUT')
-    {{--    <input type="hidden" value="{{Hashids::encode($plan->id)}}" name="id">--}}
-    <input type="hidden" value="" name="id" id='plan_id'>
     <div class="container-fluid">
-        <div class="panel" data-plugin="matchHeight">
-            <h4 class='mt-0'> Dados gerais </h4>
+        <div class="" data-plugin="matchHeight">
             <div style="width:100%">
-                <div class="row mt-2">
-                    <div class="form-group col-md-6 col-lg-6">
-                        <label for="name">Nome</label>
-                        <input value="" name="name" type="text" class="form-control" id="plan-name_edit" placeholder="Nome" maxlength='50' required>
-                    </div>
-                    <div class="form-group col-md-6 col-lg-6">
-                        <label for="price">Preço</label>
-                        <input value="" name="price" type="text" class="form-control" id="plan-price_edit" placeholder="Preço" required>
-                    </div>
-                </div>
+                <input type="hidden" value="" name="event_id_edit" id='event_id_edit'>
                 <div class="row">
-                    <div class="form-group col-md-12">
-                        <label for="description">Descrição</label>
-                        <input value="" name="description" type="text" class="form-control" id="plan-description_edit" maxlength='50' placeholder="Descrição">
+                    {{-- <hr class='display-lg-none display-xlg-none'> --}}
+                    <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class="form-group">
+                            <label>Evento: <span id="event_name_edit"></span></label>
+                        </div>
                     </div>
-                </div>
-                <hr class='display-lg-none display-xlg-none'>
-                <div id="products" class='products_row_edit'>
-                        {{-- carregado no js--}}
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <button type="button" id="add_product_plan" class="btn btn-primary col-12 add_product_plan_edit">Adicionar produto</button>
+
+                    <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class="form-group">
+                            <label>Adicionar tags:</label>
+                            <select id="add_tags_edit" name="add_tags_edit[]" multiple="multiple" class="form-control add_tags_edit" data-plugin="" >
+                                {{--select no js--}}
+                            </select>
+                        </div>
                     </div>
+
+                    <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class="form-group">
+                            <label>Remover tags:</label>
+                            <select id="remove_tags_edit" name="remove_tags_edit[]" multiple="multiple" class="form-control remove_tags_edit"  >
+                                {{--select no js--}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class="form-group">
+                            <label>Adicionar na lista:</label>
+                            <select id="add_list_edit" name="add_list_edit" class="form-control add_list_edit">
+                                {{--select no js--}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class='col-sm-12 col-md-12 col-lg-12'>
+                        <div class="form-group">
+                            <label>Remover da lista:</label>
+                            <select id="remove_list_edit" name="remove_list_edit" class="form-control remove_list_edit">
+                                {{--select no js--}}
+                            </select>
+                        </div>
+                    </div>
+                    {{-- <hr class='mb-30 display-lg-none display-xlg-none'> --}}
                 </div>
             </div>
         </div>

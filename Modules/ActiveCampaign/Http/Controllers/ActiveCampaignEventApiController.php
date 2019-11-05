@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Core\Entities\ActivecampaignEvent;
+use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
 use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
@@ -33,13 +34,18 @@ class ActiveCampaignEventApiController extends Controller
 
             $activecampaignIntegrationModel = new ActivecampaignIntegration();
 
-            $activecampaignIntegration = $activecampaignIntegrationModel->where('user_id', auth()->id())->with('events.product', 'events.plan')->where('id',$id)->first();
+            $activecampaignIntegration = $activecampaignIntegrationModel->where('user_id', auth()->id())->with('events')->where('id',$id)->first();
 
             $events = $activecampaignIntegration->events ?? collect([]);
+            foreach ($events as $key => $event) {
+                $eventText = $this->getEventsName([$event->event_sale]);
+                $event->event_text = $eventText[0]['name'];
+            }
+            // dd( ActivecampaignEventResource::collection($events));
             return ActivecampaignEventResource::collection($events);
         }
         catch(Exception $e){
-            dd($e);
+
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
@@ -49,16 +55,17 @@ class ActiveCampaignEventApiController extends Controller
      * @return ActivecampaignResource
      */
     public function show($id){
+        try{
+            $activecampaignEventModel = new ActivecampaignEvent();
+            $activecampaignEvent      = $activecampaignEventModel->find(current(Hashids::decode($id)));
+            $event = $this->getEventsName([$activecampaignEvent->event_sale]);
+            $activecampaignEvent->event_text = $event[0]['name'];
+            return new ActivecampaignEventResource($activecampaignEvent);
+        }
+        catch(Exception $e){
 
-        // $activecampaignIntegrationModel = new ActivecampaignIntegration();
-        // $activecampaignIntegration      = $activecampaignIntegrationModel->find(current(Hashids::decode($id)));
-
-        // return new ActivecampaignResource($activecampaignIntegration);
-        
-        $activecampaignEventModel = new ActivecampaignEvent();
-        $activecampaignEvent      = $activecampaignEventModel->with('product', 'plan')->find(current(Hashids::decode($id)));
-
-        return new ActivecampaignEventResource($activecampaignEvent);
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+        }
     }
 
     /**
@@ -68,53 +75,99 @@ class ActiveCampaignEventApiController extends Controller
     public function store(Request $request) {
 
         try {
-            $data                           = $request->all();
-            $activecampaignIntegrationModel = new ActivecampaignIntegration();
+            $data = $request->all();
 
-            $projectId = current(Hashids::decode($data['project_id']));
-            if (!empty($projectId)) {
-                $integration = $activecampaignIntegrationModel->where('project_id', $projectId)->first();
-                if ($integration) {
+            if(!empty($data['add_list'])) {
+                $addList = explode(';', $data['add_list']);
+                if(count($addList) > 1) {
+                    $addList = json_encode(['id' => $addList[0], 'list' => $addList[1]]);
+                } else {
+                    $addList = null;
+                }
+            }
+
+            if(!empty($data['remove_list'])) {
+                $removeList = explode(';', $data['remove_list']);
+                if(count($removeList) > 1) {
+                    $removeList = json_encode(['id' => $removeList[0], 'list' => $removeList[1]]);
+                } else {
+                    $removeList = null;
+                }
+            }
+
+            if(count($data['remove_tags'] ?? []) > 0) {
+                $removeTags = [];
+                foreach ($data['remove_tags'] as $key => $value) {
+                    $tag = explode(';', $value);
+                    if(count($tag) > 1) {
+                        $removeTags[] = ['id' => $tag[0], 'tag' => $tag[1]];
+                    }
+                }
+                if(count($removeTags) > 0) {
+                    $removeTags = json_encode($removeTags);
+                } else {
+                    $removeTags = null;
+                }
+            }
+
+            if(count($data['add_tags'] ?? []) > 0) {
+                $addTags = [];
+                foreach ($data['add_tags'] as $key => $value) {
+                    $tag = explode(';', $value);
+                    if(count($tag) > 1) {
+                        $addTags[] = ['id' => $tag[0], 'tag' => $tag[1]];
+                    }
+                }
+                if(count($addTags) > 0) {
+                    $addTags = json_encode($addTags);
+                } else {
+                    $addTags = null;
+                }
+            }
+
+            $activecampaignEventModel = new ActivecampaignEvent();
+
+            $integrationId = current(Hashids::decode($data['integration_id']));
+
+            if (!empty($integrationId)) {
+                $event = $activecampaignEventModel->where('activecampaign_integration_id', $integrationId)->where('event_sale', $data['events'])->first();
+                if ($event) {
                     return response()->json([
-                        'message' => 'Projeto já integrado',
+                        'message' => 'Evento já cadastrado',
                     ], 400);
                 }
-                if (empty($data['api_url'])) {
-                    $data['api_url'] = 0;
-                }
-                if (empty($data['api_key'])) {
-                    $data['api_key'] = 0;
-                }
 
-                $integrationCreated = $activecampaignIntegrationModel->create([
-                    'api_url'    => $data['api_url'],
-                    'api_key'    => $data['api_key'],
-                    'project_id' => $projectId,
-                    'user_id'    => auth()->user()->id,
+                $eventCreated = $activecampaignEventModel->create([
+                    'event_sale'                    => $data['events'],
+                    'add_tags'                      => $addTags ?? null,
+                    'remove_tags'                   => $removeTags ?? null,
+                    'add_list'                      => $addList ?? null,
+                    'remove_list'                   => $removeList ?? null,
+                    'activecampaign_integration_id' => $integrationId,
                 ]);
 
-                if ($integrationCreated) {
+                if ($eventCreated) {
                     return response()->json([
-                        'message' => 'Integração criada com sucesso!'
+                        'message' => 'Evento criado com sucesso!'
                     ], 200);
                 } else {
 
                     return response()->json([
-                        'message' => 'Ocorreu um erro ao realizar a integração',
+                        'message' => 'Ocorreu um erro ao salvar o evento',
                     ], 400);
                 }
             } else {
 
                 return response()->json([
-                    'message' => 'Ocorreu um erro ao realizar a integração',
+                    'message' => 'Ocorreu um erro ao salvar o evento',
                 ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao realizar integração ActiveCampaignController - store');
+            Log::warning('Erro ao salvar o evento ActiveCampaignEventController - store');
             report($e);
-
+            dd($e);
             return response()->json([
-                'message' => 'Ocorreu um erro ao realizar a integração',
+                'message' => 'Ocorreu um erro ao salvar o evento',
             ], 400);
         }
     }
@@ -126,17 +179,32 @@ class ActiveCampaignEventApiController extends Controller
     public function edit($id)
     {
         try {
+
             if (!empty($id)) {
+
+                $activecampaignEventModel       = new ActivecampaignEvent();
                 $activecampaignIntegrationModel = new ActivecampaignIntegration();
-                $projectService                 = new ProjectService();
+                $activeCampaignService          = new ActiveCampaignService();
 
-                $projects = $projectService->getMyProjects();
+                $eventId = current(Hashids::decode($id));
+                $event   = $activecampaignEventModel->where('id', $eventId)->first();
+                if ($event) {
+                    $integration = $activecampaignIntegrationModel->where('user_id', auth()->id())->where('id',$event->activecampaign_integration_id)->first();
 
-                $projectId   = current(Hashids::decode($id));
-                $integration = $activecampaignIntegrationModel->where('project_id', $projectId)->first();
+                    if($activeCampaignService->setAccess($integration->api_url, $integration->api_key, $integration->id)) {
+                        $tags = $activeCampaignService->getTags();
+                        $lists = $activeCampaignService->getLists();
+                    } else {
+                        $tags = null;
+                        $lists = null;
+                    }
 
-                if ($integration) {
-                    return response()->json(['projects' => $projects, 'integration' => $integration]);
+                    $eventName = $this->getEventsName([$event->event_sale]);
+                    $event->event_text = $eventName[0]['name'];
+                    $event = new ActivecampaignEventResource($event);
+
+                    return response()->json(['tags' => json_decode($tags, true), 'lists' => json_decode($lists, true), 'event' => $event], 200);
+
                 } else {
                     return response()->json([
                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
@@ -149,7 +217,7 @@ class ActiveCampaignEventApiController extends Controller
                 ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar Integração ActiveCampaign (ActiveCampaignController - edit)');
+            Log::warning('Erro ao tentar acessar tela editar Evento ActiveCampaign (ActiveCampaignEventController - edit)');
             report($e);
 
             return response()->json([
@@ -165,30 +233,85 @@ class ActiveCampaignEventApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $activecampaignIntegrationModel = new ActivecampaignIntegration();
-        $data                           = $request->all();
-        $integrationId                  = current(Hashids::decode($id));
-        $activecampaignIntegration      = $activecampaignIntegrationModel->find($integrationId);
-        if (empty($data['api_url'])) {
-            $data['api_url'] = 0;
-        }
-        if (empty($data['api_key'])) {
-            $data['api_key'] = 0;
-        }
+        try {
+            $data = $request->all();
 
-        $integrationUpdated = $activecampaignIntegration->update([
-            'api_url' => $data['api_url'],
-            'api_key' => $data['api_key'],
-        ]);
-        if ($integrationUpdated) {
+            if(!empty($data['add_list_edit'])) {
+                $addList = explode(';', $data['add_list_edit']);
+                if(count($addList) > 1) {
+                    $addList = json_encode(['id' => $addList[0], 'list' => $addList[1]]);
+                } else {
+                    $addList = null;
+                }
+            }
+
+            if(!empty($data['remove_list_edit'])) {
+                $removeList = explode(';', $data['remove_list_edit']);
+                if(count($removeList) > 1) {
+                    $removeList = json_encode(['id' => $removeList[0], 'list' => $removeList[1]]);
+                } else {
+                    $removeList = null;
+                }
+            }
+
+            if(count($data['remove_tags_edit'] ?? []) > 0) {
+                $removeTags = [];
+                foreach ($data['remove_tags_edit'] as $key => $value) {
+                    $tag = explode(';', $value);
+                    if(count($tag) > 1) {
+                        $removeTags[] = ['id' => $tag[0], 'tag' => $tag[1]];
+                    }
+                }
+                if(count($removeTags) > 0) {
+                    $removeTags = json_encode($removeTags);
+                } else {
+                    $removeTags = null;
+                }
+            }
+
+            if(count($data['add_tags_edit'] ?? []) > 0) {
+                $addTags = [];
+                foreach ($data['add_tags_edit'] as $key => $value) {
+                    $tag = explode(';', $value);
+                    if(count($tag) > 1) {
+                        $addTags[] = ['id' => $tag[0], 'tag' => $tag[1]];
+                    }
+                }
+                if(count($addTags) > 0) {
+                    $addTags = json_encode($addTags);
+                } else {
+                    $addTags = null;
+                }
+            }
+
+            $activecampaignEventModel = new ActivecampaignEvent();
+
+            $eventId = current(Hashids::decode($data['event_id_edit']));
+
+            $eventUpdate = $activecampaignEventModel->where('id', $eventId)->update([
+                'add_tags'                      => $addTags ?? null,
+                'remove_tags'                   => $removeTags ?? null,
+                'add_list'                      => $addList ?? null,
+                'remove_list'                   => $removeList ?? null,
+            ]);
+
+            if ($eventUpdate) {
+                return response()->json([
+                    'message' => 'Evento atualizado com sucesso!'
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Ocorreu um erro ao atualizar o evento',
+                ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao atualizar o evento ActiveCampaignEventController - update');
+            report($e);
+
             return response()->json([
-                'message' => 'Integração atualizada com sucesso!',
-            ], 200);
+                'message' => 'Ocorreu um erro ao atualizar o evento',
+            ], 400);
         }
-
-        return response()->json([
-            'message' => 'Ocorreu um erro ao atualizar a integração',
-        ], 400);
     }
 
     /**
@@ -198,26 +321,86 @@ class ActiveCampaignEventApiController extends Controller
     public function destroy($id)
     {
         try {
-            $integrationId                  = current(Hashids::decode($id));
-            $activecampaignIntegrationModel = new ActivecampaignIntegration();
-            $integration                    = $activecampaignIntegrationModel->find($integrationId);
-            $integrationDeleted             = $integration->delete();
+            $eventId                  = current(Hashids::decode($id));
+            $activecampaignEventModel = new ActivecampaignEvent();
+            $integration              = $activecampaignEventModel->find($eventId);
+            $integrationDeleted       = $integration->delete();
             if ($integrationDeleted) {
                 return response()->json([
-                    'message' => 'Integração Removida com sucesso!',
+                    'message' => 'Evento Removido com sucesso!',
                 ], 200);
             }
 
             return response()->json([
-                'message' => 'Erro ao tentar remover Integração',
+                'message' => 'Erro ao tentar remover evento',
             ], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar remover Integração ActiveCampaign (ActiveCampaignController - destroy)');
+            Log::warning('Erro ao tentar remover Evento ActiveCampaign (ActiveCampaignEventController - destroy)');
             report($e);
 
             return response()->json([
                 'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
             ], 400);
         }
+    }
+
+    public function create() {
+
+        try{
+            $request = Request::capture();
+            $data = $request->all();
+
+            $id = Hashids::decode($data['integration']);
+
+            $activecampaignIntegrationModel = new ActivecampaignIntegration();
+
+            $integration = $activecampaignIntegrationModel->where('user_id', auth()->id())->with('events')->where('id',$id)->first();
+
+            $activeCampaignService = new ActiveCampaignService();
+
+            $eventsIntegration = $integration->events->pluck('event_sale')->toArray();
+            $eventsDiff = array_diff([1,2,3,4,5], $eventsIntegration);
+            
+            $events = $this->getEventsName($eventsDiff);            
+            $events = collect($events);
+            if($activeCampaignService->setAccess($integration->api_url, $integration->api_key, $integration->id)) {
+                $tags = $activeCampaignService->getTags();
+                $lists = $activeCampaignService->getLists();
+            } else {
+                $tags = null;
+                $lists = null;
+            }
+
+            return response()->json(['tags' => json_decode($tags, true), 'lists' => json_decode($lists, true), 'events' => $events], 200);
+        }
+        catch(Exception $e){
+            // dd($e);
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
+        }
+        
+    }
+
+    private function getEventsName(array $arrayEvents) {
+        $events = [];
+        foreach ($arrayEvents as $key => $value) {
+            switch ($value) {
+                case 1:
+                    $events[] = ['name' => 'Boleto gerado', 'id' => 1];
+                    break;
+                case 2:
+                    $events[] = ['name' => 'Boleto pago', 'id' => 2];
+                    break;
+                case 3:
+                    $events[] = ['name' => 'Cartão de crédito pago', 'id' => 3];
+                    break;
+                case 4:
+                    $events[] = ['name' => 'Carrinho abandonado', 'id' => 4];
+                    break;
+                case 5:
+                    $events[] = ['name' => 'Cartão de crédito recusado', 'id' => 5];
+                    break;
+            }
+        }
+        return $events;
     }
 }

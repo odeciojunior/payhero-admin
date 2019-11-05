@@ -3,6 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 @endpush
 
 @section('content')
@@ -77,6 +78,7 @@
     @push('scripts')
         <script src="{{asset('modules/activecampaign/js/edit.js?v=1')}}"></script>
         <script src="{{asset('modules/activecampaign/js/events.js?v=1')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection
 

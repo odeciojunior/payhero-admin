@@ -4,12 +4,12 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ActiveCampaignEventPresenter;
 
 /**
  * @property integer $id
  * @property integer $activecampaign_integration_id
- * @property integer $product_id
- * @property integer $plan_id
  * @property int $event_sale
  * @property string $add_tags
  * @property string $remove_tags
@@ -25,6 +25,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ActivecampaignEvent extends Model
 {
     use SoftDeletes;
+    use PresentableTrait;
+
+    protected $presenter = ActiveCampaignEventPresenter::class;
+    
     /**
      * The "type" of the auto-incrementing ID.
      * 
@@ -37,8 +41,6 @@ class ActivecampaignEvent extends Model
      */
     protected $fillable = [
         'activecampaign_integration_id',
-        'product_id',
-        'plan_id',
         'event_sale',
         'add_tags',
         'remove_tags',
@@ -55,21 +57,5 @@ class ActivecampaignEvent extends Model
     public function activecampaignIntegration()
     {
         return $this->belongsTo('Modules\Core\Entities\ActivecampaignIntegration');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function plan()
-    {
-        return $this->belongsTo('Modules\Core\Entities\Plan');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function product()
-    {
-        return $this->belongsTo('Modules\Core\Entities\Product');
     }
 }
