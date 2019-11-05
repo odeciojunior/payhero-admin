@@ -43,33 +43,22 @@ class UpdateTrackingStatus extends Command
     public function handle()
     {
         try{
-            //DB::beginTransaction();
 
             $trackingModel = new Tracking();
 
-            //$trackings = $trackingModel->all();
-            $trackings = $trackingModel->with(['sale'])
-                ->where('tracking_status_enum', 0)
-                ->whereHas('sale', function($query){
-                   $query->where('owner_id', 19);
-                })
-                ->orderBy('id', 'desc')
-                ->get();
-
+            $trackings = $trackingModel->all();
 
             foreach ($trackings as $tracking){
 
                 $this->line('Tracking: ' . $tracking->tracking_code);
 
-//                if($this->confirm('Do you wish to continue? (yes|no)[no]'))
-//                {
-//                    $this->info("Process terminated by user");
-//                    return;
-//                }
+                /*if($this->confirm('Do you wish to continue? (yes|no)[no]'))
+                {
+                    $this->info("Process terminated by user");
+                    return;
+                }*/
 
                 $response =  json_decode($this->track($tracking));
-
-                //$response->tracking = $response->data[0] ?? null;
 
                 if(isset($response->tracking)){
 
@@ -111,7 +100,6 @@ class UpdateTrackingStatus extends Command
                 }
 
             }
-            //DB::commit();
             $this->line(date('Y-m-d H:i:s') . ' Funcionou paizao!');
         }catch (Exception $e){
             $this->line(date('Y-m-d H:i:s') . ' Error: ' . $e->getMessage());
@@ -134,12 +122,6 @@ class UpdateTrackingStatus extends Command
                 'system' => 'd2cfc007a524529536dfb43f779ba9fa0711023859ad105aedcfa86252d89ec9'
             ],
         ]);
-
-        /*curl_setopt_array($curl, [
-            CURLOPT_URL => "http://log.devppay.com.br/api/tracking/search?token_user=27aa6d41fd15ba3118159146fd7f89f2&tracking=" . $tracking->tracking_code,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "GET",
-        ]);*/
 
         $response = curl_exec($curl);
 
