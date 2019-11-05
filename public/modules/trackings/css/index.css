@@ -1,0 +1,83 @@
+.step-line {
+    background: #758D96;
+    height: 3px;
+    flex: 1
+}
+
+.step-dot {
+    background: #758D96;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+}
+
+.step-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.tracking-timeline-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.tracking-timeline-row .date-item,
+.tracking-timeline-row .status-item{
+    flex: 1;
+    color: #758D96;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.tracking-timeline-row .status-item{
+    font-weight: bold;
+}
+
+.tracking-timeline{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.step-item.active .step-dot,
+.step-item.active .step-line{
+    background: #17a2b8;
+}
+
+.date-item.active,
+.status-item.active{
+    color: #17a2b8;
+}
+
+.step-item.exception .step-dot,
+.step-item.exception .step-line{
+    background: #dc3545;
+}
+
+.date-item.exception,
+.status-item.exception{
+    color: #dc3545;
+}
+
+@media (max-width: 768px) {
+    .tracking-timeline{
+        flex-direction: row;
+    }
+    .tracking-timeline-row{
+        flex-direction: column;
+        flex: 1;
+    }
+    .step-item{
+        min-height: 50px;
+        flex-direction: column;
+    }
+    .step-line {
+        width: 3px;
+    }
+}
+
+
+

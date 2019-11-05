@@ -104,7 +104,16 @@ return [
         "product_plan_sale"        => [
             "tracking_status_enum" => [
                 "posted"     => "Postado",
-                "dispatched" => "Despachado",
+                "dispatched" => "Em trânsito",
+                "delivered"  => "Entregue",
+                "out_for_delivery" => "Saiu para entrega",
+                "exception"        => "Problema na entrega"
+            ],
+        ],
+        "tracking"        => [
+            "tracking_status_enum" => [
+                "posted"     => "Postado",
+                "dispatched" => "Em trânsito",
                 "delivered"  => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
                 "exception"        => "Problema na entrega"

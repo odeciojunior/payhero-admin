@@ -50,10 +50,10 @@ $(document).ready(function () {
 
                     $("#name").val(response.data.product.name);
                     $("#description").text(response.data.product.description);
-                    if(!isEmpty(response.data.product.sku)){
+                    if (!isEmpty(response.data.product.sku)) {
                         $('#sku input').val(response.data.product.sku);
                         $('#sku').show();
-                    }else{
+                    } else {
                         $('#sku').hide();
                     }
                     $("#cost").unmask().val(response.data.product.cost).mask('000.000.000.000.000,00', {reverse: true});
@@ -61,6 +61,13 @@ $(document).ready(function () {
                     $("#height").unmask().val(response.data.product.height);
                     $("#width").unmask().val(response.data.product.width);
                     $("#weight").unmask().val(response.data.product.weight);
+
+                    //select moeda
+                    if (response.data.product.currency_type_enum == 1) {
+                        $('#select-currency .select-currency-brl').attr('selected', true);
+                    } else {
+                        $('#select-currency .select-currency-usd').attr('selected', true);
+                    }
 
                     var p = $("#previewimage");
                     $("#photo").on("change", function () {
@@ -132,7 +139,7 @@ $(document).ready(function () {
                         let myForm = document.getElementById('my-form');
                         let formData = new FormData(myForm);
 
-                        if (verify) {
+                        if (verify()) {
                             loadingOnScreen();
                             $.ajax({
                                 method: 'POST',
@@ -174,11 +181,15 @@ $(document).ready(function () {
      */
     function verify() {
         let ver = true;
-        if ($('#name').val() == '') {
+        if ($.trim($('#name').val()) === '') {
+            $("#nav-basic-tab").click();
+            $('#name').focus();
             alertCustom("error", "O campo Nome é obrigatório");
             ver = false;
         }
-        if ($("#description") == '') {
+        if ($.trim($("#description").val()) === '') {
+            $("#nav-basic-tab").click();
+            $("#description").focus();
             alertCustom("error", "O campo Descrição é obrigatório");
             ver = false;
         }
@@ -211,8 +222,8 @@ $(document).ready(function () {
     });
 
     $("#next_step").on("click", function () {
-        $("#nav-logistic-tab").click();
-        $("#previewimage").imgAreaSelect({remove: true});
+            $("#nav-logistic-tab").click();
+            $("#previewimage").imgAreaSelect({remove: true});
     });
 
     $(".delete-product").on('click', function (event) {

@@ -61,16 +61,16 @@
                                         <div class="row">
                                             <div class="form-group col-lg-12">
                                                 <label for="name">Nome</label>
-                                                <input name="name" type="text" class="input-pad" id="name" value="" placeholder="O nome do seu produto" required="">
+                                                <input name="name" type="text" class="input-pad" id="name" value="" placeholder="O nome do seu produto" >
                                             </div>
                                             <div class="form-group col-lg-12">
                                                 <label for="description">Descrição</label>
-                                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
+                                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto"></textarea>
                                                 <p class="mb-0"> Máximo 30 caracteres. </p>
                                             </div>
                                             <div class="form-group col-lg-12" id="sku" style="display: none">
                                                 <label>SKU</label>
-                                                <input type="text" class="input-pad gray mb-2" readonly />
+                                                <input type="text" class="input-pad gray mb-2" readonly/>
                                                 <p> Editável somente no Shopify. </p>
                                             </div>
                                             <div class="form-group col-lg-6">
@@ -92,13 +92,23 @@
                                                     <option value="">Selecione</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-lg-6">
+                                            <div class='form-group col-lg-4'>
+                                                <label for="category">Moeda de custo:</label>
+                                                <select name="currency_type_enum" class="form-control select-pad" id='select-currency'>
+                                                    <option class='select-currency-brl' value='BRL' selected>BRL</option>
+                                                    <option class='select-currency-usd' value='USD'>USD</option>
+                                                </select>
+                                                <p class='info pt-5' style='font-size: 10px;'>
+                                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Informação utilizada para emissão de notas fiscais
+                                                </p>
+                                            </div>
+                                            <div class="form-group col-lg-4">
                                                 <label for="cost">Custo
                                                     <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
                                                 </label>
                                                 <input name="cost" type="text" class="input-pad money" id="cost" value="" placeholder="Digite o custo" autocomplete="off">
                                             </div>
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-4">
                                                 <label for="price">Preço
                                                     <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
                                                 </label>
@@ -192,7 +202,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=2') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=4') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
