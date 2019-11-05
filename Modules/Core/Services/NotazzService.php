@@ -115,13 +115,24 @@ class NotazzService
             foreach ($sale->plansSales as $planSale) {
                 /** @var ProductPlan $productPlan */
                 foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $productPlanSale               = $productPlan->product()
-                                                                 ->first()->productsPlanSales->where('sale_id', $sale->id)
-                                                                                             ->first();
-                    $product                       = $productPlan->product()->first();
-                    $product['product_cost']       = $productPlan->cost ?? $product->cost;
-                    $product['product_amount']     = $productPlan->amount;
-                    $product['currency_type_enum'] = $productPlan->currency_type_enum;
+                    $productPlanSale = $productPlan->product()
+                                                   ->first()->productsPlanSales->where('sale_id', $sale->id)
+                                                                               ->first();
+                    $product         = $productPlan->product()->first();
+
+                    if (!empty($productPlan->cost)) {
+                        //pega os valores de productplan
+                        $product['product_cost']       = $productPlan->cost;
+                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
+                    } else {
+                        //pega os valores de produto
+                        $product['product_cost']       = $product->cost ?? 0;
+                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
+                    }
+
+                    //$product['product_cost']               = $productPlan->cost ?? $product->cost;
+                    //$product['product_currency_type_enum'] = $product->currency_type_enum;
+                    $product['product_amount'] = $productPlan->amount;
 
                     $productsSale->add($product);
                 }
@@ -150,7 +161,7 @@ class NotazzService
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 
                 if ($totalValue <= 0) {
-                    $totalValue = 0;
+                    $totalValue = 1;
                 }
 
                 $tokenApi = $sale->project->notazzIntegration->token_api;
@@ -265,9 +276,20 @@ class NotazzService
                                                                      ->first()->productsPlanSales->where('sale_id', $sale->id)
                                                                                                  ->first();
                         $product                       = $productPlan->product()->first();
-                        $product['product_cost']       = $productPlan->cost ?? $product->cost;
+
+                        if (!empty($productPlan->cost)) {
+                            //pega os valores de productplan
+                            $product['product_cost']       = $productPlan->cost;
+                            $product['currency_type_enum'] = $productPlan->currency_type_enum;
+                        } else {
+                            //pega os valores de produto
+                            $product['product_cost']       = $product->cost ?? 0;
+                            $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
+                        }
+
+                        //$product['product_cost']       = $productPlan->cost ?? $product->cost;
+                        //$product['currency_type_enum'] = $productPlan->currency_type_enum;
                         $product['product_amount']     = $productPlan->amount;
-                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
 
                         $productsSale->add($product);
                     }
@@ -297,7 +319,7 @@ class NotazzService
                     $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 
                     if ($totalValue <= 0) {
-                        $totalValue = 0;
+                        $totalValue = 1;
                     }
 
                     $tokenApi = $sale->project->notazzIntegration->token_api;
@@ -810,7 +832,7 @@ class NotazzService
                                               ->get();
 
             foreach ($integrations as $integration) {
-                $count = $notazzService->createOldInvoices($integration->created_at, $integration->project_id);
+                $count = $notazzService->createOldInvoices($integration->start_date, $integration->project_id);
             }
         } catch (Exception $e) {
             Log::warning('NotazzService - generateInvoicesSalesApproved - error');

@@ -27,6 +27,7 @@ class UpdateProductRequest extends FormRequest
             'photo_y1'      => 'nullable',
             'photo_w'       => 'nullable',
             'photo_h'       => 'nullable',
+            'currency_type_enum' => 'nullable',
         ];
     }
 
