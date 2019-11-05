@@ -6,11 +6,11 @@ namespace Modules\Core\Services;
 
 class PerfectLogService
 {
-    private const API_URL = 'http://log.devppay.com.br';
+    private const API_URL = 'https://log.perfectpay.com.br';
 
-    private const API_SYSTEM_TOKEN = '2521e73164e82b63053bad20bcef8ce5cd67bce2896e3744df6ccaf8f574f7eb';
+    private const API_SYSTEM_TOKEN = 'd2cfc007a524529536dfb43f779ba9fa0711023859ad105aedcfa86252d89ec9';
 
-    private const API_USER_TOKEN = 'e9193d463e8c452427643763862e0ed2';
+    private const API_USER_TOKEN = '27aa6d41fd15ba3118159146fd7f89f2';
 
 
     /**
@@ -22,7 +22,7 @@ class PerfectLogService
     {
         $data = [
             'external_reference' => $trackingId,
-            'response_webhook_url' => 'http://dev.cloudfox.com.br/postback/perfectlog',
+            'response_webhook_url' => 'https://app.cloudfox.net/postback/perfectlog',
             'tracking' => $trackingNumber,
             'token_user' => self::API_USER_TOKEN,
             'system' => self::API_SYSTEM_TOKEN,
