@@ -62,6 +62,13 @@ $(document).ready(function () {
                     $("#width").unmask().val(response.data.product.width);
                     $("#weight").unmask().val(response.data.product.weight);
 
+                    //select moeda
+                    if (response.data.product.currency_type_enum == 1) {
+                        $('#select-currency .select-currency-brl').attr('selected', true);
+                    } else {
+                        $('#select-currency .select-currency-usd').attr('selected', true);
+                    }
+
                     var p = $("#previewimage");
                     $("#photo").on("change", function () {
 
