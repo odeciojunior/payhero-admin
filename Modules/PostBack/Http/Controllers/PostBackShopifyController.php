@@ -77,7 +77,7 @@ class PostBackShopifyController extends Controller
                                     foreach ($products as &$product) {
                                         //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
                                         //do que esta na tabela
-                                        $tracking = $trackingModel->where($product->product_plan_sale_id)
+                                        $tracking = $trackingModel->where('product_plan_sale_id', $product->product_plan_sale_id)
                                             ->orderBy('id', 'desc')
                                             ->first();
                                         if (isset($tracking)) {
