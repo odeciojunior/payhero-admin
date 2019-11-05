@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\TrackingHistory;
+use Modules\Core\Services\PerfectLogService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class UpdateTrackingStatus extends Command
@@ -45,6 +46,7 @@ class UpdateTrackingStatus extends Command
         try{
 
             $trackingModel = new Tracking();
+            $perfectLogService = new PerfectLogService();
 
             $trackings = $trackingModel->all();
 
@@ -58,7 +60,7 @@ class UpdateTrackingStatus extends Command
                     return;
                 }*/
 
-                $response =  json_decode($this->track($tracking));
+                $response =  $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
 
                 if(isset($response->tracking)){
 
@@ -104,27 +106,5 @@ class UpdateTrackingStatus extends Command
         }catch (Exception $e){
             $this->line(date('Y-m-d H:i:s') . ' Error: ' . $e->getMessage());
         }
-    }
-
-    private function track($tracking){
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "http://log.devppay.com.br/api/tracking",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => [
-                'external_reference' => Hashids::encode($tracking->id),
-                'response_webhook_url' => 'http://dev.cloudfox.com.br/postback/perfectlog',
-                'tracking' => $tracking->tracking_code,
-                'token_user' => '27aa6d41fd15ba3118159146fd7f89f2',
-                'system' => 'd2cfc007a524529536dfb43f779ba9fa0711023859ad105aedcfa86252d89ec9'
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-
-        return $response;
     }
 }
