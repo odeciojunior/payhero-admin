@@ -409,8 +409,13 @@ class ProjectsApiController extends Controller
         try {
 
             $projectService = new ProjectService();
+            $projectModel   = new Project();
 
-            return $projectService->getUserProjects(true, [1]);
+            $projectStatus = [
+                $projectModel->present()->getStatus('active'),
+            ];
+
+            return $projectService->getUserProjects(true, $projectStatus);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);
