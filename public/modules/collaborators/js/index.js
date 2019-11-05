@@ -40,9 +40,9 @@ $(document).ready(function () {
             success: function success(response) {
                 if (isEmpty(response.data)) {
                     $("#content-error").css('display', 'block');
+                    $("#card-table-collaborators").css('display', 'none');
                 } else {
                     $("#content-error").css('display', 'none');
-                    $("#card-table-collaborators").css('display', 'block');
                     // $("#card-invitation-data").css('display', 'block');
 
                     // $("#text-info").css('display', 'block');

@@ -184,6 +184,12 @@
                 <span class="site-menu-title">Aplicativos</span>
             </a>
         </li>
+        <li class="site-menu-item has-sub">
+            <a href="{{ route('tools.index') }}">
+                <i class="material-icons">settings</i>
+                <span class="site-menu-title">Ferramentas</span>
+            </a>
+        </li>
         {{-- <li class="site-menu-item has-sub">
             <a href="{{ route('integrations.index') }}">
                 <i class="material-icons">devices_other</i>
@@ -194,12 +200,6 @@
             <a href="{{ route('invitations.index') }}">
                 <i class="material-icons">person_add</i>
                 <span class="site-menu-title">Convites</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="{{ route('tools.index') }}">
-                <i class="material-icons">settings</i>
-                <span class="site-menu-title">Ferramentas</span>
             </a>
         </li>
     </ul>
