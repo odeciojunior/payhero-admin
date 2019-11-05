@@ -8,8 +8,8 @@
                 <div class='form-group'>
                     <label for="role_edit">Função</label>
                     <select id='role_edit' name='role' class='form-control'>
-                        <option value='admin'>Administrativo</option>
-                        <option value='attendance'>Atendimento</option>
+                        <option value='admin' class='opt-admin'>Administrativo</option>
+                        <option value='attendance' class='opt-attendance'>Atendimento</option>
                     </select>
                 </div>
             </div>

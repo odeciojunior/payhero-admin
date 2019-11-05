@@ -91,22 +91,33 @@ class CollaboratorsApiController extends Controller
      */
     public function show($id)
     {
-        $userModel = new User();
-        $userId    = current(Hashids::decode($id));
+        try {
+            $userModel = new User();
+            $userId    = current(Hashids::decode($id));
 
-        if ($userId) {
-            $user = $userModel->find($userId);
-            if (!empty($user)) {
-                return new CollaboratorsResource($user);
+            if ($userId) {
+                $user = $userModel->with('roles')->find($userId);
+                if (!empty($user)) {
+                    return new CollaboratorsResource($user);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro ao buscar colaborador',
+                                            ], 400);
+                }
             } else {
                 return response()->json([
                                             'message' => 'Ocorreu um erro ao buscar colaborador',
                                         ], 400);
             }
-        } else {
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao buscar colaborador',
-                                    ], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar colaboradorer (CollaboratorsApiController - show)');
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro ao buscar colaborador',
+                ], 400
+            );
         }
     }
 
@@ -117,33 +128,66 @@ class CollaboratorsApiController extends Controller
      */
     public function update(UpdateCollaboratorRequest $request, $id)
     {
-        $data      = $request->validated();
-        $userModel = new User();
-        $userId    = current(Hashids::decode($id));
-        if ($userId) {
-            $user = $userModel->find($userId);
-            if (!empty($data['password']) && $user->password != $data['password']) {
-                $data['password'] = bcrypt($data['password']);
-            }
-            dd($data);
-            $userUpdated = $user->update($data);
-            if ($userUpdated) {
-
+        try {
+            $data      = $request->validated();
+            $userModel = new User();
+            $userId    = current(Hashids::decode($id));
+            if ($userId) {
+                $user = $userModel->find($userId);
+                if (!empty($data['password'])) {
+                    $data['password'] = bcrypt($data['password']);
+                }
+                $userUpdated = $user->update($data);
+                $user->syncRoles([$data['role']]);
+                if ($userUpdated) {
+                    return response()->json([
+                                                'message' => 'Colaborador atualizado com sucesso!',
+                                            ], 200);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro ao atualizar colaborador',
+                                            ], 400);
+                }
             } else {
+
                 return response()->json([
                                             'message' => 'Ocorreu um erro ao atualizar colaborador',
                                         ], 400);
             }
+        } catch (Exception $e) {
+            Log::warning('Erro ao atualizar colaborador  CollaboratorsApiController - update');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao atualizar colaborador',
+                                    ], 400);
         }
     }
 
     /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        //
+        $userModel = new User();
+        $userId    = current(Hashids::decode($id));
+        if ($userId) {
+            $user        = $userModel->find($userId);
+            $userDeleted = $user->delete();
+            if ($userDeleted) {
+                return response()->json([
+                                            'message' => 'Colaborador removido com sucesso!',
+                                        ], 200);
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro ao remover colaborador',
+                                        ], 400);
+            }
+        } else {
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao remover colaborador',
+                                    ], 400);
+        }
     }
 }

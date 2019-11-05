@@ -11,6 +11,9 @@ $(document).ready(function () {
     $('#document').mask('000.000.000-000', maskOptions);
     $("#cellphone").mask("(00) 0000-00009");
 
+    $('#document_edit').mask('000.000.000-000', maskOptions);
+    $("#cellphone_edit").mask("(00) 0000-00009");
+
     create();
     index();
     function index() {
@@ -38,7 +41,7 @@ $(document).ready(function () {
                 if (isEmpty(response.data)) {
                     $("#content-error").css('display', 'block');
                 } else {
-                    $("#content-error").hide();
+                    $("#content-error").css('display', 'none');
                     $("#card-table-collaborators").css('display', 'block');
                     // $("#card-invitation-data").css('display', 'block');
 
@@ -64,10 +67,40 @@ $(document).ready(function () {
                     pagination(response, 'collaborators');
                 }
 
+                // Excluir colaborador
+                $('.delete-collaborator').unbind('click');
+                $('.delete-collaborator').on('click', function () {
+                    var collaborator_id = $(this).attr('collaborator');
+
+                    $('#modal-delete-invitation').modal('show');
+
+                    $('#btn-delete-collaborator').unbind('click');
+                    $('#btn-delete-collaborator').on('click', function () {
+                        loadingOnScreen();
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/api/collaborators/" + collaborator_id,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: (response) => {
+                                loadingOnScreenRemove();
+                                errorAjaxResponse(response);
+                            },
+                            success: (response) => {
+                                loadingOnScreenRemove();
+                                index();
+                                alertCustom('success', response.message);
+                            }
+                        });
+                    });
+                });
+
                 $(".edit-collaborator").unbind('click');
                 $('.edit-collaborator').on('click', function () {
                     var collaborator_id = $(this).attr('collaborator');
-
                     $.ajax({
                         method: "GET",
                         url: "/api/collaborators/" + collaborator_id,
@@ -87,6 +120,13 @@ $(document).ready(function () {
                             $("#btn_collaborator").addClass('btn-update');
                             $("#btn_collaborator").removeClass('btn-save');
                             $("#btn_collaborator").text('Atualizar');
+
+                            //select de funções
+                            if (response.data.role == 'admin') {
+                                $('#role_edit .opt-admin').attr('selected', true);
+                            } else {
+                                $('#role_edit .opt-attendance').attr('selected', true);
+                            }
 
                             $("#name_edit").val(response.data.name);
                             $("#email_edit").val(response.data.email);
@@ -129,6 +169,7 @@ $(document).ready(function () {
                                         errorAjaxResponse(response);
                                     },
                                     success: function success(response) {
+                                        $('#modal_add_collaborator').modal('hide');
                                         index();
                                         alertCustom('success', response.message);
                                     }
@@ -181,6 +222,7 @@ $(document).ready(function () {
         $("#btn_collaborator").addClass('btn-save');
         $("#btn_collaborator").text('Adicionar colaborador');
         $("#form_add_collaborator").show();
+        $("#form_update_collaborator").hide();
     });
     function clearFields() {
         $('#name').val('');

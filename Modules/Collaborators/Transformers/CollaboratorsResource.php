@@ -31,6 +31,7 @@ class CollaboratorsResource extends JsonResource
             'document'  => $this->document,
             'cellphone' => $this->cellphone,
             'date'      => $this->created_at->format('d/m/Y'),
+            'role'      => $this->roles[0]->name,
         ];
     }
 }

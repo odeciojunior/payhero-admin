@@ -89,7 +89,7 @@
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                    <button id="btn-delete-invitation" type="button" class="col-4 btn btn-danger" style="width: 20%;" data-dismiss="modal">Excluir</button>
+                    <button id="btn-delete-collaborator" type="button" class="col-4 btn btn-danger" style="width: 20%;" data-dismiss="modal">Excluir</button>
                 </div>
             </div>
         </div>
