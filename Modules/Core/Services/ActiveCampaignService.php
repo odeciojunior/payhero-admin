@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\ActivecampaignEvent;
 use Modules\Core\Entities\ActivecampaignSent;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -155,11 +156,11 @@ class ActiveCampaignService
     {
         try {
             $activecampaignIntegration = new ActivecampaignIntegration;
-            $integration = $activecampaignIntegration->where('project_id', $projectId)->with('events' => function($query) use($eventSale) {
-                $query->where('event_sale', $eventSale);
-            })->first();
+            $activecampaignEvent = new ActivecampaignEvent;
+            $integration = $activecampaignIntegration->where('project_id', $projectId)->first();
+            $event = $activecampaignEvent->where('event_sale', $eventSale)->where('activecampaign_integration_id', $integration->id)->first();
 
-            if(!empty($integration->events[0]->id)) {
+            if(!empty($integration->id) && !empty($event->id)) {
                 $this->setAccess($integration->api_url, $integration->api_key, $integration->id);
 
                 $data = [
@@ -169,7 +170,7 @@ class ActiveCampaignService
                     'lastName'  => '',
                 ];
 
-                return $this->sendContact($data, $integration->events[0]);
+                return $this->sendContact($data, $event, $saleId);
             } else {
                 return response()->json(['message' => 'Projeto não integrado com ActiveCampaign'], 400);
             }
@@ -191,9 +192,9 @@ class ActiveCampaignService
             $contact = json_decode($contact, true);
             if (isset($contact['contact']['id'])) {
                 // adicionar tags no contato
-                $arrayApply = explode(',', $event->add_tags);
+                $arrayApply = json_decode($event->add_tags, true);
                 foreach ($arrayApply as $key => $value) {
-                    $tagsApply[] = $this->addTagContact($value, $contact['contact']['id']);
+                    $tagsApply[] = $this->addTagContact($value['id'], $contact['contact']['id']);
                 }
                 // remover tags no contato
                 $tagsContact      = $this->getTagsContact($contact['contact']['id']);
@@ -203,19 +204,25 @@ class ActiveCampaignService
                     $arrayTagsContact[$tag['tag']] = $tag['id'];
                 }
                 $tagsRemove  = [];
-                $arrayRemove = explode(',', $event->remove_tags);
+                $arrayRemove = json_decode($event->remove_tags, true);
                 foreach ($arrayRemove as $key => $value) {
-                    $contactTagId = $arrayTagsContact[$value] ?? 0;
+                    $contactTagId = $arrayTagsContact[$value['id']] ?? 0;
 
                     if ($contactTagId)
                         $tagsRemove[] = $this->removeTagContact($contactTagId);
                 }
 
                 if(!empty($event->add_list)) {
-                    $addList = $this->updateContactList($event->add_list, $contact['contact']['id'], 1);
+                    $idAddList = json_decode($event->add_list, true);
+                    if(!empty($idAddList['id'])) {
+                        $addList = $this->updateContactList($idAddList['id'], $contact['contact']['id'], 1);
+                    }
                 }
                 if(!empty($event->remove_list)) {
-                    $removeList = $this->updateContactList($event->remove_list, $contact['contact']['id'], 0);
+                    $idRemoveList = json_decode($event->remove_list, true);
+                    if(!empty($idAddList['id'])) {
+                        $removeList = $this->updateContactList($idRemoveList['id'], $contact['contact']['id'], 0);
+                    }
                 }
                 $return            = ['add' => $tagsApply ?? null, 'remove' => $tagsRemove ?? null, 'listAdd' => $addList ?? null, 'listRemove' => $removeList ?? null];
                 $sentStatus = 2;
@@ -230,7 +237,7 @@ class ActiveCampaignService
                     'response'                      => json_encode(['contact' => $contact, 'tags' => $return ?? null]),
                     'sent_status'                   => $sentStatus,
                     'sale_id'                       => $saleId,
-                    'event_sale'                    => $eventSale,
+                    'event_sale'                    => $event->event_sale,
                     'activecampaign_integration_id' => $this->integrationId,
                 ]
             );

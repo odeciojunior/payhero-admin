@@ -35,7 +35,7 @@ class ActivecampaignSent extends Model
     /**
      * @var array
      */
-    protected $fillable = ['sale_id', 'activecampaign_integration_id', 'data', 'response', 'sent_status', 'event_sale' 'created_at', 'updated_at'];
+    protected $fillable = ['sale_id', 'activecampaign_integration_id', 'data', 'response', 'sent_status', 'event_sale', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

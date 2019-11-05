@@ -13,6 +13,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -150,6 +151,17 @@ class PostBackPagarmeController extends Controller
                     }
                 } catch (Exception $e) {
                     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
+                    report($e);
+                }
+
+                try {
+                    $activeCampaignService = new ActiveCampaignService();
+                    $sale->load('client');
+                    // $saleId, $eventSale, $name, $phone, $email, $projectId
+                    $activeCampaignService->execute($sale->id, 2, $sale->client->name, $sale->client->telephone, $sale->client->email, $sale->project_id);
+
+                } catch (Exception $e) {
+                    Log::warning('Erro ao enviar lead para ActiveCampaign na venda ' . $sale->id);
                     report($e);
                 }
             } else {
