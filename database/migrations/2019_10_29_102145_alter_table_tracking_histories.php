@@ -14,6 +14,7 @@ class AlterTableTrackingHistories extends Migration
      */
     public function up()
     {
+        DB::statement('delete from tracking_histories');
         Schema::table('tracking_histories', function(Blueprint $table){
             $table->dropForeign(['product_plan_sale_id']);
             $table->dropColumn('product_plan_sale_id');

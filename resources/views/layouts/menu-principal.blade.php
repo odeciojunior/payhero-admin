@@ -127,11 +127,11 @@
                         <span class="site-menu-title">Recuperação</span>
                     </a>
                 </li>
-                <li class="site-menu-item">
-                    <a href="/trackings" id="trackings-link">
-                        <span class="site-menu-title">Rastreamentos</span>
-                    </a>
-                </li>
+{{--                <li class="site-menu-item">--}}
+{{--                    <a href="/trackings" id="trackings-link">--}}
+{{--                        <span class="site-menu-title">Rastreamentos</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
             </ul>
         </li>
         <li class="site-menu-item has-sub">
