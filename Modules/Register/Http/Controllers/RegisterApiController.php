@@ -49,7 +49,7 @@ class RegisterApiController extends Controller
 
             $user->update(['account_owner' => $user->id]);
 
-            $user->assignRole('administrador empresarial');
+            $user->assignRole('account_owner');
 
             auth()->loginUsingId($user->id, true);
             $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();

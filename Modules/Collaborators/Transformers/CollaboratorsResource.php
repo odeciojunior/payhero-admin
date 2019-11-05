@@ -4,6 +4,7 @@ namespace Modules\Collaborators\Transformers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class ClientResource
@@ -24,9 +25,12 @@ class CollaboratorsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'name'  => $this->name,
-            'email' => $this->email,
-            'date'  => $this->created_at,
+            'id'        => Hashids::encode($this->id),
+            'name'      => $this->name,
+            'email'     => $this->email,
+            'document'  => $this->document,
+            'cellphone' => $this->cellphone,
+            'date'      => $this->created_at->format('d/m/Y'),
         ];
     }
 }
