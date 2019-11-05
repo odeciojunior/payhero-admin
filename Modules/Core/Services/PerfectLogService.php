@@ -14,7 +14,7 @@ class PerfectLogService
 
 
     /**
-     * @param $productPlanSaleId
+     * @param $trackingId
      * @param $trackingNumber
      * @return mixed
      */
