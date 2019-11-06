@@ -337,6 +337,13 @@ class TesteController extends Controller
     public function tgFunction()
     {
         //nada
+        $nservice = new NotazzService();
+        $nservice->createInvoice(4,3533,1 );
+        dd($nservice->consultNfse('1afe5fa65bf25a023df701e99a64962f'));
+
+
+
+
 
         $nservice  = new NotazzService();
         $saleModel = new Sale();
@@ -487,8 +494,7 @@ class TesteController extends Controller
         //            });
         //        })->get();
         //        dd($invoice);
-        $nservice = new NotazzService();
-        dd($nservice->consultNfse(459));
+
         //
         //        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
         //
