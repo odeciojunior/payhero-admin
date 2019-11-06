@@ -97,7 +97,6 @@ class PostBackShopifyController extends Controller
                                                 $product->tracking_code = $fulfillment["tracking_number"];
                                                 event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                                                 $perfectLogService->track(Hashids::encode($tracking->id), $fulfillment["tracking_number"]);
-                                                event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                                             }
                                         }
                                     }
