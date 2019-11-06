@@ -150,11 +150,6 @@ class TrackingsApiController extends Controller
 
                         if ($tracking) {
 
-                            //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
 
@@ -185,11 +180,6 @@ class TrackingsApiController extends Controller
                                                               'tracking_id' => $tracking->id,
                                                               'tracking_status_enum' => $trackingStatus,
                                                           ]);
-
-                            //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
 
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);

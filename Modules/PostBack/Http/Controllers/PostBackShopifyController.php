@@ -65,7 +65,7 @@ class PostBackShopifyController extends Controller
                 //venda encontrada
                 if ($sale) {
                     //obtem os produtos da venda
-                    $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($sale->id));
+                    $saleProducts = $productService->getProductsBySale($sale);
                     foreach ($requestData['fulfillments'] as $fulfillment) {
                         if (!empty($fulfillment["tracking_number"])) {
                             //percorre os produtos que vieram no postback

@@ -69,7 +69,7 @@ class PostBackPerfectLogController extends Controller
 
                 //NOTIFICAR O USUARIO
                 $productService = new ProductService();
-                $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($tracking->sale->id));
+                $saleProducts = $productService->getProductsBySale($tracking->sale);
                 event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
             }
             return response()->json(['message' => 'Postback received']);
