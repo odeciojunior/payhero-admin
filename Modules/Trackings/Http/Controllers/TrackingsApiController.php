@@ -236,7 +236,7 @@ class TrackingsApiController extends Controller
 
                 if ($tracking && $tracking->sale) {
 
-                    $saleProducts = $productService->getProductsBySaleId($tracking->sale->id);
+                    $saleProducts = $productService->getProductsBySale($tracking->sale);
                     event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
 
                     return response()->json(['message' => 'Notificação enviada com sucesso']);
