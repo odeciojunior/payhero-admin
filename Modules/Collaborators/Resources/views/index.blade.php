@@ -28,6 +28,7 @@
                             <th class="text-left">Colaborador</th>
                             <th class="text-center">Nome</th>
                             <th class="text-center">Email</th>
+                            <th class="text-center">Função</th>
                             <th class="text-center">Data cadastro</th>
                             <td class='table-title text-center options-column-width'>Opções</td>
                         </thead>

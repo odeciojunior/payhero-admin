@@ -103,14 +103,14 @@ return [
         ],
         "product_plan_sale"        => [
             "tracking_status_enum" => [
-                "posted"     => "Postado",
-                "dispatched" => "Despachado",
-                "delivered"  => "Entregue",
+                "posted"           => "Postado",
+                "dispatched"       => "Despachado",
+                "delivered"        => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
-                "exception"        => "Problema na entrega"
+                "exception"        => "Problema na entrega",
             ],
         ],
-        "invoices"        => [
+        "invoices"                 => [
             "status" => [
                 "pending"            => "Pendente",
                 "send"               => "Enviado",
@@ -121,6 +121,11 @@ return [
                 "canceled"           => "Cancelado",
                 "rejected"           => "Rejeitado",
             ],
+        ],
+        "role"                     => [
+            "account_owner" => "Dono da conta",
+            "admin"         => "Administrativo",
+            "attendance"    => "Atendimento",
         ],
     ],
 

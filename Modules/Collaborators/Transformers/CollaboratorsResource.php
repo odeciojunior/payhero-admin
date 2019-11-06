@@ -25,13 +25,15 @@ class CollaboratorsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        => Hashids::encode($this->id),
-            'name'      => $this->name,
-            'email'     => $this->email,
-            'document'  => $this->document,
-            'cellphone' => $this->cellphone,
-            'date'      => $this->created_at->format('d/m/Y'),
-            'role'      => $this->roles[0]->name,
+            'id'              => Hashids::encode($this->id),
+            'name'            => $this->name,
+            'email'           => $this->email,
+            'document'        => $this->document,
+            'cellphone'       => $this->cellphone,
+            'date'            => $this->created_at->format('d/m/Y'),
+            'role'            => $this->roles[0]->name,
+            'role_translated' => __('definitions.enum.role.' . $this->roles[0]->name),
+            'role_id'         => $this->roles[0]->id,
         ];
     }
 }

@@ -1,3 +1,8 @@
+var statusRole = {
+    4: 'success',
+    5: 'primary',
+    6: 'warning',
+}
 $(document).ready(function () {
 
     $('#document').mask('000.000.000-00');
@@ -9,6 +14,8 @@ $(document).ready(function () {
     create();
     index();
     function index() {
+        // loadOnTable('#table-body-collaborators', '#table-collaborators');
+
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         var cont = 0;
 
@@ -35,12 +42,8 @@ $(document).ready(function () {
                     $("#card-table-collaborators").css('display', 'none');
                 } else {
                     $("#content-error").css('display', 'none');
-                    // $("#card-invitation-data").css('display', 'block');
-
-                    // $("#text-info").css('display', 'block');
                     $("#card-table-collaborators").css('display', 'block');
                     $("#table-body-collaborators").html('');
-                    // $('#table-collaborators').addClass('table-striped');
 
                     $.each(response.data, function (index, value) {
 
@@ -49,6 +52,9 @@ $(document).ready(function () {
                         data += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (cont += 1) + '</button></td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.name + '</td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.email + '</td>';
+                        data += '<td class="text-center" style="vertical-align: middle;">';
+                        data += '<span class="badge badge-' + statusRole[value.role_id] + ' text-center">' + value.role_translated + '</span>';
+                        data += '</td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.date + '</td>';
                         data += "<td class='text-center'><button class='btn pointer edit-collaborator' title='Editar' style='background-color:transparent;' collaborator='" + value.id + "'><i class='material-icons gradient'>edit</i></button>" +
                             "<button class='btn pointer delete-collaborator' title='Excluir' style='background-color:transparent;' collaborator='" + value.id + "'><i class='material-icons gradient'>delete</i></button>" +
@@ -142,7 +148,7 @@ $(document).ready(function () {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;
                                 }
-
+                                loadingOnScreen();
                                 var collaboratorId = $('#collaborator_id').val();
                                 var form_data = new FormData(document.getElementById('form_update_collaborator'));
 
@@ -158,9 +164,11 @@ $(document).ready(function () {
                                     cache: false,
                                     data: form_data,
                                     error: function (response) {
+                                        loadingOnScreenRemove();
                                         errorAjaxResponse(response);
                                     },
                                     success: function success(response) {
+                                        loadingOnScreenRemove();
                                         $('#modal_add_collaborator').modal('hide');
                                         index();
                                         alertCustom('success', response.message);
@@ -181,8 +189,8 @@ $(document).ready(function () {
                 alertCustom('error', 'Dados informados inválidos');
                 return false;
             }
+            loadingOnScreen();
             var form_data = new FormData(document.getElementById('form_add_collaborator'));
-
             $.ajax({
                 method: "POST",
                 url: "/api/collaborators",
@@ -195,10 +203,12 @@ $(document).ready(function () {
                 cache: false,
                 data: form_data,
                 error: function error(response) {
+                    loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
                     // $("#no-integration-found").hide();
+                    loadingOnScreenRemove();
                     $('#modal_add_collaborator').modal('hide');
                     index();
                     clearFields();
