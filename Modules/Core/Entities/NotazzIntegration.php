@@ -62,4 +62,12 @@ class NotazzIntegration extends Model
     {
         return $this->belongsTo('Modules\Core\Entities\User');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invoices()
+    {
+        return $this->hasMany('Modules\Core\Entities\NotazzInvoice');
+    }
 }

@@ -5,13 +5,28 @@ $(document).ready(function () {
 
     function verify() {
         let ver = true;
-        if ($('#name').val().length === 0) {
+        if ($.trim($('#name').val()) === '') {
+            alertCustom("error", "O campo Nome é obrigatório");
+            ver = false;
+        }
+        if ($.trim($("#description").val()) === '') {
+            alertCustom("error", "O campo Descrição é obrigatório");
+            ver = false;
+        }
+        return ver;
+    }
+
+    function verify() {
+        let ver = true;
+        if ($.trim($('#name').val()) === '') {
+
             alertCustom("error", "O campo Nome é obrigatório");
             ver = false;
             $("#nav-basic-tab").click();
             $('#name').focus();
         }
-        if ($("#description").val().length === 0) {
+        if ($.trim($("#description").val()) === '') {
+
             alertCustom("error", "O campo Descrição é obrigatório");
             ver = false;
             $("#nav-basic-tab").click();

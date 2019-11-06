@@ -20,7 +20,15 @@ class TransfersResource extends Resource
             $anticipableValue = ' ( R$ ' . number_format(intval($this->antecipable_value) / 100, 2, ',', '.') . ' antecipado em ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->anticipationCreatedAt)
                                                                                                                                           ->format('d/m/Y') . ')';
         }
-
+        if (!empty($this->transaction) && empty($this->reason)) {
+            $reason = 'Transação #';
+        } else if (!empty($this->transaction) && $this->reason == 'chargedback') {
+            $reason = 'Chargeback #';
+        } else if (empty($this->transaction) && $this->reason == 'chargedback') {
+            $reason = 'Chargeback';
+        } else {
+            $reason = $this->reason;
+        }
         $value = number_format(intval($this->value) / 100, 2, ',', '.');
 
         return [
@@ -29,8 +37,8 @@ class TransfersResource extends Resource
             'type_enum'         => $this->type_enum,
             'anticipable_value' => $anticipableValue,
             'value'             => $this->currency == 'dolar' ? '$ ' . $value : 'R$ ' . $value,
-            'reason'            => (!empty($this->transaction) && empty($this->reason)) ? 'Transação #' : $this->reason,
-            'transaction_id'    => strtoupper(Hashids::connection('sale_id')->encode($this->sale_id)),
+            'reason'            => $reason,
+            'transaction_id'    => Hashids::connection('sale_id')->encode($this->sale_id),
             'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
             'date'              => $this->created_at->format('d/m/Y'),
         ];

@@ -24,6 +24,7 @@ class ProductsSaleResource extends Resource
             'name' => $this->name,
             'sale_status' => $this->sale_status ?? null,
             'amount' => $this->amount ?? null,
+            'tracking_id' => $this->tracking_id ?? null,
             'tracking_code' => $this->tracking_code ?? null,
             'tracking_status_enum' => $this->tracking_status_enum ?? null,
         ];

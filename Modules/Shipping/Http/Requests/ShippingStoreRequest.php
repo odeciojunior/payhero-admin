@@ -14,10 +14,10 @@ class ShippingStoreRequest extends FormRequest
     {
         return [
             "type"            => "required|string",
-            "name"            => "required|string|max:100",
-            "information"     => "required|string|max:30",
-            "value"           => "nullable|string|max:30",
-            "zip_code_origin" => "nullable|string",
+            "name"            => "required|string|max:60",
+            "information"     => "required|string|max:100",
+            "value"           => $this->get('type') == 'static' ? "required|max:8" : "",
+            "zip_code_origin" => $this->get('type') != 'static' ? "required|min:9" : "",
             "status"          => "nullable",
             "pre_selected"    => "nullable",
         ];
@@ -34,9 +34,11 @@ class ShippingStoreRequest extends FormRequest
             'name.max'                 => 'O campo descrição permite apenas 100 caracteres',
             'information.required'     => 'O campo Tempo de entrega é obrigatório',
             'information.max'          => 'O campo Tempo de entrega permite apenas 30 caracteres',
-            'zip_code_origin.required' => 'O campo código de origem é obrigatório',
+            'zip_code_origin.required' => 'O campo CEP de origem é obrigatório',
+            'zip_code_origin.min'      => 'O campo CEP de origem é deve ter no mínimo 8 dígitos',
             'status.required'          => 'O campo status é obrigatório',
             'pre_selected.required'    => 'O campo Pré-selecionado é obrigatório',
+            'value.required'           => 'O campo valor é obrigatório',
             'value.max'                => 'O campo Valor do Frete permite apenas 30 caracteres',
         ];
     }

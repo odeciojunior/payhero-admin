@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    $('[data-toggle="tooltip"]').tooltip();
+
     let user = '';
 
     let maskOptions = {
@@ -10,6 +13,106 @@ $(document).ready(function () {
     };
 
     $('#document').mask('000.000.000-000', maskOptions);
+
+    // Verificar número de celular
+    $("#btn_verify_cellphone").on("click", function () {
+        event.preventDefault();
+        loadingOnScreen();
+        let cellphone = $("#cellphone").val();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/verifycellphone',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                cellphone: cellphone
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+            }
+        });
+    });
+
+    // Verificar email
+    $("#btn_verify_email").on("click", function () {
+        event.preventDefault();
+        loadingOnScreen();
+        let email = $("#email").val();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/verifyemail',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                email: email
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+            }
+        });
+    });
+
+    $(".notification_switch").on("click", function () {
+        let object = this;
+        if (object.getAttribute("checked")) {
+            object.removeAttribute("checked");
+            object.value = 0;
+        } else {
+            object.setAttribute("checked", "checked");
+            object.value = 1;
+        }
+
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/updatenotification',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                column: object.name,
+                value: object.value
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+            }
+        });
+    });
 
     getDataProfile();
     function getDataProfile() {
@@ -55,6 +158,62 @@ $(document).ready(function () {
                     valuecss = 'danger';
                 }
 
+                // if (response.data.new_affiliation) {
+                //     $("#new_affiliation_switch").attr("checked", "checked");
+                // }
+                // if (response.data.new_affiliation_request) {
+                //     $("#new_affiliation_request_switch").attr("checked", "checked");
+                // }
+                // if (response.data.approved_affiliation) {
+                //     $("#approved_affiliation_switch").attr("checked", "checked");
+                // }
+                if (response.data.boleto_compensated) {
+                    $("#boleto_compensated_switch").attr("checked", "checked");
+                }
+                if (response.data.sale_approved) {
+                    $("#sale_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.notazz) {
+                    $("#notazz_switch").attr("checked", "checked");
+                }
+                // if (response.data.withdrawal_approved) {
+                //     $("#withdrawal_approved_switch").attr("checked", "checked");
+                // }
+                if (response.data.released_balance) {
+                    $("#released_balance_switch").attr("checked", "checked");
+                }
+                if (response.data.domain_approved) {
+                    $("#domain_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.shopify) {
+                    $("#shopify_switch").attr("checked", "checked");
+                }
+                // if (response.data.user_shopify_integration_store) {
+                //     $("#user_shopify_integration_store_switch").attr("checked", "checked");
+                // }
+                if (response.data.billet_generated) {
+                    $("#billet_generated_switch").attr("checked", "checked");
+                }
+                if (response.data.credit_card_in_proccess) {
+                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
+                }
+
+                // Verificação de telefone
+
+                if (response.data.cellphone_verified) {
+                    cellphoneVerified();
+                } else {
+                    cellphoneNotVerified();
+                }
+
+                // Verificação de email
+
+                if (response.data.email_verified) {
+                    emailVerified();
+                } else {
+                    emailNotVerified();
+                }
+
                 var linha = '<span class="badge badge-' + valuecss + '" id="personal_document_badge">' + response.data.personal_document_translate + '</span>';
                 $("#td_personal_status").append(linha);
 
@@ -73,6 +232,34 @@ $(document).ready(function () {
                 user = response.data.id_code;
             }
         });
+    }
+
+    function cellphoneVerified() {
+        $("#message_not_verified_cellphone").css("display", "none");
+        $("#input_group_cellphone").css("border-color", "forestgreen");
+        $("#cellphone").css("border-color", "forestgreen");
+        $("#input_group_cellphone").append().html("<i class='fas fa-check' data-toggle='tooltip' data-placement='left' title='Celular verificado!' style='color:forestgreen;'></i>");
+    }
+
+    function cellphoneNotVerified() {
+        $("#message_not_verified_cellphone").css("display", "");
+        $("#input_group_cellphone").css("border-color", "red");
+        $("#cellphone").css("border-color", "red");
+        $("#input_group_cellphone").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Celular não verificado!' style='color:red;'></i>");
+    }
+
+    function emailVerified() {
+        $("#message_not_verified_email").css("display", "none");
+        $("#input_group_email").css("border-color", "forestgreen");
+        $("#email").css("border-color", "forestgreen");
+        $("#input_group_email").append().html("<i class='fas fa-check' data-toggle='tooltip' data-placement='left' title='Email verificado!' style='color:forestgreen;'></i>");
+    }
+
+    function emailNotVerified() {
+        $("#message_not_verified_email").css("display", "");
+        $("#input_group_email").css("border-color", "red");
+        $("#email").css("border-color", "red");
+        $("#input_group_email").append().html("<i class='fas fa-times' data-toggle='tooltip' data-placement='left' title='Email não verificado!' style='color:red;'></i>");
     }
 
     $("#profile_update_form").on("submit", function (event) {
@@ -101,6 +288,77 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 $("#progress-bar-register").css('width', '66%');
                 $("#jump").show();
+                getDataProfile();
+            }
+        });
+    });
+
+    $("#match_cellphone_verifycode_form").on("submit", function (event) {
+        event.preventDefault();
+        let verify_code = $("#cellphone_verify_code").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/matchcellphoneverifycode',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                verifyCode: verify_code
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                $('#modal_verify_cellphone').modal('hide');
+                $('#cellphone_verify_code').val('');
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+                cellphoneVerified();
+            }
+        });
+    });
+
+    $("#match_email_verifycode_form").on("submit", function (event) {
+        event.preventDefault();
+        let verify_code = $("#email_verify_code").val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/matchemailverifycode',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                verifyCode: verify_code
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+            },
+            success: function success(response) {
+                $('#modal_verify_email').modal('hide');
+                $('#email_verify_code').val('');
+                loadingOnScreenRemove();
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+                emailVerified();
             }
         });
     });
@@ -301,7 +559,7 @@ $(document).ready(function () {
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
     }
 
-    $("#update_taxes").on("click", function(){
+    $("#update_taxes").on("click", function () {
 
         $.ajax({
             method: "POST",
@@ -311,7 +569,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: { plan : $("#credit-card-release").val() },
+            data: {plan: $("#credit-card-release").val()},
             error: function (response) {
                 errorAjaxResponse(response);
             },

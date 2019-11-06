@@ -3,6 +3,7 @@
 namespace Modules\SalesRecovery\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesRecoverydetailsResourceTransformer extends Resource
 {
@@ -30,7 +31,7 @@ class SalesRecoverydetailsResourceTransformer extends Resource
             'error'         => $this['client']->error ?? '',
         ];
 
-        if(strpos($client['email'], 'invalido') !== false){
+        if (strpos($client['email'], 'invalido') !== false) {
             $client['email'] = 'Email inválido';
         }
 
@@ -42,6 +43,7 @@ class SalesRecoverydetailsResourceTransformer extends Resource
         ];
 
         $checkout = [
+            'sale_id'            => $this['checkout']->sale_id,
             'date'               => $this['checkout']->date,
             'hours'              => $this['checkout']->hours,
             'total'              => $this['checkout']->total,

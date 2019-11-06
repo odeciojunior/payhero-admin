@@ -2,9 +2,12 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ProductPlanPresenter;
 
 /**
  * @property integer $id
@@ -19,7 +22,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ProductPlan extends Model
 {
-    use SoftDeletes;
+    use FoxModelTrait, SoftDeletes, PresentableTrait;
+    /**
+     * @var string
+     */
+    protected $presenter = ProductPlanPresenter::class;
     /**
      * The table associated with the model.
      * @var string
@@ -37,6 +44,8 @@ class ProductPlan extends Model
         'product_id',
         'plan_id',
         'amount',
+        'cost',
+        'currency_type_enum',
         'created_at',
         'updated_at',
         'deleted_at',

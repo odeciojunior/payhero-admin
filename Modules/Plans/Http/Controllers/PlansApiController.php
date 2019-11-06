@@ -104,23 +104,28 @@ class PlansApiController extends Controller
                 $project = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
-
+                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         $plan = $planModel->create($requestData);
                         if (!empty($plan)) {
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
-                                foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
-                                    if ($keyProduct == $keyAmount) {
-                                        $dataProductPlan = [
-                                            'product_id' => $product,
-                                            'plan_id'    => $plan->id,
-                                            'amount'     => $productAmount,
-                                        ];
-                                        $productPlan->create($dataProductPlan);
-                                    }
+
+                                $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
+                                if(empty($requestData['product_cost'][$keyProduct]))
+                                {
+                                    $requestData['product_cost'][$keyProduct] = 0;
                                 }
+
+                                $productPlan->create([
+                                                         'product_id'         => $requestData['products'][$keyProduct],
+                                                         'plan_id'            => $plan->id,
+                                                         'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                                         'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                                         'currency_type_enum' => $productPlan->present()
+                                                                                             ->getCurrency($requestData['currency'][$keyProduct]),
+                                                     ]);
                             }
                         } else {
                             return response()->json([
@@ -238,10 +243,18 @@ class PlansApiController extends Controller
 
                     unset($requestData['project_id']);
                     $planId               = Hashids::decode($id)[0];
+                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
 
                     $plan = $planModel->where('id', $planId)->first();
-                    $plan->update($requestData);
+
+                    $plan->update([
+                                      'name'        => $requestData["name"],
+                                      'description' => $requestData["description"],
+                                      'code'        => $id,
+                                      'price'       => $requestData["price"],
+                                      'status'      => $planModel->present()->getStatus('active'),
+                                  ]);
 
                     $productPlans = $productPlan->where('plan_id', $plan->id)->get();
                     if (count($productPlans) > 0) {
@@ -251,15 +264,17 @@ class PlansApiController extends Controller
                     }
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
-                            foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
-                                if ($keyProduct == $keyAmount) {
-                                    $productPlan->create([
-                                                             'product_id' => $product,
-                                                             'plan_id'    => $plan->id,
-                                                             'amount'     => $productAmount,
-                                                         ]);
-                                }
-                            }
+
+                            $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
+
+                            $productPlan->create([
+                                                     'product_id'         => $requestData['products'][$keyProduct],
+                                                     'plan_id'            => $plan->id,
+                                                     'amount'             => $requestData['product_amounts'][$keyProduct] ?? 1,
+                                                     'cost'               => $requestData['product_cost'][$keyProduct] ?? 0,
+                                                     'currency_type_enum' => $productPlan->present()
+                                                                                         ->getCurrency($requestData['currency'][$keyProduct]),
+                                                 ]);
                         }
                     }
 

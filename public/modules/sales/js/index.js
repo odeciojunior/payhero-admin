@@ -97,16 +97,16 @@ $(document).ready(function () {
             'client': $("#comprador").val(),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
-            'transaction': $("#transaction").val(),
+            'transaction': $("#transaction").val().replace('#', ''),
         };
 
-        if(urlParams){
+        if (urlParams) {
             let params = "";
-            for(let param in data){
+            for (let param in data) {
                 params += '&' + param + '=' + data[param];
             }
-            return params;
-        }else{
+            return encodeURI(params);
+        } else {
             return data;
         }
     }
@@ -159,7 +159,8 @@ $(document).ready(function () {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
-            url: "/api/projects/user-projects",
+            url: '/api/projects',
+
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -184,12 +185,14 @@ $(document).ready(function () {
     // Obtem lista de vendas
     function atualizar(link = null) {
 
+        let updateResume = true;
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
             link = '/api/sales?' + getFilters(true).substr(1);
         } else {
             link = '/api/sales' + link + getFilters(true);
+            updateResume = false;
         }
 
         $.ajax({
@@ -249,7 +252,9 @@ $(document).ready(function () {
             }
         });
 
-        salesResume();
+        if (updateResume) {
+            salesResume();
+        }
     }
 
     // Download do relatorio
@@ -303,21 +308,21 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnAny('.number' ,true);
+                loadOnAny('.number', true);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadOnAny('.number' ,true);
+                loadOnAny('.number', true);
                 $('#total-sales').text('0');
                 $('#comission, #total').text('R$ 0,00');
-                if(response.total_sales){
+                if (response.total_sales) {
                     $('#total-sales, #comission, #total').text('');
                     $('#total-sales').text(response.total_sales);
-                    if(!isEmpty(response.real)){
+                    if (!isEmpty(response.real)) {
                         $('#comission').append(`<div>R$ ${response.real.comission}</div>`);
                         $('#total').append(`<div>R$ ${response.real.total}</div>`);
                     }
-                    if(!isEmpty(response.dolar)){
+                    if (!isEmpty(response.dolar)) {
                         $('#comission').append(`<div>$ ${response.dolar.comission}</div>`);
                         $('#total').append(`<div>$ ${response.dolar.total}</div>`);
                     }

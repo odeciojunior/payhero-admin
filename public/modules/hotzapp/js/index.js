@@ -14,6 +14,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
+                $('#content').html("");
                 if (isEmpty(response.projects)) {
                     $('#project-empty').show();
                     $('#integration-actions').hide();

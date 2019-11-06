@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -155,6 +156,10 @@ class FoxUtils
         return current(Hashids::decode($hash));
     }
 
+    /**
+     * @param $dateString
+     * @return bool|mixed
+     */
     public static function validateDateRange($dateString)
     {
         preg_match_all('/(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)[0-9]{2})/', $dateString, $matches);
@@ -164,6 +169,37 @@ class FoxUtils
             $dateRange[1] = date('Y-m-d', strtotime(str_replace('/', '-', $dateRange[1])));
 
             return $dateRange;
+        }
+
+        return false;
+    }
+
+    public static function removeAccents($string)
+    {
+        return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
+    }
+
+    public static function removeSpecialChars($string){
+
+        return preg_replace('/[^\x00-\x7F]+/', "", $string);
+    }
+
+    /**
+     * @param mixed $var
+     * @return bool
+     */
+    public static function isEmpty($var)
+    {
+        if (!isset($var)) {
+            return true;
+        } else if (empty($var)) {
+            return true;
+        } else if (is_string($var) && trim($var) == '') {
+            return true;
+        } else if (is_array($var) && count($var) == 0) {
+            return true;
+        } else if (is_object($var) && ($var instanceof Collection) && count($var) == 0) {
+            return true;
         }
 
         return false;

@@ -39,6 +39,8 @@ $(document).ready(function () {
                 $("#domain-table-body").html('');
                 if (response.data == '') {
                     $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum domínio encontrado</td></tr>")
+                    $('#tabela-dominios').addClass('table-striped');
+
                 } else {
                     $.each(response.data, function (index, value) {
                         tableDomains(value);
@@ -299,44 +301,70 @@ $(document).ready(function () {
 
     }
 
+    function verifyInputEmpty() {
+        let returno = false;
+        if (($("#name-register").val().length === 0)) {
+            $("#error-name-register-dns").show();
+            returno = true;
+        } else {
+            $("#error-name-register-dns").hide();
+        }
+
+        if (($("#value-record").val().length === 0)) {
+            $("#error-value-record").show();
+            returno = true;
+        } else {
+            $("#error-value-record").hide();
+        }
+
+        return returno;
+    }
+
     /**
      * Adiciona records ao dominio
      */
     $("#bt-add-record").on('click', function () {
-        let domainId = $("#domain").val();
-        loadOnTable('#table-body-new-records', '#new-registers-table');
+        if (verifyInputEmpty()) {
+            return false;
+        } else {
+            $("#error-name-register-dns, #error-value-record").hide();
 
-        let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
-        formData.append('project', projectId);
+            let domainId = $("#domain").val();
+            loadOnTable('#table-body-new-records', '#new-registers-table');
 
-        formData.append('domain', domainId);
+            let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
+            formData.append('project', projectId);
 
-        $.ajax({
-            method: 'POST',
-            url: '/api/project/' + projectId + '/domain/' + domainId + '/records',
-            processData: false,
-            contentType: false,
-            cache: false,
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: formData,
-            dataType: "json",
-            error: function (response) {
-                $(".swal2-container, #modal-backdrop, #loaderLine").remove();
-                removeLoad();
-                errorAjaxResponse(response);
-            },
-            success: function (response) {
-                $(".swal2-container").remove();
-                removeLoad();
-                alertCustom('success', response.message);
-                $('#name-register, #value-record').val('');
-                updateTableRecords(domainId);
+            formData.append('domain', domainId);
 
-            }
-        });
+            $.ajax({
+                method: 'POST',
+                url: '/api/project/' + projectId + '/domain/' + domainId + '/records',
+                processData: false,
+                contentType: false,
+                cache: false,
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: formData,
+                dataType: "json",
+                error: function (response) {
+                    $(".swal2-container, #modal-backdrop, #loaderLine").remove();
+                    removeLoad();
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    $(".swal2-container").remove();
+                    removeLoad();
+                    alertCustom('success', response.message);
+                    $('#name-register, #value-record').val('');
+                    updateTableRecords(domainId);
+
+                }
+            });
+        }
+
     });
 
     /**
