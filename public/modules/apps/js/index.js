@@ -31,6 +31,10 @@ $(document).ready(function(){
                     $('#convertax-bt').addClass('added');
                     $('#convertax-icon').removeClass('wb-plus').addClass('wb-check');
                 }
+                if(response.activecampaignIntegrations > 0){
+                    $('#activecampaign-bt').addClass('added');
+                    $('#activecampaign-icon').removeClass('wb-plus').addClass('wb-check');
+                }
                 
             }
         });
