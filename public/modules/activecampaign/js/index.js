@@ -87,9 +87,9 @@ $(document).ready(function () {
     //create
     $('#btn-add-integration').on('click', function () {
         $(".modal-title").html('Adicionar nova Integração com ActiveCampaign');
-        $("#bt_integration").addClass('btn-save');
-        $("#bt_integration").removeClass('btn-update');
-        $("#bt_integration").text('Adicionar integração');
+        $("#bt_integration_add").addClass('btn-save');
+        $("#bt_integration_add").removeClass('btn-update');
+        $("#bt_integration_add").text('Adicionar integração');
         $("#modal_add_integracao").modal('show');
         $("#form_update_integration").hide();
         $("#form_add_integration").show();
@@ -104,9 +104,9 @@ $(document).ready(function () {
 // <a href="/projects/${project.id}" class="stretched-link"></a>
 
         // $(".modal-title").html('Editar nova Integração com ActiveCampaign');
-        // $("#bt_integration").addClass('btn-update');
-        // $("#bt_integration").removeClass('btn-save');
-        // $("#bt_integration").text('Atualizar');
+        // $("#bt_integration_add").addClass('btn-update');
+        // $("#bt_integration_add").removeClass('btn-save');
+        // $("#bt_integration_add").text('Atualizar');
         // $("#form_update_integration").show();
         // $("#form_add_integration").hide();
         // $("#modal_add_integracao").modal('show');

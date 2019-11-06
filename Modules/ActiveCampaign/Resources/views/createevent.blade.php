@@ -17,7 +17,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Adicionar tags:</label>
-                            <select id="add_tags" name="add_tags[]" multiple="multiple" class="form-control add_tags" data-plugin="" >
+                            <select id="add_tags" name="add_tags[]" multiple="multiple" class="form-control add_tags" style="width: 100%" >
                                 {{--select no js--}}
                             </select>
                         </div>
@@ -26,7 +26,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Remover tags:</label>
-                            <select id="remove_tags" name="remove_tags[]" multiple="multiple" class="form-control remove_tags"  >
+                            <select id="remove_tags" name="remove_tags[]" multiple="multiple" class="form-control remove_tags" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>
@@ -35,7 +35,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Adicionar na lista:</label>
-                            <select id="add_list" name="add_list" class="form-control add_list">
+                            <select id="add_list" name="add_list" class="form-control add_list" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>
@@ -44,7 +44,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Remover da lista:</label>
-                            <select id="remove_list" name="remove_list" class="form-control remove_list">
+                            <select id="remove_list" name="remove_list" class="form-control remove_list" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>

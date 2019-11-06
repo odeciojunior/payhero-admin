@@ -41,7 +41,7 @@
                                 @include('activecampaign::edit')
                             </div>
                             <div class="modal-footer" style="margin-top: 15px">
-                                <button id="bt_integration" type="button" class="btn btn-success"
+                                <button id="bt_integration_add" type="button" class="btn btn-success"
                                         data-dismiss="modal"></button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                             </div>

@@ -16,7 +16,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Adicionar tags:</label>
-                            <select id="add_tags_edit" name="add_tags_edit[]" multiple="multiple" class="form-control add_tags_edit" data-plugin="" >
+                            <select id="add_tags_edit" name="add_tags_edit[]" multiple="multiple" class="form-control add_tags_edit" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>
@@ -25,7 +25,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Remover tags:</label>
-                            <select id="remove_tags_edit" name="remove_tags_edit[]" multiple="multiple" class="form-control remove_tags_edit"  >
+                            <select id="remove_tags_edit" name="remove_tags_edit[]" multiple="multiple" class="form-control remove_tags_edit" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>
@@ -34,7 +34,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Adicionar na lista:</label>
-                            <select id="add_list_edit" name="add_list_edit" class="form-control add_list_edit">
+                            <select id="add_list_edit" name="add_list_edit" class="form-control add_list_edit" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>
@@ -43,7 +43,7 @@
                     <div class='col-sm-12 col-md-12 col-lg-12'>
                         <div class="form-group">
                             <label>Remover da lista:</label>
-                            <select id="remove_list_edit" name="remove_list_edit" class="form-control remove_list_edit">
+                            <select id="remove_list_edit" name="remove_list_edit" class="form-control remove_list_edit" style="width: 100%">
                                 {{--select no js--}}
                             </select>
                         </div>

@@ -66,7 +66,25 @@ $(function () {
                         });
                     }
 
-                    // $('#add_tags').select2();
+                    $('#add_tags').select2({
+                        dropdownParent: $('#modal_add_event'),
+                        placeholder: 'Selecione a(s) tag(s)'
+                    });
+
+                    $('#remove_tags').select2({
+                        dropdownParent: $('#modal_add_event'),
+                        placeholder: 'Selecione a(s) tag(s)'
+                    });
+
+                    $('#add_list').select2({
+                        dropdownParent: $('#modal_add_event'),
+                        placeholder: 'Selecione a lista'
+                    });
+
+                    $('#remove_list').select2({
+                        dropdownParent: $('#modal_add_event'),
+                        placeholder: 'Selecione a lista'
+                    });
 
                     $("#modal-title-event").html('<span class="ml-15">Adicionar Evento</span>');
                     $("#btn-modal").addClass('btn-save-event');
@@ -331,8 +349,8 @@ $(function () {
                             }
 
                             var tags = response.tags;
-                            $("#add_tags_edit").html('<option>Selecione a(s) tag(s)</option>');
-                            $("#remove_tags_edit").html('<option>Selecione a(s) tag(s)</option>');
+                            $("#add_tags_edit").html('');
+                            $("#remove_tags_edit").html('');
                             if(tags !== null) {
                                 let arrayTagsAdd = [];
                                 $(response.event.add_tags).each(function (index, data) {
@@ -356,6 +374,26 @@ $(function () {
                                     $("#remove_tags_edit").append("<option value='" + data.id + ";" + data.tag + "' " + selectedRemove + ">" + data.tag + "</option>");
                                 });
                             }
+
+                            $('#add_tags_edit').select2({
+                                dropdownParent: $('#modal_add_event'),
+                                placeholder: 'Selecione a(s) tag(s)'
+                            });
+
+                            $('#remove_tags_edit').select2({
+                                dropdownParent: $('#modal_add_event'),
+                                placeholder: 'Selecione a(s) tag(s)'
+                            });
+
+                            $('#add_list_edit').select2({
+                                dropdownParent: $('#modal_add_event'),
+                                placeholder: 'Selecione a lista'
+                            });
+
+                            $('#remove_list_edit').select2({
+                                dropdownParent: $('#modal_add_event'),
+                                placeholder: 'Selecione a lista'
+                            });
 
                             $("#modal_add_event").modal('show');
                             $("#form-register-event").hide();
