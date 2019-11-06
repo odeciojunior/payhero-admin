@@ -251,4 +251,89 @@ class ActiveCampaignService
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
+
+    /**
+     * @param  string $name
+     * @return json
+     */
+    public function createCustomField($name)
+    {
+        $data = [
+            "type"  => "text",
+            "title" => $name,
+        ];
+        // return['field']['id']...
+        return $this->sendDataActiveCampaign(['field' => $data], 'fields', 'POST');
+    }
+
+    /**
+     * @param  int $fieldId
+     * @param  string $name
+     * @return json
+     */
+    public function updateCustomField($fieldId, $name)
+    {
+        $data = [
+            "type"  => "text",
+            "title" => $name,
+        ];
+
+        return $this->sendDataActiveCampaign(['field' => $data], 'fields/' . $fieldId, 'PUT');
+    }
+
+    /**
+     * @return json
+     */
+    public function getCustomFields()
+    {
+        return $this->sendDataActiveCampaign(null, 'fields', 'GET');
+    }
+
+    /**
+     * @param int $contactId
+     * @param int $fieldId
+     * @param string $value
+     * @return json
+     */
+    public function setCustomFieldValue($contactId, $fieldId, $value)
+    {
+        $data = [
+            "contact" => $contactId,
+            "field"   => $fieldId,
+            "value"   => $value
+        ];
+        return $this->sendDataActiveCampaign(['fieldValue' => $data], 'fieldValues', 'POST');
+    }
+
+    /**
+     * @param  int $fieldId
+     * @param  int $relationId
+     * @return json
+     */
+    public function createCustomFieldRelation($fieldId, $relationId)
+    {
+        $data = [
+            "field" => $fieldId,
+            "relid" => $relationId, // 0 - exibe o campo no contato no Painel do ActiveCampaign
+        ];
+        return $this->sendDataActiveCampaign(['fieldRel' => $data], 'fieldRels', 'POST');
+    }
+
+    /**
+     * @param  int $fieldId
+     * @return json
+     */
+    public function getRelationsCustomField($fieldId)
+    {
+        return $this->sendDataActiveCampaign(null, 'fields/'.$fieldId.'/relations', 'GET');
+    }
+
+    /**
+     * @param  int $fieldId
+     * @return json
+     */
+    public function deleteCustomField($fieldId)
+    {
+        return $this->sendDataActiveCampaign(null, 'fields/' . $fieldId, 'DELETE');
+    }
 }
