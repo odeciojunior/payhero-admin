@@ -108,7 +108,7 @@ class ProfileApiController
                         $img->save($userPhoto->getPathname());
 
                         $digitalOceanPath = $digitalOceanService
-                            ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner) . '/public/profile', $userPhoto);
+                            ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile', $userPhoto);
 
                         $user->update([
                                           'photo' => $digitalOceanPath,

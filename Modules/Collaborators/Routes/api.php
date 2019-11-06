@@ -19,7 +19,7 @@ Route::group(
     ],
     function() {
         Route::apiResource('/collaborators', 'CollaboratorsApiController')
-             ->only('index', 'show', 'store', 'update', 'destroy')->names('api.collaborators');
+             ->only('index', 'show', 'store', 'update', 'destroy')->names('api.collaborators')->middleware('role:account_owner|admin');
     }
 );
 //Route::middleware('auth:api')->get('/collaborators', function (Request $request) {

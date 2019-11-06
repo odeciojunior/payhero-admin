@@ -21,15 +21,21 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
+     * @return string
      */
-    protected $redirectTo = '/dashboard';
+
+    //    protected $redirectTo = '/dashboard';
+    protected function redirectTo()
+    {
+        if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+            return '/dashboard';
+        } else {
+            return '/sales';
+        }
+    }
 
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct()

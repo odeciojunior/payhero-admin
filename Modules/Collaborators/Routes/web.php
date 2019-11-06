@@ -12,7 +12,7 @@
 */
 Route::group(['middleware' => ['web', 'auth']], function() {
     Route::Resource('collaborators', 'CollaboratorsController')
-         ->only('index');
+         ->only('index')->middleware('role:account_owner|admin');
 });
 //Route::prefix('collaborators')->group(function() {
 //    Route::get('/', 'CollaboratorsController@index');

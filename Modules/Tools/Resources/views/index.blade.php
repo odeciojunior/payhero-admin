@@ -13,7 +13,7 @@
                         <img class="card-img-top mt-50" src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png" alt="" height='250px;' align="middle">
                         <div class="card-body">
                             <h5 class="card-title">Colaboradores</h5>
-                            <p class="card-text sm">Cadastre manualmente seus colaboradores</p>
+                            <p class="card-text sm">Cadastre colaboradores para ajudar a gerenciar sua conta</p>
                         </div>
                     </div>
                 </div>

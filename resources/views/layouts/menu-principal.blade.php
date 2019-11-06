@@ -160,7 +160,6 @@
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-
             <li class="site-menu-item has-sub  disabled">
                 {{--            <a href="javascript:void(0)" class="disabled">--}}
                 {{--                <i class="material-icons">people</i>--}}
