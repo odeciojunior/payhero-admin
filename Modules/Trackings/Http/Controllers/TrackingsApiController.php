@@ -104,9 +104,8 @@ class TrackingsApiController extends Controller
         try {
             $data                 = $request->all();
             $productPlanSaleModel = new ProductPlanSale();
-            $saleModel            = new Sale();
             $trackingModel        = new Tracking();
-            $productService       = new ProductService();
+            $trackingService      = new TrackingService();
 
             if (!empty($data['tracking_code']) && !empty($data['sale_id']) && !empty($data['product_id'])) {
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
@@ -121,32 +120,7 @@ class TrackingsApiController extends Controller
                     //create
                     if(!isset($tracking)){
 
-                        $planSale = $productPlanSale
-                            ->sale
-                            ->plansSales
-                            ->where('plan_id', $productPlanSale->plan_id)
-                            ->where('sale_id', $productPlanSale->sale_id)
-                            ->first();
-
-                        $productPlan = $planSale->plan
-                            ->productsPlans
-                            ->where('product_id', $productPlanSale->product_id)
-                            ->where('plan_id', $productPlanSale->plan_id)
-                            ->first();
-
-                        $amount = $productPlan->amount * $planSale->amount;
-
-                        $tracking = $trackingModel->create([
-                            'sale_id' => $productPlanSale->sale->id,
-                            'product_id' => $productPlanSale->product_id,
-                            'product_plan_sale_id' => $productPlanSale->id,
-                            'plans_sale_id' => $planSale->id,
-                            'amount' => $amount,
-                            'delivery_id' => $productPlanSale->sale->delivery->id,
-                            'tracking_code'        => $data['tracking_code'],
-                            'tracking_status_enum' => $trackingModel->present()
-                                ->getTrackingStatusEnum('posted'),
-                        ]);
+                        $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
 
                         if ($tracking) {
 
