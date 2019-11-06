@@ -158,7 +158,7 @@ class PostBackPagarmeController extends Controller
                     $activeCampaignService = new ActiveCampaignService();
                     $sale->load('client');
                     // $saleId, $eventSale, $name, $phone, $email, $projectId
-                    $activeCampaignService->execute($sale->id, 2, $sale->client->name, $sale->client->telephone, $sale->client->email, $sale->project_id);
+                    $activeCampaignService->execute($sale->id, 2, $sale->client->name, $sale->client->telephone, $sale->client->email, $sale->project_id, 'sale');
 
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar lead para ActiveCampaign na venda ' . $sale->id);

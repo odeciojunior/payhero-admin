@@ -145,14 +145,15 @@ class ActiveCampaignService
     }
 
     /**
-     * @param  $saleId
+     * @param  $instanceId
      * @param  $eventSale
      * @param  $name
      * @param  $phone
      * @param  $email
      * @param  $projectId
+     * @param  $instance
      */
-    public function execute($saleId, $eventSale, $name, $phone, $email, $projectId)
+    public function execute($instanceId, $eventSale, $name, $phone, $email, $projectId, $instance)
     {
         try {
             $activecampaignIntegration = new ActivecampaignIntegration;
@@ -170,7 +171,7 @@ class ActiveCampaignService
                     'lastName'  => '',
                 ];
 
-                return $this->sendContact($data, $event, $saleId);
+                return $this->sendContact($data, $event, $instanceId, $instance);
             } else {
                 return response()->json(['message' => 'Projeto não integrado com ActiveCampaign'], 400);
             }
@@ -183,8 +184,9 @@ class ActiveCampaignService
      * @param  array $data
      * @param  int $eventEnum
      * @param  int $instanceId
+     * @param  string $instance
      */
-    public function sendContact($data, $event, $saleId)
+    public function sendContact($data, $event, $instanceId, $instance)
     {
         try {
 
@@ -236,7 +238,8 @@ class ActiveCampaignService
                     'data'                          => json_encode(['contact' => $data, 'tags_add' => $arrayApply ?? null, 'tags_remove' => $arrayRemove ?? null]),
                     'response'                      => json_encode(['contact' => $contact, 'tags' => $return ?? null]),
                     'sent_status'                   => $sentStatus,
-                    'sale_id'                       => $saleId,
+                    'instance_id'                   => $instanceId,
+                    'instance'                      => $instance,
                     'event_sale'                    => $event->event_sale,
                     'activecampaign_integration_id' => $this->integrationId,
                 ]

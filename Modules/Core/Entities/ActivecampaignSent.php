@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $sale_id
+ * @property integer $instance_id
+ * @property string $instance
  * @property integer $activecampaign_integration_id
  * @property string $data
  * @property string $response
@@ -35,7 +36,7 @@ class ActivecampaignSent extends Model
     /**
      * @var array
      */
-    protected $fillable = ['sale_id', 'activecampaign_integration_id', 'data', 'response', 'sent_status', 'event_sale', 'created_at', 'updated_at'];
+    protected $fillable = ['instance_id', 'instance', 'activecampaign_integration_id', 'data', 'response', 'sent_status', 'event_sale', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
