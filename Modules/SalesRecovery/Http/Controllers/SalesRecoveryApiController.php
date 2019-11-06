@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PagarmeService;
@@ -35,8 +36,13 @@ class SalesRecoveryApiController extends Controller
     {
         try {
             $projectService = new ProjectService();
+            $projectModel   = new Project();
 
-            $projects = $projectService->getUserProjects(true);
+            $projectStatus = [
+                $projectModel->present()->getStatus('active'), $projectModel->present()->getStatus('disabled'),
+            ];
+
+            $projects = $projectService->getUserProjects(true, $projectStatus);
             if (!empty($projects)) {
                 return SalesRecoveryIndexResourceTransformer::collection($projects);
             } else {

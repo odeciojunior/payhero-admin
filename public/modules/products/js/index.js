@@ -24,6 +24,9 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: '/api/projects?select=true',
+            data: {
+                'status': 'active'
+            },
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -33,7 +36,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                if(response.data){
+                if (response.data) {
                     $("#select-projects").html('');
                     $.each(response.data, function (index, value) {
                         if (value.shopify) {

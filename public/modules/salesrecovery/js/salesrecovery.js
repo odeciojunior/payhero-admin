@@ -13,21 +13,21 @@ $(document).ready(function () {
         startDate: moment().subtract(30, 'days'),
         endDate: moment(),
         opens: 'center',
-        maxDate: moment().endOf('day'),
+        maxDate: moment().endOf("day"),
         alwaysShowCalendar: true,
         showCustomRangeLabel: 'Customizado',
         autoUpdateInput: true,
         locale: {
             locale: 'pt-br',
             format: 'DD/MM/YYYY',
-            applyLabel: 'Aplicar',
-            cancelLabel: 'Limpar',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
             fromLabel: 'De',
             toLabel: 'Até',
             customRangeLabel: 'Customizado',
             weekLabel: 'W',
             daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
             firstDay: 0
         },
         ranges: {
@@ -49,7 +49,7 @@ $(document).ready(function () {
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: "/api/projects/?select=true",
+            url: "/api/projects?select=true",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

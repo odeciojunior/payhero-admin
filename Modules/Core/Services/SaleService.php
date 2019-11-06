@@ -5,14 +5,16 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Product;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Products\Transformers\ProductsSaleResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -24,9 +26,10 @@ class SaleService
     /**
      * @param $filters
      * @param bool $paginate
+     * @param bool $withProducts
      * @return LengthAwarePaginator|Collection
      */
-    public function getSales($filters, $paginate = true)
+    public function getSales($filters, $paginate = true, $withProducts = false)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
@@ -40,13 +43,11 @@ class SaleService
                                                     'sale',
                                                     'sale.project',
                                                     'sale.client',
-                                                    'sale.plansSales',
-                                                    'sale.plansSales.plan',
-                                                    'sale.plansSales.plan.products',
-                                                    'sale.plansSales.plan.project',
+                                                    'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
                                                     'sale.shipping',
                                                     'sale.checkout',
                                                     'sale.delivery',
+                                                    'sale.transactions',
                                                 ])->whereIn('company_id', $userCompanies)
                                          ->whereNull('invitation_id');
 
@@ -104,6 +105,25 @@ class SaleService
             $sales = $transactions->orderBy('id', 'DESC')->get();
         }
 
+        if ($withProducts) {
+            $userCompanies = $sales->pluck('company_id');
+            $sales->map(function($item) use ($userCompanies) {
+                $item->sale->products = collect();
+                $this->getDetails($item->sale, $userCompanies);
+                foreach ($item->sale->plansSales as &$planSale) {
+                    $plan = $planSale->plan;
+                    foreach ($plan->productsPlans as $productPlan) {
+                        $productPlan->product['amount']     = $productPlan->amount * $planSale->amount;
+                        $productPlan->product['plan_name']  = $plan->name;
+                        $productPlan->product['plan_price'] = $plan->price;
+                        $item->sale->products->add($productPlan->product);
+                    }
+                }
+
+                return $item;
+            });
+        }
+
         return $sales;
     }
 
@@ -123,19 +143,24 @@ class SaleService
                                      'notazzInvoices',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
-        //format dates
-        $sale->hours      = (new Carbon($sale->start_date))->format('H:m:s');
-        $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y');
-        if (isset($sale->boleto_due_date)) {
-            $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
-        }
+        //add details to sale
+        $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
+        $this->getDetails($sale, $userCompanies);
 
-        //set flag
-        if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
-            $sale->flag = 'generico';
-        } else if (!$sale->flag || empty($sale->flag)) {
-            $sale->flag = 'boleto';
+        //invoices
+        $invoices = [];
+        foreach ($sale->notazzInvoices as $notazzInvoice) {
+            $invoices[] = Hashids::encode($notazzInvoice->id);
         }
+        $sale->details->invoices = $invoices;
+
+        return $sale;
+    }
+
+    public function getDetails($sale, $userCompanies)
+    {
+
+        $userTransaction = $sale->transactions->whereIn('company_id', $userCompanies)->first();
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -154,48 +179,57 @@ class SaleService
         }
 
         //calcule fees
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-
-        $transaction = $sale->transactions->whereIn('company_id', $userCompanies)
-                                          ->first();
-
         $transactionConvertax = $sale->transactions
             ->where('company_id', 29)
             ->first();
 
         if (!empty($transactionConvertax)) {
-            $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
+            $convertaxValue = ($userTransaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
         } else {
             $convertaxValue = '0,00';
         }
 
-        $value = $transaction->value;
+        $value = $userTransaction->value;
 
-        $comission = ($transaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         if ($sale->dolar_quotation != 0) {
-            $taxa     = intval($total / $sale->dolar_quotation);
-            $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-            $total    += preg_replace('/[^0-9]/', '', $sale->iof);
+            $taxa      = intval($total / $sale->dolar_quotation);
+            $taxaReal  = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
+            $iof       = preg_replace('/[^0-9]/', '', $sale->iof);
+            $total     += $iof;
+            $sale->iof = number_format($iof / 100, 2, ',', '.');
         } else {
             $taxa     = 0;
-            $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
+            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
             $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
         }
 
-        //invoices
-        $invoices = [];
-        foreach ($sale->notazzInvoices as $notazzInvoice) {
-            $invoices[] = Hashids::encode($notazzInvoice->id);
+        //set flag
+        if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
+            $sale->flag = 'generico';
+        } else if (!$sale->flag || empty($sale->flag)) {
+            $sale->flag = 'boleto';
+        }
+
+        //format dates
+        $sale->hours      = (new Carbon($sale->start_date))->format('H:m:s');
+        $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y');
+        if (isset($sale->boleto_due_date)) {
+            $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
+        }
+
+        if ($sale->status == 1) {
+            $userTransaction->release_date = Carbon::parse($userTransaction->release_date);
+        } else {
+            $userTransaction->release_date = null;
         }
 
         //add details to sale
         $sale->details = (object) [
-            //invoices
-            'invoices'         => $invoices,
             //transaction
-            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $transaction->transaction_rate) / 100, 2, ',', '.'),
-            'percentage_rate'  => $transaction->percentage_rate,
+            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
+            'percentage_rate'  => $userTransaction->percentage_rate ?? 0,
             //extra info
             'total'            => number_format(intval($total) / 100, 2, ',', '.'),
             'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),
@@ -204,9 +238,8 @@ class SaleService
             'convertax_value'  => $convertaxValue,
             'taxa'             => number_format($taxa / 100, 2, ',', '.'),
             'taxaReal'         => $taxaReal,
+            'release_date'     => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
         ];
-
-        return $sale;
     }
 
     /**
@@ -231,27 +264,19 @@ class SaleService
     }
 
     /**
-     * @return array
+     * @param null $saleId
+     * @return AnonymousResourceCollection|null
      */
     public function getProducts($saleId = null)
     {
         try {
-            $saleModel    = new Sale();
-            $productModel = new Product();
-
             if ($saleId) {
 
-                $sale = $saleModel->with([
-                                             'plansSales.plan.products',
-                                         ])->find($saleId);
+                $productService = new ProductService();
 
-                $plansIds = $sale->plansSales->pluck('plan_id')->toArray();
+                $products = $productService->getProductsBySale($saleId);
 
-                $products = $productModel->whereHas('productsPlans', function($query) use ($plansIds) {
-                    $query->whereIn('plan_id', $plansIds);
-                })->get();
-
-                return $products;
+                return ProductsSaleResource::collection($products);
             } else {
                 return null;
             }
@@ -259,5 +284,53 @@ class SaleService
             Log::warning('Erro ao buscar produtos - SaleService - getProducts');
             report($ex);
         }
+    }
+
+    /**
+     * @param null $saleId
+     * @return AnonymousResourceCollection|null
+     */
+    public function getProductsBySaleId($saleId = null)
+    {
+        try {
+            if ($saleId) {
+
+                $productService = new ProductService();
+
+                $products = $productService->getProductsBySaleId($saleId);
+
+                return ProductsSaleResource::collection($products);
+            } else {
+                return null;
+            }
+        } catch (Exception $ex) {
+            Log::warning('Erro ao buscar produtos - SaleService - getProducts');
+            report($ex);
+        }
+    }
+
+    /**
+     * @param $saleId
+     * @return array
+     */
+    public function getEmailProducts($saleId)
+    {
+        $saleModel = new Sale();
+
+        $sale         = $saleModel->with(['plansSales.plan.productsPlans.product'])->find($saleId);
+        $productsSale = [];
+        if (!empty($sale)) {
+            /** @var PlanSale $planSale */
+            foreach ($sale->plansSales as $planSale) {
+                /** @var ProductPlan $productPlan */
+                foreach ($planSale->plan->productsPlans as $productPlan) {
+                    $product           = $productPlan->product->toArray();
+                    $product['amount'] = $productPlan->amount * $planSale->amount;
+                    $productsSale[]    = $product;
+                }
+            }
+        }
+
+        return $productsSale;
     }
 }

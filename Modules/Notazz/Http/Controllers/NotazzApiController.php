@@ -5,9 +5,11 @@ namespace Modules\Notazz\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
+use Modules\Core\Entities\Project;
 use Modules\Notazz\Http\Requests\NotazzStoreRequest;
 use Modules\Notazz\Transformers\NotazzInvoiceResource;
 use Modules\Notazz\Transformers\NotazzResource;
@@ -55,43 +57,58 @@ class NotazzApiController extends Controller
      */
     public function store(NotazzStoreRequest $request)
     {
-
         try {
             $data                   = $request->all();
             $notazzIntegrationModel = new NotazzIntegration();
+            $projectModel           = new Project();
 
             $projectId = current(Hashids::decode($data['select_projects_create']));
+            if ($projectId) {
+                //hash ok
 
-            $integration = $notazzIntegrationModel->where('project_id', $projectId)->first();
-            if ($integration) {
+                $project = $projectModel->find($projectId);
+
+                if (Gate::allows('show', [$project])) {
+
+                    $integration = $notazzIntegrationModel->where('project_id', $projectId)->first();
+                    if ($integration) {
+                        return response()->json([
+                                                    'message' => 'Projeto já integrado',
+                                                ], 400);
+                    }
+                    $integrationCreated = $notazzIntegrationModel->create([
+                                                                              'token_api'       => $data['token_api_create'],
+                                                                              'invoice_type'    => $data['select_invoice_type_create'],
+                                                                              'token_webhook'   => $data['token_webhook_create'],
+                                                                              'token_logistics' => $data['token_logistics_create'] ?? null,
+                                                                              'project_id'      => $projectId,
+                                                                              'user_id'         => auth()->user()->id,
+                                                                              'start_date'      => $data['start_date_create'],
+                                                                          ]);
+                    if ($integrationCreated) {
+                        if (!empty($data['start_date_create'])) {
+                            return response()->json([
+                                                        'message' => 'Integração criada com sucesso e as notas fiscais foram agendadas para serem geradas.',
+                                                    ], 200);
+                        } else {
+                            return response()->json([
+                                                        'message' => 'Integração criada com sucesso!',
+                                                    ], 200);
+                        }
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Ocorreu um erro ao realizar a integração',
+                                                ], 400);
+                    }
+                } else {
+                    return response()->json('Sem permissão para remover projeto', 403);
+                }
+            } else {
+                //hash wrong
                 return response()->json([
-                                            'message' => 'Projeto já integrado',
+                                            'message' => 'Projeto não encontrado',
                                         ], 400);
             }
-            $integrationCreated = $notazzIntegrationModel->create([
-                                                                      'token_api'       => $data['token_api_create'],
-                                                                      'invoice_type'    => $data['select_invoice_type_create'],
-                                                                      'token_webhook'   => $data['token_webhook_create'],
-                                                                      'token_logistics' => $data['token_logistics_create'] ?? null,
-                                                                      'project_id'      => $projectId,
-                                                                      'user_id'         => auth()->user()->id,
-                                                                      'start_date'      => $data['start_date_create'],
-                                                                  ]);
-            if ($integrationCreated) {
-                if (!empty($data['start_date_create'])) {
-                    return response()->json([
-                                                'message' => 'Integração criada com sucesso e as notas fiscais foram agendadas para serem geradas.',
-                                            ], 200);
-                } else {
-                    return response()->json([
-                                                'message' => 'Integração criada com sucesso!',
-                                            ], 200);
-                }
-            }
-
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao realizar a integração',
-                                    ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao realizar integração  NotazzController - store');
             report($e);
@@ -197,20 +214,26 @@ class NotazzApiController extends Controller
             if ($integrationId) {
                 //hash ok
 
-                $integration = $notazzIntegrationModel->find($integrationId);
+                $integration = $notazzIntegrationModel->with(['invoices'])->find($integrationId);
                 if ($integration) {
 
-                    $integrationDeleted = $integration->delete();
-                    if ($integrationDeleted) {
-                        //integracao removida
+                    if (count($integration->invoices) == 0) {
+                        $integrationDeleted = $integration->delete();
+                        if ($integrationDeleted) {
+                            //integracao removida
 
-                        return response()->json([
-                                                    'message' => 'Integração removida com sucesso.',
-                                                ], 200);
+                            return response()->json([
+                                                        'message' => 'Integração removida com sucesso.',
+                                                    ], 200);
+                        } else {
+                            //erro ao remover integracao
+                            return response()->json([
+                                                        'message' => 'Erro ao remover integração',
+                                                    ], 400);
+                        }
                     } else {
-                        //erro ao remover integracao
                         return response()->json([
-                                                    'message' => 'Erro ao remover integração',
+                                                    'message' => 'Não é possivel remover a integração, pois o já existem notas fiscais geradas ',
                                                 ], 400);
                     }
                 } else {

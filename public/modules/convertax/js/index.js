@@ -181,6 +181,9 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
+            data: {
+                'status': 'active'
+            },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',

@@ -3,6 +3,7 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
 @endpush
 
 @section('content')
@@ -30,7 +31,12 @@
                                 Tarifas e Prazos
                             </a>
                         </li>
-                    </ul> 
+                        <li class="nav-item" role="presentation" id="nav_notifications">
+                            <a class="nav-link" data-toggle="tab" href="#tab_notifications" aria-controls="tab_notifications" role="tab">
+                                Notificações
+                            </a>
+                        </li>
+                    </ul>
                     <div class="p-30 pt-20">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab_user" role="tabpanel">
@@ -54,7 +60,17 @@
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="email">Email</label>
-                                                    <input name="email" value="" type="text" class="input-pad" id="email" placeholder="Email">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="input_group_email" id="addon-email">
+                                                            </span>
+                                                        </div>
+                                                        <input name="email" value="" type="text" class="input-pad form-control" id="email" placeholder="Email" aria-describedby="addon-email">
+                                                    </div>
+                                                    <small id="message_not_verified_email" style='color:red; display:none;'>Email não verificado, clique
+                                                        <a href='#' id='btn_verify_email' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_email'>aqui</a>
+                                                        para verificá-lo!
+                                                    </small>
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="cpf">Documento</label>
@@ -62,7 +78,17 @@
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="celular">Celular</label>
-                                                    <input name="cellphone" value="" type="text" data-mask="(00) 00000-0000" class="input-pad" id="cellphone" placeholder="Celular">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="input_group_cellphone" id="addon-cellphone">
+                                                            </span>
+                                                        </div>
+                                                        <input name="cellphone" value="" type="text" data-mask="(00) 00000-0000" class="input-pad form-control" id="cellphone" placeholder="Celular" aria-describedby="addon-cellphone">
+                                                    </div>
+                                                    <small id="message_not_verified_cellphone" style='color:red; display:none;'>Celular não verificado, clique
+                                                        <a href='#' id='btn_verify_cellphone' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_cellphone'>aqui</a>
+                                                        para verificá-lo!
+                                                    </small>
                                                 </div>
                                                 <div class="form-group col-xl-4">
                                                     <label for="date_birth">Data de nascimento</label>
@@ -220,10 +246,14 @@
                                         </div>
                                         <div class="col-12">
                                             <p class='info' style='font-size: 10px; margin-top: -10px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de R$ <label id="installment-tax" style="color: gray"></label>%.
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de R$
+                                                <label id="installment-tax" style="color: gray"></label>
+                                                %.
                                             </p>
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$ <label style="color: gray" id="transaction-tax"></label> por transação.
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
+                                                <label style="color: gray" id="transaction-tax"></label>
+                                                por transação.
                                             </p>
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
@@ -232,6 +262,146 @@
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
                                             <button id="update_taxes" type="button" class="btn btn-success mr-100">Atualizar taxas</button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='tab-pane fade' id='tab_notifications' role='tabpanel'>
+                                <div class='row' style='padding:0 30px 0 30px'>
+                                    <div class='col-12'>
+                                        <h6 class='title-pad'>Notificações a receber</h6>
+                                        <p class="sub-pad"> Defina quais notificações deseja receber </p>
+                                    </div>
+                                    <div class='row mt-15 col-12'>
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Nova afiliação</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="new_affiliation_switch" name="new_affiliation" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Pedido de afiliação</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="new_affiliation_request_switch" name="new_affiliation_request" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Afiliação aprovada</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="approved_affiliation_switch" name="approved_affiliation" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="billet_generated" class="mb-10">Boleto gerado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="billet_generated_switch" name="billet_generated" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="boleto_compensated" class="mb-10">Boleto compensado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="boleto_compensated_switch" name="boleto_compensated" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo (Cartão)</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="credit_card_in_proccess_switch" name="credit_card_in_proccess" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="sale_approved" class="mb-10">Venda aprovada</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="sale_approved_switch" name="sale_approved" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="notazz" class="mb-10">Notificação de Nota Fiscal</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="notazz_switch" name="notazz" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Saque Aprovado</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="withdrawal_approved_switch" name="withdrawal_approved" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="released_balance" class="mb-10">Saldo liberado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="released_balance_switch" name="released_balance" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="domain_approved" class="mb-10">Domínio Aprovado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="domain_approved_switch" name="domain_approved" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="shopify" class="mb-10">Shopify</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="shopify_switch" name="shopify" class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {{--                                        <div class="col-4 mt-4">--}}
+                                        {{--                                            <div class="switch-holder">--}}
+                                        {{--                                                <label for="token" class="mb-10">Integração com shopify</label>--}}
+                                        {{--                                                <br>--}}
+                                        {{--                                                <label class="switch">--}}
+                                        {{--                                                    <input type="checkbox" id="user_shopify_integration_store_switch" name="user_shopify_integration_store" class="check notification_switch" value='1'>--}}
+                                        {{--                                                    <span class="slider round"></span>--}}
+                                        {{--                                                </label>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>
@@ -257,6 +427,62 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                             <button id="password_update" type="button" class="btn btn-success" data-dismiss="modal" disabled>Alterar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{--Modal Verificação Celular--}}
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_cellphone" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" style="width: 100%; text-align:center">Verificar celular</h4>
+                        </div>
+                        <div class="modal-body" style="margin-top: 10px">
+                            <span>Um código de verificação foi enviado para o seu celular, digite o código recebido no campo abaixo</span>
+                            <br>
+                            <form method="POST" enctype="multipart/form-data" id='match_cellphone_verifycode_form'>
+                                @csrf
+                                <label for="cellphone_verify_code" style="margin-top: 20px">Código de verificação</label>
+                                <input id="cellphone_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
+                                <button type='submit' class='btn btn-success mt-1'>
+                                    <i class='fas fa-check'></i> Verificar
+                                </button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{--Modal Verificação Email--}}
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_email" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" style="width: 100%; text-align:center">Verificar email</h4>
+                        </div>
+                        <div class="modal-body" style="margin-top: 10px">
+                            <span>Um código de verificação foi enviado para o seu email, digite o código recebido no campo abaixo</span>
+                            <br>
+                            <form method="POST" enctype="multipart/form-data" id='match_email_verifycode_form'>
+                                @csrf
+                                <label for="email_verify_code" style="margin-top: 20px">Código de verificação</label>
+                                <input id="email_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
+                                <button type='submit' class='btn btn-success mt-1'>
+                                    <i class='fas fa-check'></i> Verificar
+                                </button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>

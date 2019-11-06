@@ -134,7 +134,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body-cart-recovery">
                                     <div class="transition-details">
                                         <p id='date-as-hours' class="sm-text text-muted clear-fields">
                                         </p>

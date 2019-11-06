@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ProductPresenter;
 
 /**
  * @property integer $id
@@ -36,7 +38,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Product extends Model
 {
-    use SoftDeletes, FoxModelTrait;
+    use SoftDeletes, PresentableTrait, FoxModelTrait;
     /**
      * @var array
      */
@@ -50,7 +52,10 @@ class Product extends Model
      */
     protected $appends = ['id_code'];
     /**
-     * The "type" of the auto-incrementing ID.
+     * @var string
+     */
+    protected $presenter = ProductPresenter::class;
+    /**
      * @var string
      */
     protected $keyType = 'integer';
@@ -78,6 +83,7 @@ class Product extends Model
         'shopify_id',
         'shopify_variant_id',
         'project_id',
+        'currency_type_enum',
     ];
 
     /**

@@ -85,11 +85,21 @@
                                                 <option value="">Selecione</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class='form-group col-lg-4'>
+                                            <label for="category">Moeda de custo:</label>
+                                            <select name="currency_type_enum" class="form-control select-pad" id='select-currency-type-enum'>
+                                                <option value='BRL' selected>BRL</option>
+                                                <option value='USD'>USD</option>
+                                            </select>
+                                            <p class='info pt-5' style='font-size: 10px;'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Informação utilizada para emissão de notas fiscais
+                                            </p>
+                                        </div>
+                                        <div class="form-group col-lg-4">
                                             <label for="cost">Custo</label>
                                             <input name="cost" type="text" class="input-pad money" id="cost" value='' placeholder="Digite o custo" autocomplete="off">
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class="form-group col-lg-4">
                                             <label for="price">Preço</label>
                                             <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">
                                         </div>

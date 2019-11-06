@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Core\Entities\Plan;
@@ -24,7 +25,7 @@ class ReportsApiController extends Controller
     public function index(request $request)
     {
 
-        try{
+        try {
             $userProjectModel = new UserProject();
             $salesModel       = new Sale();
             $planModel        = new Plan();
@@ -41,11 +42,13 @@ class ReportsApiController extends Controller
                                                             ['project_id', $projectId],
                                                         ])->first();
 
+                $companies = Company::where('user_id', auth()->id())->pluck('id');
+
                 if ($userProject) {
                     $sales = $salesModel
                         ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
-                        ->leftJoin('transactions as transaction', function($join) use ($userProject) {
-                            $join->where('transaction.company_id', $userProject->company_id);
+                        ->leftJoin('transactions as transaction', function($join) use ($companies) {
+                            $join->whereIn('transaction.company_id', $companies);
                             $join->whereIn('transaction.status', ['paid', 'transfered', 'anticipated']);
                             $join->on('transaction.sale_id', '=', 'sales.id');
                         })
@@ -105,8 +108,8 @@ class ReportsApiController extends Controller
                                                             DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),
                                                         ])
-                                            ->where('owner_id', auth()->user()->id)
-                                            ->where('project_id', $projectId);
+                                               ->where('owner_id', auth()->user()->id)
+                                               ->where('project_id', $projectId);
                     if ($requestStartDate != '' && $requestEndDate != '') {
                         $salesDetails->whereBetween('start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                     } else {
@@ -165,7 +168,6 @@ class ReportsApiController extends Controller
                                 $totalPaidValueAproved += $sale->value;
                             }
 
-
                             if ($sale->is_mobile) {
                                 $contMobile++;
                             } else {
@@ -176,7 +178,7 @@ class ReportsApiController extends Controller
 
                     $reportService = new ReportService();
 
-                    $chartData     = $reportService->getChartData($dataSearch, $projectId, $currency);
+                    $chartData = $reportService->getChartData($dataSearch, $projectId, $currency);
 
                     $cartaoConvert = $contCreditCardAproved . '/' . $contCreditCard;
                     $boletoConvert = $contBoletoAproved . '/' . $contBoleto;
@@ -200,7 +202,7 @@ class ReportsApiController extends Controller
                     if ($totalPaidValueAproved != 0) {
                         $totalPercentPaidCredit = number_format((intval($totalValueCreditCard) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
                         $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
-                        $ticketMedio = number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved) / $countSalesAproved) / 100, 2, ',', '.');
+                        $ticketMedio            = number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved) / $countSalesAproved) / 100, 2, ',', '.');
                     }
                 }
             }
@@ -250,7 +252,7 @@ class ReportsApiController extends Controller
      */
     public function getSalesByOrigin(Request $request)
     {
-        try{
+        try {
             $companyModel = new Company();
             $saleModel    = new Sale();
 
@@ -279,11 +281,10 @@ class ReportsApiController extends Controller
             }
 
             return response()->json('project not found');
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             Log::warning('erro na tabela de origens');
+
             return response()->json('Ocorreu algum erro');
         }
     }
-
 }
