@@ -137,7 +137,7 @@
     <script>
         window.Intercom('boot', {
             app_id: "q35ubavq",
-            user_id: "{{ auth()->user()->id }}",
+            user_id: "{{ auth()->user()->account_owner }}",
             name: "{{ auth()->user()->name }}",
             email: "{{ auth()->user()->email }}",
         });

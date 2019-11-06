@@ -57,7 +57,7 @@ class RegisterApiController extends Controller
 
             if ($invite) {
                 $invite->update([
-                                    'user_invited'    => $user->id,
+                                    'user_invited'    => $user->account_owner,
                                     'status'          => '1',
                                     'register_date'   => Carbon::now()->format('Y-m-d'),
                                     'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
@@ -74,7 +74,7 @@ class RegisterApiController extends Controller
                 if ($company) {
                     $inviteModel->create([
                                              'invite'          => $company->user_id,
-                                             'user_invited'    => $user->id,
+                                             'user_invited'    => $user->account_owner,
                                              'status'          => '1',
                                              'company'         => $company->id,
                                              'register_date'   => Carbon::now()->format('Y-m-d'),

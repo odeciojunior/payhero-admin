@@ -22,9 +22,8 @@ class CollaboratorsApiController extends Controller
     public function index()
     {
         try {
-
             $userModel = new User();
-            $user      = $userModel->where([['account_owner', auth()->user()->id], ['id', '!=', auth()->user()->id]]);
+            $user      = $userModel->where([['account_owner', auth()->user()->account_owner], ['id', '!=', auth()->user()->account_owner]]);
 
             return CollaboratorsResource::collection($user->orderBy('id', 'ASC')->paginate(5));
         } catch (Exception $e) {
@@ -63,7 +62,7 @@ class CollaboratorsApiController extends Controller
             $data['score']                               = '0';
             $data['sms_zenvia_amount']                   = '0';
             $data['invites_amount']                      = 1;
-            $data['account_owner']                       = auth()->user()->id;
+            $data['account_owner']                       = auth()->user()->account_owner;
             $user                                        = $userModel->create($data);
             $user->assignRole($data['role']);
             if (!empty($user)) {
@@ -157,6 +156,7 @@ class CollaboratorsApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao atualizar colaborador  CollaboratorsApiController - update');
             report($e);
+            dd($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro ao atualizar colaborador',

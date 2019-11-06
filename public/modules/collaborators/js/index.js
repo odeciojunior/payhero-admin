@@ -170,6 +170,9 @@ $(document).ready(function () {
                                     success: function success(response) {
                                         loadingOnScreenRemove();
                                         $('#modal_add_collaborator').modal('hide');
+                                        $(".check").prop('checked', false);
+                                        $('#password_edit').attr('disabled', true);
+                                        $('#password_edit').val('');
                                         index();
                                         alertCustom('success', response.message);
                                     }

@@ -26,7 +26,7 @@ class CompanyService
 
             $companyModel = new Company();
 
-            $companies = $companyModel->with('user')->where('user_id', auth()->user()->id);
+            $companies = $companyModel->with('user')->where('user_id', auth()->user()->account_owner);
 
             if ($paginate) {
                 return CompanyResource::collection($companies->paginate(10));

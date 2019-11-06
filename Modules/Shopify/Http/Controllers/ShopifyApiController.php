@@ -38,7 +38,7 @@ class ShopifyApiController extends Controller
             $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
 
-            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
+            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->account_owner)->get();
 
             $projects = [];
 
@@ -175,7 +175,7 @@ class ShopifyApiController extends Controller
                     $shopifyIntegration = $shopifyIntegrationModel->create([
                                                                                'shared_secret' => '',
                                                                                'url_store'     => $request->shop,
-                                                                               'user_id'       => auth()->user()->id,
+                                                                               'user_id'       => auth()->user()->account_owner,
                                                                                'project_id'    => $project->id,
                                                                                'status'        => 1,
                                                                                'token'         => $integrationToken,
@@ -185,7 +185,7 @@ class ShopifyApiController extends Controller
                         $companyId = current(Hashids::decode(request()->input('state')));
 
                         $userProject = $userProjectModel->create([
-                                                                     'user_id'              => auth()->user()->id,
+                                                                     'user_id'              => auth()->user()->account_owner,
                                                                      'project_id'           => $project->id,
                                                                      'company_id'           => $companyId,
                                                                      'type'                 => 'producer',
@@ -196,7 +196,7 @@ class ShopifyApiController extends Controller
                                                                  ]);
 
                         if (!empty($userProjectModel)) {
-                            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
+                            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner));
                         } else {
                             Log::warning('callback shopfiy - erro 1');
                             $shipping->delete();
@@ -330,7 +330,7 @@ class ShopifyApiController extends Controller
                 //puxa todos os produtos
                 foreach ($project->shopifyIntegrations as $shopifyIntegration) {
                     $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                    $shopify->importShopifyStore($projectId, auth()->user()->id);
+                    $shopify->importShopifyStore($projectId, auth()->user()->account_owner);
                 }
 
                 //procura por um dominio aprovado
@@ -431,9 +431,9 @@ class ShopifyApiController extends Controller
                 /** @var ShopifyIntegration $shopifyIntegration */
                 $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
                 if (!empty($shopifyIntegration)) {
-                    event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
+                    event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner));
 
-                    //                    $this->teste($shopifyIntegration, auth()->user()->id);
+                    //                    $this->teste($shopifyIntegration, auth()->user()->account_owner);
 
                     return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], Response::HTTP_OK);
                 } else {
@@ -562,7 +562,7 @@ class ShopifyApiController extends Controller
         try {
 
             $companyModel = new Company();
-            $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+            $companies    = $companyModel->where('user_id', auth()->user()->account_owner)->get();
 
             return CompaniesSelectResource::collection($companies);
         } catch (Exception $e) {

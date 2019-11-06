@@ -34,7 +34,7 @@ class DomainApprovedPusherNotifyUserListener
         foreach ($users as $user) {
             $data = [
                 'message' => 'Domínio aprovado com sucesso para o projeto ' . $project->name . '',
-                'user'    => $user->id,
+                'user'    => $user->account_owner,
             ];
 
             $pusherService->sendPusher($data);

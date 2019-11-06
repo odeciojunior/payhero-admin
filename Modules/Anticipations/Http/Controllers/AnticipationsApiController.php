@@ -17,7 +17,6 @@ use Modules\Core\Entities\AnticipatedTransaction;
 
 class AnticipationsApiController extends Controller
 {
-
     /**
      * @param Request $request
      * @return JsonResponse
@@ -97,7 +96,7 @@ class AnticipationsApiController extends Controller
                                              ]);
 
                             $transferModel->create([
-                                                       'user_id'       => $user->id,
+                                                       'user_id'    => $user->account_owner,
                                                        'company_id' => $company->id,
                                                        'value'      => preg_replace('/\D/', '', intval($pendingBalance - preg_replace('/\D/', '', $taxValue))),
                                                        'type'       => 'in',
@@ -211,5 +210,4 @@ class AnticipationsApiController extends Controller
             report($e);
         }
     }
-
 }

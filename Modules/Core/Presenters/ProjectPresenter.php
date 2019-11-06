@@ -16,7 +16,7 @@ class ProjectPresenter extends Presenter
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
-        $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
+        $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner)->pluck('project_id');
 
         return $projectModel->whereIn('id', $userProjects)->get();
     }

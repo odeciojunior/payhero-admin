@@ -25,9 +25,11 @@ class DashboardApiController extends Controller
     public function index()
     {
         try {
+            $companyModel = new Company();
 
-            $companies = auth()->user()->companies()->get() ?? collect();
-            $values    = $this->getDataValues($companies->first()->id_code ?? null);
+            $companies = $companyModel->where('user_id', auth()->user()->account_owner)->get() ?? collect();
+
+            $values = $this->getDataValues($companies->first()->id_code ?? null);
 
             return response()->json(compact('companies', 'values'), 200);
         } catch (Exception $e) {
@@ -103,7 +105,7 @@ class DashboardApiController extends Controller
                             $pendingBalance += $pendingTransaction->value;
                         }
                     }
-                    $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner)
                                                   ->pluck('id')
                                                   ->toArray();
                     $sales         = $saleModel->with([
