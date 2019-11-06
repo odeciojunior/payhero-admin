@@ -21,21 +21,21 @@
                             <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Meus dados
                             </a>
                         </li>
-                        @if(auth()->user()->hasRole('account_owner'))
+                        @if(!auth()->user()->hasRole('attendance'))
                             <li class="nav-item" role="presentation" id="nav_documents">
                                 <a class="nav-link" data-toggle="tab" href="#tab_documentos" aria-controls="tab_documentos" role="tab">
                                     Documentos
                                 </a>
                             </li>
                         @endif
-                        @if(auth()->user()->hasRole('account_owner'))
+                        @if(!auth()->user()->hasRole('attendance'))
                             <li class="nav-item" role="presentation" id="nav_taxs">
                                 <a class="nav-link" data-toggle="tab" href="#tab_taxs" aria-controls="tab_taxs" role="tab">
                                     Tarifas e Prazos
                                 </a>
                             </li>
                         @endif
-                        @if(auth()->user()->hasRole('account_owner'))
+                        @if(!auth()->user()->hasRole('attendance'))
                             <li class="nav-item" role="presentation" id="nav_notifications">
                                 <a class="nav-link" data-toggle="tab" href="#tab_notifications" aria-controls="tab_notifications" role="tab">
                                     Notificações

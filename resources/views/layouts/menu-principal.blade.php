@@ -32,26 +32,28 @@
                 </li>
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                <li id="notifications_button" class="nav-item dropdown" disabled='true'>
+                @if(!auth()->user()->hasRole('attendance'))
+                    <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                     <span class="nav-link" data-toggle="dropdown" title="Notificações" id='notification'
                           aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                         <i class="material-icons">notifications_none</i>
                         <span class="badge badge-danger badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
                     </span>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
-                        <div class="dropdown-menu-header" style='padding:0px 20px;'>
-                            <h6><strong>NOTIFICAÇÕES</strong></h6>
-                        </div>
-                        <div class="list-group scrollable scrollable-vertical" style="position: relative;">
-                            <div class="scrollable-container" style="min-height: 250px; width: 358px;">
-                                <div id='notificationTemplate' class="scrollable-content" style="width: 358px; height:100%">
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
+                            <div class="dropdown-menu-header" style='padding:0px 20px;'>
+                                <h6><strong>NOTIFICAÇÕES</strong></h6>
+                            </div>
+                            <div class="list-group scrollable scrollable-vertical" style="position: relative;">
+                                <div class="scrollable-container" style="min-height: 250px; width: 358px;">
+                                    <div id='notificationTemplate' class="scrollable-content" style="width: 358px; height:100%">
+                                    </div>
                                 </div>
                             </div>
+                            <div class="dropdown-menu-footer" style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
+                            </div>
                         </div>
-                        <div class="dropdown-menu-footer" style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
-                        </div>
-                    </div>
-                </li>
+                    </li>
+                @endif
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
@@ -63,9 +65,11 @@
                         <a class="dropdown-item" href="{!! route('profile.index') !!}" role="menuitem">
                             <i class="material-icons align-middle"> account_circle </i> Perfil
                         </a>
-                        <a class="dropdown-item" href="{!! route('companies.index') !!}" role="menuitem">
-                            <i class="material-icons align-middle"> business </i> Empresas
-                        </a>
+                        @if(!auth()->user()->hasRole('attendance'))
+                            <a class="dropdown-item" href="{!! route('companies.index') !!}" role="menuitem">
+                                <i class="material-icons align-middle"> business </i> Empresas
+                            </a>
+                        @endif
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="material-icons align-middle"> power_settings_new </i> Logout
