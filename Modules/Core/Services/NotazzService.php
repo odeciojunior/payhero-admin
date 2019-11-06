@@ -11,6 +11,7 @@ use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\NotazzSentHistory;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
@@ -115,23 +116,24 @@ class NotazzService
             foreach ($sale->plansSales as $planSale) {
                 /** @var ProductPlan $productPlan */
                 foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $productPlanSale = $productPlan->product()
-                                                   ->first()->productsPlanSales->where('sale_id', $sale->id)
-                                                                               ->first();
+
                     $product         = $productPlan->product()->first();
 
                     if (!empty($productPlan->cost)) {
                         //pega os valores de productplan
-                        $product['product_cost']       = $productPlan->cost;
+                        $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
                         $product['currency_type_enum'] = $productPlan->currency_type_enum;
                     } else {
                         //pega os valores de produto
-                        $product['product_cost']       = $product->cost ?? 0;
+                        if (!empty($product->cost)) {
+                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+                        } else {
+                            $product['product_cost'] = 0;
+                        }
+
                         $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
                     }
 
-                    //$product['product_cost']               = $productPlan->cost ?? $product->cost;
-                    //$product['product_currency_type_enum'] = $product->currency_type_enum;
                     $product['product_amount'] = $productPlan->amount;
 
                     $productsSale->add($product);
@@ -150,7 +152,7 @@ class NotazzService
                         $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
                     }
 
-                    $costTotal += $product['product_cost'] * $product['product_amount'];
+                    $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
                 }
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
@@ -272,24 +274,25 @@ class NotazzService
                 foreach ($sale->plansSales as $planSale) {
                     /** @var ProductPlan $productPlan */
                     foreach ($planSale->plan->productsPlans as $productPlan) {
-                        $productPlanSale               = $productPlan->product()
-                                                                     ->first()->productsPlanSales->where('sale_id', $sale->id)
-                                                                                                 ->first();
-                        $product                       = $productPlan->product()->first();
+
+                        $product         = $productPlan->product()->first();
 
                         if (!empty($productPlan->cost)) {
                             //pega os valores de productplan
-                            $product['product_cost']       = $productPlan->cost;
+                            $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
                             $product['currency_type_enum'] = $productPlan->currency_type_enum;
                         } else {
                             //pega os valores de produto
-                            $product['product_cost']       = $product->cost ?? 0;
+                            if (!empty($product->cost)) {
+                                $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+                            } else {
+                                $product['product_cost'] = 0;
+                            }
+
                             $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
                         }
 
-                        //$product['product_cost']       = $productPlan->cost ?? $product->cost;
-                        //$product['currency_type_enum'] = $productPlan->currency_type_enum;
-                        $product['product_amount']     = $productPlan->amount;
+                        $product['product_amount'] = $productPlan->amount;
 
                         $productsSale->add($product);
                     }
@@ -308,7 +311,7 @@ class NotazzService
                             $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
                         }
 
-                        $costTotal += $product['product_cost'] * $product['product_amount'];
+                        $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
                     }
 
                     $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
