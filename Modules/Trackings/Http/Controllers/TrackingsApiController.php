@@ -112,7 +112,7 @@ class TrackingsApiController extends Controller
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
                 $productId = current(Hashids::decode($data['product_id']));
                 if ($saleId && $productId) {
-                    $productPlanSale = $productPlanSaleModel->with(['trackings', 'sale.plansSales', 'sale.delivery'])
+                    $productPlanSale = $productPlanSaleModel->with(['trackings', 'sale.plansSales.plan.productsPlans', 'sale.delivery'])
                                                             ->where([['sale_id', $saleId], ['product_id', $productId]])
                                                             ->first();
 
@@ -125,11 +125,23 @@ class TrackingsApiController extends Controller
                             ->sale
                             ->plansSales
                             ->where('plan_id', $productPlanSale->plan_id)
+                            ->where('sale_id', $productPlanSale->sale_id)
                             ->first();
 
+                        $productPlan = $planSale->plan
+                            ->productsPlans
+                            ->where('product_id', $productPlanSale->product_id)
+                            ->where('plan_id', $productPlanSale->plan_id)
+                            ->first();
+
+                        $amount = $productPlan->amount * $planSale->amount;
+
                         $tracking = $trackingModel->create([
+                            'sale_id' => $productPlanSale->sale->id,
+                            'product_id' => $productPlanSale->product_id,
                             'product_plan_sale_id' => $productPlanSale->id,
                             'plans_sale_id' => $planSale->id,
+                            'amount' => $amount,
                             'delivery_id' => $productPlanSale->sale->delivery->id,
                             'tracking_code'        => $data['tracking_code'],
                             'tracking_status_enum' => $trackingModel->present()
