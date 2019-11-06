@@ -76,7 +76,7 @@ class SendTrackingUpdateLast10Days extends Command
             foreach ($sales as $sale) {
                 $postback = $postbacks->where('id', $sale->shopify_order)->last();
                 if (isset($postback)) {
-                    $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($sale->id));
+                    $saleProducts = $productService->getProductsBySale($sale);
                     foreach ($postback->fulfillments as $fulfillment) {
                         if (!empty($fulfillment->tracking_number)) {
                             //percorre os produtos que vieram no postback

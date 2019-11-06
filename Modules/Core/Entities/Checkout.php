@@ -86,6 +86,7 @@ class Checkout extends Model
         'sms_sent_amount',
         'client_name',
         'client_telephone',
+        'template_type',
         'created_at',
         'updated_at',
         'deleted_at',

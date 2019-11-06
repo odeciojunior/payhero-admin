@@ -120,7 +120,11 @@ $(() => {
                 if (isEmpty(response.data)) {
                     alertCustom('error', 'Erro ao carregar resumo dos rastreios');
                 } else {
-                    let {total, delivered, dispatched, exception} = response.data;
+                    let {total, posted, dispatched, out_for_delivery, delivered, exception, not_informed} = response.data;
+
+                    dispatched += posted;
+                    dispatched += out_for_delivery;
+
                     $('#total-trackings').text(total);
                     $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00%)');

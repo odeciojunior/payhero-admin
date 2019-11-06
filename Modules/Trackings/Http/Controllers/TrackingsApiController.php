@@ -104,15 +104,14 @@ class TrackingsApiController extends Controller
         try {
             $data                 = $request->all();
             $productPlanSaleModel = new ProductPlanSale();
-            $saleModel            = new Sale();
             $trackingModel        = new Tracking();
-            $productService       = new ProductService();
+            $trackingService      = new TrackingService();
 
             if (!empty($data['tracking_code']) && !empty($data['sale_id']) && !empty($data['product_id'])) {
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
                 $productId = current(Hashids::decode($data['product_id']));
                 if ($saleId && $productId) {
-                    $productPlanSale = $productPlanSaleModel->with(['trackings', 'sale.plansSales', 'sale.delivery'])
+                    $productPlanSale = $productPlanSaleModel->with(['trackings', 'sale.plansSales.plan.productsPlans', 'sale.delivery'])
                                                             ->where([['sale_id', $saleId], ['product_id', $productId]])
                                                             ->first();
 
@@ -121,27 +120,9 @@ class TrackingsApiController extends Controller
                     //create
                     if(!isset($tracking)){
 
-                        $planSale = $productPlanSale
-                            ->sale
-                            ->plansSales
-                            ->where('plan_id', $productPlanSale->plan_id)
-                            ->first();
-
-                        $tracking = $trackingModel->create([
-                            'product_plan_sale_id' => $productPlanSale->id,
-                            'plans_sale_id' => $planSale->id,
-                            'delivery_id' => $productPlanSale->sale->delivery->id,
-                            'tracking_code'        => $data['tracking_code'],
-                            'tracking_status_enum' => $trackingModel->present()
-                                ->getTrackingStatusEnum('posted'),
-                        ]);
+                        $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
 
                         if ($tracking) {
-
-                            //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
 
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
@@ -173,11 +154,6 @@ class TrackingsApiController extends Controller
                                                               'tracking_id' => $tracking->id,
                                                               'tracking_status_enum' => $trackingStatus,
                                                           ]);
-
-                            //send email
-                            //$sale = $saleModel->find($saleId);
-                            //$saleProducts = $productService->getProductsBySale($data['sale_id']);
-                            //event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
 
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
@@ -224,7 +200,7 @@ class TrackingsApiController extends Controller
 
                 if ($tracking && $tracking->sale) {
 
-                    $saleProducts = $productService->getProductsBySaleId($tracking->sale->id);
+                    $saleProducts = $productService->getProductsBySale($tracking->sale);
                     event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
 
                     return response()->json(['message' => 'Notificação enviada com sucesso']);

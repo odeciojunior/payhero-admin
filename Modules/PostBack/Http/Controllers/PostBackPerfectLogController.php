@@ -61,16 +61,20 @@ class PostBackPerfectLogController extends Controller
                         break;
                 }
 
+                $oldStatus = $tracking->tracking_status_enum;
+
                 //ATUALIZAR O STATUS
                 $tracking->update([
                     'tracking_code' => $requestValidated['tracking'],
                     'tracking_status_enum' => $status,
                 ]);
 
-                //NOTIFICAR O USUARIO
-                $productService = new ProductService();
-                $saleProducts = $productService->getProductsBySale(Hashids::connection('sale_id')->encode($tracking->sale->id));
-                event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
+                if($oldStatus != $status){
+                    //NOTIFICAR O USUARIO
+                    $productService = new ProductService();
+                    $saleProducts = $productService->getProductsBySale($tracking->sale);
+                    event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
+                }
             }
             return response()->json(['message' => 'Postback received']);
         } catch (\Exception $exception){
