@@ -200,13 +200,13 @@ $(function () {
 
                         data += '<td id="" class="" style="vertical-align: middle;">';
                         $.each(value.add_tags, function (index2, value2) {
-                            data += '<div class="badge badge-success mr-1">' + value2.tag + '</div>';
+                            data += '<div class="badge badge-success mr-1 mb-1">' + value2.tag + '</div>';
                         });
                         data += '</td>';
 
                         data += '<td id="" class="" style="vertical-align: middle;">';
                         $.each(value.remove_tags, function (index2, value2) {
-                            data += '<div class="badge badge-danger mr-1">' + value2.tag + '</div>';
+                            data += '<div class="badge badge-danger mr-1 mb-1">' + value2.tag + '</div>';
                         });
                         data += '</td>';
 

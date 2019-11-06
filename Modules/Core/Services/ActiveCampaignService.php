@@ -46,7 +46,6 @@ class ActiveCampaignService
     public function setAccess($apiUrl, $apiKey, $integrationId)
     {
         $this->apiKey        = $apiKey;
-        // $this->apiKey        = 'teste';
         $this->apiUrl        = $apiUrl;
         $this->integrationId = $integrationId;
         if ($this->integrationId != null && $this->apiKey != null && $this->apiUrl != null) {
@@ -195,8 +194,10 @@ class ActiveCampaignService
             if (isset($contact['contact']['id'])) {
                 // adicionar tags no contato
                 $arrayApply = json_decode($event->add_tags, true);
-                foreach ($arrayApply as $key => $value) {
-                    $tagsApply[] = $this->addTagContact($value['id'], $contact['contact']['id']);
+                if(is_array($arrayApply)) {
+                    foreach ($arrayApply as $key => $value) {
+                        $tagsApply[] = $this->addTagContact($value['id'], $contact['contact']['id']);
+                    }
                 }
                 // remover tags no contato
                 $tagsContact      = $this->getTagsContact($contact['contact']['id']);
@@ -207,11 +208,13 @@ class ActiveCampaignService
                 }
                 $tagsRemove  = [];
                 $arrayRemove = json_decode($event->remove_tags, true);
-                foreach ($arrayRemove as $key => $value) {
-                    $contactTagId = $arrayTagsContact[$value['id']] ?? 0;
+                if(is_array($arrayRemove)) {
+                    foreach ($arrayRemove as $key => $value) {
+                        $contactTagId = $arrayTagsContact[$value['id']] ?? 0;
 
-                    if ($contactTagId)
-                        $tagsRemove[] = $this->removeTagContact($contactTagId);
+                        if ($contactTagId)
+                            $tagsRemove[] = $this->removeTagContact($contactTagId);
+                    }
                 }
 
                 if(!empty($event->add_list)) {
