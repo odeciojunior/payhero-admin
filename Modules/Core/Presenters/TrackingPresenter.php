@@ -4,7 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
-class ProductPlanSalePresenter extends Presenter
+class TrackingPresenter extends Presenter
 {
     public function getTrackingStatusEnum($status)
     {

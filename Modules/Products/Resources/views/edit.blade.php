@@ -61,16 +61,16 @@
                                         <div class="row">
                                             <div class="form-group col-lg-12">
                                                 <label for="name">Nome</label>
-                                                <input name="name" type="text" class="input-pad" id="name" value="" placeholder="O nome do seu produto" required="">
+                                                <input name="name" type="text" class="input-pad" id="name" value="" placeholder="O nome do seu produto" >
                                             </div>
                                             <div class="form-group col-lg-12">
                                                 <label for="description">Descrição</label>
-                                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
+                                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto"></textarea>
                                                 <p class="mb-0"> Máximo 30 caracteres. </p>
                                             </div>
                                             <div class="form-group col-lg-12" id="sku" style="display: none">
                                                 <label>SKU</label>
-                                                <input type="text" class="input-pad gray mb-2" readonly />
+                                                <input type="text" class="input-pad gray mb-2" readonly/>
                                                 <p> Editável somente no Shopify. </p>
                                             </div>
                                             <div class="form-group col-lg-6">
@@ -202,7 +202,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=3') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=4') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

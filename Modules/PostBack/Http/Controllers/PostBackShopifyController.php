@@ -7,15 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PostbackLog;
-use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\TrackingHistory;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 
 /**
  * Class PostBackShopifyController
@@ -32,8 +34,9 @@ class PostBackShopifyController extends Controller
         $postBackLogModel = new PostbackLog();
         $salesModel = new Sale();
         $projectModel = new Project();
-        $productPlanSaleModel = new ProductPlanSale();
+        $trackingModel = new Tracking();
         $productService = new ProductService();
+        $perfectLogService = new PerfectLogService();
 
         $requestData = $request->all();
 
@@ -74,14 +77,27 @@ class PostBackShopifyController extends Controller
                                     foreach ($products as &$product) {
                                         //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
                                         //do que esta na tabela
-                                        $productPlanSale = $productPlanSaleModel->find($product->product_plan_sale_id);
-                                        if (isset($productPlanSale)) {
+                                        $tracking = $trackingModel->where($product->product_plan_sale_id)
+                                            ->orderBy('id', 'desc')
+                                            ->first();
+                                        if (isset($tracking)) {
                                             //caso seja diferente, atualiza o registro e dispara o e-mail
-                                            if ($productPlanSale->tracking_code != $fulfillment["tracking_number"]) {
-                                                $productPlanSale->update(['tracking_code' => $fulfillment["tracking_number"]]);
+                                            if ($tracking->tracking_code != $fulfillment["tracking_number"]) {
+                                                $trackingStatus = $tracking->tracking_status_enum;
+
+                                                $tracking->update(['tracking_code' => $fulfillment["tracking_number"]]);
+
+                                                $trackingHistoryModel = new TrackingHistory();
+                                                $trackingHistoryModel->firstOrNew([
+                                                    'tracking_id' => $tracking->id,
+                                                    'tracking_status_enum' => $trackingStatus,
+                                                ]);
+
                                                 //atualiza no array de produtos para enviar no email
                                                 $product->tracking_code = $fulfillment["tracking_number"];
-                                                event(new TrackingCodeUpdatedEvent($sale, $productPlanSale, $saleProducts));
+                                                event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                                                $perfectLogService->track(Hashids::encode($tracking->id), $fulfillment["tracking_number"]);
+                                                event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                                             }
                                         }
                                     }

@@ -39,10 +39,10 @@ class ProductService
 
     public function getProductsBySale($saleId)
     {
-        $saleModel = new Sale(); 
- 
+        $saleModel = new Sale();
+
         $saleId = current(Hashids::connection('sale_id')->decode($saleId));
-        $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales'])->find($saleId);
+        $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.trackings'])->find($saleId);
 
         $productsSale = collect();
 
@@ -52,13 +52,15 @@ class ProductService
                     $product = $productPlan->product;
                     $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
                         ->first();
-                    $product['product_plan_sale_id'] = $productPlanSale->id;
+                    $tracking = $productPlanSale ?  !empty($productPlanSale->trackings) ? $productPlanSale->trackings->last() : null : null;
+                    $product['product_plan_sale_id'] = $productPlanSale ? $productPlanSale->id ? $productPlanSale->id : 0 : 0;
                     $product['sale_status'] = $sale->status;
                     $product['amount'] = $productPlan->amount * $planSale->amount;
-                    $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
-                    $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
-                        __('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSale->present()
-                                ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                    $product['tracking_id'] = $tracking ? Hashids::encode($tracking->id) : '';
+                    $product['tracking_code'] = $tracking ? $tracking->tracking_code ?? '' : '';
+                    $product['tracking_status_enum'] = $tracking ?  $tracking->tracking_status_enum != null ?
+                        __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                                ->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado' : 'Não informado';
                     $productsSale->add($product);
                 }
             }
@@ -70,7 +72,6 @@ class ProductService
     /**
      * @param $saleId
      * @return Collection
-     * @throws PresenterException
      */
     public function getProductsBySaleId($saleId)
     {
@@ -84,17 +85,17 @@ class ProductService
         foreach ($sale->plansSales as $planSale) {
             /** @var ProductPlan $productPlan */
             foreach ($planSale->plan->productsPlans as $productPlan) {
-                $productPlanSale = $productPlan->product()
-                                               ->first()->productsPlanSales->where('sale_id', $sale->id)
-                                                                           ->first();
-                $product = $productPlan->product()->first();
+                $product = $productPlan->product;
+                $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
+                    ->first();
+                $tracking = $productPlanSale->trackings->last();
                 $product['product_plan_sale_id'] = $productPlanSale->id;
                 $product['sale_status'] = $sale->status;
                 $product['amount'] = $productPlan->amount * $planSale->amount;
-                $product['tracking_code'] = $productPlanSale ? $productPlanSale->tracking_code ?? '' : '';
-                $product['tracking_status_enum'] = $productPlanSale ?  $productPlanSale->tracking_status_enum != null ?
-                    Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
-                                                                                                                ->getTrackingStatusEnum($productPlanSale->tracking_status_enum)) : 'Não informado' : 'Não informado';
+                $product['tracking_code'] = $tracking ? $tracking->tracking_code ?? '' : '';
+                $product['tracking_status_enum'] = $tracking ?  $tracking->tracking_status_enum != null ?
+                    __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                            ->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado' : 'Não informado';
                 $productsSale->add($product);
             }
         }

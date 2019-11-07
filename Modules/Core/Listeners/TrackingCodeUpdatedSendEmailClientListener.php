@@ -30,7 +30,7 @@ class TrackingCodeUpdatedSendEmailClientListener
             $data = [
                 'name'            => $clientNameExploded[0],
                 'project_logo'    => $event->sale->project->logo,
-                'tracking_code'   => $event->productPlanSale->tracking_code,
+                'tracking_code'   => $event->tracking->tracking_code,
                 'project_contact' => $projectContact,
                 "products"        => $event->products,
             ];

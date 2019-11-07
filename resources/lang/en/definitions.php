@@ -103,14 +103,23 @@ return [
         ],
         "product_plan_sale"        => [
             "tracking_status_enum" => [
-                "posted"           => "Postado",
-                "dispatched"       => "Despachado",
-                "delivered"        => "Entregue",
+                "posted"     => "Postado",
+                "dispatched" => "Em trânsito",
+                "delivered"  => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
-                "exception"        => "Problema na entrega",
+                "exception"        => "Problema na entrega"
             ],
         ],
-        "invoices"                 => [
+        "tracking"        => [
+            "tracking_status_enum" => [
+                "posted"     => "Postado",
+                "dispatched" => "Em trânsito",
+                "delivered"  => "Entregue",
+                "out_for_delivery" => "Saiu para entrega",
+                "exception"        => "Problema na entrega"
+            ],
+        ],
+        "invoices"        => [
             "status" => [
                 "pending"            => "Pendente",
                 "send"               => "Enviado",

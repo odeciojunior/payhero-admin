@@ -59,13 +59,15 @@ class CurrencyQuotationService
 
         $usdQuotation = $this->getUsdQuotation();
 
-        $usdCurrencyQuotation = $currencyQuotationModel->create([
-                                                                    'currency_type' => $currencyQuotationModel->present()
-                                                                                                              ->getCurrencyType('USD'),
-                                                                    'currency'      => 'USD',
-                                                                    'http_response' => $usdQuotation['http_response'],
-                                                                    'value'         => $usdQuotation['quotation'],
-                                                                ]);
+        if (!empty($usdQuotation['quotation']) && $usdQuotation['quotation'] > 0) {
+            $usdCurrencyQuotation = $currencyQuotationModel->create([
+                                                                        'currency_type' => $currencyQuotationModel->present()
+                                                                                                                  ->getCurrencyType('USD'),
+                                                                        'currency'      => 'USD',
+                                                                        'http_response' => $usdQuotation['http_response'],
+                                                                        'value'         => $usdQuotation['quotation'],
+                                                                    ]);
+        }
     }
 
     /**
@@ -77,6 +79,7 @@ class CurrencyQuotationService
         $currencyQuotationModel = new CurrencyQuotation();
         $currencyQuotationUsd   = $currencyQuotationModel->where('currency_type', $currencyQuotationModel->present()
                                                                                                          ->getCurrencyType('USD'))
+                                                         ->where('value','>','0')
                                                          ->latest('id')
                                                          ->first();
 
