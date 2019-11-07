@@ -27,7 +27,7 @@ class DashboardApiController extends Controller
         try {
             $companyModel = new Company();
 
-            $companies = $companyModel->where('user_id', auth()->user()->account_owner)->get() ?? collect();
+            $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get() ?? collect();
 
             $values = $this->getDataValues($companies->first()->id_code ?? null);
 
@@ -105,7 +105,7 @@ class DashboardApiController extends Controller
                             $pendingBalance += $pendingTransaction->value;
                         }
                     }
-                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner)
+                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
                                                   ->pluck('id')
                                                   ->toArray();
                     $sales         = $saleModel->with([

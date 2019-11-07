@@ -26,7 +26,7 @@ class CompanyPolicy
      */
     public function index(User $user, Company $company)
     {
-        if ($user->account_owner == $company->user_id) {
+        if ($user->account_owner_id == $company->user_id) {
             return true;
         } else {
             return false;
@@ -40,7 +40,7 @@ class CompanyPolicy
      */
     public function edit(User $user, Company $company)
     {
-        if ($user->account_owner == $company->user_id) {
+        if ($user->account_owner_id == $company->user_id) {
             return true;
         } else {
             return false;
@@ -54,7 +54,7 @@ class CompanyPolicy
      */
     public function update(User $user, Company $company)
     {
-        if ($user->account_owner == $company->user_id) {
+        if ($user->account_owner_id == $company->user_id) {
             return true;
         } else {
             return false;
@@ -68,7 +68,7 @@ class CompanyPolicy
      */
     public function destroy(User $user, Company $company)
     {
-        if ($user->account_owner == $company->user_id) {
+        if ($user->account_owner_id == $company->user_id) {
             return true;
         } else {
             return false;
@@ -82,7 +82,7 @@ class CompanyPolicy
      */
     public function uploadDocuments(User $user, Company $company)
     {
-        if ($user->account_owner == $company->user_id) {
+        if ($user->account_owner_id == $company->user_id) {
             return true;
         } else {
             return false;

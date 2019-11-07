@@ -27,7 +27,7 @@ class UserRegistrationListener
                 if ($userNotification->isEmpty()) {
                     UserNotification::create(
                         [
-                            "user_id" => $user->account_owner,
+                            "user_id" => $user->account_owner_id,
                         ]
                     );
                 }

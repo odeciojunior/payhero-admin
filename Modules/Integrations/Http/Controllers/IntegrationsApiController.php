@@ -29,7 +29,7 @@ class IntegrationsApiController extends Controller
         try {
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
-                                           ->where('user_id', auth()->user()->account_owner)
+                                           ->where('user_id', auth()->user()->account_owner_id)
                                            ->latest()
                                            ->paginate();
 
@@ -68,7 +68,7 @@ class IntegrationsApiController extends Controller
             /** @var ApiToken $token */
             $token = $apiTokenModel->newQuery()->create(
                 [
-                    'user_id'               => auth()->user()->account_owner,
+                    'user_id'               => auth()->user()->account_owner_id,
                     'token_id'              => $tokenIntegration->token->getKey(),
                     'access_token'          => $tokenIntegration->accessToken,
                     'scopes'                => json_encode($scopes, true),

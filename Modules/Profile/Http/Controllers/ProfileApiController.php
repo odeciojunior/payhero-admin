@@ -384,10 +384,10 @@ class ProfileApiController
 
                 $document = $request->file('file');
 
-                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner) . '/private/documents', $document, null, null, 'private');
+                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents', $document, null, null, 'private');
 
                 $userDocument->create([
-                                          'user_id'            => auth()->user()->account_owner,
+                                          'user_id'            => auth()->user()->account_owner_id,
                                           'document_url'       => $digitalOceanPath,
                                           'document_type_enum' => $dataForm["document_type"],
                                           'status'             => null,

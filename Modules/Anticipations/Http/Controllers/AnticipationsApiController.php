@@ -96,7 +96,7 @@ class AnticipationsApiController extends Controller
                                              ]);
 
                             $transferModel->create([
-                                                       'user_id'    => $user->account_owner,
+                                                       'user_id'    => $user->account_owner_id,
                                                        'company_id' => $company->id,
                                                        'value'      => preg_replace('/\D/', '', intval($pendingBalance - preg_replace('/\D/', '', $taxValue))),
                                                        'type'       => 'in',
