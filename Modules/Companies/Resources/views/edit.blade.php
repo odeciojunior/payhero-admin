@@ -64,7 +64,7 @@
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="support_telephone">Telefone</label>
-                                            <input name="support_telephone" value="" type="text" data-mask="(00) 0000-0000" class="input-pad" id="support_telephone" placeholder='Telefone'>
+                                            <input name="support_telephone" value="" type="text" class="input-pad" id="support_telephone" placeholder='Telefone'>
                                         </div>
                                     </div>
                                     <h3 class="mb-15">Informações complementares</h3>
@@ -205,7 +205,7 @@
     </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=1')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit.js?v=2')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush
