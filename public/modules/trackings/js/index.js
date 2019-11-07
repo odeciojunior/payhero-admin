@@ -67,7 +67,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects/user-projects',
+            url: '/api/projects',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -106,7 +106,7 @@ $(() => {
         $.ajax({
             method: 'GET',
             url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val(),
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', ''),
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -120,11 +120,15 @@ $(() => {
                 if (isEmpty(response.data)) {
                     alertCustom('error', 'Erro ao carregar resumo dos rastreios');
                 } else {
-                    let {total, delivered, dispatched, exception} = response.data;
+                    let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = response.data;
+
                     $('#total-trackings').text(total);
                     $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-posted').text(posted ? posted + ' (' +((posted*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-out').text(out_for_delivery ? out_for_delivery + ' (' +((out_for_delivery*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-unknown').text(unknown ? unknown + ' (' +((unknown*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                 }
                 loadOnAny('.number', true);
             }
@@ -135,10 +139,10 @@ $(() => {
 
         if (link == null) {
             link = '/api/tracking?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
         } else {
             link = '/api/tracking' + link + '&tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
@@ -163,18 +167,21 @@ $(() => {
                         let badge;
                         switch (tracking.tracking_status_enum) {
                             case 1:
+                            case 2:
+                            case 4:
                                 badge = 'primary';
                                 break;
                             case 3:
                                 badge = 'success';
                                 break;
                             case 5:
-                                badge = 'danger';
+                                badge = 'warning';
                                 break;
                             default:
-                                badge = 'info';
+                                badge = 'danger';
                                 break;
                         }
+
                         let dados = `<tr>
                                      <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>
                                      <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
@@ -183,7 +190,10 @@ $(() => {
                                         <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                      </td>
                                      <td>
-                                        <a role='button' class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                     ${ tracking.tracking_status_enum
+                                        ? "<a role='button' class='tracking-detail pointer' tracking='"+tracking.id+"' ><i class='material-icons gradient'>remove_red_eye</i></a>"
+                                        : "<i class='material-icons gray'>remove_red_eye</i>"
+                                     }
                                     </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);

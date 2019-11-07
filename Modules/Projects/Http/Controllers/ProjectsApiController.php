@@ -127,7 +127,7 @@ class ProjectsApiController extends Controller
                                 $img->save($photo->getPathname());
 
                                 $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
+                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
                                 $project->update(['photo' => $digitalOceanPath]);
                             } catch (Exception $e) {
                                 Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
@@ -136,7 +136,7 @@ class ProjectsApiController extends Controller
                         }
 
                         $userProject = $userProjectModel->create([
-                                                                     'user_id'           => auth()->user()->id,
+                                                                     'user_id'           => auth()->user()->account_owner_id,
                                                                      'project_id'        => $project->id,
                                                                      'company_id'        => $requestValidated['company'],
                                                                      'type'              => 'producer',
@@ -189,11 +189,11 @@ class ProjectsApiController extends Controller
                 $idProject = Hashids::decode($id)[0];
                 $project   = $projectModel->find($idProject);
 
-                $userProject = $userProjectModel->where('user_id', $user->id)
+                $userProject = $userProjectModel->where('user_id', $user->account_owner_id)
                                                 ->where('project_id', $idProject)->first();
                 $userProject = new UserProjectResource($userProject);
 
-                $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', $user->id)
+                $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', $user->account_owner_id)
                                                                ->where('project_id', $idProject)->get();
                 $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
 
@@ -312,7 +312,7 @@ class ProjectsApiController extends Controller
                                 $img->save($projectPhoto->getPathname());
 
                                 $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $projectPhoto);
+                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $projectPhoto);
                                 $project->update([
                                                      'photo' => $digitalOceanPath,
                                                  ]);
@@ -331,7 +331,7 @@ class ProjectsApiController extends Controller
                                 $img->save($projectLogo->getPathname());
 
                                 $digitalOceanPathLogo = $digitalOceanService
-                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/logo', $projectLogo);
+                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/projects/' . Hashids::encode($project->id) . '/logo', $projectLogo);
 
                                 $project->update([
                                                      'logo' => $digitalOceanPathLogo,
@@ -345,7 +345,7 @@ class ProjectsApiController extends Controller
                         }
 
                         $userProject                    = $userProjectModel->where([
-                                                                                       ['user_id', auth()->user()->id],
+                                                                                       ['user_id', auth()->user()->account_owner_id],
                                                                                        ['project_id', $project->id],
                                                                                    ])->first();
                         $requestValidated['company_id'] = Hashids::decode($requestValidated['company_id'])[0];

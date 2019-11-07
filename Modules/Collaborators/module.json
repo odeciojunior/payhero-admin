@@ -1,0 +1,14 @@
+{
+    "name": "Collaborators",
+    "alias": "collaborators",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Collaborators\\Providers\\CollaboratorsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

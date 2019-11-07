@@ -82,6 +82,7 @@ class BankService
             ['code' => '075', 'name' => 'Banco CR2'],
             ['code' => '076', 'name' => 'Banco KDB'],
             ['code' => '077', 'name' => 'Banco Inter'],
+            ['code' => '093', 'name' => 'Polocred'],
             ['code' => '096', 'name' => 'Banco BMF'],
             ['code' => '104', 'name' => 'Caixa Econômica Federal'],
             ['code' => '107', 'name' => 'Banco BBM'],

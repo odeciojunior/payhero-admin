@@ -39,7 +39,7 @@ class ProfilePolicy
      */
     public function uploadDocuments(User $user, User $model)
     {
-        if ($user->id == $model->id) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;
@@ -53,7 +53,7 @@ class ProfilePolicy
      */
     public function edit(User $user, User $model)
     {
-        if ($user->id == $model->id) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;

@@ -95,6 +95,8 @@ $(document).ready(function () {
                     }
                 };
                 $('#company_document').val().replace(/\D/g, '').length > 14 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-000', optionsCompanyDocument);
+
+                $("#support_telephone").mask("(00) 0000-00009");
             }
         });
     }

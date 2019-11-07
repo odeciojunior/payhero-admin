@@ -61,7 +61,7 @@ class ProductsApiController extends Controller
 
             $filters = $request->validated();
 
-            $productsSearch = $productsModel->where('user_id', auth()->user()->id);
+            $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id);
 
             if (isset($filters['shopify'])) {
                 $productsSearch->where('shopify', $filters['shopify']);
@@ -123,10 +123,10 @@ class ProductsApiController extends Controller
 
             $data                       = $request->validated();
             $data['shopify']            = 0;
-            $data['user']               = auth()->user()->id;
+            $data['user']               = auth()->user()->account_owner_id;
             $data['price']              = preg_replace("/[^0-9]/", "", $data['price']);
             $data['cost']               = preg_replace("/[^0-9]/", "", $data['cost']);
-            $data['user_id']            = auth()->user()->id;
+            $data['user_id']            = auth()->user()->account_owner_id;
             $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
 
@@ -149,7 +149,7 @@ class ProductsApiController extends Controller
                     $img->save($productPhoto->getPathname());
 
                     $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/products', $productPhoto);
 
                     $product->update([
                                          'photo' => $digitalOceanPath,
@@ -183,7 +183,7 @@ class ProductsApiController extends Controller
         try {
             $productsModel = new Product();
 
-            $productsSearch = $productsModel->where('user_id', auth()->user()->id)
+            $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id)
                                             ->where('shopify', $request->input('shopify'));
 
             if ($request->has('name') && !empty($request->input('name'))) {
@@ -295,7 +295,7 @@ class ProductsApiController extends Controller
                             $img->save($productPhoto->getPathname());
 
                             $digitalOceanPath = $this->getDigitalOceanFileService()
-                                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+                                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/public/products', $productPhoto);
 
                             $product->update([
                                                  'photo' => $digitalOceanPath,

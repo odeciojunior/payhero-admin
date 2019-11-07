@@ -76,7 +76,7 @@ class TrackingsServiceProvider extends ServiceProvider
         $langPath = resource_path('lang/modules/trackings');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'trackings');
+            $this->loadTranslationsFrom($langPath, 'tracking');
         } else {
             $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'trackings');
         }

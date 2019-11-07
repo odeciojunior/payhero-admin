@@ -27,10 +27,10 @@ class HotZappApiController extends Controller
             $userProjectModel   = new UserProject();
             $projectModel       = new Project();
 
-            $hotzappIntegrations = $hotzappIntegration->where('user_id', auth()->id())->with('project')->get();
+            $hotzappIntegrations = $hotzappIntegration->where('user_id',auth()->user()->account_owner_id)->with('project')->get();
 
             $projects     = collect();
-            $userProjects = $userProjectModel->where('user_id', auth()->id())->get();
+            $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))
@@ -106,7 +106,7 @@ class HotZappApiController extends Controller
                                                                            'credit_card_paid'    => $data['credit_card_paid'],
                                                                            'abandoned_cart'      => $data['abandoned_cart'],
                                                                            'project_id'          => $projectId,
-                                                                           'user_id'             => auth()->user()->id,
+                                                                           'user_id'             => auth()->user()->account_owner_id,
                                                                        ]);
 
                 if ($integrationCreated) {

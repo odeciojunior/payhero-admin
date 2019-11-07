@@ -26,13 +26,13 @@ class ProductService
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
         if (!empty($projectId) && !empty($project->shopify_id)) {
-            return $productModel->where('user_id', auth()->user()->id)
+            return $productModel->where('user_id', auth()->user()->account_owner_id)
                 ->where('shopify', 1)
                 ->whereHas('productsPlans.plan', function ($queryPlan) use ($projectId) {
                     $queryPlan->where('project_id', $projectId);
                 })->get();
         } else {
-            return $productModel->where('user_id', auth()->user()->id)
+            return $productModel->where('user_id', auth()->user()->account_owner_id)
                 ->where('shopify', 0)->get();
         }
     }
@@ -43,11 +43,11 @@ class ProductService
             $sale = $saleParam;
         }else if(is_int($saleParam)) {
             $saleModel = new Sale();
-            $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.trackings'])->find($saleParam);
+            $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])->find($saleParam);
         }else if(is_string($saleParam)){
             $saleModel = new Sale();
             $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
-            $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.trackings'])->find($saleId);
+            $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])->find($saleId);
         }
 
         $productsSale = collect();
@@ -58,7 +58,7 @@ class ProductService
                     $product = $productPlan->product;
                     $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
                         ->first();
-                    $tracking = $productPlanSale ?  !empty($productPlanSale->trackings) ? $productPlanSale->trackings->last() : null : null;
+                    $tracking = $productPlanSale ?  $productPlanSale->tracking ?? null : null;
                     $product['product_plan_sale_id'] = $productPlanSale ? $productPlanSale->id ? $productPlanSale->id : 0 : 0;
                     $product['sale_status'] = $sale->status;
                     $product['amount'] = $productPlan->amount * $planSale->amount;
