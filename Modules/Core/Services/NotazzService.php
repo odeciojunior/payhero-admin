@@ -117,16 +117,18 @@ class NotazzService
                 /** @var ProductPlan $productPlan */
                 foreach ($planSale->plan->productsPlans as $productPlan) {
 
-                    $product         = $productPlan->product()->first();
+                    $product = $productPlan->product()->first();
 
                     if (!empty($productPlan->cost)) {
                         //pega os valores de productplan
                         $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
+                        $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
                         $product['currency_type_enum'] = $productPlan->currency_type_enum;
                     } else {
                         //pega os valores de produto
                         if (!empty($product->cost)) {
                             $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+                            $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
                         } else {
                             $product['product_cost'] = 0;
                         }
@@ -275,16 +277,18 @@ class NotazzService
                     /** @var ProductPlan $productPlan */
                     foreach ($planSale->plan->productsPlans as $productPlan) {
 
-                        $product         = $productPlan->product()->first();
+                        $product = $productPlan->product()->first();
 
                         if (!empty($productPlan->cost)) {
                             //pega os valores de productplan
                             $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
+                            $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
                             $product['currency_type_enum'] = $productPlan->currency_type_enum;
                         } else {
                             //pega os valores de produto
                             if (!empty($product->cost)) {
                                 $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+                                $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
                             } else {
                                 $product['product_cost'] = 0;
                             }

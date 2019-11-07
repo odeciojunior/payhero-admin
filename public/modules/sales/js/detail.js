@@ -71,7 +71,9 @@ $(() => {
             backgroundColor: 'transparent'
         }).prop('readonly', true);
         btnEdit.show('fast');
-        btnNotify.show('fast');
+        if(trackingInput.val() !== ''){
+            btnNotify.show('fast');
+        }
     });
 
     // FIM - COMPORTAMENTOS DA JANELA
@@ -549,6 +551,7 @@ $(() => {
             success: (response) => {
                 let trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
                 let btnEdit = btnSave.parent().find('.btn-edit-trackingcode');
+                let btnNotify = btnSave.parent().find('.btn-notify-trackingcode');
                 let btnClose = btnSave.parent().find('.btn-close-tracking');
 
                 trackingStatusSPan.html(response.data.tracking_status);
@@ -559,6 +562,7 @@ $(() => {
                 }).prop('readonly', true);
                 btnSave.hide();
                 btnEdit.show('fast');
+                btnNotify.show('fast');
                 btnClose.hide();
                 alertCustom('success', response.message);
             }
