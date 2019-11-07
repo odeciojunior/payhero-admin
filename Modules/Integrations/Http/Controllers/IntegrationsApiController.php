@@ -97,7 +97,7 @@ class IntegrationsApiController extends Controller
             $apiTokenModel = new ApiToken();
             /** @var ApiToken $apiToken */
             $apiToken = $apiTokenModel->newQuery()->find(current(Hashids::decode($encodedId)));
-            if ($apiToken->user_id !== auth()->id()) {
+            if ($apiToken->user_id !== auth()->user()->account_owner_id) {
                 return response()->json(['message' => 'Ocorreu um erro ao excluir.'], Response::HTTP_BAD_REQUEST);
             }
             if (!$apiToken->delete()) {
