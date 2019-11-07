@@ -25,7 +25,7 @@ class ProfilePolicy
      */
     public function changePassword(User $user, User $model)
     {
-        if ($user->account_owner_id == $model->account_owner_id) {
+        if ($user->id == $model->id) {
             return true;
         } else {
             return false;
@@ -67,7 +67,7 @@ class ProfilePolicy
      */
     public function update(User $user, User $model)
     {
-        if ($user->account_owner_id == $model->account_owner_id) {
+        if ($user->id == $model->id) {
             return true;
         } else {
             return false;
