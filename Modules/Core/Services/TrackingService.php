@@ -72,7 +72,7 @@ class TrackingService
             if ($filters['status'] === 'unknown') {
                 $productPlanSales->doesntHave('tracking');
             } else {
-                $productPlanSales->whereHas('tracking', function ($query) use ($dateRange, $trackingModel, $filters) {
+                $productPlanSales->whereHas('tracking', function ($query) use ($trackingModel, $filters) {
                     $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
                 });
             }
