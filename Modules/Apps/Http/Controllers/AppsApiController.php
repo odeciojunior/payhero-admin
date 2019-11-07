@@ -26,6 +26,10 @@ class AppsApiController extends Controller
         $activecampaignIntegrationModel = new ActivecampaignIntegration();
 
         return response()->json([
+            'hotzappIntegrations'   => $hotzappIntegrationModel->where('user_id', auth()->user()->account_owner)->count(),
+            'shopifyIntegrations'   => $shopifyIntegration->where('user_id', auth()->user()->account_owner)->count(),
+            'notazzIntegrations'    => $notazzIntegration->where('user_id', auth()->user()->account_owner)->count(),
+            'convertaxIntegrations' => $convertaxIntegrationModel->where('user_id', auth()->user()->account_owner)->count(),
             'hotzappIntegrations'        => $hotzappIntegrationModel->where('user_id', auth()->user()->id)->count(),
             'shopifyIntegrations'        => $shopifyIntegration->where('user_id', auth()->user()->id)->count(),
             'notazzIntegrations'         => $notazzIntegration->where('user_id', auth()->user()->id)->count(),

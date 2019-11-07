@@ -26,7 +26,7 @@ class ProductPolicy
      */
     public function edit(User $user, Product $product)
     {
-        if ($user->id == $product->user_id) {
+        if ($user->account_owner == $product->user_id) {
             return true;
         } else {
             return false;
@@ -40,7 +40,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        if ($user->id == $product->user_id) {
+        if ($user->account_owner == $product->user_id) {
             return true;
         } else {
             return false;
@@ -54,7 +54,7 @@ class ProductPolicy
      */
     public function destroy(User $user, Product $product)
     {
-        if ($user->id == $product->user_id) {
+        if ($user->account_owner == $product->user_id) {
             return true;
         } else {
             return false;

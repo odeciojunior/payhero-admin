@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api'],
+        'middleware' => ['auth:api', 'role:account_owner|admin|attendance'],
         'prefix'     => 'sales',
     ],
     function() {
@@ -26,5 +26,5 @@ Route::group(
 );
 
 Route::apiResource('sales', 'SalesApiController')
-    ->only('index', 'show')
-    ->middleware(['auth:api']);
+     ->only('index', 'show')
+     ->middleware(['auth:api']);

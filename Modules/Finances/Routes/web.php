@@ -9,7 +9,7 @@ Route::group(
     ],
     function() {
         // rotas autenticadas
-        Route::get('/', 'FinancesController@index')->name('finances');
+        Route::get('/', 'FinancesController@index')->name('finances')->middleware('role:account_owner|admin');
     }
 
 );

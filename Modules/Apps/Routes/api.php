@@ -8,7 +8,7 @@ Route::group(
     ],
     function() {
         Route::apiResource('apps', 'AppsApiController')
-            ->only('index');
+            ->only('index')->middleware('role:account_owner|admin');
     }
 
 );

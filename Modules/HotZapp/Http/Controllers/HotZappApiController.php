@@ -106,7 +106,7 @@ class HotZappApiController extends Controller
                                                                            'credit_card_paid'    => $data['credit_card_paid'],
                                                                            'abandoned_cart'      => $data['abandoned_cart'],
                                                                            'project_id'          => $projectId,
-                                                                           'user_id'             => auth()->user()->id,
+                                                                           'user_id'             => auth()->user()->account_owner,
                                                                        ]);
 
                 if ($integrationCreated) {

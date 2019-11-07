@@ -91,7 +91,7 @@ class SalesRecoveryService
             $salesExpired->where('sales.project_id', $projectId);
         } else {
             $userProjects = $userProjectsModel->where([
-                                                          ['user_id', auth()->user()->id],
+                                                          ['user_id', auth()->user()->account_owner],
                                                           ['type', 'producer'],
                                                       ])->pluck('project_id')->toArray();
 

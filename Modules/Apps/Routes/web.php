@@ -5,5 +5,5 @@ Route::group(['middleware' => 'web', 'prefix' => 'apps', 'namespace' => '\Module
     Route::get('/',[
         'uses' => 'AppsController@index',
         'as' => 'apps'
-    ]);
+    ])->middleware('role:account_owner|admin');
 });

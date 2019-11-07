@@ -266,7 +266,7 @@ class ProjectService
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
-        $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
+        $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner)->pluck('project_id');
         $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
                              ->orderBy('id', 'DESC');
         if ($pagination) {

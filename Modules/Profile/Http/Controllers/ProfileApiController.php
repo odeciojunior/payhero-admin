@@ -384,10 +384,10 @@ class ProfileApiController
 
                 $document = $request->file('file');
 
-                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
+                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner) . '/private/documents', $document, null, null, 'private');
 
                 $userDocument->create([
-                                          'user_id'            => auth()->user()->id,
+                                          'user_id'            => auth()->user()->account_owner,
                                           'document_url'       => $digitalOceanPath,
                                           'document_type_enum' => $dataForm["document_type"],
                                           'status'             => null,
@@ -435,7 +435,7 @@ class ProfileApiController
             if (!empty($userId)) {
                 $user   = auth()->user();
                 $userId = current(Hashids::decode($userId));
-                if ($user->id == $userId) {
+                if ($user->account_owner == $userId) {
                     return new ProfileTaxResource($user);
                 } else {
                     return response()->json([
