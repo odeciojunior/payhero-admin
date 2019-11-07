@@ -4,11 +4,8 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laracasts\Presenter\PresentableTrait;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Presenters\ProductPlanSalePresenter;
 
 /**
@@ -106,10 +103,10 @@ class ProductPlanSale extends Model
     }
 
     /**
-     * @return HasMany
+     * @return HasOne
      */
-    public function trackings()
+    public function tracking()
     {
-        return $this->hasMany('Modules\Core\Entities\Tracking');
+        return $this->hasOne('Modules\Core\Entities\Tracking')->latest();
     }
 }

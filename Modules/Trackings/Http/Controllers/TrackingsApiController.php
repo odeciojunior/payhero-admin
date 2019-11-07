@@ -83,7 +83,7 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $trackings = $trackingService->getResume($data);
+            $trackings = $trackingService->getTrackings($data, true);
 
             return $trackings;
 
@@ -111,11 +111,11 @@ class TrackingsApiController extends Controller
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
                 $productId = current(Hashids::decode($data['product_id']));
                 if ($saleId && $productId) {
-                    $productPlanSale = $productPlanSaleModel->with(['trackings', 'sale.plansSales.plan.productsPlans', 'sale.delivery'])
+                    $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales.plan.productsPlans', 'sale.delivery'])
                                                             ->where([['sale_id', $saleId], ['product_id', $productId]])
                                                             ->first();
 
-                    $tracking = $productPlanSale->trackings->last();
+                    $tracking = $productPlanSale->tracking;
 
                     //create
                     if(!isset($tracking)){

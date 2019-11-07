@@ -56,7 +56,7 @@ class PostBackShopifyController extends Controller
 
                 $shopifyOrder = $requestData['id'];
 
-                $sale = $salesModel->with(['productsPlansSale.trackings', 'plansSales.plan.productsPlans', 'delivery'])
+                $sale = $salesModel->with(['productsPlansSale.tracking', 'plansSales.plan.productsPlans', 'delivery'])
                     ->where('shopify_order', $shopifyOrder)
                     ->where('project_id', $project->id)
                     ->first();
@@ -77,7 +77,7 @@ class PostBackShopifyController extends Controller
                                         //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
                                         //do que esta na tabela
                                         $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
-                                        $tracking = $productPlanSale->trackings->last();
+                                        $tracking = $productPlanSale->tracking;
                                         if (isset($tracking)) {
                                             //caso seja diferente, atualiza o registro e dispara o e-mail
                                             if ($tracking->tracking_code != $fulfillment["tracking_number"]) {

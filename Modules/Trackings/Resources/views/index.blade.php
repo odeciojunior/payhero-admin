@@ -46,6 +46,7 @@
                             <option value="delivered">Entregue</option>
                             <option value="out_for_delivery">Saiu para entrega</option>
                             <option value="exception">Problema na entrega</option>
+                            <option value="unknown">Não informado</option>
                         </select>
                     </div>
                 </div>
@@ -66,21 +67,25 @@
             <div class="fixhalf"></div>
             <div class="card shadow p-20" style='display:block;'>
                 <div class="row justify-content-center">
-                    <div class="col-md-3">
+                    <div class="col">
                         <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
                         <h4 id="total-trackings" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col">
                         <h6 class="text-center text-success"><i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
                         <h4 id="percentual-delivered" class="number text-center text-success"></h4>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col">
                         <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
                         <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col-md-3">
-                        <h6 class="text-center text-danger"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
-                        <h4 id="percentual-exception" class="number text-center text-danger"></h4>
+                    <div class="col">
+                        <h6 class="text-center text-warning"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
+                        <h4 id="percentual-exception" class="number text-center text-warning"></h4>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-center text-danger"><i class="material-icons align-middle mr-1" > error </i> Não informado</h6>
+                        <h4 id="percentual-unknown" class="number text-center text-danger"></h4>
                     </div>
                 </div>
             </div>
@@ -196,7 +201,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=2') }}"></script>
     @endpush
 
 @endsection
