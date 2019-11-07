@@ -37,12 +37,12 @@ class ReportsApiController extends Controller
             $requestEndDate   = $request->input('endDate');
             if ($projectId) {
                 $userProject = $userProjectModel->where([
-                                                            ['user_id', auth()->user()->id],
+                                                            ['user_id', auth()->user()->account_owner_id],
                                                             ['type', 'producer'],
                                                             ['project_id', $projectId],
                                                         ])->first();
 
-                $companies = Company::where('user_id', auth()->id())->pluck('id');
+                $companies = Company::where('user_id', auth()->user()->account_owner_id)->pluck('id');
 
                 if ($userProject) {
                     $sales = $salesModel
@@ -55,7 +55,7 @@ class ReportsApiController extends Controller
                         ->leftJoin('checkouts as checkout', function($join) {
                             $join->on('sales.checkout_id', 'checkout.id');
                         })
-                        ->where([['sales.project_id', $projectId], ['sales.owner_id', auth()->user()->id]]);
+                        ->where([['sales.project_id', $projectId], ['sales.owner_id', auth()->user()->account_owner_id]]);
 
                     if (!empty($requestStartDate) && !empty($requestEndDate)) {
                         $sales->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
@@ -108,7 +108,7 @@ class ReportsApiController extends Controller
                                                             DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),
                                                         ])
-                                               ->where('owner_id', auth()->user()->id)
+                                               ->where('owner_id', auth()->user()->account_owner_id)
                                                ->where('project_id', $projectId);
                     if ($requestStartDate != '' && $requestEndDate != '') {
                         $salesDetails->whereBetween('start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
@@ -256,7 +256,7 @@ class ReportsApiController extends Controller
             $companyModel = new Company();
             $saleModel    = new Sale();
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
 

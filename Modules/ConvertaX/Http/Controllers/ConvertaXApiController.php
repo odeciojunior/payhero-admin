@@ -23,7 +23,7 @@ class ConvertaXApiController extends Controller {
         try{
             $convertaxIntegration = new ConvertaxIntegration();
 
-            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->id)->with('project')->get();
+            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->account_owner_id)->with('project')->get();
 
             return ConvertaxResource::collection($convertaxIntegrations);
         }
@@ -82,7 +82,7 @@ class ConvertaXApiController extends Controller {
                                                                              'credit_card_paid'    => $data['credit_card_paid'],
                                                                              'abandoned_cart'      => $data['abandoned_cart'],
                                                                              'project_id'          => $projectId,
-                                                                             'user_id'             => auth()->user()->id,
+                                                                             'user_id'             => auth()->user()->account_owner_id,
                                                                          ]);
                 if (!empty($integrationCreated)) {
                     return response()->json([

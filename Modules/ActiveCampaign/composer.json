@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/activecampaign",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\ActiveCampaign\\Providers\\ActiveCampaignServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\ActiveCampaign\\": ""
+        }
+    }
+}

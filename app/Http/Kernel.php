@@ -63,5 +63,6 @@ class Kernel extends HttpKernel
         'throttle'              => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'VerifyShopifyPostback' => \App\Http\Middleware\VerifyShopifyPostback::class,
         'broadcast'             => \App\Http\Middleware\Broadcast::class,
+        'role'                  => \Spatie\Permission\Middlewares\RoleMiddleware::class,
     ];
 }

@@ -35,7 +35,7 @@ class SaleService
         $clientModel      = new Client();
         $transactionModel = new Transaction();
 
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
                                       ->pluck('id')
                                       ->toArray();
 
@@ -144,7 +144,7 @@ class SaleService
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
         //add details to sale
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
+        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
         $this->getDetails($sale, $userCompanies);
 
         //invoices

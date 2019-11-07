@@ -75,7 +75,7 @@ class PartnersController extends Controller
                                                          ->first();
                 $requestvalidated['project'] = current(Hashids::decode($requestvalidated['project']));
                 if ($user) {
-                    $company                    = $companyModel->where('user', $user->id)->first();
+                    $company                    = $companyModel->where('user', $user->account_owner_id)->first();
                     $requestvalidated['status'] = 'active';
 
                     if ($company) {
@@ -98,9 +98,9 @@ class PartnersController extends Controller
                         }
                     }
 
-                    $requestDataInvitation['company'] = $companyModel->where('user_id', auth()->user()->id)
+                    $requestDataInvitation['company'] = $companyModel->where('user_id', auth()->user()->account_owner_id)
                                                                      ->first()->id;
-                    $requestDataInvitation['invite']  = auth()->user()->id;
+                    $requestDataInvitation['invite']  = auth()->user()->account_owner_id;
                     $invite                           = $invitationModel->create($requestDataInvitation);
                     /*Mail::send('convites::email_convite', ['convite' => $invite], function($mail) use ($requestDataInvitation) {
                         $mail->from('teste@teste', 'cloudfox');
@@ -109,7 +109,7 @@ class PartnersController extends Controller
                     });*/
                 }
                 $requestvalidated['status'] = 'inactive';
-                $requestvalidated['user']   = $user->id ?? null;
+                $requestvalidated['user']   = $user->account_owner_id ?? null;
                 $userProjectModel->create($requestvalidated);
 
                 return response()->json('success');

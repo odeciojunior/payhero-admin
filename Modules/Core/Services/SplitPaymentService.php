@@ -35,7 +35,7 @@ class SplitPaymentService {
             $producerValue = (int) $totalValue - $cloudfoxValue;
 
             $invite = $invitationModel->where([
-                                                ['user_invited', $user->id],
+                                                ['user_invited', $user->account_owner_id],
                                                 ['status', 1], 
                                             ])->with([
                                                 'user', 'company'

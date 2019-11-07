@@ -80,7 +80,7 @@ class WithdrawalsApiController extends Controller
         /** @var Company $companyModel */
         $companyModel = new Company();
         /** @var Company $company */
-        $company = $companyModel->where('user_id', auth()->user()->id)
+        $company = $companyModel->where('user_id', auth()->user()->account_owner_id)
                                 ->find(current(Hashids::decode($data['company_id'])));
         if (Gate::allows('edit', [$company])) {
             if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
@@ -169,7 +169,7 @@ class WithdrawalsApiController extends Controller
         $company = $companyModel->find(current(Hashids::decode($companyId)));
         if (Gate::allows('edit', [$company])) {
             /** @var User $user */
-            $user = $userModel->where('id', auth()->user()->id)->first();
+            $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
             if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
                 $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
                 return response()->json(

@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/collaborators",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Collaborators\\Providers\\CollaboratorsServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Collaborators\\": ""
+        }
+    }
+}
