@@ -52,7 +52,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                        <label for="date_updated">Data de atualização</label>
+                        <label for="date_updated">Data de aprovação venda</label>
                         <input name='date_updated' id="date_updated" class="select-pad" placeholder="Clique para editar..." readonly>
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 offset-xl-6">

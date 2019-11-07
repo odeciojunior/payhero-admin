@@ -67,7 +67,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects/user-projects',
+            url: '/api/projects',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
