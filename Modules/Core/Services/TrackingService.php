@@ -60,8 +60,12 @@ class TrackingService
                 'sale.plansSales.plan.productsPlans',
                 'product',
             ])
-            ->whereHas('sale', function ($query) use ($userCompanies) {
+            ->whereHas('sale', function ($query) use ($userCompanies, $filters) {
                 $query->where('status', 1);
+                if(isset($filters['sale'])){
+                    $saleId =  current(Hashids::connection('sale_id')->decode($filters['sale']));
+                    $query->where('id', $saleId);
+                }
             })
             ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
                 $query->whereIn('company_id', $userCompanies);
