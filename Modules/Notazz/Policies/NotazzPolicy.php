@@ -22,7 +22,7 @@ class NotazzPolicy
 
         $notazzIntegration->load('project');
 
-        $userProject = UserProject::where('user_id', $user->account_owner)
+        $userProject = UserProject::where('user_id', $user->account_owner_id)
                                   ->where('project_id', $notazzIntegration->project->id)
                                   ->first();
         if ($userProject) {

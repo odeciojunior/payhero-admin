@@ -75,7 +75,7 @@ class PartnersController extends Controller
                                                          ->first();
                 $requestvalidated['project'] = current(Hashids::decode($requestvalidated['project']));
                 if ($user) {
-                    $company                    = $companyModel->where('user', $user->account_owner)->first();
+                    $company                    = $companyModel->where('user', $user->account_owner_id)->first();
                     $requestvalidated['status'] = 'active';
 
                     if ($company) {

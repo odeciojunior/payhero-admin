@@ -25,7 +25,7 @@ class ProfilePolicy
      */
     public function changePassword(User $user, User $model)
     {
-        if ($user->account_owner == $model->account_owner) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;
@@ -39,7 +39,7 @@ class ProfilePolicy
      */
     public function uploadDocuments(User $user, User $model)
     {
-        if ($user->account_owner == $model->account_owner) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;
@@ -53,7 +53,7 @@ class ProfilePolicy
      */
     public function edit(User $user, User $model)
     {
-        if ($user->account_owner == $model->account_owner) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;
@@ -67,7 +67,7 @@ class ProfilePolicy
      */
     public function update(User $user, User $model)
     {
-        if ($user->account_owner == $model->account_owner) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;
@@ -81,7 +81,7 @@ class ProfilePolicy
      */
     public function view(User $user, User $model)
     {
-        if ($user->account_owner == $model->account_owner) {
+        if ($user->account_owner_id == $model->account_owner_id) {
             return true;
         } else {
             return false;

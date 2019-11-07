@@ -435,7 +435,7 @@ class ProfileApiController
             if (!empty($userId)) {
                 $user   = auth()->user();
                 $userId = current(Hashids::decode($userId));
-                if ($user->account_owner == $userId) {
+                if ($user->account_owner_id == $userId) {
                     return new ProfileTaxResource($user);
                 } else {
                     return response()->json([
