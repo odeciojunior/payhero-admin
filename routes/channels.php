@@ -12,5 +12,5 @@
 */
 
 Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->account_owner === (int) $id;
+    return (int) $user->account_owner_id === (int) $id;
 });

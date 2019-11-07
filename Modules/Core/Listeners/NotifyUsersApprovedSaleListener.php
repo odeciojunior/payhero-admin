@@ -39,7 +39,7 @@ class NotifyUsersApprovedSaleListener
             $user      = $userModel->find($event->project->owner);
 
             $notification = Notification::where([
-                                                    ['notifiable_id', $user->account_owner],
+                                                    ['notifiable_id', $user->account_owner_id],
                                                     ['type', 'Modules\Checkout\Notifications\SaleNotification'],
                                                 ])
                                         ->whereNull('read_at')

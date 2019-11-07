@@ -37,7 +37,7 @@ class PusherNotificationApprovedSaleListener
                 $message = 'Venda aprovada no projeto ' . $event->project->name;
 
                 $data = [
-                    'user'    => $user->account_owner,
+                    'user'    => $user->account_owner_id,
                     'message' => $message,
                 ];
 

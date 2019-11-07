@@ -31,7 +31,7 @@ class NotazzApiController extends Controller
 
             $notazzIntegrations = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
                                                          ->whereHas('project.usersProjects', function($query) {
-                                                             $query->where('user_id', auth()->user()->account_owner);
+                                                             $query->where('user_id', auth()->user()->account_owner_id);
                                                          })->get();
 
             return NotazzResource::collection($notazzIntegrations);
@@ -82,7 +82,7 @@ class NotazzApiController extends Controller
                                                                               'token_webhook'   => $data['token_webhook_create'],
                                                                               'token_logistics' => $data['token_logistics_create'] ?? null,
                                                                               'project_id'      => $projectId,
-                                                                              'user_id'         => auth()->user()->account_owner,
+                                                                              'user_id'         => auth()->user()->account_owner_id,
                                                                               'start_date'      => $data['start_date_create'],
                                                                           ]);
                     if ($integrationCreated) {
@@ -130,7 +130,7 @@ class NotazzApiController extends Controller
                 //hash ok
                 $notazzIntegration = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
                                                             ->whereHas('project.usersProjects', function($query) {
-                                                                $query->where('user_id', auth()->user()->account_owner);
+                                                                $query->where('user_id', auth()->user()->account_owner_id);
                                                             })->find($integrationId);
 
                 return new NotazzResource($notazzIntegration);
