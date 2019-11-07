@@ -106,7 +106,7 @@ $(() => {
         $.ajax({
             method: 'GET',
             url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val(),
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', ''),
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -140,10 +140,10 @@ $(() => {
 
         if (link == null) {
             link = '/api/tracking?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
         } else {
             link = '/api/tracking' + link + '&tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
