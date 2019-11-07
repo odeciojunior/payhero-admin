@@ -25,6 +25,7 @@ class CreateTableGatewayPostbacks extends Migration
             $table->string('description')->nullable();
             $table->unsignedInteger('amount')->nullable();
             $table->unsignedTinyInteger('processed_flag')->index()->default(0); // 0-no , 1-yes
+            $table->unsignedTinyInteger('valid_flag')->index()->default(0); // 0-no , 1-yes
 
             $table->softDeletes();
             $table->timestamps();
