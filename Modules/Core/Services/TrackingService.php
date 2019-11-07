@@ -50,7 +50,7 @@ class TrackingService
         $productPlanSaleModel = new ProductPlanSale();
         $companyModel = new Company();
 
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
             ->pluck('id')
             ->toArray();
 
@@ -61,7 +61,8 @@ class TrackingService
                 'product',
             ])
             ->whereHas('sale', function ($query) use ($userCompanies, $filters) {
-                $query->where('status', 1);
+                $query->where('status', 1)
+                ->where('owner_id', auth()->user()->account_owner_id);
                 if(isset($filters['sale'])){
                     $saleId =  current(Hashids::connection('sale_id')->decode($filters['sale']));
                     $query->where('id', $saleId);
