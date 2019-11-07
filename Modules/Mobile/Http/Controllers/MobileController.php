@@ -2,16 +2,15 @@
 
 namespace Modules\Mobile\Http\Controllers;
 
-use App\Exceptions\Apis\Integrations\IntegrationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use stringEncode\Exception;
 
 class MobileController extends Controller
 {
-    const lastVersion = 'v1';
-    private $version = 'v10';
+    const lastVersion = 'v10';
     /**
      * @var IntegrationService
      */
@@ -20,13 +19,13 @@ class MobileController extends Controller
 
     public function __construct(Request $request)
     {
-        $this->version = $request->route('version');
+        $version = $request->route('version');
 
-//        if ($this->version) {
-//            $this->getMobileApiService($this->version);
-//        } else {
-//            $this->getMobileApiService(self::lastVersion);
-//        }
+        if ($version) {
+            $this->getMobileApiService($version);
+        } else {
+            $this->getMobileApiService(self::lastVersion);
+        }
     }
 
 
@@ -35,31 +34,75 @@ class MobileController extends Controller
         if (!$this->mobileApiService) {
 
             switch ($version) {
-                case 'v1':
-                    //$this->mobileApiService = app()->make('App\Http\Controllers\Apis\Integrations\v10\IntegrationService');
+                case 'v10':
+                    $this->mobileApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". $version ."\MobileApiService");
                     break;
                 default:
-                    throw new IntegrationException('Versão invalida.');
+                    throw new Exception('Versão inválida.');
                     break;
             }
         }
 
-        return $this->integrationService;
+        return $this->mobileApiService;
     }
 
 
     public function login(Request $request) {
 
         try {
-            $loginClassPath = "Modules\Mobile\Http\Controllers\AuthApiController"; //"Modules\Mobile\Http\Controllers\Apis\\". $this->version ."\AuthApiController";
-            $authController = app()->make($loginClassPath);
+            $dataRequest = $request->json()->all();
+
+            $validator = Validator::make($dataRequest, [
+                'email'             => 'required|string|email',
+                'password'          => 'required|string',
+                //'mobile_push_token' => 'sometimes|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => 'Invalid Data',
+                ], 400);
+            }
+
+            return $this->mobileApiService->login($request);
 
         } catch (Exception $ex) {
-            throw new Exception('Versão inválida.');
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
         }
+    }
 
+    public function dashboardGetValues() {
 
-        return $authController->login($request);
+        try {
+
+            return $this->mobileApiService->dashboardGetValues();
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    public function dashboardGetTopProducts(Request $request) {
+
+        try {
+
+            return $this->mobileApiService->dashboardGetTopProducts($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
     }
 
 }
