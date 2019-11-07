@@ -158,19 +158,23 @@ class ActiveCampaignService
             $activecampaignIntegration = new ActivecampaignIntegration;
             $activecampaignEvent = new ActivecampaignEvent;
             $integration = $activecampaignIntegration->where('project_id', $projectId)->first();
-            $event = $activecampaignEvent->where('event_sale', $eventSale)->where('activecampaign_integration_id', $integration->id)->first();
 
-            if(!empty($integration->id) && !empty($event->id)) {
-                $this->setAccess($integration->api_url, $integration->api_key, $integration->id);
+            if(!empty($integration->id)) {
+                $event = $activecampaignEvent->where('event_sale', $eventSale)->where('activecampaign_integration_id', $integration->id)->first();
 
-                $data = [
-                    'firstName' => $name,
-                    'phone'     => $phone,
-                    'email'     => $email,
-                    'lastName'  => '',
-                ];
+                if(!empty($event->id)) {
+                    $this->setAccess($integration->api_url, $integration->api_key, $integration->id);
 
-                return $this->sendContact($data, $event, $instanceId, $instance);
+                    $data = [
+                        'firstName' => $name,
+                        'phone'     => $phone,
+                        'email'     => $email,
+                        'lastName'  => '',
+                    ];
+                    return $this->sendContact($data, $event, $instanceId, $instance);
+                }
+                return response()->json(['message' => 'Ocorreu algum erro'], 400);
+
             } else {
                 return response()->json(['message' => 'Projeto não integrado com ActiveCampaign'], 400);
             }
