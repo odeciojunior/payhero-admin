@@ -57,7 +57,7 @@ class TrackingService
         $productPlanSales = $productPlanSaleModel
             ->with([
                 'tracking',
-                'sale',
+                'sale.plansSales.plan.productsPlans',
                 'product',
             ])
             ->whereHas('sale', function ($query) use ($userCompanies) {

@@ -23,6 +23,29 @@ class TrackingResource extends Resource
                 ]
             ];
         }else{
+
+            $amount = '';
+            //only relations earger loaded
+            if($this->sale->relationLoaded('plansSales')) {
+                $planSale = $this->sale
+                    ->plansSales
+                    ->where('plan_id', $this->plan_id)
+                    ->where('sale_id', $this->sale_id)
+                    ->first();
+
+                if($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
+                    $productPlan = $planSale->plan
+                        ->productsPlans
+                        ->where('product_id', $this->product_id)
+                        ->where('plan_id', $this->plan_id)
+                        ->first();
+
+                    if (isset($planSale) && isset($productPlan)) {
+                        $amount = $planSale->amount * $productPlan->amount;
+                    }
+                }
+            }
+
             return [
                 'id' => '',
                 'tracking_code' => '',
@@ -32,7 +55,7 @@ class TrackingResource extends Resource
                 'product' => [
                     'name' => $this->product->name,
                     'description' => $this->product->description,
-                    'amount' =>  '',
+                    'amount' =>  $amount,
                 ]
             ];
         }
