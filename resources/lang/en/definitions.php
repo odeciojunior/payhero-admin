@@ -131,6 +131,11 @@ return [
                 "rejected"           => "Rejeitado",
             ],
         ],
+        "role"                     => [
+            "account_owner" => "Dono da conta",
+            "admin"         => "Administrativo",
+            "attendance"    => "Atendimento",
+        ],
     ],
 
 ];

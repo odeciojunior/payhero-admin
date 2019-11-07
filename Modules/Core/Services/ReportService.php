@@ -12,8 +12,8 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
-class ReportService {
-
+class ReportService
+{
     /**
      * @param $date
      * @param $projectId
@@ -83,7 +83,7 @@ class ReportService {
         }
 
         $userCompanies = $companyModel
-            ->where('user_id', \Auth::user()->id)
+            ->where('user_id', auth()->user()->account_owner_id)
             ->pluck('id')
             ->toArray();
 
@@ -93,7 +93,7 @@ class ReportService {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->whereIn('transaction.company_id', $userCompanies);
             })
-            ->where('sales.owner_id', \Auth::user()->id)
+            ->where('sales.owner_id', auth()->user()->account_owner_id)
             ->where('sales.project_id', $projectId)
             //                       ->where('sales.status', 1)
             ->whereDate('sales.start_date', $data['startDate'])
@@ -151,7 +151,7 @@ class ReportService {
 
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -159,7 +159,7 @@ class ReportService {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.owner_id', auth()->user()->account_owner_id)
                 ->where('sales.project_id', $projectId)
                 //                           ->where('sales.status', 1)
                 ->whereBetween('start_date', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
@@ -227,7 +227,7 @@ class ReportService {
             }
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -235,7 +235,7 @@ class ReportService {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.owner_id', auth()->user()->account_owner_id)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
@@ -303,7 +303,8 @@ class ReportService {
             }
 
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
-            $userCompanies   = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies   = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')
+                                            ->toArray();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -311,7 +312,7 @@ class ReportService {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.owner_id', auth()->user()->account_owner_id)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
@@ -381,7 +382,7 @@ class ReportService {
             }
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -389,7 +390,7 @@ class ReportService {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.owner_id', auth()->user()->account_owner_id)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
@@ -452,7 +453,7 @@ class ReportService {
 
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -460,7 +461,7 @@ class ReportService {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.owner_id', auth()->user()->account_owner_id)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
@@ -497,6 +498,5 @@ class ReportService {
             report($e);
         }
     }
-
 }
 

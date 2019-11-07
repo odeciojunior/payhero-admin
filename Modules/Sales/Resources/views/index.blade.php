@@ -91,28 +91,33 @@
                     </div>
                 </div>
             </form>
-
             <!-- Resumo -->
             <div class="fixhalf"></div>
-            <div class="card shadow p-20" style='display:block;'>
-                <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas</h6>
-                        <h4 id="total-sales" class="number text-center green-gradient"></h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão </h6>
-                        <h4 id="comission" class="number text-center orange-gradient"></h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > trending_up </i> Total </h6>
-                        <h4 id="total" class="number text-center green-gradient"></i>
-                        </h4>
+            @if(!auth()->user()->hasRole('attendance'))
+                <div class="card shadow p-20" style='display:block;'>
+                    <div class="row justify-content-center">
+                        <div class="col-md-4">
+                            <h6 class="text-center green-gradient">
+                                <i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i> Quantidade de vendas
+                            </h6>
+                            <h4 id="total-sales" class="number text-center green-gradient"></h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-center orange-gradient">
+                                <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i> Comissão
+                            </h6>
+                            <h4 id="comission" class="number text-center orange-gradient"></h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-center green-gradient">
+                                <i class="material-icons align-middle green-gradient mr-1"> trending_up </i> Total </h6>
+                            <h4 id="total" class="number text-center green-gradient"></i>
+                            </h4>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Tabela -->
+        @endif
+        <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
@@ -140,17 +145,16 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
-
             <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
-{{--        <div class="content-error text-center" style="display:none">--}}
-{{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
-{{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
-{{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
-{{--            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>--}}
-{{--        </div>--}}
+        {{--        <div class="content-error text-center" style="display:none">--}}
+        {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
+        {{--            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>--}}
+        {{--            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>--}}
+        {{--            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>--}}
+        {{--        </div>--}}
     </div>
 
     <!-- Modal regerar boleto-->

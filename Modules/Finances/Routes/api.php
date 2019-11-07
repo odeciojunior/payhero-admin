@@ -9,6 +9,6 @@ Route::group(
     ],
     function() {
         // rotas autenticadas
-        Route::get('/getbalances', 'FinancesApiController@getBalances')->name('api.finances.balances');
+        Route::get('/getbalances', 'FinancesApiController@getBalances')->name('api.finances.balances')->middleware('role:account_owner|admin');
     }
 );

@@ -47,16 +47,17 @@ class RegisterApiController extends Controller
 
             $user = $userModel->create($requestData);
 
-            $user->assignRole('administrador empresarial');
+            $user->update(['account_owner' => $user->id]);
+
+            $user->assignRole('account_owner');
 
             auth()->loginUsingId($user->id, true);
-
             $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
             $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
             if ($invite) {
                 $invite->update([
-                                    'user_invited'    => $user->id,
+                                    'user_invited'    => $user->account_owner_id,
                                     'status'          => '1',
                                     'register_date'   => Carbon::now()->format('Y-m-d'),
                                     'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
@@ -73,7 +74,7 @@ class RegisterApiController extends Controller
                 if ($company) {
                     $inviteModel->create([
                                              'invite'          => $company->user_id,
-                                             'user_invited'    => $user->id,
+                                             'user_invited'    => $user->account_owner_id,
                                              'status'          => '1',
                                              'company'         => $company->id,
                                              'register_date'   => Carbon::now()->format('Y-m-d'),
