@@ -58,29 +58,27 @@ class TrackingService
             ->with([
                 'tracking',
                 'sale.plansSales.plan.productsPlans',
+                'sale.transactions',
                 'product',
             ])
             ->whereHas('sale', function ($query) use ($userCompanies, $filters) {
                 $query->where('status', 1)
-                ->where('owner_id', auth()->user()->account_owner_id);
+                ->whereHas('transactions', function ($query) use ($userCompanies) {
+                    $query->whereIn('company_id', $userCompanies);
+                });
                 if(isset($filters['sale'])){
                     $saleId =  current(Hashids::connection('sale_id')->decode($filters['sale']));
                     $query->where('id', $saleId);
                 }
-            })
-            ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
-                $query->whereIn('company_id', $userCompanies);
             });
 
         if (isset($filters['status'])) {
             if ($filters['status'] === 'unknown') {
                 $productPlanSales->doesntHave('tracking');
             } else {
-                $productPlanSales->whereHas('tracking', function ($query) use ($trackingModel, $filters) {
-                });
                 //tipo da data e periodo obrigatorio
                 $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-                $productPlanSales->doesntHave('tracking')->orWhereHas('tracking', function ($query) use ($dateRange, $trackingModel, $filters) {
+                $productPlanSales->whereHas('tracking', function ($query) use ($dateRange, $trackingModel, $filters) {
                     $query->whereBetween('updated_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                     $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
                 });
