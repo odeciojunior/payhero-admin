@@ -26,15 +26,11 @@ class AppsApiController extends Controller
         $activecampaignIntegrationModel = new ActivecampaignIntegration();
 
         return response()->json([
-            'hotzappIntegrations'   => $hotzappIntegrationModel->where('user_id', auth()->user()->account_owner)->count(),
-            'shopifyIntegrations'   => $shopifyIntegration->where('user_id', auth()->user()->account_owner)->count(),
-            'notazzIntegrations'    => $notazzIntegration->where('user_id', auth()->user()->account_owner)->count(),
-            'convertaxIntegrations' => $convertaxIntegrationModel->where('user_id', auth()->user()->account_owner)->count(),
-            'hotzappIntegrations'        => $hotzappIntegrationModel->where('user_id', auth()->user()->id)->count(),
-            'shopifyIntegrations'        => $shopifyIntegration->where('user_id', auth()->user()->id)->count(),
-            'notazzIntegrations'         => $notazzIntegration->where('user_id', auth()->user()->id)->count(),
-            'convertaxIntegrations'      => $convertaxIntegrationModel->where('user_id', auth()->user()->id)->count(),
-            'activecampaignIntegrations' => $activecampaignIntegrationModel->where('user_id', auth()->user()->id)->count(),
+            'hotzappIntegrations'        => $hotzappIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+            'shopifyIntegrations'        => $shopifyIntegration->where('user_id', auth()->user()->account_owner_id)->count(),
+            'notazzIntegrations'         => $notazzIntegration->where('user_id', auth()->user()->account_owner_id)->count(),
+            'convertaxIntegrations'      => $convertaxIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+            'activecampaignIntegrations' => $activecampaignIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
         ]);
     }
 
