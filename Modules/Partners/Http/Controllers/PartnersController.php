@@ -98,9 +98,9 @@ class PartnersController extends Controller
                         }
                     }
 
-                    $requestDataInvitation['company'] = $companyModel->where('user_id', auth()->user()->account_owner)
+                    $requestDataInvitation['company'] = $companyModel->where('user_id', auth()->user()->account_owner_id)
                                                                      ->first()->id;
-                    $requestDataInvitation['invite']  = auth()->user()->account_owner;
+                    $requestDataInvitation['invite']  = auth()->user()->account_owner_id;
                     $invite                           = $invitationModel->create($requestDataInvitation);
                     /*Mail::send('convites::email_convite', ['convite' => $invite], function($mail) use ($requestDataInvitation) {
                         $mail->from('teste@teste', 'cloudfox');
@@ -109,7 +109,7 @@ class PartnersController extends Controller
                     });*/
                 }
                 $requestvalidated['status'] = 'inactive';
-                $requestvalidated['user']   = $user->account_owner ?? null;
+                $requestvalidated['user']   = $user->account_owner_id ?? null;
                 $userProjectModel->create($requestvalidated);
 
                 return response()->json('success');

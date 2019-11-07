@@ -78,7 +78,7 @@ class CompaniesApiController extends Controller
             /** @var Company $company */
             $company = $companyModel->newQuery()->create(
                 [
-                    'user_id'          => auth()->user()->account_owner,
+                    'user_id'          => auth()->user()->account_owner_id,
                     'country'          => $requestData["country"],
                     'fantasy_name'     => $requestData["fantasy_name"],
                     'company_document' => $requestData["company_document"],
@@ -234,7 +234,7 @@ class CompaniesApiController extends Controller
             $company = $companyModel->newQuery()->find(current(Hashids::decode($dataForm['company_id'])));
             if (Gate::allows('uploadDocuments', [$company])) {
                 $document         = $request->file('file');
-                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
+                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
                 $companyDocumentModel->newQuery()->create(
                     [
                         'company_id'         => $company->id,
@@ -315,7 +315,7 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner)->get();
+            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)->get();
 
             return CompaniesSelectResource::collection($companies);
         } catch (Exception $e) {

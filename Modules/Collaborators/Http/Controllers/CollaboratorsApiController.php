@@ -23,7 +23,7 @@ class CollaboratorsApiController extends Controller
     {
         try {
             $userModel = new User();
-            $user      = $userModel->where([['account_owner', auth()->user()->account_owner], ['id', '!=', auth()->user()->account_owner]]);
+            $user      = $userModel->where([['account_owner_id', auth()->user()->account_owner_id], ['id', '!=', auth()->user()->account_owner_id]]);
 
             return CollaboratorsResource::collection($user->orderBy('id', 'ASC')->paginate(5));
         } catch (Exception $e) {
@@ -62,7 +62,7 @@ class CollaboratorsApiController extends Controller
             $data['score']                               = '0';
             $data['sms_zenvia_amount']                   = '0';
             $data['invites_amount']                      = 1;
-            $data['account_owner']                       = auth()->user()->account_owner;
+            $data['account_owner_id']                       = auth()->user()->account_owner_id;
             $user                                        = $userModel->create($data);
             $user->assignRole($data['role']);
             if (!empty($user)) {

@@ -502,7 +502,7 @@ class TesteController extends Controller
         //$shopifyService->deleteShopWebhook();
         //$shopifyService->createShopifyIntegrationWebhook(188, "https://app.cloudfox.net/postback/shopify/");
         //dd($shopifyService->getShopWebhook());
-        //$shopifyService->importShopifyStore(154, auth()->user()->account_owner);
+        //$shopifyService->importShopifyStore(154, auth()->user()->account_owner_id);
         //        $shopifyService->setThemeByRole('main');
         //        $htmlCart = $shopifyService->getTemplateHtml('snippets/ajax-cart-template.liquid');
         //        $shopifyService->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, 'junbotron.cf', true);

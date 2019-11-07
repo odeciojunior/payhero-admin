@@ -73,7 +73,7 @@ class AffiliatesController extends Controller
             }
 
             $affiliateRequestModel->create([
-                                               'user'    => auth()->user()->account_owner,
+                                               'user'    => auth()->user()->account_owner_id,
                                                'project' => $project['id'],
                                                'status'  => 'Pendente',
                                            ]);
@@ -83,10 +83,10 @@ class AffiliatesController extends Controller
             return redirect()->route('affiliates.my_affiliations');
         }
 
-        $company = $companyModel->where('user', auth()->user()->account_owner)->first();
+        $company = $companyModel->where('user', auth()->user()->account_owner_id)->first();
 
         $affiliate = $affiliateModel->create([
-                                                 'user'       => auth()->user()->account_owner,
+                                                 'user'       => auth()->user()->account_owner_id,
                                                  'project'    => $project['id'],
                                                  'percentage' => $project['percentage_affiliates'],
                                                  'company'    => @$company->id,
@@ -206,7 +206,7 @@ class AffiliatesController extends Controller
         $affiliateModel = new Affiliate();
         $projectModel   = new Project();
 
-        $myAffiliations = $affiliateModel->where('user', auth()->user()->account_owner)->get()->toArray();
+        $myAffiliations = $affiliateModel->where('user', auth()->user()->account_owner_id)->get()->toArray();
 
         $projects = [];
 
@@ -245,7 +245,7 @@ class AffiliatesController extends Controller
 
         $project = $projectModel->find($affiliate['project']);
 
-        $companies = $companyModel->where('user', auth()->user()->account_owner)->get()->toArray();
+        $companies = $companyModel->where('user', auth()->user()->account_owner_id)->get()->toArray();
 
         $userProject = $userProjectModel->where([
                                                     ['project', $project['id']],
@@ -274,7 +274,7 @@ class AffiliatesController extends Controller
         $userProjectModel = new UserProject();
 
         $userProjects = $userProjectModel->where([
-                                                     ['user', auth()->user()->account_owner],
+                                                     ['user', auth()->user()->account_owner_id],
                                                      ['type', 'producer'],
                                                  ])->pluck('project')->toArray();
 
@@ -319,7 +319,7 @@ class AffiliatesController extends Controller
         $userProjectModel = new UserProject();
 
         $userProjects = $userProjectModel->where([
-                                                     ['user', auth()->user()->account_owner],
+                                                     ['user', auth()->user()->account_owner_id],
                                                      ['type', 'producer'],
                                                  ])->pluck('project')->toArray();
 
@@ -369,7 +369,7 @@ class AffiliatesController extends Controller
         $affiliationsRequests = DB::table('affiliate_requests as affiliate_request')
                                   ->leftJoin('projects as project', 'project.id', '=', 'affiliate_request.project')
                                   ->whereNull('affiliate_request.deleted_at')
-                                  ->where('affiliate_request.user', auth()->user()->account_owner)
+                                  ->where('affiliate_request.user', auth()->user()->account_owner_id)
                                   ->whereIn('affiliate_request.status', ['pending', 'denied'])
                                   ->select([
                                                'affiliate_request.id',
