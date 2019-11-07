@@ -72,12 +72,12 @@ class TrackingService
                 $productPlanSales->doesntHave('tracking');
             } else {
                 $productPlanSales->whereHas('tracking', function ($query) use ($trackingModel, $filters) {
-                    $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
                 });
                 //tipo da data e periodo obrigatorio
                 $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-                $productPlanSales->doesntHave('tracking')->orWhereHas('trackings', function ($query) use ($dateRange) {
+                $productPlanSales->doesntHave('tracking')->orWhereHas('tracking', function ($query) use ($dateRange, $trackingModel, $filters) {
                     $query->whereBetween('updated_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                    $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
                 });
             }
         }
