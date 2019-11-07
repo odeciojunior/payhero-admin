@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\ActiveCampaignService;
 use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -76,19 +77,28 @@ class ActiveCampaignApiController extends Controller
                         'message' => 'Projeto já integrado',
                     ], 400);
                 }
-                if (empty($data['api_url'])) {
-                    $data['api_url'] = 0;
-                }
-                if (empty($data['api_key'])) {
-                    $data['api_key'] = 0;
+                if (empty($data['api_url']) || empty($data['api_key'])) {
+                    return response()->json([
+                        'message' => 'Ocorreu um erro ao realizar a integração. Campos obrigatórios não informados',
+                    ], 400);
                 }
 
-                $integrationCreated = $activecampaignIntegrationModel->create([
-                    'api_url'    => $data['api_url'],
-                    'api_key'    => $data['api_key'],
-                    'project_id' => $projectId,
-                    'user_id'    => auth()->user()->id,
-                ]);
+                $activecampaignService = new ActiveCampaignService();
+                $activecampaignService->setAccess($data['api_url'], $data['api_key'], 1);
+                $listTest = json_decode($activecampaignService->getLists(), true);
+
+                if(isset($listTest['lists'])) {
+                    $integrationCreated = $activecampaignIntegrationModel->create([
+                        'api_url'    => $data['api_url'],
+                        'api_key'    => $data['api_key'],
+                        'project_id' => $projectId,
+                        'user_id'    => auth()->user()->id,
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'Erro ao realizar a integração. API URL e/ou API Key inválido(s)',
+                    ], 400);
+                }
 
                 if ($integrationCreated) {
                     return response()->json([
@@ -162,30 +172,49 @@ class ActiveCampaignApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $activecampaignIntegrationModel = new ActivecampaignIntegration();
-        $data                           = $request->all();
-        $integrationId                  = current(Hashids::decode($id));
-        $activecampaignIntegration      = $activecampaignIntegrationModel->find($integrationId);
-        if (empty($data['api_url'])) {
-            $data['api_url'] = 0;
-        }
-        if (empty($data['api_key'])) {
-            $data['api_key'] = 0;
-        }
+        try {
+            $activecampaignIntegrationModel = new ActivecampaignIntegration();
+            $data                           = $request->all();
+            $integrationId                  = current(Hashids::decode($id));
+            $activecampaignIntegration      = $activecampaignIntegrationModel->find($integrationId);
+            
+            if (empty($data['api_url']) || empty($data['api_key'])) {
+                return response()->json([
+                    'message' => 'Erro ao atualizar a integração. Campos obrigatórios não informados',
+                ], 400);
+            }
 
-        $integrationUpdated = $activecampaignIntegration->update([
-            'api_url' => $data['api_url'],
-            'api_key' => $data['api_key'],
-        ]);
-        if ($integrationUpdated) {
+            $activecampaignService = new ActiveCampaignService();
+            $activecampaignService->setAccess($data['api_url'], $data['api_key'], $integrationId);
+            $listTest = json_decode($activecampaignService->getLists(), true);
+
+            if(isset($listTest['lists'])) {
+                $integrationUpdated = $activecampaignIntegration->update([
+                    'api_url' => $data['api_url'],
+                    'api_key' => $data['api_key'],
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Erro ao atualizar a integração. API URL e/ou API Key inválido(s)',
+                ], 400);
+            }
+
+            if ($integrationUpdated) {
+                return response()->json([
+                    'message' => 'Integração atualizada com sucesso!',
+                ], 200);
+            }
+
             return response()->json([
-                'message' => 'Integração atualizada com sucesso!',
-            ], 200);
-        }
+                'message' => 'Ocorreu um erro ao atualizar a integração',
+            ], 400);
+        } catch (Exception $e) {
+            report($e);
 
-        return response()->json([
-            'message' => 'Ocorreu um erro ao atualizar a integração',
-        ], 400);
+            return response()->json([
+                'message' => 'Ocorreu um erro ao tentar atualizar a integração!',
+            ], 400);
+        }
     }
 
     /**
