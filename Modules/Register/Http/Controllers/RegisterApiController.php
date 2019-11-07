@@ -47,7 +47,7 @@ class RegisterApiController extends Controller
 
             $user = $userModel->create($requestData);
 
-            $user->update(['account_owner' => $user->id]);
+            $user->update(['account_owner_id' => $user->id]);
 
             $user->assignRole('account_owner');
 
