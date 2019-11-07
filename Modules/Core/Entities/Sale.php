@@ -83,6 +83,7 @@ class Sale extends Model
         'start_date',
         'end_date',
         'gateway_id',
+        'gateway_transaction_id',
         'status',
         'gateway_status',
         'installments_amount',
