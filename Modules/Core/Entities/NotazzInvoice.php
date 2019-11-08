@@ -49,6 +49,7 @@ class NotazzInvoice extends Model
     protected $fillable = [
         'sale_id',
         'notazz_integration_id',
+        'currency_quotation_id',
         'invoice_type',
         'notazz_id',
         'external_id',
