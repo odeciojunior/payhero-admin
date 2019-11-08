@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\UserRegistrationEvent;
 use Modules\Core\Events\BilletPaidEvent;
+use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\UserRegistrationListener;
 use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
@@ -22,6 +23,7 @@ class EventServiceProvider extends ServiceProvider
         BilletPaidEvent::class                                => [
             BilletPaidActiveCampaignListener::class,
             BilletPaidHotZappListener::class,
+            BilletPaidSendEmailListener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',

@@ -61,6 +61,7 @@ class VerifyTrackings extends Command
 
             $sales = $salesModel->with(['productsPlansSale', 'client', 'plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
                 ->where('status', 1)
+                ->whereNotNull('shopify_order')
                 ->orderBy('id', 'desc')
                 ->get();
 
