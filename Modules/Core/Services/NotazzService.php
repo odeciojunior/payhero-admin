@@ -215,9 +215,10 @@ class NotazzService
                                       ]);
 
                 $notazzInvoice->update([
-                                           'attempts'          => $notazzInvoice->attempts + 1,
-                                           'data_json'         => $fields,
-                                           'date_last_attempt' => Carbon::now(),
+                                           'currency_quotation_id' => $lastUsdQuotation->id,
+                                           'attempts'              => $notazzInvoice->attempts + 1,
+                                           'data_json'             => $fields,
+                                           'date_last_attempt'     => Carbon::now(),
                                        ]);
 
                 $result = $this->sendRequest($fields);
