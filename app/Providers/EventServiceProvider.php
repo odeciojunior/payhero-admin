@@ -4,7 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\UserRegistrationEvent;
+use Modules\Core\Events\BilletPaidEvent;
+use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\UserRegistrationListener;
+use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
+use Modules\Core\Listeners\BilletPaidHotZappListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -15,6 +19,11 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         UserRegistrationEvent::class                          => [
             UserRegistrationListener::class,
+        ],
+        BilletPaidEvent::class                                => [
+            BilletPaidActiveCampaignListener::class,
+            BilletPaidHotZappListener::class,
+            BilletPaidSendEmailListener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',
@@ -32,7 +41,6 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\BoletoPaidPusherNotifyUser',
             'Modules\Core\Listeners\BoletoPaidNotifyUser',
             'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
-            // 'Modules\Core\Listeners\BoletoPaidActiveCampaign',
         ],
         'Modules\Core\Events\TrackingCodeUpdatedEvent'        => [
             'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',

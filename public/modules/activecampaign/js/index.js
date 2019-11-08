@@ -25,6 +25,7 @@ $(document).ready(function () {
                     }
                     if (isEmpty(response.integrations)) {
                         $("#no-integration-found").show();
+                        $('#content').html("");
                     } else {
                         $('#content').html("");
                         let integrations = response.integrations;
