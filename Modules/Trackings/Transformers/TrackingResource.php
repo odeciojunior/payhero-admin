@@ -23,7 +23,6 @@ class TrackingResource extends Resource
                 ]
             ];
         }else{
-
             $amount = '';
             //only relations earger loaded
             if($this->sale->relationLoaded('plansSales')) {
@@ -33,15 +32,17 @@ class TrackingResource extends Resource
                     ->where('sale_id', $this->sale_id)
                     ->first();
 
-                if($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
-                    $productPlan = $planSale->plan
-                        ->productsPlans
-                        ->where('product_id', $this->product_id)
-                        ->where('plan_id', $this->plan_id)
-                        ->first();
+                if (isset($planSale)) {
+                    if ($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
+                        $productPlan = $planSale->plan
+                            ->productsPlans
+                            ->where('product_id', $this->product_id)
+                            ->where('plan_id', $this->plan_id)
+                            ->first();
 
-                    if (isset($planSale) && isset($productPlan)) {
-                        $amount = $planSale->amount * $productPlan->amount;
+                        if (isset($productPlan)) {
+                            $amount = $planSale->amount * $productPlan->amount;
+                        }
                     }
                 }
             }
