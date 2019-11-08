@@ -68,23 +68,31 @@
             <div class="card shadow p-20" style='display:block;'>
                 <div class="row justify-content-center">
                     <div class="col">
-                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
-                        <h4 id="total-trackings" class="number text-center text-info"></h4>
+                        <h6 class="text-center text-success" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
+                        <h4 id="total-trackings" class="number text-center text-success"></h4>
                     </div>
                     <div class="col">
-                        <h6 class="text-center text-success"><i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
-                        <h4 id="percentual-delivered" class="number text-center text-success"></h4>
+                        <h6 class="text-center text-info" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> markunread_mailbox </i> Postado</h6>
+                        <h4 id="percentual-posted" class="number text-center text-info"></h4>
                     </div>
                     <div class="col">
-                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
+                        <h6 class="text-center text-info" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
                         <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
                     </div>
                     <div class="col">
-                        <h6 class="text-center text-warning"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
+                        <h6 class="text-center text-info" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> arrow_right_alt </i> Saiu para entrega</h6>
+                        <h4 id="percentual-out" class="number text-center text-info"></h4>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-center text-success" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
+                        <h4 id="percentual-delivered" class="number text-center text-success"></h4>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-center text-warning" style="white-space: nowrap;"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
                         <h4 id="percentual-exception" class="number text-center text-warning"></h4>
                     </div>
                     <div class="col">
-                        <h6 class="text-center text-danger"><i class="material-icons align-middle mr-1" > error </i> Não informado</h6>
+                        <h6 class="text-center text-danger" style="white-space: nowrap;"><i class="material-icons align-middle mr-1" > error </i> Não informado</h6>
                         <h4 id="percentual-unknown" class="number text-center text-danger"></h4>
                     </div>
                 </div>
@@ -201,7 +209,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=2') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=3') }}"></script>
     @endpush
 
 @endsection

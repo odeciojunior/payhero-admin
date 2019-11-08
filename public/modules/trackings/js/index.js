@@ -122,12 +122,11 @@ $(() => {
                 } else {
                     let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = response.data;
 
-                    dispatched += posted;
-                    dispatched += out_for_delivery;
-
                     $('#total-trackings').text(total);
                     $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-posted').text(posted ? posted + ' (' +((posted*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-out').text(out_for_delivery ? out_for_delivery + ' (' +((out_for_delivery*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-unknown').text(unknown ? unknown + ' (' +((unknown*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                 }
