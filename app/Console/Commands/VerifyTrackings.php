@@ -77,7 +77,7 @@ class VerifyTrackings extends Command
                         return json_decode($item->data);
                     })->last();
                 if (isset($postback)) {
-                    $this->line('Postaback encontrado! Verificando dados...');
+                    $this->line('POSTBACK ENCONTRADOOOOOOOOOOOOOOOOOOOOOO! Verificando dados...');
                     $saleProducts = $productService->getProductsBySale($sale);
                     foreach ($postback->fulfillments as $fulfillment) {
                         if (!empty($fulfillment->tracking_number)) {
