@@ -68,7 +68,7 @@ class VerifyTrackings extends Command
             foreach ($sales as $sale) {
                 $this->line('Venda: ' . $sale->id . ' procurando postback...');
                 $postback = PostbackLog::select('data')
-                    ->where('description', 'shopify')
+                    ->where('description', 'shopify-tracking')
                     ->whereRaw('JSON_EXTRACT(data, "$.fulfillments[0].tracking_number") IS NOT NULL')
                     ->whereRaw('JSON_EXTRACT(data, "$.id") = ' . $sale->shopify_order)
                     ->orderBy('id', 'desc')
@@ -77,7 +77,7 @@ class VerifyTrackings extends Command
                         return json_decode($item->data);
                     })->last();
                 if (isset($postback)) {
-                    $this->line('Postaback encontrado! Verificando dados...');
+                    $this->line('POSTBACK ENCONTRADOOOOOOOOOOOOOOOOOOOOOO! Verificando dados...');
                     $saleProducts = $productService->getProductsBySale($sale);
                     foreach ($postback->fulfillments as $fulfillment) {
                         if (!empty($fulfillment->tracking_number)) {

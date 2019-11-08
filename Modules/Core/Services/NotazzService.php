@@ -211,7 +211,7 @@ class NotazzService
                                                                                     'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                                                                 ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
                                           */
-                                          'EXTERNAL_ID'          => $notazzInvoice->external_id, // ID externo do documento que será enviado
+                                          'EXTERNAL_ID'          => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será enviado
                                       ]);
 
                 $notazzInvoice->update([
@@ -375,7 +375,7 @@ class NotazzService
                                               ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa*/
 
                                               'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                              'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será atualizado
+                                              'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será atualizado
                                           ]);
 
                     $result = $this->sendRequest($fields);
@@ -434,7 +434,7 @@ class NotazzService
                                           'METHOD'      => 'consult_nfse',//Método a ser utilizado
                                           'API_KEY'     => $tokenApi,
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será consultado
+                                          'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será consultado
                                       ]);
 
                 $result = $this->sendRequest($fields);
@@ -547,7 +547,7 @@ class NotazzService
                                           'METHOD'      => 'cancel_nfse',//Método a ser utilizado
                                           'API_KEY'     => $tokenApi,
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será cancelado
+                                          'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será cancelado
                                       ]);
 
                 return $this->sendRequest($fields);
@@ -591,7 +591,7 @@ class NotazzService
                                           'METHOD'      => 'delete_nfse',//Método a ser utilizado
                                           'API_KEY'     => $tokenApi,
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será removido
+                                          'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será removido
                                       ]);
 
                 return $this->sendRequest($fields);
@@ -721,7 +721,7 @@ class NotazzService
                                                              'date_pending'          => Carbon::now(),
                                                          ]);
             $notazzInvoice->update([
-                                       'external_id' => $notazzInvoice->id,
+                                       'external_id' => 'cloudfox-'.$notazzInvoice->id,
                                    ]);
 
             if ($notazzInvoice) {
