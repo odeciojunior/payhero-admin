@@ -2,6 +2,7 @@ $(() => {
     // COMPORTAMENTOS DA JANELA
 
     $('#discount_value').mask('00%', {reverse: true});
+    $('#refund_amount').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$ '});
 
     $("#apply_discount").on("click", function () {
         if ($("#div_discount").is(":visible")) {
@@ -132,27 +133,33 @@ $(() => {
 
         switch (sale.status) {
             case 1:
-                status.append("<span class='ml-2 badge badge-success'>Aprovada</span>");
+                status.append("<span class='ml-2 badge badge-success cancel-card' sale='" + sale.id + "' status='Aprovada'>Aprovada</span>");
+                status.append("<button id='btnCancelar' class='ml-2 btn btn-primary cancel-card' sale='" + sale.id + "' hidden>Cancelar</button>");
                 break;
             case 2:
-                status.append("<span class='ml-2 badge badge-pendente'>Pendente</span>");
+                status.append("<span class='ml-2 badge badge-pendente' status='Pendente'>Pendente</span>");
                 break;
             case 3:
-                status.append("<span class='ml-2 badge badge-danger'>Recusada</span>");
+                status.append("<span class='ml-2 badge badge-danger' status='Recusada'>Recusada</span>");
                 break;
             case 4:
-                status.append("<span class='ml-2 badge badge-danger'>Estornada</span>");
+                status.append("<span class='ml-2 badge badge-danger' status='Estornada'>Estornada</span>");
                 break;
             case 6:
-                status.append("<span class='ml-2 badge badge-primary'>Em análise</span>");
+                status.append("<span class='ml-2 badge badge-primary' status='Em análise'>Em análise</span>");
+                break;
+            case 7:
+                status.append("<span class='ml-2 btn btn-primary cancel-card' status='Em Revisão(Revisão Manual)' sale='" + sale.id + "'>Em Revisão(Revisão Manual)</span>");
+                status.append("<button id='btnCancelar' class='ml-2 btn btn-primary cancel-card' sale='" + sale.id + "' hidden>Cancelar</button>");
                 break;
             default:
-                status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
+                status.append("<span class='ml-2 badge badge-primary cancel-card' status='" + sale.status + "'>" + sale.status + "</span>");
                 break;
         }
 
         //Valores
         $("#subtotal-value").html("R$ " + sale.subTotal);
+        $("#refund_amount").val("R$ " + sale.total);
         $("#shipment-value").html("R$ " + sale.shipment_value);
 
         $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
@@ -566,7 +573,7 @@ $(() => {
     });
 
     //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '.btn-notify-trackingcode', function(){
+    $(document).on('click', '.btn-notify-trackingcode', function () {
         let tracking_id = $(this).attr('tracking');
         $.ajax({
             method: "POST",
@@ -581,6 +588,59 @@ $(() => {
             },
             success: () => {
                 alertCustom('success', 'Notificação enviada com sucesso');
+            }
+        });
+    });
+    //Muda o span para cancelar
+    $(document).on({
+            mouseenter: function () {
+                $(this).css('cursor', 'pointer').text('Cancelar');
+                $(this).css("background", "#FF4C52");
+            },
+            mouseleave: function () {
+                var status = $(this).attr('status');
+                $(this).removeAttr("style");
+                $(this).text(status);
+            }
+        }, '.cancel-card'
+    );
+
+    //Carrega o modal para confirar o cancelar da venda
+    $(document).on('click', '.cancel-card', function () {
+
+        let saleId = $(this).attr('sale');
+
+        $('#modal_cancel_sale #bt_cancel').attr('sale', saleId);
+        //
+        $('#modal_cancel_sale').modal('show');
+    });
+
+    //enviar solicitação de cancelamento
+    $('#bt_cancel').on('click', function () {
+        loadingOnScreen();
+        let saleId = $(this).attr('sale');
+        let refundAmount = $('#refund_amount').val();
+        $.ajax({
+            method: "POST",
+            url: "/api/sales/cancel/payment",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                saleId: saleId,
+                refundAmount: refundAmount,
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $(".loading").css("visibility", "hidden");
+                window.location = '/sales';
+                // alertCustom('success', response.success);
             }
         });
     });

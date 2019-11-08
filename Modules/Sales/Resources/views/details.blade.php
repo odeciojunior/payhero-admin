@@ -156,13 +156,13 @@
                         <div id="details-boleto" style="display:none">
             <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
                                                                                    style='cursor:pointer;' link='' title='Copiar link'><i
-                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
                                                                                                           class='copy_link'
                                                                                                           style='cursor:pointer;'
                                                                                                           digitable-line='' title='Copiar link'><i
-                                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
@@ -213,7 +213,34 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=3') }}"></script>
-    @endpush
 </div>
+<!-- Modal regerar boleto-->
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_cancel_sale" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg d-flex justify-content-center">
+        <div class="modal-content w-450" id="conteudo_modal_add">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" style="font-weight: 700;">Estornar Venda</h4>
+            </div>
+            <div class="pt-10 pr-20 pl-20 modal_cancel_sale_body">
+                <div class="row" id="div_discount">
+                    <div class="col-12">
+                        <label id="lavel_refund_amount" for="refund_amount">Valor a ser Estornado</label>
+                        <input id="refund_amount" readonly class="form-control" placeholder="Valor">
+                        <small id="refund_amount">O valor total da venda deve ser estornado.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 15px">
+                <button id="bt_cancel" type="button" class="btn btn-success">Confirmar Estorno?</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+@push('scripts')
+    <script src="{{ asset('/modules/sales/js/detail.js?v=3') }}"></script>
+@endpush

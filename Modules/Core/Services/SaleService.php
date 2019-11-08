@@ -14,6 +14,7 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Presenters\SalePresenter;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -309,5 +310,34 @@ class SaleService
         }
 
         return $productsSale;
+    }
+
+    /**
+     * @param Sale $sale
+     * @param $saleAmount
+     * @param $refundAmount
+     * @param $response
+     * @throws Exception
+     */
+    public function updateSaleRefunded($sale, $saleAmount, $refundAmount, $response)
+    {
+        try {
+            $salePresenter   = new SalePresenter();
+            $responseGateway = $response->response;
+            $status          = $response->status_sale;
+            //            'status'         => 'success',
+            //            'message'        => 'Venda cancelada com sucesso!',
+            //            'status_gateway' => $result['status_gateway'],
+            //            'status_sale'    => $result['status'],
+            //            'response'       => $result['response'],
+            $updateData = array_filter([
+                                           'refunded_amount' => $refundAmount ?? null,
+                                           'status'          => $salePresenter->getStatus($status),
+                                           'gateway_status'  => $response->status_gateway,
+                                       ]);
+            $sale->update($updateData);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 }

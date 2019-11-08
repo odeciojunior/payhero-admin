@@ -22,9 +22,14 @@ Route::group(
             'as'   => 'sales.resume',
             'uses' => 'SalesApiController@resume',
         ]);
+
+        Route::post('/cancel/payment', [
+            'as'   => 'sales.refund',
+            'uses' => 'SalesApiController@cancelPayment',
+        ]);
     }
 );
 
 Route::apiResource('sales', 'SalesApiController')
-    ->only('index', 'show')
-    ->middleware(['auth:api']);
+     ->only('index', 'show')
+     ->middleware(['auth:api']);
