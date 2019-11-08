@@ -338,20 +338,34 @@ class TesteController extends Controller
     public function tgFunction()
     {
         //nada
-
+//dd('xxx');
         $notazInvoiceModel = new NotazzInvoice();
         $nservice          = new NotazzService();
 
-        $invoices = $notazInvoiceModel->get();
+        $invoices = $notazInvoiceModel->where('status','!=',10)->get();
+
+//        $ret = $nservice->consultNfse(2622);
+//        dd($ret);
 
         try {
+            $count = 0;
             foreach ($invoices as $invoice) {
+                if($count > 50)
+                {
+                    break;
+                }
                 $ret = $nservice->deleteNfse($invoice->id);
+                if($ret == false)
+                {
+                    continue;
+                }
 
                 $invoice->update([
+                                           'status'   => 10,
                                            'return_message'   => $ret->statusProcessamento,
                                            'return_http_code' => $ret->codigoProcessamento,
                                        ]);
+                $count = $count + 1;
             }
 
             dd('ok');
