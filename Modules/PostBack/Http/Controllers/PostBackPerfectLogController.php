@@ -69,12 +69,12 @@ class PostBackPerfectLogController extends Controller
                     'tracking_status_enum' => $status,
                 ]);
 
-                if($oldStatus != $status){
+                /*if($oldStatus != $status){
                     //NOTIFICAR O USUARIO
                     $productService = new ProductService();
                     $saleProducts = $productService->getProductsBySale($tracking->sale);
                     event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
-                }
+                }*/
             }
             return response()->json(['message' => 'Postback received']);
         } catch (\Exception $exception){
