@@ -61,6 +61,7 @@ class VerifyTrackings extends Command
 
             $sales = $salesModel->with(['productsPlansSale', 'client', 'plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
                 ->where('status', 1)
+                ->where('owner_id', 19)
                 ->whereNotNull('shopify_order')
                 ->orderBy('id', 'desc')
                 ->get();
@@ -68,7 +69,7 @@ class VerifyTrackings extends Command
             foreach ($sales as $sale) {
                 $this->line('Venda: ' . $sale->id . ' procurando postback...');
                 $postback = PostbackLog::select('data')
-                    ->where('description', 'shopify')
+                    ->where('description', 'shopify-tracking')
                     ->whereRaw('JSON_EXTRACT(data, "$.fulfillments[0].tracking_number") IS NOT NULL')
                     ->whereRaw('JSON_EXTRACT(data, "$.id") = ' . $sale->shopify_order)
                     ->orderBy('id', 'desc')
