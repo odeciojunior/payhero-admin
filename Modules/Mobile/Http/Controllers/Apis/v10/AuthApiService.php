@@ -7,18 +7,24 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Lcobucci\JWT\Parser;
 use stringEncode\Exception;
 
+/**
+ * Class AuthApiService
+ * @package Modules\Mobile\Http\Controllers\Apis\v10
+ */
+class AuthApiService {
 
-class MobileApiService {
-
-    const version = 'v10';
-    private $dashboardApiService;
-
+    /**
+     * AuthApiService constructor.
+     */
     public function __construct() { }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function login(Request $request)
     {
         try {
@@ -35,15 +41,15 @@ class MobileApiService {
             $token = $tokenResult->token;
             $token->save();
 
-//            if (isset($dataRequest['mobile_push_token'])) {
-//                User::where('mobile_push_token', $dataRequest['mobile_push_token'])->update([
-//                    'mobile_push_token' => null
-//                ]);
-//
-//                User::where('id', $user->id)->update([
-//                    'mobile_push_token' => $dataRequest['mobile_push_token']
-//                ]);
-//            }
+            //if (isset($dataRequest['mobile_push_token'])) {
+                //User::where('mobile_push_token', $dataRequest['mobile_push_token'])->update([
+                    //'mobile_push_token' => null
+                //]);
+
+                //User::where('id', $user->id)->update([
+                    //'mobile_push_token' => $dataRequest['mobile_push_token']
+                //]);
+            //}
 
             return response()->json([
                 'access_token' => $tokenResult->accessToken,
@@ -83,48 +89,4 @@ class MobileApiService {
                 'message' => 'Erro ao deslogar'], 400);
         }
     }
-
-    public function getIntegrationApiService($class)
-    {
-        switch ($class) {
-            case 'dashboard':
-                $this->dashboardApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\DashboardApiService");
-                break;
-            default:
-                throw new Exception('Classe inválida.');
-                break;
-        }
-    }
-
-
-    public function dashboardGetValues() {
-        try {
-
-            if (!$this->dashboardApiService) {
-                $this->getIntegrationApiService('dashboard');
-            }
-
-            return $this->dashboardApiService->getValues();
-
-        } catch (Exception $ex) {
-            return response()->json(['status' => 'error',
-                'message' => 'Erro ao deslogar'], 400);
-        }
-    }
-
-    public function dashboardGetTopProducts(Request $request) {
-        try {
-
-            if (!$this->dashboardApiService) {
-                $this->getIntegrationApiService('dashboard');
-            }
-
-            return $this->dashboardApiService->getTopProducts($request);
-
-        } catch (Exception $ex) {
-            return response()->json(['status' => 'error',
-                'message' => 'Erro ao deslogar'], 400);
-        }
-    }
-
 }

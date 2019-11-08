@@ -14,18 +14,25 @@ use Modules\Core\Entities\Plan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-
+/**
+ * Class DashboardApiService
+ * @package Modules\Mobile\Http\Controllers\Apis\v10
+ */
 class DashboardApiService {
 
-    public function __construct() {
+    /**
+     * DashboardApiService constructor.
+     */
+    public function __construct() { }
 
-    }
-
-    public function getTopProducts(Request $request) {
+    /**
+     * @param $projectId
+     * @return JsonResponse
+     */
+    public function getTopProducts($projectId) {
 
         $salesModel = new Sale();
         $planModel  = new Plan();
-        $projectId  = current(Hashids::decode($request->input('project')));
 
         $itens = $salesModel
             ->select(\DB::raw('count(*) as count'), 'plan_sale.plan_id')
@@ -55,24 +62,33 @@ class DashboardApiService {
             $plans[$key]['quantidade'] = $iten['count'];
             unset($plan);
         }
-        return response()->json(['products' => $plans]);
+        return ['products' => $plans];
     }
 
     public function getAccumulated() {
-
+        return [];
     }
 
     public function getMetrics() {
-
+        return [];
     }
 
-    public function getValues() {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDashboardValues(Request $request) {
 
         try {
+            $projectId  = current(Hashids::decode($request->input('project')));
+
             $companies = auth()->user()->companies()->get() ?? collect();
             $values    = $this->getDataValues($companies->first()->id_code ?? null);
+            $products  = $this->getTopProducts($projectId);
+            $metrics   = $this->getMetrics();
+            $chart     = $this->getAccumulated();
 
-            return response()->json(compact('companies', 'values'), 200);
+            return response()->json(compact('companies', 'values', 'products', 'metrics', 'chart'), 200);
 
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da dashboard (DashboardApiController - index)');

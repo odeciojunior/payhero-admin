@@ -14,9 +14,14 @@ class MobileController extends Controller
     /**
      * @var IntegrationService
      */
-    private $mobileApiService;
+    private $integrationApiService;
 
 
+    /**
+     * MobileController constructor.
+     * @param Request $request
+     * @throws Exception
+     */
     public function __construct(Request $request)
     {
         $version = $request->route('version');
@@ -28,30 +33,34 @@ class MobileController extends Controller
         }
     }
 
-
+    /**
+     * @param $version
+     * @return mixed|IntegrationService
+     * @throws Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function getMobileApiService($version)
     {
-        if (!$this->mobileApiService) {
-
+        if (!$this->integrationApiService) {
             switch ($version) {
                 case 'v10':
-                    $this->mobileApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". $version ."\MobileApiService");
+                    $this->integrationApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". $version ."\IntegrationApiService");
                     break;
                 default:
                     throw new Exception('Versão inválida.');
                     break;
             }
         }
-
-        return $this->mobileApiService;
+        return $this->integrationApiService;
     }
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request) {
-
         try {
             $dataRequest = $request->json()->all();
-
             $validator = Validator::make($dataRequest, [
                 'email'             => 'required|string|email',
                 'password'          => 'required|string',
@@ -64,7 +73,7 @@ class MobileController extends Controller
                 ], 400);
             }
 
-            return $this->mobileApiService->login($request);
+            return $this->integrationApiService->login($request);
 
         } catch (Exception $ex) {
             report($ex);
@@ -75,11 +84,12 @@ class MobileController extends Controller
         }
     }
 
-    public function dashboardGetValues() {
-
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function dashboardGetData(Request $request) {
         try {
-
-            return $this->mobileApiService->dashboardGetValues();
+            return $this->integrationApiService->dashboardGetData($request);
 
         } catch (Exception $ex) {
             report($ex);
@@ -90,11 +100,9 @@ class MobileController extends Controller
         }
     }
 
-    public function dashboardGetTopProducts(Request $request) {
-
+    public function financeGetData() {
         try {
-
-            return $this->mobileApiService->dashboardGetTopProducts($request);
+            return $this->integrationApiService->financeGetData();
 
         } catch (Exception $ex) {
             report($ex);
