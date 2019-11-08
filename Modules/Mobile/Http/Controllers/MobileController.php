@@ -8,6 +8,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use stringEncode\Exception;
 
+/**
+ * Class MobileController
+ * @package Modules\Mobile\Http\Controllers
+ */
 class MobileController extends Controller
 {
     const lastVersion = 'v10';
@@ -21,6 +25,7 @@ class MobileController extends Controller
      * MobileController constructor.
      * @param Request $request
      * @throws Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __construct(Request $request)
     {
@@ -100,9 +105,13 @@ class MobileController extends Controller
         }
     }
 
-    public function financeGetData() {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function financeGetData(Request $request) {
         try {
-            return $this->integrationApiService->financeGetData();
+            return $this->integrationApiService->financeGetData($request);
 
         } catch (Exception $ex) {
             report($ex);

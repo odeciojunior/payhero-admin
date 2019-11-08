@@ -30,6 +30,6 @@ Route::group(
     function() {
 
         Route::post('/{version}/dashboard', 'MobileController@dashboardGetData');
-        //Route::post('/{version}/dashboard', 'MobileController@dashboardGetTopProducts');
+        Route::post('/{version}/finance', 'MobileController@financeGetData');
     }
 );

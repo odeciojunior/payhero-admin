@@ -82,7 +82,7 @@ class IntegrationApiService {
                 $this->authApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\AuthApiService");
                 break;
             case 'finance':
-                $this->financeApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\AuthApiService");
+                $this->financeApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\FinanceApiService");
                 break;
             default:
                 throw new Exception('Classe inválida.');
@@ -109,14 +109,19 @@ class IntegrationApiService {
         }
     }
 
-    public function financeGetData() {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function financeGetData(Request $request) {
         try {
 
             if (!$this->financeApiService) {
                 $this->getIntegrationApiService('finance');
             }
 
-            return $this->financeApiService->getFinanceData();
+            return $this->financeApiService->financeGetData($request);
 
         } catch (Exception $ex) {
             return response()->json(['status' => 'error',

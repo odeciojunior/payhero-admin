@@ -91,7 +91,7 @@ class DashboardApiService {
             return response()->json(compact('companies', 'values', 'products', 'metrics', 'chart'), 200);
 
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da dashboard (DashboardApiController - index)');
+            Log::warning('Erro ao buscar dados da dashboard (DashboardApiService - index)');
             report($e);
 
             return response()->json([
