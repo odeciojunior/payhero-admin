@@ -37,10 +37,11 @@ class PostBackNotazzController extends Controller
                                           'description' => 'notazz',
                                       ]);
 
-            if (!empty($requestData["id"])) {
+            if (!empty($requestData["external_id"])) {
                 //hash ok
-                $notazzInvoice = $notazzInvoiceModel->where('notazz_id', $requestData["id"])
-                                                    ->first();
+                $externalId = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
+                $notazzInvoice = $notazzInvoiceModel->find($externalId);
+
                 if ($notazzInvoice) {
                     switch ($requestData["statusNota"]) {
                         case 'Autorizada':
