@@ -9,12 +9,11 @@ class AlterTableTrackings extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
-        Schema::table('trackings', function (Blueprint $table) {
+        Schema::table('trackings', function(Blueprint $table) {
 
             $table->dropForeign(['plans_sale_id']);
 
@@ -31,7 +30,7 @@ class AlterTableTrackings extends Migration
             $table->integer('tracking_status_enum')->after('tracking_code');
         });
 
-        Schema::table('trackings', function (Blueprint $table) {
+        Schema::table('trackings', function(Blueprint $table) {
             $table->integer('amount')->nullable()->change();
         });
 
@@ -45,12 +44,11 @@ class AlterTableTrackings extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
-        Schema::table('trackings', function (Blueprint $table) {
+        Schema::table('trackings', function(Blueprint $table) {
 
             $table->dropForeign(['sale_id']);
             $table->dropForeign(['product_id']);

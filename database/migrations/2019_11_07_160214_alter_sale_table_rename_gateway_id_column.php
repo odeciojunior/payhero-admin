@@ -14,7 +14,7 @@ class AlterSaleTableRenameGatewayIdColumn extends Migration
     {
         Schema::table('sales', function(Blueprint $table) {
             $table->renameColumn('gateway_id', 'gateway_transaction_id');
-            $table->unsignedBigInteger('gateway_id')->index();
+            $table->unsignedBigInteger('gateway_id')->nullable()->index();
         });
 
         Schema::table('sales', function(Blueprint $table) {

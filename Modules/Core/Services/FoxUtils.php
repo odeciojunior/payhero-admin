@@ -4,7 +4,9 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -179,7 +181,8 @@ class FoxUtils
         return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
     }
 
-    public static function removeSpecialChars($string){
+    public static function removeSpecialChars($string)
+    {
 
         return preg_replace('/[^\x00-\x7F]+/', "", $string);
     }
@@ -203,5 +206,27 @@ class FoxUtils
         }
 
         return false;
+    }
+
+    /**
+     * @param $value
+     * @param string $type
+     * @return string|null
+     * @description encrypt/
+     */
+    public static function cipherEncrypt($value, $type = "encrypt")
+    {
+        $customKey = getenv("CUSTOM_CRYPT_KEY", null);
+        if (self::isEmpty($customKey)) {
+            return null;
+        }
+        $encrypter = new Encrypter($customKey, Config::get('app.cipher'));
+        if ($type == "decrypt") {
+            return $encrypter->decrypt($value);
+        } else {
+            return $encrypter->encrypt($value);
+        }
+
+        return null;
     }
 }
