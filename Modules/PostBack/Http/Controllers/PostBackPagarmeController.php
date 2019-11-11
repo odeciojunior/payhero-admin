@@ -168,9 +168,7 @@ class PostBackPagarmeController extends Controller
                 //     Log::warning('Erro ao enviar lead para ActiveCampaign na venda ' . $sale->id);
                 //     report($e);
                 // }
-            }
-
-            elseif ($requestData['transaction']['status'] == 'chargedback') {
+            } else if ($requestData['transaction']['status'] == 'chargedback') {
                 $sale->update([
                                   'gateway_status' => 'chargedback',
                                   'status'         => '4',
@@ -217,8 +215,7 @@ class PostBackPagarmeController extends Controller
                                              'status' => 'chargedback',
                                          ]);
                 }
-            }
-            elseif ($requestData['transaction']['status'] == 'refunded') {
+            } else if ($requestData['transaction']['status'] == 'refunded') {
                 $sale->update([
                                   'gateway_status' => 'refunded',
                                   'status'         => '7',
@@ -243,8 +240,7 @@ class PostBackPagarmeController extends Controller
                         $company->update([
                                              'balance' => $company->balance -= $transaction->value,
                                          ]);
-                    }
-                    else if ($transaction->status == 'anticipated') {
+                    } else if ($transaction->status == 'anticipated') {
 
                         $company = $companyModel->find($transaction->company_id);
 
@@ -266,8 +262,7 @@ class PostBackPagarmeController extends Controller
                                              'status' => 'refunded',
                                          ]);
                 }
-            }
-            else {
+            } else {
                 $sale->update([
                                   'gateway_status' => $requestData['transaction']['status'],
                               ]);

@@ -217,16 +217,17 @@
                         <i class="material-icons md-16">close</i>
                     </a>
                 </div>
-                <div class='my-20 mx-20'>
+                <div class='my-20 mx-20 text-center'>
                     <h3 class="black"> Você tem certeza? </h3>
                     <p class="gray"> Apó confirmada, essa operação não poderá ser desfeita!</p>
+                    <small>OBS: Taxa de R$ 1,00 por estorno</small>
                 </div>
                 <div class="modal-footer">
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
                     </a>
                     <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" data-dismiss="modal">
-                        <i class="material-icons btn-fix"> save </i> Salvar
+                        Estornar
                     </button>
                 </div>
             </div>

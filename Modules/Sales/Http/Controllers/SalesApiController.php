@@ -9,7 +9,10 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\SaleService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
@@ -265,8 +268,11 @@ class SalesApiController extends Controller
     public function refund($transactionId)
     {
         try {
-            $saleModel = new Sale();
-            $saleId    = current(Hashids::connection('sale_id')->decode($transactionId));
+            $saleModel        = new Sale();
+            $transferModel    = new Transfer();
+            $companyModel     = new Company();
+            $transactionModel = new Transaction();
+            $saleId           = current(Hashids::connection('sale_id')->decode($transactionId));
             if (!empty($saleId)) {
                 if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
                     $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
@@ -278,6 +284,18 @@ class SalesApiController extends Controller
                 $refundedTransaction = $pagarmeClient->transactions()->refund([
                                                                                   'id' => $sale->gateway_id,
                                                                               ]);
+
+                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
+                                                  ->first();
+                $transferModel->create([
+                                           'transaction_id' => $transaction->id,
+                                           'user_id'        => auth()->user()->account_owner_id,
+                                           'value'          => 100,
+                                           'type'           => 'out',
+                                           'reason'         => 'Taxa de estorno',
+                                           'company_id'     => $transaction->company_id,
+                                       ]);
                 if (!empty($refundedTransaction)) {
                     return response()->json(['message' => 'Transação estornada, aguarde alguns instantes para atualizar o status'], 200);
                 } else {
