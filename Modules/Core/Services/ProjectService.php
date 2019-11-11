@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
@@ -219,10 +220,14 @@ class ProjectService
                         }
                     }
                 }
+
                 //remover integração do shopify
-                $this->getShopifyIntegration()
-                     ->where('project_id', $project->id)
-                     ->delete();
+                $shopifyIntegration = $this->getShopifyIntegration()
+                     ->where('project_id', $project->id);
+
+                if(!empty($shopifyIntegration)){
+                    $shopifyIntegration->delete();
+                }
 
                 $products = Product::where('project_id', $project->id)->get();
 
@@ -230,8 +235,16 @@ class ProjectService
                     $product->update([
                                          'shopify_variant_id' => '',
                                          'shopify_id'         => '',
+                                     ]); 
+                }
 
-                                     ]);
+                $plans = Plan::where('project_id', $project->id)->get();
+
+                foreach ($plans as $plan) {
+                    $plan->update([
+                                    'shopify_variant_id' => '',
+                                    'shopify_id'         => '',
+                                ]); 
                 }
 
                 $projectUpdated = $project->update([
