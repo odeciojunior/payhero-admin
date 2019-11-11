@@ -26,6 +26,8 @@ class TransfersResource extends Resource
             $reason = 'Chargeback #';
         } else if (empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
+        } else if (!empty($this->transaction) && $this->reason == 'refunded') {
+            $reason = 'Estorno da transação #';
         } else {
             $reason = $this->reason;
         }
