@@ -790,6 +790,7 @@ class ShopifyService
             $product = $productModel->with('productsPlans')
                                     ->where('shopify_id', $storeProduct->getId())
                                     ->where('shopify_variant_id', $variant->getId())
+                                    ->where('project_id', $projectId)
                                     ->first();
             if ($product) {
 
