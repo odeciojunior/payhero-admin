@@ -69,6 +69,7 @@ class VerifyTrackings extends Command
                 $this->line('Venda: ' . $sale->id . ' procurando postback...');
                 $postback = PostbackLog::select('data')
                     ->where('description', 'shopify-tracking')
+                    ->where('id', '>', 25000)
                     ->whereRaw('JSON_EXTRACT(data, "$.fulfillments[0].tracking_number") IS NOT NULL')
                     ->whereRaw('JSON_EXTRACT(data, "$.id") = ' . $sale->shopify_order)
                     ->orderBy('id', 'desc')
