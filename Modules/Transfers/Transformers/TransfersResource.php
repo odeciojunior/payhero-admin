@@ -21,11 +21,13 @@ class TransfersResource extends Resource
                                                                                                                                           ->format('d/m/Y') . ')';
         }
         if (!empty($this->transaction) && empty($this->reason)) {
-            $reason = 'Transação #';
+            $reason = 'Transação';
         } else if (!empty($this->transaction) && $this->reason == 'chargedback') {
-            $reason = 'Chargeback #';
+            $reason = 'Chargeback';
         } else if (empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
+        } else if (!empty($this->transaction) && $this->reason == 'refunded') {
+            $reason = 'Estorno da transação';
         } else {
             $reason = $this->reason;
         }

@@ -107,10 +107,13 @@ $(() => {
                 status.append("<span class='ml-2 badge badge-danger'>Recusada</span>");
                 break;
             case 4:
-                status.append("<span class='ml-2 badge badge-danger'>Estornada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Chargeback</span>");
                 break;
             case 6:
                 status.append("<span class='ml-2 badge badge-primary'>Em análise</span>");
+                break;
+            case 7:
+                status.append("<span class='ml-2 badge badge-danger'>Estornado</span>");
                 break;
             default:
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
@@ -169,6 +172,12 @@ $(() => {
         $('#checkout-attempts').hide();
         if (sale.payment_method === 1) {
             $('#checkout-attempts').text('Quantidade de tentativas: ' + sale.attempts).show();
+        }
+
+        if (sale.payment_method == 1 && sale.status == 1) {
+            $('#div_refund_transaction').html('<button class="btn btn-secondary btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
+        } else {
+            $('#div_refund_transaction').html('');
         }
     }
 
@@ -372,12 +381,12 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                renderProducts(response.data);
+                renderProducts(response.data, sale);
             }
         });
     }
 
-    function renderProducts(products) {
+    function renderProducts(products, sale) {
         $("#table-product").html('');
         $('#data-tracking-products').html('');
         let div = '';
@@ -404,23 +413,25 @@ $(() => {
                 let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                                    <span class='small ellipsis d-inline-block'>${value.name}</span>
+                                    <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
                                 </td>
                                 <td>
-                                    ${
-                                        value.tracking_code
-                                        ? `<span class="font-weight-bold">${value.tracking_code}</span>` 
-                                        : `<span class="small">Não informado</span>`
-                                    }
+                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' readonly style="border-color: transparent; background-color: transparent;"/>
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
+                                <td class="text-center" style="padding: 0 !important;">
+                                    <a class='pointer btn-save-trackingcode' title='Salvar alterações' sale='${sale}' 
+                                    product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                    <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente' tracking="${value.tracking_id}"
+                                    style='margin-left: 10px; ${value.tracking_code ? '' : 'display:none;'}'><i class='icon wb-envelope' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
+                                </td>
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
                 $('#data-tracking-products').append(data);
-                $('#div_tracking_code .btn-notify-trackingcode').attr('tracking', value.tracking_id);
-
             } else {
                 $('#div_tracking_code').css('display', 'none');
             }
@@ -504,6 +515,34 @@ $(() => {
             success: () => {
                 alertCustom('success', 'Notificação enviada com sucesso');
             }
+        });
+    });
+
+    //Estornar venda
+    $(document).on('click', '.btn_refund_transaction', function () {
+        var sale = $(this).attr('sale');
+        $('#modal-refund-transaction').modal('show');
+        $('#modal_detalhes').modal('hide');
+
+        $(document).on('click', '.btn-confirm-refund-transaction', function () {
+            $.ajax({
+                method: "POST",
+                url: '/api/sales/refund/' + sale,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    $.getScript('/modules/sales/js/index.js?v=2', function () {
+                        atualizar();
+                    });
+                    alertCustom('success', response.message);
+                }
+            });
         });
     });
 
