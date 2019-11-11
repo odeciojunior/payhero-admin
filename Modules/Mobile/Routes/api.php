@@ -31,5 +31,6 @@ Route::group(
 
         Route::post('/{version}/dashboard', 'MobileController@dashboardGetData');
         Route::post('/{version}/finance', 'MobileController@financeGetData');
+        Route::post('/{version}/finance/withdraw', 'MobileController@fincanceWithdraw');
     }
 );

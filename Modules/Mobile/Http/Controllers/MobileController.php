@@ -122,4 +122,20 @@ class MobileController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function financeWithdraw(Request $request) {
+        try {
+            return $this->integrationApiService->financeWithdraw($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
 }
