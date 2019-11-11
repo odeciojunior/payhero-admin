@@ -211,22 +211,35 @@ class FoxUtils
     /**
      * @param $value
      * @param string $type
-     * @return string|null
-     * @description encrypt/
+     * @return null
      */
-    public static function cipherEncrypt($value, $type = "encrypt")
+    public static function xorEncrypt($value, $type = "encrypt")
     {
         $customKey = getenv("CUSTOM_CRYPT_KEY", null);
         if (self::isEmpty($customKey)) {
             return null;
         }
-        $encrypter = new Encrypter($customKey, Config::get('app.cipher'));
         if ($type == "decrypt") {
-            return $encrypter->decrypt($value);
-        } else {
-            return $encrypter->encrypt($value);
+            $value = base64_decode($value);
+        }
+        $valueLength     = strlen($value);
+        $customKeyLength = strlen($customKey);
+        for ($i = 0; $i < $valueLength; $i++) {
+            for ($j = 0; $j < $customKeyLength; $j++) {
+                if ($type == "decrypt") {
+                    $value[$i] = $customKey[$j] ^ $value[$i];
+                } else {
+                    $value[$i] = $value[$i] ^ $customKey[$j];
+                }
+            }
         }
 
-        return null;
+        $result = $value;
+
+        if ($type == "encrypt") {
+            $result = base64_encode($value);
+        }
+
+        return $result;
     }
 }
