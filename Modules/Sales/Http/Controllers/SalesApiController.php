@@ -296,6 +296,9 @@ class SalesApiController extends Controller
                                            'reason'         => 'Taxa de estorno',
                                            'company_id'     => $transaction->company_id,
                                        ]);
+                $transaction->company->update([
+                                                  'balance' => $transaction->company->balance -= 100,
+                                              ]);
                 if (!empty($refundedTransaction)) {
                     return response()->json(['message' => 'Transação estornada, aguarde alguns instantes para atualizar o status'], 200);
                 } else {
