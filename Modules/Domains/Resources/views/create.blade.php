@@ -6,7 +6,7 @@
             <div class="form-group">
                 <label for="name">Domínio</label>
                 <input name="name" type="text" class="input-pad fildName"
-                       id="name" placeholder="Digite o domínio">
+                       id="name" placeholder="seudominio.com">
             </div>
         </div>
     </form>
