@@ -2,64 +2,124 @@
 
 namespace Modules\Mobile\Http\Controllers;
 
-use App\Exceptions\Apis\Integrations\IntegrationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use stringEncode\Exception;
 
+/**
+ * Class MobileController
+ * @package Modules\Mobile\Http\Controllers
+ */
 class MobileController extends Controller
 {
-    const lastVersion = 'v1';
-    private $version = 'v10';
+    const lastVersion = 'v10';
     /**
      * @var IntegrationService
      */
-    private $mobileApiService;
+    private $integrationApiService;
 
 
+    /**
+     * MobileController constructor.
+     * @param Request $request
+     * @throws Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function __construct(Request $request)
     {
-        $this->version = $request->route('version');
+        $version = $request->route('version');
 
-//        if ($this->version) {
-//            $this->getMobileApiService($this->version);
-//        } else {
-//            $this->getMobileApiService(self::lastVersion);
-//        }
+        if ($version) {
+            $this->getMobileApiService($version);
+        } else {
+            $this->getMobileApiService(self::lastVersion);
+        }
     }
 
-
+    /**
+     * @param $version
+     * @return mixed|IntegrationService
+     * @throws Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function getMobileApiService($version)
     {
-        if (!$this->mobileApiService) {
-
+        if (!$this->integrationApiService) {
             switch ($version) {
-                case 'v1':
-                    //$this->mobileApiService = app()->make('App\Http\Controllers\Apis\Integrations\v10\IntegrationService');
+                case 'v10':
+                    $this->integrationApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". $version ."\IntegrationApiService");
                     break;
                 default:
-                    throw new IntegrationException('Versão invalida.');
+                    throw new Exception('Versão inválida.');
                     break;
             }
         }
-
-        return $this->integrationService;
+        return $this->integrationApiService;
     }
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request) {
-
         try {
-            $loginClassPath = "Modules\Mobile\Http\Controllers\AuthApiController"; //"Modules\Mobile\Http\Controllers\Apis\\". $this->version ."\AuthApiController";
-            $authController = app()->make($loginClassPath);
+            $dataRequest = $request->json()->all();
+            $validator = Validator::make($dataRequest, [
+                'email'             => 'required|string|email',
+                'password'          => 'required|string',
+                //'mobile_push_token' => 'sometimes|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => 'Invalid Data',
+                ], 400);
+            }
+
+            return $this->integrationApiService->login($request);
 
         } catch (Exception $ex) {
-            throw new Exception('Versão inválida.');
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
         }
+    }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function dashboardGetData(Request $request) {
+        try {
+            return $this->integrationApiService->dashboardGetData($request);
 
-        return $authController->login($request);
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function financeGetData(Request $request) {
+        try {
+            return $this->integrationApiService->financeGetData($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
     }
 
 }

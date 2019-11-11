@@ -17,16 +17,20 @@ $(document).ready(function () {
     });
 
     function updateForm() {
+        // var options = {
+        //     onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
+        //         var masks = ['000.000.000-00', '00.000.000/0000-00'];
+        //         var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
+        //         $('#brazil_company_document').mask(mask, options);
+        //     }
+        // };
         var options = {
-            onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
+            onKeyPress: function (cpf, ev, el, op) {
                 var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-                $('#brazil_company_document').mask(mask, options);
+                $('#brazil_company_document').mask((cpf.length > 14) ? masks[1] : masks[0], op);
             }
-        };
-
-        $('#brazil_company_document').mask('000.000.000-000', options);
-
+        }
+        $('#brazil_company_document').length > 11 ? $('#brazil_company_document').mask('00.000.000/0000-00', options) : $('#brazil_company_document').mask('000.000.000-00#', options);
     }
 
     $("#create_form").on("submit", function (event) {

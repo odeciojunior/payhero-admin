@@ -39,44 +39,53 @@ class PostBackNotazzController extends Controller
 
             if (!empty($requestData["external_id"])) {
                 //hash ok
-                $externalId = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
+                $externalId    = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
                 $notazzInvoice = $notazzInvoiceModel->find($externalId);
 
                 if ($notazzInvoice) {
                     switch ($requestData["statusNota"]) {
                         case 'Autorizada':
-                            $notazzInvoice->update([
-                                                       'xml'            => $requestData["xml"],
-                                                       'pdf'            => $requestData["pdf"],
-                                                       'status'         => $notazzInvoiceModel->present()
-                                                                                              ->getStatus('completed'),
-                                                       'date_completed' => Carbon::now()->toDateTime(),
-                                                   ]);
+                            if (in_array($notazzInvoice->status, [1, 2])) {
+
+                                $notazzInvoice->update([
+                                                           'xml'            => $requestData["xml"],
+                                                           'pdf'            => $requestData["pdf"],
+                                                           'status'         => $notazzInvoiceModel->present()
+                                                                                                  ->getStatus('completed'),
+                                                           'date_completed' => Carbon::now()->toDateTime(),
+                                                       ]);
+                            }
 
                             return response()->json([
                                                         'message' => 'sucesso',
                                                     ], 200);
+
                             break;
                         case 'Cancelada':
-                            $notazzInvoice->update([
-                                                       'xml'           => $requestData["xml"],
-                                                       'pdf'           => $requestData["pdf"],
-                                                       'status'        => $notazzInvoiceModel->present()
-                                                                                             ->getStatus('canceled'),
-                                                       'date_canceled' => Carbon::now()->toDateTime(),
-                                                   ]);
+                            if (in_array($notazzInvoice->status, [3])) {
+
+                                $notazzInvoice->update([
+                                                           'xml'           => $requestData["xml"],
+                                                           'pdf'           => $requestData["pdf"],
+                                                           'status'        => $notazzInvoiceModel->present()
+                                                                                                 ->getStatus('canceled'),
+                                                           'date_canceled' => Carbon::now()->toDateTime(),
+                                                       ]);
+                            }
 
                             return response()->json([
                                                         'message' => 'sucesso',
                                                     ], 200);
                             break;
                         case 'Rejeitada':
-                            $notazzInvoice->update([
-                                                       'status'           => $notazzInvoiceModel->present()
-                                                                                                ->getStatus('rejected'),
-                                                       'date_rejected'    => Carbon::now()->toDateTime(),
-                                                       'postback_message' => $requestData['motivoStatus'],
-                                                   ]);
+                            if (in_array($notazzInvoice->status, [1, 2])) {
+                                $notazzInvoice->update([
+                                                           'status'           => $notazzInvoiceModel->present()
+                                                                                                    ->getStatus('rejected'),
+                                                           'date_rejected'    => Carbon::now()->toDateTime(),
+                                                           'postback_message' => $requestData['motivoStatus'],
+                                                       ]);
+                            }
 
                             return response()->json([
                                                         'message' => 'sucesso',

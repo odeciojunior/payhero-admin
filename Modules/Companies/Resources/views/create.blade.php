@@ -38,7 +38,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/create.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/companies/js/create.js?v=2') }}"></script>
     @endpush
 
 @endsection

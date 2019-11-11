@@ -338,56 +338,52 @@ class TesteController extends Controller
     public function tgFunction()
     {
         //nada
-//dd('xxx');
-//        $notazInvoiceModel = new NotazzInvoice();
-//        $nservice          = new NotazzService();
-//
-//        $ret = $nservice->consultNfse(1581);
-//        dd($ret);
+        dd('nada');
+        //$notazInvoiceModel = new NotazzInvoice();
+        //$nservice          = new NotazzService();
 
+        //$ret = $nservice->deleteNfse(123);
+        //dd($ret);
 
-/*----------------------------------------------------------------------------
-        $notazInvoiceModel = new NotazzInvoice();
-        $nservice          = new NotazzService();
+        /*----------------------------------------------------------------------------
+                $notazInvoiceModel = new NotazzInvoice();
+                $nservice          = new NotazzService();
 
-        $invoices = $notazInvoiceModel->where('status','!=',5)->get();
+                $invoices = $notazInvoiceModel->where('status','!=',5)->get();
 
-        //        $ret = $nservice->consultNfse(2622);
-        //        dd($ret);
+                //        $ret = $nservice->consultNfse(2622);
+                //        dd($ret);
 
-        try {
-            $count = 0;
-            foreach ($invoices as $invoice) {
-                if($count > 90)
-                {
-                    break;
+                try {
+                    $count = 0;
+                    foreach ($invoices as $invoice) {
+                        if($count > 90)
+                        {
+                            break;
+                        }
+                        $ret = $nservice->deleteNfse($invoice->id);
+                        if($ret == false)
+                        {
+                            continue;
+                        }
+
+                        $invoice->update([
+                                             'status'   => 5,
+                                             'return_message'   => $ret->statusProcessamento,
+                                             'return_http_code' => $ret->codigoProcessamento,
+                                         ]);
+                        $count = $count + 1;
+                    }
+
+                    dd('ok');
+
+                } catch (Exception $ex) {
+                    dd($ex);
                 }
-                $ret = $nservice->deleteNfse($invoice->id);
-                if($ret == false)
-                {
-                    continue;
-                }
 
-                $invoice->update([
-                                     'status'   => 5,
-                                     'return_message'   => $ret->statusProcessamento,
-                                     'return_http_code' => $ret->codigoProcessamento,
-                                 ]);
-                $count = $count + 1;
-            }
+                dd('fim');
 
-            dd('ok');
-
-        } catch (Exception $ex) {
-            dd($ex);
-        }
-
-        dd('fim');
-
-        -------------------------------------------------------------------------------*/
-
-
-
+                -------------------------------------------------------------------------------*/
 
         //$nservice->createInvoice(4,3533,1 );
         //dd($nservice->consultNfse('1afe5fa65bf25a023df701e99a64962f'));
