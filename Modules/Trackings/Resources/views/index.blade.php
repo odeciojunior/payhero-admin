@@ -102,7 +102,7 @@
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
-                    <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
+                    <table id="tabela_trackings" class="table-trackings table unify" style="">
                         <thead>
                         <tr>
                             <td class="table-title">Venda</td>

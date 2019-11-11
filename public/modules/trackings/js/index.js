@@ -195,7 +195,10 @@ $(() => {
             },
             success: response => {
                 $('#dados_tabela').html('');
-                $('#tabela_trackings').addClass('table-striped');
+
+                let grayRow = false;
+                let lastSale = '';
+
                 if (isEmpty(response.data)) {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
                 } else {
@@ -220,30 +223,41 @@ $(() => {
                                 break;
                         }
 
-                        let dados = `<tr>
-                                     <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>
-                                     <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
-                                     <td class="td-status">
-                                        <span class="badge badge-${badge}">${tracking.tracking_status}</span>
-                                     </td>
-                                     <td>
-                                        <input class="form-control fake-label" readonly value="${tracking.tracking_code}">
-                                     </td>
-                                     <td style="min-width: 100px; text-align: center">
-                                        <a class='tracking-save pointer mr-10' product='${tracking.product.id}'
-                                         sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
-                                     ${ tracking.tracking_status_enum
-                                        ? `<a class='tracking-edit pointer mr-10'><i class='material-icons gradient'>edit</i></a>
-                                           <a class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
-                                        : `<a class='tracking-add pointer'><i class='material-icons gradient'>add_circle</i></a>`
-                                     }
-                                       <a class='tracking-close pointer' style="display:none"><i class='material-icons gradient'>close</i></a>
-                                    </td>
+                        if(lastSale !==  tracking.sale){
+                            grayRow = !grayRow;
+                        }
+
+                        let dados = `<tr ${grayRow ? 'class="td-odd"' : ''}>
+                                         ${
+                                            lastSale !== tracking.sale
+                                            ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>` 
+                                            : `<td></td>`
+                                         }
+                                         <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
+                                         <td class="td-status">
+                                            <span class="badge badge-${badge}">${tracking.tracking_status}</span>
+                                         </td>
+                                         <td>
+                                            <input class="form-control font-weight-bold fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+                                         </td>
+                                         <td style="min-width: 100px; text-align: right">
+                                            <a class='tracking-save pointer mr-10' product='${tracking.product.id}'
+                                             sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
+                                         ${ tracking.tracking_status_enum
+                                            ? `<a class='tracking-edit pointer mr-10'><i class='material-icons gradient'>edit</i></a>
+                                               <a class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                            : `<a class='tracking-add pointer'><i class='material-icons gradient'>add_circle</i></a>`
+                                         }
+                                           <a class='tracking-close pointer' style="display:none"><i class='material-icons gradient'>close</i></a>
+                                        </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
+
+                        lastSale = tracking.sale;
                     });
 
                     pagination(response, 'trackings', index);
+                    $('#tabela_trackings').removeClass('table-striped');
                 }
             }
         });
