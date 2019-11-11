@@ -87,6 +87,8 @@ class SalePresenter extends Presenter
                     return 'canceled';
                 case 6:
                     return 'in_proccess';
+                case 7:
+                    return 'refunded';
                 case 10:
                     return 'system_error';
             }
@@ -106,6 +108,8 @@ class SalePresenter extends Presenter
                     return 5;
                 case 'in_proccess':
                     return 6;
+                case 'refunded':
+                    return 7;
                 case 'system_error':
                     return 10;
             }

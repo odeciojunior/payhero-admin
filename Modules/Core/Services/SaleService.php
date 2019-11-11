@@ -82,7 +82,7 @@ class SaleService
         }
 
         if (empty($filters['status'])) {
-            $status = [1, 2, 4, 6];
+            $status = [1, 2, 4, 6, 7];
         } else {
             $status = [$filters["status"]];
         }

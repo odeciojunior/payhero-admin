@@ -71,7 +71,7 @@ $(() => {
             backgroundColor: 'transparent'
         }).prop('readonly', true);
         btnEdit.show('fast');
-        if(trackingInput.val() !== ''){
+        if (trackingInput.val() !== '') {
             btnNotify.show('fast');
         }
     });
@@ -143,10 +143,13 @@ $(() => {
                 status.append("<span class='ml-2 badge badge-danger'>Recusada</span>");
                 break;
             case 4:
-                status.append("<span class='ml-2 badge badge-danger'>Estornada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Chargeback</span>");
                 break;
             case 6:
                 status.append("<span class='ml-2 badge badge-primary'>Em análise</span>");
+                break;
+            case 7:
+                status.append("<span class='ml-2 badge badge-danger'>Estornado</span>");
                 break;
             default:
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
@@ -205,6 +208,12 @@ $(() => {
         $('#checkout-attempts').hide();
         if (sale.payment_method === 1) {
             $('#checkout-attempts').text('Quantidade de tentativas: ' + sale.attempts).show();
+        }
+
+        if (sale.payment_method == 1 && sale.status == 1) {
+            $('#div_refund_transaction').html('<button class="btn btn-secondary btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
+        } else {
+            $('#div_refund_transaction').html('');
         }
     }
 
@@ -570,7 +579,7 @@ $(() => {
     });
 
     //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '.btn-notify-trackingcode', function(){
+    $(document).on('click', '.btn-notify-trackingcode', function () {
         let tracking_id = $(this).attr('tracking');
         $.ajax({
             method: "POST",
@@ -586,6 +595,34 @@ $(() => {
             success: () => {
                 alertCustom('success', 'Notificação enviada com sucesso');
             }
+        });
+    });
+
+    //Estornar venda
+    $(document).on('click', '.btn_refund_transaction', function () {
+        var sale = $(this).attr('sale');
+        $('#modal-refund-transaction').modal('show');
+        $('#modal_detalhes').modal('hide');
+
+        $(document).on('click', '.btn-confirm-refund-transaction', function () {
+            $.ajax({
+                method: "POST",
+                url: '/api/sales/refund/' + sale,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    $.getScript('/modules/sales/js/index.js?v=2', function () {
+                        atualizar();
+                    });
+                    alertCustom('success', response.message);
+                }
+            });
         });
     });
 

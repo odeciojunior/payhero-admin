@@ -207,6 +207,7 @@
                             <div id='div_notazz_schedule'>
                             </div>
                         </div>
+                        <div id='div_refund_transaction' class='mt-20'></div>
                     </div>
                 </div>
             </div>
@@ -214,6 +215,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
     @endpush
 </div>
