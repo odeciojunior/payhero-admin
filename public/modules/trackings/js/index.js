@@ -13,6 +13,42 @@ $(() => {
         alertCustom('success', 'Código copiado!');
     });
 
+    $(document).on('click', '.tracking-add, .tracking-edit', function () {
+
+        let row = $(this).parent().parent();
+
+        row.find('input')
+            .removeClass('fake-label')
+            .prop('readonly', false)
+            .focus();
+
+        row.find('.tracking-save, .tracking-close')
+            .show();
+
+        row.find('.tracking-detail')
+            .hide();
+
+        $(this).hide();
+
+    });
+
+    $(document).on('click', '.tracking-close', function () {
+        let row = $(this).parent().parent();
+
+        row.find('input')
+            .addClass('fake-label')
+            .prop('readonly', true)
+            .blur();
+
+        row.find('.tracking-add, .tracking-detail, .tracking-edit')
+            .show();
+
+        row.find('.tracking-save, .tracking-close')
+            .hide();
+
+        $(this).hide();
+    });
+
     //alem do evento disparado no modal de vendas /modules/sales/detail.js
     $(document).on('click', '.btn-save-trackingcode', function(event){
         index();
@@ -164,7 +200,9 @@ $(() => {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
                 } else {
                     $.each(response.data, function (index, tracking) {
+
                         let badge;
+
                         switch (tracking.tracking_status_enum) {
                             case 1:
                             case 2:
@@ -185,15 +223,21 @@ $(() => {
                         let dados = `<tr>
                                      <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>
                                      <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
-                                     <td class="copy pointer" title="Copiar código">${tracking.tracking_code}</td>
-                                     <td>
+                                     <td class="td-status">
                                         <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                      </td>
                                      <td>
+                                        <input class="form-control fake-label" readonly value="${tracking.tracking_code}">
+                                     </td>
+                                     <td style="min-width: 100px; text-align: center">
+                                        <a class='tracking-save pointer mr-10' product='${tracking.product.id}'
+                                         sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
                                      ${ tracking.tracking_status_enum
-                                        ? "<a role='button' class='tracking-detail pointer' tracking='"+tracking.id+"' ><i class='material-icons gradient'>remove_red_eye</i></a>"
-                                        : "<i class='material-icons gray'>remove_red_eye</i>"
+                                        ? `<a class='tracking-edit pointer mr-10'><i class='material-icons gradient'>edit</i></a>
+                                           <a class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                        : `<a class='tracking-add pointer'><i class='material-icons gradient'>add_circle</i></a>`
                                      }
+                                       <a class='tracking-close pointer' style="display:none"><i class='material-icons gradient'>close</i></a>
                                     </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
@@ -313,5 +357,44 @@ $(() => {
             }
         });
 
+    });
+
+    $(document).on('click', '.tracking-save', function () {
+
+        let btnSave = $(this);
+        let row = btnSave.parent().parent();
+        btnSave.prop('disabled', true);
+
+        let tracking_code = btnSave.parent().parent().find('input').val();
+        let saleId = btnSave.attr('sale');
+        let productId = btnSave.attr('product');
+
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking',
+            data: {tracking_code: tracking_code, sale_id: saleId, product_id: productId},
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                btnSave.prop('readonly', false);
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+
+                if (!isEmpty(response.data.tracking_status)) {
+
+                    //row.find('.td-status')
+                    //    .html('<span class="badge badge-primary">Postado</span>');
+
+                    row.find('.tracking-close')
+                        .click();
+
+                    alertCustom('success', 'Código de rastreio salvo com sucesso')
+                }
+            }
+        });
     });
 });

@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=1') }}">
     @endpush
 
     <!-- Page -->
@@ -107,8 +107,8 @@
                         <tr>
                             <td class="table-title">Venda</td>
                             <td class="table-title">Produto</td>
-                            <td class="table-title">Rastreio</td>
                             <td class="table-title">Status</td>
+                            <td class="table-title">Código de Rastreio</td>
                             <td class="table-title" width="80px;"></td>
                         </tr>
                         </thead>
@@ -209,7 +209,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=3') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=4') }}"></script>
     @endpush
 
 @endsection

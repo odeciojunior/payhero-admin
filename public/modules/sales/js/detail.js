@@ -451,7 +451,7 @@ $(() => {
                                 <td class="text-center" style="padding: 0 !important;">
                                     <a class='pointer btn-save-trackingcode' title='Salvar alterações' sale='${sale}' 
                                     product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                    <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                    <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
                                     <a class='pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente' tracking="${value.tracking_id}"
                                     style='margin-left: 10px; ${value.tracking_code ? '' : 'display:none;'}'><i class='icon wb-envelope' aria-hidden='true' style='color:#f1556f;'></i></a>
                                     <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>

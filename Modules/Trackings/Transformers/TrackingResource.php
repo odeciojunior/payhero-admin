@@ -17,6 +17,7 @@ class TrackingResource extends Resource
                 'tracking_status' => $this->tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->present()->getTrackingStatusEnum($this->tracking->tracking_status_enum)) : 'Não informado',
                 'sale' => Hashids::connection('sale_id')->encode($this->sale->id),
                 'product' => [
+                    'id' => Hashids::encode($this->product->id),
                     'name' => $this->product->name,
                     'description' => $this->product->description,
                     'amount' =>  $this->tracking->amount,
@@ -54,6 +55,7 @@ class TrackingResource extends Resource
                 'tracking_status' => 'Não informado',
                 'sale' => Hashids::connection('sale_id')->encode($this->sale->id),
                 'product' => [
+                    'id' => Hashids::encode($this->product->id),
                     'name' => $this->product->name,
                     'description' => $this->product->description,
                     'amount' =>  $amount,
