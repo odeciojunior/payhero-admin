@@ -36,7 +36,6 @@ class TrackingCodeUpdatedSendEmailClientListener
             ];
 
             $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
-            $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, 'giteb33312@netmail8.com', $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
         }
     }
 }

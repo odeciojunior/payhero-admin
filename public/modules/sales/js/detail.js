@@ -40,42 +40,6 @@ $(() => {
         alertCustom('success', 'Linha Digitável copiado!');
     });
 
-    //Codigo de rastreio
-    $(document).on('click', '.btn-edit-trackingcode', function () {
-        let trackingInput = $(this).parent().parent().find('#tracking_code');
-        let btnEdit = $(this);
-        let btnNotify = btnEdit.parent().find('.btn-notify-trackingcode');
-        let btnSave = btnEdit.parent().find('.btn-save-trackingcode');
-        let btnClose = $(this).parent().find('.btn-close-tracking');
-        btnEdit.hide();
-        btnNotify.hide();
-        btnSave.show('fast');
-        btnClose.show('fast');
-        trackingInput.css({
-            borderColor: '',
-            backgroundColor: ''
-        }).prop('readonly', false);
-    });
-
-    //Botão para ocultar campos rastreio
-    $(document).on('click', '.btn-close-tracking', function () {
-        let trackingInput = $(this).parent().parent().find('#tracking_code');
-        let btnEdit = $(this).parent().find('.btn-edit-trackingcode');
-        let btnNotify = btnEdit.parent().find('.btn-notify-trackingcode');
-        let btnSave = $(this).parent().find('.btn-save-trackingcode');
-
-        $(this).hide();
-        btnSave.hide();
-        trackingInput.css({
-            borderColor: 'transparent',
-            backgroundColor: 'transparent'
-        }).prop('readonly', true);
-        btnEdit.show('fast');
-        if(trackingInput.val() !== ''){
-            btnNotify.show('fast');
-        }
-    });
-
     // FIM - COMPORTAMENTOS DA JANELA
 
     // MODAL DETALHES DA VENDA
@@ -408,12 +372,12 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                renderProducts(response.data, sale);
+                renderProducts(response.data);
             }
         });
     }
 
-    function renderProducts(products, sale) {
+    function renderProducts(products) {
         $("#table-product").html('');
         $('#data-tracking-products').html('');
         let div = '';
@@ -440,25 +404,23 @@ $(() => {
                 let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
-                                    <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
+                                    <span class='small ellipsis d-inline-block'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' readonly style="border-color: transparent; background-color: transparent;"/>
+                                    ${
+                                        value.tracking_code
+                                        ? `<span class="font-weight-bold">${value.tracking_code}</span>` 
+                                        : `<span class="small">Não informado</span>`
+                                    }
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
-                                <td class="text-center" style="padding: 0 !important;">
-                                    <a class='pointer btn-save-trackingcode' title='Salvar alterações' sale='${sale}' 
-                                    product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                    <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente' tracking="${value.tracking_id}"
-                                    style='margin-left: 10px; ${value.tracking_code ? '' : 'display:none;'}'><i class='icon wb-envelope' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
-                                </td>
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
                 $('#data-tracking-products').append(data);
+                $('#div_tracking_code .btn-notify-trackingcode').attr('tracking', value.tracking_id);
+
             } else {
                 $('#div_tracking_code').css('display', 'none');
             }
@@ -525,52 +487,8 @@ $(() => {
 
     // FIM - MODAL DETALHES DA VENDA
 
-    //Sallet Código de Rastreio
-    $(document).on('click', '.btn-save-trackingcode', function () {
-        let btnSave = $(this);
-        let trackingInput = $(this).parent().parent().find('#tracking_code');
-        let tracking_code = trackingInput.val();
-        let productId = $(this).attr('product-code');
-        let saleId = $(this).attr('sale');
-        if (tracking_code == '') {
-            alertCustom('error', 'Dados informados inválidos');
-            return false;
-        }
-        $.ajax({
-            method: "POST",
-            url: '/api/tracking',
-            data: {tracking_code: tracking_code, sale_id: saleId, product_id: productId},
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                let trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
-                let btnEdit = btnSave.parent().find('.btn-edit-trackingcode');
-                let btnNotify = btnSave.parent().find('.btn-notify-trackingcode');
-                let btnClose = btnSave.parent().find('.btn-close-tracking');
-
-                trackingStatusSPan.html(response.data.tracking_status);
-                trackingInput.val(response.data.tracking_code);
-                trackingInput.css({
-                    borderColor: 'transparent',
-                    backgroundColor: 'transparent'
-                }).prop('readonly', true);
-                btnSave.hide();
-                btnEdit.show('fast');
-                btnNotify.show('fast');
-                btnClose.hide();
-                alertCustom('success', response.message);
-            }
-        });
-    });
-
     //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '.btn-notify-trackingcode', function(){
+    $(document).on('click', '#div_tracking_code .btn-notify-trackingcode', function(){
         let tracking_id = $(this).attr('tracking');
         $.ajax({
             method: "POST",

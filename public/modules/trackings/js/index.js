@@ -288,6 +288,7 @@ $(() => {
                 $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
                 $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
                 $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
+                $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
 
                 //GRAFICO DO STATUS DA ENTREGA
 
@@ -408,6 +409,26 @@ $(() => {
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
+            }
+        });
+    });
+
+    //enviar e-mail com o codigo de rastreio
+    $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function(){
+        let tracking_id = $(this).attr('tracking');
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking/notify/' + tracking_id,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: () => {
+                alertCustom('success', 'Notificação enviada com sucesso');
             }
         });
     });

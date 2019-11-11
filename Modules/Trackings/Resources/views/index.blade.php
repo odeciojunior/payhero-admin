@@ -197,6 +197,11 @@
                                 <span id="tracking-delivery-zipcode" class="table-title gray">CEP: 27520174</span>
                                 <br>
                                 <span id="tracking-delivery-city" class="table-title gray">Cidade: Resende/RJ</span>
+                                <a class='btn p-1 pointer float-right btn-notify-trackingcode'
+                                   title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                    <i class='icon wb-envelope' aria-hidden='true'></i>
+                                    Enviar e-mail para o cliente
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -209,7 +214,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=5') }}"></script>
     @endpush
 
 @endsection
