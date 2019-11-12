@@ -47,6 +47,19 @@
                     <input type="text" class="input-pad addon" name="start_date_edit" id="start_date_edit" placeholder="Data Inicial" value='' disabled>
                 </div>
             </div>
+            <div class='form-group col-12'>
+                <label for="url_store">Dias em espera</label>
+                <div class="d-flex input-group">
+                    <select class="select-pad" id="select_pending_days_edit" name="select_pending_days_edit">
+                        <option value='1'>1</option>
+                        <option value='7'>7</option>
+                        <option value='15'>15</option>
+                        <option value='30'>30</option>
+                        <option value='60'>60</option>
+                    </select>
+                    <small>Quantidade de dias que a notazz vai aguardar para efetivamente emitir a nota fiscal.</small>
+                </div>
+            </div>
         </div>
     </div>
 </form>

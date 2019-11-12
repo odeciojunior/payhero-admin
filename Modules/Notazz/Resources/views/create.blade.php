@@ -44,6 +44,20 @@
                 <label for="url_store">Data inicial</label>
                 <div class="d-flex input-group">
                     <input type="date" class="input-pad addon" name="start_date_create" id="start_date_create" placeholder="Data Inicial" value=''>
+                    <small>Data inicial da geração das notas fiscais. Esta data pode ser retroativa.</small>
+                </div>
+            </div>
+            <div class='form-group col-12'>
+                <label for="url_store">Dias em espera</label>
+                <div class="d-flex input-group">
+                    <select class="select-pad" id="select_pending_days_create" name="select_pending_days_create">
+                        <option value='1'>1</option>
+                        <option value='7'>7</option>
+                        <option value='15'>15</option>
+                        <option value='30'>30</option>
+                        <option value='60'>60</option>
+                    </select>
+                    <small>Quantidade de dias que a notazz vai aguardar para efetivamente emitir a nota fiscal.</small>
                 </div>
             </div>
         </div>
