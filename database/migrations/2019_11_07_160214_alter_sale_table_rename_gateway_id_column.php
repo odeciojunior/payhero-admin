@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -23,6 +24,10 @@ class AlterSaleTableRenameGatewayIdColumn extends Migration
         Schema::table('sales', function(Blueprint $table) {
             $table->foreign('gateway_id')->references('id')->on('gateways');
         });
+
+
+        $sql = "UPDATE sales SET gateway_id = 1 "; // 1 - pagarme_production
+        DB::select($sql);
     }
 
     /**
