@@ -148,8 +148,7 @@ class SalesApiController extends Controller
                 foreach ($sale->products as $product) {
                     $saleArray = [
                         //sale
-                        'sale_code'                  => '#' . strtoupper(Hashids::connection('sale_id')
-                                                                                ->encode($sale->id)),
+                        'sale_code'                  => '#' . Hashids::connection('sale_id')->encode($sale->id),
                         'shopify_order'              => strval($sale->shopify_order),
                         'payment_form'               => $sale->payment_method == 2 ? 'Boleto' : ($sale->payment_method == 1 ? 'Cartão' : ''),
                         'installments_amount'        => $sale->installments_amount ?? '',

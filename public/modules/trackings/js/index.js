@@ -263,6 +263,7 @@ $(() => {
         });
     }
 
+    //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
 
         $.ajax({
@@ -374,6 +375,7 @@ $(() => {
 
     });
 
+    //salvar tracking
     $(document).on('click', '.tracking-save', function () {
 
         let btnSave = $(this);
@@ -432,4 +434,49 @@ $(() => {
             }
         });
     });
+
+    //importar excel
+    $('#btn-import-xls').on('click', function(){
+        // loadOnAny('#btn-import-xls', false, {
+        //     styles: {
+        //         container: {
+        //             minHeight: '36px',
+        //             width: 'auto',
+        //         },
+        //         loader: {
+        //             width: '20px',
+        //             height: '20px',
+        //             borderWidth: '4px'
+        //         },
+        //     }
+        // });
+        $('#input-import-xls').click();
+    });
+
+    $('#input-import-xls').on('change', function(){
+        $('#btn-import-xls').prop('disabled', true);
+        let form = new FormData();
+        form.append('import.xls', this.files[0]);
+        $.ajax({
+            url: '/api/tracking/import',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                console.log(response)
+            },
+            error: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                console.log(response)
+            }
+        });
+    });
+
 });
