@@ -821,6 +821,7 @@ class ShopifyService
                             'description' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                             'price'       => $variant->getPrice(),
                             'status'      => '1',
+                            'project_id'  => $projectId,
                         ]
                     );
 
@@ -863,6 +864,7 @@ class ShopifyService
                             'code'               => '',
                             'price'              => $variant->getPrice(),
                             'status'             => '1',
+                            'project_id'         => $projectId,
                         ]
                     );
 
@@ -906,6 +908,7 @@ class ShopifyService
                         'code'               => '',
                         'price'              => $variant->getPrice(),
                         'status'             => '1',
+                        'project_id'         => $projectId,
                     ]
                 );
                 $plan->update(['code' => Hashids::encode($plan->id)]);
