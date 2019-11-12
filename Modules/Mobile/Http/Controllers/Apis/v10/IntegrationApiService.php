@@ -22,6 +22,7 @@ class IntegrationApiService {
     private $authApiService;
     private $financeApiService;
     private $profileApiService;
+    private $salesApiService;
 
     /**
      * IntegrationApiService constructor.
@@ -88,6 +89,8 @@ class IntegrationApiService {
             case 'profile':
                 $this->profileApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\ProfileApiService");
                 break;
+            case 'sales':
+                $this->salesApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\SalesApiService");
             default:
                 throw new Exception('Classe inválida.');
                 break;
@@ -162,7 +165,7 @@ class IntegrationApiService {
     public function profileGetData(Request $request) {
         try {
 
-            if (!$this->financeApiService) {
+            if (!$this->profileApiService) {
                 $this->getIntegrationApiService('profile');
             }
 
@@ -182,7 +185,7 @@ class IntegrationApiService {
     public function profileChangePassword(Request $request) {
         try {
 
-            if (!$this->financeApiService) {
+            if (!$this->profileApiService) {
                 $this->getIntegrationApiService('profile');
             }
 
@@ -202,7 +205,7 @@ class IntegrationApiService {
     public function profileUpdateNotification(Request $request) {
         try {
 
-            if (!$this->financeApiService) {
+            if (!$this->profileApiService) {
                 $this->getIntegrationApiService('profile');
             }
 
@@ -211,6 +214,46 @@ class IntegrationApiService {
         } catch (Exception $ex) {
             return response()->json(['status' => 'error',
                 'message' => 'Erro ao atualizar a configuração de notificações'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function salesByFilter(Request $request) {
+        try {
+
+            if (!$this->salesApiService) {
+                $this->getIntegrationApiService('sales');
+            }
+
+            return $this->salesApiService->salesByFilter($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao recuperar vendas'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function saleById(Request $request) {
+        try {
+
+            if (!$this->salesApiService) {
+                $this->getIntegrationApiService('sales');
+            }
+
+            return $this->salesApiService->saleById($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao recuperar detalhes da venda'], 400);
         }
     }
 }
