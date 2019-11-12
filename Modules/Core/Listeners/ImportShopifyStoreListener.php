@@ -17,13 +17,6 @@ class ImportShopifyStoreListener implements ShouldQueue
     use Queueable;
 
     /**
-     * The number of seconds the job can run before timing out.
-     *
-     * @var int
-     */
-    public $timeout = 7200;
-
-    /**
      * Handle the event.
      * @param object $event
      * @return void
