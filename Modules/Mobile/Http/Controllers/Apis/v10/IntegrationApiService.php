@@ -21,6 +21,7 @@ class IntegrationApiService {
     private $dashboardApiService;
     private $authApiService;
     private $financeApiService;
+    private $profileApiService;
 
     /**
      * IntegrationApiService constructor.
@@ -72,9 +73,9 @@ class IntegrationApiService {
      * @throws Exception
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getIntegrationApiService($class)
+    public function getIntegrationApiService($service)
     {
-        switch ($class) {
+        switch ($service) {
             case 'dashboard':
                 $this->dashboardApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\DashboardApiService");
                 break;
@@ -83,6 +84,9 @@ class IntegrationApiService {
                 break;
             case 'finance':
                 $this->financeApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\FinanceApiService");
+                break;
+            case 'profile':
+                $this->profileApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\ProfileApiService");
                 break;
             default:
                 throw new Exception('Classe inválida.');
@@ -146,6 +150,67 @@ class IntegrationApiService {
         } catch (Exception $ex) {
             return response()->json(['status' => 'error',
                 'message' => 'Erro ao carregar dados de finanças'], 400);
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function profileGetData(Request $request) {
+        try {
+
+            if (!$this->financeApiService) {
+                $this->getIntegrationApiService('profile');
+            }
+
+            return $this->profileApiService->getProfileData($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao carregar dados de profile'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function profileChangePassword(Request $request) {
+        try {
+
+            if (!$this->financeApiService) {
+                $this->getIntegrationApiService('profile');
+            }
+
+            return $this->profileApiService->changePassword($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao alterar senha'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function profileUpdateNotification(Request $request) {
+        try {
+
+            if (!$this->financeApiService) {
+                $this->getIntegrationApiService('profile');
+            }
+
+            return $this->profileApiService->updateUserNotification($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao atualizar a configuração de notificações'], 400);
         }
     }
 }
