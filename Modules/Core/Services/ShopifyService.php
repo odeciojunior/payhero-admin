@@ -957,9 +957,6 @@ class ShopifyService
      */
     public function importShopifyStore($projectId, $userId)
     {
-
-        $teste = $erro;
-
         $projectModel = new Project();
 
         $userModel = new User();
