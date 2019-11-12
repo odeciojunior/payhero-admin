@@ -84,6 +84,7 @@ class NotazzApiController extends Controller
                                                                               'project_id'      => $projectId,
                                                                               'user_id'         => auth()->user()->account_owner_id,
                                                                               'start_date'      => $data['start_date_create'],
+                                                                              'pending_days'    => $data['select_pending_days_create'],
                                                                           ]);
                     if ($integrationCreated) {
                         if (!empty($data['start_date_create'])) {
@@ -178,6 +179,7 @@ class NotazzApiController extends Controller
                                                'token_webhook'   => $dataRequest['token_webhook_edit'],
                                                'token_api'       => $dataRequest['token_api_edit'],
                                                'token_logistics' => $dataRequest['token_logistics_edit'],
+                                               'pending_days'    => $dataRequest['select_pending_days_edit'],
                                            ]);
 
                 return response()->json([

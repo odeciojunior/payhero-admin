@@ -23,10 +23,12 @@ class NotazzResource extends Resource
             'token_api'       => $this->token_api,
             'token_webhook'   => $this->token_webhook,
             'token_logistics' => $this->token_logistics,
-            'start_date'      => Carbon::parse($this->start_date)->format('d/m/Y') , //($this->start_date) ? $this->start_date->format('d/m/Y') : '',
+            'start_date'      => Carbon::parse($this->start_date)
+                                       ->format('d/m/Y'), //($this->start_date) ? $this->start_date->format('d/m/Y') : '',
             'project_id'      => Hashids::encode($this->project->id),
             'project_name'    => substr($this->project->name, 0, 20),
             'project_photo'   => $this->project->photo,
+            'pending_days'    => $this->pending_days,
             'created_at'      => $this->created_at->format('d/m/Y'),
         ];
     }

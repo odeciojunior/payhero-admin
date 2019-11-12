@@ -11,7 +11,6 @@ use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\NotazzSentHistory;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
-use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
@@ -170,6 +169,8 @@ class NotazzService
 
                 $tokenApi = $sale->project->notazzIntegration->token_api;
 
+                $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
+
                 $fields = json_encode([
                                           'METHOD'                 => 'create_nfse',//Método a ser utilizado
                                           'API_KEY'                => $tokenApi,
@@ -188,11 +189,11 @@ class NotazzService
                                           'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
                                           'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
 
-                                          'DESTINATION_EMAIL_SEND' => [
-                                              '1' => [
-                                                  'EMAIL' => $sale->client->email,
-                                              ],
-                                          ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
+                                          //                                          'DESTINATION_EMAIL_SEND' => [
+                                          //                                              '1' => [
+                                          //                                                  'EMAIL' => $sale->client->email,
+                                          //                                              ],
+                                          //                                          ],
 
                                           'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
                                           'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
@@ -211,11 +212,14 @@ class NotazzService
                                                                                     'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                                                                 ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
                                           */
-                                          'EXTERNAL_ID'          => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será enviado
+                                          'EXTERNAL_ID'          => $notazzInvoice->external_id, // ID externo do documento que será enviado
+                                          'DOCUMENT_ISSUE_DATE'  => Carbon::now()
+                                                                          ->addDays($pendingDays)
+                                                                          ->toDateTimeString(),
                                       ]);
 
                 $notazzInvoice->update([
-                                           'currency_quotation_id' => $lastUsdQuotation->id,
+                                           'currency_quotation_id' => $lastUsdQuotation->id ?? null,
                                            'attempts'              => $notazzInvoice->attempts + 1,
                                            'data_json'             => $fields,
                                            'date_last_attempt'     => Carbon::now(),
@@ -332,6 +336,8 @@ class NotazzService
 
                     $tokenApi = $sale->project->notazzIntegration->token_api;
 
+                    $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
+
                     $fields = json_encode([
 
                                               'METHOD'                 => 'update_nfse',//Método a ser utilizado
@@ -351,11 +357,11 @@ class NotazzService
                                               'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
                                               'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
 
-                                              'DESTINATION_EMAIL_SEND' => [
-                                                  '1' => [
-                                                      'EMAIL' => $sale->client->email,
-                                                  ],
-                                              ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
+                                              //                                              'DESTINATION_EMAIL_SEND' => [
+                                              //                                                  '1' => [
+                                              //                                                      'EMAIL' => $sale->client->email,
+                                              //                                                  ],
+                                              //                                              ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
 
                                               'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
                                               'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
@@ -374,8 +380,11 @@ class NotazzService
                                                   'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                               ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa*/
 
-                                              'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                              'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será atualizado
+                                              'DOCUMENT_ID'         => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
+                                              'EXTERNAL_ID'         => $notazzInvoice->external_id, // ID externo do documento que será atualizado
+                                              'DOCUMENT_ISSUE_DATE' => Carbon::now()
+                                                                             ->addDays($pendingDays)
+                                                                             ->toDateTimeString(),
                                           ]);
 
                     $result = $this->sendRequest($fields);
@@ -434,7 +443,7 @@ class NotazzService
                                           'METHOD'      => 'consult_nfse',//Método a ser utilizado
                                           'API_KEY'     => $tokenApi,
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será consultado
+                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será consultado
                                       ]);
 
                 $result = $this->sendRequest($fields);
@@ -547,7 +556,7 @@ class NotazzService
                                           'METHOD'      => 'cancel_nfse',//Método a ser utilizado
                                           'API_KEY'     => $tokenApi,
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será cancelado
+                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será cancelado
                                       ]);
 
                 return $this->sendRequest($fields);
@@ -591,7 +600,7 @@ class NotazzService
                                           'METHOD'      => 'delete_nfse',//Método a ser utilizado
                                           'API_KEY'     => $tokenApi,
                                           'DOCUMENT_ID' => $notazzInvoice->notazz_id,//Código retornado pelo sistema após utilizar o método create_nfse ou create_nfe_55. Utilizar esta variável para o método consult_nfe_55, consult_nfse, delete_nfe_55, delete_nfse, update_nfe_55, update_nfse
-                                          'EXTERNAL_ID' => 'cloudfox-'.$notazzInvoice->external_id, // ID externo do documento que será removido
+                                          'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será removido
                                       ]);
 
                 return $this->sendRequest($fields);
@@ -684,6 +693,11 @@ class NotazzService
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
+            $notazzInvoice->update([
+                                       'status' => $notazzInvoiceModel->present()
+                                                                      ->getStatus('in_process'),
+                                   ]);
+
             SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
         }
     }
@@ -721,7 +735,7 @@ class NotazzService
                                                              'date_pending'          => Carbon::now(),
                                                          ]);
             $notazzInvoice->update([
-                                       'external_id' => 'cloudfox-'.$notazzInvoice->id,
+                                       'external_id' => 'cloudfox-' . $notazzInvoice->id,
                                    ]);
 
             if ($notazzInvoice) {
