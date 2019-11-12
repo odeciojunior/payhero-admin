@@ -39,69 +39,69 @@
                         </div>
                         <div class="tab-content pt-10 pr-30 pl-30">
                             <div class="tab-pane active" id="tab_user" role="tabpanel">
-                                <form method="POST" enctype="multipart/form-data" id='company_update_form'>
+                                <form method="POST" enctype="multipart/form-data" id='company_update_form' class='form-basic-informations'>
                                     @csrf
                                     @method('PUT')
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="fantasy_name">Razão Social</label>
-                                            <input name="fantasy_name" value="" type="text" class="input-pad" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="company_document">CNPJ</label>
-                                            <input name="company_document" value="" type="text" class="input-pad" id="company_document" placeholder='CNPJ'>
+                                            <input name="company_document" value="" type="text" class="form-control" id="company_document" placeholder='CNPJ'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="business_website">Site</label>
-                                            <input name="business_website" value="" type="text" class="input-pad" id="business_website" placeholder='Site' maxlength='60'>
+                                            <input name="business_website" value="" type="text" class="form-control" id="business_website" placeholder='Site' maxlength='60'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="support_email">E-mail</label>
-                                            <input name="support_email" value="" type="text" class="input-pad" id="support_email" placeholder='E-mail' maxlength='40'>
+                                            <input name="support_email" value="" type="text" class="form-control" id="support_email" placeholder='E-mail' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="support_telephone">Telefone</label>
-                                            <input name="support_telephone" value="" type="text" class="input-pad" id="support_telephone" placeholder='Telefone'>
+                                            <input name="support_telephone" value="" type="text" class="form-control" id="support_telephone" placeholder='Telefone'>
                                         </div>
                                     </div>
                                     <h3 class="mb-15">Informações complementares</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="input-pad" id="zip_code" placeholder='CEP'>
+                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="form-control" id="zip_code" placeholder='CEP'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-5">
                                             <label for="street">Rua/Avenida</label>
-                                            <input name="street" value="" type="text" class="input-pad" id="street" placeholder='Rua/Avenida' maxlength='40'>
+                                            <input name="street" value="" type="text" class="form-control" id="street" placeholder='Rua/Avenida' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Nº</label>
-                                            <input name="number" value="" type="text" data-mask="0#########" class="input-pad" id="number" placeholder='Nº' maxlength='10'>
+                                            <input name="number" value="" type="text" data-mask="0#########" class="form-control" id="number" placeholder='Nº' maxlength='10'>
                                         </div>
                                         <div class="form-group col-xl-5">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="" type="text" class="input-pad" id="neighborhood" placeholder='Bairro' maxlength='30'>
+                                            <input name="neighborhood" value="" type="text" class="form-control" id="neighborhood" placeholder='Bairro' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="" type="text" class="input-pad" id="complement" placeholder='Complemento' maxlength='30'>
+                                            <input name="complement" value="" type="text" class="form-control" id="complement" placeholder='Complemento' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="" type="text" class="input-pad" id="state" placeholder='Estado' maxlength='30'>
+                                            <input name="state" value="" type="text" class="form-control" id="state" placeholder='Estado' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="" type="text" class="input-pad" id="city" placeholder='Cidade' maxlength='30'>
+                                            <input name="city" value="" type="text" class="form-control" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-6">
                                             <label for="country">Country</label>
-                                            <input name="country" value="" type="text" class="input-pad" id="country">
+                                            <input name="country" value="" type="text" class="form-control" id="country">
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
@@ -159,7 +159,7 @@
                                     <div class="col-lg-6">
                                         <div id="dropzone">
                                             <form method="POST" action="{!! route('api.companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                                <div class="dz-message needsclick">
+                                                <div class="dz-message needsclick text-dropzone">
                                                     Arraste os arquivos ou clique para selecionar<br/>
                                                 </div>
                                                 <input id="company_id" name="company_id" value="" type="hidden" class="input-pad">
@@ -205,7 +205,7 @@
     </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=3')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit.js?v=4')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush
