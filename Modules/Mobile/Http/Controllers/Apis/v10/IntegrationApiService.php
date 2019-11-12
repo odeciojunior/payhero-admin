@@ -23,6 +23,7 @@ class IntegrationApiService {
     private $financeApiService;
     private $profileApiService;
     private $salesApiService;
+    private $notificationApiService;
 
     /**
      * IntegrationApiService constructor.
@@ -91,6 +92,10 @@ class IntegrationApiService {
                 break;
             case 'sales':
                 $this->salesApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\SalesApiService");
+                break;
+            case 'notification':
+                $this->notificationApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\NotificationApiService");
+                break;
             default:
                 throw new Exception('Classe inválida.');
                 break;
@@ -254,6 +259,26 @@ class IntegrationApiService {
         } catch (Exception $ex) {
             return response()->json(['status' => 'error',
                 'message' => 'Erro ao recuperar detalhes da venda'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function notificationGetUnread(Request $request) {
+        try {
+
+            if (!$this->notificationApiService) {
+                $this->getIntegrationApiService('notification');
+            }
+
+            return $this->notificationApiService->getUnreadNotifications($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao recuperar as notificações'], 400);
         }
     }
 }

@@ -223,4 +223,21 @@ class MobileController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function notificationGetUnread(Request $request) {
+        try {
+            return $this->integrationApiService->notificationGetUnread($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
 }

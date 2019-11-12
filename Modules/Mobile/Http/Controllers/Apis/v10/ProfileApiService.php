@@ -43,7 +43,7 @@ class ProfileApiService {
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao carregar dados do perfil - ProfileApiService getProfileData',
+                'message' => 'Erro ao carregar dados do perfil - ProfileApiService - getProfileData',
             ], 400);
         }
     }
