@@ -13,6 +13,42 @@ $(() => {
         alertCustom('success', 'Código copiado!');
     });
 
+    $(document).on('click', '.tracking-add, .tracking-edit', function () {
+
+        let row = $(this).parent().parent();
+
+        row.find('input')
+            .removeClass('fake-label')
+            .prop('readonly', false)
+            .focus();
+
+        row.find('.tracking-save, .tracking-close')
+            .show();
+
+        row.find('.tracking-detail')
+            .hide();
+
+        $(this).hide();
+
+    });
+
+    $(document).on('click', '.tracking-close', function () {
+        let row = $(this).parent().parent();
+
+        row.find('input')
+            .addClass('fake-label')
+            .prop('readonly', true)
+            .blur();
+
+        row.find('.tracking-add, .tracking-detail, .tracking-edit')
+            .show();
+
+        row.find('.tracking-save, .tracking-close')
+            .hide();
+
+        $(this).hide();
+    });
+
     //alem do evento disparado no modal de vendas /modules/sales/detail.js
     $(document).on('click', '.btn-save-trackingcode', function(event){
         index();
@@ -67,7 +103,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects/user-projects',
+            url: '/api/projects',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -106,7 +142,7 @@ $(() => {
         $.ajax({
             method: 'GET',
             url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val(),
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', ''),
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -120,11 +156,15 @@ $(() => {
                 if (isEmpty(response.data)) {
                     alertCustom('error', 'Erro ao carregar resumo dos rastreios');
                 } else {
-                    let {total, delivered, dispatched, exception} = response.data;
+                    let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = response.data;
+
                     $('#total-trackings').text(total);
                     $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-posted').text(posted ? posted + ' (' +((posted*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-out').text(out_for_delivery ? out_for_delivery + ' (' +((out_for_delivery*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                     $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-unknown').text(unknown ? unknown + ' (' +((unknown*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
                 }
                 loadOnAny('.number', true);
             }
@@ -135,10 +175,10 @@ $(() => {
 
         if (link == null) {
             link = '/api/tracking?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
         } else {
             link = '/api/tracking' + link + '&tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val();
+                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
@@ -155,41 +195,69 @@ $(() => {
             },
             success: response => {
                 $('#dados_tabela').html('');
-                $('#tabela_trackings').addClass('table-striped');
+
+                let grayRow = false;
+                let lastSale = '';
+
                 if (isEmpty(response.data)) {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
                 } else {
                     $.each(response.data, function (index, tracking) {
+
                         let badge;
+
                         switch (tracking.tracking_status_enum) {
                             case 1:
+                            case 2:
+                            case 4:
                                 badge = 'primary';
                                 break;
                             case 3:
                                 badge = 'success';
                                 break;
                             case 5:
-                                badge = 'danger';
+                                badge = 'warning';
                                 break;
                             default:
-                                badge = 'info';
+                                badge = 'danger';
                                 break;
                         }
-                        let dados = `<tr>
-                                     <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>
-                                     <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
-                                     <td class="copy pointer" title="Copiar código">${tracking.tracking_code}</td>
-                                     <td>
-                                        <span class="badge badge-${badge}">${tracking.tracking_status}</span>
-                                     </td>
-                                     <td>
-                                        <a role='button' class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
-                                    </td>
+
+                        if(lastSale !==  tracking.sale){
+                            grayRow = !grayRow;
+                        }
+
+                        let dados = `<tr ${grayRow ? 'class="td-odd"' : ''}>
+                                         ${
+                                            lastSale !== tracking.sale
+                                            ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>` 
+                                            : `<td></td>`
+                                         }
+                                         <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
+                                         <td class="td-status">
+                                            <span class="badge badge-${badge}">${tracking.tracking_status}</span>
+                                         </td>
+                                         <td>
+                                            <input class="form-control font-weight-bold fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+                                         </td>
+                                         <td style="min-width: 100px; text-align: right">
+                                            <a class='tracking-save pointer mr-10' product='${tracking.product.id}'
+                                             sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
+                                         ${ tracking.tracking_status_enum
+                                            ? `<a class='tracking-edit pointer mr-10'><i class='material-icons gradient'>edit</i></a>
+                                               <a class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                            : `<a class='tracking-add pointer'><i class='material-icons gradient'>add_circle</i></a>`
+                                         }
+                                           <a class='tracking-close pointer' style="display:none"><i class='material-icons gradient'>close</i></a>
+                                        </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
+
+                        lastSale = tracking.sale;
                     });
 
                     pagination(response, 'trackings', index);
+                    $('#tabela_trackings').removeClass('table-striped');
                 }
             }
         });
@@ -220,6 +288,7 @@ $(() => {
                 $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
                 $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
                 $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
+                $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
 
                 //GRAFICO DO STATUS DA ENTREGA
 
@@ -303,5 +372,64 @@ $(() => {
             }
         });
 
+    });
+
+    $(document).on('click', '.tracking-save', function () {
+
+        let btnSave = $(this);
+        let row = btnSave.parent().parent();
+        btnSave.prop('disabled', true);
+
+        let tracking_code = btnSave.parent().parent().find('input').val();
+        let saleId = btnSave.attr('sale');
+        let productId = btnSave.attr('product');
+
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking',
+            data: {tracking_code: tracking_code, sale_id: saleId, product_id: productId},
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                btnSave.prop('readonly', false);
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+
+                if (!isEmpty(response.data.tracking_status)) {
+
+                    //row.find('.td-status')
+                    //    .html('<span class="badge badge-primary">Postado</span>');
+
+                    row.find('.tracking-close')
+                        .click();
+
+                    alertCustom('success', 'Código de rastreio salvo com sucesso')
+                }
+            }
+        });
+    });
+
+    //enviar e-mail com o codigo de rastreio
+    $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function(){
+        let tracking_id = $(this).attr('tracking');
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking/notify/' + tracking_id,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: () => {
+                alertCustom('success', 'Notificação enviada com sucesso');
+            }
+        });
     });
 });

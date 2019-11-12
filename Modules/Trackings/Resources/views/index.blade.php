@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=1') }}">
     @endpush
 
     <!-- Page -->
@@ -46,12 +46,13 @@
                             <option value="delivered">Entregue</option>
                             <option value="out_for_delivery">Saiu para entrega</option>
                             <option value="exception">Problema na entrega</option>
+                            <option value="unknown">Não informado</option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                        <label for="date_updated">Data de atualização</label>
+                        <label for="date_updated">Data de aprovação venda</label>
                         <input name='date_updated' id="date_updated" class="select-pad" placeholder="Clique para editar..." readonly>
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 offset-xl-6">
@@ -66,21 +67,33 @@
             <div class="fixhalf"></div>
             <div class="card shadow p-20" style='display:block;'>
                 <div class="row justify-content-center">
-                    <div class="col-md-3">
-                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
-                        <h4 id="total-trackings" class="number text-center text-info"></h4>
+                    <div class="col">
+                        <h6 class="text-center text-success" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
+                        <h4 id="total-trackings" class="number text-center text-success"></h4>
                     </div>
-                    <div class="col-md-3">
-                        <h6 class="text-center text-success"><i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
-                        <h4 id="percentual-delivered" class="number text-center text-success"></h4>
+                    <div class="col">
+                        <h6 class="text-center text-info" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> markunread_mailbox </i> Postado</h6>
+                        <h4 id="percentual-posted" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col-md-3">
-                        <h6 class="text-center text-info"><i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
+                    <div class="col">
+                        <h6 class="text-center text-info" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
                         <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col-md-3">
-                        <h6 class="text-center text-danger"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
-                        <h4 id="percentual-exception" class="number text-center text-danger"></h4>
+                    <div class="col">
+                        <h6 class="text-center text-info" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> arrow_right_alt </i> Saiu para entrega</h6>
+                        <h4 id="percentual-out" class="number text-center text-info"></h4>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-center text-success" style="white-space: nowrap;"><i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
+                        <h4 id="percentual-delivered" class="number text-center text-success"></h4>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-center text-warning" style="white-space: nowrap;"><i class="material-icons align-middle mr-1" > error </i> Problema na entrega</h6>
+                        <h4 id="percentual-exception" class="number text-center text-warning"></h4>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-center text-danger" style="white-space: nowrap;"><i class="material-icons align-middle mr-1" > error </i> Não informado</h6>
+                        <h4 id="percentual-unknown" class="number text-center text-danger"></h4>
                     </div>
                 </div>
             </div>
@@ -89,13 +102,13 @@
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
-                    <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
+                    <table id="tabela_trackings" class="table-trackings table unify" style="">
                         <thead>
                         <tr>
                             <td class="table-title">Venda</td>
                             <td class="table-title">Produto</td>
-                            <td class="table-title">Rastreio</td>
                             <td class="table-title">Status</td>
+                            <td class="table-title">Código de Rastreio</td>
                             <td class="table-title" width="80px;"></td>
                         </tr>
                         </thead>
@@ -184,6 +197,11 @@
                                 <span id="tracking-delivery-zipcode" class="table-title gray">CEP: 27520174</span>
                                 <br>
                                 <span id="tracking-delivery-city" class="table-title gray">Cidade: Resende/RJ</span>
+                                <a class='btn p-1 pointer float-right btn-notify-trackingcode'
+                                   title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                    <i class='icon wb-envelope' aria-hidden='true'></i>
+                                    Enviar e-mail para o cliente
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -196,7 +214,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=5') }}"></script>
     @endpush
 
 @endsection

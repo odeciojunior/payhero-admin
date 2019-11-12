@@ -26,7 +26,8 @@ class TrackingShowResource extends Resource
                 'street' => $this->delivery->street,
                 'number' => $this->delivery->number,
                 'zip_code' => $this->delivery->zip_code,
-                'city' => $this->delivery->city
+                'city' => $this->delivery->city,
+                'state' => $this->delivery->state,
             ],
             'history' => $this->history->map(function($item){
                 return [

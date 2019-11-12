@@ -8,7 +8,7 @@
             <i class="icon wb-more-horizontal" aria-hidden="true"></i>
         </button>
         <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-            <img class="navbar-brand-logo" src="{{ asset('modules/global/adminremark/assets/images/cloudfox_logo.png') }}" >
+            <img class="navbar-brand-logo" src="{{ asset('modules/global/adminremark/assets/images/cloudfox_logo.png') }}">
             <span class="navbar-brand-text hidden-xs-down" style="color: black"> <span style="font-weight: 300;">Cloud</span><strong>Fox</strong></span>
         </div>
         <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
@@ -17,7 +17,7 @@
         </button>
     </div>
     <div class="navbar-container container-fluid">
-        <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->id())}}'>
+        <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->user()->account_owner_id)}}'>
         <!-- Navbar Collapse -->
         <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
             <!-- Navbar Toolbar -->
@@ -32,26 +32,28 @@
                 </li>
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                <li id="notifications_button" class="nav-item dropdown" disabled='true'>
+                @if(!auth()->user()->hasRole('attendance'))
+                    <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                     <span class="nav-link" data-toggle="dropdown" title="Notificações" id='notification'
                           aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                         <i class="material-icons">notifications_none</i>
                         <span class="badge badge-danger badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
                     </span>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
-                        <div class="dropdown-menu-header" style='padding:0px 20px;'>
-                            <h6><strong>NOTIFICAÇÕES</strong></h6>
-                        </div>
-                        <div class="list-group scrollable scrollable-vertical" style="position: relative;">
-                            <div class="scrollable-container" style="min-height: 250px; width: 358px;">
-                                <div id='notificationTemplate' class="scrollable-content" style="width: 358px; height:100%">
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
+                            <div class="dropdown-menu-header" style='padding:0px 20px;'>
+                                <h6><strong>NOTIFICAÇÕES</strong></h6>
+                            </div>
+                            <div class="list-group scrollable scrollable-vertical" style="position: relative;">
+                                <div class="scrollable-container" style="min-height: 250px; width: 358px;">
+                                    <div id='notificationTemplate' class="scrollable-content" style="width: 358px; height:100%">
+                                    </div>
                                 </div>
                             </div>
+                            <div class="dropdown-menu-footer" style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
+                            </div>
                         </div>
-                        <div class="dropdown-menu-footer" style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
-                        </div>
-                    </div>
-                </li>
+                    </li>
+                @endif
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
@@ -63,9 +65,11 @@
                         <a class="dropdown-item" href="{!! route('profile.index') !!}" role="menuitem">
                             <i class="material-icons align-middle"> account_circle </i> Perfil
                         </a>
-                        <a class="dropdown-item" href="{!! route('companies.index') !!}" role="menuitem">
-                            <i class="material-icons align-middle"> business </i> Empresas
-                        </a>
+                        @if(!auth()->user()->hasRole('attendance'))
+                            <a class="dropdown-item" href="{!! route('companies.index') !!}" role="menuitem">
+                                <i class="material-icons align-middle"> business </i> Empresas
+                            </a>
+                        @endif
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="material-icons align-middle"> power_settings_new </i> Logout
@@ -94,113 +98,143 @@
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
-        <li class="site-menu-item has-sub">
-            <a href="{{ route('dashboard.index') }}">
-                <i class="material-icons align-middle">dashboard</i>
-                <span class="site-menu-title ml-5">Dashboard</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub disabled">
-            <a class="disabled" href="{{ route('showcase') }}">
-                <i class="material-icons align-middle">store</i>
-                <span class="site-menu-title">Vitrine (em breve)</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="javascript:void(0)" id="sales-link">
-                <!-- <i class="material-icons align-middle"><span class="mm-opended-hidden">shopping_basket</span></i> -->
-                <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79zM9 9l3-4.4L15 9H9zm3 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-                </svg>
-                <span class="site-menu-title">Vendas</span>
-                <span class="site-menu-arrow"></span>
-            </a>
-            <ul class="site-menu-sub">
-                <li class="site-menu-item has-sub">
-                    <a href="{!! route('sales.index') !!}">
-                        <span class="site-menu-title">Visão geral</span>
-                    </a>
-                </li>
-                <li class="site-menu-item">
-                    <a href="{{ route('recovery.index') }}">
-                        <span class="site-menu-title">Recuperação</span>
-                    </a>
-                </li>
-{{--                <li class="site-menu-item">--}}
-{{--                    <a href="/trackings" id="trackings-link">--}}
-{{--                        <span class="site-menu-title">Rastreamentos</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-            </ul>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="/projects" id="projects-link">
-                <i class="material-icons">style</i>
-                <span class="site-menu-title">Projetos</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="{{ route('products.index') }}" id="products-link">
-                <i class="material-icons">laptop</i>
-                <span class="site-menu-title">Produtos</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub  disabled">
-            <a class="disabled" href="{{ route('attendance') }}">
-                <i class="material-icons">chat_bubble_outline</i>
-                <span class="site-menu-title">Atendimento (em breve)</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub  disabled">
-            <a href="javascript:void(0)" class="disabled">
-                <i class="material-icons">people</i>
-                <span class="site-menu-title">Afiliados (em breve)</span>
-                <span class="site-menu-arrow"></span>
-            </a>
-            <ul class="site-menu-sub">
-                <li class="site-menu-item">
-                    <a href="{!! route('afiliados.minhasafiliacoes') !!}">
-                        <span class="site-menu-title">Minhas afiliações</span>
-                    </a>
-                </li>
-                <li class="site-menu-item">
-                    <a href="{!! route('afiliados.meusafiliados') !!}">
-                        <span class="site-menu-title">Meus afiliados</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="{!! route('finances') !!}">
-                <i class="material-icons align-middle">local_atm</i>
-                <span class="site-menu-title">Finanças</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="{!! route('reports.index') !!}">
-                <i class="material-icons">insert_chart_outlined</i>
-                <span class="site-menu-title">Relatórios</span>
-            </a>
-        </li>
-        <li class="site-menu-item has-sub">
-            <a href="{{ route('apps') }}" id='apps-link'>
-                <i class="material-icons">apps</i>
-                <span class="site-menu-title">Aplicativos</span>
-            </a>
-        </li>
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('dashboard.index') }}">
+                    <i class="material-icons align-middle">dashboard</i>
+                    <span class="site-menu-title ml-5">Dashboard</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub disabled">
+                <a class="disabled" href="{{ route('showcase') }}">
+                    <i class="material-icons align-middle">store</i>
+                    <span class="site-menu-title">Vitrine (em breve)</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)" id="sales-link">
+                    <!-- <i class="material-icons align-middle"><span class="mm-opended-hidden">shopping_basket</span></i> -->
+                    <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79zM9 9l3-4.4L15 9H9zm3 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                    </svg>
+                    <span class="site-menu-title">Vendas</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item has-sub">
+                        <a href="{!! route('sales.index') !!}">
+                            <span class="site-menu-title">Visão geral</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('recovery.index') }}">
+                            <span class="site-menu-title">Recuperação</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('trackings.index') }}">
+                            <span class="site-menu-title">Rastreamentos</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="/projects" id="projects-link">
+                    <i class="material-icons">style</i>
+                    <span class="site-menu-title">Projetos</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('products.index') }}" id="products-link">
+                    <i class="material-icons">laptop</i>
+                    <span class="site-menu-title">Produtos</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub  disabled">
+                <a class="disabled" href="{{ route('attendance') }}">
+                    <i class="material-icons">chat_bubble_outline</i>
+                    <span class="site-menu-title">Atendimento (em breve)</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub  disabled">
+                {{--            <a href="javascript:void(0)" class="disabled">--}}
+                {{--                <i class="material-icons">people</i>--}}
+                {{--                <span class="site-menu-title">Afiliados (em breve)</span>--}}
+                {{--                <span class="site-menu-arrow"></span>--}}
+                {{--            </a>--}}
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a href="{!! route('afiliados.minhasafiliacoes') !!}">
+                            <span class="site-menu-title">Minhas afiliações</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{!! route('afiliados.meusafiliados') !!}">
+                            <span class="site-menu-title">Meus afiliados</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{!! route('finances') !!}">
+                    <i class="material-icons align-middle">local_atm</i>
+                    <span class="site-menu-title">Finanças</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{!! route('reports.index') !!}">
+                    <i class="material-icons">insert_chart_outlined</i>
+                    <span class="site-menu-title">Relatórios</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('apps') }}" id='apps-link'>
+                    <i class="material-icons">apps</i>
+                    <span class="site-menu-title">Aplicativos</span>
+                </a>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('tools.index') }}">
+                    <i class="material-icons">settings</i>
+                    <span class="site-menu-title">Ferramentas</span>
+                </a>
+            </li>
+        @endif
         {{-- <li class="site-menu-item has-sub">
             <a href="{{ route('integrations.index') }}">
                 <i class="material-icons">devices_other</i>
                 <span class="site-menu-title">Integrações</span>
             </a>
         </li> --}}
-        <li class="site-menu-item has-sub">
-            <a href="{{ route('invitations.index') }}">
-                <i class="material-icons">person_add</i>
-                <span class="site-menu-title">Convites</span>
-            </a>
-        </li>
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('invitations.index') }}">
+                    <i class="material-icons">person_add</i>
+                    <span class="site-menu-title">Convites</span>
+                </a>
+            </li>
+        @endif
     </ul>
 </div>
 {{--FIM DA SIDEBAR--}}

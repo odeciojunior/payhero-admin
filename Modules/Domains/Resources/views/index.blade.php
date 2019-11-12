@@ -50,7 +50,7 @@
                         <div class='row'>
                             <div class='form-group'>
                                 <label for='name'>Domínio</label>
-                                <input name='name' type='text' class='input-pad name-domain' id='name' placeholder='Digite o domínio'>
+                                <input name='name' type='text' class='input-pad name-domain' id='name' placeholder='seudominio.com'>
                                 <span class='info-domain'></span>
                             </div>
                         </div>

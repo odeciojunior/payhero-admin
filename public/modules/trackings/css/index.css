@@ -79,5 +79,14 @@
     }
 }
 
+.fake-label{
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+
+.td-odd{
+    background-color: rgba(51, 51, 51, 0.06) !important;
+}
+
 
 

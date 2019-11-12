@@ -13,7 +13,9 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
+use Modules\Core\Events\BilletPaidEvent;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -130,87 +132,143 @@ class PostBackPagarmeController extends Controller
                     }
                 }
 
-                try {
-                    $hotZappIntegrationModel = new HotZappIntegration();
-                    $hotzappIntegration      = $hotZappIntegrationModel->where('project_id', $plan->project_id)
-                                                                       ->first();
+                $sale->load('client');
+                event(new BilletPaidEvent($plan, $sale, $sale->client));
 
-                    if (!empty($hotzappIntegration)) {
-                        $hotZappService = new HotZappService($hotzappIntegration->link);
-                        $hotZappService->boletoPaid($sale);
+                // try {
+                //     $hotZappIntegrationModel = new HotZappIntegration();
+                //     $hotzappIntegration      = $hotZappIntegrationModel->where('project_id', $plan->project_id)
+                //                                                        ->first();
+
+                //     if (!empty($hotzappIntegration)) {
+                //         $hotZappService = new HotZappService($hotzappIntegration->link);
+                //         $hotZappService->boletoPaid($sale);
+                //     }
+
+                //     $convertaxIntegrationModel = new ConvertaxIntegration();
+                //     $convertaxIntegration      = $convertaxIntegrationModel->where('project_id', $plan->project_id)
+                //                                                            ->first();
+
+                //     if (!empty($convertaxIntegration)) {
+                //         $hotZappService = new HotZappService($convertaxIntegration->link);
+                //         $hotZappService->boletoPaid($sale);
+                //     }
+                // } catch (Exception $e) {
+                //     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
+                //     report($e);
+                // }
+
+                // try {
+                //     $activeCampaignService = new ActiveCampaignService();
+                //     $sale->load('client');
+                //     // $saleId, $eventSale, $name, $phone, $email, $projectId
+                //     $activeCampaignService->execute($sale->id, 2, $sale->client->name, $sale->client->telephone, $sale->client->email, $sale->project_id, 'sale');
+
+                // } catch (Exception $e) {
+                //     Log::warning('Erro ao enviar lead para ActiveCampaign na venda ' . $sale->id);
+                //     report($e);
+                // }
+            } else if ($requestData['transaction']['status'] == 'chargedback') {
+                $sale->update([
+                                  'gateway_status' => 'chargedback',
+                                  'status'         => '4',
+                              ]);
+
+                $transferModel = new Transfer();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->status == 'transfered') {
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'chargedback',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
+                    } else if ($transaction->status == 'anticipated') {
+
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->antecipable_value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'chargedback',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
                     }
 
-                    $convertaxIntegrationModel = new ConvertaxIntegration();
-                    $convertaxIntegration      = $convertaxIntegrationModel->where('project_id', $plan->project_id)
-                                                                           ->first();
+                    $transaction->update([
+                                             'status' => 'chargedback',
+                                         ]);
+                }
+            } else if ($requestData['transaction']['status'] == 'refunded') {
+                $sale->update([
+                                  'gateway_status' => 'refunded',
+                                  'status'         => '7',
+                              ]);
 
-                    if (!empty($convertaxIntegration)) {
-                        $hotZappService = new HotZappService($convertaxIntegration->link);
-                        $hotZappService->boletoPaid($sale);
+                $transferModel = new Transfer();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->status == 'transfered') {
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'refunded',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
+                    } else if ($transaction->status == 'anticipated') {
+
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->antecipable_value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'chargedback',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
                     }
-                } catch (Exception $e) {
-                    Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
-                    report($e);
+
+                    $transaction->update([
+                                             'status' => 'refunded',
+                                         ]);
                 }
             } else {
+                $sale->update([
+                                  'gateway_status' => $requestData['transaction']['status'],
+                              ]);
 
-                if ($requestData['transaction']['status'] == 'chargedback') {
-                    $sale->update([
-                                      'gateway_status' => 'chargedback',
-                                      'status'         => '4',
-                                  ]);
-
-                    $transferModel = new Transfer();
-
-                    foreach ($transactions as $transaction) {
-
-                        if ($transaction->status == 'transfered') {
-                            $company = $companyModel->find($transaction->company_id);
-
-                            $transferModel->create([
-                                                       'transaction_id' => $transaction->id,
-                                                       'user_id'        => $company->user_id,
-                                                       'value'          => $transaction->value,
-                                                       'type'           => 'out',
-                                                       'reason'         => 'chargedback',
-                                                       'company_id'     => $company->id,
-                                                   ]);
-
-                            $company->update([
-                                                 'balance' => $company->balance -= $transaction->value,
-                                             ]);
-                        }
-                        elseif($transaction->status == 'anticipated'){
-
-                            $company = $companyModel->find($transaction->company_id);
-
-                            $transferModel->create([
-                                                       'transaction_id' => $transaction->id,
-                                                       'user_id'        => $company->user_id,
-                                                       'value'          => $transaction->antecipable_value,
-                                                       'type'           => 'out',
-                                                       'reason'         => 'chargedback',
-                                                       'company_id'     => $company->id,
-                                                   ]);
-
-                            $company->update([
-                                                 'balance' => $company->balance -= $transaction->value,
-                                             ]);
-
-                        }
-
-                        $transaction->update([
-                                                 'status' => 'chargedback',
-                                             ]);
-                    }
-                } else {
-                    $sale->update([
-                                      'gateway_status' => $requestData['transaction']['status'],
-                                  ]);
-
-                    foreach ($transactions as $transaction) {
-                        $transaction->update(['status' => $requestData['transaction']['status']]);
-                    }
+                foreach ($transactions as $transaction) {
+                    $transaction->update(['status' => $requestData['transaction']['status']]);
                 }
             }
         }

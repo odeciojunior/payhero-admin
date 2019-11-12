@@ -81,17 +81,15 @@ class SalesRecoveryService
                                                                  ]);
 
         if (!empty($client)) {
-            $clientSearch = $clientModel->where('name', 'like', '%' . $client . '%')->first();
-            if (!empty($clientSearch)) {
-                $salesExpired->where('sales.client_id', $clientSearch->id);
-            }
+            $clientSearch = $clientModel->where('name', 'like', '%' . $client . '%')->pluck('id')->toArray();
+            $salesExpired->whereIn('sales.client_id', $clientSearch);
         }
 
         if (!empty($projectId)) {
             $salesExpired->where('sales.project_id', $projectId);
         } else {
             $userProjects = $userProjectsModel->where([
-                                                          ['user_id', auth()->user()->id],
+                                                          ['user_id', auth()->user()->account_owner_id],
                                                           ['type', 'producer'],
                                                       ])->pluck('project_id')->toArray();
 

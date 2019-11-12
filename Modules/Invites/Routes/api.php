@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:api']], function() {
-    Route::apiResource('invitations', 'InvitesApiController')->only('index', 'store','destroy')->names('api.invites');
+    Route::apiResource('invitations', 'InvitesApiController')->only('index', 'store','destroy')->names('api.invites')->middleware('role:account_owner|admin');
 
     Route::get('/invitations/getinvitationdata', 'InvitesApiController@getInvitationData')
-         ->name('api.getinvitationdata');
+         ->name('api.getinvitationdata')->middleware('role:account_owner|admin');
     Route::post('/invitations/resendinvitation', 'InvitesApiController@resendInvitation')
-         ->name('api.resendinvitation');
+         ->name('api.resendinvitation')->middleware('role:account_owner|admin');
 });
 

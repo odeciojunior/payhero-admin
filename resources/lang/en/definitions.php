@@ -98,6 +98,7 @@ return [
                 'in_proccess'  => "Em análise",
                 "pending"      => "Pendente",
                 "refused"      => "Recusado",
+                "refunded"     => "Estornado",
                 "system_error" => "Erro de sistema",
             ],
         ],
@@ -130,6 +131,11 @@ return [
                 "canceled"           => "Cancelado",
                 "rejected"           => "Rejeitado",
             ],
+        ],
+        "role"                     => [
+            "account_owner" => "Dono da conta",
+            "admin"         => "Administrativo",
+            "attendance"    => "Atendimento",
         ],
     ],
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api'],
+        'middleware' => ['auth:api', 'role:account_owner|admin|attendance'],
         'prefix'     => 'sales',
     ],
     function() {
@@ -27,6 +27,7 @@ Route::group(
             'as'   => 'sales.refund',
             'uses' => 'SalesApiController@cancelPayment',
         ]);
+        Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
     }
 );
 

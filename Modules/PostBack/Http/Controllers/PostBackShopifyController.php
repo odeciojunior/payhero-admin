@@ -6,13 +6,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\ProductService;
@@ -59,7 +56,7 @@ class PostBackShopifyController extends Controller
 
                 $shopifyOrder = $requestData['id'];
 
-                $sale = $salesModel->with(['productsPlansSale.trackings', 'plansSales.plan.productsPlans', 'delivery'])
+                $sale = $salesModel->with(['productsPlansSale.tracking', 'plansSales.plan.productsPlans', 'delivery'])
                     ->where('shopify_order', $shopifyOrder)
                     ->where('project_id', $project->id)
                     ->first();
@@ -80,7 +77,7 @@ class PostBackShopifyController extends Controller
                                         //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
                                         //do que esta na tabela
                                         $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
-                                        $tracking = $productPlanSale->trackings->last();
+                                        $tracking = $productPlanSale->tracking;
                                         if (isset($tracking)) {
                                             //caso seja diferente, atualiza o registro e dispara o e-mail
                                             if ($tracking->tracking_code != $fulfillment["tracking_number"]) {

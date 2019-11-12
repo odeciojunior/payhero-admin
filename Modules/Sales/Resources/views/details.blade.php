@@ -129,19 +129,23 @@
                         <div id='div_tracking_code' style='display:none;'>
                             <h4> Rastreio </h4>
                             {{--<p class="font-size-10"><i class="icon wb-info-circle"></i> Ao cadastrar ou alterar um codigo de rastreio, <b>enviaremos um e-mail</b> notificando o cliente.</p>--}}
-                            <table class='table table-striped mt-15'>
+                            <table class='table table-striped mb-10'>
                                 <thead>
                                     <tr>
                                         <th>Produto</th>
                                         <th>Rastreio</th>
                                         <th>Status</th>
-                                        <th>Ações</th>
+                                        {{-- <th>Ações</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id='data-tracking-products'>
                                     {{-- js carregado--}}
                                 </tbody>
                             </table>
+                            <a class='btn p-1 pointer float-right btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                <i class='icon wb-envelope' aria-hidden='true'></i>
+                                Enviar e-mail para o cliente
+                            </a>
                         </div>
                     </div>
                     <!-- DETALHES  -->
@@ -156,13 +160,13 @@
                         <div id="details-boleto" style="display:none">
             <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
                                                                                    style='cursor:pointer;' link='' title='Copiar link'><i
-                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
                                                                                                           class='copy_link'
                                                                                                           style='cursor:pointer;'
                                                                                                           digitable-line='' title='Copiar link'><i
-                                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
@@ -207,6 +211,7 @@
                             <div id='div_notazz_schedule'>
                             </div>
                         </div>
+                        <div id='div_refund_transaction' class='mt-20'></div>
                     </div>
                 </div>
             </div>
@@ -241,6 +246,7 @@
     </div>
 </div>
 <!-- End Modal -->
-@push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=3') }}"></script>
-@endpush
+    @push('scripts')
+        <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
+    @endpush
+</div>

@@ -130,6 +130,7 @@ $(document).ready(function () {
                                         $('#token_webhook_edit').val(response.data.token_webhook);
                                         $('#token_logistics_edit').val(response.data.token_logistics);
                                         $('#start_date_edit').val(response.data.start_date);
+                                        $('#select_pending_days_edit').val(response.data.pending_days);
 
                                         $("#modal_add_integracao").modal('show');
                                         $("#form_add_integration").hide();
@@ -242,6 +243,7 @@ $(document).ready(function () {
                         var token_webhook_create = $('#token_webhook_create').val();
                         var token_logistics_create = $('#token_logistics_create').val();
                         var start_date_create = $('#start_date_create').val();
+                        var select_pending_days_create = $('#select_pending_days_create').val();
 
                         if ($('#start_date_create').val() != '') {
                             swal({
@@ -271,7 +273,8 @@ $(document).ready(function () {
                                             token_api_create: token_api_create,
                                             token_webhook_create: token_webhook_create,
                                             token_logistics_create: token_logistics_create,
-                                            start_date_create: start_date_create
+                                            start_date_create: start_date_create,
+                                            select_pending_days_create: select_pending_days_create
                                         },
                                         error: function error(response) {
                                             if (response.status === 422) {
@@ -307,7 +310,8 @@ $(document).ready(function () {
                                     token_api_create: token_api_create,
                                     token_webhook_create: token_webhook_create,
                                     token_logistics_create: token_logistics_create,
-                                    start_date_create: start_date_create
+                                    start_date_create: start_date_create,
+                                    select_pending_days_create: select_pending_days_create
                                 },
                                 error: function error(response) {
                                     if (response.status === 422) {

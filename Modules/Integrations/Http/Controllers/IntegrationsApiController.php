@@ -29,7 +29,7 @@ class IntegrationsApiController extends Controller
         try {
             $apiTokenModel = new ApiToken();
             $tokens        = $apiTokenModel->newQuery()
-                                           ->where('user_id', auth()->id())
+                                           ->where('user_id', auth()->user()->account_owner_id)
                                            ->latest()
                                            ->paginate();
 
@@ -68,7 +68,7 @@ class IntegrationsApiController extends Controller
             /** @var ApiToken $token */
             $token = $apiTokenModel->newQuery()->create(
                 [
-                    'user_id'               => auth()->id(),
+                    'user_id'               => auth()->user()->account_owner_id,
                     'token_id'              => $tokenIntegration->token->getKey(),
                     'access_token'          => $tokenIntegration->accessToken,
                     'scopes'                => json_encode($scopes, true),
@@ -97,7 +97,7 @@ class IntegrationsApiController extends Controller
             $apiTokenModel = new ApiToken();
             /** @var ApiToken $apiToken */
             $apiToken = $apiTokenModel->newQuery()->find(current(Hashids::decode($encodedId)));
-            if ($apiToken->user_id !== auth()->id()) {
+            if ($apiToken->user_id !== auth()->user()->account_owner_id) {
                 return response()->json(['message' => 'Ocorreu um erro ao excluir.'], Response::HTTP_BAD_REQUEST);
             }
             if (!$apiToken->delete()) {

@@ -88,13 +88,13 @@ class SalePresenter extends Presenter
                 case 6:
                     return 'in_proccess';
                 case 7:
-                    return 'in_review';
-                case 8:
                     return 'refunded';
-                case 9:
+                case 8:
                     return 'partial_refunded';
                 case 10:
                     return 'system_error';
+                case 20:
+                    return 'in_review';
             }
 
             return '';
@@ -112,14 +112,14 @@ class SalePresenter extends Presenter
                     return 5;
                 case 'in_proccess':
                     return 6;
-                case 'in_review':
-                    return 7;
                 case 'refunded':
-                    return 8;
+                    return 7;
                 case 'partial_refunded':
-                    return 9;
+                    return 8;
                 case 'system_error':
                     return 10;
+                case 'in_review':
+                    return 20;
             }
 
             return '';

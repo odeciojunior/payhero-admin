@@ -36,7 +36,7 @@ class TrackingService
             'plans_sale_id' => $planSale->id,
             'amount' => $amount,
             'delivery_id' => $productPlanSale->sale->delivery->id,
-            'tracking_code'        => $trackingCode,
+            'tracking_code' => $trackingCode,
             'tracking_status_enum' => $trackingModel->present()
                 ->getTrackingStatusEnum('posted'),
         ]);
@@ -44,94 +44,102 @@ class TrackingService
         return $tracking;
     }
 
-    public function getTrackings($filters)
+    public function getTrackings($filters, $resume = false)
     {
         $trackingModel = new Tracking();
-        $companyModel = new Company();
+        $productPlanSaleModel = new ProductPlanSale();
 
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-            ->pluck('id')
-            ->toArray();
-
-        $trackings = $trackingModel
+        $productPlanSales = $productPlanSaleModel
             ->with([
-                'sale.transactions',
+                'tracking',
+                'sale.plansSales.plan.productsPlans',
                 'product',
             ])
-            ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
-                $query->whereIn('company_id', $userCompanies);
-            })
-            ->whereNotNull('tracking_code');
+            ->whereHas('sale', function ($query) use ($filters) {
+                //tipo da data e periodo obrigatorio
+                $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+                $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                    ->where('status', 1)
+                    ->where('owner_id', auth()->user()->account_owner_id);
+
+                if(isset($filters['sale'])){
+                    $saleId =  current(Hashids::connection('sale_id')->decode($filters['sale']));
+                    $query->where('id', $saleId);
+                }
+            });
 
         if (isset($filters['status'])) {
-            $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
+            if ($filters['status'] === 'unknown') {
+                $productPlanSales->doesntHave('tracking');
+            } else {
+                $productPlanSales->whereHas('tracking', function ($query) use ($trackingModel, $filters) {
+                    $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
+                });
+            }
         }
 
         if (isset($filters['tracking_code'])) {
-            $trackings->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
+            $productPlanSales->whereHas('tracking', function ($query) use ($filters) {
+                $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
+            });
         }
 
         if (isset($filters['project'])) {
-            $trackings->whereHas('product', function ($query) use ($filters) {
+            $productPlanSales->whereHas('product', function ($query) use ($filters) {
                 $query->where('project_id', current(Hashids::decode($filters['project'])));
             });
         }
-        //tipo da data e periodo obrigatorio
-        $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-        $trackings->whereBetween('updated_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
 
-        return $trackings->orderBy('id', 'desc')->paginate(10);
-    }
+        if (!$resume) {
+            return $productPlanSales->orderBy('id', 'desc')->paginate(10);
+        } else {
 
-    public function getResume($filters)
-    {
-        $trackingModel = new Tracking();
-        $companyModel = new Company();
+            $productPlanSales = $productPlanSales->get();
 
-        $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-            ->pluck('id')
-            ->toArray();
+            $total = $productPlanSales->count();
+            $posted = 0;
+            $dispatched = 0;
+            $delivered = 0;
+            $out_for_delivery = 0;
+            $exception = 0;
+            $unknown = 0;
 
-        $query = $trackingModel
-            ->whereHas('sale.transactions', function ($query) use ($userCompanies) {
-                $query->whereIn('company_id', $userCompanies);
-            })
-            ->whereNotNull('tracking_code');
+            foreach ($productPlanSales as $productPlanSale) {
 
-        if (isset($filters['status'])) {
-            $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
+                $tracking = $productPlanSale->tracking;
+
+                if (isset($tracking)) {
+                    switch ($tracking->tracking_status_enum) {
+                        case $tracking->present()->getTrackingStatusEnum('posted'):
+                            $posted++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('dispatched'):
+                            $dispatched++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('delivered'):
+                            $delivered++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('out_for_delivery'):
+                            $out_for_delivery++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('exception'):
+                            $exception++;
+                            break;
+                    }
+                } else {
+                    $unknown++;
+                }
+            }
+
+            return response()->json(['data' => [
+                'total' => $total,
+                'posted' => $posted,
+                'dispatched' => $dispatched,
+                'delivered' => $delivered,
+                'out_for_delivery' => $out_for_delivery,
+                'exception' => $exception,
+                'unknown' => $unknown
+            ]]);
         }
-
-        if (isset($filters['tracking_code'])) {
-            $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
-        }
-
-        if (isset($filters['project'])) {
-            $query->whereHas('product', function ($query) use ($filters) {
-                $query->where('project_id', current(Hashids::decode($filters['project'])));
-            });
-        }
-        //tipo da data e periodo obrigatorio
-        $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-        $query->whereBetween('updated_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-
-        $trackings = $query->select('tracking_status_enum')
-            ->get();
-
-        $total = $trackings->count();
-        $posted = $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum('posted'))->count();
-        $dispatched = $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum('dispatched'))->count();
-        $delivered = $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum('delivered'))->count();
-        $out_for_delivery = $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum('out_for_delivery'))->count();
-        $exception = $trackings->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum('exception'))->count();
-
-        return response()->json(['data' => [
-            'total' => $total,
-            'posted' => $posted,
-            'dispatched' => $dispatched,
-            'delivered' => $delivered,
-            'out_for_delivery' => $out_for_delivery,
-            'exception' => $exception,
-        ]]);
     }
 }

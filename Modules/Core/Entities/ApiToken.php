@@ -130,7 +130,7 @@ class ApiToken extends Model
     public static function generateTokenIntegration($name, $scopes, $user = null)
     {
         $scopes = is_array($scopes) ? $scopes : [$scopes];
-        $userId = $user->id ?? auth()->id();
+        $userId = $user->account_owner_id ?? auth()->user()->account_owner_id;
         /** @var PersonalAccessTokenFactory $tokenFactory */
         $tokenFactory = app()->make(PersonalAccessTokenFactory::class);
 

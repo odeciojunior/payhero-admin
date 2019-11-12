@@ -1,0 +1,14 @@
+{
+    "name": "ActiveCampaign",
+    "alias": "activecampaign",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\ActiveCampaign\\Providers\\ActiveCampaignServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

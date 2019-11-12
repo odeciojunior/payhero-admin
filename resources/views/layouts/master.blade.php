@@ -98,7 +98,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=1') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=2') }}"></script>
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
@@ -137,7 +137,7 @@
     <script>
         window.Intercom('boot', {
             app_id: "q35ubavq",
-            user_id: "{{ auth()->user()->id }}",
+            user_id: "{{ auth()->user()->account_owner_id }}",
             name: "{{ auth()->user()->name }}",
             email: "{{ auth()->user()->email }}",
         });

@@ -790,6 +790,7 @@ class ShopifyService
             $product = $productModel->with('productsPlans')
                                     ->where('shopify_id', $storeProduct->getId())
                                     ->where('shopify_variant_id', $variant->getId())
+                                    ->where('project_id', $projectId)
                                     ->first();
             if ($product) {
 
@@ -798,8 +799,7 @@ class ShopifyService
                         'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
                         'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                         'weight'             => $variant->getWeight(),
-                        'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                     ->getCost(),
+                        //'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                         'shopify_id'         => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
                         'sku'                => $variant->getSku(),
@@ -820,6 +820,7 @@ class ShopifyService
                             'description' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
                             'price'       => $variant->getPrice(),
                             'status'      => '1',
+                            'project_id'  => $projectId,
                         ]
                     );
 
@@ -884,8 +885,7 @@ class ShopifyService
                         'guarantee'          => '0',
                         'format'             => 1,
                         'category_id'        => '11',
-                        'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                     ->getCost(),
+                        'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                         'shopify'            => true,
                         'price'              => '',
                         'shopify_id'         => $storeProduct->getId(),
@@ -956,7 +956,6 @@ class ShopifyService
      */
     public function importShopifyStore($projectId, $userId)
     {
-
         $projectModel = new Project();
 
         $userModel = new User();

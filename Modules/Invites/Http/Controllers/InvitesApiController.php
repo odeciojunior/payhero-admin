@@ -33,7 +33,7 @@ class InvitesApiController extends Controller
 
             $invitationModel = new Invitation();
 
-            $invites = $invitationModel->newQuery()->where('invite', auth()->user()->id)->with('company');
+            $invites = $invitationModel->newQuery()->where('invite', auth()->user()->account_owner_id)->with('company');
 
             return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(5));
         } catch (Exception $e) {
@@ -60,7 +60,7 @@ class InvitesApiController extends Controller
                 $userModel       = new User();
                 $inviteSaved     = null;
 
-                $invitesSent = $invitationModel->where('invite', auth()->user()->id)->count();
+                $invitesSent = $invitationModel->where('invite', auth()->user()->account_owner_id)->count();
 
                 if ($invitesSent == auth()->user()->invites_amount) {
                     return response()->json([
@@ -102,7 +102,7 @@ class InvitesApiController extends Controller
                             } else {
                                 if (!$invite) {
                                     $data = [
-                                        'invite'        => auth()->user()->id,
+                                        'invite'        => auth()->user()->account_owner_id,
                                         'status'        => $invitationModel->present()->getStatus('pending'),
                                         'company_id'    => current(Hashids::decode($request->input('company'))),
                                         'email_invited' => $request->input('email'),
@@ -213,7 +213,7 @@ class InvitesApiController extends Controller
                 [
                     [
                         'invite',
-                        auth()->user()->id,
+                        auth()->user()->account_owner_id,
                     ],
                     [
                         'status',
@@ -221,8 +221,8 @@ class InvitesApiController extends Controller
                     ],
                 ]
             )->count();
-            $invitationSentCount     = $invitationModel->newQuery()->where('invite', auth()->user()->id)->count();
-            $userIdInvites           = $invitationModel->newQuery()->where('invite', auth()->user()->id)->pluck('id')
+            $invitationSentCount     = $invitationModel->newQuery()->where('invite', auth()->user()->account_owner_id)->count();
+            $userIdInvites           = $invitationModel->newQuery()->where('invite', auth()->user()->account_owner_id)->pluck('id')
                                                        ->toArray();
             $commissionPaid          = $transactionModel->newQuery()->whereIn('invitation_id', $userIdInvites)
                                                         ->where('status', 'transfered')->sum('value');

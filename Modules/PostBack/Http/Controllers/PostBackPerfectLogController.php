@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -27,8 +25,6 @@ class PostBackPerfectLogController extends Controller
                 'updated_at' => 'required',
                 'status' => 'required',
             ]);
-
-            Log::debug(json_encode($requestValidated, JSON_PRETTY_PRINT));
 
             $trackingModel = new Tracking();
 
@@ -61,16 +57,20 @@ class PostBackPerfectLogController extends Controller
                         break;
                 }
 
+                $oldStatus = $tracking->tracking_status_enum;
+
                 //ATUALIZAR O STATUS
                 $tracking->update([
                     'tracking_code' => $requestValidated['tracking'],
                     'tracking_status_enum' => $status,
                 ]);
 
-                //NOTIFICAR O USUARIO
-                $productService = new ProductService();
-                $saleProducts = $productService->getProductsBySale($tracking->sale);
-                event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
+                /*if($oldStatus != $status){
+                    //NOTIFICAR O USUARIO
+                    $productService = new ProductService();
+                    $saleProducts = $productService->getProductsBySale($tracking->sale);
+                    event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
+                }*/
             }
             return response()->json(['message' => 'Postback received']);
         } catch (\Exception $exception){

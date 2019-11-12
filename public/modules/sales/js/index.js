@@ -213,6 +213,7 @@ $(document).ready(function () {
                 var statusArray = {
                     1: 'success',
                     6: 'primary',
+                    7: 'danger',
                     4: 'danger',
                     3: 'danger',
                     2: 'pendente'
