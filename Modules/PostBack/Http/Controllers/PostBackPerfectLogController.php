@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -27,8 +25,6 @@ class PostBackPerfectLogController extends Controller
                 'updated_at' => 'required',
                 'status' => 'required',
             ]);
-
-            Log::debug(json_encode($requestValidated, JSON_PRETTY_PRINT));
 
             $trackingModel = new Tracking();
 
