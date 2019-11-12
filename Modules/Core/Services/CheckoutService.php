@@ -97,9 +97,11 @@ class CheckoutService
     public function cancelPayment($saleId, $refundAmount)
     {
         try {
-            $saleService   = new SaleService();
-            $sale          = Sale::where('id', Hashids::connection('sale_id')->decode($saleId))->first();
-            $saleAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            $saleService = new SaleService();
+            $saleModel   = new Sale();
+            $sale        = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))->first();
+            $saleAmount  = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            // TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
             if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
                 $result = [
                     'status'  => 'error',
@@ -112,7 +114,7 @@ class CheckoutService
             ];
             $response         = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if ($response->status == 'success') {
-                $checkUpdate = $saleService->updateSaleRefunded($sale, $saleAmount, $refundAmount, $response);
+                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
                 if ($checkUpdate) {
                     $result = [
                         'status'  => 'success',

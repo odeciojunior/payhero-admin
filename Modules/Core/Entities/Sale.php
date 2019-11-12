@@ -50,6 +50,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property Affiliate $affiliate
  * @property Client $client
  * @property Delivery $delivery
+ * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
  * @property PlanSale[] $plansSales
  * @property Transaction[] $transactions
@@ -151,6 +152,14 @@ class Sale extends Model
     public function delivery()
     {
         return $this->belongsTo('Modules\Core\Entities\Delivery');
+    }
+
+    /**
+     * @return hasMany
+     */
+    public function saleRefundHistory()
+    {
+        return $this->hasMany('Modules\Core\Entities\SaleRefundHistory');
     }
 
     /**

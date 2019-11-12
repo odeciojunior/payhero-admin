@@ -18,6 +18,7 @@ class CreateSaleRefundHistoriesTable extends Migration
             $table->integer('refunded_amount');
             $table->timestamp('date_refunded');
             $table->json('gateway_response');
+            $table->softDeletes();
             $table->timestamps();
         });
         Schema::table('sale_refund_histories', function(Blueprint $table) {

@@ -91,6 +91,8 @@ class SalePresenter extends Presenter
                     return 'in_review';
                 case 8:
                     return 'refunded';
+                case 9:
+                    return 'partial_refunded';
                 case 10:
                     return 'system_error';
             }
@@ -114,6 +116,8 @@ class SalePresenter extends Presenter
                     return 7;
                 case 'refunded':
                     return 8;
+                case 'partial_refunded':
+                    return 9;
                 case 'system_error':
                     return 10;
             }

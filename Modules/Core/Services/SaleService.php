@@ -7,12 +7,15 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Presenters\SalePresenter;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -314,29 +317,87 @@ class SaleService
 
     /**
      * @param Sale $sale
-     * @param $saleAmount
-     * @param $refundAmount
+     * @param int $refundAmount
      * @param $response
+     * @return bool
      * @throws Exception
      */
-    public function updateSaleRefunded($sale, $saleAmount, $refundAmount, $response)
+    public function updateSaleRefunded($sale, $refundAmount, $response)
     {
         try {
-            $salePresenter   = new SalePresenter();
-            $responseGateway = $response->response;
-            $status          = $response->status_sale;
+            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+            DB::beginTransaction();
+            $saleModel       = new Sale();
+            $responseGateway = $response->response ?? [];
+            $statusGateway   = $response->status_gateway ?? '';
             //            'status'         => 'success',
             //            'message'        => 'Venda cancelada com sucesso!',
             //            'status_gateway' => $result['status_gateway'],
             //            'status_sale'    => $result['status'],
             //            'response'       => $result['response'],
-            $updateData = array_filter([
-                                           'refunded_amount' => $refundAmount ?? null,
-                                           'status'          => $salePresenter->getStatus($status),
-                                           'gateway_status'  => $response->status_gateway,
-                                       ]);
-            $sale->update($updateData);
+            $newTotalPaidValue = $totalPaidValue - $refundAmount;
+            if ($newTotalPaidValue <= 0) {
+                $status = 'refunded';
+            } else {
+                $status = 'partial_refunded';
+            }
+            $newTotalPaidValue = substr_replace($newTotalPaidValue, '.', strlen($newTotalPaidValue) - 2, 0);
+            $updateData        = array_filter([
+                                                  'total_paid_value' => ($newTotalPaidValue ?? 0),
+                                                  'status'           => $saleModel->present()->getStatus($status),
+                                                  'gateway_status'   => $statusGateway,
+                                              ]);
+
+            SaleRefundHistory::create([
+                                          'sale_id'          => $sale->id,
+                                          'refunded_amount'  => $refundAmount,
+                                          'date_refunded'    => Carbon::now(),
+                                          'gateway_response' => json_encode($responseGateway),
+                                      ]);
+            $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
+            if ($checktRecalc) {
+                $checktUpdate = $sale->update($updateData);
+                if ($checktUpdate) {
+                    DB::commit();
+                }
+
+                return true;
+            }
+            DB::rollBack();
+
+            return false;
         } catch (Exception $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * @param Sale $sale
+     * @param int $refundAmount
+     * @return bool
+     * @throws Exception
+     */
+    public function recalcSaleRefund($sale, $refundAmount)
+    {
+        try {
+            $totalPaidValue     = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+            $percentRefund      = (int) round((($refundAmount / $totalPaidValue) * 100));
+            $refundTransactions = $sale->transactions;
+            foreach ($refundTransactions as $refundTransaction) {
+                //calcula valor que deve ser estornado da transação
+                $transactionValue = (int) $refundTransaction->value;
+
+                $transactionRefundAmount = (int) round(($transactionValue * ($percentRefund / 100)));
+                //calcula novo valor da transação
+                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
+
+                $refundTransaction->save();
+            }
+
+            return true;
+        } catch
+        (Exception $ex) {
             throw $ex;
         }
     }
