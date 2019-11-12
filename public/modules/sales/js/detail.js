@@ -416,18 +416,10 @@ $(() => {
                                     <span class='small' style='display: inline-block; width: 60px;white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;'>${value.name}</span>
                                 </td>
                                 <td>
-                                    <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' readonly style="border-color: transparent; background-color: transparent;"/>
+                                    <span class="small font-weight-bold">${value.tracking_code}</span>
                                 </td>
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
-                                </td>
-                                <td class="text-center" style="padding: 0 !important;">
-                                    <a class='pointer btn-save-trackingcode' title='Salvar alterações' sale='${sale}' 
-                                    product-code='${value.id}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                    <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente' tracking="${value.tracking_id}"
-                                    style='margin-left: 10px; ${value.tracking_code ? '' : 'display:none;'}'><i class='icon wb-envelope' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                    <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
                                 </td>
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
