@@ -16,7 +16,6 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\SaleService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
