@@ -84,7 +84,7 @@ $(document).ready(function () {
                 $("#td_address_status").append("<span class='badge badge-" + getStatusBadge(company.address_document_status) + "'>" + company.address_document_translate + "</span>");
                 $("#td_contract_status").append("<span class='badge badge-" + getStatusBadge(company.contract_document_status) + "'>" + company.contract_document_translate + "</span>");
                 configSubmits();
-
+                verifyDocuments(company);
                 //mascara cnpj
                 var optionsCompanyDocument = {
                     onKeyPress: function (cpf, ev, el, op) {
@@ -182,6 +182,19 @@ $(document).ready(function () {
     }
     function selectItemsFunction(item) {
         return {value: item.code, text: (item.code + ' - ' + item.name)};
+    }
+    //vefica se os documentos da empresa estão aprovados e desabilita todos os inputs
+    function verifyDocuments(company) {
+        if (company.address_document_status == 3 && company.bank_document_status == 3 && company.contract_document_status == 3) {
+            $(".form-basic-informations :input[type=text]").attr("disabled", true);
+            $(".dz-hidden-input").prop("disabled", true);
+            $('#dropzoneDocuments').css({
+                'cursor': 'not-allowed',
+            });
+            $('.text-dropzone').css({
+                'cursor': 'not-allowed',
+            });
+        }
     }
 });
 Dropzone.options.dropzoneDocuments = {

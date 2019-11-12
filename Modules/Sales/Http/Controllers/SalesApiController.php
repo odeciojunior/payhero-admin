@@ -299,6 +299,7 @@ class SalesApiController extends Controller
                 $transaction->company->update([
                                                   'balance' => $transaction->company->balance -= 100,
                                               ]);
+                sleep(7);
                 if (!empty($refundedTransaction)) {
                     return response()->json(['message' => 'Transação estornada, aguarde alguns instantes para atualizar o status'], 200);
                 } else {

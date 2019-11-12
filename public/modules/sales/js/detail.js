@@ -517,6 +517,7 @@ $(() => {
         $('#modal_detalhes').modal('hide');
 
         $(document).on('click', '.btn-confirm-refund-transaction', function () {
+            loadingOnScreen();
             $.ajax({
                 method: "POST",
                 url: '/api/sales/refund/' + sale,
@@ -526,9 +527,11 @@ $(() => {
                     'Accept': 'application/json',
                 },
                 error: (response) => {
+                    loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
+                    loadingOnScreenRemove();
                     $.getScript('/modules/sales/js/index.js?v=2', function () {
                         atualizar();
                     });
