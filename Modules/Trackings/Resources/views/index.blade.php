@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=1') }}">
     @endpush
 
     <!-- Page -->
@@ -102,13 +102,13 @@
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
-                    <table id="tabela_trackings" class="table-trackings table table-striped unify" style="">
+                    <table id="tabela_trackings" class="table-trackings table unify" style="">
                         <thead>
                         <tr>
                             <td class="table-title">Venda</td>
                             <td class="table-title">Produto</td>
-                            <td class="table-title">Rastreio</td>
                             <td class="table-title">Status</td>
+                            <td class="table-title">Código de Rastreio</td>
                             <td class="table-title" width="80px;"></td>
                         </tr>
                         </thead>
@@ -197,6 +197,11 @@
                                 <span id="tracking-delivery-zipcode" class="table-title gray">CEP: 27520174</span>
                                 <br>
                                 <span id="tracking-delivery-city" class="table-title gray">Cidade: Resende/RJ</span>
+                                <a class='btn p-1 pointer float-right btn-notify-trackingcode'
+                                   title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                    <i class='icon wb-envelope' aria-hidden='true'></i>
+                                    Enviar e-mail para o cliente
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -209,7 +214,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=3') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=5') }}"></script>
     @endpush
 
 @endsection
