@@ -57,7 +57,8 @@
                                 <option value="">Todos status</option>
                                 <option value="1">Aprovado</option>
                                 <option value="2">Aguardando pagamento</option>
-                                <option value="4">Estornada</option>
+                                <option value="4">Chargeback</option>
+                                <option value="7">Estornado</option>
                                 <option value="6">Em análise</option>
                             </select>
                         </div>
@@ -206,8 +207,36 @@
     </div>
     <!-- End Modal -->
 
+    <!-- Modal estonar transação-->
+    <div id="modal-refund-transaction" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-simple">
+            <div class="modal-content p-10">
+                <div class="modal-header simple-border-bottom mb-10">
+                    <h4 class="modal-title" id="modal-title">Estornar transação</h4>
+                    <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div class='my-20 mx-20 text-center'>
+                    <h3 class="black"> Você tem certeza? </h3>
+                    <p class="gray"> Apó confirmada, essa operação não poderá ser desfeita!</p>
+                    <small>OBS: Taxa de R$ 1,00 por estorno</small>
+                </div>
+                <div class="modal-footer">
+                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                        Fechar
+                    </a>
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" data-dismiss="modal">
+                        Estornar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=2') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

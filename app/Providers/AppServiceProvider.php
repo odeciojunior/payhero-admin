@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
     {
         //set timezone para este
         date_default_timezone_set('America/Sao_Paulo');
+
+        Queue::failing(function (JobFailed $event) {
+            Log::warning('Te peguei');
+            Log::warning($event->exception);
+            report($event->exception);
+        });
     }
 
     /**

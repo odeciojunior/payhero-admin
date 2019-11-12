@@ -129,19 +129,23 @@
                         <div id='div_tracking_code' style='display:none;'>
                             <h4> Rastreio </h4>
                             {{--<p class="font-size-10"><i class="icon wb-info-circle"></i> Ao cadastrar ou alterar um codigo de rastreio, <b>enviaremos um e-mail</b> notificando o cliente.</p>--}}
-                            <table class='table table-striped mt-15'>
+                            <table class='table table-striped mb-10'>
                                 <thead>
                                     <tr>
                                         <th>Produto</th>
                                         <th>Rastreio</th>
                                         <th>Status</th>
-                                        <th>Ações</th>
+                                        {{-- <th>Ações</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id='data-tracking-products'>
                                     {{-- js carregado--}}
                                 </tbody>
                             </table>
+                            <a class='btn p-1 pointer float-right btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                <i class='icon wb-envelope' aria-hidden='true'></i>
+                                Enviar e-mail para o cliente
+                            </a>
                         </div>
                     </div>
                     <!-- DETALHES  -->
@@ -207,6 +211,7 @@
                             <div id='div_notazz_schedule'>
                             </div>
                         </div>
+                        <div id='div_refund_transaction' class='mt-20'></div>
                     </div>
                 </div>
             </div>
@@ -214,6 +219,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
     @endpush
 </div>

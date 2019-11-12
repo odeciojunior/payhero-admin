@@ -23,6 +23,8 @@ class TransactionPresenter extends Presenter
                     return 'partner';
                 case 6:
                     return 'convertaX';
+                case 7:
+                    return 'refunded';
             }
             return '';
         } else {
@@ -39,6 +41,8 @@ class TransactionPresenter extends Presenter
                     return 5;
                 case 'convertaX':
                     return 6;
+                case 'refunded':
+                    return 7;
             }
             return '';
         }

@@ -168,65 +168,107 @@ class PostBackPagarmeController extends Controller
                 //     Log::warning('Erro ao enviar lead para ActiveCampaign na venda ' . $sale->id);
                 //     report($e);
                 // }
+            } else if ($requestData['transaction']['status'] == 'chargedback') {
+                $sale->update([
+                                  'gateway_status' => 'chargedback',
+                                  'status'         => '4',
+                              ]);
+
+                $transferModel = new Transfer();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->status == 'transfered') {
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'chargedback',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
+                    } else if ($transaction->status == 'anticipated') {
+
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->antecipable_value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'chargedback',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
+                    }
+
+                    $transaction->update([
+                                             'status' => 'chargedback',
+                                         ]);
+                }
+            } else if ($requestData['transaction']['status'] == 'refunded') {
+                $sale->update([
+                                  'gateway_status' => 'refunded',
+                                  'status'         => '7',
+                              ]);
+
+                $transferModel = new Transfer();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->status == 'transfered') {
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'refunded',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
+                    } else if ($transaction->status == 'anticipated') {
+
+                        $company = $companyModel->find($transaction->company_id);
+
+                        $transferModel->create([
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $company->user_id,
+                                                   'value'          => $transaction->antecipable_value,
+                                                   'type'           => 'out',
+                                                   'reason'         => 'chargedback',
+                                                   'company_id'     => $company->id,
+                                               ]);
+
+                        $company->update([
+                                             'balance' => $company->balance -= $transaction->value,
+                                         ]);
+                    }
+
+                    $transaction->update([
+                                             'status' => 'refunded',
+                                         ]);
+                }
             } else {
+                $sale->update([
+                                  'gateway_status' => $requestData['transaction']['status'],
+                              ]);
 
-                if ($requestData['transaction']['status'] == 'chargedback') {
-                    $sale->update([
-                                      'gateway_status' => 'chargedback',
-                                      'status'         => '4',
-                                  ]);
-
-                    $transferModel = new Transfer();
-
-                    foreach ($transactions as $transaction) {
-
-                        if ($transaction->status == 'transfered') {
-                            $company = $companyModel->find($transaction->company_id);
-
-                            $transferModel->create([
-                                                       'transaction_id' => $transaction->id,
-                                                       'user_id'        => $company->user_id,
-                                                       'value'          => $transaction->value,
-                                                       'type'           => 'out',
-                                                       'reason'         => 'chargedback',
-                                                       'company_id'     => $company->id,
-                                                   ]);
-
-                            $company->update([
-                                                 'balance' => $company->balance -= $transaction->value,
-                                             ]);
-                        }
-                        elseif($transaction->status == 'anticipated'){
-
-                            $company = $companyModel->find($transaction->company_id);
-
-                            $transferModel->create([
-                                                       'transaction_id' => $transaction->id,
-                                                       'user_id'        => $company->user_id,
-                                                       'value'          => $transaction->antecipable_value,
-                                                       'type'           => 'out',
-                                                       'reason'         => 'chargedback',
-                                                       'company_id'     => $company->id,
-                                                   ]);
-
-                            $company->update([
-                                                 'balance' => $company->balance -= $transaction->value,
-                                             ]);
-
-                        }
-
-                        $transaction->update([
-                                                 'status' => 'chargedback',
-                                             ]);
-                    }
-                } else {
-                    $sale->update([
-                                      'gateway_status' => $requestData['transaction']['status'],
-                                  ]);
-
-                    foreach ($transactions as $transaction) {
-                        $transaction->update(['status' => $requestData['transaction']['status']]);
-                    }
+                foreach ($transactions as $transaction) {
+                    $transaction->update(['status' => $requestData['transaction']['status']]);
                 }
             }
         }
