@@ -14,7 +14,7 @@ class AlterTableNotazzIntegrationAddPendingDaysColumn extends Migration
     public function up()
     {
         Schema::table('notazz_integrations', function(Blueprint $table) {
-            $table->unsignedInteger('pending_days')->default(1); //1, 7, 15, 30, 60
+            $table->unsignedInteger('pending_days')->after('invoice_type')->default(1); //1, 7, 15, 30, 60
         });
     }
 
