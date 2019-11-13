@@ -220,28 +220,34 @@ $(function () {
                     $('#table-plans').addClass('table-striped');
 
                 } else {
-
                     $("#data-table-plan").html('');
-                    $.each(response.data, function (index, value) {
-                        data = '';
-                        data += '<tr>';
-                        data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.name + '</td>';
-                        data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.description + '</td>';
-                        data += '<td id="link" class="display-sm-none display-m-none copy_link" title="Copiar Link" style="vertical-align: middle;cursor:pointer;" link="' + value.code + '">' + value.code + '</td>';
-                        data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
-                        data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
-                        data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
-                        data += "<td style='text-align:center' class='mg-responsive'>"
-                        data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'                                                 ><i class='material-icons gradient'>remove_red_eye</i></a>"
-                        data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
-                        data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><i class='material-icons gradient'>delete_outline</i></a>";
-                        data += "</td>";
-                        data += '</tr>';
-                        $("#data-table-plan").append(data);
-                        $('#table-plans').addClass('table-striped');
-                    });
 
-                    pagination(response, 'plans', index);
+                    if (response.data[0].document_status == 'approved') {
+                        $.each(response.data, function (index, value) {
+                            data = '';
+                            data += '<tr>';
+                            data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.name + '</td>';
+                            data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.description + '</td>';
+                            data += '<td id="link" class="display-sm-none display-m-none copy_link" title="Copiar Link" style="vertical-align: middle;cursor:pointer;" link="' + value.code + '">' + value.code + '</td>';
+                            data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
+                            data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
+                            data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
+                            data += "<td style='text-align:center' class='mg-responsive'>"
+                            data += "<a title='Visualizar' class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'                                                 ><i class='material-icons gradient'>remove_red_eye</i></a>"
+                            data += "<a title='Editar' class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
+                            data += "<a title='Excluir' class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><i class='material-icons gradient'>delete_outline</i></a>";
+                            data += "</td>";
+                            data += '</tr>';
+                            $("#data-table-plan").append(data);
+                            $('#table-plans').addClass('table-striped');
+                        });
+
+                        pagination(response, 'plans', index);
+                    } else {
+                        $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Link de pagamento só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</td></tr>");
+                        $('#table-plans').addClass('table-striped');
+                    }
+
                 }
 
                 /**
