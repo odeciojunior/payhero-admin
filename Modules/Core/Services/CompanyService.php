@@ -40,4 +40,22 @@ class CompanyService
             return [];
         }
     }
+
+    public function isDocumentValidated(int $companyId)
+    {
+        $companyModel     = new Company();
+        $company          = $companyModel->find($companyId);
+        $companyPresenter = $companyModel->present();
+        if (!empty($company)) {
+            if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') &&
+                $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') &&
+                $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
 }

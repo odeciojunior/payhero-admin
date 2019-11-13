@@ -191,7 +191,7 @@ $(() => {
     }
 
     function renderProjectConfig(data) {
-
+        console.log(data);
         let {project, companies, userProject, shopifyIntegrations} = data;
 
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
@@ -210,7 +210,11 @@ $(() => {
         $('#update-project #invoice-description').val(project.invoice_description);
         $('#update-project #companies').html('');
         for (let company of companies) {
-            $('#update-project #companies').append(`<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} >${company.name}</option>`)
+            $('#update-project #companies').append(
+                `<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} ${(company.company_document_status == 'pending' ? 'disabled' : '')}>
+                   ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
+                </option>
+                `)
         }
         $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
         $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_interest_free - 1).change();

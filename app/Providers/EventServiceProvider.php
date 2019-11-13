@@ -9,6 +9,7 @@ use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\UserRegistrationListener;
 use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
+// use Modules\Core\Listeners\BilletPaidDigitalManagerListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,7 @@ class EventServiceProvider extends ServiceProvider
             BilletPaidActiveCampaignListener::class,
             BilletPaidHotZappListener::class,
             BilletPaidSendEmailListener::class,
+            // BilletPaidDigitalManagerListener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',

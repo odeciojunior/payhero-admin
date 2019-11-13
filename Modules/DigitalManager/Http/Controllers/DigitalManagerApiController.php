@@ -69,7 +69,6 @@ class DigitalManagerApiController extends Controller
      */
     public function store(Request $request)
     {
-
         try {
             $data                           = $request->all();
             $digitalmanagerIntegrationModel = new DigitalmanagerIntegration();
@@ -81,6 +80,15 @@ class DigitalManagerApiController extends Controller
                     return response()->json([
                                                 'message' => 'Projeto já integrado',
                                             ], 400);
+                }
+                if(empty($data['api_token']) || empty($data['url'])) {
+                    return response()->json(['message' => 'API Token e URL são obrigatórios!'], 400);
+                }
+                if(strlen($data['api_token']) != 40) {
+                    return response()->json(['message' => 'API Token inválido!'], 400);
+                }
+                if(!filter_var($data['url'], FILTER_VALIDATE_URL)) {
+                    return response()->json(['message' => 'URL inválido!'], 400);
                 }
                 if (empty($data['boleto_generated'])) {
                     $data['boleto_generated'] = 0;
@@ -182,47 +190,66 @@ class DigitalManagerApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $digitalmanagerIntegrationModel = new DigitalmanagerIntegration();
-        $data                           = $request->all();
-        $integrationId                  = current(Hashids::decode($id));
-        $digitalmanagerIntegration             = $digitalmanagerIntegrationModel->find($integrationId);
-        if (empty($data['boleto_generated'])) {
-            $data['boleto_generated'] = 0;
-        }
-        if (empty($data['boleto_paid'])) {
-            $data['boleto_paid'] = 0;
-        }
-        if (empty($data['credit_card_paid'])) {
-            $data['credit_card_paid'] = 0;
-        }
-        if (empty($data['credit_card_refused'])) {
-            $data['credit_card_refused'] = 0;
-        }
-        if (empty($data['abandoned_cart'])) {
-            $data['abandoned_cart'] = 0;
-        }
-        if (empty($data['abandoned_cart'])) {
-            $data['abandoned_cart'] = 0;
-        }
+        
+        try {
+            
+            $digitalmanagerIntegrationModel = new DigitalmanagerIntegration();
+            $data                           = $request->all();
+            $integrationId                  = current(Hashids::decode($id));
+            $digitalmanagerIntegration      = $digitalmanagerIntegrationModel->find($integrationId);
+            $messageError = '';
+            if(empty($data['api_token']) || empty($data['url'])) {
+                return response()->json(['message' => 'API Token e URL são obrigatórios!'], 400);
+            }
+            if(strlen($data['api_token']) != 40) {
+                return response()->json(['message' => 'API Token inválido!'], 400);
+            }
+            if(!filter_var($data['url'], FILTER_VALIDATE_URL)) {
+                return response()->json(['message' => 'URL inválido!'], 400);
+            }
+            if (empty($data['boleto_generated'])) {
+                $data['boleto_generated'] = 0;
+            }
+            if (empty($data['boleto_paid'])) {
+                $data['boleto_paid'] = 0;
+            }
+            if (empty($data['credit_card_paid'])) {
+                $data['credit_card_paid'] = 0;
+            }
+            if (empty($data['credit_card_refused'])) {
+                $data['credit_card_refused'] = 0;
+            }
+            if (empty($data['abandoned_cart'])) {
+                $data['abandoned_cart'] = 0;
+            }
+            if (empty($data['abandoned_cart'])) {
+                $data['abandoned_cart'] = 0;
+            }
 
-        $integrationUpdated = $digitalmanagerIntegration->update([
-                                                              'api_token'           => $data['api_token'],
-                                                              'url'                 => $data['url'],
-                                                              'billet_generated'    => $data['boleto_generated'],
-                                                              'billet_paid'         => $data['boleto_paid'],
-                                                              'credit_card_refused' => $data['credit_card_refused'],
-                                                              'credit_card_paid'    => $data['credit_card_paid'],
-                                                              'abandoned_cart'      => $data['abandoned_cart'],
-                                                          ]);
-        if ($integrationUpdated) {
+            $integrationUpdated = $digitalmanagerIntegration->update([
+                                                                  'api_token'           => $data['api_token'],
+                                                                  'url'                 => $data['url'],
+                                                                  'billet_generated'    => $data['boleto_generated'],
+                                                                  'billet_paid'         => $data['boleto_paid'],
+                                                                  'credit_card_refused' => $data['credit_card_refused'],
+                                                                  'credit_card_paid'    => $data['credit_card_paid'],
+                                                                  'abandoned_cart'      => $data['abandoned_cart'],
+                                                              ]);
+            if ($integrationUpdated) {
+                return response()->json([
+                                            'message' => 'Integração atualizada com sucesso!',
+                                        ], 200);
+            }
+
             return response()->json([
-                                        'message' => 'Integração atualizada com sucesso!',
-                                    ], 200);
+                                        'message' => 'Ocorreu um erro ao atualizar a integração',
+                                    ], 400);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao atualizar a integração',
+                                    ], 400);
         }
-
-        return response()->json([
-                                    'message' => 'Ocorreu um erro ao atualizar a integração',
-                                ], 400);
     }
 
     /**

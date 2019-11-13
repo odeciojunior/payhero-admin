@@ -171,6 +171,12 @@ class PostBackShopifyController extends Controller
             try {
                 $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
 
+                if(empty($shopIntegration)){
+                    return response()->json([
+                        'message' => 'Integração não encontrada',
+                    ], 200);
+                }
+
                 $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
             } catch (\Exception $e) {
                 return response()->json([

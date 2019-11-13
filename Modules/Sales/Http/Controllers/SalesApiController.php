@@ -230,7 +230,7 @@ class SalesApiController extends Controller
 
                 $sale                = $saleModel->find($saleId);
                 $refundedTransaction = $pagarmeClient->transactions()->refund([
-                                                                                  'id' => $sale->gateway_id,
+                                                                                  'id' => $sale->gateway_transaction_id,
                                                                               ]);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');

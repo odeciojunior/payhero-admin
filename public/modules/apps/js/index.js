@@ -35,6 +35,10 @@ $(document).ready(function(){
                     $('#activecampaign-bt').addClass('added');
                     $('#activecampaign-icon').removeClass('wb-plus').addClass('wb-check');
                 }
+                if(response.digitalmanagerIntegrations > 0){
+                    $('#digitalmanager-bt').addClass('added');
+                    $('#digitalmanager-icon').removeClass('wb-plus').addClass('wb-check');
+                }
                 
             }
         });
