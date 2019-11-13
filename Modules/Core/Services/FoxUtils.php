@@ -204,4 +204,39 @@ class FoxUtils
 
         return false;
     }
+
+    /**
+     * @param $value
+     * @param string $type
+     * @return null
+     */
+    public static function xorEncrypt($value, $type = "encrypt")
+    {
+        $customKey = getenv("CUSTOM_CRYPT_KEY", null);
+        if (self::isEmpty($customKey)) {
+            return null;
+        }
+        if ($type == "decrypt") {
+            $value = base64_decode($value);
+        }
+        $valueLength     = strlen($value);
+        $customKeyLength = strlen($customKey);
+        for ($i = 0; $i < $valueLength; $i++) {
+            for ($j = 0; $j < $customKeyLength; $j++) {
+                if ($type == "decrypt") {
+                    $value[$i] = $customKey[$j] ^ $value[$i];
+                } else {
+                    $value[$i] = $value[$i] ^ $customKey[$j];
+                }
+            }
+        }
+
+        $result = $value;
+
+        if ($type == "encrypt") {
+            $result = base64_encode($value);
+        }
+
+        return $result;
+    }
 }
