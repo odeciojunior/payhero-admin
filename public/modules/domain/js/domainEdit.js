@@ -48,7 +48,7 @@ $(document).ready(function () {
                     $('#tabela-dominios').addClass('table-striped');
 
                     pagination(response, 'domain', updateDomains);
-
+                    verifyCompanyDocuments(response);
                     /**
                      * Delete Domain
                      */
@@ -599,7 +599,7 @@ $(document).ready(function () {
      * Recheck dominio
      */
     $(".btn-verify-domain").unbind('click');
-    $(".btn-verify-domain").on('click', function () {
+    $(document).on('click', '.btn-verify-domain',function () {
         let domainId = $("#domain").val();
         $("#modal-title-dns-recheck").hide();
 
@@ -695,5 +695,11 @@ $(document).ready(function () {
     function resetHtml(whereToReset) {
         $(whereToReset).html('');
     }
-
+    function verifyCompanyDocuments(response) {
+        if (response.data[0].document_status == 'approved') {
+            $('#div-recheck-dns').html("<button class='btn btn-success btn-verify-domain' domain='' style='font-size: 25px;'>Verificar</button>")
+        } else {
+            $('#div-recheck-dns').html('<span class="table-title">A aprovação do domínio só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</span>');
+        }
+    }
 });
