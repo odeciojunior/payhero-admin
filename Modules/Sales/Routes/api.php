@@ -22,11 +22,6 @@ Route::group(
             'as'   => 'sales.resume',
             'uses' => 'SalesApiController@resume',
         ]);
-
-        Route::post('/cancel/payment', [
-            'as'   => 'sales.refund',
-            'uses' => 'SalesApiController@cancelPayment',
-        ]);
         Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
     }
 );

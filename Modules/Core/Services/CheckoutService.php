@@ -7,8 +7,11 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Presenters\SalePresenter;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -94,13 +97,14 @@ class CheckoutService
             return $products;
         }*/
 
-    public function cancelPayment($saleId, $refundAmount)
+    public function cancelPayment($sale, $refundAmount)
     {
         try {
-            $saleService = new SaleService();
-            $saleModel   = new Sale();
-            $sale        = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))->first();
-            $saleAmount  = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            $saleService      = new SaleService();
+            $transactionModel = new Transaction();
+            $transferModel    = new Transfer();
+            $companyModel     = new Company();
+            $saleAmount       = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             // TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
             if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
                 $result = [
@@ -108,7 +112,7 @@ class CheckoutService
                     'message' => 'Valor não confere com o da Venda.',
                 ];
             }
-            $urlCancelPayment = $this->urlCancelPayment . $saleId;
+            $urlCancelPayment = $this->urlCancelPayment . Hashids::connection('sale_id')->encode($sale->id);
             $dataCancel       = [
                 'refundeAmount' => $refundAmount,
             ];
@@ -116,6 +120,21 @@ class CheckoutService
             if ($response->status == 'success') {
                 $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
                 if ($checkUpdate) {
+                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+                    $transaction   = $transactionModel->where('sale_id', $sale->id)
+                                                      ->whereIn('company_id', $userCompanies)
+                                                      ->first();
+                    $transferModel->create([
+                                               'transaction_id' => $transaction->id,
+                                               'user_id'        => auth()->user()->account_owner_id,
+                                               'value'          => 100,
+                                               'type'           => 'out',
+                                               'reason'         => 'Taxa de estorno',
+                                               'company_id'     => $transaction->company_id,
+                                           ]);
+                    $transaction->company->update([
+                                                      'balance' => $transaction->company->balance -= 100,
+                                                  ]);
                     $result = [
                         'status'  => 'success',
                         'message' => 'Venda Estornada com sucesso.',

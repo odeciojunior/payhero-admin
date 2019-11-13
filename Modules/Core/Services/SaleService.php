@@ -17,8 +17,10 @@ use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Presenters\SalePresenter;
 use Modules\Products\Transformers\ProductsSaleResource;
+use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -381,17 +383,38 @@ class SaleService
     public function recalcSaleRefund($sale, $refundAmount)
     {
         try {
+            $companyModel       = new Company();
+            $transferModel      = new Transfer();
             $totalPaidValue     = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
             $percentRefund      = (int) round((($refundAmount / $totalPaidValue) * 100));
             $refundTransactions = $sale->transactions;
             foreach ($refundTransactions as $refundTransaction) {
                 //calcula valor que deve ser estornado da transação
-                $transactionValue = (int) $refundTransaction->value;
-
+                $transactionValue        = (int) $refundTransaction->value;
                 $transactionRefundAmount = (int) round(($transactionValue * ($percentRefund / 100)));
                 //calcula novo valor da transação
-                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
+                //todo ativar quando for estorno parcial e ver como tratar a comissão ficando zerada
+//                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
+                //Caso transaction ja esteja como transfered, criar transfer de saida
+                $company = $companyModel->find($refundTransaction->company_id);
+                if ($refundTransaction->status == 'transfered') {
 
+                    $transferModel->create([
+                                               'transaction_id' => $refundTransaction->id,
+                                               'user_id'        => $company->user_id,
+                                               'value'          => $transactionRefundAmount,
+                                               'type'           => 'out',
+                                               'reason'         => 'refunded',
+                                               'company_id'     => $company->id,
+                                           ]);
+
+                    $company->update([
+                                         'balance' => $company->balance -= $transactionRefundAmount,
+                                     ]);
+                }
+                if ($transactionRefundAmount == $transactionValue) {
+                    $refundTransaction->status = 'refunded';
+                }
                 $refundTransaction->save();
             }
 
@@ -399,6 +422,75 @@ class SaleService
         } catch
         (Exception $ex) {
             throw $ex;
+        }
+    }
+
+    /**
+     * @param $transactionId
+     * @return array
+     */
+    public
+    function refund($transactionId)
+    {
+        try {
+            $saleModel        = new Sale();
+            $transferModel    = new Transfer();
+            $companyModel     = new Company();
+            $transactionModel = new Transaction();
+            $saleId           = current(Hashids::connection('sale_id')->decode($transactionId));
+            if (!empty($saleId)) {
+                if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
+                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
+                } else {
+                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
+                }
+
+                $sale                = $saleModel->find($saleId);
+                $refundedTransaction = $pagarmeClient->transactions()->refund([
+                                                                                  'id' => $sale->gateway_id,
+                                                                              ]);
+
+                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
+                                                  ->first();
+                $transferModel->create([
+                                           'transaction_id' => $transaction->id,
+                                           'user_id'        => auth()->user()->account_owner_id,
+                                           'value'          => 100,
+                                           'type'           => 'out',
+                                           'reason'         => 'Taxa de estorno',
+                                           'company_id'     => $transaction->company_id,
+                                       ]);
+                $transaction->company->update([
+                                                  'balance' => $transaction->company->balance -= 100,
+                                              ]);
+                sleep(7);
+                if (!empty($refundedTransaction)) {
+                    return
+                        [
+                            'status'  => 'success',
+                            'message' => 'Transação estornada, aguarde alguns instantes para atualizar o status',
+                        ];
+                } else {
+                    return [
+                        'status'  => 'error',
+                        'message' => 'Erro ao estornar transação',
+                    ];
+                }
+            } else {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro ao estornar transação',
+                ];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao estornar transação SaleService - refund');
+            report($e);
+
+            return [
+                'status'  => 'error',
+                'message' => 'Erro ao estornar transação',
+            ];
         }
     }
 }
