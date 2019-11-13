@@ -42,14 +42,15 @@ class DigitalManagerService
      */
     private function sendPost($data)
     {
+        $data = json_encode($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->apiUrl );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         if (!empty($data))
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-        $headers   = [];
+        $headers   = ['Content-Type: application/json','Content-Length: ' . strlen($data)];
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
@@ -137,7 +138,7 @@ class DigitalManagerService
                     'address_comp'     => $sale->delivery->complement ?? null,
                     'address_district' => $sale->delivery->neighborhood ?? null,
                     'address_city'     => $sale->delivery->city ?? null,
-                    'address_country'  => $sale->delivery->country ?? null,
+                    'address_country'  => substr($sale->delivery->country ?? null, 0, 2),
                     'address_zip_code' => $sale->delivery->zip_code ?? null,
                 ],
                 // 'affiliate' => [
