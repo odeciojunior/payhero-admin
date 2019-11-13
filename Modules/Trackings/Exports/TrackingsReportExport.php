@@ -56,6 +56,9 @@ class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoS
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
                     $currentSale = $this->collection()->get($row - 1)['sale'];
+                    if ($currentSale != $lastSale && isset($lastSale)) {
+                        $setGray = !$setGray;
+                    }
                     if($setGray){
                         $event->sheet->getDelegate()
                             ->getStyle('A' . $row . ':R' . $row)
@@ -63,9 +66,6 @@ class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoS
                             ->setFillType('solid')
                             ->getStartColor()
                             ->setRGB('e5e5e5');
-                    }
-                    if ($currentSale != $lastSale && isset($lastSale)) {
-                        $setGray = !$setGray;
                     }
                     $lastSale = $currentSale;
                 }

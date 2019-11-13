@@ -56,6 +56,9 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
                     $currentSale = $this->collection()->get($row - 1)['sale_code'];
+                    if ($currentSale != $lastSale && isset($lastSale)) {
+                        $setGray = !$setGray;
+                    }
                     if($setGray){
                             $event->sheet->getDelegate()
                                 ->getStyle('A' . $row . ':AR' . $row)
@@ -63,9 +66,6 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                                 ->setFillType('solid')
                                 ->getStartColor()
                                 ->setRGB('e5e5e5');
-                    }
-                    if ($currentSale != $lastSale && isset($lastSale)) {
-                        $setGray = !$setGray;
                     }
                     $lastSale = $currentSale;
                 }
