@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Imports;
+namespace Modules\Trackings\Imports;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
@@ -11,6 +11,8 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\TrackingsImportedEvent;
+use Modules\Core\Services\PerfectLogService;
+use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, WithEvents
@@ -35,6 +37,8 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
     public function collection(Collection $collection)
     {
         $saleModel = new Sale();
+        $trackingService = new TrackingService();
+        $perfectLogService = new PerfectLogService();
 
         foreach ($collection as $key => $value) {
             if ($key == 0) continue;
@@ -69,12 +73,16 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
 
                     $tracking = $productPlanSale->tracking;
 
-                    if(isset($tracking) && isset($row[5]) && $tracking->tracking_code != $row[5]){
-                        //$tracking->update([
-                        //    'tracking_code' => $row[5],
-                        //]);
-                    }else{
-                        //$tracking = $trackingService->createTracking($row[0], $productPlanSale);
+                    if(isset($tracking) && isset($row[1])){
+                        if($tracking->tracking_code != $row[1]){
+                            $tracking->update([
+                                'tracking_code' => $row[1],
+                            ]);
+                            $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
+                        }
+                    }else if(isset($row[1])) {
+                        $tracking = $trackingService->createTracking($row[1], $productPlanSale);
+                        $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
                     }
                 }
             }
