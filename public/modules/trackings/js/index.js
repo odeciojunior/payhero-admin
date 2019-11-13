@@ -396,7 +396,7 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                btnSave.prop('readonly', false);
+                btnSave.prop('disabled', false);
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -408,7 +408,7 @@ $(() => {
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
-                btnSave.prop('readonly', false);
+                btnSave.prop('disabled', false);
             }
         });
     });

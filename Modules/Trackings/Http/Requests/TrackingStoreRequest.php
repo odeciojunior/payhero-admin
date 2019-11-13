@@ -33,6 +33,7 @@ class TrackingStoreRequest extends FormRequest
         return [
             'required' => 'Erro ao salvar código de rastreio',
             'tracking_code.max' => 'Código de rastreio inválido',
+            'tracking_code.min' => 'Código de rastreio inválido',
             'tracking_code.regex' => 'Código de rastreio inválido'
         ];
     }
