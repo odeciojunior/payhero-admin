@@ -19,6 +19,7 @@ use Modules\Core\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
+use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -98,16 +99,16 @@ class TrackingsApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param TrackingStoreRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(TrackingStoreRequest $request)
     {
         try {
-            $data                 = $request->all();
+            $data = $request->all();
             $productPlanSaleModel = new ProductPlanSale();
-            $trackingModel        = new Tracking();
-            $trackingService      = new TrackingService();
+            $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
 
             if (!empty($data['tracking_code']) && !empty($data['sale_id']) && !empty($data['product_id'])) {
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
