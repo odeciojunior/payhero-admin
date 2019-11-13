@@ -466,14 +466,14 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            success: response => {
-                $('#btn-import-xls').prop('disabled', false);
-                console.log(response)
-            },
             error: response => {
                 $('#btn-import-xls').prop('disabled', false);
-                console.log(response)
-            }
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                alertCustom('success', 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!')
+            },
         });
     });
 

@@ -221,15 +221,25 @@ class TrackingsApiController extends Controller
         }
     }
 
-    public function import(Request $request){
+    public function import(Request $request)
+    {
+        try {
+            if ($request->hasFile('import_xls')) {
+                $extension = strtolower(request()->file('import_xls')->getClientOriginalExtension());
+                if (in_array($extension, ['csv', 'xls', 'xlsx'])) {
+                    $user = auth()->user();
+                    Excel::queueImport(new TrackingsImport($user), request()->file('import_xls'));
 
-        if($request->hasFile('import_xls')){
-            $user = auth()->user();
-            Excel::queueImport(new TrackingsImport($user->account_owner_id), request()->file('import_xls'))->chain([
-                new TrackingsImportedEvent($user)
-            ]);
+                    return response()->json(['message' => 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!']);
+                } else {
+                    return response()->json(['message' => 'Formato de arquivo inválido!'], 400);
+                }
+            }
+            return response()->json(['message' => 'Arquivo inválido'], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao importar códigos de rastreio (TrackingApiController - import)');
+            report($e);
+            return response()->json(['message' => 'Erro ao importar arquivo'], 400);
         }
-        return 'nop';
-
     }
 }

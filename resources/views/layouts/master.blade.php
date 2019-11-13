@@ -101,7 +101,7 @@
 <script src="{{ asset('modules/global/js/global.js?v=2') }}"></script>
 @stack('scripts')
 
-@if(env('APP_ENV', 'production') == 'production')
+{{--@if(env('APP_ENV', 'production') == 'production')--}}
     <script>(function () {
             var w = window;
             var ic = w.Intercom;
@@ -148,6 +148,6 @@
 
     <script src="{{ asset('modules/global/js/notifications.js?v=4') }}"></script>
 
-@endif
+{{--@endif--}}
 </body>
 </html>
