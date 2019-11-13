@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/digitalmanager",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\DigitalManager\\Providers\\DigitalManagerServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\DigitalManager\\": ""
+        }
+    }
+}
