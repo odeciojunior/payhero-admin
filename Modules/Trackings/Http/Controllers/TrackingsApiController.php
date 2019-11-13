@@ -9,14 +9,17 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Events\TrackingsImportedEvent;
+use Modules\Core\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
+use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -96,16 +99,16 @@ class TrackingsApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param TrackingStoreRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(TrackingStoreRequest $request)
     {
         try {
-            $data                 = $request->all();
+            $data = $request->all();
             $productPlanSaleModel = new ProductPlanSale();
-            $trackingModel        = new Tracking();
-            $trackingService      = new TrackingService();
+            $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
 
             if (!empty($data['tracking_code']) && !empty($data['sale_id']) && !empty($data['product_id'])) {
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
@@ -216,6 +219,17 @@ class TrackingsApiController extends Controller
 
             return response()->json(['message' => 'Erro ao notificar cliente'], 400);
         }
+    }
+
+    public function import(Request $request){
+
+        if($request->hasFile('import_xls')){
+            $user = auth()->user();
+            Excel::queueImport(new TrackingsImport($user->account_owner_id), request()->file('import_xls'))->chain([
+                new TrackingsImportedEvent($user)
+            ]);
+        }
+        return 'nop';
 
     }
 }

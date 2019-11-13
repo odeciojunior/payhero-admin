@@ -159,16 +159,22 @@ class DashboardApiService {
                         'currency'          => $company->country == 'usa' ? '$' : 'R$',
                     ];
                 } else {
-                    return [];
+                    return [
+                        'message' => 'Erro => $company não foi encontrada (DashboardApiController - getDataValues)',
+                    ];
                 }
             } else {
-                return [];
+                return [
+                    'message' => 'Erro => $company não foi encontrada (DashboardApiController - getDataValues)',
+                ];
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da empresa (DashboardApiController - getDataValues)');
             report($e);
 
-            return [];
+            return [
+                'message' => 'Erro ao buscar dados da empresa (DashboardApiController - getDataValues)',
+            ];
         }
     }
 
