@@ -138,13 +138,13 @@ class PagarmeService
         }
 
         $this->sale->update([
-                                'gateway_id'            => $transaction->tid,
-                                'gateway_status'        => $transaction->status,
-                                'boleto_digitable_line' => $transaction->boleto_barcode,
-                                'boleto_link'           => $transaction->boleto_url,
-                                'boleto_due_date'       => $transaction->boleto_expiration_date,
-                                'status'                => 2,
-                                'start_date'            => Carbon::now(),
+                                'gateway_transaction_id' => $transaction->tid,
+                                'gateway_status'         => $transaction->status,
+                                'boleto_digitable_line'  => $transaction->boleto_barcode,
+                                'boleto_link'            => $transaction->boleto_url,
+                                'boleto_due_date'        => $transaction->boleto_expiration_date,
+                                'status'                 => 2,
+                                'start_date'             => Carbon::now(),
                             ]);
 
         $transactions = $this->transactionModel->where('sale_id', $this->sale->id)->delete();
