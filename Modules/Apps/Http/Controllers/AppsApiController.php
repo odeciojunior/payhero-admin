@@ -10,6 +10,8 @@ use Modules\Core\Entities\HotzappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\DigitalmanagerIntegration;
+
 
 class AppsApiController extends Controller
 {
@@ -24,6 +26,7 @@ class AppsApiController extends Controller
         $notazzIntegration              = new NotazzIntegration();
         $convertaxIntegrationModel      = new ConvertaxIntegration();
         $activecampaignIntegrationModel = new ActivecampaignIntegration();
+        $digitalmanagerIntegrationModel = new DigitalmanagerIntegration();
 
         return response()->json([
             'hotzappIntegrations'        => $hotzappIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
@@ -31,6 +34,7 @@ class AppsApiController extends Controller
             'notazzIntegrations'         => $notazzIntegration->where('user_id', auth()->user()->account_owner_id)->count(),
             'convertaxIntegrations'      => $convertaxIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'activecampaignIntegrations' => $activecampaignIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+            'digitalmanagerIntegrations' => $digitalmanagerIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
         ]);
     }
 
