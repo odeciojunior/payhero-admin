@@ -138,4 +138,106 @@ class MobileController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profileGetData(Request $request) {
+        try {
+            return $this->integrationApiService->profileGetData($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profileChangePassword(Request $request) {
+        try {
+            return $this->integrationApiService->profileChangePassword($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profileUpdateNotification(Request $request) {
+        try {
+            return $this->integrationApiService->profileUpdateNotification($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function salesByFilter(Request $request) {
+        try {
+            return $this->integrationApiService->salesByFilter($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saleById(Request $request) {
+        try {
+            return $this->integrationApiService->salesById($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function notificationGetUnread(Request $request) {
+        try {
+            return $this->integrationApiService->notificationGetUnread($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
 }

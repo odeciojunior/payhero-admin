@@ -238,7 +238,7 @@ $(() => {
                                             <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                          </td>
                                          <td>
-                                            <input class="form-control font-weight-bold fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+                                            <input maxlength="16" minlength="10" class="form-control font-weight-bold fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
                                          <td style="min-width: 100px; text-align: right">
                                             <a class='tracking-save pointer mr-10' product='${tracking.product.id}'
@@ -263,6 +263,7 @@ $(() => {
         });
     }
 
+    //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
 
         $.ajax({
@@ -374,6 +375,7 @@ $(() => {
 
     });
 
+    //salvar tracking
     $(document).on('click', '.tracking-save', function () {
 
         let btnSave = $(this);
@@ -394,21 +396,19 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                btnSave.prop('readonly', false);
+                btnSave.prop('disabled', false);
                 errorAjaxResponse(response);
             },
             success: (response) => {
 
                 if (!isEmpty(response.data.tracking_status)) {
 
-                    //row.find('.td-status')
-                    //    .html('<span class="badge badge-primary">Postado</span>');
-
                     row.find('.tracking-close')
                         .click();
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
+                btnSave.prop('disabled', false);
             }
         });
     });
@@ -432,4 +432,49 @@ $(() => {
             }
         });
     });
+
+    //importar excel
+    $('#btn-import-xls').on('click', function(){
+        // loadOnAny('#btn-import-xls', false, {
+        //     styles: {
+        //         container: {
+        //             minHeight: '36px',
+        //             width: 'auto',
+        //         },
+        //         loader: {
+        //             width: '20px',
+        //             height: '20px',
+        //             borderWidth: '4px'
+        //         },
+        //     }
+        // });
+        $('#input-import-xls').click();
+    });
+
+    $('#input-import-xls').on('change', function(){
+        $('#btn-import-xls').prop('disabled', true);
+        let form = new FormData();
+        form.append('import.xls', this.files[0]);
+        $.ajax({
+            url: '/api/tracking/import',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            success: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                console.log(response)
+            },
+            error: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                console.log(response)
+            }
+        });
+    });
+
 });

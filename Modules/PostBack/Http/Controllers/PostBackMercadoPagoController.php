@@ -77,7 +77,7 @@ class PostBackMercadoPagoController extends Controller
             $deliveryModel    = new Delivery();
             $clientModel      = new Client();
 
-            $sale = $saleModel->where('gateway_id', $requestData['data']['id'])->first();
+            $sale = $saleModel->where('gateway_transaction_id', $requestData['data']['id'])->first();
 
             if (empty($sale)) {
                 Log::warning('VENDA NÃO ENCONTRADA!!!' . @$requestData['data']['id']);

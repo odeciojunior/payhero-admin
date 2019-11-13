@@ -25,7 +25,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property float $shipment_value
  * @property string $start_date
  * @property string $end_date
- * @property string $gateway_id
+ * @property string $gateway_transaction_id
  * @property int $status
  * @property string $gateway_status
  * @property int $installments_amount
@@ -83,8 +83,8 @@ class Sale extends Model
         'shipment_value',
         'start_date',
         'end_date',
-        'gateway_id',
         'gateway_transaction_id',
+        'gateway_id',
         'status',
         'gateway_status',
         'installments_amount',
