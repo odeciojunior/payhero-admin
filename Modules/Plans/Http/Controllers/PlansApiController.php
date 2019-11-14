@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\FoxUtils;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
@@ -107,14 +108,16 @@ class PlansApiController extends Controller
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
+                        $requestData['name']        = FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['name']));
+                        $requestData['description'] = FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['description']));
+
                         $plan = $planModel->create($requestData);
                         if (!empty($plan)) {
                             $plan->update(['code' => $plan->id_code]);
                             foreach ($requestData['products'] as $keyProduct => $product) {
 
                                 $requestData['product_cost'][$keyProduct] = preg_replace("/[^0-9]/", "", $requestData['product_cost'][$keyProduct]);
-                                if(empty($requestData['product_cost'][$keyProduct]))
-                                {
+                                if (empty($requestData['product_cost'][$keyProduct])) {
                                     $requestData['product_cost'][$keyProduct] = 0;
                                 }
 
@@ -249,8 +252,8 @@ class PlansApiController extends Controller
                     $plan = $planModel->where('id', $planId)->first();
 
                     $plan->update([
-                                      'name'        => $requestData["name"],
-                                      'description' => $requestData["description"],
+                                      'name'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['name'])),
+                                      'description' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['description'])),
                                       'code'        => $id,
                                       'price'       => $requestData["price"],
                                       'status'      => $planModel->present()->getStatus('active'),
