@@ -41,18 +41,19 @@ class FinancesApiController extends Controller
                     //                                                            ->where('status', 'paid')
                     //                                                            ->whereDate('release_date', '>', now()->startOfDay())
                     //                                                            ->get();
-                    $pendingTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                            ->where('status', 'paid')
-                                                            ->whereDate('release_date', '>', now()->startOfDay())
-                                                            ->select(DB::raw('sum( value ) as pending_balance'))
-                                                            ->first();
-                    $pendingBalance      += $pendingTransactions->pending_balance;
+
+                    $pendingTransactions     = $transactionModel->newQuery()->where('company_id', $company->id)
+                                                                ->where('status', 'paid')
+                                                                ->whereDate('release_date', '>', now()->startOfDay())
+                                                                ->select(DB::raw('sum( value ) as pending_balance'))
+                                                                ->first();
+                    $pendingBalance          += $pendingTransactions->pending_balance;
                     $anticipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
                                                                 ->where('status', 'anticipated')
                                                                 ->whereDate('release_date', '>', now()->startOfDay())
                                                                 ->select(DB::raw('sum( value - antecipable_value ) as pending_balance'))
                                                                 ->first();
-                    $pendingBalance += $anticipableTransactions->pending_balance;
+                    $pendingBalance          += $anticipableTransactions->pending_balance;
                     $antecipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
                                                                 ->where('status', 'paid')
                                                                 ->whereDate('release_date', '>', Carbon::today())
@@ -60,9 +61,19 @@ class FinancesApiController extends Controller
                                                                 ->select(DB::raw('sum( antecipable_value ) as antecipable_balance'))
                                                                 ->first();
 
+                    /*$pendingAntifraudTransactions = $transactionModel->newQuery()
+                                                                     ->where('company_id', $company->id)
+                                                                     ->where('status', 'pending')
+                                                                     ->whereDate('release_date', '>', now()->startOfDay())
+                                                                     ->whereHas("sale", function($query) {
+                                                                         $query->where("status", 20);
+                                                                     })
+                                                                     ->select(DB::raw('sum( value ) as pending_antifraud_balance'))
+                                                                     ->first();*/
+                    //                    $pendingAntifraudBalance      = $pendingAntifraudTransactions->pending_antifraud_balance;
                     $antecipableBalance += $antecipableTransactions->antecipable_balance;
-                    $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance;
+                    $availableBalance   = $company->balance;
+                    $totalBalance       = $availableBalance + $pendingBalance;
 
                     return response()->json(
                         [
@@ -70,6 +81,7 @@ class FinancesApiController extends Controller
                             'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                             'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                            //                            'pending_antifraud_balance' => number_format(intval($pendingAntifraudBalance) / 100, 2, ',', '.'),
                             'currency'            => $company->country == 'usa' ? '$' : 'R$',
                         ]
                     );

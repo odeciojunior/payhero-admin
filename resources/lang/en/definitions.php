@@ -92,35 +92,37 @@ return [
         ],
         "sale"                     => [
             "status" => [
-                "approved"     => "Aprovado",
-                "canceled"     => "Cancelado",
-                "charge_back"  => "Chargeback",
-                'in_proccess'  => "Em análise",
-                "pending"      => "Pendente",
-                "refused"      => "Recusado",
-                "refunded"     => "Estornado",
-                "system_error" => "Erro de sistema",
+                "approved"         => "Aprovado",
+                "canceled"         => "Cancelado",
+                "charge_back"      => "Chargeback",
+                'in_proccess'      => "Em análise",
+                "pending"          => "Pendente",
+                "refused"          => "Recusado",
+                "refunded"         => "Estornado",
+                "partial_refunded" => "Estorno Parcial",
+                "in_review"        => "Revisão Antifraude",
+                "system_error"     => "Erro de sistema",
             ],
         ],
         "product_plan_sale"        => [
             "tracking_status_enum" => [
-                "posted"     => "Postado",
-                "dispatched" => "Em trânsito",
-                "delivered"  => "Entregue",
+                "posted"           => "Postado",
+                "dispatched"       => "Em trânsito",
+                "delivered"        => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
-                "exception"        => "Problema na entrega"
+                "exception"        => "Problema na entrega",
             ],
         ],
-        "tracking"        => [
+        "tracking"                 => [
             "tracking_status_enum" => [
-                "posted"     => "Postado",
-                "dispatched" => "Em trânsito",
-                "delivered"  => "Entregue",
+                "posted"           => "Postado",
+                "dispatched"       => "Em trânsito",
+                "delivered"        => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
-                "exception"        => "Problema na entrega"
+                "exception"        => "Problema na entrega",
             ],
         ],
-        "invoices"        => [
+        "invoices"                 => [
             "status" => [
                 "pending"            => "Pendente",
                 "send"               => "Enviado",

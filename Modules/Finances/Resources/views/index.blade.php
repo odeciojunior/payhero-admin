@@ -51,6 +51,17 @@
                                                 <div class="grad-border"></div>
                                             </div>
                                         </div>
+
+                                    {{--Antifraude--}}
+                                    <!-- <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
+                                        <div class="price-holder">
+                                            <h6 class="label-price"> Revisão Antifraude </h6>
+                                            <h4 class="price saldoAntifraude">
+                                            </h4>
+                                            <div class="grad-border" style='background-image: linear-gradient(to right, rgb(250, 217, 97), red);'></div>
+                                        </div>
+                                    </div> !-->
+
                                         {{-- <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                             <div class="price-holder antecipacao" id="pop-antecipacao">
                                                 <h6 class="label-price"> Disponível para antecipar </h6>
@@ -99,7 +110,7 @@
                                                 <div class="grad-border green"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-12 mb-15">
+                                        <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo Total </h6>
                                                 <h4 class="price saltoTotal">

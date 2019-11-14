@@ -99,7 +99,6 @@ class DashboardApiController extends Controller
                                                             ->whereDate('release_date', '>', Carbon::today()
                                                                                                    ->toDateString())
                                                             ->get();
-
                     if (count($pendingTransactions)) {
                         foreach ($pendingTransactions as $pendingTransaction) {
                             $pendingBalance += $pendingTransaction->value;
@@ -112,19 +111,27 @@ class DashboardApiController extends Controller
                                                           'transactions' => function($query) use ($userCompanies) {
                                                               $query->whereIn('company_id', $userCompanies);
                                                           },
-                                                      ])->where('status', '1')
+                                                      ])->whereIn('status', [1, 20])
                                                ->whereDate('end_date', Carbon::today()
                                                                              ->toDateString())->get();
+
+                    $pendingAntifraudBalance = 0;
                     if (count($sales)) {
                         foreach ($sales as $sale) {
                             foreach ($sale->transactions as $transaction) {
-                                $todayBalance += $transaction->value;
+                                if ($sale->status == 1) {
+                                    $todayBalance += $transaction->value;
+                                } else if ($sale->status == 20) {
+                                    $pendingAntifraudBalance += $transaction->value;
+                                } else {
+                                    continue;
+                                }
                             }
                         }
                     }
 
                     $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance;
+                    $totalBalance     = $availableBalance + $pendingBalance + $pendingAntifraudBalance;
 
                     return [
                         'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),

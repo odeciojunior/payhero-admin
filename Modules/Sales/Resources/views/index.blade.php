@@ -60,6 +60,7 @@
                                 <option value="4">Chargeback</option>
                                 <option value="7">Estornado</option>
                                 <option value="6">Em análise</option>
+                                <option value="7">Análise Antifraude</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">

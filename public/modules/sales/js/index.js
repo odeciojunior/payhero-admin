@@ -210,13 +210,14 @@ $(document).ready(function () {
                 $('#dados_tabela').html('');
                 $('#tabela_vendas').addClass('table-striped');
 
-                var statusArray = {
+                let statusArray = {
                     1: 'success',
                     6: 'primary',
                     7: 'danger',
                     4: 'danger',
                     3: 'danger',
-                    2: 'pendente'
+                    2: 'pendente',
+                    20: 'pendente'
                 };
 
                 if (!isEmpty(response.data)) {
