@@ -79,8 +79,8 @@
                                                     </small>
                                                 </div>
                                                 <div class="form-group col-xl-6">
-                                                    <label for="cpf">Documento</label>
-                                                    <input name="document" value="" type="text" class="input-pad" id="document" placeholder="Documento">
+                                                    <label for="cpf">CPF</label>
+                                                    <input name="document" value="" type="text" class="input-pad" id="document" placeholder="CPF">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="celular">Celular</label>
@@ -498,7 +498,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=1')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=2')}}"></script>
     @endpush
 
 @endsection

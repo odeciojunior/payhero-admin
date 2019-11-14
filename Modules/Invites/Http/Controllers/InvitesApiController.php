@@ -35,7 +35,7 @@ class InvitesApiController extends Controller
 
             $invites = $invitationModel->where('invite', auth()->user()->account_owner_id)->with('company');
 
-            return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(5));
+            return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(10));
         } catch (Exception $e) {
             Log::warning('Erro ao tentar listar convites (InvitesApiController - index)');
             report($e);
