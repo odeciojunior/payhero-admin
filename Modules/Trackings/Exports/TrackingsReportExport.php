@@ -1,16 +1,16 @@
 <?php
 
-namespace Modules\Sales\Exports\Reports;
+namespace Modules\Trackings\Exports;
 
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents
+class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents
 {
+
     /**
      * @var array
      */
@@ -26,7 +26,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     }
 
     /**
-     * @return array|Collection
+     * @return array
      */
     public function collection()
     {
@@ -40,12 +40,12 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AR1'; // All headers
+                $cellRange = 'A1:R1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)
                     ->getFill()
                     ->setFillType('solid')
                     ->getStartColor()
-                    ->setRGB('E16A0A');
+                    ->setRGB('3e8ef7');
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
                     'color' => ['rgb' => 'ffffff'],
                     'size' => 16
@@ -55,17 +55,17 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 $setGray = false;
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
-                    $currentSale = $this->collection()->get($row - 1)['sale_code'];
+                    $currentSale = $this->collection()->get($row - 1)['sale'];
                     if ($currentSale != $lastSale && isset($lastSale)) {
                         $setGray = !$setGray;
                     }
                     if($setGray){
-                            $event->sheet->getDelegate()
-                                ->getStyle('A' . $row . ':AR' . $row)
-                                ->getFill()
-                                ->setFillType('solid')
-                                ->getStartColor()
-                                ->setRGB('e5e5e5');
+                        $event->sheet->getDelegate()
+                            ->getStyle('A' . $row . ':R' . $row)
+                            ->getFill()
+                            ->setFillType('solid')
+                            ->getStartColor()
+                            ->setRGB('e5e5e5');
                     }
                     $lastSale = $currentSale;
                 }
@@ -79,34 +79,12 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     public function headings(): array
     {
         return [
-            //sale
             'Código da Venda',
-            'Pedido do Shopify',
-            'Forma de Pagamento',
-            'Número de Parcelas',
-            'Bandeira do Cartão',
-            'Link do Boleto',
-            'Linha Digitavel do Boleto',
-            'Data de Vencimento do Boleto',
-            'Data Inicial do Pagamento',
-            'Data Final do Pagamento',
-            'Status',
-            'Valor Total Venda',
-            'Frete',
-            'Valor do Frete',
-            'Taxas',
-            'Comissão',
-            //plan
-            'Projeto',
-            'Plano',
-            'Preço do Plano',
-            'Código dos produtos',
+            'Código do Rastreio',
+            'Código do Produto',
             'Produto',
-            'Id do Shopify',
-            'Id da Variante do Shopify',
-            'Quantidade dos Produtos',
+            'Quantidade',
             'SKU',
-            //client
             'Nome do Cliente',
             'Telefone do Cliente',
             'Email do Cliente',
@@ -119,14 +97,6 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
             'Cidade',
             'Estado',
             'País',
-            //track
-            'src',
-            'utm_source',
-            'utm_medium',
-            'utm_campaign',
-            'utm_term',
-            'utm_content',
-            'utm_perfect',
         ];
     }
 }

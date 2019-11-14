@@ -439,6 +439,23 @@ function defaultSelectItemsFunction(item) {
     return {value: item.id_code, text: item.name};
 }
 
+function downloadFile(response, request) {
+    let type = request.getResponseHeader("Content-Type");
+    // Get file name
+    let contentDisposition = request.getResponseHeader("Content-Disposition");
+    let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+    fileName = fileName ? fileName[0].replace("filename=", "") : '';
+
+    var a = document.createElement("a");
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
+    a.setAttribute("download", fileName);
+    a.click();
+    window.URL.revokeObjectURL(a.href);
+    document.body.removeChild(a);
+}
+
 $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i) {
     event.preventDefault();
     let inputId = $(this).data('copy_id') || '#copyText';
