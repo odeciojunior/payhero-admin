@@ -230,7 +230,7 @@ class ProjectsApiController extends Controller
         try {
             $projectModel = new Project();
 
-            $projectId = Hashids::decode($id)[0];
+            $projectId = current(Hashids::decode($id));
 
             $project = $projectModel->where('id', $projectId)->first();
 
@@ -344,13 +344,15 @@ class ProjectsApiController extends Controller
                             return response()->json(['message', 'Erro ao atualizar projeto'], 400);
                         }
 
-                        $userProject                    = $userProjectModel->where([
-                                                                                       ['user_id', auth()->user()->account_owner_id],
-                                                                                       ['project_id', $project->id],
-                                                                                   ])->first();
-                        $requestValidated['company_id'] = Hashids::decode($requestValidated['company_id'])[0];
-                        if ($userProject->company_id != $requestValidated['company_id']) {
-                            $userProject->update(['company_id' => $requestValidated['company_id']]);
+                        $userProject = $userProjectModel->where([
+                                                                    ['user_id', auth()->user()->account_owner_id],
+                                                                    ['project_id', $project->id],
+                                                                ])->first();
+                        if (!empty($requestValidated['company_id'])) {
+                            $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+                            if ($userProject->company_id != $requestValidated['company_id']) {
+                                $userProject->update(['company_id' => $requestValidated['company_id']]);
+                            }
                         }
 
                         return response()->json(['message' => 'Projeto atualizado!'], 200);

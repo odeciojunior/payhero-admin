@@ -40,7 +40,6 @@ class TrackingsImportedNotification extends Notification
     {
         return [
             'message' => 'Importação dos códigos de rastreio concluída.',
-            'link'    => route('trackings.index'),
         ];
     }
 }

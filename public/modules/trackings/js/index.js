@@ -95,6 +95,26 @@ $(() => {
         endDate = end.format('YYYY-MM-DD');
     });
 
+    function getFilters(urlParams = false) {
+        let data = {
+            'tracking_code': $('#tracking_code').val(),
+            'status': $('#status').val(),
+            'project': $('#project-select').val(),
+            'date_updated': $('#date_updated').val(),
+            'sale': $('#sale').val().replace('#', ''),
+        };
+
+        if (urlParams) {
+            let params = "";
+            for (let param in data) {
+                params += '&' + param + '=' + data[param];
+            }
+            return encodeURI(params);
+        } else {
+            return data;
+        }
+    }
+
     getProducts();
 
     function getProducts() {
@@ -141,8 +161,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', ''),
+            url: '/api/tracking/resume?' + getFilters(true).substr(1),
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -174,11 +193,9 @@ $(() => {
     function index(link = null) {
 
         if (link == null) {
-            link = '/api/tracking?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
+            link = '/api/tracking?' + getFilters(true).substr(1);
         } else {
-            link = '/api/tracking' + link + '&tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
+            link = '/api/tracking' + link + getFilters(true);
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
@@ -433,28 +450,47 @@ $(() => {
         });
     });
 
+    //exportar excel
+    $("#btn-export-csv").on("click", function () {
+        trackingsExport('csv');
+    });
+
+    $("#btn-export-xls").on("click", function () {
+        trackingsExport('xlsx');
+    });
+
+    function trackingsExport(fileFormat){
+        let data = getFilters();
+        data['format'] = fileFormat;
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking/export',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, textStatus, request) {
+                downloadFile(response, request);
+            }
+        });
+    }
+
     //importar excel
     $('#btn-import-xls').on('click', function(){
-        // loadOnAny('#btn-import-xls', false, {
-        //     styles: {
-        //         container: {
-        //             minHeight: '36px',
-        //             width: 'auto',
-        //         },
-        //         loader: {
-        //             width: '20px',
-        //             height: '20px',
-        //             borderWidth: '4px'
-        //         },
-        //     }
-        // });
         $('#input-import-xls').click();
     });
 
     $('#input-import-xls').on('change', function(){
         $('#btn-import-xls').prop('disabled', true);
         let form = new FormData();
-        form.append('import.xls', this.files[0]);
+        form.append('import.xlsx', this.files[0]);
+        $(this).val(null);
         $.ajax({
             url: '/api/tracking/import',
             type: 'post',
@@ -466,14 +502,14 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            success: response => {
-                $('#btn-import-xls').prop('disabled', false);
-                console.log(response)
-            },
             error: response => {
                 $('#btn-import-xls').prop('disabled', false);
-                console.log(response)
-            }
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                alertCustom('success', 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!')
+            },
         });
     });
 

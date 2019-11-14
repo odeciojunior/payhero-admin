@@ -21,3 +21,7 @@ Route::group(['middleware' => ['web', 'auth']], function() {
     ]);
 
 });
+
+Route::get('apps/shopify/app/index', function(){
+    return view('shopify.shopifyapp');
+});

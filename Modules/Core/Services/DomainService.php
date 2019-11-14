@@ -3,8 +3,10 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Events\DomainApprovedEvent;
@@ -33,6 +35,14 @@ class DomainService
      * @var ShopifyService
      */
     private $shopifyService;
+    /**
+     * @var Company
+     */
+    private $companyModel;
+    /**
+     * @var User
+     */
+    private $userModel;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
@@ -68,6 +78,30 @@ class DomainService
         }
 
         return $this->domainModel;
+    }
+
+    /**
+     * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getCompanyModel()
+    {
+        if (!$this->companyModel) {
+            $this->companyModel = app(Company::class);
+        }
+
+        return $this->companyModel;
+    }
+
+    /**
+     * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getUserModel()
+    {
+        if (!$this->userModel) {
+            $this->userModel = app(User::class);
+        }
+
+        return $this->userModel;
     }
 
     /**
@@ -109,7 +143,33 @@ class DomainService
                                        'project',
                                        'project.shopifyIntegrations',
                                        'project.users',
-                                   ]);
+                                   ])->whereHas('project.usersProjects.company', function($query) {
+                    $query->where([
+                                      [
+                                          'bank_document_status', $this->getCompanyModel()->present()
+                                                                       ->getBankDocumentStatus('approved'),
+                                      ],
+                                      [
+                                          'address_document_status', $this->getCompanyModel()->present()
+                                                                          ->getAddressDocumentStatus('approved'),
+                                      ],
+                                      [
+                                          'contract_document_status', $this->getCompanyModel()->present()
+                                                                           ->getContractDocumentStatus('approved'),
+                                      ],
+                                  ]);
+                })->whereHas('project.users', function($query) {
+                    $query->where([
+                                      [
+                                          'address_document_status', $this->getUserModel()->present()
+                                                                          ->getAddressDocumentStatus('approved'),
+                                      ],
+                                      [
+                                          'personal_document_status', $this->getUserModel()->present()
+                                                                           ->getPersonalDocumentStatus('approved'),
+                                      ],
+                                  ]);
+                });
             if (!$reCheck) {
                 $domains->where('status', '!=', $this->getDomainModel()->present()->getStatus('approved'));
             }
@@ -190,7 +250,8 @@ class DomainService
                                     $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $this->getShopifyIntegrationModel()->present()
+                                                                    'theme_type' => $this->getShopifyIntegrationModel()
+                                                                                         ->present()
                                                                                          ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'snippets/ajax-cart-template.liquid',

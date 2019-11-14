@@ -1,28 +1,34 @@
 <?php
 
-namespace Modules\Core\Imports;
+namespace Modules\Trackings\Imports;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
+use Modules\Core\Events\TrackingsImportedEvent;
+use Modules\Core\Services\PerfectLogService;
+use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue
+class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, WithEvents
 {
     /**
-     * @var int
+     * @var User
      */
-    private $userId;
+    private $user;
 
     /**
      * TrackingsImport constructor.
-     * @param int $userId
+     * @param User $user
      */
-    public function __construct(int $userId)
+    public function __construct(User $user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
     /**
@@ -31,6 +37,8 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue
     public function collection(Collection $collection)
     {
         $saleModel = new Sale();
+        $trackingService = new TrackingService();
+        $perfectLogService = new PerfectLogService();
 
         foreach ($collection as $key => $value) {
             if ($key == 0) continue;
@@ -45,7 +53,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue
 
             $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
                 ->where('id', $saleId)
-                ->where('owner_id', $this->userId)->first();
+                ->where('owner_id', $this->user->account_owner_id)->first();
 
             if (isset($sale)) {
 
@@ -65,12 +73,16 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue
 
                     $tracking = $productPlanSale->tracking;
 
-                    if(isset($tracking) && isset($row[5]) && $tracking->tracking_code != $row[5]){
-                        //$tracking->update([
-                        //    'tracking_code' => $row[5],
-                        //]);
-                    }else{
-                        //$tracking = $trackingService->createTracking($row[0], $productPlanSale);
+                    if(isset($tracking) && isset($row[1])){
+                        if($tracking->tracking_code != $row[1]){
+                            $tracking->update([
+                                'tracking_code' => $row[1],
+                            ]);
+                            $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
+                        }
+                    }else if(isset($row[1])) {
+                        $tracking = $trackingService->createTracking($row[1], $productPlanSale);
+                        $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
                     }
                 }
             }
@@ -83,5 +95,17 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    /**
+     * @return array
+     */
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(){
+                event(new TrackingsImportedEvent($this->user));
+            },
+        ];
     }
 }

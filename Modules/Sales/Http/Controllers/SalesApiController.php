@@ -96,57 +96,6 @@ class SalesApiController extends Controller
                 }
             );
 
-            $header = [
-                //sale
-                'Código da Venda',
-                'Pedido do Shopify',
-                'Forma de Pagamento',
-                'Número de Parcelas',
-                'Bandeira do Cartão',
-                'Link do Boleto',
-                'Linha Digitavel do Boleto',
-                'Data de Vencimento do Boleto',
-                'Data Inicial do Pagamento',
-                'Data Final do Pagamento',
-                'Status',
-                'Valor Total Venda',
-                'Frete',
-                'Valor do Frete',
-                'Taxas',
-                'Comissão',
-                //plan
-                'Projeto',
-                'Plano',
-                'Preço do Plano',
-                'Código dos produtos',
-                'Produto',
-                'Id do Shopify',
-                'Id da Variante do Shopify',
-                'Quantidade dos Produtos',
-                'SKU',
-                //client
-                'Nome do Cliente',
-                'Telefone do Cliente',
-                'Email do Cliente',
-                'Documento',
-                'Endereço',
-                'Número',
-                'Complemento',
-                'Bairro',
-                'Cep',
-                'Cidade',
-                'Estado',
-                'País',
-                //track
-                'src',
-                'utm_source',
-                'utm_medium',
-                'utm_campaign',
-                'utm_term',
-                'utm_content',
-                'utm_perfect',
-            ];
-
             $saleData = collect();
             foreach ($salesResult as $sale) {
                 foreach ($sale->products as $product) {
@@ -204,7 +153,7 @@ class SalesApiController extends Controller
                 }
             }
 
-            return Excel::download(new SaleReportExport($saleData, $header), 'export.' . $dataRequest['format']);
+            return Excel::download(new SaleReportExport($saleData), 'export.' . $dataRequest['format']);
         } catch (Exception $e) {
             report($e);
 

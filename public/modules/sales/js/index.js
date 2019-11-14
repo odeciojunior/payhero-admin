@@ -72,23 +72,6 @@ $(document).ready(function () {
         }, '.boleto-pending'
     );
 
-    function downloadFile(response, request) {
-        let type = request.getResponseHeader("Content-Type");
-        // Get file name
-        let contentDisposition = request.getResponseHeader("Content-Disposition");
-        let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-        fileName = fileName ? fileName[0].replace("filename=", "") : '';
-
-        var a = document.createElement("a");
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
-        a.setAttribute("download", fileName);
-        a.click();
-        window.URL.revokeObjectURL(a.href);
-        document.body.removeChild(a);
-    }
-
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
