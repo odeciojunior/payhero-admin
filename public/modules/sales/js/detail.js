@@ -490,26 +490,6 @@ $(() => {
 
     // FIM - MODAL DETALHES DA VENDA
 
-    //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '#div_tracking_code .btn-notify-trackingcode', function(){
-        let tracking_id = $(this).attr('tracking');
-        $.ajax({
-            method: "POST",
-            url: '/api/tracking/notify/' + tracking_id,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: () => {
-                alertCustom('success', 'Notificação enviada com sucesso');
-            }
-        });
-    });
-
     //Estornar venda
     $(document).on('click', '.btn_refund_transaction', function () {
         var sale = $(this).attr('sale');
