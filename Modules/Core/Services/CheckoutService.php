@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +24,6 @@ class CheckoutService
 {
     /**
      * @var string
-     */
-    private $urlCancelPayment = 'http://checkout.devcloudfox.net/api/payment/cancel/';
-    /**
-     * @var
      */
     private $internalApiToken;
 
@@ -112,7 +109,7 @@ class CheckoutService
                     'message' => 'Valor não confere com o da Venda.',
                 ];
             }
-            $urlCancelPayment = $this->urlCancelPayment . Hashids::connection('sale_id')->encode($sale->id);
+            $urlCancelPayment = FoxUtils::urlCheckout() . '/api/payment/cancel/';
             $dataCancel       = [
                 'refundeAmount' => $refundAmount,
             ];
@@ -155,6 +152,59 @@ class CheckoutService
 
             return $result;
         } catch (Exception $ex) {
+            return [
+                'status'  => 'error',
+                'message' => 'Error ao tentar cancelar venda.',
+                'error'   => $ex->getMessage(),
+            ];
+        }
+    }
+
+    public function regenerateBilletZoop($saleId, $totalPaidValue, $dueDate)
+    {
+
+        try {
+
+            $regenerateBilletUrl = FoxUtils::urlCheckout() . '/api/payment/regeneratebillet';
+            $data                = [
+                'sale_id'          => $saleId,
+                'due_date'         => $dueDate,
+                'total_paid_value' => $totalPaidValue,
+            ];
+
+            $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
+            if ($response->status == 'success') {
+                $saleModel  = new Sale();
+                $dataUpdate = (array) $response->response->response;
+                $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
+                                        ->update(array_merge($dataUpdate,
+                                                             ['start_date' => Carbon::now()]));
+                if ($check) {
+
+                    $result = [
+                        'status'   => 'success',
+                        'message'  => print_r($response->message, true) ?? '',
+                        'response' => $response,
+                    ];
+                } else {
+                    $result = [
+                        'status'   => 'error',
+                        'message'  => print_r($response->message, true) ?? '',
+                        'response' => $response,
+                    ];
+                }
+            } else {
+                $result = [
+                    'status'   => 'error',
+                    'message'  => print_r($response->message, true) ?? '',
+                    'response' => $response,
+                ];
+            }
+
+            return $result;
+        } catch (Exception $ex) {
+            report($ex);
+
             return [
                 'status'  => 'error',
                 'message' => 'Error ao tentar cancelar venda.',

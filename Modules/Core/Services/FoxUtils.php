@@ -209,6 +209,32 @@ class FoxUtils
     }
 
     /**
+     * @return bool
+     */
+    public static function isProduction()
+    {
+        if (env("APP_ENV", "local") == "production") {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function urlCheckout()
+    {
+        if (env("APP_ENV", "local") == "production") {
+            $url = 'https://checkout.cloudfox.net';
+        } else {
+            $url = 'http://checkout.devcloudfox.net';
+        }
+
+        return $url;
+    }
+
+    /**
      * @param $value
      * @param string $type
      * @return null
