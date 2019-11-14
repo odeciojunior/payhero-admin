@@ -179,9 +179,14 @@ class FoxUtils
         return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
     }
 
+    // public static function removeSpecialChars($string){
+
+    //     return preg_replace('/[^\x00-\x7F]+/', "", $string);
+    // }
+
     public static function removeSpecialChars($string){
 
-        return preg_replace('/[^\x00-\x7F]+/', "", $string);
+        return preg_replace('/([^a-zà-úA-ZÀ-Ú0-9 ]|[äåæËÎÏÐðÑ×÷ØÝÞßCÆøÆø])/u', "", $string);
     }
 
     /**
