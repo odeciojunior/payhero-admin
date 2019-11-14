@@ -111,18 +111,19 @@ class DashboardApiController extends Controller
                                                           'transactions' => function($query) use ($userCompanies) {
                                                               $query->whereIn('company_id', $userCompanies);
                                                           },
-                                                      ])->whereIn('status', [1, 20])
+                                                          // ])->whereIn('status', [1, 20])
+                                                      ])->where('status', 1)
                                                ->whereDate('end_date', Carbon::today()
                                                                              ->toDateString())->get();
 
-                    $pendingAntifraudBalance = 0;
+                    // $pendingAntifraudBalance = 0;
                     if (count($sales)) {
                         foreach ($sales as $sale) {
                             foreach ($sale->transactions as $transaction) {
                                 if ($sale->status == 1) {
                                     $todayBalance += $transaction->value;
-                                } else if ($sale->status == 20) {
-                                    $pendingAntifraudBalance += $transaction->value;
+                                    /*  } else if ($sale->status == 20) {
+                                        $pendingAntifraudBalance += $transaction->value;*/
                                 } else {
                                     continue;
                                 }
@@ -131,7 +132,8 @@ class DashboardApiController extends Controller
                     }
 
                     $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance + $pendingAntifraudBalance;
+                    $totalBalance     = $availableBalance + $pendingBalance /*+ $pendingAntifraudBalance*/
+                    ;
 
                     return [
                         'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
