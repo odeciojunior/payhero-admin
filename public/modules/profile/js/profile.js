@@ -5,10 +5,13 @@ $(document).ready(function () {
     let user = '';
 
     let maskOptions = {
+        // onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
+        //     var masks = ['000.000.000-000', '00.000.000/0000-00'];
+        //     var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
+        //     $('#document').mask(mask, maskOptions);
+        // }
         onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-            var masks = ['000.000.000-000', '00.000.000/0000-00'];
-            var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-            $('#document').mask(mask, maskOptions);
+            $('#document').mask('000.000.000-00');
         }
     };
 

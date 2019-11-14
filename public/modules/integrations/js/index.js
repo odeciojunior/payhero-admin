@@ -38,6 +38,8 @@ $(document).ready(function () {
                 // console.log(response);
                 if (isEmpty(response.data)) {
                     $("#content-error").css('display', 'block');
+                    $("#card-table-integrate").css('display', 'none');
+                    $("#card-integration-data").css('display', 'none');
                 } else {
                     $("#content-error").hide();
                     updateIntegrationTableData(response);
@@ -51,10 +53,11 @@ $(document).ready(function () {
 
     // Atualiza tabela de dados com a lista de integrações
     function updateIntegrationTableData(response) {
+
         $("#card-table-integrate").css('display', 'block');
         $("#card-integration-data").css('display', 'block');
 
-        $("#text-info").css('display', 'block');
+        // $("#text-info").css('display', 'block');
         $("#card-table-integrate").css('display', 'block');
         $("#table-body-integrates").html('');
 
@@ -77,9 +80,9 @@ $(document).ready(function () {
             //Access Token
             dados += '<td class="text-center" style="vertical-align: middle;">';
             dados += '<div class="input-group mb-2 mr-sm-2 mt-2">';
-            dados += '<div class="input-group"><input type="text" class="form-control font-sm brr" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
+            dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
             dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
-            dados += '<a href="#" class="btnCopiarLink" data-toggle="tooltip" data-copy_id="#inputToken' + value.id_code + '" title="Copiar token">';
+            dados += '<a href="#" class="btnCopiarLink" data-toggle="tooltip" title="Copiar token">';
             dados += '<i class="material-icons gray gradient"> file_copy </i>'
             dados += '</a></div></div></div>';
             dados += '</div>';
@@ -208,12 +211,22 @@ $(document).ready(function () {
             success: (response) => {
                 // console.log(response);
                 $(".close").click();
-                alertCustom('success', response.message);
+                alertCustom('success', 'Integração criada com sucesso!');
                 loadingOnScreenRemove();
                 refreshIntegrations();
             }
         });
     }
+    //Botao de copiar
+    $(document).on("click", '.btnCopiarLink', function () {
+        var tmpInput = $("<input>");
+        $("body").append(tmpInput);
+        var copyText = $(this).parent().parent().parent().find('.inptToken').val();
+        tmpInput.val(copyText).select();
+        document.execCommand("copy");
+        tmpInput.remove();
+        alertCustom('success', 'Token copiado!');
+    });
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {

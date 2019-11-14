@@ -6,7 +6,7 @@ var statusInvite = {
 
 $(document).ready(function () {
     updateInvites();
-
+    var currentPage = 1;
     function updateInvites() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -42,10 +42,13 @@ $(document).ready(function () {
                     $("#table-body-invites").html('');
 
                     $.each(response.data, function (index, value) {
-
                         dados = '';
                         dados += '<tr>';
-                        dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (cont += 1) + '</button></td>';
+                        if (index != 9) {
+                            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (currentPage - 1) + (cont += 1) + '</button></td>';
+                        } else {
+                            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + response.meta.to + '</button></td>';
+                        }
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">';
@@ -273,6 +276,7 @@ $(document).ready(function () {
             }
 
             $('#first_page').on("click", function () {
+                currentPage = 1;
                 updateInvites('?page=1');
             });
 
@@ -285,6 +289,7 @@ $(document).ready(function () {
                 $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
 
                 $('#page_' + (response.meta.current_page - x)).on("click", function () {
+                    currentPage = $(this).html();
                     updateInvites('?page=' + $(this).html());
                 });
             }
@@ -305,6 +310,7 @@ $(document).ready(function () {
                 $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
 
                 $('#page_' + (response.meta.current_page + x)).on("click", function () {
+                    currentPage = $(this).html();
                     updateInvites('?page=' + $(this).html());
                 });
             }
@@ -319,6 +325,7 @@ $(document).ready(function () {
                 }
 
                 $('#last_page').on("click", function () {
+                    currentPage = $(this).html();
                     updateInvites('?page=' + response.meta.last_page);
                 });
             }
