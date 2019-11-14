@@ -28,7 +28,11 @@ class PerfectLogService
             'system' => self::API_SYSTEM_TOKEN,
         ];
 
-        $result = $this->call('/api/tracking', $data, 'POST');
+        if (getenv('APP_ENV', 'local') == 'production') {
+            $result = $this->call('/api/tracking', $data, 'POST');
+        } else {
+            $result = '';
+        }
 
         return json_decode($result);
     }

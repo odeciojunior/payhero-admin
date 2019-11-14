@@ -104,7 +104,6 @@ $(document).ready(function () {
 
     // prepare data to create a template
     function getNotificationData(data){
-        console.log(data.type)
         var message = '', iconClass = '', link = '';
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
