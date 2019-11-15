@@ -229,7 +229,7 @@ class FoxUtils
      */
     public static function urlCheckout()
     {
-        if (env("APP_ENV", "local") == "production") {
+        if (self::isProduction()) {
             $url = 'https://checkout.cloudfox.net';
         } else {
             $url = 'http://checkout.devcloudfox.net';

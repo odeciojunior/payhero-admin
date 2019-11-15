@@ -88,7 +88,7 @@ class SaleService
         }
 
         if (empty($filters['status'])) {
-            $status = [1, 2, 4, 6, 7];
+            $status = [1, 2, 4, 6, 7/*, 20*/];
         } else {
             $status = [$filters["status"]];
         }
@@ -394,7 +394,7 @@ class SaleService
                 $transactionRefundAmount = (int) round(($transactionValue * ($percentRefund / 100)));
                 //calcula novo valor da transação
                 //todo ativar quando for estorno parcial e ver como tratar a comissão ficando zerada
-//                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
+                //                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
                 //Caso transaction ja esteja como transfered, criar transfer de saida
                 $company = $companyModel->find($refundTransaction->company_id);
                 if ($refundTransaction->status == 'transfered') {
