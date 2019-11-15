@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Company;
@@ -180,6 +181,7 @@ class CheckoutService
             } else {
                 $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
             }
+            Log::info('LINK BOLETO:  ' . $regenerateBilletUrl);
 
             $data = [
                 'sale_id'          => $saleId,
