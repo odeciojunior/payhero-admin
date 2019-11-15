@@ -151,6 +151,7 @@ class CheckoutService
                     ];
                 }
             } else {
+                report(new Exception(print_r($response, true)));
                 $result = [
                     'status'  => 'error',
                     'message' => 'Error ao tentar cancelar venda.',
