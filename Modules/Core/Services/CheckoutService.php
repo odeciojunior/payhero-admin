@@ -109,9 +109,9 @@ class CheckoutService
                     'message' => 'Valor não confere com o da Venda.',
                 ];
             }
-            $urlCancelPayment = FoxUtils::urlCheckout() . '/api/payment/cancel/';
+            $urlCancelPayment = FoxUtils::urlCheckout() . '/api/payment/cancel/' . Hashids::connection('sale_id')->encode($sale->id);
             $dataCancel       = [
-                'refundeAmount' => $refundAmount,
+                'refundAmount' => $refundAmount,
             ];
             $response         = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if ($response->status == 'success') {
