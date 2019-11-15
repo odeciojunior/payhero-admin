@@ -2,7 +2,6 @@ $(() => {
     // COMPORTAMENTOS DA JANELA
 
     $('#discount_value').mask('00%', {reverse: true});
-    $('#refund_amount').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$ '});
 
     $("#apply_discount").on("click", function () {
         if ($("#div_discount").is(":visible")) {
@@ -99,13 +98,13 @@ $(() => {
 
         switch (sale.status) {
             case 1:
-                status.append("<span class='ml-2 badge badge-success' sale='" + sale.id + "' status='Aprovada'>Aprovada</span>");
+                status.append("<span class='ml-2 badge badge-success'>Aprovada</span>");
                 break;
             case 2:
-                status.append("<span class='ml-2 badge badge-pendente' status='Pendente'>Pendente</span>");
+                status.append("<span class='ml-2 badge badge-pendente'>Pendente</span>");
                 break;
             case 3:
-                status.append("<span class='ml-2 badge badge-danger' status='Recusada'>Recusada</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Recusada</span>");
                 break;
             case 4:
                 status.append("<span class='ml-2 badge badge-danger'>Chargeback</span>");
@@ -123,13 +122,12 @@ $(() => {
                 status.append("<span class='ml-2 badge badge-pendente'>Análise Antifraude</span>");
                 break;
             default:
-                status.append("<span class='ml-2 badge badge-primary' status='" + sale.status + "'>" + sale.status + "</span>");
+                status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
 
         //Valores
         $("#subtotal-value").html("R$ " + sale.subTotal);
-        $("#refund_amount").val("R$ " + sale.total);
         $("#shipment-value").html("R$ " + sale.shipment_value);
 
         $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
@@ -498,34 +496,13 @@ $(() => {
 
     // FIM - MODAL DETALHES DA VENDA
 
-    //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '#div_tracking_code .btn-notify-trackingcode', function () {
-        let tracking_id = $(this).attr('tracking');
-        $.ajax({
-            method: "POST",
-            url: '/api/tracking/notify/' + tracking_id,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: () => {
-                alertCustom('success', 'Notificação enviada com sucesso');
-            }
-        });
-    });
-    $(".btn_refund_transaction").unbind('click');
     //Estornar venda
     $(document).on('click', '.btn_refund_transaction', function () {
         var sale = $(this).attr('sale');
         $('#modal-refund-transaction').modal('show');
         $('#modal_detalhes').modal('hide');
-        $(".btn-confirm-refund-transaction").unbind('click');
+
         $(document).on('click', '.btn-confirm-refund-transaction', function () {
-            // console.log('asdasdasdasdasdads');
             loadingOnScreen();
             $.ajax({
                 method: "POST",
@@ -548,29 +525,6 @@ $(() => {
                 }
             });
         });
-    });
-    //Muda o span para cancelar
-    $(document).on({
-            mouseenter: function () {
-                $(this).css('cursor', 'pointer').text('Cancelar');
-                $(this).css("background", "#FF4C52");
-            },
-            mouseleave: function () {
-                var status = $(this).attr('status');
-                $(this).removeAttr("style");
-                $(this).text(status);
-            }
-        }, '.cancel-card'
-    );
-
-    //Carrega o modal para confirar o cancelar da venda
-    $(document).on('click', '.cancel-card', function () {
-
-        let saleId = $(this).attr('sale');
-
-        $('#modal_cancel_sale #bt_cancel').attr('sale', saleId);
-        //
-        $('#modal_cancel_sale').modal('show');
     });
 
 });

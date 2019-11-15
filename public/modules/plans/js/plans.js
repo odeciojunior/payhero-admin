@@ -8,6 +8,7 @@ $(function () {
     var form_update_plan = $("#form-update-plan").html();
 
     var card_div_edit;
+    var pageCurrent;
     // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
 
     $('#tab_plans').on('click', function () {
@@ -178,6 +179,7 @@ $(function () {
      */
     function index() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        pageCurrent = link;
 
         loadOnTable('#data-table-plan', '#table-plans');
         if (link == null) {
@@ -341,7 +343,6 @@ $(function () {
                                 $.each(response.data.products, function (index, value) {
                                     let productCost = value.product_cost.split(' ')
                                     var product_total = productCost[1] * value.amount;
-                                    // console.log('CUSTO DO PRODUTO = ' + String(value.product_cost))
                                     $('.products_row_edit').append(`
                                         <div class='card container '>
                                             <div id="products_div_edit" class="row">
@@ -482,6 +483,7 @@ $(function () {
                                     });
                                 }
                             });
+
                             $("#modal_add_plan").modal('show');
                             $("#form-register-plan").hide();
                             $("#form-update-plan").show();
@@ -577,12 +579,12 @@ $(function () {
                                         loadingOnScreenRemove();
                                         errorAjaxResponse(response);
 
-                                        index();
+                                        index(pageCurrent);
                                     }),
                                     success: function success(data) {
                                         loadingOnScreenRemove();
                                         alertCustom("success", "Plano atualizado com sucesso");
-                                        index();
+                                        index(pageCurrent);
                                     }
                                 });
                             });
@@ -703,7 +705,6 @@ $(function () {
         let quantidade = $(element).parent().parent().find('.products_amount_edit')
 
         calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-        // console.log(custoUnitario.val() + ' -- ' + custoTotal.val() + ' -- ' + moeda.val() + ' -- ' + quantidade.val())
     }
     function getElementsCreate(element) {
         let custoUnitario = $(element).parent().parent().find('.products_cost_create')
@@ -712,24 +713,20 @@ $(function () {
         let quantidade = $(element).parent().parent().find('.products_amount_create')
 
         calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-        // console.log(custoUnitario.val() + ' -- ' + custoTotal.val() + ' -- ' + moeda.val() + ' -- ' + quantidade.val())
     }
     function clickElementEdit(element) {
         $(element).parent().parent().find('.products_cost_edit').focus();
     }
     function clickElementCreate(element) {
         $(element).parent().parent().find('.products_cost_create').focus();
-        // console.log($(element).parent().parent().find('.products_cost_create'))
     }
 
     function calculateTotal(custoUnitario, custoTotal, moeda, quantidade) {
         let valorCusto = custoUnitario.maskMoney('unmasked')[0];
-        // console.log(valorCusto)
         let valorQuantidade = $(quantidade).val();
         let valorTotal = valorCusto * valorQuantidade
 
         setCurrency(custoUnitario, custoTotal, moeda, valorTotal)
-        // console.log(valorCusto + ' --- ' + valorQuantidade + ' --- ' + valorTotal);
     }
 
     function setCurrency(custoUnitario, custoTotal, moeda, valorTotal) {

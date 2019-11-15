@@ -142,10 +142,6 @@
                                     {{-- js carregado--}}
                                 </tbody>
                             </table>
-                            <a class='btn p-1 pointer float-right btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
-                                <i class='icon wb-envelope' aria-hidden='true'></i>
-                                Enviar e-mail para o cliente
-                            </a>
                         </div>
                     </div>
                     <!-- DETALHES  -->

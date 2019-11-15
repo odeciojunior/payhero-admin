@@ -10,7 +10,7 @@
             <button id="store-integrate" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Integrações</h2>
-            <p id='text-info' style="margin-top: 12px; display: none;">Cadastre seus tokens para integrar com a CloudFox.</p>
+            <p id='text-info' style="margin-top: 12px;">Cadastre seus tokens para integrar com a CloudFox.</p>
             <div class="card shadow p-20" id='card-integration-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div class="col-md-3 col-sm-12">
@@ -158,7 +158,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js') }}"></script>
+        <script src="{{asset('modules/integrations/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection

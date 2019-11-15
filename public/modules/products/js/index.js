@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    var pageCurrent;
+
     // Comportamentos da tela
     $("#type-products").on('change', function () {
 
@@ -13,7 +15,12 @@ $(document).ready(function () {
     });
 
     $('#btn-filtro').on('click', function () {
+        deleteCookie();
         updateProducts();
+    });
+
+    $("#pagination-products").on('click', function () {
+        deleteCookie();
     });
 
     getTypeProducts();
@@ -52,13 +59,37 @@ $(document).ready(function () {
     }
 
     function updateProducts(link = null) {
+        if (link !== null) {
+            pageCurrent = link;
+            deleteCookie();
+
+        }
 
         loadOnAny('.page-content');
 
-        if (link == null) {
-            link = '/api/products?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val() + '&name=' + $('#name').val();
+        let type = '';
+        let project = '';
+        let name = '';
+
+        var cookie = getCookie();
+        if (cookie == '') {
+            type = $("#type-products").val();
+            project = $("#select-projects").val();
+            name = $("#name").val();
         } else {
-            link = '/api/products' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val() + '&name=' + $('#name').val();
+            cookie = JSON.parse(cookie);
+            type = cookie.type;
+            project = cookie.project;
+            name = cookie.nameProduct;
+            link = cookie.page;
+
+            $("#type-products").val(type);
+        }
+
+        if (link == null) {
+            link = '/api/products?shopify=' + type + '&project=' + project + '&name=' + name;
+        } else {
+            link = '/api/products' + link + '&shopify=' + type + '&project=' + project + '&name=' + name;
         }
 
         $.ajax({
@@ -101,6 +132,13 @@ $(document).ready(function () {
                     });
 
                     $(".product-image").on("click", function () {
+                        var product = {
+                            type: $("#type-products option:selected").val(),
+                            project: $("#select-projects option:selected").val(),
+                            nameProduct: $("#name").val(),
+                            page: pageCurrent !== null ? pageCurrent : null,
+                        };
+                        setCookie('filterProduct', 1, product);
                         window.location.href = "/products/" + $(this).data('code') + "/edit";
                     });
 
@@ -118,5 +156,40 @@ $(document).ready(function () {
                 loadOnAny('.page-content', true);
             }
         });
+
     }
+
+    function setCookie(name, exdays, object) {
+
+        var expires;
+        var date;
+        var value;
+        date = new Date(); // criando cookie com a data atual
+        date.setTime(date.getTime() + (exdays * 3600 * 1000));
+        expires = date.toUTCString();
+        value = JSON.stringify(object);
+
+        document.cookie = name + "=" + value + "; expires=" + expires + ";path=/";
+    }
+
+    function getCookie() {
+        var name = 'filterProduct' + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function deleteCookie() {
+        setCookie('filterProduct', -1);
+    }
+
 });
