@@ -264,6 +264,15 @@ class CheckoutService
             $result   = curl_exec($ch);
             $response = json_decode($result);
 
+            $message = [
+                "result"   => $result,
+                "response" => $response,
+                "apitoken" => $this->internalApiToken,
+                "data"     => json_encode($data),
+                "url"      => $url,
+            ];
+            report(new Exception(json_encode($message)));
+
             return $response;
         } catch (Exception $ex) {
             report($ex);
