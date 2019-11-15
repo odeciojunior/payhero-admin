@@ -266,6 +266,7 @@ class CheckoutService
 
             return $response;
         } catch (Exception $ex) {
+            report($ex);
             throw $ex;
         }
     }
