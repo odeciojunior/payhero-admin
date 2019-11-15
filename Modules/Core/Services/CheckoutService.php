@@ -118,6 +118,7 @@ class CheckoutService
                 $urlCancelPayment = 'http://checkout.devcloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                    ->encode($sale->id);
             }
+            report(new Exception('LINK REFUND: ' . $urlCancelPayment));
             $dataCancel = [
                 'refundeAmount' => $refundAmount,
             ];
@@ -181,7 +182,7 @@ class CheckoutService
             } else {
                 $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
             }
-            Log::info('LINK BOLETO:  ' . $regenerateBilletUrl);
+            report(new Exception('LINK BOLETO: ' . $regenerateBilletUrl));
 
             $data = [
                 'sale_id'          => $saleId,
