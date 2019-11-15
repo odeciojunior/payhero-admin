@@ -109,11 +109,18 @@ class CheckoutService
                     'message' => 'Valor não confere com o da Venda.',
                 ];
             }
-            $urlCancelPayment = FoxUtils::urlCheckout() . '/api/payment/cancel/' . Hashids::connection('sale_id')->encode($sale->id);
-            $dataCancel       = [
-                'refundAmount' => $refundAmount,
+            $domain = $sale->project->domains->where('status', 3)->first();
+            if (FoxUtils::isProduction()) {
+                $urlCancelPayment = 'https://checkout.' . $domain->name . '/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                          ->encode($sale->id);
+            } else {
+                $urlCancelPayment = 'http://checkout.devcloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                   ->encode($sale->id);
+            }
+            $dataCancel = [
+                'refundeAmount' => $refundAmount,
             ];
-            $response         = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
+            $response   = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if ($response->status == 'success') {
                 $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
                 if ($checkUpdate) {
@@ -164,9 +171,17 @@ class CheckoutService
     {
 
         try {
+            $saleModel = new Sale();
+            $sale      = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
+                                                                                 ->decode($saleId))->first();
+            $domain    = $sale->project->domains->where('status', 3)->first();
+            if (FoxUtils::isProduction()) {
+                $regenerateBilletUrl = 'https://checkout.' . $domain->name . '/api/payment/regeneratebillet';
+            } else {
+                $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
+            }
 
-            $regenerateBilletUrl = FoxUtils::urlCheckout() . '/api/payment/regeneratebillet';
-            $data                = [
+            $data = [
                 'sale_id'          => $saleId,
                 'due_date'         => $dueDate,
                 'total_paid_value' => $totalPaidValue,

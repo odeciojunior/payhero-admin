@@ -229,7 +229,7 @@ class SalesApiController extends Controller
                 //zoop_production || zoop_sandbox
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
             } else {//if (in_array($sale->gateway_id, [1, 2])) {
-                //pagarme_production || pagamer_sandbox
+                //                pagarme_production || pagamer_sandbox
                 $result = $saleService->refund($saleId);
             }
             //            else {
