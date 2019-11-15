@@ -151,10 +151,10 @@ class CheckoutService
                     ];
                 }
             } else {
-                report(new Exception(print_r($response, true)));
+                report(new Exception(json_encode($response)));
                 $result = [
                     'status'  => 'error',
-                    'message' => 'Error ao tentar cancelar venda.',
+                    'message' => 'Error ao tentar cancelar venda. 1',
                     'error'   => $response->message,
                 ];
             }
@@ -163,7 +163,7 @@ class CheckoutService
         } catch (Exception $ex) {
             return [
                 'status'  => 'error',
-                'message' => 'Error ao tentar cancelar venda.',
+                'message' => 'Error ao tentar cancelar venda. 2',
                 'error'   => $ex->getMessage(),
             ];
         }
