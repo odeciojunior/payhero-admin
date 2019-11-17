@@ -548,7 +548,7 @@
                     <div class="content-success">
                         <img src="{{asset('modules/global/gif/cloudfox-loading-1.gif')}}">
                         <h1 class="bold orange mt10"> Tudo pronto! </h1>
-                        <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você estara na sua nova dashboard.
+                        <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você estará na sua nova dashboard.
                     </div>
                 </div>
             </form>
