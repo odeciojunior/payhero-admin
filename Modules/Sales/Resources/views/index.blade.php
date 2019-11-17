@@ -144,12 +144,12 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
-            <!-- End Modal -->
+                @include('sales::details')
+                <!-- End Modal -->
+                <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                    {{-- js carrega... --}}
+                </ul>
             </div>
-            <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                {{-- js carrega... --}}
-            </ul>
         </div>
         {{--        <div class="content-error text-center" style="display:none">--}}
         {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
