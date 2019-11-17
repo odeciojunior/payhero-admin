@@ -42,6 +42,6 @@ Route::group(
     ],
     function() {
         Route::get('verifyinvite/{code}', 'InvitesApiController@verifyInviteRegistration')
-             ->name('api.verifyinvite')->middleware('role:account_owner');
+             ->name('api.verifyinvite');
     }
 );
