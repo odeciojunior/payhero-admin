@@ -23,6 +23,7 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
+use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\DomainRecord;
@@ -42,15 +43,26 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-        $shoifyIntegrationModel = new ShopifyIntegration();
 
-        $shopifyService = new ShopifyService('ofertatopp.myshopify.com', 'eac3b08e185500eb2e0b972936a5223c');
+        $userModel = new User();
 
-        // $shopifyService->createShopWebhook();
+        $invites = Invitation::where('status', 1)->whereNull('company_id')->whereNotNull('invite')->get();
 
-        dd($shopifyService->getShopWebhook());
+        foreach($invites as $invite){
 
+            $user = $userModel->find($invite->invite);
 
+            $companyId = $user->companies()->first()->id;
+
+            if(!empty($companyId)){
+                $invite->update([
+                    'company_id' => $companyId,
+                ]);
+            }
+
+        }
+
+        dd("heyyy");
     }
 
 }
