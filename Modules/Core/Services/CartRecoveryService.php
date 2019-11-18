@@ -32,6 +32,7 @@ class CartRecoveryService
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                                       ->with('project', 'checkoutPlans.plan.productsPlans.product')
                                       ->get();
+
             foreach ($abandonedCarts as $abandonedCart) {
                 $products = [];
 
