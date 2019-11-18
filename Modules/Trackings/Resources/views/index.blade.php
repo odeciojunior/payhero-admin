@@ -45,7 +45,7 @@
                                    data-toggle="modal" data-target="#modal-detalhes-importar">
                                     <i class="icon wb-info"></i>
                                 </a>
-                                <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10" style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
+                                <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10 pointer" style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
                             </div>
                         </div>
                     </div>
