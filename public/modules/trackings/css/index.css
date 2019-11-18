@@ -116,6 +116,7 @@
 
 .cell-selected .caret {
     overflow: hidden;
+    border-right: .15em solid #000;
     white-space: nowrap;
     display: block;
     max-width: 94px;
@@ -140,6 +141,13 @@
     position: absolute;
     bottom: 29px;
     right: 30px;
+}
+
+@media (max-width: 569px) {
+    .cell-fade{
+        right: 0;
+        left: 379px
+    }
 }
 
 
