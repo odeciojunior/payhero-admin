@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    var currentPage;
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
@@ -132,7 +133,8 @@ $(document).ready(function () {
             success: function success(response) {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
-                window.location = '/sales';
+                $("#modal_regerar_boleto").modal('hide');
+                atualizar(currentPage);
             }
         });
     });
@@ -167,6 +169,8 @@ $(document).ready(function () {
 
     // Obtem lista de vendas
     function atualizar(link = null) {
+
+        currentPage = link;
 
         let updateResume = true;
         loadOnTable('#dados_tabela', '#tabela_vendas');
