@@ -461,7 +461,6 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
     let inputId = $(this).data('copy_id') || '#copyText';
     let copyText = (inputId === '#copyText' ? $(this).data('copy_text') || '' : $(inputId).val() || '');
     if (copyText === '') {
-        console.log('textovazio');
         return false;
     }
     if (document.getElementById("copyText") === null) {
