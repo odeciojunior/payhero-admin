@@ -7,14 +7,20 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
+use Modules\Core\Presenters\SalePresenter;
 use Modules\Products\Transformers\ProductsSaleResource;
+use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -82,7 +88,7 @@ class SaleService
         }
 
         if (empty($filters['status'])) {
-            $status = [1, 2, 4, 6, 7];
+            $status = [1, 2, 4, 6, 7/*, 20*/];
         } else {
             $status = [$filters["status"]];
         }
@@ -309,5 +315,182 @@ class SaleService
         }
 
         return $productsSale;
+    }
+
+    /**
+     * @param Sale $sale
+     * @param int $refundAmount
+     * @param $response
+     * @return bool
+     * @throws Exception
+     */
+    public function updateSaleRefunded($sale, $refundAmount, $response)
+    {
+        try {
+            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+            DB::beginTransaction();
+            $saleModel       = new Sale();
+            $responseGateway = $response->response ?? [];
+            $statusGateway   = $response->status_gateway ?? '';
+            //            'status'         => 'success',
+            //            'message'        => 'Venda cancelada com sucesso!',
+            //            'status_gateway' => $result['status_gateway'],
+            //            'status_sale'    => $result['status'],
+            //            'response'       => $result['response'],
+            $newTotalPaidValue = $totalPaidValue - $refundAmount;
+            if ($newTotalPaidValue <= 0) {
+                $status = 'refunded';
+            } else {
+                $status = 'partial_refunded';
+            }
+            $newTotalPaidValue = substr_replace($newTotalPaidValue, '.', strlen($newTotalPaidValue) - 2, 0);
+            $updateData        = array_filter([
+                                                  'total_paid_value' => ($newTotalPaidValue ?? 0),
+                                                  'status'           => $saleModel->present()->getStatus($status),
+                                                  'gateway_status'   => $statusGateway,
+                                              ]);
+
+            SaleRefundHistory::create([
+                                          'sale_id'          => $sale->id,
+                                          'refunded_amount'  => $refundAmount,
+                                          'date_refunded'    => Carbon::now(),
+                                          'gateway_response' => json_encode($responseGateway),
+                                      ]);
+            $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
+            if ($checktRecalc) {
+                $checktUpdate = $sale->update($updateData);
+                if ($checktUpdate) {
+                    DB::commit();
+                }
+
+                return true;
+            }
+            DB::rollBack();
+
+            return false;
+        } catch (Exception $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * @param Sale $sale
+     * @param int $refundAmount
+     * @return bool
+     * @throws Exception
+     */
+    public function recalcSaleRefund($sale, $refundAmount)
+    {
+        try {
+            $companyModel       = new Company();
+            $transferModel      = new Transfer();
+            $totalPaidValue     = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+            $percentRefund      = (int) round((($refundAmount / $totalPaidValue) * 100));
+            $refundTransactions = $sale->transactions;
+            foreach ($refundTransactions as $refundTransaction) {
+                //calcula valor que deve ser estornado da transação
+                $transactionValue        = (int) $refundTransaction->value;
+                $transactionRefundAmount = (int) round(($transactionValue * ($percentRefund / 100)));
+                //calcula novo valor da transação
+                //todo ativar quando for estorno parcial e ver como tratar a comissão ficando zerada
+                //                $refundTransaction->value = ($transactionValue - $transactionRefundAmount);
+                //Caso transaction ja esteja como transfered, criar transfer de saida
+                $company = $companyModel->find($refundTransaction->company_id);
+                if ($refundTransaction->status == 'transfered') {
+
+                    $transferModel->create([
+                                               'transaction_id' => $refundTransaction->id,
+                                               'user_id'        => $company->user_id,
+                                               'value'          => $transactionRefundAmount,
+                                               'type'           => 'out',
+                                               'reason'         => 'refunded',
+                                               'company_id'     => $company->id,
+                                           ]);
+
+                    $company->update([
+                                         'balance' => $company->balance -= $transactionRefundAmount,
+                                     ]);
+                }
+                if ($transactionRefundAmount == $transactionValue) {
+                    $refundTransaction->status = 'refunded';
+                }
+                $refundTransaction->save();
+            }
+
+            return true;
+        } catch
+        (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * @param $transactionId
+     * @return array
+     */
+    public
+    function refund($transactionId)
+    {
+        try {
+            $saleModel        = new Sale();
+            $transferModel    = new Transfer();
+            $companyModel     = new Company();
+            $transactionModel = new Transaction();
+            $saleId           = current(Hashids::connection('sale_id')->decode($transactionId));
+            if (!empty($saleId)) {
+                if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
+                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
+                } else {
+                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
+                }
+
+                $sale                = $saleModel->find($saleId);
+                $refundedTransaction = $pagarmeClient->transactions()->refund([
+                                                                                  'id' => $sale->gateway_id,
+                                                                              ]);
+
+                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
+                                                  ->first();
+                $transferModel->create([
+                                           'transaction_id' => $transaction->id,
+                                           'user_id'        => auth()->user()->account_owner_id,
+                                           'value'          => 100,
+                                           'type'           => 'out',
+                                           'reason'         => 'Taxa de estorno',
+                                           'company_id'     => $transaction->company_id,
+                                       ]);
+                $transaction->company->update([
+                                                  'balance' => $transaction->company->balance -= 100,
+                                              ]);
+                sleep(7);
+                if (!empty($refundedTransaction)) {
+                    return
+                        [
+                            'status'  => 'success',
+                            'message' => 'Transação estornada, aguarde alguns instantes para atualizar o status',
+                        ];
+                } else {
+                    return [
+                        'status'  => 'error',
+                        'message' => 'Erro ao estornar transação',
+                    ];
+                }
+            } else {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro ao estornar transação',
+                ];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao estornar transação SaleService - refund');
+            report($e);
+
+            return [
+                'status'  => 'error',
+                'message' => 'Erro ao estornar transação',
+            ];
+        }
     }
 }

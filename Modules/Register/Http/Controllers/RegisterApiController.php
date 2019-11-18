@@ -77,7 +77,7 @@ class RegisterApiController extends Controller
                                              'invite'          => $company->user_id,
                                              'user_invited'    => $user->account_owner_id,
                                              'status'          => '1',
-                                             'company'         => $company->id,
+                                             'company_id'      => $company->id,
                                              'register_date'   => Carbon::now()->format('Y-m-d'),
                                              'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
                                              'email_invited'   => $requestData['email'],

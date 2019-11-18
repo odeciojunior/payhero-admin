@@ -108,8 +108,8 @@ class PlansApiController extends Controller
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
-                        $requestData['name']        = FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['name']));
-                        $requestData['description'] = FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['description']));
+                        $requestData['name']        = FoxUtils::removeSpecialChars($requestData['name']);
+                        $requestData['description'] = FoxUtils::removeSpecialChars($requestData['description']);
 
                         $plan = $planModel->create($requestData);
                         if (!empty($plan)) {
@@ -252,8 +252,8 @@ class PlansApiController extends Controller
                     $plan = $planModel->where('id', $planId)->first();
 
                     $plan->update([
-                                      'name'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['name'])),
-                                      'description' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($requestData['description'])),
+                                      'name'        => FoxUtils::removeSpecialChars($requestData['name']),
+                                      'description' => FoxUtils::removeSpecialChars($requestData['description']),
                                       'code'        => $id,
                                       'price'       => $requestData["price"],
                                       'status'      => $planModel->present()->getStatus('active'),

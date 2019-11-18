@@ -5,7 +5,10 @@ namespace Modules\Sales\Http\Controllers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +16,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\SaleService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
@@ -213,54 +217,39 @@ class SalesApiController extends Controller
         }
     }
 
-    public function refund($transactionId)
+    public function refund(Request $request, $saleId)
     {
         try {
-            $saleModel        = new Sale();
-            $transferModel    = new Transfer();
-            $companyModel     = new Company();
-            $transactionModel = new Transaction();
-            $saleId           = current(Hashids::connection('sale_id')->decode($transactionId));
-            if (!empty($saleId)) {
-                if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
-                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
-                } else {
-                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
-                }
-
-                $sale                = $saleModel->find($saleId);
-                $refundedTransaction = $pagarmeClient->transactions()->refund([
-                                                                                  'id' => $sale->gateway_transaction_id,
-                                                                              ]);
-
-                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
-                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
-                                                  ->first();
-                $transferModel->create([
-                                           'transaction_id' => $transaction->id,
-                                           'user_id'        => auth()->user()->account_owner_id,
-                                           'value'          => 100,
-                                           'type'           => 'out',
-                                           'reason'         => 'Taxa de estorno',
-                                           'company_id'     => $transaction->company_id,
-                                       ]);
-                $transaction->company->update([
-                                                  'balance' => $transaction->company->balance -= 100,
-                                              ]);
-                sleep(7);
-                if (!empty($refundedTransaction)) {
-                    return response()->json(['message' => 'Transação estornada, aguarde alguns instantes para atualizar o status'], 200);
-                } else {
-                    return response()->json(['message' => 'Erro ao estornar transação'], 400);
-                }
+            $checkoutService = new CheckoutService();
+            $saleService     = new SaleService();
+            $saleModel       = new Sale();
+            $sale            = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))->first();
+            $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            if (in_array($sale->gateway_id, [3, 4])) {
+                //zoop_production || zoop_sandbox
+                $result = $checkoutService->cancelPayment($sale, $refundAmount);
+            } else {//if (in_array($sale->gateway_id, [1, 2])) {
+                //                pagarme_production || pagamer_sandbox
+                $result = $saleService->refund($saleId);
+            }
+            //            else {
+            //                $result = [
+            //                    'status'  => 'error',
+            //                    'message' => 'Gateway não encontrado para pedido de estorno',
+            //                ];
+            //            }
+            if ($result['status'] == 'success') {
+                return response()->json(['success' => $result['message']], Response::HTTP_OK);
             } else {
-                return response()->json(['message' => 'Erro ao estornar transação'], 400);
+                report(new Exception(json_encode($result)));
+
+                return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao estornar transação SalesApiController - refund');
+            Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
             report($e);
 
-            return response()->json(['message' => 'Erro ao estornar transação'], 400);
+            return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
         }
     }
 }
