@@ -116,7 +116,6 @@
 
 .cell-selected .caret {
     overflow: hidden;
-    border-right: .15em solid orange;
     white-space: nowrap;
     display: block;
     max-width: 94px;
