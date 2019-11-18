@@ -80,7 +80,7 @@ class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoS
     {
         return [
             'Código da Venda',
-            'Código do Rastreio',
+            'Código de Rastreio',
             'Código do Produto',
             'Produto',
             'Quantidade',
