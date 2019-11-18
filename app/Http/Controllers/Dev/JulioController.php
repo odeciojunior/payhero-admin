@@ -42,15 +42,14 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-        // $shoifyIntegrationModel = new ShopifyIntegration();
+        $shoifyIntegrationModel = new ShopifyIntegration();
 
-        // $shopifyService = new ShopifyService('howzeinsud.myshopify.com', '1d3690c109481a620361d6e9190cdb1f');
+        $shopifyService = new ShopifyService('ofertatopp.myshopify.com', 'eac3b08e185500eb2e0b972936a5223c');
 
         // $shopifyService->createShopWebhook();
 
-        // dd($shopifyService->getShopWebhook());
+        dd($shopifyService->getShopWebhook());
 
-        $string = "Carregádor 4 em 1 Para Iphones , Android , Apple Watchs e Airpods.ɸ";
 
     }
 

@@ -49,11 +49,6 @@ $(() => {
         $(this).hide();
     });
 
-    //alem do evento disparado no modal de vendas /modules/sales/detail.js
-    $(document).on('click', '.btn-save-trackingcode', function(event){
-        index();
-    });
-
     $('#bt_filtro').on('click', function () {
         index();
         getResume();
