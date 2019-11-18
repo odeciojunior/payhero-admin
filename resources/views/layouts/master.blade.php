@@ -140,7 +140,7 @@
             email: "{{ auth()->user()->email }}",
         });
 
-        window.Appcues.identify("<?= $current_user_id ?>", {
+        window.Appcues.identify("{{ auth()->user()->id }}", {
             account_id: "{{ auth()->user()->id }}",
             first_name: "{{ auth()->user()->name }}",
             email: "{{ auth()->user()->email }}",
