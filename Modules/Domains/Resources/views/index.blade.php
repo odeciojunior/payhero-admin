@@ -313,8 +313,8 @@
                             </table>
                         </div>
                         <span id='domain-hash'></span>
-                        <div style='width: 100%; text-align: center; padding-top: 3%;'>
-                            <button class='btn btn-success btn-verify-domain' domain='' style='font-size: 25px;'>Verificar</button>
+                        <div style='width: 100%; text-align: center; padding-top: 3%;' id='div-recheck-dns'>
+{{--                            <button class='btn btn-success btn-verify-domain' domain='' style='font-size: 25px;'>Verificar</button>--}}
                         </div>
                     </div>
                 </div>

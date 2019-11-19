@@ -22,7 +22,6 @@ Route::group(
             'as'   => 'sales.resume',
             'uses' => 'SalesApiController@resume',
         ]);
-
         Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
     }
 );

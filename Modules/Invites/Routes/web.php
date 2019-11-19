@@ -23,8 +23,8 @@ Route::group(
         'middleware' => ['web'],
     ],
     function() {
-        Route::post('/obterconvite', 'InvitesController@getInvitation')->name('get.invitation')->middleware('role:account_owner|admin');
-        Route::post('/obterconvitehubsmart', 'InvitesController@getHubsmartInvitation')->name('get.hubsmartinvitation')->middleware('role:account_owner|admin');
+        Route::post('/obterconvite', 'InvitesController@getInvitation')->name('get.invitation')->middleware('role:account_owner');
+        Route::post('/obterconvitehubsmart', 'InvitesController@getHubsmartInvitation')->name('get.hubsmartinvitation')->middleware('role:account_owner');
     }
 );
 
@@ -32,7 +32,7 @@ Route::group(
  * Private Rote
  */
 Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::Resource('invitations', 'InvitesController')->only('index', 'create', 'store')->names('invitations')->middleware('role:account_owner|admin');
+    Route::Resource('invitations', 'InvitesController')->only('index', 'create', 'store')->names('invitations')->middleware('role:account_owner');
 });
 
 Route::group(
@@ -42,6 +42,6 @@ Route::group(
     ],
     function() {
         Route::get('verifyinvite/{code}', 'InvitesApiController@verifyInviteRegistration')
-             ->name('api.verifyinvite')->middleware('role:account_owner|admin');
+             ->name('api.verifyinvite');
     }
 );

@@ -1,3 +1,5 @@
+/* Tracking Status */
+
 .step-line {
     background: #758D96;
     height: 3px;
@@ -79,6 +81,10 @@
     }
 }
 
+/* END - Tracking Status */
+
+/* Trackings Table */
+
 .fake-label{
     border-color: transparent !important;
     background-color: transparent !important;
@@ -86,6 +92,62 @@
 
 .td-odd{
     background-color: rgba(51, 51, 51, 0.06) !important;
+}
+
+/* END - Trackings Table */
+
+.cell-selected {
+    border: 2px solid green;
+    padding: 10px 13px;
+}
+
+.cell-selected::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: green;
+    position: relative;
+    display: inline-block;
+    float: right;
+    top: 4px;
+    left: 15px;
+    border: 1px solid #fff;
+}
+
+.cell-selected .caret {
+    overflow: hidden;
+    border-right: .15em solid #000;
+    white-space: nowrap;
+    display: block;
+    max-width: 94px;
+    animation: typing 3.5s steps(40, end),
+    blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #000; }
+}
+
+.cell-fade{
+    background: linear-gradient(90deg, transparent, #fff);
+    width: 100px;
+    height: 161px;
+    position: absolute;
+    bottom: 29px;
+    right: 30px;
+}
+
+@media (max-width: 569px) {
+    .cell-fade{
+        right: 0;
+        left: 379px
+    }
 }
 
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
@@ -191,10 +192,15 @@ class SalesRecoveryApiController extends Controller
                                           'shopify_discount' => $discount,
                                       ]);
                     }
+                    if (in_array($sale->gateway_id, [3, 4])) {
+                        $checkoutService   = new CheckoutService();
+                        $boletoRegenerated = $checkoutService->regenerateBilletZoop(Hashids::connection('sale_id')
+                                                                                           ->encode($sale->id), $totalPaidValue, $request->input('date'));
+                    } else {
+                        $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
 
-                    $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
-
-                    $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
+                        $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
+                    }
                     if ($boletoRegenerated['status'] == 'success') {
                         $message = 'Boleto regenerado com sucesso';
                         $status  = 200;

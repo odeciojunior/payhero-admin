@@ -57,6 +57,16 @@
                     </div>
                 </div>
             </div>
+            {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                <div class="card" onclick="window.location.href='/apps/digitalmanager'" style='width:300px;'>
+                    <a id="digitalmanager-bt" href="/apps/digitalmanager" class="add-btn"><i id="digitalmanager-icon" class="icon wb-plus" aria-hidden="true"></i></a>
+                    <img class="card-img-top mt-100" src="{!! asset('modules/global/img/digital_manager_guru.png') !!}" alt="" align="middle">
+                    <div class="card-body mt-80">
+                        <h5 class="card-title">Digital Manager Guru</h5>
+                        <p class="card-text sm">Integre seus projetos com Digital Manager Guru</p>
+                    </div>
+                </div>
+            </div> --}}
         </div>
     </div>
 @endsection

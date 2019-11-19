@@ -12,8 +12,6 @@
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
-    <!-- csrf token used for ajax requests -->
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <!-- access token used for api ajax requests -->
     <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
@@ -46,10 +44,9 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=2') }}">
     @stack('css')
 
-<!-- Scripts -->
     @if(env('APP_ENV', 'production') == 'production')
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
         <script>
@@ -63,14 +60,11 @@
     </script>
 </head>
 <body class="animsition site-navbar-small dashboard">
+
+{{-- loading --}}
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
 </div>
-<style>
-    body {
-        background-color: #f1f4f5;
-        font-family: 'Muli', sans-serif !important;
-    }
-</style>
+
 @include("layouts.menu-principal")
 
 @yield('content')
@@ -99,6 +93,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js?v=2') }}"></script>
+
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
@@ -132,7 +127,10 @@
                     w.addEventListener('load', l, false);
                 }
             }
-        })();</script>
+        })();
+    </script>
+
+    <script src="https://fast.appcues.com/60650.js"></script>
 
     <script>
         window.Intercom('boot', {
@@ -141,13 +139,21 @@
             name: "{{ auth()->user()->name }}",
             email: "{{ auth()->user()->email }}",
         });
+
+        window.Appcues.identify("{{ auth()->user()->id }}", {
+            account_id: "{{ auth()->user()->id }}",
+            first_name: "{{ auth()->user()->name }}",
+            email: "{{ auth()->user()->email }}",
+        });
     </script>
 
-    {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
     <script src="{{ asset('modules/global/js/notifications.js?v=4') }}"></script>
 
 @endif
+
 </body>
+
 </html>
+

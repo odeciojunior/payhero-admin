@@ -98,6 +98,8 @@ $(document).ready(function () {
                         dados += "<td><span class='badge badge-danger'>Estornada</span></td>";
                     } else if (value.status == '5') {
                         dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
+                    } else if (value.status == '20') {
+                        dados += "<td><span class='badge badge-pendente'>Análise Antifraude</span></td>";
                     }
                     dados += "<td>" + value.start_date + "</td>";
                     dados += "<td>" + value.end_date + "</td>";

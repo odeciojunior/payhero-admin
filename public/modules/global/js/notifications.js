@@ -41,7 +41,7 @@ $(document).ready(function () {
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {
-        $.ajax({ 
+        $.ajax({
             method: 'GET',
             url: '/api/notifications/unreadamount',
             headers: {
@@ -75,7 +75,7 @@ $(document).ready(function () {
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
                 $(response.data).each(function(index, data){
-                    $("#notificationTemplate").append(notificationTemplate(data));                    
+                    $("#notificationTemplate").append(notificationTemplate(data));
                 });
                 markNotificationsAsRead();
             }
@@ -104,7 +104,6 @@ $(document).ready(function () {
 
     // prepare data to create a template
     function getNotificationData(data){
-
         var message = '', iconClass = '', link = '';
         switch (data.type) {
             case 'BoletoCompensatedNotification' :
@@ -141,6 +140,11 @@ $(document).ready(function () {
                 message   = data.message;
                 iconClass = 'money-success';
                 link      = '/finances';
+                break;
+            case 'TrackingsImportedNotification':
+                message   = data.message;
+                iconClass = 'tracking-success';
+                link      = '/trackings';
                 break;
             default:
                 break;

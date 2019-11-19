@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    var currentPage;
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
@@ -72,23 +73,6 @@ $(document).ready(function () {
         }, '.boleto-pending'
     );
 
-    function downloadFile(response, request) {
-        let type = request.getResponseHeader("Content-Type");
-        // Get file name
-        let contentDisposition = request.getResponseHeader("Content-Disposition");
-        let fileName = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-        fileName = fileName ? fileName[0].replace("filename=", "") : '';
-
-        var a = document.createElement("a");
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
-        a.setAttribute("download", fileName);
-        a.click();
-        window.URL.revokeObjectURL(a.href);
-        document.body.removeChild(a);
-    }
-
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
@@ -149,7 +133,8 @@ $(document).ready(function () {
             success: function success(response) {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
-                window.location = '/sales';
+                $("#modal_regerar_boleto").modal('hide');
+                atualizar(currentPage);
             }
         });
     });
@@ -185,6 +170,8 @@ $(document).ready(function () {
     // Obtem lista de vendas
     function atualizar(link = null) {
 
+        currentPage = link;
+
         let updateResume = true;
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
@@ -210,13 +197,14 @@ $(document).ready(function () {
                 $('#dados_tabela').html('');
                 $('#tabela_vendas').addClass('table-striped');
 
-                var statusArray = {
+                let statusArray = {
                     1: 'success',
                     6: 'primary',
                     7: 'danger',
                     4: 'danger',
                     3: 'danger',
-                    2: 'pendente'
+                    2: 'pendente',
+                    20: 'pendente'
                 };
 
                 if (!isEmpty(response.data)) {

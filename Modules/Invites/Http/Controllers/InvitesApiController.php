@@ -33,9 +33,9 @@ class InvitesApiController extends Controller
 
             $invitationModel = new Invitation();
 
-            $invites = $invitationModel->newQuery()->where('invite', auth()->user()->account_owner_id)->with('company');
+            $invites = $invitationModel->where('invite', auth()->user()->account_owner_id)->with('company');
 
-            return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(5));
+            return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(10));
         } catch (Exception $e) {
             Log::warning('Erro ao tentar listar convites (InvitesApiController - index)');
             report($e);
@@ -62,7 +62,7 @@ class InvitesApiController extends Controller
 
                 $invitesSent = $invitationModel->where('invite', auth()->user()->account_owner_id)->count();
 
-                if ($invitesSent == auth()->user()->invites_amount) {
+                if ($invitesSent >= auth()->user()->invites_amount) {
                     return response()->json([
                                                 'message' => 'Envio de convites indisponível, limite atingido!',
                                             ], 400);
@@ -71,10 +71,9 @@ class InvitesApiController extends Controller
                 $company = current(Hashids::decode($request->input('company')));
                 if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
                     try {
-                        $invite          = $invitationModel->newQuery()
-                                                           ->where([['email_invited', $request->input('email')], ['company_id', $company]])
+                        $invite          = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
                                                            ->first();
-                        $user            = $userModel->newQuery()->where('email', $request->input('email'))->first();
+                        $user            = $userModel->where('email', $request->input('email'))->first();
                         $sendgridService = new EmailService();
                         if (empty($user)) {
                             $emailInvited = $sendgridService->sendInvite($request->input('email'), Hashids::encode($company));
@@ -108,7 +107,7 @@ class InvitesApiController extends Controller
                                         'email_invited' => $request->input('email'),
                                         'parameter'     => $request->input('company'),
                                     ];
-                                    $invitationModel->newQuery()->create($data);
+                                    $invitationModel->create($data);
                                 }
 
                                 return response()->json(
@@ -209,7 +208,7 @@ class InvitesApiController extends Controller
         try {
             $invitationModel         = new Invitation();
             $transactionModel        = new Transaction();
-            $invitationAcceptedCount = $invitationModel->newQuery()->where(
+            $invitationAcceptedCount = $invitationModel->where(
                 [
                     [
                         'invite',
@@ -221,12 +220,14 @@ class InvitesApiController extends Controller
                     ],
                 ]
             )->count();
-            $invitationSentCount     = $invitationModel->newQuery()->where('invite', auth()->user()->account_owner_id)->count();
-            $userIdInvites           = $invitationModel->newQuery()->where('invite', auth()->user()->account_owner_id)->pluck('id')
+            $invitationSentCount     = $invitationModel->where('invite', auth()->user()->account_owner_id)
+                                                       ->count();
+            $userIdInvites           = $invitationModel->where('invite', auth()->user()->account_owner_id)
+                                                       ->pluck('id')
                                                        ->toArray();
-            $commissionPaid          = $transactionModel->newQuery()->whereIn('invitation_id', $userIdInvites)
+            $commissionPaid          = $transactionModel->whereIn('invitation_id', $userIdInvites)
                                                         ->where('status', 'transfered')->sum('value');
-            $commissionPending       = $transactionModel->newQuery()->whereIn('invitation_id', $userIdInvites)
+            $commissionPending       = $transactionModel->whereIn('invitation_id', $userIdInvites)
                                                         ->where('status', 'paid')->sum('value');
 
             return response()->json(
@@ -266,9 +267,9 @@ class InvitesApiController extends Controller
             $invitationId    = current(Hashids::decode($data['invitationId']));
             if ($invitationId) {
                 $sendgridService = new EmailService();
-                $invitation      = $invitationModel->newQuery()->find($invitationId);
+                $invitation      = $invitationModel->find($invitationId);
                 if (FoxUtils::validateEmail($invitation->email_invited) && !empty($invitation->company_id)) {
-                    $user = $userModel->newQuery()->where('email', $invitation->email_invited)->first();
+                    $user = $userModel->where('email', $invitation->email_invited)->first();
                     if ($user) {
                         return response()->json(
                             [

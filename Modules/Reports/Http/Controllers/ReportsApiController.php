@@ -3,6 +3,7 @@
 namespace Modules\Reports\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Core\Entities\Plan;
@@ -19,12 +20,11 @@ use Modules\Reports\Transformers\SalesByOriginResource;
 class ReportsApiController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function index(request $request)
     {
-
         try {
             $userProjectModel = new UserProject();
             $salesModel       = new Sale();
@@ -103,7 +103,7 @@ class ReportsApiController extends Controller
                     // calculos dashboard
                     $salesDetails = $salesModel->select([
                                                             DB::raw('SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesAproved'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 2 THEN 1 ELSE 0 END) AS contSalesPending'),
+                                                            DB::raw('SUM(CASE WHEN sales.status = 2 OR sales.status = 7 THEN 1 ELSE 0 END) AS contSalesPending'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 3 THEN 1 ELSE 0 END) AS contSalesRecused'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),

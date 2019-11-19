@@ -25,7 +25,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property float $shipment_value
  * @property string $start_date
  * @property string $end_date
- * @property string $gateway_id
+ * @property string $gateway_transaction_id
  * @property int $status
  * @property string $gateway_status
  * @property int $installments_amount
@@ -50,6 +50,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property Affiliate $affiliate
  * @property Client $client
  * @property Delivery $delivery
+ * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
  * @property PlanSale[] $plansSales
  * @property Transaction[] $transactions
@@ -82,6 +83,7 @@ class Sale extends Model
         'shipment_value',
         'start_date',
         'end_date',
+        'gateway_transaction_id',
         'gateway_id',
         'status',
         'gateway_status',
@@ -150,6 +152,14 @@ class Sale extends Model
     public function delivery()
     {
         return $this->belongsTo('Modules\Core\Entities\Delivery');
+    }
+
+    /**
+     * @return hasMany
+     */
+    public function saleRefundHistory()
+    {
+        return $this->hasMany('Modules\Core\Entities\SaleRefundHistory');
     }
 
     /**

@@ -44,7 +44,7 @@ class TrackingService
         return $tracking;
     }
 
-    public function getTrackings($filters, $resume = false)
+    public function getTrackings($filters, $paginate = true)
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
@@ -53,6 +53,8 @@ class TrackingService
             ->with([
                 'tracking',
                 'sale.plansSales.plan.productsPlans',
+                'sale.delivery',
+                'sale.client',
                 'product',
             ])
             ->whereHas('sale', function ($query) use ($filters) {
@@ -90,56 +92,10 @@ class TrackingService
             });
         }
 
-        if (!$resume) {
+        if ($paginate) {
             return $productPlanSales->orderBy('id', 'desc')->paginate(10);
         } else {
-
-            $productPlanSales = $productPlanSales->get();
-
-            $total = $productPlanSales->count();
-            $posted = 0;
-            $dispatched = 0;
-            $delivered = 0;
-            $out_for_delivery = 0;
-            $exception = 0;
-            $unknown = 0;
-
-            foreach ($productPlanSales as $productPlanSale) {
-
-                $tracking = $productPlanSale->tracking;
-
-                if (isset($tracking)) {
-                    switch ($tracking->tracking_status_enum) {
-                        case $tracking->present()->getTrackingStatusEnum('posted'):
-                            $posted++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('dispatched'):
-                            $dispatched++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('delivered'):
-                            $delivered++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('out_for_delivery'):
-                            $out_for_delivery++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('exception'):
-                            $exception++;
-                            break;
-                    }
-                } else {
-                    $unknown++;
-                }
-            }
-
-            return response()->json(['data' => [
-                'total' => $total,
-                'posted' => $posted,
-                'dispatched' => $dispatched,
-                'delivered' => $delivered,
-                'out_for_delivery' => $out_for_delivery,
-                'exception' => $exception,
-                'unknown' => $unknown
-            ]]);
+            return $productPlanSales->get();
         }
     }
 }

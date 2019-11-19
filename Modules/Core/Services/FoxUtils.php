@@ -4,7 +4,9 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -179,9 +181,14 @@ class FoxUtils
         return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
     }
 
+    // public static function removeSpecialChars($string){
+
+    //     return preg_replace('/[^\x00-\x7F]+/', "", $string);
+    // }
+
     public static function removeSpecialChars($string){
 
-        return preg_replace('/[^\x00-\x7F]+/', "", $string);
+        return preg_replace('/([^a-zà-úA-ZÀ-Ú0-9 ]|[äåæËÎÏÐðÑ×÷ØÝÞßÆøÆø])/u', "", $string);
     }
 
     /**
@@ -203,5 +210,66 @@ class FoxUtils
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isProduction()
+    {
+        if (env("APP_ENV", "local") == "production") {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function urlCheckout()
+    {
+        if (self::isProduction()) {
+            $url = 'https://checkout.cloudfox.net';
+        } else {
+            $url = 'http://checkout.devcloudfox.net';
+        }
+
+        return $url;
+    }
+
+    /**
+     * @param $value
+     * @param string $type
+     * @return null
+     */
+    public static function xorEncrypt($value, $type = "encrypt")
+    {
+        $customKey = getenv("CUSTOM_CRYPT_KEY", null);
+        if (self::isEmpty($customKey)) {
+            return null;
+        }
+        if ($type == "decrypt") {
+            $value = base64_decode($value);
+        }
+        $valueLength     = strlen($value);
+        $customKeyLength = strlen($customKey);
+        for ($i = 0; $i < $valueLength; $i++) {
+            for ($j = 0; $j < $customKeyLength; $j++) {
+                if ($type == "decrypt") {
+                    $value[$i] = $customKey[$j] ^ $value[$i];
+                } else {
+                    $value[$i] = $value[$i] ^ $customKey[$j];
+                }
+            }
+        }
+
+        $result = $value;
+
+        if ($type == "encrypt") {
+            $result = base64_encode($value);
+        }
+
+        return $result;
     }
 }

@@ -9,14 +9,17 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Trackings\Exports\TrackingsReportExport;
+use Modules\Trackings\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
+use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -83,29 +86,72 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $trackings = $trackingService->getTrackings($data, true);
+            $productPlanSales = $trackingService->getTrackings($data, false);
 
-            return $trackings;
+            $total = $productPlanSales->count();
+            $posted = 0;
+            $dispatched = 0;
+            $delivered = 0;
+            $out_for_delivery = 0;
+            $exception = 0;
+            $unknown = 0;
+
+            foreach ($productPlanSales as $productPlanSale) {
+
+                $tracking = $productPlanSale->tracking;
+
+                if (isset($tracking)) {
+                    switch ($tracking->tracking_status_enum) {
+                        case $tracking->present()->getTrackingStatusEnum('posted'):
+                            $posted++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('dispatched'):
+                            $dispatched++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('delivered'):
+                            $delivered++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('out_for_delivery'):
+                            $out_for_delivery++;
+                            break;
+                        case $tracking->present()->getTrackingStatusEnum('exception'):
+                            $exception++;
+                            break;
+                    }
+                } else {
+                    $unknown++;
+                }
+            }
+
+            return response()->json(['data' => [
+                'total' => $total,
+                'posted' => $posted,
+                'dispatched' => $dispatched,
+                'delivered' => $delivered,
+                'out_for_delivery' => $out_for_delivery,
+                'exception' => $exception,
+                'unknown' => $unknown
+            ]]);
 
         } catch (Exception $e) {
-            Log::warning('Erro ao exibir códigos de rastreio (TrackingApiController - resume)');
+            Log::warning('Erro ao exibir resumo dos rastreamentos (TrackingApiController - resume)');
             report($e);
 
-            return response()->json(['message' => 'Erro ao resumo dos rastreamentos'], 400);
+            return response()->json(['message' => 'Erro ao exibir resumo dos rastreamentos'], 400);
         }
     }
 
     /**
-     * @param Request $request
+     * @param TrackingStoreRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(TrackingStoreRequest $request)
     {
         try {
-            $data                 = $request->all();
+            $data = $request->all();
             $productPlanSaleModel = new ProductPlanSale();
-            $trackingModel        = new Tracking();
-            $trackingService      = new TrackingService();
+            $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
 
             if (!empty($data['tracking_code']) && !empty($data['sale_id']) && !empty($data['product_id'])) {
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
@@ -216,6 +262,103 @@ class TrackingsApiController extends Controller
 
             return response()->json(['message' => 'Erro ao notificar cliente'], 400);
         }
+    }
 
+    public function export(Request $request)
+    {
+        try {
+
+            $trackingService = new TrackingService();
+
+            $data = $request->all();
+
+            $productPlanSales = $trackingService->getTrackings($data, false);
+
+            $trackings = $productPlanSales->map(function ($item) {
+
+                $return = [
+                    'sale' => '#' . Hashids::connection('sale_id')->encode($item->sale->id),
+                    'tracking_code' => '',
+                    'product_id' => '#' . Hashids::encode($item->product->id),
+                    'product_name' => $item->product->name . ($item->product->description ? ' (' . $item->product->description . ')' : ''),
+                    'product_amount' => '',
+                    'product_sku' => $item->product->sku,
+                    'client_name' => $item->sale->client->name ?? '',
+                    'client_telephone' => $item->sale->client->telephone ?? '',
+                    'client_email' => $item->sale->client->email ?? '',
+                    'client_document' => $item->sale->client->document ?? '',
+                    'client_street' => $item->sale->delivery->street ?? '',
+                    'client_number' => $item->sale->delivery->number ?? '',
+                    'client_complement' => $item->sale->delivery->complement ?? '',
+                    'client_neighborhood' => $item->sale->delivery->neighborhood ?? '',
+                    'client_zip_code' => $item->sale->delivery->zip_code ?? '',
+                    'client_city' => $item->sale->delivery->city ?? '',
+                    'client_state' => $item->sale->delivery->state ?? '',
+                    'client_country' => $item->sale->delivery->country ?? '',
+                ];
+
+                if($item->tracking){
+                    $return['product_amount'] = $item->tracking->amount;
+                    $return['tracking_code'] = $item->tracking->tracking_code;
+                } else {
+                    if ($item->sale->relationLoaded('plansSales')) {
+                        $planSale = $item->sale
+                            ->plansSales
+                            ->where('plan_id', $item->plan_id)
+                            ->where('sale_id', $item->sale_id)
+                            ->first();
+                        if (isset($planSale)) {
+                            if ($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
+                                $productPlan = $planSale->plan
+                                    ->productsPlans
+                                    ->where('product_id', $item->product_id)
+                                    ->where('plan_id', $item->plan_id)
+                                    ->first();
+
+                                if (isset($productPlan)) {
+                                    $return['product_amount'] = $planSale->amount * $productPlan->amount;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return $return;
+            });
+
+            return Excel::download(new TrackingsReportExport($trackings), 'export.' . $data['format']);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao exportar códigos de rastreio (TrackingApiController - export)');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao exportar dos rastreamentos'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function import(Request $request)
+    {
+        try {
+            if ($request->hasFile('import_xlsx')) {
+                $extension = strtolower(request()->file('import_xlsx')->getClientOriginalExtension());
+                if (in_array($extension, ['csv', 'xlsx'])) {
+                    $user = auth()->user();
+                    Excel::queueImport(new TrackingsImport($user), request()->file('import_xlsx'));
+
+                    return response()->json(['message' => 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!']);
+                } else {
+                    return response()->json(['message' => 'Formato de arquivo inválido!'], 400);
+                }
+            }
+            return response()->json(['message' => 'Arquivo inválido'], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao importar códigos de rastreio (TrackingApiController - import)');
+            report($e);
+            return response()->json(['message' => 'Erro ao importar arquivo'], 400);
+        }
     }
 }

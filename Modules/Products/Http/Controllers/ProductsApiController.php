@@ -6,6 +6,7 @@ use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Products\Http\Requests\IndexProductRequest;
 use Modules\Products\Http\Requests\UpdateProductRequest;
@@ -129,7 +130,8 @@ class ProductsApiController extends Controller
             $data['user_id']            = auth()->user()->account_owner_id;
             $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
-
+            $data['name']               = FoxUtils::removeSpecialChars($data['name']);
+            $data['description']        = FoxUtils::removeSpecialChars($data['description']);
             if (empty($category)) {
                 $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
                 $data['category_id'] = $category->id;
@@ -280,6 +282,9 @@ class ProductsApiController extends Controller
                     if (isset($data['cost'])) {
                         $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
                     }
+
+                    $data['name']        = FoxUtils::removeSpecialChars($data['name']);
+                    $data['description'] = FoxUtils::removeSpecialChars($data['description']);
                     $product->update($data);
 
                     $productPhoto = $request->file('product_photo');

@@ -17,7 +17,7 @@ $(() => {
 
         let row = $(this).parent().parent();
 
-        row.find('input')
+        row.find('.input-tracking-code')
             .removeClass('fake-label')
             .prop('readonly', false)
             .focus();
@@ -35,7 +35,7 @@ $(() => {
     $(document).on('click', '.tracking-close', function () {
         let row = $(this).parent().parent();
 
-        row.find('input')
+        row.find('.input-tracking-code')
             .addClass('fake-label')
             .prop('readonly', true)
             .blur();
@@ -47,11 +47,6 @@ $(() => {
             .hide();
 
         $(this).hide();
-    });
-
-    //alem do evento disparado no modal de vendas /modules/sales/detail.js
-    $(document).on('click', '.btn-save-trackingcode', function(event){
-        index();
     });
 
     $('#bt_filtro').on('click', function () {
@@ -94,6 +89,26 @@ $(() => {
         startDate = start.format('YYYY-MM-DD');
         endDate = end.format('YYYY-MM-DD');
     });
+
+    function getFilters(urlParams = false) {
+        let data = {
+            'tracking_code': $('#tracking_code').val(),
+            'status': $('#status').val(),
+            'project': $('#project-select').val(),
+            'date_updated': $('#date_updated').val(),
+            'sale': $('#sale').val().replace('#', ''),
+        };
+
+        if (urlParams) {
+            let params = "";
+            for (let param in data) {
+                params += '&' + param + '=' + data[param];
+            }
+            return encodeURI(params);
+        } else {
+            return data;
+        }
+    }
 
     getProducts();
 
@@ -141,8 +156,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/tracking/resume?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', ''),
+            url: '/api/tracking/resume?' + getFilters(true).substr(1),
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -174,11 +188,9 @@ $(() => {
     function index(link = null) {
 
         if (link == null) {
-            link = '/api/tracking?' + 'tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
+            link = '/api/tracking?' + getFilters(true).substr(1);
         } else {
-            link = '/api/tracking' + link + '&tracking_code=' + $('#tracking_code').val() + '&status=' + $('#status').val()
-                + '&project=' + $('#project-select').val() + '&date_updated=' + $('#date_updated').val() + '&sale=' + $('#sale').val().replace('#', '');
+            link = '/api/tracking' + link + getFilters(true);
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
@@ -238,17 +250,17 @@ $(() => {
                                             <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                          </td>
                                          <td>
-                                            <input class="form-control font-weight-bold fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+                                            <input maxlength="16" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
                                          <td style="min-width: 100px; text-align: right">
-                                            <a class='tracking-save pointer mr-10' product='${tracking.product.id}'
+                                            <a class='tracking-save pointer mr-10' title="Salvar" product='${tracking.product.id}'
                                              sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
                                          ${ tracking.tracking_status_enum
-                                            ? `<a class='tracking-edit pointer mr-10'><i class='material-icons gradient'>edit</i></a>
-                                               <a class='tracking-detail pointer' tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
-                                            : `<a class='tracking-add pointer'><i class='material-icons gradient'>add_circle</i></a>`
+                                            ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
+                                               <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                            : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
                                          }
-                                           <a class='tracking-close pointer' style="display:none"><i class='material-icons gradient'>close</i></a>
+                                           <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
@@ -263,6 +275,7 @@ $(() => {
         });
     }
 
+    //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
 
         $.ajax({
@@ -374,13 +387,22 @@ $(() => {
 
     });
 
+    $(document).on('click', '.input-tracking-code', function(){
+        let row = $(this).parent().parent();
+        row.find('.tracking-edit, .tracking-add').click();
+        $(this).one('focusout', function(){
+            row.find('.tracking-close').click();
+        });
+    });
+
+    //salvar tracking
     $(document).on('click', '.tracking-save', function () {
 
         let btnSave = $(this);
         let row = btnSave.parent().parent();
         btnSave.prop('disabled', true);
 
-        let tracking_code = btnSave.parent().parent().find('input').val();
+        let tracking_code = btnSave.parent().parent().find('.input-tracking-code').val();
         let saleId = btnSave.attr('sale');
         let productId = btnSave.attr('product');
 
@@ -394,21 +416,19 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                btnSave.prop('readonly', false);
+                btnSave.prop('disabled', false);
                 errorAjaxResponse(response);
             },
             success: (response) => {
 
                 if (!isEmpty(response.data.tracking_status)) {
 
-                    //row.find('.td-status')
-                    //    .html('<span class="badge badge-primary">Postado</span>');
-
                     row.find('.tracking-close')
                         .click();
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
+                btnSave.prop('disabled', false);
             }
         });
     });
@@ -432,4 +452,68 @@ $(() => {
             }
         });
     });
+
+    //exportar excel
+    $("#btn-export-csv").on("click", function () {
+        trackingsExport('csv');
+    });
+
+    $("#btn-export-xls").on("click", function () {
+        trackingsExport('xlsx');
+    });
+
+    function trackingsExport(fileFormat){
+        let data = getFilters();
+        data['format'] = fileFormat;
+        $.ajax({
+            method: "POST",
+            url: '/api/tracking/export',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, textStatus, request) {
+                downloadFile(response, request);
+            }
+        });
+    }
+
+    //importar excel
+    $('#btn-import-xls').on('click', function(){
+        $('#input-import-xls').click();
+    });
+
+    $('#input-import-xls').on('change', function(){
+        $('#btn-import-xls').prop('disabled', true);
+        let form = new FormData();
+        form.append('import.xlsx', this.files[0]);
+        $(this).val(null);
+        $.ajax({
+            url: '/api/tracking/import',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#btn-import-xls').prop('disabled', false);
+                alertCustom('success', 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!')
+            },
+        });
+    });
+
 });

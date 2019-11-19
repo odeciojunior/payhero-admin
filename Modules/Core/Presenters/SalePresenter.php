@@ -71,7 +71,7 @@ class SalePresenter extends Presenter
      */
     public function getStatus($status = null)
     {
-        $status  = $status ?? $this->status;
+        $status = $status ?? $this->status;
 
         if (is_numeric($status)) {
             switch ($status) {
@@ -89,8 +89,14 @@ class SalePresenter extends Presenter
                     return 'in_proccess';
                 case 7:
                     return 'refunded';
+                case 8:
+                    return 'partial_refunded';
                 case 10:
                     return 'system_error';
+                case 20:
+                    return 'in_review';
+                case 21:
+                    return 'canceled_antifraud';
             }
 
             return '';
@@ -110,8 +116,14 @@ class SalePresenter extends Presenter
                     return 6;
                 case 'refunded':
                     return 7;
+                case 'partial_refunded':
+                    return 8;
                 case 'system_error':
                     return 10;
+                case 'in_review':
+                    return 20;
+                case 'canceled_antifraud':
+                    return 21;
             }
 
             return '';

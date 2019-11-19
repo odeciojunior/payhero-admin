@@ -142,10 +142,6 @@
                                     {{-- js carregado--}}
                                 </tbody>
                             </table>
-                            <a class='btn p-1 pointer float-right btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
-                                <i class='icon wb-envelope' aria-hidden='true'></i>
-                                Enviar e-mail para o cliente
-                            </a>
                         </div>
                     </div>
                     <!-- DETALHES  -->
@@ -218,7 +214,8 @@
             <div class="clearfix"></div>
         </div>
     </div>
+</div>
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js?v=1') }}"></script>
     @endpush
 </div>

@@ -60,6 +60,7 @@
                                 <option value="4">Chargeback</option>
                                 <option value="7">Estornado</option>
                                 <option value="6">Em análise</option>
+                                <option value="20">Análise Antifraude</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -145,10 +146,10 @@
                 <!-- Modal detalhes da venda-->
             @include('sales::details')
             <!-- End Modal -->
+                <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                    {{-- js carrega... --}}
+                </ul>
             </div>
-            <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                {{-- js carrega... --}}
-            </ul>
         </div>
         {{--        <div class="content-error text-center" style="display:none">--}}
         {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}

@@ -42,7 +42,7 @@ class PostBackEbanxController extends Controller
                         'testMode'       => false,
                     ]);
 
-        $sale = $saleModel->where('gateway_id', $requestData['hash_codes'])->first();
+        $sale = $saleModel->where('gateway_transaction_id', $requestData['hash_codes'])->first();
 
         if (!$sale) {
             Log::warning('Venda não encontrada no retorno do Ebanx com código ' . $requestData['hash_codes']);

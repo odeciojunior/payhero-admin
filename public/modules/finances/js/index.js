@@ -116,6 +116,7 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>');
+                $('.saldoAntifraude').html('<span class="currency">R$</span><span class="pending-antifraud-balance">0,00</span>');
                 $('.removeSpan').remove();
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
@@ -126,6 +127,7 @@ $(document).ready(function () {
                 $(".available-balance").html(isEmpty(response.available_balance));
                 $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
+                $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
                 $(".total-balance").html(isEmpty(response.total_balance));
                 $(".loading").remove();
                 $("#div-available-money").unbind('click');

@@ -796,8 +796,8 @@ class ShopifyService
 
                 $product->update(
                     [
-                        'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
-                        'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
+                        'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                         'weight'             => $variant->getWeight(),
                         //'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                         'shopify_id'         => $storeProduct->getId(),
@@ -816,8 +816,8 @@ class ShopifyService
                     $plan = $planModel->find($productPlan->plan_id);
                     $plan->update(
                         [
-                            'name'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
-                            'description' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
+                            'name'        => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                            'description' => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                             'price'       => $variant->getPrice(),
                             'status'      => '1',
                             'project_id'  => $projectId,
@@ -858,8 +858,8 @@ class ShopifyService
                             'shopify_id'         => $storeProduct->getId(),
                             'shopify_variant_id' => $variant->getId(),
                             'project_id'         => $projectId,
-                            'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
-                            'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
+                            'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                            'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                             'code'               => '',
                             'price'              => $variant->getPrice(),
                             'status'             => '1',
@@ -880,8 +880,8 @@ class ShopifyService
                 $product = $productModel->create(
                     [
                         'user_id'            => $userId,
-                        'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
-                        'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
+                        'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                         'guarantee'          => '0',
                         'format'             => 1,
                         'category_id'        => '11',
@@ -900,8 +900,8 @@ class ShopifyService
                         'shopify_id'         => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
                         'project_id'         => $projectId,
-                        'name'               => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($storeProduct->getTitle(), 0, 100))),
-                        'description'        => FoxUtils::removeSpecialChars(FoxUtils::removeAccents(substr($description, 0, 100))),
+                        'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                        'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                         'code'               => '',
                         'price'              => $variant->getPrice(),
                         'status'             => '1',

@@ -115,6 +115,12 @@ $(() => {
             case 7:
                 status.append("<span class='ml-2 badge badge-danger'>Estornado</span>");
                 break;
+            case 8:
+                status.append("<span class='ml-2 badge badge-danger'>Estorno Parcial</span>");
+                break;
+            case 20:
+                status.append("<span class='ml-2 badge badge-pendente'>Análise Antifraude</span>");
+                break;
             default:
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
@@ -490,32 +496,13 @@ $(() => {
 
     // FIM - MODAL DETALHES DA VENDA
 
-    //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '#div_tracking_code .btn-notify-trackingcode', function(){
-        let tracking_id = $(this).attr('tracking');
-        $.ajax({
-            method: "POST",
-            url: '/api/tracking/notify/' + tracking_id,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: () => {
-                alertCustom('success', 'Notificação enviada com sucesso');
-            }
-        });
-    });
-
     //Estornar venda
     $(document).on('click', '.btn_refund_transaction', function () {
         var sale = $(this).attr('sale');
         $('#modal-refund-transaction').modal('show');
         $('#modal_detalhes').modal('hide');
 
+        $(".btn-confirm-refund-transaction").unbind('click');
         $(document).on('click', '.btn-confirm-refund-transaction', function () {
             loadingOnScreen();
             $.ajax({
@@ -533,7 +520,7 @@ $(() => {
                 success: (response) => {
                     loadingOnScreenRemove();
                     $.getScript('/modules/sales/js/index.js?v=2', function () {
-                        atualizar();
+                        atualizar(currentPage);
                     });
                     alertCustom('success', response.message);
                 }
