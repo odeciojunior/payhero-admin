@@ -3,6 +3,7 @@
 namespace Modules\Trackings\Exports;
 
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -13,9 +14,9 @@ use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithMapping, WithEvents
+class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithMapping, WithEvents
 {
-    use Exportable;
+    //use Exportable;
 
     private $filters;
 
@@ -30,11 +31,11 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
         $this->filename = $filename;
     }
 
-    public function query()
+    public function collection()
     {
         $trackingService = new TrackingService();
 
-        return $trackingService->getTrackings($this->filters, false, true);
+        return $trackingService->getTrackings($this->filters, false);
     }
 
     public function map($row): array
@@ -122,7 +123,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
                     }
                     $lastSale = $currentSale;
                 }
-                event(new TrackingsExportedEvent($this->user, $this->filename));
+                //event(new TrackingsExportedEvent($this->user, $this->filename));
             },
         ];
     }
