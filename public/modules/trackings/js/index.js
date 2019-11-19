@@ -471,6 +471,7 @@ $(() => {
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: response => {
                 errorAjaxResponse(response);
