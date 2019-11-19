@@ -147,7 +147,6 @@ $(document).ready(function () {
                 link      = '/trackings';
                 break;
             case 'TrackingsExportedNotification':
-                console.log(data)
                 message   = 'Exportação dos códigos de rastreio concluída.';
                 iconClass = 'tracking-success';
                 link      = '/trackings/download/' + data.message;
