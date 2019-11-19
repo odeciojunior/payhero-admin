@@ -226,18 +226,10 @@ class SalesApiController extends Controller
             $sale            = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))->first();
             $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             if (in_array($sale->gateway_id, [3, 4])) {
-                //zoop_production || zoop_sandbox
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
-            } else {//if (in_array($sale->gateway_id, [1, 2])) {
-                //                pagarme_production || pagamer_sandbox
+            } else {
                 $result = $saleService->refund($saleId);
             }
-            //            else {
-            //                $result = [
-            //                    'status'  => 'error',
-            //                    'message' => 'Gateway não encontrado para pedido de estorno',
-            //                ];
-            //            }
             if ($result['status'] == 'success') {
                 return response()->json(['success' => $result['message']], Response::HTTP_OK);
             } else {

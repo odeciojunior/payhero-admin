@@ -2,18 +2,21 @@
 
 namespace Modules\HotZapp\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\HotzappIntegration;
+use Modules\Core\Entities\Sale;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Project;
+use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\CheckoutService;
+use Modules\Core\Entities\HotzappIntegration;
 use Modules\HotZapp\Transformers\HotZappResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
-use Vinkla\Hashids\Facades\Hashids;
 
 class HotZappApiController extends Controller
 {
@@ -252,4 +255,39 @@ class HotZappApiController extends Controller
                                     ], 400);
         }
     }
+
+    public function regenerateBoleto(Request $request){
+
+        $saleId = current(Hashids::decode($request->boleto_id));
+
+        $sale = Sale::find($saleId);
+
+        if(!empty($sale)){
+
+            if (in_array($sale->gateway_id, [3, 4])) {
+                $checkoutService   = new CheckoutService();
+                $boletoRegenerated = $checkoutService->regenerateBilletZoop(Hashids::connection('sale_id')
+                                                                                   ->encode($sale->id), $totalPaidValue, $request->input('date'));
+            } else {
+                $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
+    
+                $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
+            }
+
+            $sale = Sale::find($saleId);
+
+            return response()->json([
+                'boleto_link'    => $sale->boleto_link,
+                'digitable_line' => $sale->boleto_digitable_line
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'error' => 'sale not found'
+            ], 400);
+        }
+
+    }
+
+
 }
