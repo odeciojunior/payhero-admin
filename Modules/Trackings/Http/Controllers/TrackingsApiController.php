@@ -271,9 +271,11 @@ class TrackingsApiController extends Controller
 
             $filename = 'export' . time() . '.' . $data['format'];
 
-            (new TrackingsReportExport($data, auth()->user(), $filename))->queue($filename, (env('APP_ENV') == 'local') ? 'local' : 'downloadSpaces');
+            return Excel::download(new TrackingsReportExport($data, auth()->user(), $filename), $filename);
 
-            return response()->json(['message' => 'A exportação começou']);
+            /*(new TrackingsReportExport($data, auth()->user(), $filename))->queue($filename, (env('APP_ENV') == 'local') ? 'local' : 'downloadSpaces');
+
+            return response()->json(['message' => 'A exportação começou']);*/
 
         } catch (Exception $e) {
             Log::warning('Erro ao exportar códigos de rastreio (TrackingApiController - export)');
