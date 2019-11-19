@@ -471,17 +471,20 @@ $(() => {
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
-                //'Accept': 'application/json',
+                'Accept': 'application/json',
             },
-            xhrFields: {
-                responseType: 'blob'
-            },
+            // xhrFields: {
+            //     responseType: 'blob'
+            // },
             error: response => {
                 errorAjaxResponse(response);
             },
-            success: (response, textStatus, request) => {
-                downloadFile(response, request);
-            }
+            success: () => {
+                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
+            },
+            // success: (response, textStatus, request) => {
+            //     downloadFile(response, request);
+            // }
         });
     }
 

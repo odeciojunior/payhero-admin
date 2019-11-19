@@ -16,7 +16,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithMapping, WithEvents
 {
-    //use Exportable;
+    use Exportable;
 
     private $filters;
 
@@ -123,7 +123,7 @@ class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoS
                     }
                     $lastSale = $currentSale;
                 }
-                //event(new TrackingsExportedEvent($this->user, $this->filename));
+                event(new TrackingsExportedEvent($this->user, $this->filename));
             },
         ];
     }
