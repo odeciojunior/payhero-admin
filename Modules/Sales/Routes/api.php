@@ -29,3 +29,17 @@ Route::group(
 Route::apiResource('sales', 'SalesApiController')
      ->only('index', 'show')
      ->middleware(['auth:api']);
+
+
+Route::group(
+    [
+        'middleware' => ['InternalApiAuth'],
+        'prefix'     => 'sales',
+    ],
+    function() {
+
+        Route::post('/saleprocess', [
+            'uses' => 'SalesApiController@saleProcess',
+        ]);
+    }
+);
