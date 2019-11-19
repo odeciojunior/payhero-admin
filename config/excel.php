@@ -165,7 +165,7 @@ return [
         |
         */
         //'local_path'  => sys_get_temp_dir(),
-        'local_path' => storage_path('tmp'),
+        'local_path' => public_path('tmp'),
 
         /*
         |--------------------------------------------------------------------------
