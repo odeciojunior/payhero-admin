@@ -267,72 +267,33 @@ class TrackingsApiController extends Controller
     public function export(Request $request)
     {
         try {
-
-            $trackingService = new TrackingService();
-
             $data = $request->all();
 
-            $productPlanSales = $trackingService->getTrackings($data, false);
+            $filename = 'export' . time() . '.' . $data['format'];
 
-            $trackings = $productPlanSales->map(function ($item) {
+            //return Excel::download(new TrackingsReportExport($data, auth()->user(), $filename), $filename);
 
-                $return = [
-                    'sale' => '#' . Hashids::connection('sale_id')->encode($item->sale->id),
-                    'tracking_code' => '',
-                    'product_id' => '#' . Hashids::encode($item->product->id),
-                    'product_name' => $item->product->name . ($item->product->description ? ' (' . $item->product->description . ')' : ''),
-                    'product_amount' => '',
-                    'product_sku' => $item->product->sku,
-                    'client_name' => $item->sale->client->name ?? '',
-                    'client_telephone' => $item->sale->client->telephone ?? '',
-                    'client_email' => $item->sale->client->email ?? '',
-                    'client_document' => $item->sale->client->document ?? '',
-                    'client_street' => $item->sale->delivery->street ?? '',
-                    'client_number' => $item->sale->delivery->number ?? '',
-                    'client_complement' => $item->sale->delivery->complement ?? '',
-                    'client_neighborhood' => $item->sale->delivery->neighborhood ?? '',
-                    'client_zip_code' => $item->sale->delivery->zip_code ?? '',
-                    'client_city' => $item->sale->delivery->city ?? '',
-                    'client_state' => $item->sale->delivery->state ?? '',
-                    'client_country' => $item->sale->delivery->country ?? '',
-                ];
+            (new TrackingsReportExport($data, auth()->user(), $filename))->queue($filename);
 
-                if($item->tracking){
-                    $return['product_amount'] = $item->tracking->amount;
-                    $return['tracking_code'] = $item->tracking->tracking_code;
-                } else {
-                    if ($item->sale->relationLoaded('plansSales')) {
-                        $planSale = $item->sale
-                            ->plansSales
-                            ->where('plan_id', $item->plan_id)
-                            ->where('sale_id', $item->sale_id)
-                            ->first();
-                        if (isset($planSale)) {
-                            if ($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
-                                $productPlan = $planSale->plan
-                                    ->productsPlans
-                                    ->where('product_id', $item->product_id)
-                                    ->where('plan_id', $item->plan_id)
-                                    ->first();
-
-                                if (isset($productPlan)) {
-                                    $return['product_amount'] = $planSale->amount * $productPlan->amount;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return $return;
-            });
-
-            return Excel::download(new TrackingsReportExport($trackings), 'export.' . $data['format']);
+            return response()->json(['message' => 'A exportação começou']);
 
         } catch (Exception $e) {
             Log::warning('Erro ao exportar códigos de rastreio (TrackingApiController - export)');
             report($e);
 
             return response()->json(['message' => 'Erro ao exportar dos rastreamentos'], 400);
+        }
+    }
+
+    public function download($filename)
+    {
+        $file_path = storage_path('app/' . $filename);
+        if (file_exists($file_path)) {
+            return response()->download($file_path, $filename, [
+                'Content-Length: ' . filesize($file_path)
+            ])->deleteFileAfterSend(true);
+        } else {
+            abort(404);
         }
     }
 

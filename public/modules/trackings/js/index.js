@@ -49,11 +49,6 @@ $(() => {
         $(this).hide();
     });
 
-    //alem do evento disparado no modal de vendas /modules/sales/detail.js
-    $(document).on('click', '.btn-save-trackingcode', function(event){
-        index();
-    });
-
     $('#bt_filtro').on('click', function () {
         index();
         getResume();
@@ -473,19 +468,23 @@ $(() => {
         $.ajax({
             method: "POST",
             url: '/api/tracking/export',
-            xhrFields: {
-                responseType: 'blob'
-            },
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error(response) {
+            // xhrFields: {
+            //     responseType: 'blob'
+            // },
+            error: response => {
                 errorAjaxResponse(response);
             },
-            success: function success(response, textStatus, request) {
-                downloadFile(response, request);
-            }
+            success: () => {
+                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
+            },
+            // success: (response, textStatus, request) => {
+            //     downloadFile(response, request);
+            // }
         });
     }
 

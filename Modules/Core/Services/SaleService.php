@@ -88,7 +88,7 @@ class SaleService
         }
 
         if (empty($filters['status'])) {
-            $status = [1, 2, 4, 6, 7/*, 20*/];
+            $status = [1, 2, 4, 6, 7, 20];
         } else {
             $status = [$filters["status"]];
         }
@@ -429,8 +429,7 @@ class SaleService
      * @param $transactionId
      * @return array
      */
-    public
-    function refund($transactionId)
+    public function refund($transactionId)
     {
         try {
             $saleModel        = new Sale();
@@ -447,7 +446,7 @@ class SaleService
 
                 $sale                = $saleModel->find($saleId);
                 $refundedTransaction = $pagarmeClient->transactions()->refund([
-                                                                                  'id' => $sale->gateway_id,
+                                                                                  'id' => $sale->gateway_transaction_id,
                                                                               ]);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
@@ -486,10 +485,14 @@ class SaleService
         } catch (Exception $e) {
             Log::warning('Erro ao estornar transação SaleService - refund');
             report($e);
+            $message = 'Erro ao estornar transação';
+            if ($e->getMessage() == 'Transação já estornada') {
+                $message = 'Transação já estornada';
+            }
 
             return [
                 'status'  => 'error',
-                'message' => 'Erro ao estornar transação',
+                'message' => $message,
             ];
         }
     }

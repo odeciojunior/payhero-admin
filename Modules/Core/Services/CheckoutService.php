@@ -151,10 +151,9 @@ class CheckoutService
                     ];
                 }
             } else {
-                report(new Exception(json_encode($response)));
                 $result = [
                     'status'  => 'error',
-                    'message' => 'Error ao tentar cancelar venda. 1',
+                    'message' => 'Error ao tentar cancelar venda.',
                     'error'   => $response->message,
                 ];
             }
@@ -163,7 +162,7 @@ class CheckoutService
         } catch (Exception $ex) {
             return [
                 'status'  => 'error',
-                'message' => 'Error ao tentar cancelar venda. 2',
+                'message' => 'Error ao tentar cancelar venda.',
                 'error'   => $ex->getMessage(),
             ];
         }
@@ -263,15 +262,6 @@ class CheckoutService
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             $result   = curl_exec($ch);
             $response = json_decode($result);
-
-            $message = [
-                "result"   => $result,
-                "response" => $response,
-                "apitoken" => $this->internalApiToken,
-                "data"     => json_encode($data),
-                "url"      => $url,
-            ];
-            report(new Exception(json_encode($message)));
 
             return $response;
         } catch (Exception $ex) {

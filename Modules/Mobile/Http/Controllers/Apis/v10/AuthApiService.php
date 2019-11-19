@@ -31,10 +31,12 @@ class AuthApiService {
             $credentials['email'] = $request['email'];
             $credentials['password'] = $request['password'];
 
-            if (!Auth::attempt($credentials))
+            if (!Auth::attempt($credentials)) {
                 return response()->json([
+                    'status' => 'success',
                     'message' => 'Unauthorized',
                 ], 401);
+            }
 
             $user = $request->user();
             $tokenResult = $user->createToken('personal_access_token', ['admin']);
