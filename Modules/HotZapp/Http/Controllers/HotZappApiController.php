@@ -3,6 +3,7 @@
 namespace Modules\HotZapp\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Sale;
 use Illuminate\Http\JsonResponse;
@@ -264,14 +265,19 @@ class HotZappApiController extends Controller
 
         if(!empty($sale)){
 
+            $project = $sale->project;
+
+            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
+            $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+
             if (in_array($sale->gateway_id, [3, 4])) {
                 $checkoutService   = new CheckoutService();
                 $boletoRegenerated = $checkoutService->regenerateBilletZoop(Hashids::connection('sale_id')
-                                                                                   ->encode($sale->id), $totalPaidValue, $request->input('date'));
+                                                                                   ->encode($sale->id), $totalPaidValue, Carbon::now()->addDays($project->boleto_due_days ?? 3)->format('Y-m-d'));
             } else {
                 $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
     
-                $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
+                $boletoRegenerated = $pagarmeService->boletoPayment(Carbon::now()->addDays($project->boleto_due_days ?? 3)->format('Y-m-d'));
             }
 
             $sale = Sale::find($saleId);
@@ -286,7 +292,6 @@ class HotZappApiController extends Controller
                 'error' => 'sale not found'
             ], 400);
         }
-
     }
 
 
