@@ -502,6 +502,7 @@ $(() => {
         $('#modal-refund-transaction').modal('show');
         $('#modal_detalhes').modal('hide');
 
+        $(".btn-confirm-refund-transaction").unbind('click');
         $(document).on('click', '.btn-confirm-refund-transaction', function () {
             loadingOnScreen();
             $.ajax({
@@ -519,7 +520,7 @@ $(() => {
                 success: (response) => {
                     loadingOnScreenRemove();
                     $.getScript('/modules/sales/js/index.js?v=2', function () {
-                        atualizar();
+                        atualizar(currentPage);
                     });
                     alertCustom('success', response.message);
                 }

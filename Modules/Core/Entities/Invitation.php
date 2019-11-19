@@ -47,7 +47,7 @@ class Invitation extends Model
         'invite',
         'user_invited',
         'company_id',
-        'invitation_id',
+        'invitation_id', 
         'email_invited',
         'status',
         'register_date',
@@ -73,13 +73,13 @@ class Invitation extends Model
     {
         return $this->belongsTo('Modules\Core\Entities\User', 'user_invited');
     }
-
+ 
     /**
      * @return BelongsTo
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User', 'invite');
+        return $this->belongsTo('Modules\Core\Entities\User','id', 'invite');
     }
 
     /**

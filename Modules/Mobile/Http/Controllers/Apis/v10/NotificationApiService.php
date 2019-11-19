@@ -18,6 +18,10 @@ class NotificationApiService {
      */
     public function __construct() { }
 
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUnreadNotifications()
     {
         try {

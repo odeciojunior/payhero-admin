@@ -7,9 +7,9 @@ namespace Modules\Mobile\Http\Controllers\Apis\v10;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\SaleService;
-use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
+use Illuminate\Http\Request;
 
 /**
  * Class SalesApiService
@@ -27,7 +27,7 @@ class SalesApiService {
      * @param SaleIndexRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function salesByFilter(SaleIndexRequest $request)
+    public function salesByFilter(Request $request)
     {
         try {
             $saleService = new SaleService();

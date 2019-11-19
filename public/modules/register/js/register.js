@@ -21,7 +21,6 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $("#link-invalid").html('');
-                console.log(response);
             }
         });
     }
