@@ -2,7 +2,6 @@
 
 namespace Modules\Trackings\Exports;
 
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -61,7 +60,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
             'client_country' => $row->sale->delivery->country ?? '',
         ];
 
-        if($row->tracking){
+        if ($row->tracking) {
             $return['product_amount'] = $row->tracking->amount;
             $return['tracking_code'] = $row->tracking->tracking_code;
         } else {
@@ -93,44 +92,37 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                try{
-                    $cellRange = 'A1:R1'; // All headers
-                    $event->sheet->getDelegate()->getStyle($cellRange)
-                        ->getFill()
-                        ->setFillType('solid')
-                        ->getStartColor()
-                        ->setRGB('3e8ef7');
-                    $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
-                        'color' => ['rgb' => 'ffffff'],
-                        'size' => 16
-                    ]);
+            AfterSheet::class => function (AfterSheet $event) {
+                $cellRange = 'A1:R1'; // All headers
+                $event->sheet->getDelegate()->getStyle($cellRange)
+                    ->getFill()
+                    ->setFillType('solid')
+                    ->getStartColor()
+                    ->setRGB('3e8ef7');
+                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
+                    'color' => ['rgb' => 'ffffff'],
+                    'size' => 16
+                ]);
 
-                    $lastRow = $event->sheet->getDelegate()->getHighestRow();
-                    $setGray = false;
-                    $lastSale = null;
-                    for ($row = 2; $row <= $lastRow; $row++) {
-                        $currentSale = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
-                        if ($currentSale != $lastSale) {
-                            $setGray = !$setGray;
-                        }
-                        if($setGray){
-                            $event->sheet->getDelegate()
-                                ->getStyle('A' . $row . ':R' . $row)
-                                ->getFill()
-                                ->setFillType('solid')
-                                ->getStartColor()
-                                ->setRGB('e5e5e5');
-                        }
-                        $lastSale = $currentSale;
+                $lastRow = $event->sheet->getDelegate()->getHighestRow();
+                $setGray = false;
+                $lastSale = null;
+                for ($row = 2; $row <= $lastRow; $row++) {
+                    $currentSale = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
+                    if ($currentSale != $lastSale) {
+                        $setGray = !$setGray;
                     }
-
-                    event(new TrackingsExportedEvent($this->user, $this->filename));
-                }catch (\Exception $e){
-                    Log::warning('Erro ao customizar planilha (TrackingReportExport - registerEvents)');
-                    report($e);
+                    if ($setGray) {
+                        $event->sheet->getDelegate()
+                            ->getStyle('A' . $row . ':R' . $row)
+                            ->getFill()
+                            ->setFillType('solid')
+                            ->getStartColor()
+                            ->setRGB('e5e5e5');
+                    }
+                    $lastSale = $currentSale;
                 }
-
+                event(new TrackingsExportedEvent($this->user, $this->filename));
             },
         ];
     }
