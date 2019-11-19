@@ -93,8 +93,6 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js?v=2') }}"></script>
-<script src="https://fast.conpass.io/8h5R8LPu1l0n-.js"></script>
-
 
 @stack('scripts')
 
@@ -132,6 +130,8 @@
         })();
     </script>
 
+    <script src="https://fast.appcues.com/60650.js"></script>
+
     <script>
         window.Intercom('boot', {
             app_id: "q35ubavq",
@@ -140,8 +140,9 @@
             email: "{{ auth()->user()->email }}",
         });
 
-        Conpass.init({
-            name: "{{ auth()->user()->name }}",
+        window.Appcues.identify("{{ auth()->user()->id }}", {
+            account_id: "{{ auth()->user()->id }}",
+            first_name: "{{ auth()->user()->name }}",
             email: "{{ auth()->user()->email }}",
         });
     </script>
