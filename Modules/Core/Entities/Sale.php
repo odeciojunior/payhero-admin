@@ -26,6 +26,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property string $start_date
  * @property string $end_date
  * @property string $gateway_transaction_id
+ * @property string $gateway_id
  * @property int $status
  * @property string $gateway_status
  * @property int $installments_amount
@@ -44,6 +45,9 @@ use Modules\Core\Presenters\SalePresenter;
  * @property string $deleted_at
  * @property string $updated_at
  * @property int $attempts
+ * @property string gateway_card_flag
+ * @property float gateway_tax_percent
+ * @property integer gateway_tax_value
  * @property Checkout $checkout
  * @property Project $project
  * @property Shipping $shipping
@@ -104,6 +108,9 @@ class Sale extends Model
         'created_at',
         'deleted_at',
         'updated_at',
+        'gateway_card_flag',
+        'gateway_tax_percent',
+        'gateway_tax_value',
     ];
 
     /**
