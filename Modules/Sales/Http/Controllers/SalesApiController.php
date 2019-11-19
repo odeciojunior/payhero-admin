@@ -239,7 +239,7 @@ class SalesApiController extends Controller
             //                ];
             //            }
             if ($result['status'] == 'success') {
-                return response()->json(['success' => $result['message']], Response::HTTP_OK);
+                return response()->json(['message' => $result['message']], Response::HTTP_OK);
             } else {
                 return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
             }

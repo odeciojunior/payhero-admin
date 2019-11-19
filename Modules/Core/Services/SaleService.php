@@ -429,8 +429,7 @@ class SaleService
      * @param $transactionId
      * @return array
      */
-    public
-    function refund($transactionId)
+    public function refund($transactionId)
     {
         try {
             $saleModel        = new Sale();
@@ -486,10 +485,14 @@ class SaleService
         } catch (Exception $e) {
             Log::warning('Erro ao estornar transação SaleService - refund');
             report($e);
+            $message = 'Erro ao estornar transação';
+            if ($e->getMessage() == 'Transação já estornada') {
+                $message = 'Transação já estornada';
+            }
 
             return [
                 'status'  => 'error',
-                'message' => 'Erro ao estornar transação',
+                'message' => $message,
             ];
         }
     }
