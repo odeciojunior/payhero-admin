@@ -62,6 +62,18 @@ $(() => {
             },
             success: (response) => {
                 getSale(response.data);
+
+                $(".btn_refund_transaction").unbind('click');
+                $(".btn_refund_transaction").on('click', function () {
+                    var sale = $(this).attr('sale');
+                    $('#modal-refund-transaction').modal('show');
+                    $('#modal_detalhes').modal('hide');
+
+                    $(".btn-confirm-refund-transaction").unbind('click');
+                    $(".btn-confirm-refund-transaction").on('click', function () {
+                        refundedClick(sale);
+                    })
+                });
             }
         });
     });
@@ -497,35 +509,29 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    $(document).on('click', '.btn_refund_transaction', function () {
-        var sale = $(this).attr('sale');
-        $('#modal-refund-transaction').modal('show');
-        $('#modal_detalhes').modal('hide');
-
-        $(".btn-confirm-refund-transaction").unbind('click');
-        $(document).on('click', '.btn-confirm-refund-transaction', function () {
-            loadingOnScreen();
-            $.ajax({
-                method: "POST",
-                url: '/api/sales/refund/' + sale,
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: (response) => {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: (response) => {
-                    loadingOnScreenRemove();
-                    $.getScript('/modules/sales/js/index.js?v=2', function () {
-                        atualizar(currentPage);
-                    });
-                    alertCustom('success', response.message);
-                }
-            });
+    function refundedClick(sale) {
+        console.log(currentPage)
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/sales/refund/' + sale,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+                atualizar(currentPage);
+            },
+            success: (response) => {
+                console.log(response);
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                atualizar(currentPage);
+            }
         });
-    });
+    }
 
 });
