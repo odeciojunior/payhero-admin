@@ -18,7 +18,7 @@ Route::group(
         'prefix'     => 'apps/hotzapp', 
     ],
     function() {
-        Route::get('/boleto/{boleto_id}', 'HotZappApiController@regenerateBoleto');
+        Route::get('/newboleto/{boleto_id}', 'HotZappApiController@regenerateBoleto');
     }
 );
 
