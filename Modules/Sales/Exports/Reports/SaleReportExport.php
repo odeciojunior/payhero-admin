@@ -55,7 +55,7 @@ class SaleReportExport implements FromCollection, WithHeadings, ShouldAutoSize, 
                 $setGray = false;
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
-                    $currentSale = $this->collection()->get($row - 1)['sale_code'];
+                    $currentSale = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
                     if ($currentSale != $lastSale && isset($lastSale)) {
                         $setGray = !$setGray;
                     }
