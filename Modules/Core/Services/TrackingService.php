@@ -44,7 +44,7 @@ class TrackingService
         return $tracking;
     }
 
-    public function getTrackings($filters, $paginate = true)
+    public function getTrackings($filters, $paginate = true, $builder = false)
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
@@ -92,7 +92,9 @@ class TrackingService
             });
         }
 
-        if ($paginate) {
+        if($builder){
+            return $productPlanSales;
+        } else if ($paginate) {
             return $productPlanSales->orderBy('id', 'desc')->paginate(10);
         } else {
             return $productPlanSales->get();

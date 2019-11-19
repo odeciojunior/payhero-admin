@@ -25,7 +25,8 @@ class AuthApiController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'error' => 'Invalid Data',
+                    'status' => 'error',
+                    'message' => 'Invalid Data',
                 ], 400);
             } else {
                 $credentials['email'] = $dataRequest['email'];
@@ -33,6 +34,7 @@ class AuthApiController extends Controller
 
                 if (!Auth::attempt($credentials))
                     return response()->json([
+                        'status' => 'error',
                         'message' => 'Unauthorized',
                     ], 401);
 

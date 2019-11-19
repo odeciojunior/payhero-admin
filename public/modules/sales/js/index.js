@@ -1,6 +1,7 @@
+var currentPage = null;
+var atualizar = null;
 $(document).ready(function () {
 
-    var currentPage;
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
@@ -168,7 +169,7 @@ $(document).ready(function () {
     }
 
     // Obtem lista de vendas
-    function atualizar(link = null) {
+    atualizar = function (link = null) {
 
         currentPage = link;
 

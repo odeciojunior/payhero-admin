@@ -47,6 +47,9 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\TrackingsImportedEvent'        => [
             'Modules\Core\Listeners\NotifyTrackingsImportedListener',
         ],
+        'Modules\Core\Events\TrackingsExportedEvent'        => [
+            'Modules\Core\Listeners\NotifyTrackingsExportedListener',
+        ],
         'Modules\Core\Events\TrackingCodeUpdatedEvent'        => [
             'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',
         ],
