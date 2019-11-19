@@ -13,6 +13,3 @@ Route::group(
 );
 
 
-Route::get('/apps/hotzapp/boleto/{boleto_id}', 'HotZappApiController@regenerateBoleto');
-
-
