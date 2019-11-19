@@ -32,4 +32,27 @@ class UserService
 
         return false;
     }
+
+    public function getRefusedDocuments()
+    {
+        $userModel        = new User();
+        $userPresenter    = $userModel->present();
+        $user             = auth()->user();
+        $refusedDocuments = collect();
+        if (!empty($user)) {
+            foreach ($user->userDocuments as $document) {
+                if (!empty($document->refused_reason)) {
+                    $dataDocument = [
+                        'date'            => $document->created_at->format('d/m/Y'),
+                        'type_translated' => __('definitions.enum.user_document_type.' . $userPresenter->getDocumentType($document->document_type_enum)),
+                        'document_url'    => $document->document_url,
+                        'refused_reason'  => $document->refused_reason,
+                    ];
+                    $refusedDocuments->push(collect($dataDocument));
+                }
+            }
+        }
+
+        return $refusedDocuments;
+    }
 }

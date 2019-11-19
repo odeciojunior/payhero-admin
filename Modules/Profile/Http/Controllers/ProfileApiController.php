@@ -40,7 +40,7 @@ class ProfileApiController
             $user = auth()->user();
 
             if (Gate::allows('view', [$user])) {
-                $user->load(["userNotification"]);
+                $user->load(["userNotification", "userDocuments"]);
                 $userResource = new UserResource($user);
 
                 return new UserResource($userResource);
@@ -501,6 +501,28 @@ class ProfileApiController
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
                                     ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function openDocument(Request $request)
+    {
+        try {
+            $digitalOceanFileService = app(DigitalOceanFileService::class);
+            $data                    = $request->all();
+            if (!empty($data['document_url'])) {
+                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['document_url'], 180);
+
+                return response()->json(['data' => $temporaryUrl], 200);
+            }
+
+            return response()->json(['message' => 'Erro ao acessar documento do usuário!'], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao acessar documento do usuário  ProfileApiController - openDocument');
+            report($e);
         }
     }
 }
