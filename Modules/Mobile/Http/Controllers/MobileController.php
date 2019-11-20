@@ -211,9 +211,9 @@ class MobileController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function saleById(Request $request) {
+    public function getSaleDetails(Request $request) {
         try {
-            return $this->integrationApiService->salesById($request);
+            return $this->integrationApiService->getSaleDetails($request);
 
         } catch (Exception $ex) {
             report($ex);

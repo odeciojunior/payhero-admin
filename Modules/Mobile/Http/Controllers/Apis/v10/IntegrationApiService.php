@@ -247,14 +247,14 @@ class IntegrationApiService {
      * @return JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function saleById(Request $request) {
+    public function getSaleDetails(Request $request) {
         try {
 
             if (!$this->salesApiService) {
                 $this->getIntegrationApiService('sales');
             }
 
-            return $this->salesApiService->saleById($request);
+            return $this->salesApiService->getSaleDetails($request);
 
         } catch (Exception $ex) {
             return response()->json(['status' => 'error',
