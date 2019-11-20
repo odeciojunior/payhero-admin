@@ -269,15 +269,19 @@ class HotZappApiController extends Controller
 
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
             $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-
+            $dueDays = $project->boleto_due_days ?? 3;
+            $dueDate = Carbon::now()->addDays($dueDays)->format('Y-m-d');
+            if (Carbon::parse($dueDate)->isWeekend()) {
+                $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
+            }
             if (in_array($sale->gateway_id, [3, 4])) {
                 $checkoutService   = new CheckoutService();
                 $boletoRegenerated = $checkoutService->regenerateBilletZoop(Hashids::connection('sale_id')
-                                                                                   ->encode($sale->id), $totalPaidValue, Carbon::now()->addDays($project->boleto_due_days ?? 3)->format('Y-m-d'));
+                                                                                   ->encode($sale->id), $totalPaidValue, $dueDate);
             } else {
                 $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
     
-                $boletoRegenerated = $pagarmeService->boletoPayment(Carbon::now()->addDays($project->boleto_due_days ?? 3)->format('Y-m-d'));
+                $boletoRegenerated = $pagarmeService->boletoPayment($dueDate);
             }
 
             $sale = Sale::find($saleId);
