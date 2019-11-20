@@ -4,7 +4,6 @@ namespace Modules\Dashboard\Http\Controllers;
 
 use Illuminate\View\View;
 use Illuminate\Routing\Controller;
-use Modules\Core\Services\FoxUtils;
 
 /**
  * Class DashboardController

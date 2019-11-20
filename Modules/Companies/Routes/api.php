@@ -9,6 +9,8 @@ Route::group(['middleware' => ['auth:api']], function() {
 
     Route::get('/companies/usercompanies', 'CompaniesApiController@getCompanies')->name('api.companies.getcompanies')->middleware('role:account_owner|admin');
 
+    Route::post('/companies/opendocument', 'CompaniesApiController@openDocument');
+
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')->middleware('role:account_owner|admin');
 });
 

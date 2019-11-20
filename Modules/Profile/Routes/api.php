@@ -31,5 +31,8 @@ Route::group(
 
         // Atualização da userNotification
         Route::post('/profile/updatenotification', 'ProfileApiController@updateUserNotification');
+
+        Route::post('/profile/opendocument', 'ProfileApiController@openDocument');
+
     }
 );

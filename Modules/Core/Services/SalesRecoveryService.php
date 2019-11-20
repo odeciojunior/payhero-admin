@@ -164,8 +164,9 @@ class SalesRecoveryService
 
         $domain = $domainModel->where([
                                           ['status', 3],
-                                          ['project_id', $checkout->project],
+                                          ['project_id', $checkout->project_id],
                                       ])->first();
+
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {

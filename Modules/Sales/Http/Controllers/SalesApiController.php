@@ -12,10 +12,13 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\SaleService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
@@ -226,23 +229,39 @@ class SalesApiController extends Controller
             $sale            = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))->first();
             $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             if (in_array($sale->gateway_id, [3, 4])) {
-                //zoop_production || zoop_sandbox
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
-            } else {//if (in_array($sale->gateway_id, [1, 2])) {
-                //                pagarme_production || pagamer_sandbox
+            } else {
                 $result = $saleService->refund($saleId);
             }
-            //            else {
-            //                $result = [
-            //                    'status'  => 'error',
-            //                    'message' => 'Gateway não encontrado para pedido de estorno',
-            //                ];
-            //            }
             if ($result['status'] == 'success') {
-                return response()->json(['success' => $result['message']], Response::HTTP_OK);
+                return response()->json(['message' => $result['message']], Response::HTTP_OK);
             } else {
                 return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
             }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+                
+    public function saleProcess(Request $request)
+    {
+        try {
+
+            $requestData = $request->all();
+
+            $saleModel = new Sale();
+            $planModel = new Plan();
+
+            $plan = $planModel->find($requestData['plan_id']);
+            $sale = $saleModel->with(['client'])->find($requestData['sale_id']);
+
+            event(new BilletPaidEvent($plan, $sale, $sale->client));
+
+            return response()->json(['message' => 'success'], Response::HTTP_OK);
+
         } catch (Exception $e) {
             Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
             report($e);

@@ -155,7 +155,7 @@
                                     <div class="col">
                                     </div>
                                 </div>
-                                <div class="row mt-15">
+                                <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
                                     <div class="col-lg-6">
                                         <div id="dropzone">
                                             <form method="POST" action="{!! route('api.companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
@@ -196,6 +196,16 @@
                                         </small>
                                     </div>
                                 </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'><p>Antes de enviar os documentos é necessário completar todos os dados residenciais da sua empresa na aba EMPRESA.</p></div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_documents_refused'></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -205,7 +215,7 @@
     </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=4')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit.js?v=5')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

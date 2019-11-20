@@ -149,7 +149,7 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=4') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=7') }}"></script>
 
 @endif
 

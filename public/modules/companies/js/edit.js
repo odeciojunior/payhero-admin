@@ -85,6 +85,9 @@ $(document).ready(function () {
                 $("#td_contract_status").append("<span class='badge badge-" + getStatusBadge(company.contract_document_status) + "'>" + company.contract_document_translate + "</span>");
                 configSubmits();
                 verifyDocuments(company);
+                getRefusedDocuments(response.company.refusedDocuments);
+                verifyCompanyAddress(company);
+                openDocument();
                 //mascara cnpj
                 var optionsCompanyDocument = {
                     onKeyPress: function (cpf, ev, el, op) {
@@ -183,6 +186,32 @@ $(document).ready(function () {
     function selectItemsFunction(item) {
         return {value: item.code, text: (item.code + ' - ' + item.name)};
     }
+    function openDocument() {
+        $(".document-url").on("click", function (e) {
+            e.preventDefault();
+            let documentUrl = $(this).attr('href');
+            loadingOnScreen();
+            $.ajax({
+                method: "POST",
+                url: '/api/companies/opendocument',
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: {document_url: documentUrl},
+                error: function (response) {
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    loadingOnScreenRemove();
+                    window.open(response.data, '_blank');
+                }
+            });
+        });
+    }
+
     //vefica se os documentos da empresa estão aprovados e desabilita todos os inputs
     function verifyDocuments(company) {
         if (company.address_document_status == 3 && company.bank_document_status == 3 && company.contract_document_status == 3) {
@@ -195,6 +224,22 @@ $(document).ready(function () {
                 'cursor': 'not-allowed',
             });
         }
+    }
+    function verifyCompanyAddress(company) {
+        if (company.zip_code == '' || company.street == '' || company.number == '' || company.neighborhood == '' || company.state == '' || company.city == '' || company.country == '') {
+            $('#row_dropzone_documents').hide();
+            $('#div_address_pending').show();
+        } else {
+            $('#row_dropzone_documents').show();
+            $('#div_address_pending').hide();
+        }
+    }
+    function getRefusedDocuments(refusedDocuments) {
+        $.each(refusedDocuments, function (index, value) {
+            $('#div_documents_refused').append('<div class="alert alert-danger text-center my-20">' +
+                '<p>O ' + value.type_translated + ' que foi enviado na data: ' + value.date + ' foi reprovado pelo motivo abaixo: <br><a href="' + value.document_url + '" class="document-url">Visualizar documento</a> <br> <b>' + value.refused_reason + '</b> <br></p>' +
+                '</div>');
+        });
     }
 });
 Dropzone.options.dropzoneDocuments = {

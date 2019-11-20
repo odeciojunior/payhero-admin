@@ -132,7 +132,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
                 $('#email').val(response.data.email);
                 $('#name').val(response.data.name);
                 $('#document').val(response.data.document);
@@ -233,6 +232,10 @@ $(document).ready(function () {
                 linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
                 $("#td_address_status").append(linha);
                 user = response.data.id_code;
+
+                verifyDocuments(response.data);
+                getRefusedDocuments(response.data.refusedDocuments);
+                verifyUserAddress(response.data);
             }
         });
     }
@@ -582,7 +585,57 @@ $(document).ready(function () {
             }
         });
     });
-
+    $(".document-url").on("click", function (e) {
+        e.preventDefault();
+        let documentUrl = $(this).attr('href');
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/profile/opendocument',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {document_url: documentUrl},
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                window.open(response.data, '_blank');
+            }
+        });
+    });
+    //vefica se os documentos do usuário estão aprovados e desabilita todos os inputs
+    function verifyDocuments(user) {
+        if (user.address_document_status == 3 && user.personal_document_status == 3) {
+            $(".dz-hidden-input").prop("disabled", true);
+            $('#dropzoneDocuments').css({
+                'cursor': 'not-allowed',
+            });
+            $('.text-dropzone').css({
+                'cursor': 'not-allowed',
+            });
+        }
+    }
+    function verifyUserAddress(user) {
+        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null || user.state == null) {
+            $('#row_dropzone_documents').hide();
+            $('#div_address_pending').show();
+        } else {
+            $('#row_dropzone_documents').show();
+            $('#div_address_pending').hide();
+        }
+    }
+    function getRefusedDocuments(refusedDocuments) {
+        $.each(refusedDocuments, function (index, value) {
+            $('#div_documents_refused').append('<div class="alert alert-danger text-center my-20">' +
+                '<p>O ' + value.type_translated + ' que foi enviado na data: ' + value.date + ' foi reprovado pelo motivo abaixo: <br><a href="' + value.document_url + '" class="document-url">Visualizar documento</a> <br><b>' + value.refused_reason + '</b> <br></p>' +
+                '</div>');
+        });
+    }
 });
 
 Dropzone.options.dropzoneDocuments = {

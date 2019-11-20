@@ -58,4 +58,27 @@ class CompanyService
 
         return false;
     }
+
+    public function getRefusedDocuments(int $companyId)
+    {
+        $companyModel     = new Company();
+        $company          = $companyModel->with('companyDocuments')->find($companyId);
+        $companyPresenter = $companyModel->present();
+        $refusedDocuments = collect();
+        if (!empty($company)) {
+            foreach ($company->companyDocuments as $document) {
+                if (!empty($document->refused_reason)) {
+                    $dataDocument = [
+                        'date'            => $document->created_at->format('d/m/Y'),
+                        'type_translated' => __('definitions.enum.company_document_type.' . $companyPresenter->getDocumentType($document->document_type_enum)),
+                        'document_url'    => $document->document_url,
+                        'refused_reason'  => $document->refused_reason,
+                    ];
+                    $refusedDocuments->push(collect($dataDocument));
+                }
+            }
+        }
+
+        return $refusedDocuments;
+    }
 }
