@@ -194,9 +194,19 @@ class CheckoutService
                 $dataUpdate = (array) $response->response->response;
                 $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
                                         ->update(array_merge($dataUpdate,
-                                                             ['start_date' => Carbon::now()]));
+                                                             ['start_date' => Carbon::now()
+                                                             ,'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0)]));
                 if ($check) {
+                    $transactionModel = new Transaction();
+                    $sale             = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
+                                                                                                ->decode($saleId))
+                                                  ->first();
+                    $transactions     = $transactionModel->where('sale_id', Hashids::connection('sale_id')
+                                                                                   ->decode($saleId))->delete();
 
+                    $splitPaymentService = new SplitPaymentService();
+
+                    $splitPaymentService->splitPayment($totalPaidValue, $sale, $sale->project, $sale->user);
                     $result = [
                         'status'   => 'success',
                         'message'  => print_r($response->message, true) ?? '',

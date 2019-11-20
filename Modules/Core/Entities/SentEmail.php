@@ -5,7 +5,7 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class UserNotification
+ * Class SentEmail
  * @package Modules\Core\Entities
  * @property string $from_email
  * @property string $from_name
