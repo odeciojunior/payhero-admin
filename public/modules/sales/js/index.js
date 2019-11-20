@@ -205,7 +205,7 @@ $(document).ready(function () {
                     4: 'danger',
                     3: 'danger',
                     2: 'pendente',
-                    20: 'pendente'
+                    20: 'antifraude'
                 };
 
                 if (!isEmpty(response.data)) {
