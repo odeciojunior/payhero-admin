@@ -172,7 +172,7 @@
                                         <table class="table table-striped">
                                             <tbody class="custom-t-body">
                                                 <tr>
-                                                    <td>Extrato Bancário</td>
+                                                    <td>Comprovante de extrato bancário</td>
                                                     <td id="td_bank_status">
                                                         @if($company->bank_document_status == 1)
                                                             <span class="badge badge-primary"> {{ $company->bank_document_translate }} </span>
@@ -187,7 +187,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td> Comprovante Residência</td>
+                                                    <td> Comprovante de endereço</td>
                                                     <td id="td_address_status">
                                                         @if($company->address_document_status == 1)
                                                             <span class="badge badge-primary"> {{ $company->address_document_translate }} </span>
@@ -198,11 +198,10 @@
                                                         @else
                                                             <span class="badge badge-danger"> {{ $company->address_document_translate }} </span>
                                                         @endif
-                                                        {{--                                                        <span class="badge {{ ($company->address_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}"> {{ $company->address_document_translate }}</span>--}}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Contrato Social</td>
+                                                    <td>Comprovante de contrato social</td>
                                                     <td id="td_contract_status">
                                                         @if($company->contract_document_status == 1)
                                                             <span class="badge badge-primary"> {{ $company->contract_document_translate }} </span>
@@ -213,7 +212,6 @@
                                                         @else
                                                             <span class="badge badge-danger"> {{ $company->contract_document_translate }} </span>
                                                         @endif
-                                                        {{--                                                        <span class="badge {{ ($company->contract_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}">  {{ $company->contract_document_translate }} </span>--}}
                                                     </td>
                                                 </tr>
                                             </tbody>
