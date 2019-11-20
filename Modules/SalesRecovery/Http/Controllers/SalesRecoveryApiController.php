@@ -2,6 +2,7 @@
 
 namespace Modules\SalesRecovery\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -192,14 +193,19 @@ class SalesRecoveryApiController extends Controller
                                           'shopify_discount' => $discount,
                                       ]);
                     }
+
+                    $dueDate = $request->input('date');
+                    if (Carbon::parse($dueDate)->isWeekend()) {
+                        $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
+                    }
                     if (in_array($sale->gateway_id, [3, 4])) {
                         $checkoutService   = new CheckoutService();
                         $boletoRegenerated = $checkoutService->regenerateBilletZoop(Hashids::connection('sale_id')
-                                                                                           ->encode($sale->id), $totalPaidValue, $request->input('date'));
+                                                                                           ->encode($sale->id), $totalPaidValue, $dueDate);
                     } else {
                         $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
 
-                        $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
+                        $boletoRegenerated = $pagarmeService->boletoPayment($dueDate);
                     }
                     if ($boletoRegenerated['status'] == 'success') {
                         $message = 'Boleto regenerado com sucesso';
