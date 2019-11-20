@@ -598,7 +598,7 @@
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
-<script src="{{asset('modules/register/js/register.js?v=2')}}"></script>
+<script src="{{asset('modules/register/js/register.js?v=3')}}"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
 {{--<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>--}}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
