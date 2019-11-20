@@ -57,6 +57,8 @@ class Kernel extends ConsoleKernel
 
         //Alterar status do boletos de pendente para cancelado
         $schedule->command('change:boletopendingtocanceled')->dailyAt('08:30');
+
+        $schedule->command('command:UpdateListsFoxActiveCampaign')->hourly();
     }
 
     /**

@@ -17,10 +17,21 @@ $(document).ready(function () {
 
                 } else {
                     errorAjaxResponse(response);
+
                 }
             },
             success: (response) => {
                 $("#link-invalid").html('');
+                if(response.data == 'email') {
+                    $('#email').addClass('d-none');
+                    $('#email').val(response.email);
+                    $('<input type="text" name="emailscreen" id="emailscreen" value="'+response.email+'" required class="disabled" disabled>').insertAfter('#email');
+                } else {
+                    $('#email').removeClass('d-none');
+                    $('#email').val('');
+                    $('#emailscreen').addClass('d-none');
+
+                }
             }
         });
     }
@@ -184,7 +195,7 @@ $(document).ready(function () {
                     $("#progress-bar-register").css('width', '66%');
                     $("#jump").show();
                 } else {
-                    alertCustom('error', 'revise os dados informados');
+                    alertCustom('error', response.message);
                 }
             }
         });

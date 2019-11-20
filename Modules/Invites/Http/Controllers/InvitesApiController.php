@@ -329,30 +329,55 @@ class InvitesApiController extends Controller
 
             $company = $companyModel->find(current(Hashids::decode($inviteId)));
 
-            if (empty($company)) {
-                return response()->json(
-                    [
-                        'message' => 'Link convite inválido!',
-                        'data'    => 'invalido',
-                    ], 400
-                );
-            } else {
-                $invitesSent = $invitationModel->where('invite', $company->user_id)->count();
-
-                if ($invitesSent >= $company->user->invites_amount) {
+            if(strlen($inviteId) > 15) {
+                $inviteId = substr($inviteId, 0, 15);
+                $inviteId = Hashids::decode($inviteId);
+                $invite   = $invitationModel->where('id', $inviteId)->first();
+                if(isset($invite->id) && $invite->status == 2) {
                     return response()->json(
+                            [
+                                'message' => 'Convite válido!',
+                                'data'    => 'email',
+                                'email'   => $invite->email_invited
+                            ], 200
+                        );
+                } else {
+                    return response()->json(
+                            [
+                                'message' => 'Convite inválido!',
+                                'data'    => 'invalido',
+                            ], 400
+                        );
+                }
+            } else {
+
+                $company = $companyModel->find(current(Hashids::decode($inviteId)));
+
+                if (empty($company)) {
+                     return response()->json(
                         [
-                            'message' => 'Convite indisponivel, limite atingido!',
+                            'message' => 'Link convite inválido!',
                             'data'    => 'invalido',
                         ], 400
                     );
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Convite valido!',
-                            'data'    => 'valido',
-                        ], 200
-                    );
+                 } else {
+                    $invitesSent = $invitationModel->where('invite', $company->user_id)->count();
+
+                    if ($invitesSent >= $company->user->invites_amount) {
+                        return response()->json(
+                            [
+                                'message' => 'Convite indisponivel, limite atingido!',
+                                'data'    => 'invalido',
+                            ], 400
+                        );
+                    } else {
+                        return response()->json(
+                            [
+                                'message' => 'Convite valido!',
+                                'data'    => 'valido',
+                            ], 200
+                        );
+                    }
                 }
             }
         } catch (Exception $e) {
