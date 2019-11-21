@@ -3,83 +3,40 @@
 namespace Modules\Sales\Exports\Reports;
 
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Modules\Core\Events\SalesExportedEvent;
 use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
 {
+    use Exportable;
+
     private $filters;
+
+    private $user;
+
+    private $filename;
+
     private $saleService;
 
-    public function __construct($filters)
+    public function __construct($filters, $user, $filename)
     {
         $this->filters = $filters;
         $this->saleService = new SaleService();
+        $this->user = $user;
+        $this->filename = $filename;
     }
 
     public function query()
     {
         return $this->saleService->getSalesQueryBuilder($this->filters, true);
-    }
-
-    public function headings(): array
-    {
-        return [
-            //sale
-            'Código da Venda',
-            'Pedido do Shopify',
-            'Forma de Pagamento',
-            'Número de Parcelas',
-            'Bandeira do Cartão',
-            'Link do Boleto',
-            'Linha Digitavel do Boleto',
-            'Data de Vencimento do Boleto',
-            'Data Inicial do Pagamento',
-            'Data Final do Pagamento',
-            'Status',
-            'Valor Total Venda',
-            'Frete',
-            'Valor do Frete',
-            'Taxas',
-            'Comissão',
-            //plan
-            'Projeto',
-            'Plano',
-            'Preço do Plano',
-            'Código dos produtos',
-            'Produto',
-            'Id do Shopify',
-            'Id da Variante do Shopify',
-            'Quantidade dos Produtos',
-            'SKU',
-            //client
-            'Nome do Cliente',
-            'Telefone do Cliente',
-            'Email do Cliente',
-            'Documento',
-            'Endereço',
-            'Número',
-            'Complemento',
-            'Bairro',
-            'Cep',
-            'Cidade',
-            'Estado',
-            'País',
-            //track
-            'src',
-            'utm_source',
-            'utm_medium',
-            'utm_campaign',
-            'utm_term',
-            'utm_content',
-            'utm_perfect',
-        ];
     }
 
     public function map($row): array
@@ -157,6 +114,59 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
         return $saleData;
     }
 
+    public function headings(): array
+    {
+        return [
+            //sale
+            'Código da Venda',
+            'Pedido do Shopify',
+            'Forma de Pagamento',
+            'Número de Parcelas',
+            'Bandeira do Cartão',
+            'Link do Boleto',
+            'Linha Digitavel do Boleto',
+            'Data de Vencimento do Boleto',
+            'Data Inicial do Pagamento',
+            'Data Final do Pagamento',
+            'Status',
+            'Valor Total Venda',
+            'Frete',
+            'Valor do Frete',
+            'Taxas',
+            'Comissão',
+            //plan
+            'Projeto',
+            'Plano',
+            'Preço do Plano',
+            'Código dos produtos',
+            'Produto',
+            'Id do Shopify',
+            'Id da Variante do Shopify',
+            'Quantidade dos Produtos',
+            'SKU',
+            //client
+            'Nome do Cliente',
+            'Telefone do Cliente',
+            'Email do Cliente',
+            'Documento',
+            'Endereço',
+            'Número',
+            'Complemento',
+            'Bairro',
+            'Cep',
+            'Cidade',
+            'Estado',
+            'País',
+            //track
+            'src',
+            'utm_source',
+            'utm_medium',
+            'utm_campaign',
+            'utm_term',
+            'utm_content',
+            'utm_perfect',
+        ];
+    }
 
     public function registerEvents(): array
     {
@@ -191,6 +201,8 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                     }
                     $lastSale = $currentSale;
                 }
+
+                event(new SalesExportedEvent($this->user, $this->filename));
             },
         ];
     }

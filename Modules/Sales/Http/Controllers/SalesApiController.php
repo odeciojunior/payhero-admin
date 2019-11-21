@@ -78,14 +78,20 @@ class SalesApiController extends Controller
 
     /**
      * @param SaleIndexRequest $request
-     * @return JsonResponse|BinaryFileResponse
+     * @return JsonResponse
      */
     public function export(SaleIndexRequest $request)
     {
         try {
             $dataRequest = $request->all();
 
-            return Excel::download(new SaleReportExport($dataRequest), 'export.' . $dataRequest['format']);
+            //return Excel::download(new SaleReportExport($dataRequest), 'export.' . $dataRequest['format']);
+
+            $filename = 'sales_report_' . time() . '.' . $dataRequest['format'];
+
+            (new SaleReportExport($dataRequest, auth()->user(), $filename))->queue($filename);
+
+            return response()->json(['message' => 'A exportação começou']);
         } catch (Exception $e) {
             report($e);
 
