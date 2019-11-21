@@ -47,7 +47,7 @@ class SalesApiController extends Controller
 
             $data = $request->all();
 
-            $sales = $saleService->getSales($data);
+            $sales = $saleService->getPaginetedSales($data);
 
             return TransactionResource::collection($sales);
         } catch (Exception $e) {
@@ -93,7 +93,7 @@ class SalesApiController extends Controller
 
             $saleService = new SaleService();
 
-            $salesResult = $saleService->getSales($dataRequest, false, true)->map(
+            $salesResult = $saleService->getAllSalesWithProducts($dataRequest)->map(
                 function($transaction) {
                     return $transaction->sale;
                 }
@@ -171,7 +171,7 @@ class SalesApiController extends Controller
 
             $data = $request->all();
 
-            $transactions = $saleService->getSales($data, false);
+            $transactions = $saleService->getAllSales($data);
 
             if ($transactions->count()) {
                 $resume = $transactions->reduce(function($carry, $item) use ($saleService) {
@@ -245,7 +245,7 @@ class SalesApiController extends Controller
             return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
         }
     }
-                
+
     public function saleProcess(Request $request)
     {
         try {
