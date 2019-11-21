@@ -22,6 +22,7 @@ use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -37,7 +38,7 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $trackings = $trackingService->getTrackings($data);
+            $trackings = $trackingService->getPaginatedTrackings($data);
 
             return TrackingResource::collection($trackings);
 
@@ -86,7 +87,7 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $productPlanSales = $trackingService->getTrackings($data, false);
+            $productPlanSales = $trackingService->getAllTrackings($data);
 
             $total = $productPlanSales->count();
             $posted = 0;
@@ -264,14 +265,17 @@ class TrackingsApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @see https://docs.laravel-excel.com/3.1/exports/queued.html
+     */
     public function export(Request $request)
     {
         try {
             $data = $request->all();
 
-            $filename = 'export' . time() . '.' . $data['format'];
-
-            //return Excel::download(new TrackingsReportExport($data, auth()->user(), $filename), $filename);
+            $filename = 'trackings_report_' . time() . '.' . $data['format'];
 
             (new TrackingsReportExport($data, auth()->user(), $filename))->queue($filename);
 
@@ -282,18 +286,6 @@ class TrackingsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao exportar dos rastreamentos'], 400);
-        }
-    }
-
-    public function download($filename)
-    {
-        $file_path = storage_path('app/' . $filename);
-        if (file_exists($file_path)) {
-            return response()->download($file_path, $filename, [
-                'Content-Length: ' . filesize($file_path)
-            ])->deleteFileAfterSend(true);
-        } else {
-            abort(404);
         }
     }
 

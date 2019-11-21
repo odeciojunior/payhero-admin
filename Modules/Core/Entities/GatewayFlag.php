@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property GatewayFlagTax[] $gatewayFlagTaxes
  * @property Gateway $gateway
  */
-class CardFlag extends Model
+class GatewayFlag extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
