@@ -27,7 +27,8 @@ class SalesController extends Controller
         if (file_exists($file_path)) {
             return response()->download($file_path, $filename, [
                 'Content-Length: ' . filesize($file_path)
-            ])->deleteFileAfterSend(true);
+            ]);
+            //->deleteFileAfterSend(true);
         } else {
             abort(404);
         }

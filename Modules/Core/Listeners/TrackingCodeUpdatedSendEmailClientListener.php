@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\LinkShortenerService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -26,11 +27,13 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
     {
         $sendGridService = new SendgridService();
         $smsService      = new SmsService();
+        $linkShortenerService = new LinkShortenerService();
         $domainModel     = new Domain();
 
         $clientName      = $event->sale->client->name;
         $clientEmail     = $event->sale->client->email;
-        //$clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+        $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+        //TODO: remover teste
         $clientTelephone = FoxUtils::prepareCellPhoneNumber('24998345779');
 
         $projectName     = $event->sale->project->name;
@@ -50,7 +53,8 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
 
             if(!empty($clientTelephone)){
-                $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code']);
+                $link = $linkShortenerService->shorten('linkcorreios.com.br/?id=' . $data['tracking_code']);
+                $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
             }
         }
     }
