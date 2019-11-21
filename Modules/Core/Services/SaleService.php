@@ -128,36 +128,6 @@ class SaleService
     }
 
     /**
-     * @param $filters
-     * @return Collection
-     */
-    public function getAllSalesWithProducts($filters)
-    {
-        $transactions = $this->getSalesQueryBuilder($filters, true);
-
-        $sales =  $transactions->orderBy('id', 'DESC')->get();
-
-        $userCompanies = $sales->pluck('company_id');
-        $sales->map(function($item) use ($userCompanies) {
-            $item->sale->products = collect();
-            $this->getDetails($item->sale, $userCompanies);
-            foreach ($item->sale->plansSales as &$planSale) {
-                $plan = $planSale->plan;
-                foreach ($plan->productsPlans as $productPlan) {
-                    $productPlan->product['amount']     = $productPlan->amount * $planSale->amount;
-                    $productPlan->product['plan_name']  = $plan->name;
-                    $productPlan->product['plan_price'] = $plan->price;
-                    $item->sale->products->add($productPlan->product);
-                }
-            }
-
-            return $item;
-        });
-
-        return $sales;
-    }
-
-    /**
      * @param $saleId
      * @return Sale
      * @throws Exception
