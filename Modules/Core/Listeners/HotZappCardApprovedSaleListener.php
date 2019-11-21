@@ -3,6 +3,8 @@
 namespace App\Listeners\Modules\Core\Listeners;
 
 use App\Events\Modules\Core\Events\SaleApprovedEvent;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\HotzappIntegration;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
@@ -10,8 +12,10 @@ use Modules\Core\Services\HotZappService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class HotZappCardApprovedSaleListener
+class HotZappCardApprovedSaleListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
@@ -68,7 +72,6 @@ class HotZappCardApprovedSaleListener
             report($e);
         }
     }
-
 }
 
 

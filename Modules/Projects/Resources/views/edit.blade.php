@@ -258,14 +258,13 @@
                         <select name='checkout_type' class='form-control select-pad' id="checkout_type">
                             <option value='1'>Checkout de 3 etapas (recomendado)</option>
                             <option value='2'>Checkout de 1 etapa</option>
+                            <option value='' disabled>Checkout selecionado por IA - inteligência artificial (em breve)</option>
                         </select>
-
                     </div>
                     <div class='col-md-8'></div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
-                        <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text'
-                               placeholder='URL' maxlength='60'>
+                        <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
                         <span id='input-pad-error' class='text-danger'></span>
                     </div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
@@ -274,11 +273,6 @@
                                placeholder='URL' maxlength='60'>
                         <span id='boleto_redirect-error' class='text-danger'></span>
                     </div>
-                    {{--                    <div class='form-group col-md-4 col-sm-12 col-xs-12'>--}}
-                    {{--                        <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>--}}
-                    {{--                        <input id='analyzing_redirect' name='analyzing_redirect' value='' class='input-pad' type='text'--}}
-                    {{--                               placeholder='URL' maxlength='60'>--}}
-                    {{--                    </div>--}}
                     <p class="info mt-5 col-12" style="font-size: 10px;">
                         <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
                         <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.

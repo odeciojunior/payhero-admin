@@ -83,7 +83,7 @@
                                                     <input name="document" value="" type="text" class="input-pad" id="document" placeholder="CPF">
                                                 </div>
                                                 <div class="form-group col-xl-6">
-                                                    <label for="celular">Celular</label>
+                                                    <label for="celular">Celular (WhatsApp)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="input_group_cellphone" id="addon-cellphone">
@@ -196,18 +196,18 @@
                                             </thead>
                                             <tbody class="custom-t-body">
                                                 <tr>
-                                                    <td>Identidade</td>
+                                                    <td>Documento com foto</td>
                                                     <td id="td_personal_status"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Residência</td>
+                                                    <td>Comprovante de residência</td>
                                                     <td id="td_address_status"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="col-lg-12 mt-10">
-                                        <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto)
+                                        <small class="text-muted" style="line-height: 1.5;"> Documentos aceitos: RG ou CNH (oficial e com foto)
                                             <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
                                         </small>
                                     </div>

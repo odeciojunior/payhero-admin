@@ -2,12 +2,19 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Services\UserNotificationService;
 use Modules\Notifications\Notifications\BoletoCompensatedNotification;
 
-class BoletoPaidNotifyUser
+/**
+ * Class BoletoPaidNotifyUser
+ * @package Modules\Core\Listeners
+ */
+class BoletoPaidNotifyUser implements ShouldQueue
 {
+    use Queueable;
     /**
      * @var string
      * @description name of the column in user_notifications table to check if it will send

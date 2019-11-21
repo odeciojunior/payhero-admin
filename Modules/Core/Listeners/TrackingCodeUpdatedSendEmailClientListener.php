@@ -2,13 +2,23 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Domain;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\LinkShortenerService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\SmsService;
 
-class TrackingCodeUpdatedSendEmailClientListener
+/**
+ * Class TrackingCodeUpdatedSendEmailClientListener
+ * @package Modules\Core\Listeners
+ */
+class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
 {
+    use Queueable;
 
     /**
      * @param TrackingCodeUpdatedEvent $event
@@ -16,17 +26,22 @@ class TrackingCodeUpdatedSendEmailClientListener
     public function handle(TrackingCodeUpdatedEvent $event)
     {
         $sendGridService = new SendgridService();
+        $smsService      = new SmsService();
+        $linkShortenerService = new LinkShortenerService();
         $domainModel     = new Domain();
 
-        $clientName      = $event->sale->client->name;
+        $clientName      = $event->sale->client->present()->getFirstName();
         $clientEmail     = $event->sale->client->email;
+        $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+        //TODO: remover teste
+        $clientTelephone = FoxUtils::prepareCellPhoneNumber('24998345779');
 
         $projectName     = $event->sale->project->name;
         $projectContact  = $event->sale->project->contact;
         $clientNameExploded = explode(' ', $clientName);
         $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
 
-        if(isset($domain)){
+        if (isset($domain)) {
             $data = [
                 'name'            => $clientNameExploded[0],
                 'project_logo'    => $event->sale->project->logo,
@@ -36,6 +51,11 @@ class TrackingCodeUpdatedSendEmailClientListener
             ];
 
             $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+
+            if(!empty($clientTelephone)){
+                $link = $linkShortenerService->shorten('https://www.linkcorreios.com.br/?id=' . $data['tracking_code']);
+                $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+            }
         }
     }
 }

@@ -156,6 +156,10 @@
     background: rgb(255, 157, 0);
 }
 
+.badge-antifraude {
+    background: rgb(22, 142, 209);
+}
+
 .badge-aprovado {
     background: #44a44b;
 }

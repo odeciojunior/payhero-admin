@@ -146,8 +146,13 @@ $(document).ready(function () {
                 iconClass = 'tracking-success';
                 link      = '/trackings';
                 break;
+            case 'SalesExportedNotification':
+                message   = 'Exportação do relatório de vendas concluída.';
+                iconClass = 'money-success';
+                link      = '/sales/download/' + data.message;
+                break;
             case 'TrackingsExportedNotification':
-                message   = 'Exportação dos códigos de rastreio concluída.';
+                message   = 'Exportação do relatório de códigos de rastreio concluída.';
                 iconClass = 'tracking-success';
                 link      = '/trackings/download/' + data.message;
                 break;
