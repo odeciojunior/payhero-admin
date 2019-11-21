@@ -4,6 +4,8 @@ var statusInvite = {
     3: 'warning',
 }
 
+let disabledCompany = true;
+
 $(document).ready(function () {
     updateInvites();
     var currentPage = 1;
@@ -153,61 +155,82 @@ $(document).ready(function () {
             success: (response) => {
                 if (isEmpty(response.data)) {
                     loadingOnScreenRemove();
-                    modalNotCompanies();
+                    $("#modal-then-companies").hide();
+                    $("#modal-not-approved-document-companies").hide();
+                    $("#modal-not-companies").show();
                 } else {
                     loadingOnScreenRemove();
-                    modalThenCompanies();
 
-                    $("#modal-reverse-title").html('Novo Convite');
+                    let contCompanies = 0;
+                    let contCompaniesNotApproved = 0;
+
                     var selCompany = '';
                     selCompany = '<select class="select-company-list">';
-                    var option = '';
 
+                    disabledCompany = true;
                     $.each(response.data, function (index, value) {
-                        option += '<option value=' + value.id_code + ' >' + value.fantasy_name + '</option>';
-                        selCompany += '<option value=' + value.id_code + ' >' + value.fantasy_name + '</option>';
+                        contCompanies++;
+                        if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado') {
+                            disabledCompany = false;
+                            contCompaniesNotApproved++;
+                            selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                        } else {
+                            selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+                        }
                     });
                     selCompany += '</select>';
 
-                    $("#company-list").html('').append(selCompany);
+                    if (contCompanies === contCompaniesNotApproved) {
+                        $("#modal-then-companies").hide();
+                        $("#modal-not-companies").hide();
+                        $("#modal-not-approved-document-companies").show();
+                    } else {
+                        $("#modal-not-companies").hide();
+                        $("#modal-not-approved-document-companies").hide();
+                        $("#modal-then-companies").show();
 
-                    var linkInvite = '';
-                    var companyId = $(".select-company-list option:selected").val();
-                    linkInvite = 'https://app.cloudfox.net/register/' + $(".select-company-list option:selected").val();
+                        $("#modal-reverse-title").html('Novo Convite');
 
-                    $("#invite-link").val(linkInvite);
+                        $("#company-list").html('').append(selCompany);
 
-                    $(".select-company-list").on('change', function () {
-                        linkInvite = 'https://app.cloudfox.net/register/' + $(this).val();
+                        var linkInvite = '';
+                        var companyId = $(".select-company-list option:selected").val();
+                        linkInvite = 'https://app.cloudfox.net/register/' + $(".select-company-list option:selected").val();
+
                         $("#invite-link").val(linkInvite);
-                        companyId = $(this).val();
-                    });
 
-                    $("#copy-link").on("click", function () {
-                        var copyText = document.getElementById("invite-link");
-                        copyText.select();
-                        document.execCommand("copy");
+                        $(".select-company-list").on('change', function () {
+                            linkInvite = 'https://app.cloudfox.net/register/' + $(this).val();
+                            $("#invite-link").val(linkInvite);
+                            companyId = $(this).val();
+                        });
 
-                        alertCustom('success', 'Link copiado!');
-                    });
+                        $("#copy-link").on("click", function () {
+                            var copyText = document.getElementById("invite-link");
+                            copyText.select();
+                            document.execCommand("copy");
 
-                    $("#btn-send-invite").unbind();
-                    $("#btn-send-invite").on('click', function () {
-                        var email = $("#email").val();
+                            alertCustom('success', 'Link copiado!');
+                        });
 
-                        if (email == '') {
-                            alertCustom('error', 'O campo Email do convidado é obrigatório');
-                        } else if (companyId == '') {
-                            alertCustom('error', 'O campo Empresa para receber é obrigatório');
-                        } else {
-                            loadingOnScreen();
-                            sendInviteAjax(email, companyId);
-                        }
-                    });
+                        $("#btn-send-invite").unbind();
+                        $("#btn-send-invite").on('click', function () {
+                            var email = $("#email").val();
+
+                            if (email == '') {
+                                alertCustom('error', 'O campo Email do convidado é obrigatório');
+                            } else if (companyId == '') {
+                                alertCustom('error', 'O campo Empresa para receber é obrigatório');
+                            } else {
+                                loadingOnScreen();
+                                sendInviteAjax(email, companyId);
+                            }
+                        });
+                    }
+
                 }
             }
-        })
-        ;
+        });
 
         $("#modal-invite").modal('show');
     });
@@ -334,11 +357,79 @@ $(document).ready(function () {
 
     //ALTERAÇÃO DE HTML
 
-    function modalNotCompanies() {
-        $('#mainModalBody').html('<div id="modal-not-companies" class="modal-content p-10">' + '<div class="header-modal simple-border-bottom">' + '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2></div>' + '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' + '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' + '<span class="swal2-x-mark">' + '<span class="swal2-x-mark-line-left"></span>' + '<span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' + '<h5 align="center">Deseja cadastrar uma empresa?' + '<a class="red pointer" href="/companies">clique aqui</a></h5></div>' + '<div style="width:100%; text-align:center; padding-top:3%;">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' + '</div></div>');
-    }
+    /*  function modalNotCompanies() {
+          $('#mainModalBody').html(
+              '<div id="modal-not-companies" class="modal-content p-10">' +
+              '<div class="header-modal simple-border-bottom">' +
+              '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2>' +
+              '</div>' +
+              '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' +
+              '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' +
+              '<span class="swal2-x-mark">' +
+              '<span class="swal2-x-mark-line-left"></span>' +
+              '<span class="swal2-x-mark-line-right"></span>' +
+              '</span>' +
+              '</div>' +
+              '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' +
+              '<h5 align="center">Deseja cadastrar uma empresa?' +
+              '<a class="red pointer" href="/companies">clique aqui</a>' +
+              '</h5>' +
+              '</div>' +
+              '<div style="width:100%; text-align:center; padding-top:3%;">' +
+              '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' +
+              '</div>' +
+              '</div>');
+      }
 
-    function modalThenCompanies() {
-        $('#mainModalBody').html('<div id="modal-then-companies" class="modal-content"><div class="modal-header">' + '<button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>' + '<h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4></div>' + '<div id="modal-reverse-body" class="modal-body"><div id="body-modal"><div class="row">' + '<div class="form-group col-12"><label for="email">Email do convidado</label>' + '<input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">' + '</div></div><div class="row"><div class="form-group col-12">' + '<label for="company">Empresa para receber</label><div id="company-list"></div></div></div>' + '<div class="row"><div class="col-12"><label for="email">Link de convite</label>' + '</div><div id="invite-link-select" class="input-group col-12"><input type="text" class="form-control" id="invite-link" value="" readonly>' + '<span class="input-group-btn"><button id="copy-link" class="btn btn-default" type="button">Copiar</button>' + '</span></div></div><div class="row" style="margin-top: 35px"><div class="form-group col-12">' + '<input id="btn-send-invite" type="button" class="form-control btn col-sm-12 col-m-3 col-lg-3" value="Enviar Convite" style="color:white;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">' + '</div></div></div></div></div>');
-    }
+      function modalThenCompanies() {
+          let textModal = '';
+          textModal += '<div id="modal-then-companies" class="modal-content">' +
+              '<div class="modal-header">' +
+              '<button type="button" id="btn-close-invite" class="close" data-dismiss="modal" aria-label="Close">' +
+              '<span aria-hidden="true">×</span>' +
+              '</button>' +
+              '<h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4>' +
+              '</div>' +
+              '<div id="modal-reverse-body" class="modal-body">' +
+              '<div id="body-modal">' +
+              '<div class="row">' +
+              '<div class="form-group col-12">' +
+              '<label for="email">Email do convidado</label>' +
+              '<input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">' +
+              '</div>' +
+              '</div>' +
+              '<div class="row">' +
+              '<div class="form-group col-12">' +
+              '<label for="company">Empresa para receber</label>' +
+              '<div id="company-list"></div>' +
+              '<span>Para enviar convites a empresa tem que estar com os documentos aprovados </span>' +
+              '</div>' +
+              '</div>';
+          if (disabledCompany) {
+              textModal += '<div class="row">' +
+                  '<div class="col-12">' +
+                  '<label for="email">Link de convite</label>' +
+                  '</div>' +
+                  '<div id="invite-link-select" class="input-group col-12">' +
+                  '<input type="text" class="form-control" id="invite-link" value="" readonly>' +
+                  '<span class="input-group-btn">' +
+                  '<button id="copy-link" class="btn btn-default" type="button">Copiar</button>' +
+                  '</span>' +
+                  '</div>' +
+                  '</div>' +
+                  '<div class="row" style="margin-top: 35px">' +
+                  '<div class="form-group col-12">' +
+                  '<input id="btn-send-invite" type="button" class="form-control btn col-sm-12 col-m-3 col-lg-3" value="Enviar Convite" ' +
+                  'style="color:white;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>';
+          } else {
+              textModal += '</div></div></div>';
+          }
+
+          $('#mainModalBody').html(textModal);
+      }*/
 });

@@ -3,6 +3,8 @@
 namespace App\Listeners\Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Notification;
@@ -10,8 +12,9 @@ use App\Events\Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Services\UserNotificationService;
 use Modules\Notifications\Notifications\SaleApprovedNotification;
 
-class NotifyUsersApprovedSaleListener
+class NotifyUsersApprovedSaleListener implements ShouldQueue
 {
+    use Queueable;
     /**
      * @var string
      * @description name of the column in user_notifications table to check if it will send

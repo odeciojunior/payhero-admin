@@ -9,6 +9,7 @@ use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
@@ -30,20 +31,26 @@ class RegisterApiController extends Controller
             $inviteModel  = new Invitation();
             $companyModel = new Company();
 
-            $parameter    = $requestData['parameter'];
+            $parameter = $requestData['parameter'];
 
-            if(strlen($parameter) > 15) {
+            if (strlen($parameter) > 15) {
                 $inviteId = substr($parameter, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
-                $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)->first();
-                if(!isset($invite->id) || (isset($invite->id) && $invite->status != 2)) {
+                $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)
+                                        ->first();
+                if (!isset($invite->id) || (isset($invite->id) && $invite->status != 2)) {
                     return response()->json(['success' => 'false', 'message' => 'Convite inválido!']);
                 }
             } else {
                 $companyId = Hashids::decode($parameter);
-                $company = $companyModel->where('id', $companyId)->first();
-                if(isset($company->id)) {
-                    $invitesSent = $inviteModel->where('invite', $company->user_id)->count();
+                $company   = $companyModel->where('id', $companyId)->first();
+                if (isset($company->id)) {
+                    $invitesSent    = $inviteModel->where('invite', $company->user_id)->count();
+                    $companyService = new CompanyService();
+                    if (!$companyService->isDocumentValidated($company->id)) {
+                        return response()->json(['success' => 'false', 'message' => 'Convite indisponivel!']);
+                    }
+
                     if ($invitesSent >= $company->user->invites_amount) {
                         return response()->json(['success' => 'false', 'message' => 'Convite indisponivel, limite atingido!']);
                     }
@@ -75,9 +82,9 @@ class RegisterApiController extends Controller
             $user->assignRole('account_owner');
 
             auth()->loginUsingId($user->id, true);
-            
-            if(!isset($invite)) {
-                $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
+
+            if (!isset($invite)) {
+                $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
             }
             // $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
@@ -121,7 +128,7 @@ class RegisterApiController extends Controller
 
             return response()->json([
                                         'success' => 'false',
-                                        'message' => 'revise os dados informados'
+                                        'message' => 'revise os dados informados',
                                     ]);
         }
     }

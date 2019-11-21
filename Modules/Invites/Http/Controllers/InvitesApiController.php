@@ -12,6 +12,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Invites\Transformers\InviteResource;
@@ -69,8 +70,18 @@ class InvitesApiController extends Controller
                 }
 
                 $company = current(Hashids::decode($request->input('company')));
+
                 if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
                     try {
+                        $companyService = new CompanyService();
+                        if (!$companyService->isDocumentValidated($company)) {
+                            return response()->json(
+                                [
+                                    'message' => 'Envio de convites indisponível, os documentos da empresa precisam estar aprovados!',
+                                ], 400
+                            );
+                        }
+
                         $invite          = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
                                                            ->first();
                         $user            = $userModel->where('email', $request->input('email'))->first();
@@ -329,39 +340,39 @@ class InvitesApiController extends Controller
 
             $company = $companyModel->find(current(Hashids::decode($inviteId)));
 
-            if(strlen($inviteId) > 15) {
+            if (strlen($inviteId) > 15) {
                 $inviteId = substr($inviteId, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
                 $invite   = $invitationModel->where('id', $inviteId)->first();
-                if(isset($invite->id) && $invite->status == 2) {
+                if (isset($invite->id) && $invite->status == 2) {
                     return response()->json(
-                            [
-                                'message' => 'Convite válido!',
-                                'data'    => 'email',
-                                'email'   => $invite->email_invited
-                            ], 200
-                        );
+                        [
+                            'message' => 'Convite válido!',
+                            'data'    => 'email',
+                            'email'   => $invite->email_invited,
+                        ], 200
+                    );
                 } else {
                     return response()->json(
-                            [
-                                'message' => 'Convite inválido!',
-                                'data'    => 'invalido',
-                            ], 400
-                        );
+                        [
+                            'message' => 'Convite inválido!',
+                            'data'    => 'invalido',
+                        ], 400
+                    );
                 }
             } else {
 
                 $company = $companyModel->find(current(Hashids::decode($inviteId)));
 
                 if (empty($company)) {
-                     return response()->json(
+                    return response()->json(
                         [
                             'message' => 'Link convite inválido!',
                             'data'    => 'invalido',
                         ], 400
                     );
-                 } else {
-                    $invitesSent = $invitationModel->where('invite', $company->user_id)->count();
+                } else {
+                    $invitesSent = $invitationModel->where('invite', $company->user_id)->where('status', 1)->count();
 
                     if ($invitesSent >= $company->user->invites_amount) {
                         return response()->json(
