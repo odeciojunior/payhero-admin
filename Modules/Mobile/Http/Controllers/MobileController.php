@@ -143,6 +143,23 @@ class MobileController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function financeAccountInformation(Request $request) {
+        try {
+            return $this->integrationApiService->financeAccountInformation($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function profileGetData(Request $request) {
         try {
             return $this->integrationApiService->profileGetData($request);

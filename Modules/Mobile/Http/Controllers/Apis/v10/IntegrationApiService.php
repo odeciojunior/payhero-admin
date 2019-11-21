@@ -161,6 +161,26 @@ class IntegrationApiService {
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function financeAccountInformation(Request $request) {
+        try {
+
+            if (!$this->financeApiService) {
+                $this->getIntegrationApiService('finance');
+            }
+
+            return $this->financeApiService->getAccountInformation($request);
+
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error',
+                'message' => 'Erro ao carregar dados de finanças'], 400);
+        }
+    }
+
 
     /**
      * @param Request $request
