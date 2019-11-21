@@ -37,7 +37,7 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $trackings = $trackingService->getTrackings($data);
+            $trackings = $trackingService->getPaginatedTrackings($data);
 
             return TrackingResource::collection($trackings);
 
@@ -86,7 +86,7 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $productPlanSales = $trackingService->getTrackings($data, false);
+            $productPlanSales = $trackingService->getAllTrackings($data);
 
             $total = $productPlanSales->count();
             $posted = 0;

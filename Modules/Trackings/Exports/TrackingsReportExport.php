@@ -14,7 +14,7 @@ use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoSize, WithMapping, WithEvents
+class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithMapping, WithEvents
 {
     use Exportable;
 
@@ -31,11 +31,11 @@ class TrackingsReportExport implements FromCollection, WithHeadings, ShouldAutoS
         $this->filename = $filename;
     }
 
-    public function collection()
+    public function query()
     {
         $trackingService = new TrackingService();
 
-        return $trackingService->getTrackings($this->filters, false);
+        return $trackingService->getTrackingsQueryBuilder($this->filters);
     }
 
     public function map($row): array
