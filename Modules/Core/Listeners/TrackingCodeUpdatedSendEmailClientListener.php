@@ -33,8 +33,6 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
         $clientName      = $event->sale->client->present()->getFirstName();
         $clientEmail     = $event->sale->client->email;
         $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
-        //TODO: remover teste
-        $clientTelephone = FoxUtils::prepareCellPhoneNumber('24998345779');
 
         $projectName     = $event->sale->project->name;
         $projectContact  = $event->sale->project->contact;
