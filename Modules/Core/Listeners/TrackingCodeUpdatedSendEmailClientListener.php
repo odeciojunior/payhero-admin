@@ -23,7 +23,7 @@ class TrackingCodeUpdatedSendEmailClientListener
         $linkShortenerService = new LinkShortenerService();
         $domainModel     = new Domain();
 
-        $clientName      = $event->sale->client->name;
+        $clientName      = $event->sale->client->present()->getFirstName();
         $clientEmail     = $event->sale->client->email;
         $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
         //TODO: remover teste
@@ -46,7 +46,7 @@ class TrackingCodeUpdatedSendEmailClientListener
             $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
 
             if(!empty($clientTelephone)){
-                $link = $linkShortenerService->shorten('linkcorreios.com.br/?id=' . $data['tracking_code']);
+                $link = $linkShortenerService->shorten('https://www.linkcorreios.com.br/?id=' . $data['tracking_code']);
                 $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
             }
         }
