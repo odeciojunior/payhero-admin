@@ -2,14 +2,23 @@
 
 namespace Modules\Core\Listeners;
 
+use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Entities\HotzappIntegration;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Illuminate\Support\Facades\Log;
 
-class BilletPaidHotZappListener
+/**
+ * Class BilletPaidHotZappListener
+ * @package Modules\Core\Listeners
+ */
+class BilletPaidHotZappListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
@@ -20,9 +29,7 @@ class BilletPaidHotZappListener
     }
 
     /**
-     * Handle the event.
      * @param BilletPaidEvent $event
-     * @return void
      */
     public function handle(BilletPaidEvent $event)
     {

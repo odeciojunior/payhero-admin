@@ -3,6 +3,7 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
 use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -11,13 +12,19 @@ use Modules\Core\Events\ReleasedBalanceEvent;
 use Modules\Core\Services\UserNotificationService;
 use Modules\Notifications\Notifications\ReleasedBalanceNotification;
 
-class ReleasedBalanceNotifyUserListener
+/**
+ * Class ReleasedBalanceNotifyUserListener
+ * @package Modules\Core\Listeners
+ */
+class ReleasedBalanceNotifyUserListener implements ShouldQueue
 {
+    use Queueable;
     /**
      * @var string
      * @description name of the column in user_notifications table to check if it will send
      */
     private $userNotification = "released_balance";
+
     /**
      * Create the event listener.
      * @return void

@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\LinkShortenerService;
@@ -10,8 +12,13 @@ use Modules\Core\Services\SendgridService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\SmsService;
 
-class TrackingCodeUpdatedSendEmailClientListener
+/**
+ * Class TrackingCodeUpdatedSendEmailClientListener
+ * @package Modules\Core\Listeners
+ */
+class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
 {
+    use Queueable;
 
     /**
      * @param TrackingCodeUpdatedEvent $event
@@ -34,7 +41,7 @@ class TrackingCodeUpdatedSendEmailClientListener
         $clientNameExploded = explode(' ', $clientName);
         $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
 
-        if(isset($domain)){
+        if (isset($domain)) {
             $data = [
                 'name'            => $clientNameExploded[0],
                 'project_logo'    => $event->sale->project->logo,

@@ -2,11 +2,19 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Services\SendgridService;
 
-class BoletoPaidEmailNotifyUser
+/**
+ * Class BoletoPaidEmailNotifyUser
+ * @package Modules\Core\Listeners
+ */
+class BoletoPaidEmailNotifyUser implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
@@ -25,8 +33,8 @@ class BoletoPaidEmailNotifyUser
     {
         /** @var SendgridService $sendGridService */
         $sendGridService = new SendgridService();
-        $user = $event->data['user'];
-        $data = $event->data;
+        $user            = $event->data['user'];
+        $data            = $event->data;
         $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
     }
 }

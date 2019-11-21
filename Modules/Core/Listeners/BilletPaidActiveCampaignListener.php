@@ -2,12 +2,16 @@
 
 namespace Modules\Core\Listeners;
 
+use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Services\ActiveCampaignService;
 
-
-class BilletPaidActiveCampaignListener
+class BilletPaidActiveCampaignListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
@@ -26,13 +30,15 @@ class BilletPaidActiveCampaignListener
     {
         try {
             $activeCampaignService = new ActiveCampaignService;
-            $sale = $event->sale;
-            $client = $event->client;
+            $sale                  = $event->sale;
+            $client                = $event->client;
+
             // execute($saleId, $eventSale, $name, $phone, $email, $projectId)
             return $activeCampaignService->execute($sale->id, 2, $client->name, $client->telephone, $client->email, $sale->project_id, 'sale'); // 2 - boleto pago
         } catch (Exception $e) {
-            return response()->json(['message' => 'Ocorreu algum erro'], 400);
             report($e);
+
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
 }
