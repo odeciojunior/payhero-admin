@@ -275,9 +275,11 @@ class TrackingsApiController extends Controller
         try {
             $data = $request->all();
 
-            $filename = 'trackings_report_' . time() . '.' . $data['format'];
+            $user = auth()->user();
 
-            (new TrackingsReportExport($data, auth()->user(), $filename))->queue($filename);
+            $filename = 'trackings_report_' . Hashids::encode($user->id) . '.'. $data['format'];
+
+            (new TrackingsReportExport($data, $user, $filename))->queue($filename);
 
             return response()->json(['message' => 'A exportação começou']);
 

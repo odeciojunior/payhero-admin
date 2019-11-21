@@ -3,12 +3,20 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Services\PusherService;
 
-class BoletoPaidPusherNotifyUser
+/**
+ * Class BoletoPaidPusherNotifyUser
+ * @package Modules\Core\Listeners
+ */
+class BoletoPaidPusherNotifyUser implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void

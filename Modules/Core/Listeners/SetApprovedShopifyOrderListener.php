@@ -3,6 +3,8 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Services\SaleService;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -14,9 +16,17 @@ use Modules\Core\Events\SaleApprovedEvent;
 use Slince\Shopify\Client as ShopifyClient;
 use Modules\Core\Entities\ShopifyIntegration;
 
-class SetApprovedShopifyOrderListener
+/**
+ * Class SetApprovedShopifyOrderListener
+ * @package Modules\Core\Listeners
+ */
+class SetApprovedShopifyOrderListener implements ShouldQueue
 {
+    use Queueable;
 
+    /**
+     * @param SaleApprovedEvent $event
+     */
     public function handle(SaleApprovedEvent $event)
     {
         $shopifyIntegrationModel = new ShopifyIntegration();

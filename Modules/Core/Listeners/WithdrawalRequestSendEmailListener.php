@@ -2,14 +2,19 @@
 
 namespace Modules\Core\Listeners;
 
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\SendgridService;
 
-class WithdrawalRequestSendEmailListener
+/**
+ * Class WithdrawalRequestSendEmailListener
+ * @package Modules\Core\Listeners
+ */
+class WithdrawalRequestSendEmailListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
@@ -26,7 +31,7 @@ class WithdrawalRequestSendEmailListener
     {
         $sendGridService = new SendgridService();
         $userName        = $event->withdrawal->company->user->name;
-        $data = [
+        $data            = [
             'name'  => $userName,
             'date'  => $event->withdrawal->created_at->format('d/m/Y'),
             'value' => number_format(intval($event->withdrawal->value) / 100, 2, ',', '.'),

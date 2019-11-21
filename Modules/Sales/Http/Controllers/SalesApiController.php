@@ -85,9 +85,9 @@ class SalesApiController extends Controller
         try {
             $dataRequest = $request->all();
 
-            //return Excel::download(new SaleReportExport($dataRequest), 'export.' . $dataRequest['format']);
+            $user = auth()->user();
 
-            $filename = 'sales_report_' . time() . '.' . $dataRequest['format'];
+            $filename = 'sales_report_' . Hashids::encode($user->id) . '.'. $dataRequest['format'];
 
             (new SaleReportExport($dataRequest, auth()->user(), $filename))->queue($filename);
 

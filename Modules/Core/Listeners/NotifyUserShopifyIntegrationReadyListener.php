@@ -3,12 +3,20 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\PusherService;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 
-class NotifyUserShopifyIntegrationReadyListener
+/**
+ * Class NotifyUserShopifyIntegrationReadyListener
+ * @package Modules\Core\Listeners
+ */
+class NotifyUserShopifyIntegrationReadyListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void

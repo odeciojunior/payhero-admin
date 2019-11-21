@@ -17,6 +17,7 @@ use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
@@ -198,17 +199,10 @@ class SaleService
 
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
-        if ($sale->dolar_quotation != 0) {
-            $taxa      = intval($total / $sale->dolar_quotation);
-            $taxaReal  = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-            $iof       = preg_replace('/[^0-9]/', '', $sale->iof);
-            $total     += $iof;
-            $sale->iof = number_format($iof / 100, 2, ',', '.');
-        } else {
-            $taxa     = 0;
-            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
-            $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
-        }
+        $taxa = 0;
+        //            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
+        $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+        $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
         if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
