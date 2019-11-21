@@ -3,9 +3,11 @@
 namespace Modules\Core\Listeners;
 
 use Modules\Core\Entities\Domain;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\SmsService;
 
 class TrackingCodeUpdatedSendEmailClientListener
 {
@@ -16,10 +18,13 @@ class TrackingCodeUpdatedSendEmailClientListener
     public function handle(TrackingCodeUpdatedEvent $event)
     {
         $sendGridService = new SendgridService();
+        $smsService      = new SmsService();
         $domainModel     = new Domain();
 
         $clientName      = $event->sale->client->name;
         $clientEmail     = $event->sale->client->email;
+        //$clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+        $clientTelephone = FoxUtils::prepareCellPhoneNumber('24998345779');
 
         $projectName     = $event->sale->project->name;
         $projectContact  = $event->sale->project->contact;
@@ -36,6 +41,10 @@ class TrackingCodeUpdatedSendEmailClientListener
             ];
 
             $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+
+            if(!empty($clientTelephone)){
+                $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code']);
+            }
         }
     }
 }
