@@ -83,7 +83,7 @@
                                                     <input name="document" value="" type="text" class="input-pad" id="document" placeholder="CPF">
                                                 </div>
                                                 <div class="form-group col-xl-6">
-                                                    <label for="celular">Celular</label>
+                                                    <label for="celular">Celular (WhatsApp)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="input_group_cellphone" id="addon-cellphone">
@@ -174,12 +174,12 @@
                                     <div class="col">
                                     </div>
                                 </div>
-                                <div class="row mt-15">
+                                <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
                                     <div class="col-lg-6">
                                         <div id="dropzone">
                                             <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                                 @csrf
-                                                <div class="dz-message needsclick">
+                                                <div class="dz-message needsclick text-dropzone">
                                                     Arraste ou clique para fazer upload.<br/>
                                                 </div>
                                                 <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
@@ -196,20 +196,30 @@
                                             </thead>
                                             <tbody class="custom-t-body">
                                                 <tr>
-                                                    <td>Identidade</td>
+                                                    <td>Documento com foto</td>
                                                     <td id="td_personal_status"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Residência</td>
+                                                    <td>Comprovante de residência</td>
                                                     <td id="td_address_status"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-lg-12  mt-10">
-                                        <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto)
+                                    <div class="col-lg-12 mt-10">
+                                        <small class="text-muted" style="line-height: 1.5;"> Documentos aceitos: RG ou CNH (oficial e com foto)
                                             <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
                                         </small>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'><p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p></div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_documents_refused'></div>
                                     </div>
                                 </div>
                             </div>
@@ -498,7 +508,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=2')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=3')}}"></script>
     @endpush
 
 @endsection

@@ -340,4 +340,22 @@ class ActiveCampaignService
     {
         return $this->sendDataActiveCampaign(null, 'fields/' . $fieldId, 'DELETE');
     }
+
+    /**
+     * @param  int $listId
+     * @return json
+     */
+    public function getContactsByList($listId, $limit, $offset)
+    {
+        return $this->sendDataActiveCampaign(null, 'contacts/?listid=' . $listId . '&status=1&limit='.$limit.'&offset='.$offset, 'GET');
+    }
+
+    /**
+     * @param  int $contactId
+     * @return json
+     */
+    public function getContactById($contactId)
+    {
+        return $this->sendDataActiveCampaign(null, 'contacts/' . $contactId , 'GET');
+    }
 }

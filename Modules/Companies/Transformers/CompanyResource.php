@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\Resource;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Presenters\CompanyPresenter;
+use Modules\Core\Services\CompanyService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -29,8 +30,10 @@ class CompanyResource extends Resource
     public function toArray($request)
     {
         /** @var CompanyPresenter $presenter */
-        $presenter      = $this->resource->present();
-        $documentStatus = $presenter->allStatusPending() ? $presenter->getStatus(3) : $presenter->getStatus(1);
+        $presenter        = $this->resource->present();
+        $documentStatus   = $presenter->allStatusPending() ? $presenter->getStatus(3) : $presenter->getStatus(1);
+        $companyService   = new CompanyService();
+        $refusedDocuments = $companyService->getRefusedDocuments($this->resource->id);
 
         return [
             'id_code'                     => Hashids::encode($this->resource->id),
@@ -59,6 +62,7 @@ class CompanyResource extends Resource
             'bank_document_translate'     => __('definitions.enum.status.' . $presenter->getBankDocumentStatus()),
             'address_document_translate'  => __('definitions.enum.status.' . $presenter->getAddressDocumentStatus()),
             'contract_document_translate' => __('definitions.enum.status.' . $presenter->getContractDocumentStatus()),
+            'refusedDocuments'            => $refusedDocuments,
         ];
     }
 }

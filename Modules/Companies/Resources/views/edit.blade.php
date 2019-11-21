@@ -112,7 +112,7 @@
                             <div class="tab-pane" id="tab_bank_data" role="tabpanel">
                                 <form method="POST" enctype="multipart/form-data" id='company_bank_update_form'>
                                     @method('PUT')
-                                    <h3 class="mb-15 mt-10">Informações Bancárias</h3>
+                                    <h3 class="mb-15 mt-10">Informações bancárias da empresa</h3>
                                     <div class="row">
                                         <div class="col-xl-4">
                                             <div class='form-group'>
@@ -155,7 +155,7 @@
                                     <div class="col">
                                     </div>
                                 </div>
-                                <div class="row mt-15">
+                                <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
                                     <div class="col-lg-6">
                                         <div id="dropzone">
                                             <form method="POST" action="{!! route('api.companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
@@ -171,17 +171,17 @@
                                         <table class="table table-striped">
                                             <tbody class="custom-t-body">
                                                 <tr>
-                                                    <td>Extrato Bancário</td>
+                                                    <td>Comprovante de extrato bancário</td>
                                                     <td id="td_bank_status">
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td> Comprovante Residência</td>
+                                                    <td>Comprovante de endereço</td>
                                                     <td id="td_address_status">
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Contrato Social</td>
+                                                    <td>Comprovante de contrato social</td>
                                                     <td id="td_contract_status">
                                                     </td>
                                                 </tr>
@@ -190,10 +190,20 @@
                                     </div>
                                     <div class="col-lg-12  mt-10">
                                         <small class="text-muted" style="line-height: 1.5;">
-                                            Conta Bancária: extrato válido do banco.
-                                            <br> Residência: luz, água ou outros;
-                                            <br> Contrato Social: provando que você é dono ou sócio da empresa;
+                                                Comprovante de conta bancária: extrato válido do banco.
+                                            <br>Comprovante de endereço: luz, água ou outros;
+                                            <br>Comprovante de contrato social: provando que você é dono ou sócio da empresa;
                                         </small>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'><p>Antes de enviar os documentos é necessário completar todos os dados residenciais da sua empresa na aba EMPRESA.</p></div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_documents_refused'></div>
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +215,7 @@
     </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=4')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit.js?v=5')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

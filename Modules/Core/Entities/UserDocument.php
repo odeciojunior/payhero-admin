@@ -30,8 +30,9 @@ class UserDocument extends Model
         'user_id', 
         'document_url', 
         'document_type_enum', 
-        'status', 
-        'created_at', 
+        'status',
+        'refused_reason',
+        'created_at',
         'updated_at'
     ];
 

@@ -113,7 +113,7 @@ class CompaniesApiController extends Controller
             $bankService = new BankService();
             /** @var Company $company */
             $company = $companyModel
-                ->with('user')
+                ->with('user','companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('edit', [$company])) {
                 $banks = $bankService->getBanks('BR');
@@ -136,7 +136,7 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
-
+            dd($e);
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
@@ -326,6 +326,27 @@ class CompaniesApiController extends Controller
                     'message' => 'Ocorreu um erro ao tentar buscar dados, tente novamente mais tarde',
                 ], 400
             );
+        }
+    }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function openDocument(Request $request)
+    {
+        try {
+            $digitalOceanFileService = app(DigitalOceanFileService::class);
+            $data                    = $request->all();
+            if (!empty($data['document_url'])) {
+                $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['document_url'], 180);
+
+                return response()->json(['data' => $temporaryUrl], 200);
+            }
+
+            return response()->json(['message' => 'Erro ao acessar documento da empresa!'], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao acessar documento da empresa CompaniesApiController - openDocument');
+            report($e);
         }
     }
 }

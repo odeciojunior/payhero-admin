@@ -30,6 +30,28 @@ class RegisterApiController extends Controller
             $inviteModel  = new Invitation();
             $companyModel = new Company();
 
+            $parameter    = $requestData['parameter'];
+
+            if(strlen($parameter) > 15) {
+                $inviteId = substr($parameter, 0, 15);
+                $inviteId = Hashids::decode($inviteId);
+                $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)->first();
+                if(!isset($invite->id) || (isset($invite->id) && $invite->status != 2)) {
+                    return response()->json(['success' => 'false', 'message' => 'Convite inválido!']);
+                }
+            } else {
+                $companyId = Hashids::decode($parameter);
+                $company = $companyModel->where('id', $companyId)->first();
+                if(isset($company->id)) {
+                    $invitesSent = $inviteModel->where('invite', $company->user_id)->count();
+                    if ($invitesSent >= $company->user->invites_amount) {
+                        return response()->json(['success' => 'false', 'message' => 'Convite indisponivel, limite atingido!']);
+                    }
+                } else {
+                    return response()->json(['success' => 'false', 'message' => 'Link convite inválido']);
+                }
+            }
+
             $requestData['password']                            = bcrypt($requestData['password']);
             $requestData['percentage_rate']                     = '5.9';
             $requestData['transaction_rate']                    = '1.00';
@@ -53,8 +75,11 @@ class RegisterApiController extends Controller
             $user->assignRole('account_owner');
 
             auth()->loginUsingId($user->id, true);
-            $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
-            $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
+            
+            if(!isset($invite)) {
+                $invite  = $inviteModel->where('email_invited', $requestData['email'])->first();
+            }
+            // $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
             if ($invite) {
                 $invite->update([
@@ -65,7 +90,7 @@ class RegisterApiController extends Controller
                                     'email_invited'   => $requestData['email'],
                                 ]);
 
-                if (empty($invite->invite)) {
+                if (empty($invite->invite) && isset($company->id)) {
                     $invite->update([
                                         'invite' => $company->user_id,
                                     ]);
@@ -96,6 +121,7 @@ class RegisterApiController extends Controller
 
             return response()->json([
                                         'success' => 'false',
+                                        'message' => 'revise os dados informados'
                                     ]);
         }
     }

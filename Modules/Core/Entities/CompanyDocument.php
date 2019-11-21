@@ -17,9 +17,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class CompanyDocument extends Model
 {
-
-    use SoftDeletes;
-
     /**
      * The "type" of the auto-incrementing ID.
      * 
@@ -34,8 +31,9 @@ class CompanyDocument extends Model
         'company_id', 
         'document_url', 
         'document_type_enum', 
-        'status', 
-        'created_at', 
+        'status',
+        'refused_reason',
+        'created_at',
         'updated_at'
     ];
 

@@ -4,6 +4,7 @@ namespace Modules\Profile\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Lang;
+use Modules\Core\Services\UserService;
 
 /**
  * Class UserResource
@@ -19,6 +20,8 @@ class UserResource extends Resource
     public function toArray($request)
     {
         $userNotification = $this->userNotification ?? collect();
+        $userService      = new UserService();
+        $refusedDocuments = $userService->getRefusedDocuments();
 
         return [
             'id_code'                     => $this->id_code,
@@ -57,6 +60,8 @@ class UserResource extends Resource
             'shopify'                     => $userNotification->shopify ?? false,
             'billet_generated'            => $userNotification->billet_generated ?? false,
             'credit_card_in_proccess'     => $userNotification->credit_card_in_proccess ?? false,
+
+            'refusedDocuments' => $refusedDocuments,
         ];
     }
 }

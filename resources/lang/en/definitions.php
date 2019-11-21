@@ -139,6 +139,15 @@ return [
             "admin"         => "Administrativo",
             "attendance"    => "Atendimento",
         ],
+        "user_document_type"       => [
+            "personal_document" => "Documento Pessoal",
+            "address_document"  => "Comprovante de residência",
+        ],
+        "company_document_type"    => [
+            "bank_document_status"     => "Documento Bancário",
+            "address_document_status"  => "Comprovante de endereço empresarial",
+            "contract_document_status" => "Contrato social",
+        ],
     ],
 
 ];
