@@ -511,6 +511,10 @@ font-size: 10px;
     background: rgb(255, 157, 0);
 }
 
+.badge-antifraude {
+    background: rgb(22, 142, 209);
+}
+
 .badge-aprovado, .badge-completed {
     background: #44a44b;
 }
