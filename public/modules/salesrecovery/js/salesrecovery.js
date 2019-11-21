@@ -339,7 +339,7 @@ $(document).ready(function () {
     function createHtmlDetails(data) {
         clearFields();
 
-        $('#modal-title').html('Detalhes Carrinho Abandonado' + '<br><hr>');
+        $('#modal-title').html('Detalhes ' + '<br><hr>');
         $("#date-as-hours").html(`${data.checkout.date} às ${data.checkout.hours}`);
         $("#status-checkout").addClass('badge-' + statusRecovery[data.status]).html(data.status);
 
