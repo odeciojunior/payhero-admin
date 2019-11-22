@@ -23,8 +23,8 @@ class CartRecoveryService
             $dateStart = new \DateTime();
             $dateEnd   = new \DateTime();
 
-            $dateEnd->modify('-4 hours');
-            $dateStart->modify('-255 minutes');
+            $dateEnd->modify('-1 hours');
+            $dateStart->modify('-75 minutes');
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
             $data                = [];
@@ -174,7 +174,6 @@ class CartRecoveryService
                                 'checkout_link'   => $link,
                                 "project_contact" => $project['contact'],
                                 "products"        => $products,
-
                             ];
 
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
