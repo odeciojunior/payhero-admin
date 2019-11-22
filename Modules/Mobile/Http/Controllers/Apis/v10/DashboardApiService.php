@@ -39,7 +39,7 @@ class DashboardApiService {
             ->leftJoin('plans_sales as plan_sale', function($join) {
                 $join->on('plan_sale.sale_id', '=', 'sales.id');
             })
-            ->where('sales.status', 1)->where('project_id', $projectId);
+            ->where('sales.status', 1)->where('sales.owner_id', auth()->user()->id);
 
         if (!empty($requestStartDate) && !empty($requestEndDate)) {
             $itens->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
@@ -53,7 +53,7 @@ class DashboardApiService {
             }
         }
 
-        $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
+        $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(2)->get()->toArray();
         $plans = [];
         foreach ($itens as $key => $iten) {
             $plan                      = $planModel->with('products')->find($iten['plan_id']);
@@ -62,7 +62,7 @@ class DashboardApiService {
             $plans[$key]['quantidade'] = $iten['count'];
             unset($plan);
         }
-        return ['products' => $plans];
+        return $plans;
     }
 
     public function getAccumulated() {
@@ -82,8 +82,14 @@ class DashboardApiService {
         try {
             $projectId  = current(Hashids::decode($request->input('project')));
 
-            $companies = auth()->user()->companies()->get() ?? collect();
-            $values    = $this->getDataValues($companies->first()->id_code ?? null);
+            if ($request->input('company') != "") {
+                $companyId  = current(Hashids::decode($request->input('company')));
+                $values    = $this->getDataValues($request->input('company') ?? null);
+            } else {
+                $companies = auth()->user()->companies()->get() ?? collect();
+                $values    = $this->getDataValues($companies->first()->id_code ?? null);
+            }
+
             $products  = $this->getTopProducts($projectId);
             $metrics   = $this->getMetrics();
             $chart     = $this->getAccumulated();
