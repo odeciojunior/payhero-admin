@@ -4,20 +4,20 @@ namespace Modules\Core\Listeners;
 
 use Illuminate\Bus\Queueable;
 use Modules\Core\Entities\Checkout;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateCheckoutTableListener
+class UpdateCheckoutTableListener implements ShouldQueue
 {
+    use Queueable;
 
-    public function __construct(){
+    public function __construct()
+    {
 
     }
 
     /**
      * Handle the event.
-     *
-     * @param  object  $event
+     * @param object $event
      * @return void
      */
     public function handle($event)
@@ -34,9 +34,9 @@ class UpdateCheckoutTableListener
 
         foreach ($abandonedCarts as $abandonedCart) {
             $abandonedCart->update([
-                                    'client_name'      => $abandonedCart->name,
-                                    'client_telephone' => $abandonedCart->telephone,
-                                ]);
+                                       'client_name'      => $abandonedCart->name,
+                                       'client_telephone' => $abandonedCart->telephone,
+                                   ]);
         }
     }
 }

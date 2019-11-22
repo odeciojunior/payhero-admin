@@ -15,17 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property boolean $active_flag
  * @property string $created_at
  * @property string $updated_at
- * @property CardFlag $cardFlag
+ * @property GatewayFlag $gatewayFlag
  */
 class GatewayFlagTax extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -34,9 +32,8 @@ class GatewayFlagTax extends Model
     /**
      * @return BelongsTo
      */
-    public function cardFlag()
+    public function gatewayFlag()
     {
         return $this->belongsTo('Modules\Core\Entities\CardFlag');
     }
-
 }

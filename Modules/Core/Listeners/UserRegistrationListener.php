@@ -3,6 +3,8 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\UserRegistrationEvent;
 
@@ -10,8 +12,10 @@ use Modules\Core\Events\UserRegistrationEvent;
  * Class UserRegistrationListener
  * @package Modules\Core\Listeners
  */
-class UserRegistrationListener
+class UserRegistrationListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Handle the event.
      * @param UserRegistrationEvent $event

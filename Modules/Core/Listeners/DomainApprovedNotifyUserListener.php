@@ -3,6 +3,7 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\DomainApprovedEvent;
 use Illuminate\Queue\InteractsWithQueue;
@@ -11,8 +12,13 @@ use Modules\Core\Services\UserNotificationService;
 use Modules\Notifications\Notifications\BoletoCompensatedNotification;
 use Modules\Notifications\Notifications\DomainApprovedNotification;
 
-class DomainApprovedNotifyUserListener
+/**
+ * Class DomainApprovedNotifyUserListener
+ * @package Modules\Core\Listeners
+ */
+class DomainApprovedNotifyUserListener implements ShouldQueue
 {
+    use Queueable;
     /**
      * @var string
      * @description name of the column in user_notifications table to check if it will send

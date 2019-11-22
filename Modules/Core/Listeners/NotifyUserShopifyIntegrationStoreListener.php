@@ -3,18 +3,21 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserNotificationService;
-use Modules\Notifications\Notifications\SendPushShopifyIntegrationReadyNotification;
 use Modules\Notifications\Notifications\UserShopifyIntegrationStoreNotification;
 
-class NotifyUserShopifyIntegrationStoreListener
+/**
+ * Class NotifyUserShopifyIntegrationStoreListener
+ * @package Modules\Core\Listeners
+ */
+class NotifyUserShopifyIntegrationStoreListener implements ShouldQueue
 {
+    use Queueable;
     /**
      * @var string
      * @description name of the column in user_notifications table to check if it will send

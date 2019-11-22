@@ -5,11 +5,11 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
@@ -18,7 +18,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Presenters\SalePresenter;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
@@ -31,11 +30,10 @@ class SaleService
 {
     /**
      * @param $filters
-     * @param bool $paginate
      * @param bool $withProducts
-     * @return LengthAwarePaginator|Collection
+     * @return Builder|Transaction
      */
-    public function getSales($filters, $paginate = true, $withProducts = false)
+    public function getSalesQueryBuilder($filters, $withProducts = false)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
@@ -105,32 +103,29 @@ class SaleService
             $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
         });
 
-        if ($paginate) {
-            $sales = $transactions->orderBy('id', 'DESC')->paginate(10);
-        } else {
-            $sales = $transactions->orderBy('id', 'DESC')->get();
-        }
+        return $transactions;
+    }
 
-        if ($withProducts) {
-            $userCompanies = $sales->pluck('company_id');
-            $sales->map(function($item) use ($userCompanies) {
-                $item->sale->products = collect();
-                $this->getDetails($item->sale, $userCompanies);
-                foreach ($item->sale->plansSales as &$planSale) {
-                    $plan = $planSale->plan;
-                    foreach ($plan->productsPlans as $productPlan) {
-                        $productPlan->product['amount']     = $productPlan->amount * $planSale->amount;
-                        $productPlan->product['plan_name']  = $plan->name;
-                        $productPlan->product['plan_price'] = $plan->price;
-                        $item->sale->products->add($productPlan->product);
-                    }
-                }
+    /**
+     * @param $filters
+     * @return LengthAwarePaginator
+     */
+    public function getPaginetedSales($filters)
+    {
+        $transactions = $this->getSalesQueryBuilder($filters);
 
-                return $item;
-            });
-        }
+        return $transactions->orderBy('id', 'DESC')->paginate(10);
+    }
 
-        return $sales;
+    /**
+     * @param $filters
+     * @return Collection
+     */
+    public function getAllSales($filters)
+    {
+        $transactions = $this->getSalesQueryBuilder($filters);
+
+        return $transactions->orderBy('id', 'DESC')->get();
     }
 
     /**
@@ -163,6 +158,11 @@ class SaleService
         return $sale;
     }
 
+    /**
+     * @param $sale
+     * @param $userCompanies
+     * @throws Exception
+     */
     public function getDetails($sale, $userCompanies)
     {
 
@@ -199,17 +199,10 @@ class SaleService
 
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
-        if ($sale->dolar_quotation != 0) {
-            $taxa      = intval($total / $sale->dolar_quotation);
-            $taxaReal  = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-            $iof       = preg_replace('/[^0-9]/', '', $sale->iof);
-            $total     += $iof;
-            $sale->iof = number_format($iof / 100, 2, ',', '.');
-        } else {
-            $taxa     = 0;
-            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
-            $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
-        }
+        $taxa = 0;
+        //            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
+        $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+        $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
         if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {

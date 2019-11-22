@@ -2,6 +2,9 @@
 
 namespace Modules\Core\Listeners;
 
+use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Events\BilletPaidEvent;
@@ -10,8 +13,14 @@ use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class BilletPaidSendEmailListener
+/**
+ * Class BilletPaidSendEmailListener
+ * @package Modules\Core\Listeners
+ */
+class BilletPaidSendEmailListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
@@ -23,7 +32,6 @@ class BilletPaidSendEmailListener
 
     /**
      * @param BilletPaidEvent $event
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function handle(BilletPaidEvent $event)
     {

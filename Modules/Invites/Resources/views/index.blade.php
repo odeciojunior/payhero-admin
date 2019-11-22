@@ -14,25 +14,34 @@
             <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div style="width: 20%">
-                        <h6 class="text-center green-gradient"><i class="material-icons align-middle mr-1 green-gradient"> card_giftcard </i> Convites disponíveis </h6>
+                        <h6 class="text-center green-gradient">
+                            <i class="material-icons align-middle mr-1 green-gradient"> card_giftcard </i> Convites disponíveis
+                        </h6>
                         <h4 id='invitations_amount' class="number text-center green-gradient"></h4>
                     </div>
                     <div style="width: 20%">
-                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites enviados </h6>
+                        <h6 class="text-center orange-gradient">
+                            <i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites enviados
+                        </h6>
                         <h4 id='invitations_sent' class="number text-center orange-gradient"></h4>
                     </div>
                     <div style="width: 20%">
-                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > people </i>  Convites ativos </h6>
+                        <h6 class="text-center green-gradient">
+                            <i class="material-icons align-middle green-gradient mr-1"> people </i> Convites ativos
+                        </h6>
                         <h4 id='invitations_accepted' class="number text-center green-gradient"></i>
                         </h4>
                     </div>
                     <div style="width: 20%">
-                        <h6 class="text-center orange-gradient"> <i class="material-icons align-middle orange-gradient"> attach_money </i> Comissão pendente </h6>
+                        <h6 class="text-center orange-gradient">
+                            <i class="material-icons align-middle orange-gradient"> attach_money </i> Comissão pendente
+                        </h6>
                         <h4 id='commission_pending' class="number text-center orange-gradient" style='color:green'></i>
                         </h4>
                     </div>
                     <div style="width: 20%">
-                        <h6 class="text-center green-gradient"> <i class="material-icons align-middle green-gradient"> attach_money </i> Comissão paga </h6>
+                        <h6 class="text-center green-gradient">
+                            <i class="material-icons align-middle green-gradient"> attach_money </i> Comissão paga </h6>
                         <h4 id='commission_paid' class="number text-center green-gradient"></i>
                         </h4>
                     </div>
@@ -70,7 +79,94 @@
             </ul>
             <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-simple">
-
+                    <!-- Tem company -->
+                    <div id='modal-then-companies' class='modal-content' style='display:none;'>
+                        <div class='modal-header'>
+                            <button type='button' id='btn-close-invite' class='close' data-dismiss='modal' aria-label='Close'>
+                                <span aria-hidden='true'>×</span>
+                            </button>
+                            <h4 id='modal-reverse-title' class='modal-title' style='width:100%; text-align:center'></h4>
+                        </div>
+                        <div id='modal-reverse-body' class='modal-body'>
+                            <div id='body-modal'>
+                                <div class='row'>
+                                    <div class='form-group col-12'>
+                                        <label for='email'>Email do convidado</label>
+                                        <input name='email_invited' type='text' class='form-control' id='email' placeholder='Email'>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='form-group col-12'>
+                                        <label for='company'>
+                                            Empresa para receber
+                                        </label>
+                                        <div id='company-list'></div>
+                                        Para enviar convites todos os documentos da empresa precisam estar aprovados
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <label for='email'>Link do Convite</label>
+                                    </div>
+                                    <div id='invite-link-select' class='input-group col-12'>
+                                        <input type='text' class='form-control' id='invite-link' value='' readonly>
+                                        <span class='input-group-btn'>
+                                            <button id='copy-link' class='btn btn-default' type='button'>Copiar</button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class='row' style='margin-top: 35px'>
+                                    <div class='form-group col-12'>
+                                        <input id='btn-send-invite' type='button' class='form-control btn col-sm-12 col-m-3 col-lg-3' value='Enviar Convite' style='color:white; background-image: linear-gradient(to right, #e6774c, #f92278); position: relative; float: right;'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Not Company -->
+                    <div id='modal-not-companies' class='modal-content p-10' style='display: none;'>
+                        <div class='header-modal simple-border-bottom'>
+                            <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
+                        </div>
+                        <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
+                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                                <span class='swal2-x-mark'>
+                                    <span class='swal2-x-mark-line-left'></span>
+                                    <span class='swal2-x-mark-line-right'></span>
+                                </span>
+                            </div>
+                            <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
+                            <h5 align='center'>
+                                Deseja cadastrar uma empresa?
+                                <a class='red pointer' href='/companies'>Clique aqui</a>
+                            </h5>
+                        </div>
+                        <div style='width:100%; text-align: center; padding-top: 3%;'>
+                            <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                Retornar
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Not Approved documents companies -->
+                    <div id='modal-not-approved-document-companies' class='modal-content p-10' style='display: none;'>
+                        <div class='header-modal simple-border-bottom'>
+                            <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
+                        </div>
+                        <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
+                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                                <span class='swal2-x-mark'>
+                                    <span class='swal2-x-mark-line-left'></span>
+                                    <span class='swal2-x-mark-line-right'></span>
+                                </span>
+                            </div>
+                            <h3 align='center'>Para enviar convites todos os documentos da empresa precisam estar aprovados!</h3>
+                        </div>
+                        <div style='width:100%; text-align: center; padding-top: 3%;'>
+                            <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                                Retornar
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,7 +208,7 @@
                         <i class="material-icons" style="font-size: 80px;color:#16b248;"> email </i>
                     </div>
                     <h4 class="black"> Você realmente deseja reenviar o convite? </h4>
-{{--                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>--}}
+                    {{--                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>--}}
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button id='btn-cancel' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
@@ -122,7 +218,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=3') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=1') }}"></script>
     @endpush
 
 @endsection

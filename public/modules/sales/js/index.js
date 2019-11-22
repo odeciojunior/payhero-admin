@@ -255,19 +255,23 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
-            xhrFields: {
-                responseType: 'blob'
-            },
+            //xhrFields: {
+            //    responseType: 'blob'
+            //},
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: (response) => {
                 errorAjaxResponse(response);
             },
-            success: function success(response, textStatus, request) {
-                downloadFile(response, request);
+            success: () => {
+                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
             }
+            // success: function success(response, textStatus, request) {
+            //     downloadFile(response, request);
+            // }
         });
     }
 

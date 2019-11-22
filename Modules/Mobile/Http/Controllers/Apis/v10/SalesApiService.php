@@ -4,6 +4,7 @@
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkouts\Transformers\CheckoutResource;
@@ -15,6 +16,7 @@ use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SaleService;
 use Modules\Deliveries\Transformers\DeliveryResource;
 use Modules\Products\Transformers\ProductsSaleResource;
+use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Illuminate\Http\Request;
@@ -33,18 +35,18 @@ class SalesApiService {
 
 
     /**
-     * @param SaleIndexRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function salesByFilter(Request $request)
     {
         try {
             $saleService = new SaleService();
             $data = $request->all();
-            $sales = $saleService->getSales($data);
-            $salesCollection = TransactionResource::collection($sales);
+            $sales = $saleService->getPaginetedSales($data);
+            TransactionResource::collection($sales);
 
-            return response()->json(compact('salesCollection'), 200);
+            return response()->json(compact('sales'), 200);
 
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesApiService - salesByFilter');

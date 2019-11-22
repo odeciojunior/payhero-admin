@@ -3,13 +3,21 @@
 namespace App\Listeners\Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Services\PusherService;
-use App\Events\Modules\Core\Events\SaleApprovedEvent;
 
-class PusherNotificationApprovedSaleListener
+/**
+ * Class PusherNotificationApprovedSaleListener
+ * @package App\Listeners\Modules\Core\Listeners
+ */
+class PusherNotificationApprovedSaleListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void
