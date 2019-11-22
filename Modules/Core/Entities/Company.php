@@ -99,6 +99,7 @@ class Company extends Model
         'bank_document_status',
         'address_document_status',
         'contract_document_status',
+        'company_type',
         'created_at',
         'deleted_at',
         'updated_at',
