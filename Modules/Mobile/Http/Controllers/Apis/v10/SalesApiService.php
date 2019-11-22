@@ -44,9 +44,9 @@ class SalesApiService {
             $saleService = new SaleService();
             $data = $request->all();
             $sales = $saleService->getPaginetedSales($data);
-            $salesCollection = TransactionResource::collection($sales);
+            TransactionResource::collection($sales);
 
-            return response()->json(compact('salesCollection'), 200);
+            return response()->json(compact('sales'), 200);
 
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesApiService - salesByFilter');
