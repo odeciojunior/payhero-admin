@@ -36,5 +36,6 @@ Route::group(
         Route::post('/{version}/profile', 'MobileController@profileGetData');
         Route::post('/{version}/sales', 'MobileController@salesByFilter');
         Route::post('/{version}/sales/details', 'MobileController@getSaleDetails');
+        Route::post('/{version}/projects', 'MobileController@getUserProjects');
     }
 );

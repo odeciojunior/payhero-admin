@@ -11,6 +11,10 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Transformers\UserResource;
 
+/**
+ * Class ProfileApiService
+ * @package Modules\Mobile\Http\Controllers\Apis\v10
+ */
 class ProfileApiService {
 
     /**
