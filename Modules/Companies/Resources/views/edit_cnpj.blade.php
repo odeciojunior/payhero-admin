@@ -11,7 +11,7 @@
     <div class="page">
         <div class="page-header container">
             <h1 class="page-title">Editar empresa</h1>
-            <div class="page-header-actions">
+            <div class="page-header-actions"> 
                 <a class="btn btn-primary float-right" id="redirect_back_link">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
@@ -213,12 +213,13 @@
             </div>
         </div>
     </div>
+
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=5')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=5')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-
     @endpush
+
 @endsection
 
 

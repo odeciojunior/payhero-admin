@@ -29,7 +29,6 @@ class CompanyResource extends Resource
      */
     public function toArray($request)
     {
-        /** @var CompanyPresenter $presenter */
         $presenter        = $this->resource->present();
         $documentStatus   = $presenter->allStatusPending() ? $presenter->getStatus(3) : $presenter->getStatus(1);
         $companyService   = new CompanyService();

@@ -23,7 +23,6 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        //        dd("foi");
         return view('companies::index');
     }
 
@@ -49,36 +48,20 @@ class CompaniesController extends Controller
      */
     public function edit($encodedId)
     {
-        if(Request::input('type') == 2){
+
+        if(Request::input('type') == 2){ // pessoa jurídica
+
             return view('companies::edit_cnpj');
         }
-        else{
+
+        elseif(Request::input('type') == 1){ // pessoa física
+
             return view('companies::edit_cpf');
         }
+
+        return "";
     }
 
-    /**
-     * @param CompanyCreateFormRequest $request
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function getCreateForm(CompanyCreateFormRequest $request)
-    {
-        try {
-            if ($request->get('country') == 'usa') {
-                $view = view('companies::create_american_company');
-            } else {
-                $view = view('companies::create_brazilian_company');
-            }
-
-            return response()->json($view->render());
-        } catch (Exception $e) {
-            Log::warning('Erro ao criar form de cadastro da empresa (CompaniesController - getCreateForm)');
-            report($e);
-
-            return response()->json('erro', 400);
-        }
-    }
 }
 
 
