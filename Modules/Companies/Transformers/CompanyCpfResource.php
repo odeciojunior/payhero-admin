@@ -2,6 +2,8 @@
 
 namespace Modules\Companies\Transformers;
 
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\CompanyService;
 use Illuminate\Http\Resources\Json\Resource;
 
 class CompanyCpfResource extends Resource

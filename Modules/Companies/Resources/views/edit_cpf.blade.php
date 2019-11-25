@@ -20,7 +20,8 @@
             <div class="card shadow" data-plugin="matchHeight">
                 <div class="tab-content pt-10 pr-30 pl-30">
                     <div class="tab-pane active" id="tab_user" role="tabpanel">
-                        <form method="POST" enctype="multipart/form-data" id='company_update_form' class='form-basic-informations'>
+                        <form method="POST" enctype="multipart/form-data" id='company_update_bank_form' class='form-basic-informations'>
+                            @method('PUT')
                             <h3 class="mb-15 mt-10">Conta bancária</h3>
                             <div class="row">
                                 <div class="col-xl-4">
@@ -81,7 +82,7 @@
                             </div>
                         </div>
                         <div class="form-group text-right">
-                            <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
+                            <input id="update_bank_data" type="button" class="btn btn-success" value="Atualizar" style="width: auto;">
                         </div>
                     </div>
                 </div>
