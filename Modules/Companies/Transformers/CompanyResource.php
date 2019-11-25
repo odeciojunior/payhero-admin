@@ -29,7 +29,6 @@ class CompanyResource extends Resource
      */
     public function toArray($request)
     {
-        /** @var CompanyPresenter $presenter */
         $presenter        = $this->resource->present();
         $documentStatus   = $presenter->allStatusPending() ? $presenter->getStatus(3) : $presenter->getStatus(1);
         $companyService   = new CompanyService();
@@ -63,6 +62,7 @@ class CompanyResource extends Resource
             'address_document_translate'  => __('definitions.enum.status.' . $presenter->getAddressDocumentStatus()),
             'contract_document_translate' => __('definitions.enum.status.' . $presenter->getContractDocumentStatus()),
             'refusedDocuments'            => $refusedDocuments,
+            'type'                        => $this->company_type,
         ];
     }
 }

@@ -1,15 +1,18 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.scss')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+
 @endpush
+
 @section('content')
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
             <h1 class="page-title">Editar empresa</h1>
-            <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
+            <div class="page-header-actions"> 
+                <a class="btn btn-primary float-right" id="redirect_back_link">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
             </div>
@@ -36,71 +39,70 @@
                         </div>
                         <div class="tab-content pt-10 pr-30 pl-30">
                             <div class="tab-pane active" id="tab_user" role="tabpanel">
-                                <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_update_form'>
+                                <form method="POST" enctype="multipart/form-data" id='company_update_form' class='form-basic-informations'>
                                     @csrf
                                     @method('PUT')
-                                    <input type='hidden' name="country" value="{!! $company->country !!}" id="country">
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="fantasy_name">Razão Social</label>
-                                            <input name="fantasy_name" value="{!! $company->fantasy_name !!}" type="text" class="input-pad" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="company_document">CNPJ</label>
-                                            <input name="company_document" value="{!! $company->company_document !!}" type="text" class="input-pad" id="company_document" placeholder='CNPJ'>
+                                            <input name="company_document" value="" type="text" class="form-control" id="company_document" placeholder='CNPJ'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="business_website">Site</label>
-                                            <input name="business_website" value="{!! $company->business_website !!}" type="text" class="input-pad" id="business_website" placeholder='Site' maxlength='60'>
+                                            <input name="business_website" value="" type="text" class="form-control" id="business_website" placeholder='Site' maxlength='60'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="support_email">E-mail</label>
-                                            <input name="support_email" value="{!! $company->support_email !!}" type="text" class="input-pad" id="support_email" placeholder='E-mail' maxlength='40'>
+                                            <input name="support_email" value="" type="text" class="form-control" id="support_email" placeholder='E-mail' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="support_telephone">Telefone</label>
-                                            <input name="support_telephone" value="{!! $company->support_telephone !!}" type="text" data-mask="(00) 0000-0000" class="input-pad" id="support_telephone" placeholder='Telefone'>
+                                            <input name="support_telephone" value="" type="text" class="form-control" id="support_telephone" placeholder='Telefone'>
                                         </div>
                                     </div>
                                     <h3 class="mb-15">Informações complementares</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="{!! $company->zip_code !!}" type="text" data-mask="00000-000" class="input-pad" id="brazil_zip_code" placeholder='CEP'>
+                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="form-control" id="zip_code" placeholder='CEP'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-5">
                                             <label for="street">Rua/Avenida</label>
-                                            <input name="street" value="{!! $company->street !!}" type="text" class="input-pad" id="street" placeholder='Rua/Avenida' maxlength='40'>
+                                            <input name="street" value="" type="text" class="form-control" id="street" placeholder='Rua/Avenida' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Nº</label>
-                                            <input name="number" value="{!! $company->number !!}" type="text" data-mask="0#" class="input-pad" id="number" placeholder='Nº' maxlength='10'>
+                                            <input name="number" value="" type="text" data-mask="0#########" class="form-control" id="number" placeholder='Nº' maxlength='10'>
                                         </div>
                                         <div class="form-group col-xl-5">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="{!! $company->neighborhood !!}" type="text" class="input-pad" id="neighborhood" placeholder='Bairro' maxlength='30'>
+                                            <input name="neighborhood" value="" type="text" class="form-control" id="neighborhood" placeholder='Bairro' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="{!! $company->complement !!}" type="text" class="input-pad" id="complement" placeholder='Complemento' maxlength='30'>
+                                            <input name="complement" value="" type="text" class="form-control" id="complement" placeholder='Complemento' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="{!! $company->state !!}" type="text" class="input-pad" id="state" placeholder='Estado' maxlength='30'>
+                                            <input name="state" value="" type="text" class="form-control" id="state" placeholder='Estado' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="{!! $company->city !!}" type="text" class="input-pad" id="city" placeholder='Cidade' maxlength='30'>
+                                            <input name="city" value="" type="text" class="form-control" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
-                                        {{--<div class="form-group col-xl-6">--}}
-                                        {{--<label for="country">Country</label>--}}
-                                        {{--<input name="country" value="{!! $company->country !!}" type="text" class="input-pad" id="country">--}}
-                                        {{--</div>--}}
+                                        <div class="form-group col-xl-6">
+                                            <label for="country">Country</label>
+                                            <input name="country" value="" type="text" class="form-control" id="country">
+                                        </div>
                                     </div>
                                     <div class="form-group text-right">
                                         <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
@@ -108,37 +110,35 @@
                                 </form>
                             </div>
                             <div class="tab-pane" id="tab_bank_data" role="tabpanel">
-                                <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_bank_update_form'>
-                                    @csrf
+                                <form method="POST" enctype="multipart/form-data" id='company_bank_update_form'>
                                     @method('PUT')
-                                    <h3 class="mb-15 mt-10">Informações Bancárias</h3>
+                                    <h3 class="mb-15 mt-10">Informações bancárias da empresa</h3>
                                     <div class="row">
-                                        <div class="form-group col-xl-4">
-                                            <label for="bank">Banco</label>
-                                            <select id="bank" name="bank" class="form-control select-pad">
-                                                <option value="">Selecione</option>
-                                                @foreach($banks as $bank)
-                                                    <option value="{!! $bank['code'] !!}" {!! $company->bank == $bank['code'] ? 'selected' : '' !!}>{!! $bank['code'] . ' - ' .$bank['name'] !!}</option>
-                                                @endforeach
-                                            </select>
+                                        <div class="col-xl-4">
+                                            <div class='form-group'>
+                                                <label for='bank'>Banco</label>
+                                                <select id="bank" name="bank" class="form-control" style='width:100%' data-plugin="select2" >
+                                                    <option value="">Selecione</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-3">
                                             <label for="agency">Agência</label>
-                                            <input name="agency" value="{!! $company->agency !!}" type="text" class="input-pad" id="agency" placeholder='Agência' maxlength='20'>
+                                            <input name="agency" value="" type="text" class="input-pad" id="agency" placeholder='Agência' maxlength='20'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="agency_digit">Digito</label>
-                                            <input name="agency_digit" value="{!! $company->agency_digit !!}" type="text" class="input-pad" id="agency_digit" placeholder='Digito' maxlength='20'>
+                                            <input name="agency_digit" value="" type="text" class="input-pad" id="agency_digit" placeholder='Digito' maxlength='20'>
                                         </div>
                                         <div class="form-group col-xl-3">
                                             <label for="account">Conta</label>
-                                            <input name="account" value="{!! $company->account !!}" type="text" class="input-pad" id="account" placeholder='Conta' maxlength='20'>
+                                            <input name="account" value="" type="text" class="input-pad" id="account" placeholder='Conta' maxlength='20'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="account_digit">Digito</label>
-                                            <input name="account_digit" value="{!! $company->account_digit !!}" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
+                                            <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
@@ -155,15 +155,14 @@
                                     <div class="col">
                                     </div>
                                 </div>
-                                <div class="row mt-15">
+                                <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
                                     <div class="col-lg-6">
                                         <div id="dropzone">
-                                            <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                                @csrf
-                                                <div class="dz-message needsclick">
+                                            <form method="POST" action="{!! route('api.companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                                <div class="dz-message needsclick text-dropzone">
                                                     Arraste os arquivos ou clique para selecionar<br/>
                                                 </div>
-                                                <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
+                                                <input id="company_id" name="company_id" value="" type="hidden" class="input-pad">
                                                 <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
                                             </form>
                                         </div>
@@ -174,44 +173,16 @@
                                                 <tr>
                                                     <td>Comprovante de extrato bancário</td>
                                                     <td id="td_bank_status">
-                                                        @if($company->bank_document_status == 1)
-                                                            <span class="badge badge-primary"> {{ $company->bank_document_translate }} </span>
-                                                        @elseif($company->bank_document_status == 2)
-                                                            <span class="badge badge-pendente"> {{ $company->bank_document_translate }} </span>
-                                                        @elseif($company->bank_document_status == 3)
-                                                            <span class="badge badge-success"> {{ $company->bank_document_translate }} </span>
-                                                        @else
-                                                            <span class="badge badge-danger"> {{ $company->bank_document_translate }} </span>
-                                                        @endif
-                                                        {{--                                                        <span class="badge {{ ($company->bank_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}"> {{ $company->bank_document_translate }} </span>--}}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td> Comprovante de endereço</td>
+                                                    <td>Comprovante de endereço</td>
                                                     <td id="td_address_status">
-                                                        @if($company->address_document_status == 1)
-                                                            <span class="badge badge-primary"> {{ $company->address_document_translate }} </span>
-                                                        @elseif($company->address_document_status == 2)
-                                                            <span class="badge badge-pendente"> {{ $company->address_document_translate }} </span>
-                                                        @elseif($company->address_document_status == 3)
-                                                            <span class="badge badge-success"> {{ $company->address_document_translate }} </span>
-                                                        @else
-                                                            <span class="badge badge-danger"> {{ $company->address_document_translate }} </span>
-                                                        @endif
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Comprovante de contrato social</td>
                                                     <td id="td_contract_status">
-                                                        @if($company->contract_document_status == 1)
-                                                            <span class="badge badge-primary"> {{ $company->contract_document_translate }} </span>
-                                                        @elseif($company->contract_document_status == 2)
-                                                            <span class="badge badge-pendente"> {{ $company->contract_document_translate }} </span>
-                                                        @elseif($company->contract_document_status == 3)
-                                                            <span class="badge badge-success"> {{ $company->contract_document_translate }} </span>
-                                                        @else
-                                                            <span class="badge badge-danger"> {{ $company->contract_document_translate }} </span>
-                                                        @endif
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -219,10 +190,20 @@
                                     </div>
                                     <div class="col-lg-12  mt-10">
                                         <small class="text-muted" style="line-height: 1.5;">
-                                            Conta Bancária: extrato válido do banco.
-                                            <br> Residência: luz, água ou outros;
-                                            <br> Contrato Social: provando que você é dono ou sócio da empresa;
+                                                Comprovante de conta bancária: extrato válido do banco.
+                                            <br>Comprovante de endereço: luz, água ou outros;
+                                            <br>Comprovante de contrato social: provando que você é dono ou sócio da empresa;
                                         </small>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'><p>Antes de enviar os documentos é necessário completar todos os dados residenciais da sua empresa na aba EMPRESA.</p></div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-12'>
+                                        <div id='div_documents_refused'></div>
                                     </div>
                                 </div>
                             </div>
@@ -232,10 +213,13 @@
             </div>
         </div>
     </div>
+
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=1')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=5')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
+
 @endsection
 
 

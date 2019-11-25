@@ -46,6 +46,7 @@ $(document).ready(function () {
             }
         });
     });
+
 ////Functions
     function initLinks() {
         let encodedId = extractIdFromPathName();
