@@ -3,13 +3,14 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
-use Illuminate\Contracts\View\Factory;
+use Throwable;
+use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Request;
 use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
-use Throwable;
 
 /**
  * Class CompaniesController
@@ -41,13 +42,19 @@ class CompaniesController extends Controller
     {
 
     }
+
     /**
      * @param $encodedId
      * @return Factory|View
      */
     public function edit($encodedId)
     {
-        return view('companies::edit', compact('encodedId'));
+        if(Request::input('type') == 2){
+            return view('companies::edit_cnpj');
+        }
+        else{
+            return view('companies::edit_cpf');
+        }
     }
 
     /**

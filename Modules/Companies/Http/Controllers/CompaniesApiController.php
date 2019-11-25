@@ -328,6 +328,7 @@ class CompaniesApiController extends Controller
             );
         }
     }
+
     /**
      * @param Request $request
      * @return JsonResponse

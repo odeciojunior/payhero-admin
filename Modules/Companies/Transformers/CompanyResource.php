@@ -63,6 +63,7 @@ class CompanyResource extends Resource
             'address_document_translate'  => __('definitions.enum.status.' . $presenter->getAddressDocumentStatus()),
             'contract_document_translate' => __('definitions.enum.status.' . $presenter->getContractDocumentStatus()),
             'refusedDocuments'            => $refusedDocuments,
+            'type'                        => $this->company_type,
         ];
     }
 }
