@@ -390,7 +390,7 @@ class ProfileApiController
                                           'user_id'            => auth()->user()->account_owner_id,
                                           'document_url'       => $digitalOceanPath,
                                           'document_type_enum' => $dataForm["document_type"],
-                                          'status'             => null,
+                                          'status'             => $user->present()->getPersonalDocumentStatus('analyzing'),
                                       ]);
 
                 if (($dataForm["document_type"] ?? '') == $user->present()->getDocumentType('personal_document')) {

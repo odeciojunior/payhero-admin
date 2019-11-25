@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(
     [
         'middleware' => ['web'],
@@ -18,5 +20,8 @@ Route::group(
     ],
     function() {
         Route::post('/', 'RegisterApiController@store');
+        Route::post('/verifycpf', 'RegisterApiController@verifyCpf');
+        Route::post('/verifycnpj', 'RegisterApiController@verifyCnpj');
+        Route::post('/verifyemail', 'RegisterApiController@verifyEmail');
     }
 );
