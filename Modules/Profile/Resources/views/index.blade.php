@@ -208,7 +208,7 @@
                                                         <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                     </td>--}}
                                                     <td>
-                                                        <i id='' class="details-document icon fa-eye" data-document='personal_document' aria-hidden="true" style="font-size: 24px;cursor:pointer"></i>
+                                                        <i title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -223,7 +223,7 @@
                                                         <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                     </td>--}}
                                                     <td>
-                                                        <i id='' class="details-document icon fa-eye" data-document='address_document' aria-hidden="true" style="font-size: 24px;cursor:pointer"></i>
+                                                        <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -539,13 +539,13 @@
                         </div>
                         <div class="modal-body" style="margin-top: 10px">
                             <div class='row'>
-                                <div class='col-lg-12' id='table-documents'>
+                                <div class='col-lg-12' id='table-documents' style='min-height:150px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
                                     <table class="table table-striped table-hover table-sm table-striped">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Data Envio</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col"></th>
+                                                <th class='text-center' scope="col">Data Envio</th>
+                                                <th class='text-center' scope="col">Status</th>
+                                                <th class='text-center' scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody id='profile-documents-modal' class="custom-t-body">
