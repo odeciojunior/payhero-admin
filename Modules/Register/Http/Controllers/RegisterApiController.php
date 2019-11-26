@@ -185,7 +185,7 @@ class RegisterApiController extends Controller
         if ($cnpj) {
             return response()->json([
                                         'cnpj_exist' => 'true',
-                                        'message'    => 'Esse CPF já está cadastrado na plataforma',
+                                        'message'    => 'Esse CNPJ já está cadastrado na plataforma',
                                     ]);
         } else {
             return response()->json([
