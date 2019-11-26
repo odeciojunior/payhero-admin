@@ -320,7 +320,7 @@
                                         <th>Evento</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="table-trail"></tbody>
+                                    <tbody id="table-checkpoint"></tbody>
                                 </table>
                             </div>
                         </div>
