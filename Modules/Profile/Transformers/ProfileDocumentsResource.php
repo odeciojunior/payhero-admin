@@ -30,9 +30,10 @@ class ProfileDocumentsResource extends Resource
         }
 
         return [
-            'date'         => $this->created_at ? Carbon::parse($this->created_at)->format('d/m/Y H:i:s') : '',
-            'status'       => $userDocumentModel->present()->getTypeEnum($this->status),
-            'document_url' => $temporaryUrl,
+            'date'           => $this->created_at ? Carbon::parse($this->created_at)->format('d/m/Y H:i:s') : '',
+            'status'         => $userDocumentModel->present()->getTypeEnum($this->status),
+            'document_url'   => $temporaryUrl,
+            'refused_reason' => $this->refused_reason,
 
         ];
     }

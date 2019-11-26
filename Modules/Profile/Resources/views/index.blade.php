@@ -546,11 +546,14 @@
                                                 <th class='text-center' scope="col">Data Envio</th>
                                                 <th class='text-center' scope="col">Status</th>
                                                 <th class='text-center' scope="col"></th>
+                                                <th class='text-center' scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody id='profile-documents-modal' class="custom-t-body">
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class='col-lg-12' id='document-refused-motived' style='display:none;'>
                                 </div>
                                 <div class="col-lg-12">
                                     <div id="dropzone">

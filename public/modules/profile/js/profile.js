@@ -4,14 +4,14 @@ let badgeArray = {
     'pending': 'badge-primary',
     'analyzing': 'badge-pending',
     'approved': 'badge-success',
-    'refuse': 'badge-danger',
+    'refused': 'badge-danger',
 };
 
 let statusArray = {
     'pending': 'Pendente',
     'analyzing': 'Em análise',
     'approved': 'Aprovado',
-    'refuse': 'Recusado',
+    'refused': 'Recusado',
 };
 
 $(document).ready(function () {
@@ -250,7 +250,7 @@ $(document).ready(function () {
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
-                getRefusedDocuments(response.data.refusedDocuments);
+                // getRefusedDocuments(response.data.refusedDocuments);
                 verifyUserAddress(response.data);
             }
         });
@@ -656,9 +656,11 @@ $(document).ready(function () {
     function htmlTableDocuments(data) {
         console.log(data);
         let dados = '';
+        let verifyReason = false;
         if (data.length == 0) {
             $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
         } else {
+            $("#document-refused-motived").html('');
             $.each(data, function (index, value) {
                 dados = `<tr>
                         <td class='text-center'>${value.date}</td>
@@ -666,15 +668,28 @@ $(document).ready(function () {
                             <span class='badge ${badgeArray[value.status]}'>
                                     ${statusArray[value.status]}</td>
                                </span>
-                        </td>
-                        <td class='text-center'>
+                        </td>`;
+
+                if (value.refused_reason != '' && value.refused_reason != null) {
+                    dados += `
+                                <td class='text-center' style='color:red;'>${value.refused_reason}</td>
+                             `;
+
+                } else {
+                    dados += `
+                                <td class='text-center' style='color:red;'></td>
+                             `;
+                }
+                dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
+                        
                     </tr>`;
                 $("#profile-documents-modal").append(dados);
 
             });
         }
+
     }
 
     function getDocumentsProfile(document_type) {
@@ -704,6 +719,7 @@ $(document).ready(function () {
 
     $(".details-document").on('click', function () {
         $("#profile-documents-modal").html('');
+        $("#document-refused-motived").css('display', 'none');
         loadOnTable('#profile-documents-modal', '#table-documents');
 
         documentType = $(this).data('document');
