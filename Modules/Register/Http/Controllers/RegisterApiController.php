@@ -4,13 +4,14 @@ namespace Modules\Register\Http\Controllers;
 
 use Exception;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\SendgridService;
@@ -81,6 +82,15 @@ class RegisterApiController extends Controller
 
             $user->assignRole('account_owner');
 
+            $companyModel->create([
+                                      'user_id'          => $user->account_owner_id,
+                                      'fantasy_name'     => ($requestData['company_type'] == $companyModel->present()
+                                                                                                          ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
+                                      'company_document' => ($requestData['company_type'] == $companyModel->present()
+                                                                                                          ->getCompanyType('physical person')) ? $requestData['document'] : $requestData['company_document'],
+                                      'company_type'     => $requestData['company_type'],
+                                  ]);
+
             auth()->loginUsingId($user->id, true);
 
             if (!isset($invite)) {
@@ -147,6 +157,58 @@ class RegisterApiController extends Controller
         $emailValidated  = FoxUtils::validateEmail($userEmail);
         if ($emailValidated) {
             $sendgridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
+        }
+    }
+
+    public function verifyCpf(Request $request)
+    {
+        $data        = $request->all();
+        $userService = new UserService();
+        $cpf         = $userService->verifyCpf($data['document']);
+        if ($cpf) {
+            return response()->json([
+                                        'cpf_exist' => 'true',
+                                        'message'   => 'Esse CPF já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'cpf_exist' => 'false',
+                                    ]);
+        }
+    }
+
+    public function verifyCnpj(Request $request)
+    {
+        $data           = $request->all();
+        $companyService = new CompanyService();
+        $cnpj           = $companyService->verifyCnpj($data['company_document']);
+        if ($cnpj) {
+            return response()->json([
+                                        'cnpj_exist' => 'true',
+                                        'message'    => 'Esse CPF já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'cnpj_exist' => 'false',
+                                    ]);
+        }
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $data      = $request->all();
+        $userModel = new User();
+
+        $user = $userModel->where('email', 'like', '%' . $data['email'] . '%')->first();
+        if (!empty($user)) {
+            return response()->json([
+                                        'email_exist' => 'true',
+                                        'message'     => 'Esse Email já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'email_exist' => 'false',
+                                    ]);
         }
     }
 }

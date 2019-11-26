@@ -3,27 +3,28 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
+use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
-use Modules\Companies\Http\Requests\CompanyCreateRequest;
-use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
-use Modules\Companies\Transformers\CompaniesSelectResource;
-use Modules\Companies\Transformers\CompanyResource;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyDocument;
+use Illuminate\Contracts\View\Factory;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Entities\CompanyDocument;
 use Symfony\Component\HttpFoundation\Response;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Companies\Transformers\CompanyResource;
+use Modules\Companies\Transformers\CompanyCpfResource;
+use Modules\Companies\Http\Requests\CompanyCreateRequest;
+use Modules\Companies\Http\Requests\CompanyUpdateRequest;
+use Modules\Companies\Transformers\CompaniesSelectResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
 
 /**
  * Class CompaniesController
@@ -72,10 +73,9 @@ class CompaniesApiController extends Controller
     public function store(CompanyCreateRequest $request)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
             $requestData  = $request->validated();
-            /** @var Company $company */
+
             $company = $companyModel->newQuery()->create(
                 [
                     'user_id'          => auth()->user()->account_owner_id,
@@ -89,7 +89,6 @@ class CompaniesApiController extends Controller
                 [
                     'message'   => 'Dados atualizados com sucesso',
                     'idEncoded' => Hashids::encode($company->id),
-                    //                    'redirect' => route('companies.edit', ['idEncoded' => Hashids::encode($company->id)]),
                 ], Response::HTTP_OK
             );
         } catch (Exception $e) {
@@ -107,18 +106,24 @@ class CompaniesApiController extends Controller
     public function show($encodedId)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
-            /** @var BankService $bankService */
+
             $bankService = new BankService();
-            /** @var Company $company */
+
             $company = $companyModel
                 ->with('user','companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
+
             if (Gate::allows('edit', [$company])) {
                 $banks = $bankService->getBanks('BR');
-                /** @var CompanyResource $companyResource */
-                $companyResource = new CompanyResource($company);
+
+                $companyResource = null;
+                if($company->company_type == $companyModel->present()->getCompanyType('juridical person')){
+                    $companyResource = new CompanyResource($company);
+                }
+                elseif($company->company_type == $companyModel->present()->getCompanyType('physical person')){
+                    $companyResource = new CompanyCpfResource($company);
+                }
 
                 return response()->json(
                     [
@@ -149,10 +154,9 @@ class CompaniesApiController extends Controller
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
             $requestData  = $request->validated();
-            /** @var Company $company */
+
             $company = $companyModel->newQuery()->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
                 if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
@@ -179,9 +183,8 @@ class CompaniesApiController extends Controller
     public function destroy($encodedId)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
-            /** @var Company $company */
+
             $company = $companyModel->newQuery()->withCount([
                                                                 'transactions',
                                                                 'usersProjects',
@@ -205,7 +208,6 @@ class CompaniesApiController extends Controller
                     );
                 }
             } else {
-                //empresa nao exsite
                 return response()->json(['message' => 'Empresa não encontrada para remoção'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
@@ -223,14 +225,13 @@ class CompaniesApiController extends Controller
     public function uploadDocuments(CompanyUploadDocumentRequest $request)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
-            /** @var DigitalOceanFileService $digitalOceanFileService */
+
             $digitalOceanFileService = app()->make(DigitalOceanFileService::class);
-            /** @var CompanyDocument $companyDocumentModel */
+
             $companyDocumentModel = new CompanyDocument();
             $dataForm             = $request->validated();
-            /** @var Company $company */
+
             $company = $companyModel->newQuery()->find(current(Hashids::decode($dataForm['company_id'])));
             if (Gate::allows('uploadDocuments', [$company])) {
                 $document         = $request->file('file');
@@ -328,6 +329,7 @@ class CompaniesApiController extends Controller
             );
         }
     }
+
     /**
      * @param Request $request
      * @return JsonResponse

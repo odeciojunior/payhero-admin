@@ -23,16 +23,14 @@ $(document).ready(function () {
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
                     dados += "<td>" + value.company_document + "</td>";
-                    // dados += "<td>" + value.document_status + "</td>";
                     dados += '<td>';
                     if (value.document_status == 'aprovado') {
                         dados += '<span class="badge badge-success">' + value.document_status + '</span>';
                     } else {
                         dados += '<span class="badge badge-primary">' + value.document_status + '</span>';
-
                     }
                     dados += '</td>';
-                    dados += "<td><a title='Editar' href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><i class='material-icons gradient'>  edit </i></a></td>";
+                    dados += "<td><a title='Editar' href='/companies/" + value.id_code + "/edit?type="+ value.type +"' class='edit-company' data-company='" + value.id_code + "'  role='button'><i class='material-icons gradient'>  edit </i></a></td>";
                     dados += "<td><a title='Excluir' class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>";
                     dados += "</tr>";
                     $('#companies_table').addClass('table-striped');

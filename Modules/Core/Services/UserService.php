@@ -55,4 +55,20 @@ class UserService
 
         return $refusedDocuments;
     }
+
+    public function verifyCpf($cpf)
+    {
+        $userModel     = new User();
+        $cpf           = preg_replace("/[^0-9]/", "", $cpf);
+        $userPresenter = $userModel->present();
+
+        $user = $userModel->where(
+            [['document', 'like', '%' . $cpf . '%'], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
+        )->first();
+        if (!empty($user)) {
+            return true;
+        }
+
+        return false;
+    }
 }

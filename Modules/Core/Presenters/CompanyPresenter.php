@@ -191,6 +191,7 @@ class CompanyPresenter extends Presenter
             return '';
         }
     }
+
     /**
      * @param $status
      * @return int|string
