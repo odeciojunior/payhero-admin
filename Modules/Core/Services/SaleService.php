@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Entities\ShopifyIntegration;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -21,6 +22,7 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Presenters\SalePresenter;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
+use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -360,6 +362,37 @@ class SaleService
             if ($checktRecalc) {
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
+                    if (!FoxUtils::isEmpty($sale->shopify_order)) {
+                        try {
+                            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+
+                            $credential = new PublicAppCredential($shopifyIntegration->token);
+
+                            $client = new \Slince\Shopify\Client($credential, $shopifyIntegration->url_store, [
+                                'metaCacheDir' => '/var/tmp',
+                            ]);
+                            $order  = $client->getOrderManager()->find($sale->shopify_order);
+                            if (!FoxUtils::isEmpty($order)) {
+                                if ($order->getFinancialStatus() == 'pending') {
+                                    $client->getOrderManager()->cancel($sale->shopify_order);
+                                } else {
+                                    $transaction = [
+                                        "kind"   => "refund",
+                                        "source" => "external",
+                                    ];
+                                    if ($sale->payment_method == 2) {
+
+                                        $transaction = array_merge($transaction, ['gateway' => 'Boleto']);
+                                    }
+                                    $client->getTransactionManager()->create($sale->shopify_order, $transaction);
+                                }
+                            } else {
+                                throw new Exception('Ordem não encontrado no shopigy papra a venda - ' . $sale->id);
+                            }
+                        } catch (Exception $ex) {
+                            report($ex);
+                        }
+                    }
                     DB::commit();
                 }
 
