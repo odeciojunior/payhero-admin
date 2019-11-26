@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -58,6 +59,7 @@ class TrackingsApiController extends Controller
     {
         try {
             $trackingModel = new Tracking();
+            $perfectLogservice = new PerfectLogService();
 
             $trackingId = current(Hashids::decode($id));
 
@@ -66,6 +68,56 @@ class TrackingsApiController extends Controller
                 'delivery',
                 'history'
             ])->find($trackingId);
+
+            $apiTracking = $perfectLogservice->find($tracking->tracking_code);
+
+            if(isset($apiTracking->tracking_status)){
+                $status = $perfectLogservice->parseStatus($apiTracking->tracking_status);
+                if($tracking->tracking_status_enum != $status){
+                    $tracking->tracking_status_enum = $status;
+                    $tracking->save();
+                }
+            }
+
+            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
+            $checkpoints = collect();
+
+            //objeto postado
+            $checkpoints->add([
+                'tracking_status_enum' => $postedStatus,
+                'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
+                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                'event' => 'Código de rastreio informado',
+            ]);
+
+            if(!empty($apiTracking->trail)) {
+                foreach ($apiTracking->trail as $log){
+                    $status_enum = $perfectLogservice->parseStatus($log->tracking_status);
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                    //remove caracteres chineses e informações indesejadas
+                    preg_match('/[^\p{Latin}[:punct:]\s+]/u', $log->event, $nonLatinChars);
+                    $event = str_replace([
+                        'Clique aquiMinhas Importações - ',
+                        'CHINA/',
+                        'CHINA /',
+                        'Paísem'
+                    ], '', $log->event);
+                    $event = str_replace([
+                        'de País em',
+                    ], 'do exterior', $event);
+
+                    //
+                    $checkpoints->add([
+                        'tracking_status_enum' => $status_enum,
+                        'tracking_status' => $status,
+                        'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
+                        'event' => $nonLatinChars ? 'Encomenda no exterior' :  $event,
+                    ]);
+                }
+            }
+
+            $tracking->checkpoints = $checkpoints->unique()->toArray();
 
             return new TrackingShowResource($tracking);
 

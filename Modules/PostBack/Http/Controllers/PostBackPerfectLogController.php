@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\PerfectLogService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -27,50 +28,20 @@ class PostBackPerfectLogController extends Controller
             ]);
 
             $trackingModel = new Tracking();
+            $perfectLogService = new PerfectLogService();
 
             $tracking = $trackingModel->with(['sale'])
                 ->find(current(Hashids::decode($requestValidated['external_reference'])));
 
             if(isset($tracking)){
 
-                $status = 1;
-
-                switch ($requestValidated['status']) {
-                    //case 'pending':
-                    case 'preparation':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('posted');
-                        break;
-                    case 'sent':
-                    case 'resend':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('dispatched');
-                        break;
-                    case 'delivered':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('delivered');
-                        break;
-                    case 'out_for_delivery':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('out_for_delivery');
-                        break;
-                    case 'canceled':
-                    case 'erro_fiscal':
-                    case 'returned':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('exception');
-                        break;
-                }
-
-                $oldStatus = $tracking->tracking_status_enum;
+                $status = $perfectLogService->parseStatus($requestValidated['status']);
 
                 //ATUALIZAR O STATUS
                 $tracking->update([
                     'tracking_code' => $requestValidated['tracking'],
                     'tracking_status_enum' => $status,
                 ]);
-
-                /*if($oldStatus != $status){
-                    //NOTIFICAR O USUARIO
-                    $productService = new ProductService();
-                    $saleProducts = $productService->getProductsBySale($tracking->sale);
-                    event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
-                }*/
             }
             return response()->json(['message' => 'Postback received']);
         } catch (\Exception $exception){
