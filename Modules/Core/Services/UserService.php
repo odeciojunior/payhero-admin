@@ -63,7 +63,7 @@ class UserService
         $userPresenter = $userModel->present();
 
         $user = $userModel->where(
-            [['document', 'like', '%' . $cpf . '%'], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
+            [['document', $cpf], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
         )->first();
         if (!empty($user)) {
             return true;
