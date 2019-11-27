@@ -33,6 +33,24 @@ class UserService
         return false;
     }
 
+    public function haveAnyDocumentPending()
+    {
+        $userModel     = new User();
+        $user          = auth()->user();
+        $userPresenter = $userModel->present();
+
+        if (!empty($user)) {
+            if (($user->address_document_status == $userPresenter->getAddressDocumentStatus('approved') ||
+                    $user->address_document_status == $userPresenter->getAddressDocumentStatus('analyzing')) &&
+                ($user->personal_document_status == $userPresenter->getPersonalDocumentStatus('approved') ||
+                    $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('analyzing'))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function getRefusedDocuments()
     {
         $userModel        = new User();

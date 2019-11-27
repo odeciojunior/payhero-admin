@@ -8,9 +8,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
+use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -523,6 +525,39 @@ class ProfileApiController
         } catch (Exception $e) {
             Log::warning('Erro ao acessar documento do usuário  ProfileApiController - openDocument');
             report($e);
+        }
+    }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function verifyDocuments()
+    {
+        try {
+            $companyService           = new CompanyService();
+            $userService              = new UserService();
+
+            $companyDocumentPending = $companyService->haveAnyDocumentPending();
+            $userDocumentPending = $userService->haveAnyDocumentPending();
+
+            $link = null;
+
+            if ($userDocumentPending) {
+                $link = '/profile';
+            } elseif ($companyDocumentPending) {
+                $link = '/companies';
+            }
+
+            $result = $companyDocumentPending || $userDocumentPending;
+
+            return response()->json(['message' => 'Documentos verificados!', 'pending' => $result, 'link' => $link], 200);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao verificar documentos ProfileApiController - verifyDocuments');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao verificar documentos'], 400);
         }
     }
 }

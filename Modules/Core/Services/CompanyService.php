@@ -47,16 +47,43 @@ class CompanyService
         $company          = $companyModel->find($companyId);
         $companyPresenter = $companyModel->present();
         if (!empty($company)) {
-            if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') &&
-                $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') &&
-                $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
+            if($company->company_type = $companyPresenter->getCompanyType('juridical person')){
+                if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') &&
+                    $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') &&
+                    $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
+                    return true;
+                }
+            } else if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved')) {
                 return true;
-            } else {
-                return false;
             }
         }
 
         return false;
+    }
+
+    public function haveAnyDocumentPending()
+    {
+        $companyModel = new Company();
+        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
+        $companyPresenter = $companyModel->present();
+
+        foreach ($companies as $company) {
+            if ($company->company_type = $companyPresenter->getCompanyType('juridical person')) {
+                if (($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
+                        $company->bank_document_status == $companyPresenter->getBankDocumentStatus('analyzing')) &&
+                    ($company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') ||
+                        $company->address_document_status == $companyPresenter->getAddressDocumentStatus('analyzing')) &&
+                    ($company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved') ||
+                        $company->contract_document_status == $companyPresenter->getContractDocumentStatus('analyzing'))) {
+                    return false;
+                }
+            } else if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
+                $company->bank_document_status == $companyPresenter->getBankDocumentStatus('analyzing')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getRefusedDocuments(int $companyId)
