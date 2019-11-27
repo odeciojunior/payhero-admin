@@ -102,7 +102,8 @@
                 </div>
                 <div class='modal-body' style='margin: 10px;'>
                     <div class='row'>
-                        <div class='col-lg-12' id='table-documents-person-fisic' style='min-height: 150px; max-height: 150px; overflow-x: hidden; overflow-y: scroll; margin-bottom: 20px;'>
+                        <div class='col-lg-12'
+                             style='min-height: 150px; max-height: 150px; overflow-x: hidden; overflow-y: scroll; margin-bottom: 20px;'>
                             <table class='table table-striped table-hover table-sm' id='table-documents-person-fisic'>
                                 <thead>
                                     <tr>
