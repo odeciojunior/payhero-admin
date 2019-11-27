@@ -67,7 +67,7 @@
 
 @include("layouts.menu-principal")
 
-<div class="alert alert-dismissible fade document-pending">
+<div class="alert alert-dismissible fade document-pending" style="display:none">
     <div class="message-container">
         <span class="message-pending">Existem itens pendentes em seu cadastro</span>
         <a href="/companies" class="btn-finalize">Finalizar cadastro</a>
