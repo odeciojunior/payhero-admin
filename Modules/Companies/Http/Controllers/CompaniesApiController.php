@@ -141,7 +141,6 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
-            dd($e);
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
