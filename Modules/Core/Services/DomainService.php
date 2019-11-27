@@ -3,10 +3,13 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Domain;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Company;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\UserService;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Events\DomainApprovedEvent;
@@ -137,39 +140,13 @@ class DomainService
     public function verifyPendingDomains($domainId = null, $reCheck = false)
     {
         try {
-            //verifica todos os dominios pendentes
+            //verifica todos os dominios pendentes registrados na última semana
             $domains = $this->getDomainModel()
                             ->with([
                                        'project',
                                        'project.shopifyIntegrations',
                                        'project.users',
-                                   ])->whereHas('project.usersProjects.company', function($query) {
-                    $query->where([
-                                      [
-                                          'bank_document_status', $this->getCompanyModel()->present()
-                                                                       ->getBankDocumentStatus('approved'),
-                                      ],
-                                      [
-                                          'address_document_status', $this->getCompanyModel()->present()
-                                                                          ->getAddressDocumentStatus('approved'),
-                                      ],
-                                      [
-                                          'contract_document_status', $this->getCompanyModel()->present()
-                                                                           ->getContractDocumentStatus('approved'),
-                                      ],
-                                  ]);
-                })->whereHas('project.users', function($query) {
-                    $query->where([
-                                      [
-                                          'address_document_status', $this->getUserModel()->present()
-                                                                          ->getAddressDocumentStatus('approved'),
-                                      ],
-                                      [
-                                          'personal_document_status', $this->getUserModel()->present()
-                                                                           ->getPersonalDocumentStatus('approved'),
-                                      ],
-                                  ]);
-                });
+                            ]);
             if (!$reCheck) {
                 $domains->where('status', '!=', $this->getDomainModel()->present()->getStatus('approved'));
             }
@@ -177,9 +154,21 @@ class DomainService
             if (!empty($domainId)) {
                 $domains->where('id', $domainId);
             }
+            $domains->where('created_at', '>', Carbon::today()->subWeek()->addDay());
             $domains = $domains->get();
 
+            $userService    = new UserService();
+            $companyService = new CompanyService();
+
             foreach ($domains as $domain) {
+
+                if(!$userService->isDocumentValidated($domain->project->users->first()->id)){
+                    continue;
+                }
+
+                if(!$companyService->isDocumentValidated($domain->project->usersProjects->first()->company->id)){
+                    continue;
+                }
 
                 if ($this->getCloudFlareService()
                          ->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {

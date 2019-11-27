@@ -574,7 +574,6 @@ $(document).ready(function () {
                     $("#content-modal-recheck-dns-success").hide();
 
                     $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
-
                 }
 
                 $("#modal-info-dns").modal('show');
