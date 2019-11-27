@@ -67,6 +67,16 @@
 
 @include("layouts.menu-principal")
 
+<div class="alert alert-dismissible fade document-pending">
+    <div class="message-container">
+        <span class="message-pending">Existem itens pendentes em seu cadastro</span>
+        <a href="/companies" class="btn-finalize">Finalizar cadastro</a>
+    </div>
+    <a data-dismiss="alert" role="button">
+        <i class="material-icons document-pending-close">close</i>
+    </a>
+</div>
+
 @yield('content')
 
 <!-- Plugins -->
@@ -92,7 +102,10 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=2') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=3') }}"></script>
+<script>
+    verifyDocumentPending();
+</script>
 
 @stack('scripts')
 
