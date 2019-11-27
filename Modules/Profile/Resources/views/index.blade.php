@@ -524,7 +524,8 @@
                 </div>
             </div>
             {{-- Modal detalhes --}}
-            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-details-document" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-details-document" aria-hidden="true"
+                 aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-simple">
                     <div class="modal-content">
                         <div class="modal-header">

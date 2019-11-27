@@ -819,18 +819,30 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
                 if (response.data.length == 0) {
                     $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
                 } else {
-
-                    $("#profile-documents-modal").html('');
+                    $("#document-refused-motived").html('');
                     $.each(response.data, function (index, value) {
                         dados = `<tr>
-                        <td>${value.date}</td>
-                        <td>
+                        <td class='text-center'>${value.date}</td>
+                        <td class='text-center' style='cursor: pointer;'>
                             <span class='badge ${badgeArray[value.status]}'>
-                                ${statusArray[value.status]}</td>
-                            </span>
-                        <td style='cursor: pointer;'>
-                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document pointer' ><i class='material-icons gradient'>remove_red_eye</i></a>
+                                    ${statusArray[value.status]}</td>
+                               </span>
+                        </td>`;
+
+                        if (value.refused_reason != '' && value.refused_reason != null) {
+                            dados += `
+                                <td class='text-center' style='color:red;'>${value.refused_reason}</td>
+                             `;
+
+                        } else {
+                            dados += `
+                                <td class='text-center' style='color:red;'></td>
+                             `;
+                        }
+                        dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
+                        
                     </tr>`;
                         $("#profile-documents-modal").append(dados);
 
