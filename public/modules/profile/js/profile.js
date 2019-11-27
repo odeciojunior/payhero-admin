@@ -851,6 +851,8 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
 
             }
         });
+
+        ajaxVerifyDocumentPending();
     }
 
 });

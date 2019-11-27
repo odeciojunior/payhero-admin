@@ -17,21 +17,15 @@ use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
-use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\SendgridService;
-use Modules\Core\Services\SmsService;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\ProfileDocumentsResource;
 use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class ProfileApiController
