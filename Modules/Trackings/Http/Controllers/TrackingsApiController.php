@@ -241,18 +241,17 @@ class TrackingsApiController extends Controller
                         }
                     //update
                     } else {
-                        $trackingStatus = $tracking->tracking_status_enum;
+                        //$trackingStatus = $tracking->tracking_status_enum;
 
                         $trackingCodeupdated = $tracking->update([
                                                                     'tracking_code' => $data['tracking_code'],
                                                                  ]);
                         if ($trackingCodeupdated) {
-                            $trackingHistoryModel = new TrackingHistory();
-
-                            $trackingHistoryModel->firstOrNew([
-                                                              'tracking_id' => $tracking->id,
-                                                              'tracking_status_enum' => $trackingStatus,
-                                                          ]);
+                            //$trackingHistoryModel = new TrackingHistory();
+                            //$trackingHistoryModel->firstOrNew([
+                            //                                  'tracking_id' => $tracking->id,
+                            //                                  'tracking_status_enum' => $trackingStatus,
+                            //                              ]);
 
                             $perfectLogService = new PerfectLogService();
                             $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);

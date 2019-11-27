@@ -88,15 +88,15 @@ class UpdateTrackingStatus extends Command
                             break;
                     }
 
-                    $trackingStatusOld = $tracking->tracking_status_enum;
+                    //$trackingStatusOld = $tracking->tracking_status_enum;
                     $tracking->tracking_status_enum = $status;
                     $tracking->save();
 
-                    $trackingHistoryModel = new TrackingHistory();
-                    $trackingHistoryModel->firstOrNew([
-                        'tracking_id' => $tracking->id,
-                        'tracking_status_enum' => $trackingStatusOld,
-                    ]);
+                    //$trackingHistoryModel = new TrackingHistory();
+                    //$trackingHistoryModel->firstOrNew([
+                    //    'tracking_id' => $tracking->id,
+                    //    'tracking_status_enum' => $trackingStatusOld,
+                    //]);
 
                     $this->line(json_encode($response->tracking, JSON_PRETTY_PRINT));
                 }
