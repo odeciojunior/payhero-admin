@@ -7,23 +7,25 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
-use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\UserDocument;
-use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
+use Modules\Core\Services\UserService;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
+use Intervention\Image\Facades\Image;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\ProfileDocumentsResource;
 use Modules\Profile\Transformers\ProfileTaxResource;
 use Modules\Profile\Transformers\UserResource;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class ProfileApiController
@@ -559,6 +561,39 @@ class ProfileApiController
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
                                     ], 400);
+        }
+    }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function verifyDocuments()
+    {
+        try {
+            $companyService           = new CompanyService();
+            $userService              = new UserService();
+
+            $companyDocumentPending = $companyService->haveAnyDocumentPending();
+            $userDocumentPending = $userService->haveAnyDocumentPending();
+
+            $link = null;
+
+            if ($userDocumentPending) {
+                $link = '/profile';
+            } elseif ($companyDocumentPending) {
+                $link = '/companies';
+            }
+
+            $result = $companyDocumentPending || $userDocumentPending;
+
+            return response()->json(['message' => 'Documentos verificados!', 'pending' => $result, 'link' => $link], 200);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao verificar documentos ProfileApiController - verifyDocuments');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao verificar documentos'], 400);
         }
     }
 }

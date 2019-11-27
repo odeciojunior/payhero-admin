@@ -35,9 +35,9 @@ class RegisterRequest extends FormRequest
 
             'bank'          => 'required',
             'agency'        => 'required',
-            'agency_digit'  => 'required',
+            'agency_digit'  => 'nullable',
             'account'       => 'required',
-            'account_digit' => 'required',
+            'account_digit' => 'nullable',
 
             'street_company'       => 'nullable',
             'number_company'       => 'nullable',

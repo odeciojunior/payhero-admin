@@ -217,6 +217,8 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
             }
         });
 
+        ajaxVerifyDocumentPending();
+
         function htmlTableDoc(dataTable) {
             document.querySelector('#loaderLine').remove();
             let dados = '';

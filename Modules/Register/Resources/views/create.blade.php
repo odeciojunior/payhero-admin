@@ -288,9 +288,9 @@
                     <div class='row'>
                         <div class="col-lg-6">
                             <div class="input-holder d-flex flex-column">
-                                <label for="company_document">CPNJ</label>
+                                <label for="company_document">CNPJ</label>
                                 <input type="text" name="company_document" id="company_document" placeholder="Digite seu CNPJ" required>
-                                <p class='sm-tex text-danger' id='companyDocumentError' style='display:none;'>O campo CPNJ é obrigatório</p>
+                                <p class='sm-tex text-danger' id='companyDocumentError' style='display:none;'>O campo CNPJ é obrigatório</p>
                                 <p class='sm-tex text-danger' id='companydocumentExistError' style='display:none;'>Esse CNPJ já está cadastrado na plataforma</p>
                             </div>
                         </div>
@@ -368,7 +368,7 @@
             </div>
             <div id="success" class="div6" style="display: none">
                 <div class="content-success">
-                    <img src="{{asset('modules/global/gif/cloudfox-loading-1.gif')}}">
+                    <img src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/cloudfox-loading-register.gif">
                     <h1 class="bold orange mt10"> Tudo pronto! </h1>
                     <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você estará na sua nova dashboard.
                 </div>
