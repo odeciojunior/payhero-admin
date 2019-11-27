@@ -240,6 +240,7 @@
                         <thead>
                         <tr>
                             <td class="table-title">Venda</td>
+                            <td class="table-title">Data de Aprovação</td>
                             <td class="table-title">Produto</td>
                             <td class="table-title">Status</td>
                             <td class="table-title">Código de Rastreio</td>

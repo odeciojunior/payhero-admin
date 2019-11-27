@@ -227,7 +227,7 @@ $(() => {
                 let lastSale = '';
 
                 if (isEmpty(response.data)) {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='5' style='height: 70px;vertical-align: middle'> Nenhum rastreamento encontrada</td></tr>");
                 } else {
                     $.each(response.data, function (index, tracking) {
 
@@ -243,7 +243,12 @@ $(() => {
                                             ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>` 
                                             : `<td></td>`
                                          }
-                                         <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
+                                         <td>${tracking.approved_date}</td>
+                                         <td>
+                                             <span style="max-width: 330px; display:block; margin:0 auto;">
+                                                ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}
+                                            </span>
+                                        </td>
                                          <td class="td-status">
                                             <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                          </td>
