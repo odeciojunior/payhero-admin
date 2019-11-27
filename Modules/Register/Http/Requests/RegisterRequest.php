@@ -13,11 +13,38 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => 'required|unique:users|max:200',
-            'name'      => 'required',
-            'cellphone' => 'required',
-            'password'  => 'required',
-            'parameter' => 'nullable',
+            'email'             => 'required|unique:users|max:200',
+            'name'              => 'required',
+            'cellphone'         => 'required',
+            'document'          => 'required',
+            'date_birth'        => 'required',
+            'password'          => 'required',
+            'zip_code'          => 'required',
+            'street'            => 'required',
+            'number'            => 'required',
+            'neighborhood'      => 'required',
+            'complement'        => 'nullable',
+            'city'              => 'required',
+            'state'             => 'required',
+            'company_document'  => 'nullable',
+            'fantasy_name'      => 'nullable',
+            'support_email'     => 'nullable',
+            'support_telephone' => 'nullable',
+            'company_type'      => 'nullable',
+            'parameter'         => 'nullable',
+
+            'bank'          => 'required',
+            'agency'        => 'required',
+            'agency_digit'  => 'required',
+            'account'       => 'required',
+            'account_digit' => 'required',
+
+            'street_company'       => 'nullable',
+            'number_company'       => 'nullable',
+            'neighborhood_company' => 'nullable',
+            'complement_company'   => 'nullable',
+            'state_company'        => 'nullable',
+            'city_company'         => 'nullable',
         ];
     }
 
@@ -37,11 +64,18 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'     => 'Precisamos do seu email para continuar',
-            'email.unique'       => 'Email informado ja esta sendo utilizado',
-            'name.required'      => 'Precisamos do seu nome para continuar',
-            'cellphone.required' => 'Precisamos do seu celular para continuar',
-            'password.required'  => 'Password inválido',
+            'email.required'        => 'Precisamos do seu email para continuar',
+            'email.unique'          => 'Email informado ja esta sendo utilizado',
+            'name.required'         => 'Precisamos do seu nome para continuar',
+            'cellphone.required'    => 'Precisamos do seu celular para continuar',
+            'document.required'     => 'Precisamos do seu CPF para continuar',
+            'date_birth.required'   => 'Precisamos do sua data de nascimento para continuar',
+            'zip_code.required'     => 'Precisamos do seu CEP para continuar',
+            'street.required'       => 'Precisamos do nome da sua rua para continuar',
+            'neighborhood.required' => 'Precisamos do nome do seu bairro para continuar',
+            'city.required'         => 'Precisamos do nome da sua cidade para continuar',
+            'state.required'        => 'Precisamos do nome do seu estado para continuar',
+            'password.required'     => 'Password inválido',
         ];
     }
 }

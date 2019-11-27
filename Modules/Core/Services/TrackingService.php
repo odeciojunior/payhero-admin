@@ -44,7 +44,7 @@ class TrackingService
         return $tracking;
     }
 
-    public function getTrackings($filters, $paginate = true, $builder = false)
+    public function getTrackingsQueryBuilder($filters)
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
@@ -92,12 +92,20 @@ class TrackingService
             });
         }
 
-        if($builder){
-            return $productPlanSales;
-        } else if ($paginate) {
-            return $productPlanSales->orderBy('id', 'desc')->paginate(10);
-        } else {
-            return $productPlanSales->get();
-        }
+        return $productPlanSales;
+    }
+
+    public function getPaginatedTrackings($filters)
+    {
+        $productPlanSales = $this->getTrackingsQueryBuilder($filters);
+
+        return $productPlanSales->orderBy('id', 'desc')->paginate(10);
+    }
+
+    public function getAllTrackings($filters)
+    {
+        $productPlanSales = $this->getTrackingsQueryBuilder($filters);
+
+        return $productPlanSales->get();
     }
 }

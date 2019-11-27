@@ -13,7 +13,7 @@ class CompanyUploadDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            'document_type' => 'required|numeric|in:1,2,3',
+            'document_type' => 'required|string',
             'company_id'    => 'required|string|max:255',
             'file'          => 'required|mimes:jpeg,jpg,png,doc,pdf',
         ];

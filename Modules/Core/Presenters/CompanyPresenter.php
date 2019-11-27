@@ -193,6 +193,32 @@ class CompanyPresenter extends Presenter
     }
 
     /**
+     * @param $status
+     * @return int|string
+     */
+    public function getCompanyType($status)
+    {
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'physical person';
+                case 2:
+                    return 'juridical person';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'physical person':
+                    return 1;
+                case 'juridical person':
+                    return 2;
+            }
+
+            return '';
+        }
+    }
+    /**
      * @return bool
      */
     public function allStatusPending()

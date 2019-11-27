@@ -1,3 +1,19 @@
+let documentType = '';
+let bagder = '';
+let badgeArray = {
+    'pending': 'badge-primary',
+    'analyzing': 'badge-pending',
+    'approved': 'badge-success',
+    'refused': 'badge-danger',
+};
+
+let statusArray = {
+    'pending': 'Pendente',
+    'analyzing': 'Em análise',
+    'approved': 'Aprovado',
+    'refused': 'Recusado',
+};
+
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -234,7 +250,7 @@ $(document).ready(function () {
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
-                getRefusedDocuments(response.data.refusedDocuments);
+                // getRefusedDocuments(response.data.refusedDocuments);
                 verifyUserAddress(response.data);
             }
         });
@@ -636,9 +652,121 @@ $(document).ready(function () {
                 '</div>');
         });
     }
+
+    function htmlTableDocuments(data) {
+        console.log(data);
+        let dados = '';
+        let verifyReason = false;
+        if (data.length == 0) {
+            $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
+        } else {
+            $("#document-refused-motived").html('');
+            $.each(data, function (index, value) {
+                dados = `<tr>
+                        <td class='text-center'>${value.date}</td>
+                        <td class='text-center' style='cursor: pointer;'>
+                            <span class='badge ${badgeArray[value.status]}'>
+                                    ${statusArray[value.status]}</td>
+                               </span>
+                        </td>`;
+
+                if (value.refused_reason != '' && value.refused_reason != null) {
+                    dados += `
+                                <td class='text-center' style='color:red;'>${value.refused_reason}</td>
+                             `;
+
+                } else {
+                    dados += `
+                                <td class='text-center' style='color:red;'></td>
+                             `;
+                }
+                dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                        </td>
+                        
+                    </tr>`;
+                $("#profile-documents-modal").append(dados);
+
+            });
+        }
+
+    }
+
+    function getDocumentsProfile(document_type) {
+        $.ajax({
+            url: "/api/profile/getdocuments",
+            type: "POST",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                'document_type': document_type
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                $("#loaderLine").remove();
+
+            },
+            success: function success(response) {
+                console.log(response.data);
+                htmlTableDocuments(response.data);
+                $("#loaderLine").remove();
+
+            }
+        });
+    }
+
+    $(".details-document").on('click', function () {
+        $("#profile-documents-modal").html('');
+        $("#document-refused-motived").css('display', 'none');
+        loadOnTable('#profile-documents-modal', '#table-documents');
+
+        documentType = $(this).data('document');
+        getDocumentsProfile(documentType);
+
+        Dropzone.forElement('#dropzoneDocuments').removeAllFiles(true);
+
+        $("#document_type").val($(this).data('document'));
+
+        if ($(this).data('document') == 'personal_document') {
+            $("#modal-title-documents").html('Documento Pessoal');
+            $("#modal-title-documents-info").html(`<br><small class="" style="line-height: 1.5;">'
+                                                                            <br><b>Documentos aceitos (Desde que contenham o CPF):</b><br>
+                                                                            <ul>
+                                                                            <li class='text-left'><b>RG (Carteira de Identidade )</b></li>
+                                                                            <li class='text-left'><b>CNH (Carteira Nacional de Habilitação)</b></li>
+                                                                            <li class='text-left'><b>Carteira Funcional</b></li>
+                                                                            <li class='text-left'><b>CPTS (Carteira de Trabalho e Previdência Social)</b></li>
+                                                                            <li class='text-left'><b>Passaporte</b></li>
+                                                                            </ul>
+                
+                 
+                                                                        </small>`);
+        } else {
+            $("#modal-title-documents").html('Documento Compravante de Residência');
+            $("#modal-title-documents-info").html(`<br><small class="" style="line-height: 1.5;">
+                <br><b>Comp. de Residência aceitos:</b><br>
+                <ul>
+                <li class='text-left'><b>Água</b></li>
+                <li class='text-left'><b>Energia</b></li>
+                <li class='text-left'><b>Gás Encanado</b></li>
+                <li class='text-left'><b>Internet</b></li>
+                <li class='text-left'><b>Telefone Fixo ou Móvel</b></li>
+                <li class='text-left'><b>Contrato de Locação em nome do usuário ou dos Pais</b></li>
+                </ul>
+                <b>Se nome de terceiro, anexar junto declaração de endereço do titular da conta e RG do titular da conta.</b>
+                </small>`);
+        }
+
+        $("#modal-details-document").modal('show');
+    });
+
 });
 
-Dropzone.options.dropzoneDocuments = {
+Dropzone.autoDiscover = false;
+
+const myDropzone = new Dropzone('#dropzoneDocuments', {
     headers: {
         'Authorization': $('meta[name="access-token"]').attr('content'),
         'Accept': 'application/json',
@@ -647,56 +775,17 @@ Dropzone.options.dropzoneDocuments = {
     maxFilesize: 2,
     url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
-    accept: function accept(file, done) {
-        var dropz = this;
-
-        swal({
-            title: 'Qual é o tipo do documento?',
-            type: 'warning',
-            input: 'select',
-            inputPlaceholder: 'Selecione o documento',
-            inputOptions: {
-                '1': 'Documento de identidade',
-                '2': 'Comprovante de residência'
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#3085D6',
-            cancelButtonColor: '#DD3333',
-            confirmButtonText: 'Enviar'
-        }).then(function (data) {
-            if (data.value) {
-                //ok
-                $('#document_type').val(data.value);
-                done();
-            } else {
-                //cancel
-                dropz.removeFile(file);
-            }
-        }).catch(function (reason) {
-            //close
-            dropz.removeFile(file);
-        });
-    },
+    previewsContainer: ".dropzone-previews",
+    thumbnailWidth: 100,
+    thumbnailHeight: 100,
     success: function success(file, response) {
-        //update table
-        if (response.personal_document_translate === 'Em análise') {
-            $('#personal_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.personal_document_translate);
-        }
-        if (response.address_document_translate === 'Em análise') {
+        alertCustom('success', response.message);
 
-            $('#address_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.address_document_translate);
+        if (file.previewElement) {
+            return file.previewElement.classList.add('dz-success');
         }
 
-        swal({
-            position: 'bottom',
-            type: 'success',
-            toast: 'true',
-            title: response.message,
-            showConfirmButton: false,
-            timer: 6000
-        });
-    },
-    error: function error(file, response) {
+    }, error: function (file, response) {
 
         if (response.search('Max filesize') > 0) {
             response = 'O documento é muito grande. Tamanho maximo: 2mb.';
@@ -704,18 +793,65 @@ Dropzone.options.dropzoneDocuments = {
             response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.';
         }
 
-        swal({
-            position: 'bottom',
-            type: 'error',
-            toast: 'true',
-            title: response,
-            showConfirmButton: false,
-            timer: 6000
-        });
+        errorAjaxResponse(response);
+        myDropzone.removeFile(file);
+    }, complete: function () {
+        loadOnTable('#profile-documents-modal', '#table-documents');
 
-        this.removeFile(file);
+        $.ajax({
+            url: "/api/profile/getdocuments",
+            type: "POST",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                'document_type': documentType
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                $("#loaderLine").remove();
+            },
+            success: function success(response) {
+                $("#loaderLine").remove();
+
+                let dados = '';
+                if (response.data.length == 0) {
+                    $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
+                } else {
+                    $("#document-refused-motived").html('');
+                    $.each(response.data, function (index, value) {
+                        dados = `<tr>
+                        <td class='text-center'>${value.date}</td>
+                        <td class='text-center' style='cursor: pointer;'>
+                            <span class='badge ${badgeArray[value.status]}'>
+                                    ${statusArray[value.status]}</td>
+                               </span>
+                        </td>`;
+
+                        if (value.refused_reason != '' && value.refused_reason != null) {
+                            dados += `
+                                <td class='text-center' style='color:red;'>${value.refused_reason}</td>
+                             `;
+
+                        } else {
+                            dados += `
+                                <td class='text-center' style='color:red;'></td>
+                             `;
+                        }
+                        dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                        </td>
+                        
+                    </tr>`;
+                        $("#profile-documents-modal").append(dados);
+
+                    });
+                }
+
+            }
+        });
     }
 
-};
-
+});
 

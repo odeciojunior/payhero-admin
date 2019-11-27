@@ -83,7 +83,7 @@
                                                     <input name="document" value="" type="text" class="input-pad" id="document" placeholder="CPF">
                                                 </div>
                                                 <div class="form-group col-xl-6">
-                                                    <label for="celular">Celular</label>
+                                                    <label for="celular">Celular (WhatsApp)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="input_group_cellphone" id="addon-cellphone">
@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
                                 <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
-                                    <div class="col-lg-6">
+                                    {{--<div class="col-lg-6">
                                         <div id="dropzone">
                                             <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                                 @csrf
@@ -185,36 +185,56 @@
                                                 <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
                                             </form>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
+                                    </div>--}}
+                                    <div class="col-lg-12">
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Documento</th>
                                                     <th scope="col">Status</th>
+                                                    <th scope="col"></th>
                                                 </tr>
                                             </thead>
                                             <tbody class="custom-t-body">
                                                 <tr>
-                                                    <td>Identidade</td>
+                                                    <td>
+                                                        Documento com foto
+                                                        <small class="text-muted" style="line-height: 1.5;">
+                                                            <br>Documentos aceitos: RG ou CNH (oficial e com foto)
+                                                        </small>
+                                                    </td>
                                                     <td id="td_personal_status"></td>
+                                                    {{--<td>
+                                                        <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
+                                                    </td>--}}
+                                                    <td>
+                                                        <i title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Residência</td>
+                                                    <td>
+                                                        Comprovante de residência
+                                                        <small class="text-muted" style="line-height: 1.5;">
+                                                            <br>Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
+                                                        </small>
+                                                    </td>
                                                     <td id="td_address_status"></td>
+                                                    {{--<td>
+                                                        <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
+                                                    </td>--}}
+                                                    <td>
+                                                        <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-lg-12 mt-10">
-                                        <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto)
-                                            <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
-                                        </small>
-                                    </div>
                                 </div>
                                 <div class='row'>
                                     <div class='col-md-12'>
-                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'><p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p></div>
+                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'>
+                                            <p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class='row'>
@@ -496,6 +516,58 @@
                                     <i class='fas fa-check'></i> Verificar
                                 </button>
                             </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Modal detalhes --}}
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-details-document" aria-hidden="true"
+                 aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_documents">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <div style="width: 100%; text-align:center">
+                                <h4 id='modal-title-documents' class="modal-title"></h4>
+                                <div id='modal-title-documents-info'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="margin-top: 10px">
+                            <div class='row'>
+                                <div class='col-lg-12' id='table-documents' style='min-height:150px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
+                                    <table class="table table-striped table-hover table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class='text-center' scope="col">Data Envio</th>
+                                                <th class='text-center' scope="col">Status</th>
+                                                <th class='text-center' scope="col"></th>
+                                                <th class='text-center' scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id='profile-documents-modal' class="custom-t-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class='col-lg-12' id='document-refused-motived' style='display:none;'>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div id="dropzone">
+                                        <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                            @csrf
+                                            <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
+                                                Arraste ou clique para fazer upload.<br/>
+                                            </div>
+                                            <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>

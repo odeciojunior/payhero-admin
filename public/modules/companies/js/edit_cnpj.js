@@ -22,6 +22,7 @@ $(document).ready(function () {
             }
         });
     });
+
     $("#zip_code").on("input", function () {
         var zip_code = $('#zip_code').val().replace(/[^0-9]/g, '');
         if (zip_code.length !== 8) return false;
@@ -46,7 +47,8 @@ $(document).ready(function () {
             }
         });
     });
-////Functions
+
+    //Functions
     function initLinks() {
         let encodedId = extractIdFromPathName();
         let origin = $(location).attr('origin');
@@ -57,6 +59,7 @@ $(document).ready(function () {
         companyBankUpdateForm.attr('action', (apiPath + "/" + encodedId));
         dropzoneDocuments.attr('action', (apiPath + '/uploaddocuments'));
     }
+
     function initForm() {
         //Get CompanyId from path
         let encodedId = extractIdFromPathName();
@@ -97,19 +100,11 @@ $(document).ready(function () {
                 }
                 $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
 
-                // var optionsCompanyDocument = {
-                //     onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-                //
-                //         var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                //         var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
-                //         $('#company_document').mask(mask, options);
-                //     }
-                // };
-                // $('#company_document').val().replace(/\D/g, '').length > 14 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-000', optionsCompanyDocument);
                 $("#support_telephone").mask("(00) 0000-00009");
             }
         });
     }
+
     //Config Submit
     function configSubmits() {
         companyUpdateForm.on("submit", function (event) {
@@ -161,6 +156,7 @@ $(document).ready(function () {
             });
         });
     }
+
     function getStatusBadge(bankDocumentStatus) {
         let badge = null;
         switch (bankDocumentStatus) {
@@ -183,9 +179,11 @@ $(document).ready(function () {
 
         return badge;
     }
+
     function selectItemsFunction(item) {
         return {value: item.code, text: (item.code + ' - ' + item.name)};
     }
+
     function openDocument() {
         $(".document-url").on("click", function (e) {
             e.preventDefault();
@@ -225,6 +223,7 @@ $(document).ready(function () {
             });
         }
     }
+
     function verifyCompanyAddress(company) {
         if (company.zip_code == '' || company.street == '' || company.number == '' || company.neighborhood == '' || company.state == '' || company.city == '' || company.country == '') {
             $('#row_dropzone_documents').hide();
@@ -234,6 +233,7 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
+
     function getRefusedDocuments(refusedDocuments) {
         $.each(refusedDocuments, function (index, value) {
             $('#div_documents_refused').append('<div class="alert alert-danger text-center my-20">' +
@@ -242,6 +242,8 @@ $(document).ready(function () {
         });
     }
 });
+
+
 Dropzone.options.dropzoneDocuments = {
     headers: {
         'Authorization': $('meta[name="access-token"]').attr('content'),

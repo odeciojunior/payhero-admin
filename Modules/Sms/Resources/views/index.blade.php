@@ -64,7 +64,7 @@
                         <td class="" style="vertical-align: middle;">SMS</td>
                         <td class="display-m-none display-sm-none" style="vertical-align: middle;">Carrinho abandonado
                         </td>
-                        <td class="" style="vertical-align: middle;">4 horas depois</td>
+                        <td class="" style="vertical-align: middle;">1 hora depois</td>
                         <td class="shipping-zip-code-origin " style="vertical-align: middle">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>
                         <td class="shipping-status " style="vertical-align: middle;">
                             <span class="badge badge-success mb-1">Ativo</span>
@@ -172,7 +172,7 @@
                     <tr class='page-2' style='display:none;'>
                         <td class="" style="vertical-align: middle;">Email</td>
                         <td class="display-m-none display-sm-none" style="vertical-align: middle;">Carrinho abandonado</td>
-                        <td class="" style="vertical-align: middle;">4 horas depois</td>
+                        <td class="" style="vertical-align: middle;">1 hora depois</td>
                         <td class="shipping-zip-code-origin " style="vertical-align:middle;">Olá {primeiro_nome}, nossos produtos estão com preços especiais e o estoque é bem limitado. Recomendamos que você finalize a compra ainda hoje para garantir a promoção e economizar dinheiro! {link_carrinho_abandonado}</td>
                         <td class="shipping-status " style="vertical-align: middle;">
                             <span class="badge badge-success mb-1">Ativo</span>
@@ -205,13 +205,93 @@
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
+                    <tr class='page-3' style='display:none;'>
+                        <td class="" style="vertical-align: middle;">SMS</td>
+                        <td class="display-m-none display-sm-none" style="vertical-align: middle;">Compra no cartão</td>
+                        <td class="" style="vertical-align: middle;">Imediato</td>
+                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">
+                            Olá {primeiro_nome}, seu pedido foi confirmado! Em breve lhe enviaremos o código de rastreio</td>
+                        <td class="shipping-status " style="vertical-align: middle;">
+                            <span class="badge badge-success mb-1">Ativo</span>
+                            <span class="badge badge-primary">Grátis</span>
+                        </td>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'>remove_red_eye</i></a>
+                            <a role='button' class='pointer disabled edit-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'> edit </i></a>
+                            <a role='button' class='pointer disabled delete-sms mg-responsive' data-toggle='modal' data-target='#modal-delete'>
+                                <i class='material-icons gradient'> delete_outline </i></a>
+                        </td>
+                    </tr>
+                    <tr class='page-3' style='display:none;'>
+                        <td class="" style="vertical-align: middle;">Email</td>
+                        <td class="display-m-none display-sm-none" style="vertical-align: middle;">Boleto compensado</td>
+                        <td class="" style="vertical-align: middle;">Imediato</td>
+                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">
+                            Olá {primeiro_nome}, Seu pedido {codigo_venda} foi aprovado.
+                            Obrigado pela sua compra, nos próximos dias enviaremos o código de rastreiopara você acompanhar seu pedido.</td>
+                        <td class="shipping-status " style="vertical-align: middle;">
+                            <span class="badge badge-success mb-1">Ativo</span>
+                            <span class="badge badge-primary">Grátis</span>
+                        </td>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'>remove_red_eye</i></a>
+                            <a role='button' class='pointer disabled edit-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'> edit </i></a>
+                            <a role='button' class='pointer disabled delete-sms mg-responsive' data-toggle='modal' data-target='#modal-delete'>
+                                <i class='material-icons gradient'> delete_outline </i></a>
+                        </td>
+                    </tr>
+                    <tr class='page-3' style='display:none;'>
+                        <td class="" style="vertical-align: middle;">Email</td>
+                        <td class="display-m-none display-sm-none" style="vertical-align: middle;">Código de Rastreio</td>
+                        <td class="" style="vertical-align: middle;">Imediato</td>
+                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">
+                            Olá {primeiro_nome},
+                            Boas notícias seu pedido ja está a caminho do endereço de entrega. Você pode rastrear a entrega do seu pedido diretamente do site dos Correios. {nome_produto} {codigo_rastreio} {link_rastreamento} {qtde_produto}</td>
+                        <td class="shipping-status " style="vertical-align: middle;">
+                            <span class="badge badge-success mb-1">Ativo</span>
+                            <span class="badge badge-primary">Grátis</span>
+                        </td>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'>remove_red_eye</i></a>
+                            <a role='button' class='pointer disabled edit-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'> edit </i></a>
+                            <a role='button' class='pointer disabled delete-sms mg-responsive' data-toggle='modal' data-target='#modal-delete'>
+                                <i class='material-icons gradient'> delete_outline </i></a>
+                        </td>
+                    </tr>
+                    <tr class='page-3' style='display:none;'>
+                        <td class="" style="vertical-align: middle;">SMS</td>
+                        <td class="display-m-none display-sm-none" style="vertical-align: middle;">Código de Rastreio</td>
+                        <td class="" style="vertical-align: middle;">Imediato</td>
+                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">
+                            Olá {primeiro_nome},
+                            seu código de rastreio chegou: {codigo_rastreio} Acesse: {link_rastreamento}</td>
+                        <td class="shipping-status " style="vertical-align: middle;">
+                            <span class="badge badge-success mb-1">Ativo</span>
+                            <span class="badge badge-primary">Grátis</span>
+                        </td>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'>remove_red_eye</i></a>
+                            <a role='button' class='pointer disabled edit-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'> edit </i></a>
+                            <a role='button' class='pointer disabled delete-sms mg-responsive' data-toggle='modal' data-target='#modal-delete'>
+                                <i class='material-icons gradient'> delete_outline </i></a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <div class="pagination-sm text-right">
-    <button id='current-page-shippings1' class='btn nav-btn active'>1</button>
-    <button id='current-page-shippings2' class='btn nav-btn'>2</button>
+    <button class='page-notification btn nav-btn active' disabled>1</button>
+    <button class='page-notification btn nav-btn'>2</button>
+    <button class='page-notification btn nav-btn'>3</button>
 </div>
 

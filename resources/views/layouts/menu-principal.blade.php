@@ -95,6 +95,7 @@
         <!-- End Site Navbar Seach -->
     </div>
 </nav>
+    
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">

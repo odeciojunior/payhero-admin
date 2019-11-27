@@ -797,7 +797,7 @@ class ShopifyService
 
                 $product->update(
                     [
-                        'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                        'name'               => $storeProduct->getTitle() != '' ? FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)) : ' Nome ',
                         'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                         'weight'             => $variant->getWeight(),
                         //'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
@@ -880,7 +880,7 @@ class ShopifyService
                 $product = $productModel->create(
                     [
                         'user_id'            => $userId,
-                        'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
+                        'name'               => $storeProduct->getTitle() != '' ? FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)) : 'Nome',
                         'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
                         'guarantee'          => '0',
                         'format'             => 1,

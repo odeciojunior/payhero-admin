@@ -421,19 +421,16 @@ class ShopifyApiController extends Controller
      */
     public function synchronizeProducts(Request $request)
     {
-        //            return response()->json(['message' => 'Funfou!'], Response::HTTP_OK);
         try {
             $requestData = $request->all();
             $projectId   = current(Hashids::decode($requestData['project_id']));
-            /** @var ShopifyIntegration $shopifyModel */
+
             $shopifyModel = new ShopifyIntegration();
             if (!empty($projectId)) {
-                /** @var ShopifyIntegration $shopifyIntegration */
+
                 $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
                 if (!empty($shopifyIntegration)) {
                     event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
-
-                    //                    $this->teste($shopifyIntegration, auth()->user()->account_owner_id);
 
                     return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], Response::HTTP_OK);
                 } else {

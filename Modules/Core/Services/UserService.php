@@ -16,10 +16,16 @@ use Modules\Core\Entities\User;
  */
 class UserService
 {
-    public function isDocumentValidated()
+    public function isDocumentValidated($userId = null)
     {
         $userModel     = new User();
-        $user          = auth()->user();
+        if(empty($userId)){
+            $user = auth()->user();
+        }
+        else{
+            $user = User::find($userId);
+        }
+
         $userPresenter = $userModel->present();
         if (!empty($user)) {
             if ($user->address_document_status == $userPresenter->getAddressDocumentStatus('approved') &&
@@ -54,5 +60,21 @@ class UserService
         }
 
         return $refusedDocuments;
+    }
+
+    public function verifyCpf($cpf)
+    {
+        $userModel     = new User();
+        $cpf           = preg_replace("/[^0-9]/", "", $cpf);
+        $userPresenter = $userModel->present();
+
+        $user = $userModel->where(
+            [['document', $cpf], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
+        )->first();
+        if (!empty($user)) {
+            return true;
+        }
+
+        return false;
     }
 }

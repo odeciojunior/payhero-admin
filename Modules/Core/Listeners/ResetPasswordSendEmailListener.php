@@ -2,13 +2,15 @@
 
 namespace Modules\Core\Listeners;
 
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Services\SendgridService;
 
-class ResetPasswordSendEmailListener
+class ResetPasswordSendEmailListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Create the event listener.
      * @return void

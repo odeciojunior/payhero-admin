@@ -82,6 +82,9 @@ class BoletoService
                     $clientNameExploded = explode(' ', $clientName);
 
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                    if ($discount != '') {
+                        $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                    }
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $saleService->getEmailProducts($boleto->id);
@@ -182,6 +185,9 @@ class BoletoService
                     }
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                    if ($discount != '') {
+                        $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                    }
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $saleService->getEmailProducts($boleto->id);
                     $project                  = $projectModel->find($boleto->project_id);
@@ -269,6 +275,9 @@ class BoletoService
                     }
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                    if ($discount != '') {
+                        $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                    }
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $saleService->getEmailProducts($boleto->id);
                     $project                  = $projectModel->find($boleto->project_id);

@@ -1,17 +1,12 @@
 $(function () {
 
-    $("#current-page-shippings2").on('click', function () {
-        $(".page-1").hide();
-        $(".page-2").show();
-        $("#current-page-shippings2").addClass('active').attr('disabled');
-        $("#current-page-shippings1").removeClass('active').removeAttr('disabled', 'disabled');
-    });
+    $(".page-notification").on('click', function () {
 
-    $("#current-page-shippings1").on('click', function () {
-        $(".page-1").show();
-        $(".page-2").hide();
-        $("#current-page-shippings1").addClass('active').attr('disabled', 'disabled');
-        $("#current-page-shippings2").removeClass('active').removeAttr('disabled');
+        $(".page-notification").removeClass('active').prop('disabled', false);
+        $(this).addClass('active').prop('disabled', true);
+        let page = $(this).html();
+        $('#data-table-sms tr').hide();
+        $('.page-' + page).show();
     });
 });
 
@@ -254,7 +249,7 @@ $(function () {
 
         $("#data-table-sms").append(data);
 
-        
+
         // $.ajax({
         //     method: "GET",
         //     url: '/sms',

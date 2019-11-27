@@ -42,7 +42,6 @@ class FinanceApiService {
 
             $balances = $this->getBalances($request);
             $transactions = $this->getTransactions($request);
-            $bankAccount = $this->getAccountInformation($request);
 
             return response()->json(compact('balances', 'transactions', 'bankAccount'), 200);
 
@@ -191,30 +190,36 @@ class FinanceApiService {
             $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
             if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
                 $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
-                return [
-                    'message' => 'success',
-                    'data'    => [
-                        'user_documents_status' => 'pending',
-                    ]
-                ];
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'user_documents_status' => 'pending',
+                        ],
+                    ], 200
+                );
             }
 
             if (!$user->email_verified) {
-                return [
-                    'message' => 'success',
-                    'data'    => [
-                        'email_verified' => 'false',
-                    ]
-                ];
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'email_verified' => 'false',
+                        ],
+                    ], 200
+                );
             }
 
             if (!$user->cellphone_verified) {
-                return [
-                    'message' => 'success',
-                    'data'    => [
-                        'cellphone_verified' => 'false',
-                    ]
-                ];
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'cellphone_verified' => 'false',
+                        ],
+                    ], 200
+                );
             }
 
             if ($company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') &&
@@ -223,28 +228,32 @@ class FinanceApiService {
 
                 // Verificar se telefone e e-mail estão verificados
 
-                return [
-                    'message' => 'success',
-                    'data'    => [
-                        'documents_status' => 'approved',
-                        'bank'             => $bankService->getBankName($company->bank),
-                        'account'          => $company->account,
-                        'account_digit'    => $company->account_digit,
-                        'agency'           => $company->agency,
-                        'agency_digit'     => $company->agency_digit,
-                        'document'         => $company->company_document,
-                    ]
-                ];
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'documents_status' => 'approved',
+                            'bank'             => $bankService->getBankName($company->bank),
+                            'account'          => $company->account,
+                            'account_digit'    => $company->account_digit,
+                            'agency'           => $company->agency,
+                            'agency_digit'     => $company->agency_digit,
+                            'document'         => $company->company_document,
+                        ],
+                    ], 200
+                );
             } else {
-                return [
-                    'message' => 'success',
-                    'data'    => [
-                        'documents_status' => 'pending',
-                    ]
-                ];
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'documents_status' => 'pending',
+                        ],
+                    ], 200
+                );
             }
         } else {
-            return ['message' => 'Sem permissão para visualizar dados da conta'];
+            return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
         }
     }
 
