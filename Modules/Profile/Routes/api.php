@@ -34,5 +34,7 @@ Route::group(
 
         Route::post('/profile/opendocument', 'ProfileApiController@openDocument');
 
+        // Busca documentos do Usuario (data,status,url)
+        Route::post('/profile/getdocuments', 'ProfileApiController@getDocuments');
     }
 );

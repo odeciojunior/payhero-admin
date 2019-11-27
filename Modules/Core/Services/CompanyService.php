@@ -86,10 +86,10 @@ class CompanyService
     {
         $companyModel     = new Company();
         $companyPresenter = $companyModel->present();
-        $cnpj           = preg_replace("/[^0-9]/", "", $cnpj);
+        $cnpj             = preg_replace("/[^0-9]/", "", $cnpj);
         $company          = $companyModel->where(
             [
-                ['company_document', 'like', '%' . $cnpj . '%'],
+                ['company_document', $cnpj],
                 ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
                 ['address_document_status', $companyPresenter->getAddressDocumentStatus('approved')],
                 ['contract_document_status', $companyPresenter->getContractDocumentStatus('approved')],

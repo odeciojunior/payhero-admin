@@ -9,6 +9,7 @@ use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
+use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
@@ -26,8 +27,7 @@ class RegisterApiController extends Controller
     public function store(RegisterRequest $request)
     {
         try {
-            $requestData = $request->validated();
-
+            $requestData  = $request->validated();
             $userModel    = new User();
             $inviteModel  = new Invitation();
             $companyModel = new Company();
@@ -82,13 +82,35 @@ class RegisterApiController extends Controller
 
             $user->assignRole('account_owner');
 
+            $streetCompany       = $requestData['street_company'] ?? null;
+            $numberCompany       = $requestData['number_company'] ?? null;
+            $neighborhoodCompany = $requestData['neighborhood_company'] ?? null;
+            $complementCompany   = $requestData['complement_company'] ?? null;
+            $stateCompany        = $requestData['state_company'] ?? null;
+            $cityCompany         = $requestData['city_company'] ?? null;
+            $supportEmail        = $requestData['support_email'] ?? null;
+            $supportPhone        = $requestData['support_telephone'] ?? null;
+
             $companyModel->create([
-                                      'user_id'          => $user->account_owner_id,
-                                      'fantasy_name'     => ($requestData['company_type'] == $companyModel->present()
-                                                                                                          ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
-                                      'company_document' => ($requestData['company_type'] == $companyModel->present()
-                                                                                                          ->getCompanyType('physical person')) ? $requestData['document'] : $requestData['company_document'],
-                                      'company_type'     => $requestData['company_type'],
+                                      'user_id'           => $user->account_owner_id,
+                                      'fantasy_name'      => ($requestData['company_type'] == $companyModel->present()
+                                                                                                           ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
+                                      'company_document'  => ($requestData['company_type'] == $companyModel->present()
+                                                                                                           ->getCompanyType('physical person')) ? $requestData['document'] : $requestData['company_document'],
+                                      'company_type'      => $requestData['company_type'],
+                                      'support_email'     => $supportEmail,
+                                      'support_telephone' => $supportPhone,
+                                      'street'            => $streetCompany,
+                                      'number'            => $numberCompany,
+                                      'neighborhood'      => $neighborhoodCompany,
+                                      'complement'        => $complementCompany,
+                                      'state'             => $stateCompany,
+                                      'city'              => $cityCompany,
+                                      'bank'              => $requestData['bank'],
+                                      'agency'            => $requestData['agency'],
+                                      'agency_digit'      => $requestData['agency_digit'],
+                                      'account'           => $requestData['account'],
+                                      'account_digit'     => $requestData['account_digit'],
                                   ]);
 
             auth()->loginUsingId($user->id, true);
@@ -185,7 +207,7 @@ class RegisterApiController extends Controller
         if ($cnpj) {
             return response()->json([
                                         'cnpj_exist' => 'true',
-                                        'message'    => 'Esse CPF já está cadastrado na plataforma',
+                                        'message'    => 'Esse CNPJ já está cadastrado na plataforma',
                                     ]);
         } else {
             return response()->json([
@@ -210,5 +232,15 @@ class RegisterApiController extends Controller
                                         'email_exist' => 'false',
                                     ]);
         }
+    }
+
+    public function getBanks()
+    {
+        $bankService = new BankService();
+        $banks       = $bankService->getBanks('BR');
+
+        return response([
+                            'banks' => $banks,
+                        ], 200);
     }
 }
