@@ -75,13 +75,15 @@ class CompaniesApiController extends Controller
         try {
             $companyModel = new Company();
             $requestData  = $request->validated();
-
             $company = $companyModel->newQuery()->create(
                 [
                     'user_id'          => auth()->user()->account_owner_id,
                     'country'          => $requestData["country"],
-                    'fantasy_name'     => $requestData["fantasy_name"],
-                    'company_document' => $requestData["company_document"],
+                    'fantasy_name'     => ($requestData['company_type'] == $companyModel->present()
+                                                                                        ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
+                    'company_document' => ($requestData['company_type'] == $companyModel->present()
+                                                                                        ->getCompanyType('physical person')) ? auth()->user()->document : $requestData["company_document"],
+                    'company_type'     => $requestData['company_type'],
                 ]
             );
 
@@ -111,17 +113,16 @@ class CompaniesApiController extends Controller
             $bankService = new BankService();
 
             $company = $companyModel
-                ->with('user','companyDocuments')
+                ->with('user', 'companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
 
             if (Gate::allows('edit', [$company])) {
                 $banks = $bankService->getBanks('BR');
 
                 $companyResource = null;
-                if($company->company_type == $companyModel->present()->getCompanyType('juridical person')){
+                if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
                     $companyResource = new CompanyResource($company);
-                }
-                elseif($company->company_type == $companyModel->present()->getCompanyType('physical person')){
+                } else if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                     $companyResource = new CompanyCpfResource($company);
                 }
 
@@ -141,7 +142,7 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
-            dd($e);
+
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
@@ -349,6 +350,48 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao acessar documento da empresa CompaniesApiController - openDocument');
             report($e);
+        }
+    }
+
+    /**
+     * @return JsonResponse
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     */
+    public function verify()
+    {
+        $companyModel = new Company();
+        $company      = $companyModel->where(
+            [
+                ['user_id', auth()->user()->account_owner_id],
+                [
+                    'company_type', $companyModel->present()->getCompanyType('physical person'),
+                ],
+            ])->first();
+        if (!empty($company)) {
+            return response()->json(['has_physical_company' => 'true']);
+        } else {
+            return response()->json(['has_physical_company' => 'false']);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function verifyCnpj(Request $request)
+    {
+        $data           = $request->all();
+        $companyService = new CompanyService();
+        $cnpj           = $companyService->verifyCnpj($data['company_document']);
+        if ($cnpj) {
+            return response()->json([
+                                        'cnpj_exist' => 'true',
+                                        'message'    => 'Esse CNPJ já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'cnpj_exist' => 'false',
+                                    ]);
         }
     }
 }

@@ -11,6 +11,10 @@ Route::group(['middleware' => ['auth:api']], function() {
 
     Route::post('/companies/opendocument', 'CompaniesApiController@openDocument');
 
+    Route::get('/companies/verify', 'CompaniesApiController@verify');
+
+    Route::post('/companies/verifycnpj', 'CompaniesApiController@verifyCnpj');
+
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')->middleware('role:account_owner|admin');
 });
 
