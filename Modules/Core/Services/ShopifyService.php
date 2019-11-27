@@ -1379,6 +1379,33 @@ class ShopifyService
             //                          ]);
         }
     }
+
+    public function refundOrder(ShopifyIntegration $shopifyIntegration, $shopifyOrder)
+    {
+        try {
+            $credential = new PublicAppCredential($shopifyIntegration->token);
+
+            $client = new \Slince\Shopify\Client($credential, $shopifyIntegration->url_store, [
+                'metaCacheDir' => '/var/tmp',
+            ]);
+            $order  = $client->getOrderManager()->find($shopifyOrder);
+            if (!FoxUtils::isEmpty($order)) {
+                if ($order->getFinancialStatus() == 'pending') {
+                    $client->getOrderManager()->cancel($shopifyOrder);
+                } else {
+                    $transaction = [
+                        "kind"   => "refund",
+                        "source" => "external",
+                    ];
+                    $client->getTransactionManager()->create($shopifyOrder, $transaction);
+                }
+            } else {
+                throw new Exception('Ordem não encontrado no shopigy papra a venda - ' . $order);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
 }
 
 

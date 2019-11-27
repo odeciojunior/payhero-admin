@@ -12,6 +12,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\User;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller;
+use Modules\Core\Services\ShopifyService;
 use Slince\Shopify\PublicAppCredential;
 use Slince\Shopify\Client;
 use Vinkla\Hashids\Facades\Hashids;
@@ -38,8 +40,8 @@ class PostBackPagarmeController extends Controller
      */
     public function postBackListener(Request $request)
     {
-
-        $requestData = $request->all();
+        $shopifyService = new ShopifyService();
+        $requestData    = $request->all();
 
         $postBackLogModel = new PostbackLog();
 
@@ -58,8 +60,8 @@ class PostBackPagarmeController extends Controller
             $planModel        = new Plan();
             $planSaleModel    = new PlanSale();
 
-            $sale = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
-
+            $sale               = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
             if (empty($sale)) {
                 Log::warning('VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
 
@@ -110,7 +112,7 @@ class PostBackPagarmeController extends Controller
 
                 $plan = $planModel->find($plansSale->plan_id);
 
-                if ($sale->shopify_order != '') {
+                if (!FoxUtils::isEmpty($sale->shopify_order)) {
 
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
@@ -119,13 +121,17 @@ class PostBackPagarmeController extends Controller
                     try {
                         $credential = new PublicAppCredential($shopifyIntegration['token']);
 
-                        $client = new Client($credential, $shopifyIntegration['url_store'], [
+                        $client            = new Client($credential, $shopifyIntegration['url_store'], [
                             'metaCacheDir' => './tmp',
                         ]);
-
-                        $client->getTransactionManager()->create($sale->shopify_order, [
-                            "kind" => "capture",
-                        ]);
+                        $transactionUpdate = [
+                            "kind"   => "sale",
+                            "source" => "external",
+                        ];
+                        if ($sale->payment_method == 2) {
+                            $transactionUpdate['gateway'] = 'Boleto';
+                        }
+                        $client->getTransactionManager()->create($sale->shopify_order, $transactionUpdate);
                     } catch (Exception $e) {
                         Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale->id);
                         report($e);
@@ -173,7 +179,10 @@ class PostBackPagarmeController extends Controller
                                   'gateway_status' => 'chargedback',
                                   'status'         => '4',
                               ]);
+                if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
+                    $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
+                }
                 $transferModel = new Transfer();
 
                 foreach ($transactions as $transaction) {
@@ -220,7 +229,10 @@ class PostBackPagarmeController extends Controller
                                   'gateway_status' => 'refunded',
                                   'status'         => '7',
                               ]);
+                if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
+                    $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
+                }
                 $transferModel = new Transfer();
 
                 foreach ($transactions as $transaction) {

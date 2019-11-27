@@ -362,36 +362,11 @@ class SaleService
             if ($checktRecalc) {
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
-                    if (!FoxUtils::isEmpty($sale->shopify_order)) {
-                        try {
-                            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+                    $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+                    if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
+                        $shopifyService = new ShopifyService();
 
-                            $credential = new PublicAppCredential($shopifyIntegration->token);
-
-                            $client = new \Slince\Shopify\Client($credential, $shopifyIntegration->url_store, [
-                                'metaCacheDir' => '/var/tmp',
-                            ]);
-                            $order  = $client->getOrderManager()->find($sale->shopify_order);
-                            if (!FoxUtils::isEmpty($order)) {
-                                if ($order->getFinancialStatus() == 'pending') {
-                                    $client->getOrderManager()->cancel($sale->shopify_order);
-                                } else {
-                                    $transaction = [
-                                        "kind"   => "refund",
-                                        "source" => "external",
-                                    ];
-                                    if ($sale->payment_method == 2) {
-
-                                        $transaction = array_merge($transaction, ['gateway' => 'Boleto']);
-                                    }
-                                    $client->getTransactionManager()->create($sale->shopify_order, $transaction);
-                                }
-                            } else {
-                                throw new Exception('Ordem não encontrado no shopigy papra a venda - ' . $sale->id);
-                            }
-                        } catch (Exception $ex) {
-                            report($ex);
-                        }
+                        $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
                     }
                     DB::commit();
                 }
