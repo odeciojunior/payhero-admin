@@ -2,8 +2,11 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\CompanyDocumentPresenter;
 
 /**
  * @property integer $id
@@ -17,24 +20,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class CompanyDocument extends Model
 {
+    use PresentableTrait, FoxModelTrait;
+    protected $presenter = CompanyDocumentPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'company_id', 
-        'document_url', 
-        'document_type_enum', 
+        'company_id',
+        'document_url',
+        'document_type_enum',
         'status',
         'refused_reason',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**
