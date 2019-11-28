@@ -316,9 +316,9 @@ $(() => {
                 $('#table-checkpoint').html('');
                 $('.tracking-timeline .tracking-timeline-row').html('');
 
-                if(!isEmpty(tracking.checkpoints)){
+                if (!isEmpty(tracking.checkpoints)) {
                     let resume = [];
-                    for(let checkpoint of tracking.checkpoints){
+                    for (let checkpoint of tracking.checkpoints) {
 
                         $('#table-checkpoint').append(`<tr>
                                                       <td>${checkpoint.created_at}</td>
@@ -328,7 +328,7 @@ $(() => {
                                                       <td>${checkpoint.event}</td>
                                                 </tr>`);
 
-                        switch(checkpoint.tracking_status_enum) {
+                        switch (checkpoint.tracking_status_enum) {
                             case 1: //postado
                                 resume[0] = checkpoint;
                                 break;
@@ -349,17 +349,15 @@ $(() => {
 
                     resume[1] = resume[1] || {tracking_status: 'Em trânsito'};
 
-                    if(resume[3] && !resume[2]){
+                    if (resume[3] && !resume[2]) {
                         resume[2] = {tracking_status: 'Saiu para a entrega', created_at: resume[3].created_at};
-                    }else{
+                    } else {
                         resume[2] = resume[2] || {tracking_status: 'Saiu para a entrega'};
                     }
 
                     resume[3] = resume[3] || {tracking_status: 'Entregue'};
 
-                    console.log(resume);
-
-                    for(let key in resume){
+                    for (let key in resume) {
                         let value = resume[key];
                         $('.tracking-timeline .tracking-timeline-row').eq(0)
                             .append(`<div class="date-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">${value.created_at || ''}</div>`);
@@ -373,6 +371,17 @@ $(() => {
                             .append(`<div class="status-item ${value.created_at ? key === 'exception' ? 'exception' : 'active' : ''}">${value.tracking_status}</div>`);
                     }
                 }
+
+                let statusBadge = $(this).parent()
+                    .parent()
+                    .find('td .badge');
+
+                if (statusBadge.html() !== tracking.tracking_status) {
+                    statusBadge.removeClass('badge-success badge-warning badge-danger badge-primary')
+                        .addClass('badge-' + getStatusBadge(tracking.tracking_status_enum))
+                        .html(tracking.tracking_status);
+                }
+
                 //FIM - GRAFICO DO STATUS DA ENTREGA
 
                 loadOnAny('#modal-tracking-details', true);
