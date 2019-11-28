@@ -359,7 +359,8 @@ class SaleService
                     if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
                         $shopifyService = new ShopifyService();
 
-                        $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
+                        $shopifyService->refundOrder($shopifyIntegration, $sale);
+                        $shopifyService->saveSaleShopifyRequest();
                     }
                     DB::commit();
                 }
