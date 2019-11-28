@@ -6,8 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\TrackingHistory;
-use Modules\Core\Services\PerfectLogService;
+use Modules\Core\Services\AftershipService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class UpdateTrackingStatus extends Command
@@ -46,7 +45,7 @@ class UpdateTrackingStatus extends Command
         try{
 
             $trackingModel = new Tracking();
-            $perfectLogService = new PerfectLogService();
+            $aftershipService = new AftershipService();
 
             $trackings = $trackingModel->all();
 
@@ -60,7 +59,7 @@ class UpdateTrackingStatus extends Command
                     return;
                 }*/
 
-                $response =  $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
+                $response =  $aftershipService->createTracking($tracking->tracking_code);
 
                 if(isset($response->tracking)){
 
