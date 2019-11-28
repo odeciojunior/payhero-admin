@@ -11,7 +11,7 @@
         <div class="page-header container">
             <h1 class="page-title">Editar empresa (Pessoa física)</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" id="redirect_back_link" href="/companies">
+                <a class="btn btn-primary float-right" href="/companies">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
             </div>
@@ -50,12 +50,13 @@
                                     <label for="account_digit">Digito</label>
                                     <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
                                 </div>
+                                <div class="form-group col-xl-2">
+                                    <label for="update_bank_data"></label>
+                                    <input id="update_bank_data" type="button" class="btn btn-success mt-30" value="Atualizar" style="width: auto;">
+                                </div>
                             </div>
                         </form>
-                        <div class="form-group text-right">
-                            <input id="update_bank_data" type="button" class="btn btn-success" value="Atualizar" style="width: auto;">
-                        </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 mb-40 mt-15">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -72,9 +73,6 @@
                                         <td class='text-center'>
                                             <span id='status-document-fisic'></span>
                                         </td>
-                                        {{--<td>
-                                            <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
-                                        </td>--}}
                                         <td class='text-center'>
                                             <i title='Enviar documento' class='icon wb-upload gradient details-document-person-fisic' data-document='person-fisic' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                         </td>
@@ -103,7 +101,7 @@
                 <div class='modal-body' style='margin: 10px;'>
                     <div class='row'>
                         <div class='col-lg-12'
-                             style='min-height: 150px; max-height: 150px; overflow-x: hidden; overflow-y: scroll; margin-bottom: 20px;'>
+                             style='min-height: 100px; max-height: 150px; overflow-x: hidden; overflow-y: scroll; margin-bottom: 20px;'>
                             <table class='table table-striped table-hover table-sm' id='table-documents-person-fisic'>
                                 <thead>
                                     <tr>
@@ -138,55 +136,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-    {{--<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-details-document-person-fisic" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_documents_person_fisic">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <div style="width: 100%; text-align:center">
-                        <h4 id='modal-title-documents' class="modal-title">Comprovante de Extrato Bancário</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body" style="margin-top: 10px">
-                <div class='row'>
-                    <div class='col-lg-12' id='table-documents-person-fisic' style='min-height:150px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
-                        <table class="table table-striped table-hover table-sm table-striped" id='table-bank-fisic-document'>
-                            <thead>
-                                <tr>
-                                    <th class='text-center' scope="col">Data Envio</th>
-                                    <th class='text-center' scope="col">Status</th>
-                                    <th class='text-center' scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id='profile-documents-person-fisic-modal' class="custom-t-body">
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-lg-12">
-                        <div id="dropzone">
-                            <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzone-documents-bank'>
-                                @csrf
-                                <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
-                                    Arraste ou clique para fazer upload.<br/>
-                                </div>
-                                <input id="document_type_person_fisic" name="document_type" value="" type="hidden" class="input-pad">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>--}}
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>

@@ -70,6 +70,7 @@ $(document).ready(function () {
 
     // mascara para cep
     $('#zip_code').mask('99.999-999');
+    $('#zip_code_company').mask('99.999-999');
 
     //mascara cnpj
     $('#company_document').mask('00.000.000/0000-00');
@@ -146,6 +147,7 @@ $(document).ready(function () {
         $('.div4').hide();
         $('.div7').show();
         $("#btn-go").show();
+        $('#alert-row').hide();
         $("#progress-bar-register").css('width', '80%');
 
     }
@@ -154,6 +156,7 @@ $(document).ready(function () {
         $('.div4').hide();
         $('.div5').show();
         $("#btn-go").show();
+        $('#alert-row').hide();
         currentPage = 'bank data physical person';
         $("#progress-bar-register").css('width', '80%');
     })
@@ -169,6 +172,7 @@ $(document).ready(function () {
         $(".div3").hide();
         $(".div4").show();
         $("#btn-go").hide();
+        $('#alert-row').show();
         $("#progress-bar-register").css('width', '64%');
     }
     function passwordComplete() {
@@ -485,6 +489,8 @@ $(document).ready(function () {
         $("#emailError").css('display', 'none');
         $("#phoneError").css('display', 'none');
         $("#documentError").css('display', 'none');
+        $("#documentExistError").css('display', 'none');
+        $("#documentInvalidError").css('display', 'none');
         $("#dateBirthError").css('display', 'none');
 
         if ($("#firstname").val().length < 3) {
@@ -502,18 +508,26 @@ $(document).ready(function () {
 
         var str_cpf = $("#document").val().replace(/[^0-9]/g, '');
 
-        if (!verifyCPF(str_cpf)) {
+        if ($("#document").val().replace(/[^0-9]/g, '').length < 1) {
             $("#documentError").show();
+            $("#documentInvalidError").hide();
+            $('#documentExistError').hide();
+            isDataValid = false;
+        } else if (!verifyCPF(str_cpf)) {
+            $("#documentInvalidError").show();
+            $('#documentError').hide();
             $('#documentExistError').hide();
             isDataValid = false;
         } else {
             let result = verifyEqualCPF($("#document").val());
             if (result) {
                 $("#documentError").hide();
+                $("#documentInvalidError").hide();
                 $('#documentExistError').show();
                 isDataValid = false;
             } else {
                 $("#documentError").hide();
+                $("#documentInvalidError").hide();
                 $('#documentExistError').hide();
             }
         }
@@ -634,6 +648,7 @@ $(document).ready(function () {
         $('#btn-physical-person').hide();
         $(this).hide();
         $("#btn-go").show();
+        $('#alert-row').hide();
     });
 
     //verifica CEP

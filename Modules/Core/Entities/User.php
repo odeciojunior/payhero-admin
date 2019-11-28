@@ -74,12 +74,7 @@ class User extends Authenticable
      * @var string
      */
     protected $presenter = UserPresenter::class;
-    /**
-     * @var array
-     */
-    protected $dispatchesEvents = [
-        'created' => UserRegistrationEvent::class,
-    ];
+
     /**
      * @var array
      */
