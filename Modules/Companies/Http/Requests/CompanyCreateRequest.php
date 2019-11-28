@@ -15,8 +15,21 @@ class CompanyCreateRequest extends FormRequest
         return [
             //            'country'          => 'required|string|max:255,|in:"usa","brazil"',
             'country'          => 'required|string|max:255',
-            'fantasy_name'     => 'required|string|max:255',
-            'company_document' => 'required|string|max:255',
+            'fantasy_name'     => 'required_if:company_type,==,2|string|max:255',
+            'company_type'     => 'required|integer',
+            'company_document' => 'required_if:company_type,==,2|digits:14',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'company_document.required_if' => 'O campo CNPJ é obrigatório',
+            'fantasy_name.required_if'     => 'O campo Razão Social é obrigatório',
+            'company_document.digits'      => 'CNPJ inválido',
         ];
     }
 

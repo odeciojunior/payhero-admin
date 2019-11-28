@@ -144,13 +144,17 @@ class PostBackEbanxController extends Controller
                     try {
                         $credential = new PublicAppCredential($shopifyIntegration['token']);
 
-                        $client = new Client($credential, $shopifyIntegration['url_store'], [
+                        $client            = new Client($credential, $shopifyIntegration['url_store'], [
                             'metaCacheDir' => './tmp',
                         ]);
-
-                        $client->getTransactionManager()->create($sale['shopify_order'], [
-                            "kind" => "capture",
-                        ]);
+                        $transactionUpdate = [
+                            "kind"   => "sale",
+                            "source" => "external",
+                        ];
+                        if ($sale['payment_method'] == 2) {
+                            $transactionUpdate['gateway'] = 'Boleto';
+                        }
+                        $client->getTransactionManager()->create($sale->shopify_order, $transactionUpdate);
                     } catch (\Exception $e) {
                         Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale['id']);
                         report($e);

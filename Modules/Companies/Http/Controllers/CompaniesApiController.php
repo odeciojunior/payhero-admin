@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Modules\Companies\Transformers\CompanyDocumentsResource;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
@@ -75,13 +76,15 @@ class CompaniesApiController extends Controller
         try {
             $companyModel = new Company();
             $requestData  = $request->validated();
-
-            $company = $companyModel->newQuery()->create(
+            $company      = $companyModel->newQuery()->create(
                 [
                     'user_id'          => auth()->user()->account_owner_id,
                     'country'          => $requestData["country"],
-                    'fantasy_name'     => $requestData["fantasy_name"],
-                    'company_document' => $requestData["company_document"],
+                    'fantasy_name'     => ($requestData['company_type'] == $companyModel->present()
+                                                                                        ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
+                    'company_document' => ($requestData['company_type'] == $companyModel->present()
+                                                                                        ->getCompanyType('physical person')) ? auth()->user()->document : $requestData["company_document"],
+                    'company_type'     => $requestData['company_type'],
                 ]
             );
 
@@ -89,7 +92,8 @@ class CompaniesApiController extends Controller
                 [
                     'message'   => 'Dados atualizados com sucesso',
                     'idEncoded' => Hashids::encode($company->id),
-                ], Response::HTTP_OK
+                ],
+                Response::HTTP_OK
             );
         } catch (Exception $e) {
             Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
@@ -111,17 +115,16 @@ class CompaniesApiController extends Controller
             $bankService = new BankService();
 
             $company = $companyModel
-                ->with('user','companyDocuments')
+                ->with('user', 'companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
 
             if (Gate::allows('edit', [$company])) {
                 $banks = $bankService->getBanks('BR');
 
                 $companyResource = null;
-                if($company->company_type == $companyModel->present()->getCompanyType('juridical person')){
+                if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
                     $companyResource = new CompanyResource($company);
-                }
-                elseif($company->company_type == $companyModel->present()->getCompanyType('physical person')){
+                } else if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                     $companyResource = new CompanyCpfResource($company);
                 }
 
@@ -129,19 +132,21 @@ class CompaniesApiController extends Controller
                     [
                         'company' => $companyResource,
                         'banks'   => $banks,
-                    ], Response::HTTP_OK
+                    ],
+                    Response::HTTP_OK
                 );
             } else {
                 return response()->json(
                     [
                         'message' => 'Sem permissão para editar a empresa',
-                    ], Response::HTTP_FORBIDDEN
+                    ],
+                    Response::HTTP_FORBIDDEN
                 );
             }
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
-            dd($e);
+
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
@@ -154,15 +159,17 @@ class CompaniesApiController extends Controller
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
         try {
-            $companyModel = new Company();
-            $requestData  = $request->validated();
+            $companyModel   = new Company();
+            $companyService = new CompanyService();
+            $requestData    = $request->validated();
 
-            $company = $companyModel->newQuery()->find(current(Hashids::decode($encodedId)));
+            $company = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
                 if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
                     $company->bank_document_status = $companyModel->present()->getBankDocumentStatus('pending');
                 }
                 $company->update($requestData);
+                $companyService->getChangesUpdateBankData($company);
 
                 return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
             } else {
@@ -204,7 +211,8 @@ class CompaniesApiController extends Controller
                     return response()->json(
                         [
                             'message' => 'Sem permissão para remover a empresa',
-                        ], Response::HTTP_FORBIDDEN
+                        ],
+                        Response::HTTP_FORBIDDEN
                     );
                 }
             } else {
@@ -232,20 +240,27 @@ class CompaniesApiController extends Controller
             $companyDocumentModel = new CompanyDocument();
             $dataForm             = $request->validated();
 
-            $company = $companyModel->newQuery()->find(current(Hashids::decode($dataForm['company_id'])));
+            $company = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
             if (Gate::allows('uploadDocuments', [$company])) {
                 $document         = $request->file('file');
                 $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
-                $companyDocumentModel->newQuery()->create(
+
+                $documentType = $companyDocumentModel->present()->getDocumentType($dataForm["document_type"]);
+                if (empty($documentType)) {
+                    return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], Response::HTTP_BAD_REQUEST);
+                }
+
+                $companyDocumentModel->create(
                     [
                         'company_id'         => $company->id,
                         'document_url'       => $digitalOceanPath,
-                        'document_type_enum' => $dataForm["document_type"],
-                        'status'             => null,
+                        'document_type_enum' => $documentType,
+                        'status'             => $companyDocumentModel->present()->getTypeEnum('analyzing'),
                     ]
                 );
-                if (($dataForm["document_type"] ?? '') == $company->present()
-                                                                  ->getDocumentType('bank_document_status')) {
+                if ($documentType == $company->present()
+                                             ->getDocumentType('bank_document_status')
+                ) {
                     $company->update(
                         [
                             'bank_document_status' => $company->present()
@@ -253,8 +268,9 @@ class CompaniesApiController extends Controller
                         ]
                     );
                 }
-                if (($dataForm["document_type"] ?? '') == $company->present()
-                                                                  ->getDocumentType('address_document_status')) {
+                if ($documentType == $company->present()
+                                             ->getDocumentType('address_document_status')
+                ) {
                     $company->update(
                         [
                             'address_document_status' => $company->present()
@@ -262,8 +278,9 @@ class CompaniesApiController extends Controller
                         ]
                     );
                 }
-                if (($dataForm["document_type"] ?? '') == $company->present()
-                                                                  ->getDocumentType('contract_document_status')) {
+                if ($documentType == $company->present()
+                                             ->getDocumentType('contract_document_status')
+                ) {
                     $company->update(
                         [
                             'contract_document_status' => $company->present()
@@ -275,30 +292,15 @@ class CompaniesApiController extends Controller
                 return response()->json(
                     [
                         'message' => 'Arquivo enviado com sucesso.',
-                        'data'    => [
-                            'bank_document_translate'     => [
-                                'status'  => $company->bank_document_status,
-                                'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                            ->getBankDocumentStatus($company->bank_document_status)),
-                            ],
-                            'address_document_translate'  => [
-                                'status'  => $company->address_document_status,
-                                'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                            ->getAddressDocumentStatus($company->address_document_status)),
-                            ],
-                            'contract_document_translate' => [
-                                'status'  => $company->contract_document_status,
-                                'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                            ->getContractDocumentStatus($company->contract_document_status)),
-                            ],
-                        ],
-                    ], Response::HTTP_OK
+                    ],
+                    Response::HTTP_OK
                 );
             } else {
                 return response()->json(
                     [
                         'message' => 'Sem permissão para enviar documentos para a empresa',
-                    ], Response::HTTP_FORBIDDEN
+                    ],
+                    Response::HTTP_FORBIDDEN
                 );
             }
         } catch (Exception $e) {
@@ -325,7 +327,8 @@ class CompaniesApiController extends Controller
             return response()->json(
                 [
                     'message' => 'Ocorreu um erro ao tentar buscar dados, tente novamente mais tarde',
-                ], 400
+                ],
+                400
             );
         }
     }
@@ -351,6 +354,77 @@ class CompaniesApiController extends Controller
             report($e);
         }
     }
+
+    /**
+     * @return JsonResponse
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     */
+    public function verify()
+    {
+        $companyModel = new Company();
+        $company      = $companyModel->where(
+            [
+                ['user_id', auth()->user()->account_owner_id],
+                [
+                    'company_type', $companyModel->present()->getCompanyType('physical person'),
+                ],
+            ]
+        )->first();
+        if (!empty($company)) {
+            return response()->json(['has_physical_company' => 'true']);
+        } else {
+            return response()->json(['has_physical_company' => 'false']);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function verifyCnpj(Request $request)
+    {
+        $data           = $request->all();
+        $companyService = new CompanyService();
+        $cnpj           = $companyService->verifyCnpj($data['company_document']);
+        if ($cnpj) {
+            return response()->json([
+                                        'cnpj_exist' => 'true',
+                                        'message'    => 'Esse CNPJ já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'cnpj_exist' => 'false',
+                                    ]);
+        }
+    }
+
+    public function getDocuments(Request $request, $companyId)
+    {
+
+        try {
+
+            if (!empty($companyId) && !empty($request->input('document_type'))) {
+                $companyDocumentModel = new CompanyDocument();
+                $companyDocuments     = $companyDocumentModel->where('company_id', current(Hashids::decode($companyId)));
+
+                if (!empty($request->input('document_type'))) {
+                    $companyDocuments->where('document_type_enum', $companyDocumentModel->present()
+                                                                                        ->getDocumentType($request->input('document_type')));
+                }
+
+                return CompanyDocumentsResource::collection($companyDocuments->get());
+            } else {
+
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
+        }
+    }
 }
-
-

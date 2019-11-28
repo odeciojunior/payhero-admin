@@ -135,7 +135,7 @@ class NotazzService
                         $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
                     }
 
-                    $product['product_amount'] = $productPlan->amount ?? 1;
+                    $product['product_amount'] = ($planSale->amount * $productPlan->amount) ?? 1;
 
                     $productsSale->add($product);
                 }

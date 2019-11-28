@@ -16,10 +16,16 @@ use Modules\Core\Entities\User;
  */
 class UserService
 {
-    public function isDocumentValidated()
+    public function isDocumentValidated($userId = null)
     {
         $userModel     = new User();
-        $user          = auth()->user();
+        if(empty($userId)){
+            $user = auth()->user();
+        }
+        else{
+            $user = User::find($userId);
+        }
+
         $userPresenter = $userModel->present();
         if (!empty($user)) {
             if ($user->address_document_status == $userPresenter->getAddressDocumentStatus('approved') &&
@@ -31,6 +37,24 @@ class UserService
         }
 
         return false;
+    }
+
+    public function haveAnyDocumentPending()
+    {
+        $userModel     = new User();
+        $user          = auth()->user();
+        $userPresenter = $userModel->present();
+
+        if (!empty($user)) {
+            if (($user->address_document_status == $userPresenter->getAddressDocumentStatus('approved') ||
+                    $user->address_document_status == $userPresenter->getAddressDocumentStatus('analyzing')) &&
+                ($user->personal_document_status == $userPresenter->getPersonalDocumentStatus('approved') ||
+                    $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('analyzing'))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getRefusedDocuments()
@@ -63,7 +87,7 @@ class UserService
         $userPresenter = $userModel->present();
 
         $user = $userModel->where(
-            [['document', 'like', '%' . $cpf . '%'], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
+            [['document', $cpf], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
         )->first();
         if (!empty($user)) {
             return true;
