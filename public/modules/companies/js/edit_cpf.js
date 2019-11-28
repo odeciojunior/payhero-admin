@@ -107,7 +107,6 @@ $(document).ready(function () {
 
             },
             success: function success(response) {
-                console.log(response.data);
                 $("#loaderLine").remove();
                 htmlTable(response.data);
                 $("#modal-document-person-fisic").modal('show');
@@ -120,7 +119,7 @@ $(document).ready(function () {
         $("#loaderLine").remove();
         let dados = '';
         if (dataTable.length == 0) {
-            $("#table-body-documents-person-fisic").append('<span>Nenhum, documento enviado</span>')
+            $("#table-body-documents-person-fisic").append('<span>Nenhum documento enviado</span>')
         } else {
             $("#document-person-fisic-refused-motived").html('');
             $("#table-body-documents-person-fisic").html('');
@@ -168,8 +167,6 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
     url: '/api/companies/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     previewsContainer: ".dropzone-previews",
-    thumbnailWidth: 100,
-    thumbnailHeight: 100,
     success: function success(file, response) {
         alertCustom('success', response.message);
 
@@ -190,8 +187,6 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
     }, complete: function () {
         loadOnTable('#table-body-documents-person-fisic', '#table-documents-person-fisic');
         let codeId = extractIdFromPathName();
-
-        console.log();
 
         $.ajax({
             method: 'POST',
@@ -217,11 +212,13 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
             }
         });
 
+        ajaxVerifyDocumentPending();
+
         function htmlTableDoc(dataTable) {
             document.querySelector('#loaderLine').remove();
             let dados = '';
             if (dataTable.length == 0) {
-                document.querySelector("#table-body-documents-person-fisic").innerHTML = '<span>Nenhum, documento enviado</span>';
+                document.querySelector("#table-body-documents-person-fisic").innerHTML = '<span>Nenhum documento enviado</span>';
             } else {
                 document.querySelector("#table-body-documents-person-fisic").innerHTML = '';
                 document.querySelector("#document-person-fisic-refused-motived").innerHTML = '';
@@ -230,7 +227,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
                         <td class='text-center'>${value.date}</td>
                         <td class='text-center' style='cursor: pointer;'>
                             <span class='badge ${companyStatus[value.status]}'>
-                                    ${companyStatusTranslated[value.status]}</td>
+                                    ${companyStatusTranslated[value.status]}
                                </span>
                         </td>`;
 
@@ -245,7 +242,8 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
                              `;
                     }
                     dados += `<td class='text-center'>
-                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'>
+                            <i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
                         
                     </tr>`;

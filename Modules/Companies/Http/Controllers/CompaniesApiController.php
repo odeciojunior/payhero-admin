@@ -146,10 +146,7 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
-<<<<<<< HEAD
-=======
 
->>>>>>> eaf9f8c834ead0cd307da29cb63f28bac98f098c
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
@@ -406,10 +403,14 @@ class CompaniesApiController extends Controller
 
             if (!empty($companyId) && !empty($request->input('document_type'))) {
                 $companyDocumentModel = new CompanyDocument();
-                $companyDocuments     = $companyDocumentModel->where('company_id', current(Hashids::decode($companyId)))
-                                                             ->get();
+                $companyDocuments     = $companyDocumentModel->where('company_id', current(Hashids::decode($companyId)));
 
-                return CompanyDocumentsResource::collection($companyDocuments);
+                if (!empty($request->input('document_type'))) {
+                    $companyDocuments->where('document_type_enum', $companyDocumentModel->present()
+                                                                                    ->getDocumentType($request->input('document_type')));
+                }
+
+                return CompanyDocumentsResource::collection($companyDocuments->get());
             } else {
 
                 return response()->json([

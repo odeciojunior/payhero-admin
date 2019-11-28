@@ -462,4 +462,43 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
     alert("Link " + $(inputId).val() + " copiado com Sucesso!");
 });
 
+/* Document Pending Alert */
+
+function ajaxVerifyDocumentPending(){
+    $.ajax({
+        method: 'GET',
+        url: '/api/profile/verifydocuments',
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: response => {
+            errorAjaxResponse(response);
+        },
+        success: response => {
+            sessionStorage.setItem('documentsPending', JSON.stringify(response));
+            if (response.pending) {
+                $('.document-pending').addClass('show');
+                $('.btn-finalize').attr('href', response.link);
+            }
+        },
+    });
+}
+
+function verifyDocumentPending(){
+    if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
+        let documentsPending = sessionStorage.getItem('documentsPending');
+        if (documentsPending === null) {
+            ajaxVerifyDocumentPending();
+        } else {
+            documentsPending = JSON.parse(documentsPending);
+            if (documentsPending.pending) {
+                $('.document-pending').addClass('show');
+                $('.btn-finalize').attr('href', documentsPending.link);
+            }
+        }
+    }
+}
+
+/* End - Document Pending Alert */
 

@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    sessionStorage.removeItem('documentsPending');
+
     getDataDashboard();
     loading('#cardPendente', '#loaderCard');
     loading('#cardAntecipavel', '#loaderCard');
