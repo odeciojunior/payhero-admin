@@ -148,6 +148,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                console.log(response);
                 $('#email').val(response.data.email);
                 $('#name').val(response.data.name);
                 $('#document').val(response.data.document);
@@ -164,27 +165,7 @@ $(document).ready(function () {
                 $("#previewimage").on("error", function () {
                     $(this).attr('src', '/modules/global/img/user-default.png');
                 });
-                var valuecss = '';
 
-                if (response.data.personal_document_status === 1) {
-                    valuecss = 'primary';
-                } else if (response.data.personal_document_status === 2) {
-                    valuecss = 'pendente';
-                } else if (response.data.personal_document_status === 3) {
-                    valuecss = 'success';
-                } else {
-                    valuecss = 'danger';
-                }
-
-                // if (response.data.new_affiliation) {
-                //     $("#new_affiliation_switch").attr("checked", "checked");
-                // }
-                // if (response.data.new_affiliation_request) {
-                //     $("#new_affiliation_request_switch").attr("checked", "checked");
-                // }
-                // if (response.data.approved_affiliation) {
-                //     $("#approved_affiliation_switch").attr("checked", "checked");
-                // }
                 if (response.data.boleto_compensated) {
                     $("#boleto_compensated_switch").attr("checked", "checked");
                 }
@@ -194,9 +175,7 @@ $(document).ready(function () {
                 if (response.data.notazz) {
                     $("#notazz_switch").attr("checked", "checked");
                 }
-                // if (response.data.withdrawal_approved) {
-                //     $("#withdrawal_approved_switch").attr("checked", "checked");
-                // }
+
                 if (response.data.released_balance) {
                     $("#released_balance_switch").attr("checked", "checked");
                 }
@@ -206,9 +185,7 @@ $(document).ready(function () {
                 if (response.data.shopify) {
                     $("#shopify_switch").attr("checked", "checked");
                 }
-                // if (response.data.user_shopify_integration_store) {
-                //     $("#user_shopify_integration_store_switch").attr("checked", "checked");
-                // }
+
                 if (response.data.billet_generated) {
                     $("#billet_generated_switch").attr("checked", "checked");
                 }
@@ -232,22 +209,9 @@ $(document).ready(function () {
                     emailNotVerified();
                 }
 
-                var linha = '<span class="badge badge-' + valuecss + '" id="personal_document_badge">' + response.data.personal_document_translate + '</span>';
-                $("#td_personal_status").append(linha);
+                $("#td_personal_status").append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
 
-                if (response.data.address_document_status === 1) {
-                    $("#address-document-id").hide();
-                    valuecss = 'primary';
-                } else if (response.data.address_document_status === 2) {
-                    valuecss = 'pendente';
-                } else if (response.data.address_document_status === 3) {
-                    valuecss = 'success';
-                } else {
-                    valuecss = 'danger';
-                }
-
-                linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
-                $("#td_address_status").append(linha);
+                $("#td_address_status").append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
@@ -788,8 +752,6 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
     url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     previewsContainer: ".dropzone-previews",
-    thumbnailWidth: 100,
-    thumbnailHeight: 100,
     success: function success(file, response) {
         alertCustom('success', response.message);
 
