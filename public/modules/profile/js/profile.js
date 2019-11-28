@@ -153,9 +153,9 @@ $(document).ready(function () {
                  * Dados Pessoais
                  */
                 if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
-                    $('#document').attr('readonly', true);
+                    $('#document').attr('disabled', 'disabled');
                 } else {
-                    $('#document').attr('readonly', false);
+                    $('#document').removeAttr('disabled');
                 }
 
                 $('#name').val(response.data.name);
@@ -175,7 +175,7 @@ $(document).ready(function () {
                 /**
                  * Dados Residenciais
                  */
-                if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
+                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
                     $('.dados-residenciais').attr('disabled', 'disabled');
                 } else {
                     $('.dados-residenciais').removeAttr('disabled');
@@ -291,6 +291,9 @@ $(document).ready(function () {
     }
 
     $("#profile_update_form").on("submit", function (event) {
+        $('.dados-residenciais').removeAttr('disabled');
+        $('#document').removeAttr('disabled');
+
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
         loadingOnScreen();
@@ -308,8 +311,10 @@ $(document).ready(function () {
             data: form_data,
             error: function (response) {
                 errorAjaxResponse(response);
+
             },
             success: function success(response) {
+
                 loadingOnScreenRemove();
                 $(".div1").hide();
                 $(".div2").show();
