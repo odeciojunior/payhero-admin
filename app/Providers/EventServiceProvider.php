@@ -9,6 +9,7 @@ use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\UserRegistrationListener;
 use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
+
 // use Modules\Core\Listeners\BilletPaidDigitalManagerListener;
 
 class EventServiceProvider extends ServiceProvider
@@ -19,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         UserRegistrationEvent::class                          => [
-            UserRegistrationListener::class,
+            //            UserRegistrationListener::class,
         ],
         BilletPaidEvent::class                                => [
             BilletPaidActiveCampaignListener::class,
@@ -44,13 +45,13 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\BoletoPaidNotifyUser',
             'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
         ],
-        'Modules\Core\Events\TrackingsImportedEvent'        => [
+        'Modules\Core\Events\TrackingsImportedEvent'          => [
             'Modules\Core\Listeners\NotifyTrackingsImportedListener',
         ],
-        'Modules\Core\Events\SalesExportedEvent'        => [
+        'Modules\Core\Events\SalesExportedEvent'              => [
             'Modules\Core\Listeners\NotifySalesExportedListener',
         ],
-        'Modules\Core\Events\TrackingsExportedEvent'        => [
+        'Modules\Core\Events\TrackingsExportedEvent'          => [
             'Modules\Core\Listeners\NotifyTrackingsExportedListener',
         ],
         'Modules\Core\Events\TrackingCodeUpdatedEvent'        => [
