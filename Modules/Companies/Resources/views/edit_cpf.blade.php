@@ -120,7 +120,7 @@
                         <div class='col-lg-12' id='document-person-fisic-refused-motived' style='display: none;'></div>
                         <div class='col-lg-12'>
                             <div id='dropzone'>
-                                <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentsJuridicPerson'>
+                                <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentsFisicPerson'>
                                     @csrf
                                     <div class='dz-message needsclick text-dropzone dropzone-previews' id='dropzone-text-document-person-fisic'>
                                         Arraste ou clique para fazer upload. <br>
