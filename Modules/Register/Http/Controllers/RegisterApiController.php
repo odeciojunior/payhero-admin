@@ -5,10 +5,12 @@ namespace Modules\Register\Http\Controllers;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\UserNotification;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
@@ -27,10 +29,11 @@ class RegisterApiController extends Controller
     public function store(RegisterRequest $request)
     {
         try {
-            $requestData  = $request->validated();
-            $userModel    = new User();
-            $inviteModel  = new Invitation();
-            $companyModel = new Company();
+            $requestData           = $request->validated();
+            $userModel             = new User();
+            $inviteModel           = new Invitation();
+            $companyModel          = new Company();
+            $userNotificationModel = new UserNotification();
 
             $parameter = $requestData['parameter'];
 
@@ -112,6 +115,18 @@ class RegisterApiController extends Controller
                                       'account'           => $requestData['account'],
                                       'account_digit'     => $requestData['account_digit'],
                                   ]);
+
+            if (!empty($user)) {
+                $user->load(["userNotification"]);
+                $userNotification = $user->userNotification ?? collect();
+                if ($userNotification->isEmpty()) {
+                    $userNotificationModel->create(
+                        [
+                            "user_id" => $user->id,
+                        ]
+                    );
+                }
+            }
 
             auth()->loginUsingId($user->id, true);
 

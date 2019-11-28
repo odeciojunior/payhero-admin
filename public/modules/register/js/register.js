@@ -70,6 +70,7 @@ $(document).ready(function () {
 
     // mascara para cep
     $('#zip_code').mask('99.999-999');
+    $('#zip_code_company').mask('99.999-999');
 
     //mascara cnpj
     $('#company_document').mask('00.000.000/0000-00');
@@ -146,6 +147,7 @@ $(document).ready(function () {
         $('.div4').hide();
         $('.div7').show();
         $("#btn-go").show();
+        $('#alert-row').hide();
         $("#progress-bar-register").css('width', '80%');
 
     }
@@ -154,6 +156,7 @@ $(document).ready(function () {
         $('.div4').hide();
         $('.div5').show();
         $("#btn-go").show();
+        $('#alert-row').hide();
         currentPage = 'bank data physical person';
         $("#progress-bar-register").css('width', '80%');
     })
@@ -169,6 +172,7 @@ $(document).ready(function () {
         $(".div3").hide();
         $(".div4").show();
         $("#btn-go").hide();
+        $('#alert-row').show();
         $("#progress-bar-register").css('width', '64%');
     }
     function passwordComplete() {
@@ -634,6 +638,7 @@ $(document).ready(function () {
         $('#btn-physical-person').hide();
         $(this).hide();
         $("#btn-go").show();
+        $('#alert-row').hide();
     });
 
     //verifica CEP

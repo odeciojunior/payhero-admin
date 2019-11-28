@@ -236,6 +236,7 @@ $(document).ready(function () {
                 $("#td_personal_status").append(linha);
 
                 if (response.data.address_document_status === 1) {
+                    $("#address-document-id").hide();
                     valuecss = 'primary';
                 } else if (response.data.address_document_status === 2) {
                     valuecss = 'pendente';
@@ -252,6 +253,18 @@ $(document).ready(function () {
                 verifyDocuments(response.data);
                 // getRefusedDocuments(response.data.refusedDocuments);
                 verifyUserAddress(response.data);
+
+                if (response.data.address_document_status === 3) {
+                    $("#address-document-id").hide();
+                } else {
+                    $("#address-document-id").show();
+                }
+                if (response.data.personal_document_status === 3) {
+                    $("#personal-document-id").hide();
+                } else {
+                    $("#personal-document-id").show();
+                }
+
             }
         });
     }
@@ -654,11 +667,10 @@ $(document).ready(function () {
     }
 
     function htmlTableDocuments(data) {
-        console.log(data);
         let dados = '';
         let verifyReason = false;
         if (data.length == 0) {
-            $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
+            $("#profile-documents-modal").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
         } else {
             $("#document-refused-motived").html('');
             $.each(data, function (index, value) {

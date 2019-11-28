@@ -47,7 +47,7 @@ class CompanyService
         $company          = $companyModel->find($companyId);
         $companyPresenter = $companyModel->present();
         if (!empty($company)) {
-            if($company->company_type = $companyPresenter->getCompanyType('juridical person')){
+            if ($company->company_type = $companyPresenter->getCompanyType('juridical person')) {
                 if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') &&
                     $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') &&
                     $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
@@ -63,8 +63,8 @@ class CompanyService
 
     public function haveAnyDocumentPending()
     {
-        $companyModel = new Company();
-        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
+        $companyModel     = new Company();
+        $companies        = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
         $companyPresenter = $companyModel->present();
 
         foreach ($companies as $company) {
@@ -126,6 +126,23 @@ class CompanyService
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * @param $company
+     * Se os dados do relacionados ao banco forem alterados o status documento muda para pendente
+     */
+    public function getChangesUpdateBankData($company)
+    {
+        $companyChanges = $company->getChanges();
+
+        if (!empty($companyChanges['bank']) || !empty($companyChanges['agency'])
+            || !empty($companyChanges['agency_digit']) || !empty($companyChanges['account'])
+            || !empty($companyChanges['account_digit'])) {
+            $company->update([
+                                 'bank_document_status' => $company->present()->getStatus('pending'),
+                             ]);
         }
     }
 }
