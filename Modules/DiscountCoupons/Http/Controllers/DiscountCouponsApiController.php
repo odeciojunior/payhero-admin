@@ -210,8 +210,8 @@ class DiscountCouponsApiController extends Controller
 
                     $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
                     $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
-                    if(empty($requestData['rule_value'])) {
-                        $requestData['rule_value'] = 0;
+                    if(empty($requestValidated['rule_value'])) {
+                        $requestValidated['rule_value'] = 0;
                     }
                     $couponUpdated = $coupon->update($requestValidated);
 
