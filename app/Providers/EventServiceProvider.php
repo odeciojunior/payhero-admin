@@ -19,14 +19,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        UserRegistrationEvent::class                          => [
-            //            UserRegistrationListener::class,
-        ],
         BilletPaidEvent::class                                => [
             BilletPaidActiveCampaignListener::class,
             BilletPaidHotZappListener::class,
             BilletPaidSendEmailListener::class,
-            // BilletPaidDigitalManagerListener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',
@@ -64,10 +60,7 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
         ],
         'Modules\Core\Events\SaleApprovedEvent'               => [
-            //            'Modules\Core\Listeners\NotifyUsersApprovedSaleListener',
-            //            'Modules\Core\Listeners\PusherNotificationApprovedSaleListener',
             'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
-            //            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle',
