@@ -7,6 +7,9 @@ Route::group(
         'middleware' => ['auth:api'],
     ],
     function() {
+
+        Route::get('/profile/verifydocuments', 'ProfileApiController@verifyDocuments');
+
         Route::apiResource('profile', 'ProfileApiController')
              ->only('index', 'show', 'edit', 'store', 'update', 'destroy', 'create')
              ->names('api.profile');
