@@ -97,6 +97,7 @@
                             <input type="text" name="document" id="document" placeholder="Digite seu CPF" required>
                             <p class='sm-tex text-danger' id='documentError' style='display:none;'>O campo CPF é obrigatório</p>
                             <p class='sm-tex text-danger' id='documentExistError' style='display:none;'>Esse CPF já está cadastrado na plataforma</p>
+                            <p class='sm-tex text-danger' id='documentInvalidError' style='display:none;'>CPF inválido</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -341,8 +342,8 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="input-holder d-flex flex-column">
-                            <label for="agency_digit">Digito</label>
-                            <input type="text" name="agency_digit" id="agency_digit" placeholder="Digite o digito da agência" required>
+                            <label for="agency_digit">Dígito</label>
+                            <input type="text" name="agency_digit" id="agency_digit" placeholder="Digite o dígito da agência" required>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -354,8 +355,8 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="input-holder d-flex flex-column">
-                            <label for="account_digit">Digito</label>
-                            <input type="text" name="account_digit" id="account_digit" placeholder="Digite o digito da conta" required>
+                            <label for="account_digit">Dígito</label>
+                            <input type="text" name="account_digit" id="account_digit" placeholder="Digite o dígito da conta" required>
                         </div>
                     </div>
                 </div>
@@ -454,7 +455,7 @@
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
-<script src="{{asset('modules/register/js/register.js?v=8')}}"></script>
+<script src="{{asset('modules/register/js/register.js?v=9')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
