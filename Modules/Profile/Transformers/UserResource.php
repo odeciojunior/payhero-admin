@@ -43,10 +43,10 @@ class UserResource extends Resource
             'date_birth'                  => $this->date_birth,
             'personal_document_status'    => $this->personal_document_status,
             'address_document_status'     => $this->address_document_status,
-            'personal_document_translate' => Lang::get('definitions.enum.personal_document_status.' . $this->present()
-                                                                                                           ->getPersonalDocumentStatus($this->personal_document_status)),
-            'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' . $this->present()
-                                                                                                           ->getPersonalDocumentStatus($this->address_document_status)),
+            'personal_document_translate' => $this->present()
+                                                  ->getPersonalDocumentStatus($this->personal_document_status),
+            'address_document_translate'  => $this->present()
+                                                  ->getPersonalDocumentStatus($this->address_document_status),
             // Notificações
             'new_affiliation'             => $userNotification->new_affiliation ?? false,
             'new_affiliation_request'     => $userNotification->new_affiliation_request ?? false,
