@@ -329,34 +329,42 @@ $(() => {
                                                 </tr>`);
 
                         switch(checkpoint.tracking_status_enum) {
-                            case 1:
-                                resume['posted'] = checkpoint;
+                            case 1: //postado
+                                resume[0] = checkpoint;
                                 break;
-                            case 2:
-                                resume['dispatched'] = checkpoint;
+                            case 2: //dispatched
+                                resume[1] = checkpoint;
                                 break;
-                            case 4:
-                                resume['out_for_delivery'] = checkpoint;
+                            case 4: // out_for_delivery
+                                resume[2] = checkpoint;
                                 break;
-                            case 3:
-                                resume['delivered'] = checkpoint;
+                            case 3: //delivered
+                                resume[3] = checkpoint;
                                 break;
-                            case 5:
-                                resume['exception'] = checkpoint;
+                            case 5: //exception
+                                resume[4] = checkpoint;
                                 break;
                         }
                     }
 
-                    resume['dispatched'] = resume['dispatched'] || {tracking_status: 'Em trânsito'};
-                    resume['out_for_delivery'] = resume['out_for_delivery'] || {tracking_status: 'Saiu para a entrega'};
-                    resume['delivered'] = resume['delivered'] || {tracking_status: 'Entregue'};
+                    resume[1] = resume[1] || {tracking_status: 'Em trânsito'};
+
+                    if(resume[3] && !resume[2]){
+                        resume[2] = {tracking_status: 'Saiu para a entrega', created_at: resume[3].created_at};
+                    }else{
+                        resume[2] = resume[2] || {tracking_status: 'Saiu para a entrega'};
+                    }
+
+                    resume[3] = resume[3] || {tracking_status: 'Entregue'};
+
+                    console.log(resume);
 
                     for(let key in resume){
                         let value = resume[key];
                         $('.tracking-timeline .tracking-timeline-row').eq(0)
-                            .append(`<div class="date-item ${value.created_at ? key === 'exception' ? 'exception' : 'active' : ''}">${value.created_at || ''}</div>`);
+                            .append(`<div class="date-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">${value.created_at || ''}</div>`);
                         $('.tracking-timeline .tracking-timeline-row').eq(1)
-                            .append(`<div class="step-item ${value.created_at ? key === 'exception' ? 'exception' : 'active' : ''}">
+                            .append(`<div class="step-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">
                                         <span class="step-line"></span>
                                         <span class="step-dot"></span>
                                         <span class="step-line"></span>
