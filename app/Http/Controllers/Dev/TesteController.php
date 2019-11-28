@@ -342,8 +342,7 @@ class TesteController extends Controller
         //nada
 
 
-//        dd('nada');
-
+        dd('nada');
 
 //---------------------------------------------------------------------------
 //        $notazInvoiceModel = new NotazzInvoice();
