@@ -50,12 +50,13 @@
                                     <label for="account_digit">Digito</label>
                                     <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
                                 </div>
+                                <div class="form-group col-xl-2">
+                                    <label for="update_bank_data"></label>
+                                    <input id="update_bank_data" type="button" class="btn btn-success mt-30" value="Atualizar" style="width: auto;">
+                                </div>        
                             </div>
                         </form>
-                        <div class="form-group text-right">
-                            <input id="update_bank_data" type="button" class="btn btn-success" value="Atualizar" style="width: auto;">
-                        </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 mb-40 mt-15">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
