@@ -148,12 +148,38 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response);
-                $('#email').val(response.data.email);
+
+                /**
+                 * Dados Pessoais
+                 */
+                if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
+                    $('#document').attr('readonly', true);
+                } else {
+                    $('#document').attr('readonly', false);
+                }
+
                 $('#name').val(response.data.name);
+                $('#email').val(response.data.email);
                 $('#document').val(response.data.document);
                 $('#cellphone').val(response.data.cellphone);
                 $('#date_birth').val(response.data.date_birth);
+
+                /**
+                 * Imagem Perfil
+                 */
+                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
+                });
+
+                /**
+                 * Dados Residenciais
+                 */
+                if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
+                    $('.dados-residenciais').attr('disabled', 'disabled');
+                } else {
+                    $('.dados-residenciais').removeAttr('disabled');
+                }
                 $('#zip_code').val(response.data.zip_code);
                 $('#street').val(response.data.street);
                 $('#number').val(response.data.number);
@@ -161,11 +187,10 @@ $(document).ready(function () {
                 $('#complement').val(response.data.complement);
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
-                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function () {
-                    $(this).attr('src', '/modules/global/img/user-default.png');
-                });
 
+                /**
+                 * Notificações
+                 */
                 if (response.data.boleto_compensated) {
                     $("#boleto_compensated_switch").attr("checked", "checked");
                 }
@@ -209,9 +234,13 @@ $(document).ready(function () {
                     emailNotVerified();
                 }
 
-                $("#td_personal_status").append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
+                /**
+                 * Documentos
+                 */
 
-                $("#td_address_status").append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
+                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
+
+                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
@@ -685,7 +714,6 @@ $(document).ready(function () {
 
             },
             success: function success(response) {
-                console.log(response.data);
                 htmlTableDocuments(response.data);
                 $("#loaderLine").remove();
 
