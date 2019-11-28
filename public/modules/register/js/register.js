@@ -146,6 +146,7 @@ $(document).ready(function () {
         $('.div4').hide();
         $('.div7').show();
         $("#btn-go").show();
+        $('#alert-row').hide();
         $("#progress-bar-register").css('width', '80%');
 
     }
@@ -154,6 +155,7 @@ $(document).ready(function () {
         $('.div4').hide();
         $('.div5').show();
         $("#btn-go").show();
+        $('#alert-row').hide();
         currentPage = 'bank data physical person';
         $("#progress-bar-register").css('width', '80%');
     })
@@ -169,6 +171,7 @@ $(document).ready(function () {
         $(".div3").hide();
         $(".div4").show();
         $("#btn-go").hide();
+        $('#alert-row').show();
         $("#progress-bar-register").css('width', '64%');
     }
     function passwordComplete() {
@@ -634,6 +637,7 @@ $(document).ready(function () {
         $('#btn-physical-person').hide();
         $(this).hide();
         $("#btn-go").show();
+        $('#alert-row').hide();
     });
 
     //verifica CEP
