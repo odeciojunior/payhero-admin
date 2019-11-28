@@ -194,7 +194,7 @@
                                                     </td>
                                                     <td id="td_personal_status"></td>
                                                     <td>
-                                                        <i title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                        <i id='personal-document-id' title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -206,7 +206,7 @@
                                                     </td>
                                                     <td id="td_address_status"></td>
                                                     <td>
-                                                        <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                        <i id='address-document-id' title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
                                                 </tr>
                                             </tbody>
