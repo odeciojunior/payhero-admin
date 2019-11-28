@@ -2,7 +2,9 @@
 
 namespace Modules\Core\Services;
 
+use App\Entities\Sale;
 use Exception;
+use Modules\Core\Services\FoxUtils;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -13,7 +15,6 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Modules\Core\Entities\ProductPlan;
@@ -1242,6 +1243,167 @@ class ShopifyService
             }
         } else {
             return null;
+        }
+    }
+
+    public function newOrder(Sale $sale)
+    {
+
+        try {
+            $delivery = $sale->delivery;
+            $client   = $sale->client;
+
+            $totalValue = $sale->present()->getSubTotal();
+
+            $firstProduct = true;
+            $items        = [];
+            foreach ($sale->plansSales as $planSale) {
+
+                foreach ($planSale->plan->productsPlans as $productPlan) {
+
+                    $productPrice = 0;
+                    if ($firstProduct) {
+                        if (!empty($sale->shopify_discount)) {
+                            $totalValue -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                        }
+
+                        if ($productPlan->amount * $planSale->amount > 1) {
+                            $productPrice = intval($totalValue / ($productPlan->amount * $planSale->amount));
+                        } else {
+                            $productPrice = $totalValue;
+                        }
+                        $productPrice = substr_replace($productPrice, '.', strlen($productPrice) - 2, 0);
+                        $firstProduct = false;
+                    }
+
+                    $items[] = [
+                        "grams"             => 500,
+                        "id"                => $planSale->plan->id,
+                        "price"             => $productPrice,
+                        "product_id"        => $productPlan->product->shopify_id,
+                        "quantity"          => $productPlan->amount * $planSale->amount,
+                        "requires_shipping" => true,
+                        "sku"               => $productPlan->product->sku,
+                        "title"             => $planSale->plan->name,
+                        "variant_id"        => $productPlan->product->shopify_variant_id,
+                        "variant_title"     => $planSale->plan->name,
+                        "name"              => $planSale->plan->name,
+                        "gift_card"         => false,
+                    ];
+                }
+            }
+
+            $address = $delivery->street . ' - ' . $delivery->number;
+            if ($delivery->complement != '') {
+                $address .= ' - ' . $delivery->complement;
+            }
+            $address .= ' - ' . $delivery->neighborhood;
+
+            $shippingAddress = [
+                "address1"      => $address,
+                "address2"      => "",
+                "city"          => $delivery->city,
+                "company"       => $client->document,
+                "country"       => "Brasil",
+                "first_name"    => $delivery->present()->getReceiverFirstName(),
+                "last_name"     => $delivery->present()->getReceiverLastName(),
+                "phone"         => $client->present()->getTelephoneShopify(),
+                "province"      => $delivery->state,
+                "zip"           => $delivery->zip_code,
+                "name"          => $client->name,
+                "country_code"  => "BR",
+                "province_code" => $delivery->state,
+            ];
+
+            $orderData = [
+                "accepts_marketing"       => false,
+                "currency"                => "BRL",
+                "email"                   => $client->email,
+                "phone"                   => $client->present()->getTelephoneShopify(),
+                "first_name"              => $delivery->present()->getReceiverFirstName(),
+                "last_name"               => $delivery->present()->getReceiverLastName(),
+                "buyer_accepts_marketing" => false,
+                "line_items"              => $items,
+                "shipping_address"        => $shippingAddress,
+            ];
+
+            if ($sale->payment_method == 1) {
+
+                $orderData += [
+                    "transactions" => [
+                        [
+                            "kind"   => "sale",
+                            "status" => "success",
+                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        ],
+                    ],
+                ];
+            } else if ($sale->payment_method == 2) {
+
+                $orderData += [
+                    "financial_status" => "pending",
+                    //                    "transactions"     => [
+                    //                        [
+                    //                            "kind"    => "Boleto",
+                    //                            "gateway" => "Boleto",
+                    //                            "status"  => "success",
+                    //                            "amount"  => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                    //                        ],
+                    //                    ],
+                ];
+            }
+
+            $order = $this->shopifyClient->getOrderManager()->create($orderData);
+            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+                $sale->update([
+                                  'shopify_order' => 000,
+                              ]);
+            }
+            $sale->update([
+                              'shopify_order' => $order->getId(),
+                          ]);
+        } catch (\Exception $e) {
+            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
+            report($e);
+            //            $shippingAddress['phone']      = '+5555959844325';
+            //            $orderData['phone']            = '+5555959844325';
+            //            $orderData['shipping_address'] = $shippingAddress;
+            //            $order                         = $this->shopifyClient->getOrderManager()->create($orderData);
+            //            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+            $sale->update([
+                              'shopify_order' => 000,
+                          ]);
+            //            }
+            //            $sale->update([
+            //                              'shopify_order' => $order->getId(),
+            //                          ]);
+        }
+    }
+
+    public function refundOrder(ShopifyIntegration $shopifyIntegration, $shopifyOrder)
+    {
+        try {
+            $credential = new PublicAppCredential($shopifyIntegration->token);
+
+            $client = new Client($credential, $shopifyIntegration->url_store, [
+                'metaCacheDir' => '/var/tmp',
+            ]);
+            $order  = $client->getOrderManager()->find($shopifyOrder);
+            if (!FoxUtils::isEmpty($order)) {
+                if ($order->getFinancialStatus() == 'pending') {
+                    $client->getOrderManager()->cancel($shopifyOrder);
+                } else {
+                    $transaction = [
+                        "kind"   => "refund",
+                        "source" => "external",
+                    ];
+                    $client->getTransactionManager()->create($shopifyOrder, $transaction);
+                }
+            } else {
+                throw new Exception('Ordem não encontrado no shopigy papra a venda - ' . $order);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
         }
     }
 }
