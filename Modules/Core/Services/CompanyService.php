@@ -140,21 +140,9 @@ class CompanyService
         if (!empty($companyChanges['bank']) || !empty($companyChanges['agency'])
             || !empty($companyChanges['agency_digit']) || !empty($companyChanges['account'])
             || !empty($companyChanges['account_digit'])) {
-            if ($company->company_type == $company->present()->getCompanyType('physical person')) {
-                $company->update([
-                                     'bank_document_status' => $company->present()->getStatus('pending'),
-                                 ]);
-            } else {
-                $company->update([
-                                     'bank_document_status' => $company->present()->getStatus('pending'),
-                                 ]);
-                $company->update([
-                                     'address_document_status' => $company->present()->getStatus('pending'),
-                                 ]);
-                $company->update([
-                                     'contract_document_status' => $company->present()->getStatus('pending'),
-                                 ]);
-            }
+            $company->update([
+                                 'bank_document_status' => $company->present()->getStatus('pending'),
+                             ]);
         }
     }
 }

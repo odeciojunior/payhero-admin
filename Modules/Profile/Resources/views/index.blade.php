@@ -199,9 +199,7 @@
                                                 <tr>
                                                     <td>
                                                         Documento com foto
-                                                        <small class="text-muted" style="line-height: 1.5;">
-                                                            <br>Documentos aceitos: RG ou CNH (oficial e com foto)
-                                                        </small>
+
                                                     </td>
                                                     <td id="td_personal_status"></td>
                                                     {{--<td>
@@ -214,9 +212,7 @@
                                                 <tr>
                                                     <td>
                                                         Comprovante de residência
-                                                        <small class="text-muted" style="line-height: 1.5;">
-                                                            <br>Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
-                                                        </small>
+
                                                     </td>
                                                     <td id="td_address_status"></td>
                                                     {{--<td>
