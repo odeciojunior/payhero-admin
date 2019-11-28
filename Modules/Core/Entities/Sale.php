@@ -3,10 +3,12 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Date;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
 
@@ -24,6 +26,7 @@ use Modules\Core\Presenters\SalePresenter;
  * @property float $total_paid_value
  * @property float $shipment_value
  * @property string $start_date
+ * @property DateTime $date_refunded
  * @property string $end_date
  * @property string $gateway_transaction_id
  * @property string $gateway_id
@@ -86,6 +89,7 @@ class Sale extends Model
         'sub_total',
         'shipment_value',
         'start_date',
+        'date_refunded',
         'end_date',
         'gateway_transaction_id',
         'gateway_id',
