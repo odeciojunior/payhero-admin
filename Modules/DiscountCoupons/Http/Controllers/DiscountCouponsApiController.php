@@ -73,6 +73,9 @@ class DiscountCouponsApiController extends Controller
                 $requestData["project_id"] = current(Hashids::decode($projectId));
                 $requestData['value'] = preg_replace("/[^0-9]/", "", $requestData['value']);
                 $requestData['rule_value'] = preg_replace("/[^0-9]/", "", $requestData['rule_value']);
+                if(empty($requestData['rule_value'])) {
+                    $requestData['rule_value'] = 0;
+                }
 
                 $project = $projectModel->find($requestData["project_id"]);
 
@@ -207,7 +210,9 @@ class DiscountCouponsApiController extends Controller
 
                     $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
                     $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
-
+                    if(empty($requestData['rule_value'])) {
+                        $requestData['rule_value'] = 0;
+                    }
                     $couponUpdated = $coupon->update($requestValidated);
 
                     if ($couponUpdated) {

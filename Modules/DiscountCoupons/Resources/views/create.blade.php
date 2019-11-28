@@ -33,7 +33,7 @@
         </div>
         <div class="form-group col-xl-12">
             <label for="status">Válido para compras com valor maior que:</label>
-            <input name="rule_value" type="text" class="form-control rule-value" placeholder="Valor">
+            <input name="rule_value" type="text" class="form-control rule-value" value="0,00" placeholder="0,00">
         </div>
     </div>
 </form>

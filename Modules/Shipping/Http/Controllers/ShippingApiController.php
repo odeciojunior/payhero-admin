@@ -98,6 +98,9 @@ class ShippingApiController extends Controller
                         }
                     }
                     $shippingValidated['rule_value'] =  preg_replace( '/[^0-9]/', '', $shippingValidated['rule_value']);
+                    if(empty($shippingValidated['rule_value'])) {
+                        $shippingValidated['rule_value'] = 0;
+                    }
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
@@ -229,7 +232,9 @@ class ShippingApiController extends Controller
                         }
                     }
                     $requestValidated['rule_value'] =  preg_replace( '/[^0-9]/', '', $requestValidated['rule_value']);
-
+                    if(empty($requestValidated['rule_value'])) {
+                        $requestValidated['rule_value'] = 0;
+                    }
                     $shippingUpdated = $shipping->update($requestValidated);
 
                     if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
