@@ -167,8 +167,6 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
     url: '/api/companies/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     previewsContainer: ".dropzone-previews",
-    thumbnailWidth: 100,
-    thumbnailHeight: 100,
     success: function success(file, response) {
         alertCustom('success', response.message);
 

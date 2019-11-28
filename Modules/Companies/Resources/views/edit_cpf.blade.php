@@ -120,8 +120,8 @@
                             <div id='dropzone'>
                                 <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentsFisicPerson'>
                                     @csrf
-                                    <div class='dz-message needsclick text-dropzone dropzone-previews' id='dropzone-text-document-person-fisic'>
-                                        Arraste ou clique para fazer upload. <br>
+                                    <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
+                                        Arraste ou clique para fazer upload.<br/>
                                     </div>
                                     <input type='hidden' id='document_type' name='document_type' value='bank_document_status'>
                                     <input type='hidden' id='company_id' name='company_id' value=''>
