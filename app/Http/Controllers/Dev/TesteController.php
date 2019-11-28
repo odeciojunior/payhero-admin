@@ -6,8 +6,10 @@ use App\Jobs\SendNotazzInvoiceJob;
 use Exception;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
+use Modules\Core\Entities\NotazzSentHistory;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\SentEmail;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -338,9 +340,49 @@ class TesteController extends Controller
     public function tgFunction()
     {
         //nada
-        dd('nada');
-        //$notazInvoiceModel = new NotazzInvoice();
-        //$nservice          = new NotazzService();
+
+
+//        dd('nada');
+
+
+//---------------------------------------------------------------------------
+//        $notazInvoiceModel = new NotazzInvoice();
+//        $nservice          = new NotazzService();
+//
+//        $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+//                                      ->where('status', '!=', 5)
+//                                      ->get();
+//
+//        try {
+//            $count = 0;
+//            foreach ($invoices as $invoice) {
+//                if ($count > 90) {
+//                    break;
+//                }
+//                $ret = $nservice->deleteNfse($invoice->id);
+//                if ($ret == false) {
+//                    $invoice->update([
+//                                         'status'           => 5,
+//                                     ]);
+//                    continue;
+//                }
+//
+//                $invoice->update([
+//                                     'status'           => 5,
+//                                     'return_message'   => $ret->statusProcessamento,
+//                                     'return_http_code' => $ret->codigoProcessamento,
+//                                 ]);
+//
+//                $count = $count + 1;
+//            }
+//
+//            dd('ok');
+//        } catch (Exception $ex) {
+//            dd($ex);
+//        }
+//
+//        dd($invoices);
+//---------------------------------------------------------------------------
 
         //$ret = $nservice->deleteNfse(123);
         //dd($ret);
