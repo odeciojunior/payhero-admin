@@ -489,6 +489,8 @@ $(document).ready(function () {
         $("#emailError").css('display', 'none');
         $("#phoneError").css('display', 'none');
         $("#documentError").css('display', 'none');
+        $("#documentExistError").css('display', 'none');
+        $("#documentInvalidError").css('display', 'none');
         $("#dateBirthError").css('display', 'none');
 
         if ($("#firstname").val().length < 3) {
@@ -506,18 +508,26 @@ $(document).ready(function () {
 
         var str_cpf = $("#document").val().replace(/[^0-9]/g, '');
 
-        if (!verifyCPF(str_cpf)) {
+        if ($("#document").val().replace(/[^0-9]/g, '').length < 1) {
             $("#documentError").show();
+            $("#documentInvalidError").hide();
+            $('#documentExistError').hide();
+            isDataValid = false;
+        } else if (!verifyCPF(str_cpf)) {
+            $("#documentInvalidError").show();
+            $('#documentError').hide();
             $('#documentExistError').hide();
             isDataValid = false;
         } else {
             let result = verifyEqualCPF($("#document").val());
             if (result) {
                 $("#documentError").hide();
+                $("#documentInvalidError").hide();
                 $('#documentExistError').show();
                 isDataValid = false;
             } else {
                 $("#documentError").hide();
+                $("#documentInvalidError").hide();
                 $('#documentExistError').hide();
             }
         }
