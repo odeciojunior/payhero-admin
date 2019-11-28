@@ -168,46 +168,40 @@
                                             <tr>
                                                 <td>
                                                     Comprovante de extrato bancário
-                                                    <small class="text-muted" style="line-height: 1.5;">
-                                                        <br>Documentos aceitos: extrato válido do banco
-                                                    </small>
+
                                                 </td>
                                                 <td id="td-bank-status"></td>
                                                 {{--<td>
                                                     <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                 </td>--}}
                                                 <td>
-                                                    <i title='Enviar documento' class='icon wb-upload gradient details-document-person-juridic' data-document='bank_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    <i id='details-document-person-juridic-bank-document' title='Enviar documento' class='icon wb-upload gradient details-document-person-juridic' data-document='bank_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px; display:none;"></i>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     Comprovante de endereço
-                                                    <small class="text-muted" style="line-height: 1.5;">
-                                                        <br>Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
-                                                    </small>
+
                                                 </td>
                                                 <td id="td-address-status"></td>
                                                 {{--<td>
                                                     <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                 </td>--}}
                                                 <td>
-                                                    <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    <i id='details-document-person-juridic-address' title='Enviar Documento' id='details-document-person-juridic-address' class='icon wb-upload gradient details-document-person-juridic' data-document='address_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     Comprovante de contrato social
-                                                    <small class="text-muted" style="line-height: 1.5;">
-                                                        <br>Comprovante de contrato social: provando que você é dono ou sócio da empresa.
-                                                    </small>
+
                                                 </td>
                                                 <td id="td-contract-status"></td>
                                                 {{--<td>
                                                     <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                 </td>--}}
                                                 <td>
-                                                    <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='contract_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    <i id='details-document-person-juridic-contract' title='Enviar Documento' class='icon wb-upload gradient details-document-person-juridic' data-document='contract_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -303,13 +297,13 @@
                         </div>
                         <div class='col-lg-12'>
                             <div id='dropzone'>
-                                <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentJuridicPerson'>
+                                <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentsJuridicPerson'>
                                     @csrf
-                                    <div class='dz-message needsclick text-dropzone dropzone-previews' id='dropzone-text-document-person-juridic'>
-                                        Arraste ou clique para fazer upload.
+                                    <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
+                                        Arraste ou clique para fazer upload.<br/>
                                     </div>
-                                    <input type='hidden' id='document-type' name='document-type' value=''>
-                                    <input type='hidden' id='company-id' name='compnay-id' value=''>
+                                    <input type='hidden' id='document-type' name='document_type' value=''>
+                                    <input type='hidden' id='company-id' name='company_id' value=''>
                                 </form>
                             </div>
                         </div>

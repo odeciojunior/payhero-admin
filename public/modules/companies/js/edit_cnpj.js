@@ -1,10 +1,29 @@
+let companyStatus = {
+    pending: 'badge badge-primary',
+    analyzing: 'badge badge-pending',
+    approved: 'badge badge-success',
+    refused: 'badge badge-danger',
+};
+
+let companyStatusTranslated = {
+    pending: 'Pendente',
+    analyzing: 'Em análise',
+    approved: 'Aprovado',
+    refused: 'Recusado',
+};
+
+let companyTypeDocument = {
+    bank_document_status: 'Comprovante de extrato bancário',
+    address_document_status: 'Comprovante de endereço',
+    contract_document_status: 'Comprovante de contrato social'
+};
+
 $(document).ready(function () {
     //On Ready
     //Clear all content of form
     let redirectBackLink = $("#redirect_back_link");
     let companyUpdateForm = $("#company_update_form");
     let companyBankUpdateForm = $("#company_bank_update_form");
-    let dropzoneDocuments = $("#dropzoneDocuments");
     initLinks();
     initForm();
 
@@ -57,7 +76,6 @@ $(document).ready(function () {
         redirectBackLink.attr('href', path);
         companyUpdateForm.attr('action', (apiPath + "/" + encodedId));
         companyBankUpdateForm.attr('action', (apiPath + "/" + encodedId));
-        dropzoneDocuments.attr('action', (apiPath + '/uploaddocuments'));
     }
 
     function initForm() {
@@ -76,6 +94,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                console.log(response);
                 let company = response.company;
                 let lists = {bank: response.banks};
                 let functions = {bank: selectItemsFunction};
@@ -83,12 +102,41 @@ $(document).ready(function () {
                 fillAllFormInputsWithModel('company_bank_update_form', company, lists, functions);
                 $("#company_id").attr('value', company.id_code);
 
-                $("#td_bank_status").append("<span class='badge badge-" + getStatusBadge(company.bank_document_status) + "'>" + company.bank_document_translate + "</span>");
-                $("#td_address_status").append("<span class='badge badge-" + getStatusBadge(company.address_document_status) + "'>" + company.address_document_translate + "</span>");
-                $("#td_contract_status").append("<span class='badge badge-" + getStatusBadge(company.contract_document_status) + "'>" + company.contract_document_translate + "</span>");
+                $("#td-bank-status").append(`
+                    <span class='badge ${companyStatus[company.bank_document_status]}'>
+                        ${companyStatusTranslated[company.bank_document_status]} 
+                    </span>
+                    `);
+
+                if (companyStatusTranslated[company.bank_document_status] === 'Aprovado') {
+                    $("#details-document-person-juridic-bank-document").hide();
+                } else {
+                    $("#details-document-person-juridic-bank-document").show();
+                }
+                if (companyStatusTranslated[company.address_document_status] === 'Aprovado') {
+                    $("#details-document-person-juridic-address").hide();
+                } else {
+                    $("#details-document-person-juridic-address").show();
+                }
+                if (companyStatusTranslated[company.contract_document_status] === 'Aprovado') {
+                    $("#details-document-person-juridic-contract").hide();
+                } else {
+                    $("#details-document-person-juridic-contract").show();
+                }
+
+                $("#td-address-status").append(`
+                    <span class='badge ${companyStatus[company.address_document_status]}'>
+                        ${companyStatusTranslated[company.address_document_status]} 
+                    </span>
+                    `);
+                $("#td-contract-status").append(`
+                    <span class='badge ${companyStatus[company.contract_document_status]}'>
+                        ${companyStatusTranslated[company.contract_document_status]} 
+                    </span>
+                    `);
                 configSubmits();
                 verifyDocuments(company);
-                getRefusedDocuments(response.company.refusedDocuments);
+                // getRefusedDocuments(response.company.refusedDocuments);
                 verifyCompanyAddress(company);
                 openDocument();
                 //mascara cnpj
@@ -101,6 +149,21 @@ $(document).ready(function () {
                 $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
 
                 $("#support_telephone").mask("(00) 0000-00009");
+
+                $(".details-document-person-juridic").on('click', function () {
+                    $("#document-type").val('');
+                    $("#modal-title-document-person-juridic").html('');
+
+                    $("#document-type").val($(this).data('document'));
+                    $("#modal-title-document-person-juridic").html(`${companyTypeDocument[$(this).data('document')]}`);
+
+                    $("#modal-document-person-juridic").modal('show');
+
+                    Dropzone.forElement('#dropzoneDocumentsJuridicPerson').removeAllFiles(true);
+
+                    getDocuments(encodedId);
+
+                });
             }
         });
     }
@@ -241,89 +304,166 @@ $(document).ready(function () {
                 '</div>');
         });
     }
+
+    function htmlTitleModal() {
+        let nameDocument = $(".details-document-person-juridic").data('document');
+    }
+
+    function getDocuments(encodedId) {
+        loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
+        $.ajax({
+            method: 'POST',
+            url: `/api/companies/${encodedId}/getdocuments`,
+            data: {
+                document_type: $("#document-type").val()
+            },
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                $("#loaderLine").remove();
+
+            },
+            success: function success(response) {
+                $("#loaderLine").remove();
+                htmlTable(response.data);
+                $("#company-id").val(encodedId);
+                $("#modal-document-person-fisic").modal('show');
+            },
+        });
+    }
+
+    function htmlTable(dataTable) {
+        $("#loaderLine").remove();
+
+        let dados = '';
+        if (dataTable.length == 0) {
+            $("#table-body-document-person-juridic").append('<span>Nenhum documento enviado</span>');
+        } else {
+            $("#table-body-document-person-juridic").html('');
+            $.each(dataTable, function (index, value) {
+                dados = `
+                    <tr>
+                        <td class='text-center'>${value.date}</td>
+                        <td class='text-center' style='cursor: pointer;'>
+                            <span class='badge ${companyStatus[value.status]}'>
+                                ${companyStatusTranslated[value.status]}
+                            </span>
+                        </td>`;
+
+                if (value.refused_reason != '' && value.refused_reason != null) {
+                    dados += `<td class='text-center' style='color: red;'>${value.refused_reason}</td>`;
+                } else {
+                    dados += `<td class='text-center' style='color:red;'></td>`;
+                }
+
+                dados += `
+                    <td class='text-center'>
+                        <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                    </td>
+                    </tr>
+                `;
+                $("#table-body-document-person-juridic").append(dados);
+
+            });
+        }
+
+    }
+
 });
 
+Dropzone.autoDiscover = false;
 
-Dropzone.options.dropzoneDocuments = {
+const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
     headers: {
         'Authorization': $('meta[name="access-token"]').attr('content'),
         'Accept': 'application/json',
     },
     paramName: "file",
-    maxFilesize: 2, // MB
+    maxFilesize: 2,
+    url: '/api/companies/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
-    //uploadMultiple: true,
-    accept: function accept(file, done) {
-        var dropz = this;
-        swal({
-            title: 'Qual é o tipo do documento?',
-            type: 'warning',
-            input: 'select',
-            inputPlaceholder: 'Selecione o documento',
-            inputOptions: {
-                '1': 'Extrato bancário',
-                '2': 'Comprovante de residência',
-                '3': 'Contrato social'
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#3085D6',
-            cancelButtonColor: '#DD3333',
-            confirmButtonText: 'Enviar'
-        }).then(function (data) {
-            if (data.value) {
-                //ok
-                $('#document_type').val(data.value);
-                done();
-            } else {
-                //cancel
-                dropz.removeFile(file);
-            }
-        }).catch(function (reason) {
-            //close
-            dropz.removeFile(file);
-        });
-    },
-    success: function success(file, response) {
-        //update table
-        if (response.data.bank_document_translate.status === 3) {
-            $('#td_bank_status').html('<span class="badge badge-aprovado">' + response.data.bank_document_translate.message + '</span>');
-        } else if (response.data.bank_document_translate.status === 2) {
-            $('#td_bank_status').html('<span class="badge badge-pendente">' + response.data.bank_document_translate.message + '</span>');
+    previewsContainer: ".dropzone-previews",
+    success: function (file, response) {
+        alertCustom('success', response.message);
+
+        if (file.previewElement) {
+            return file.previewElement.classList.add('dz-success');
         }
-        if (response.data.address_document_translate.status === 3) {
-            $('#td_address_status').html('<span class="badge badge-aprovado">' + response.data.address_document_translate.message + '</span>');
-        } else if (response.data.address_document_translate.status === 2) {
-            $('#td_address_status').html('<span class="badge badge-pendente">' + response.data.address_document_translate.message + '</span>');
-        }
-        if (response.data.contract_document_translate.status === 3) {
-            $('#td_contract_status').html('<span class="badge badge-aprovado">' + response.data.contract_document_translate.message + '</span>');
-        } else if (response.data.contract_document_translate.status === 2) {
-            $('#td_contract_status').html('<span class="badge badge-pendente">' + response.data.contract_document_translate.message + '</span>');
-        }
-        swal({
-            position: 'bottom',
-            type: 'success',
-            toast: 'true',
-            title: response.message,
-            showConfirmButton: false,
-            timer: 6000
-        });
-    },
-    error: function error(file, response) {
+
+    }, error: function (file, response) {
+        console.log(response);
         if (response.search('Max filesize') > 0) {
             response = 'O documento é muito grande. Tamanho maximo: 2mb.';
         } else if (response.search('upload files of this type') > 0) {
             response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.';
+        } else {
+            errorAjaxResponse(response);
         }
 
-        swal({
-            position: 'bottom',
-            type: 'error',
-            toast: 'true',
-            title: response,
-            showConfirmButton: false,
-            timer: 6000
+        errorAjaxResponse(response);
+        myDropzone.removeFile(file);
+
+    }, complete: function () {
+        loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
+        let codeId = extractIdFromPathName();
+
+        $.ajax({
+            method: 'POST',
+            url: `/api/companies/${codeId}/getdocuments`,
+            data: {
+                document_type: document.querySelector('#document-type').value
+            },
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                $("#loaderLine").remove();
+            }, success: function (response) {
+                htmlTableDocumentJuridic(response.data);
+            }
         });
-        this.removeFile(file);
+
+        function htmlTableDocumentJuridic(dataTable) {
+            document.querySelector("#loaderLine").remove();
+            let dados = '';
+            if (dataTable.length == 0) {
+                document.querySelector('#table-body-document-person-juridic').innerHTML = '<span>Nenhum documento enviado</span>'
+            } else {
+                document.querySelector('#table-body-document-person-juridic').innerHTML = '';
+                for (let value of dataTable) {
+                    dados += `<tr>
+                            <td class='text-center'>${value.date}</td>
+                            <td class='text-center' style='cursor: pointer;'>
+                                <span class='badge ${companyStatus[value.status]}'>
+                                    ${companyStatusTranslated[value.status]}
+                                </span>
+                            </td>`;
+                    if (value.refused_reason != '' && value.refused_reason != null) {
+                        dados += `<td class='text-center' style='color:red;'>${value.refused_reason}</td>`;
+                    } else {
+                        dados += `<td class='text-center' style='color:red;'></td>`;
+                    }
+
+                    dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'>
+                            <i class='material-icons gradient'>remove_red_eye</i></a>
+                        </td>
+                        
+                    </tr>`;
+                }
+
+                document.querySelector('#table-body-document-person-juridic').innerHTML = dados;
+            }
+        }
+
     }
-};
+});
+
+
