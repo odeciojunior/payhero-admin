@@ -107,6 +107,23 @@ $(document).ready(function () {
                         ${companyStatusTranslated[company.bank_document_status]} 
                     </span>
                     `);
+
+                if (companyStatusTranslated[company.bank_document_status] === 'Aprovado') {
+                    $("#details-document-person-juridic-bank-document").hide();
+                } else {
+                    $("#details-document-person-juridic-bank-document").show();
+                }
+                if (companyStatusTranslated[company.address_document_status] === 'Aprovado') {
+                    $("#details-document-person-juridic-address").hide();
+                } else {
+                    $("#details-document-person-juridic-address").show();
+                }
+                if (companyStatusTranslated[company.contract_document_status] === 'Aprovado') {
+                    $("#details-document-person-juridic-contract").hide();
+                } else {
+                    $("#details-document-person-juridic-contract").show();
+                }
+
                 $("#td-address-status").append(`
                     <span class='badge ${companyStatus[company.address_document_status]}'>
                         ${companyStatusTranslated[company.address_document_status]} 
