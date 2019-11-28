@@ -208,7 +208,7 @@
                                                         <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                     </td>--}}
                                                     <td>
-                                                        <i title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                        <i id='personal-document-id' title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -223,7 +223,7 @@
                                                         <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                     </td>--}}
                                                     <td>
-                                                        <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                        <i id='address-document-id' title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
                                                 </tr>
                                             </tbody>

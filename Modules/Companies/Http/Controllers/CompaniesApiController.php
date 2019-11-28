@@ -159,15 +159,17 @@ class CompaniesApiController extends Controller
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
         try {
-            $companyModel = new Company();
-            $requestData  = $request->validated();
+            $companyModel   = new Company();
+            $companyService = new CompanyService();
+            $requestData    = $request->validated();
 
-            $company = $companyModel->newQuery()->find(current(Hashids::decode($encodedId)));
+            $company = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
                 if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
                     $company->bank_document_status = $companyModel->present()->getBankDocumentStatus('pending');
                 }
                 $company->update($requestData);
+                $companyService->getChangesUpdateBankData($company);
 
                 return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
             } else {
@@ -407,7 +409,7 @@ class CompaniesApiController extends Controller
 
                 if (!empty($request->input('document_type'))) {
                     $companyDocuments->where('document_type_enum', $companyDocumentModel->present()
-                                                                                    ->getDocumentType($request->input('document_type')));
+                                                                                        ->getDocumentType($request->input('document_type')));
                 }
 
                 return CompanyDocumentsResource::collection($companyDocuments->get());
