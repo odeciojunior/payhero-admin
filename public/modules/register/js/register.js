@@ -70,6 +70,7 @@ $(document).ready(function () {
 
     // mascara para cep
     $('#zip_code').mask('99.999-999');
+    $('#zip_code_company').mask('99.999-999');
 
     //mascara cnpj
     $('#company_document').mask('00.000.000/0000-00');
