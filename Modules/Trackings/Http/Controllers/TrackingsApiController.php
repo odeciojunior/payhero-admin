@@ -13,17 +13,15 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\AftershipService;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
-use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -59,7 +57,7 @@ class TrackingsApiController extends Controller
     {
         try {
             $trackingModel = new Tracking();
-            $perfectLogservice = new PerfectLogService();
+            $aftershipService = new AftershipService();
 
             $trackingId = current(Hashids::decode($id));
 
@@ -69,10 +67,12 @@ class TrackingsApiController extends Controller
                 'history'
             ])->find($trackingId);
 
-            $apiTracking = $perfectLogservice->find($tracking->tracking_code);
+            $response = $aftershipService->getAllTrackings(['keyword' => $tracking->tracking_code]);
 
-            if(isset($apiTracking->tracking_status)){
-                $status = $perfectLogservice->parseStatus($apiTracking->tracking_status);
+            $apiTracking = $response->data->trackings[0] ?? null;
+
+            if(isset($apiTracking->tag)){
+                $status = $aftershipService->parseStatus($apiTracking->tag);
                 if($tracking->tracking_status_enum != $status){
                     $tracking->tracking_status_enum = $status;
                     $tracking->save();
@@ -90,28 +90,36 @@ class TrackingsApiController extends Controller
                 'event' => 'Código de rastreio informado',
             ]);
 
-            if(!empty($apiTracking->trail)) {
-                foreach ($apiTracking->trail as $log){
-                    $status_enum = $perfectLogservice->parseStatus($log->tracking_status);
+            if(!empty($apiTracking->checkpoints)) {
+                foreach ($apiTracking->checkpoints as $log){
+                    $status_enum = $aftershipService->parseStatus($log->tag);
                     $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
+                    $location = $log->location ? (' - ' . $log->location) : '';
+
+                    $event = $log->message . $location;
+
                     //remove caracteres chineses e informações indesejadas
-                    preg_match('/[^\p{Latin}[:punct:]\s+]/u', $log->event, $nonLatinChars);
+                    preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
                     $event = str_replace([
                         'Clique aquiMinhas Importações - ',
                         'CHINA/',
                         'CHINA /',
                         'Paísem'
-                    ], '', $log->event);
+                    ], '', $event);
                     $event = str_replace([
                         'de País em',
                     ], 'do exterior', $event);
 
-                    //
+                    if(strlen($log->checkpoint_time) < 25){
+                        $data = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i:s', $log->checkpoint_time);
+                    }else{
+                        $data = Carbon::createFromFormat('Y-m-d\TH:i:sP', $log->checkpoint_time);
+                    }
                     $checkpoints->add([
                         'tracking_status_enum' => $status_enum,
                         'tracking_status' => $status,
-                        'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
+                        'created_at' => Carbon::parse($data)->format('d/m/Y'),
                         'event' => $nonLatinChars ? 'Encomenda no exterior' :  $event,
                     ]);
                 }
@@ -223,8 +231,8 @@ class TrackingsApiController extends Controller
 
                         if ($tracking) {
 
-                            $perfectLogService = new PerfectLogService();
-                            $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
+                            $aftershipService = new AftershipService();
+                            $aftershipService->createTracking(Hashids::encode($tracking->id), $data['tracking_code']);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio salvo',
@@ -253,8 +261,8 @@ class TrackingsApiController extends Controller
                             //                                  'tracking_status_enum' => $trackingStatus,
                             //                              ]);
 
-                            $perfectLogService = new PerfectLogService();
-                            $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
+                            $aftershipService = new AftershipService();
+                            $aftershipService->createTracking($data['tracking_code']);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio alterado',
