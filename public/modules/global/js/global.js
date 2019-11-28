@@ -486,7 +486,7 @@ function ajaxVerifyDocumentPending(){
 }
 
 function verifyDocumentPending(){
-    // if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
+    if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
         let documentsPending = sessionStorage.getItem('documentsPending');
         if (documentsPending === null) {
             ajaxVerifyDocumentPending();
@@ -497,7 +497,7 @@ function verifyDocumentPending(){
                 $('.btn-finalize').attr('href', documentsPending.link);
             }
         }
-    // }
+    }
 }
 
 /* End - Document Pending Alert */
