@@ -303,13 +303,13 @@
                         </div>
                         <div class='col-lg-12'>
                             <div id='dropzone'>
-                                <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentJuridicPerson'>
+                                <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentsJuridicPerson'>
                                     @csrf
-                                    <div class='dz-message needsclick text-dropzone dropzone-previews' id='dropzone-text-document-person-juridic'>
-                                        Arraste ou clique para fazer upload.
+                                    <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
+                                        Arraste ou clique para fazer upload.<br/>
                                     </div>
-                                    <input type='hidden' id='document-type' name='document-type' value=''>
-                                    <input type='hidden' id='company-id' name='compnay-id' value=''>
+                                    <input type='hidden' id='document-type' name='document_type' value=''>
+                                    <input type='hidden' id='company-id' name='company_id' value=''>
                                 </form>
                             </div>
                         </div>

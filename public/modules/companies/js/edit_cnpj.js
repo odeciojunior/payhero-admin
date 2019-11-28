@@ -12,6 +12,12 @@ let companyStatusTranslated = {
     refused: 'Recusado',
 };
 
+let companyTypeDocument = {
+    bank_document_status: 'Comprovante de extrato bancário',
+    address_document_status: 'Comprovante de endereço',
+    contract_document_status: 'Comprovante de contrato social'
+};
+
 $(document).ready(function () {
     //On Ready
     //Clear all content of form
@@ -129,11 +135,14 @@ $(document).ready(function () {
 
                 $(".details-document-person-juridic").on('click', function () {
                     $("#document-type").val('');
+                    $("#modal-title-document-person-juridic").html('');
 
                     $("#document-type").val($(this).data('document'));
+                    $("#modal-title-document-person-juridic").html(`${companyTypeDocument[$(this).data('document')]}`);
+
                     $("#modal-document-person-juridic").modal('show');
 
-                    Dropzone.forElement('#dropzoneDocumentJuridicPerson').removeAllFile(true);
+                    Dropzone.forElement('#dropzoneDocumentsJuridicPerson').removeAllFiles(true);
 
                     getDocuments(encodedId);
 
@@ -279,13 +288,17 @@ $(document).ready(function () {
         });
     }
 
-    function getDocuments() {
+    function htmlTitleModal() {
+        let nameDocument = $(".details-document-person-juridic").data('document');
+    }
+
+    function getDocuments(encodedId) {
         loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
         $.ajax({
             method: 'POST',
             url: `/api/companies/${encodedId}/getdocuments`,
             data: {
-                document_type: $("#document_type").val()
+                document_type: $("#document-type").val()
             },
             dataType: "json",
             headers: {
@@ -300,8 +313,8 @@ $(document).ready(function () {
             success: function success(response) {
                 $("#loaderLine").remove();
                 htmlTable(response.data);
+                $("#company-id").val(encodedId);
                 $("#modal-document-person-fisic").modal('show');
-                $("#company_id").val(encodedId);
             },
         });
     }
@@ -357,8 +370,6 @@ const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
     url: '/api/companies/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     previewsContainer: ".dropzone-previews",
-    thumbnailWidth: 100,
-    thumbnailHeight: 100,
     success: function (file, response) {
         alertCustom('success', response.message);
 
@@ -367,10 +378,13 @@ const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
         }
 
     }, error: function (file, response) {
+        console.log(response);
         if (response.search('Max filesize') > 0) {
             response = 'O documento é muito grande. Tamanho maximo: 2mb.';
         } else if (response.search('upload files of this type') > 0) {
             response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.';
+        } else {
+            errorAjaxResponse(response);
         }
 
         errorAjaxResponse(response);
@@ -384,7 +398,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
             method: 'POST',
             url: `/api/companies/${codeId}/getdocuments`,
             data: {
-                document_type: document.querySelector('#document_type').value
+                document_type: document.querySelector('#document-type').value
             },
             dataType: "json",
             headers: {
@@ -397,40 +411,42 @@ const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
             }, success: function (response) {
                 htmlTableDocumentJuridic(response.data);
             }
-        })
+        });
+
+        function htmlTableDocumentJuridic(dataTable) {
+            document.querySelector("#loaderLine").remove();
+            let dados = '';
+            if (dataTable.length == 0) {
+                document.querySelector('#table-body-document-person-juridic').innerHTML = '<span>Nenhum documento enviado</span>'
+            } else {
+                document.querySelector('#table-body-document-person-juridic').innerHTML = '';
+                for (let value of dataTable) {
+                    dados += `<tr>
+                            <td class='text-center'>${value.date}</td>
+                            <td class='text-center' style='cursor: pointer;'>
+                                <span class='badge ${companyStatus[value.status]}'>
+                                    ${companyStatusTranslated[value.status]}
+                                </span>
+                            </td>`;
+                    if (value.refused_reason != '' && value.refused_reason != null) {
+                        dados += `<td class='text-center' style='color:red;'>${value.refused_reason}</td>`;
+                    } else {
+                        dados += `<td class='text-center' style='color:red;'></td>`;
+                    }
+
+                    dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'>
+                            <i class='material-icons gradient'>remove_red_eye</i></a>
+                        </td>
+                        
+                    </tr>`;
+                }
+
+                document.querySelector('#table-body-document-person-juridic').innerHTML = dados;
+            }
+        }
+
     }
 });
 
-function htmlTableDocumentJuridic(dataTable) {
-    document.querySelector("#loaderLine").remove();
-    let dados = '';
-    if (dataTable.length == 0) {
-        document.querySelector('#table-body-document-person-juridic').innerHTML = '<span>Nenhum documento enviado</span>'
-    } else {
-        document.querySelector('#table-body-document-person-juridic').innerHTML = '';
-        for (let value of dataTable) {
-            dados += `
-                <tr>
-                    <td class='text-center'>${value.date}</td>
-                    <td class='text-center' style='cursor: pointer;'>
-                        <span class='badge ${companyStatus[value.status]}'>${companyStatusTranslated[value.status]}</span>
-                    </td>
-                </tr>`;
-            if (value.refused_reason != '' && value.refused_reason != null) {
-                dados += `<td class='text-center' style='color:red;'>${value.refused_reason}</td>`;
-            } else {
-                dados += `<td class='text-center' style='color:red;'></td>`;
-            }
 
-            dados += `
-                <td class='text-center'>
-                    <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'>
-                        <i class='material-icons gradient'>removed_red_eyes</i>
-                    </a>
-                </td>
-            `;
-        }
-
-        document.querySelector('#table-body-document-person-juridic').innerHTML = dados;
-    }
-}
