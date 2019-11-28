@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\ShopifyIntegration;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -17,6 +16,7 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -466,6 +466,13 @@ class SaleService
                                               ]);
                 sleep(7);
                 if (!empty($refundedTransaction)) {
+                    SaleRefundHistory::create([
+                                                  'sale_id'          => $sale->id,
+                                                  'refunded_amount'  => $sale->original_total_paid_value ?? 0,
+                                                  'date_refunded'    => Carbon::now(),
+                                                  'gateway_response' => json_encode($refundedTransaction),
+                                              ]);
+
                     return
                         [
                             'status'  => 'success',

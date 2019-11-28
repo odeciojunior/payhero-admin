@@ -1385,7 +1385,7 @@ class ShopifyService
         try {
             $credential = new PublicAppCredential($shopifyIntegration->token);
 
-            $client = new \Slince\Shopify\Client($credential, $shopifyIntegration->url_store, [
+            $client = new Client($credential, $shopifyIntegration->url_store, [
                 'metaCacheDir' => '/var/tmp',
             ]);
             $order  = $client->getOrderManager()->find($shopifyOrder);
