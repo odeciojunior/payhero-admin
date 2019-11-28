@@ -37,5 +37,9 @@
                 <option value="0">Desativado</option>
             </select>
         </div>
+        <div class="form-group col-xl-12">
+            <label for="status">Válido para compras com valor maior que:</label>
+            <input name="rule_value" type="text" class="form-control rule-value" placeholder="Valor">
+        </div>
     </div>
 </form>

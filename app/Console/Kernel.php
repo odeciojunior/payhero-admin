@@ -59,6 +59,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('change:boletopendingtocanceled')->dailyAt('08:30');
 
         $schedule->command('command:UpdateListsFoxActiveCampaign')->hourly();
+
+        $schedule->command('command:UpdateCheckoutIdLogs')->everyMinute()->withoutOverlapping();
     }
 
     /**

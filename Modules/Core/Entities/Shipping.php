@@ -51,6 +51,7 @@ class Shipping extends Model
         'type',
         'zip_code_origin',
         'status',
+        'rule_value',
         'pre_selected',
         'created_at',
         'updated_at',

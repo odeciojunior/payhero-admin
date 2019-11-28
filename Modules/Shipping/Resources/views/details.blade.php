@@ -22,6 +22,11 @@
             <td class='text-left shipping-info'></td>
         </tr>
         <tr>
+            <td class="table-title">Disponível para compras acima de:</td>
+            <td style='width: 20px'></td>
+            <td class='text-left rule-shipping-value'></td>
+        </tr>
+        <tr>
             <td class="table-title">Status</td>
             <td style='width: 20px'></td>
             <td class='text-left shipping-status'>

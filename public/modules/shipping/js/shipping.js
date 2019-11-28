@@ -37,6 +37,17 @@ $(document).ready(function () {
     });
 
     $('.shipping-value').mask('#.##0,00', {reverse: true});
+    $('.rule-shipping-value').mask('#.##0,00', {reverse: true});
+
+    $('.rule-shipping-value').on('blur', function () {
+        if ($(this).val().length == 1) {
+            let val = '0,0'+$(this).val();
+            $('.rule-shipping-value').val(val);
+        } else if($(this).val().length == 2) {
+            let val = '0,'+$(this).val();
+            $('.rule-shipping-value').val(val);
+        }
+    });
 
     $('.check').on('click', function () {
         if ($(this).is(':checked')) {
@@ -52,6 +63,7 @@ $(document).ready(function () {
         $('.shipping-info').val('');
         $('.shipping-value').val('');
         $('.shipping-zipcode').val('');
+        $('.rule-shipping-value').val('');
     }
 
     $(".shipping-description").keyup(function () {
@@ -112,6 +124,7 @@ $(document).ready(function () {
                 $('#modal-detail-shipping .shipping-description').html(response.name);
                 $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automáticamente' : response.value);
                 $('#modal-detail-shipping .shipping-info').html(response.information);
+                $('#modal-detail-shipping .rule-shipping-value').html(response.rule_value);
                 $('#modal-detail-shipping .shipping-status').html(response.status == 1 ? '<span class="badge badge-success text-left">Ativo</span>' : '<span class="badge badge-danger">Desativado</span>');
                 $('#modal-detail-shipping .shipping-pre-selected').html(response.pre_selected == 1 ? '<span class="badge badge-success">Sim</span>' : '<span class="badge badge-primary">Não</span>');
 
@@ -152,6 +165,8 @@ $(document).ready(function () {
                 $('#modal-edit-shipping .shipping-description').val(response.name);
                 $('#modal-edit-shipping .shipping-info').val(response.information);
                 $('#modal-edit-shipping .shipping-value').val(response.value);
+                $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value);
+                $('#modal-edit-shipping .rule-shipping-value').trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 if (response.status == 1) {
                     $('#modal-edit-shipping .shipping-status').val(1).prop('checked', true);

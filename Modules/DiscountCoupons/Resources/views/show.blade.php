@@ -21,6 +21,11 @@
             <td class='text-left coupon-value'></td>
         </tr>
         <tr>
+            <td class='table-title'>Válido para compras acima de:</td>
+            <td style='width: 20px'></td>
+            <td class='text-left rule-value'></td>
+        </tr>
+        <tr>
             <td class="table-title">Status</td>
             <td style='width: 20px'></td>
             <td class='text-left coupon-status'>

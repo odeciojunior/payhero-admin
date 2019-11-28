@@ -20,6 +20,7 @@ class ShippingStoreRequest extends FormRequest
             "zip_code_origin" => $this->get('type') != 'static' ? "required|min:9" : "",
             "status"          => "nullable",
             "pre_selected"    => "nullable",
+            "rule_value"      => "nullable",
         ];
     }
 
