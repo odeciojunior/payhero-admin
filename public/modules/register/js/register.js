@@ -47,7 +47,7 @@ $(document).ready(function () {
 
     }
 
-    $("#progress-bar-register").css('width', '33%');
+    $("#progress-bar-register").css('width', '16%');
     var accessToken = '';
     // MASCARA CNPJ/CPF
     var options = {
@@ -58,18 +58,9 @@ $(document).ready(function () {
         }
     };
 
-    //mascara cpf
-    $('#brasil_company_document').mask('000.000.000-000', options);
-
-    // mascara cep
-    $("#brasil_zip_code").mask("99.999-999");
-
-    // mascara number
-    $("#brasil_number").mask("0#");
-    $("#eua_number").mask("0#");
-
     // mascara numero telefone
     $("#phone").mask("(00) 0000-00009");
+    $("#support_telephone").mask("(00) 0000-00009");
 
     // mascara cpf do usuario
     $('#document').mask('000.000.000-00');
@@ -85,6 +76,14 @@ $(document).ready(function () {
 
     //mascara numero
     $('#number').mask('0#');
+    $('#agency').mask('0#');
+    $('#agency_digit').mask('0#');
+    $('#account').mask('0#');
+    $('#account_digit').mask('0#');
+    $('#number_company').mask('0#');
+
+    //select de bancos
+    $('#bank').select2();
 
     var currentPage = 'basic data';
 
@@ -106,17 +105,31 @@ $(document).ready(function () {
     });
 
     // botão prosseguir
-    $("#btn-go").click(function () {
+    $("#btn-go").click(function (e) {
+        e.preventDefault();
         loadingOnScreen();
-        if (currentPage == 'basic data') {
-            basicDataComplete();
-        } else if (currentPage == 'password') {
-            passwordComplete();
-            // companyComplete();
-        } else if (currentPage == 'residential data') {
-            residentialDataComplete();
-        } else if (currentPage == 'company data') {
-            companyComplete();
+        switch (currentPage) {
+            case "basic data":
+                basicDataComplete();
+                break;
+            case "password":
+                passwordComplete();
+                break;
+            case "residential data":
+                residentialDataComplete();
+                break;
+            case "company data":
+                companyComplete();
+                break;
+            case "residential data company":
+                residentialDataCompanyComplete();
+                break;
+            case "bank data juridical person":
+                bankJuridicalPersonComplete();
+                break;
+            case "bank data physical person":
+                bankPhysicalPersonComplete();
+                break;
         }
     });
 
@@ -128,15 +141,173 @@ $(document).ready(function () {
             return false;
         }
         loadingOnScreenRemove();
+        currentPage = 'residential data company';
+
+        $('.div4').hide();
+        $('.div7').show();
+        $("#btn-go").show();
+        $("#progress-bar-register").css('width', '80%');
+
+    }
+    $('#btn-physical-person').on('click', function (e) {
+        e.preventDefault();
+        $('.div4').hide();
+        $('.div5').show();
+        $("#btn-go").show();
+        currentPage = 'bank data physical person';
+        $("#progress-bar-register").css('width', '80%');
+    })
+
+    function residentialDataComplete() {
+        if (!validateResidentialData()) {
+            alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove();
+            return false;
+        }
+        loadingOnScreenRemove();
+        currentPage = 'company data';
+        $(".div3").hide();
+        $(".div4").show();
+        $("#btn-go").hide();
+        $("#progress-bar-register").css('width', '64%');
+    }
+    function passwordComplete() {
+
+        if (!validatePassword()) {
+            alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove();
+            return false;
+        }
+        loadingOnScreenRemove();
+        currentPage = 'residential data';
+        $(".div2").hide();
+        $(".div3").show();
+        $("#progress-bar-register").css('width', '48%');
+
+    }
+    function basicDataComplete() {
+
+        if (!validateBasicData()) {
+            alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove();
+            return false;
+        }
+        loadingOnScreenRemove();
+
+        currentPage = 'password';
+        $(".div1").hide();
+        $(".div2").show();
+        $("#progress-bar-register").css('width', '32%');
+    }
+    function bankPhysicalPersonComplete() {
+        if (!validateBankData()) {
+            alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove();
+            return false;
+        }
+        loadingOnScreenRemove();
         let url = new URL(window.location.href).pathname;
         let parameter = url.split("/")[2];
         $("#progress-bar-register").css('width', '99%');
-        $(".div4").hide();
+        $(".div5").hide();
         $(".div6").show();
-        $('#btn-physical-person').hide();
-        $('#btn-juridical-person').hide();
-        $('#text-company').hide();
         $("#btn-go").hide();
+        $.ajax({
+            method: "POST",
+            url: "/api/register",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                name: $('#firstname').val() + ' ' + $('#lastname').val(),
+                email: $('#email').val(),
+                cellphone: $('#phone').val(),
+                document: $('#document').val().replace(/[^0-9]/g, ''),
+                date_birth: $('#date_birth').val(),
+
+                password: $('#password').val(),
+                parameter: parameter,
+
+                zip_code: $('#zip_code').val(),
+                street: $('#street').val(),
+                number: $('#number').val(),
+                neighborhood: $('#neighborhood').val(),
+                complement: $('#complement').val(),
+                city: $('#city').val(),
+                state: $('#state').val(),
+
+                company_type: 1,
+
+                bank: $('#bank').val(),
+                agency: $('#agency').val(),
+                agency_digit: $('#agency_digit').val(),
+                account: $('#account').val(),
+                account_digit: $('#account_digit').val(),
+
+            },
+            error: function (_error) {
+                function error(_x) {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
+                $(".div5").show();
+                $(".div6").hide();
+                $("#btn-go").show();
+                loadingOnScreenRemove();
+            }),
+            success: function success(response) {
+                loadingOnScreenRemove();
+                if (response.success == 'true') {
+                    accessToken = response.access_token;
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/register/welcome/",
+                        headers: {
+                            'Authorization': 'Bearer ' + accessToken,
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                        },
+                        success: function success(response) {
+                        }
+                    });
+                    setTimeout(registerComplete, 10000);
+
+                } else {
+                    $(".div5").show();
+                    $(".div6").hide();
+                    $("#btn-go").show();
+                    loadingOnScreenRemove();
+                    alertCustom('error', response.message);
+                }
+            }
+        });
+    }
+    function bankJuridicalPersonComplete() {
+        if (!validateBankData()) {
+            alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove();
+            return false;
+        }
+        loadingOnScreenRemove();
+        let url = new URL(window.location.href).pathname;
+        let parameter = url.split("/")[2];
+        $("#progress-bar-register").css('width', '99%');
+        $(".div5").hide();
+        $(".div6").show();
+        $("#btn-go").hide();
+
         $.ajax({
             method: "POST",
             url: "/api/register",
@@ -165,14 +336,26 @@ $(document).ready(function () {
 
                 company_document: $("#company_document").val().replace(/[^0-9]/g, ''),
                 fantasy_name: $("#fantasy_name").val(),
+                support_email: $("#support_email").val(),
+                support_telephone: $("#support_telephone").val(),
                 company_type: 2,
+
+                street_company: $('#street_company').val(),
+                number_company: $('#number_company').val(),
+                neighborhood_company: $('#neighborhood_company').val(),
+                complement_company: $('#complement_company').val(),
+                state_company: $('#state_company').val(),
+                city_company: $('#city_company').val(),
+
+                bank: $('#bank').val(),
+                agency: $('#agency').val(),
+                agency_digit: $('#agency_digit').val(),
+                account: $('#account').val(),
+                account_digit: $('#account_digit').val(),
             },
             error: function error(response) {
-                $(".div4").show();
+                $(".div5").show();
                 $(".div6").hide();
-                $('#btn-physical-person').show();
-                $('#btn-juridical-person').show();
-                $('#text-company').show();
                 $("#btn-go").show();
                 alertCustom('error', 'Ocorreu algum erro');
             },
@@ -195,147 +378,28 @@ $(document).ready(function () {
 
         });
     }
-    $('#btn-physical-person').on('click', function (e) {
-        e.preventDefault();
-        let url = new URL(window.location.href).pathname;
-        let parameter = url.split("/")[2];
-        $("#progress-bar-register").css('width', '99%');
-        $(".div4").hide();
-        $(this).hide();
-        $("#btn-juridical-person").hide();
-        $("#text-main").hide();
-        $(".div6").show();
-        $.ajax({
-            method: "POST",
-            url: "/api/register",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                name: $('#firstname').val() + ' ' + $('#lastname').val(),
-                email: $('#email').val(),
-                cellphone: $('#phone').val(),
-                document: $('#document').val().replace(/[^0-9]/g, ''),
-                date_birth: $('#date_birth').val(),
-
-                password: $('#password').val(),
-                parameter: parameter,
-
-                zip_code: $('#zip_code').val(),
-                street: $('#street').val(),
-                number: $('#number').val(),
-                neighborhood: $('#neighborhood').val(),
-                complement: $('#complement').val(),
-                city: $('#city').val(),
-                state: $('#state').val(),
-
-                company_type: 1,
-            },
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-                $(".div4").show();
-                $(".div6").hide();
-                $(this).show();
-                $("#btn-juridical-person").show();
-                $("#text-main").show();
-                loadingOnScreenRemove();
-            }),
-            success: function success(response) {
-                loadingOnScreenRemove();
-                if (response.success == 'true') {
-                    accessToken = response.access_token;
-                    $.ajax({
-                        method: "GET",
-                        url: "/api/register/welcome/",
-                        headers: {
-                            'Authorization': 'Bearer ' + accessToken,
-                            'Accept': 'application/json',
-                        },
-                        error: function error(response) {
-                        },
-                        success: function success(response) {
-                        }
-                    });
-                    setTimeout(registerComplete, 10000);
-
-                } else {
-                    $(".div4").show();
-                    $(".div6").hide();
-                    $(this).show();
-                    $("#btn-juridical-person").show();
-                    $("#text-main").show();
-                    loadingOnScreenRemove();
-                    alertCustom('error', response.message);
-                }
-            }
-        });
-    })
-
-    function residentialDataComplete() {
-        if (!validateResidentialData()) {
+    function residentialDataCompanyComplete() {
+        if (!validateResidentialDataCompany()) {
             alertCustom('error', 'Revise os dados informados');
             loadingOnScreenRemove();
             return false;
         }
         loadingOnScreenRemove();
-        currentPage = 'company data';
-        $(".div3").hide();
-        $(".div4").show();
-        $("#btn-go").hide();
-        $("#progress-bar-register").css('width', '83%');
-
-    }
-    function passwordComplete() {
-
-        if (!validatePassword()) {
-            alertCustom('error', 'Revise os dados informados');
-            loadingOnScreenRemove();
-            return false;
-        }
+        currentPage = 'bank data juridical person';
         loadingOnScreenRemove();
-        currentPage = 'residential data';
-        $(".div2").hide();
-        $(".div3").show();
-        $("#progress-bar-register").css('width', '73%');
+        $('.div7').hide();
+        $('.div5').show();
+        $("#btn-go").show();
+        $("#progress-bar-register").css('width', '91%');
 
-    }
-    function basicDataComplete() {
-
-        if (!validateBasicData()) {
-            alertCustom('error', 'Revise os dados informados');
-            loadingOnScreenRemove();
-            return false;
-        }
-        loadingOnScreenRemove();
-
-        // let url = new URL(window.location.href).pathname;
-        // let parameter = url.split("/")[2];
-        currentPage = 'password';
-        $(".div1").hide();
-        $(".div2").show();
-        // alertCustom('success', 'Cadastro realizado com sucesso');
-        $("#progress-bar-register").css('width', '53%');
-        // $("#jump").show();
     }
 
     function validateCompanyData() {
 
         $("#companyDocumentError").css('display', 'none');
         $("#fantasyNameError").css('display', 'none');
+        $("#supportEmailError").css('display', 'none');
+        $("#supportTelephoneError").css('display', 'none');
 
         var isDataValid = true;
 
@@ -357,6 +421,18 @@ $(document).ready(function () {
 
         if ($("#fantasy_name").val().length < 3) {
             $("#fantasyNameError").show();
+            isDataValid = false;
+        }
+
+        var emailFilter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        var illegalChars = /[\(\)\<\>\,\;\:\\\/\"\[\]]/;
+        if (!emailFilter.test($("#support_email").val()) || $("#support_email").val().match(illegalChars) || $("#support_email").val().indexOf(" ") !== -1) {
+            $("#supportEmailError").show();
+            isDataValid = false;
+        }
+
+        if ($("#support_telephone").val().replace(/[^0-9]/g, '').length < 10) {
+            $("#supportTelephoneError").show();
             isDataValid = false;
         }
 
@@ -423,20 +499,7 @@ $(document).ready(function () {
             $("#phoneError").show();
             isDataValid = false;
         }
-        // if ($("#document").val().replace(/[^0-9]/g, '').length < 11) {
-        //     $("#documentError").show();
-        //     isDataValid = false;
-        // } else {
-        //     let result = verifyEqualCPF($("#document").val());
-        //     if (result) {
-        //         $("#documentError").hide();
-        //         $('#documentExistError').show();
-        //         isDataValid = false;
-        //     } else {
-        //         $("#documentError").hide();
-        //         $('#documentExistError').hide();
-        //     }
-        // }
+
         var str_cpf = $("#document").val().replace(/[^0-9]/g, '');
 
         if (!verifyCPF(str_cpf)) {
@@ -501,7 +564,67 @@ $(document).ready(function () {
         }
         return isDataValid;
     }
+    function validateBankData() {
+        $("#bankError").css('display', 'none');
+        $("#agencyError").css('display', 'none');
+        $("#accountError").css('display', 'none');
 
+        var isDataValid = true;
+
+        if ($("#bank").val() == '') {
+            $("#bankError").show();
+            isDataValid = false;
+        }
+
+        if ($("#agency").val().length < 1) {
+            $("#agencyError").show();
+            isDataValid = false;
+        }
+
+        if ($("#account").val().length < 1) {
+            $("#accountError").show();
+            isDataValid = false;
+        }
+
+        return isDataValid;
+    }
+    function validateResidentialDataCompany() {
+        var isDataValid = true;
+
+        $("#zipCodeCompanyError").css('display', 'none');
+        $("#streetCompanyError").css('display', 'none');
+        $("#numberCompanyError").css('display', 'none');
+        $("#neighborhoodCompanyError").css('display', 'none');
+        $("#stateCompanyError").css('display', 'none');
+        $("#cityCompanyError").css('display', 'none');
+
+        if ($("#zip_code_company").val().replace(/[^0-9]/g, '').length < 8) {
+            $("#zipCodeCompanyError").show();
+            isDataValid = false;
+        }
+        if ($("#street_company").val().length < 3) {
+            $("#streetCompanyError").show();
+            isDataValid = false;
+        }
+        if ($("#number_company").val().length < 1) {
+            $("#numberCompanyError").show();
+            isDataValid = false;
+        }
+        if ($("#neighborhood_company").val().length < 3) {
+            $("#neighborhoodCompanyError").show();
+            isDataValid = false;
+        }
+        if ($("#city_company").val().length < 2) {
+            $("#cityCompanyError").show();
+            isDataValid = false;
+        }
+        if ($("#state_company").val().length < 1) {
+            $("#stateCompanyError").show();
+            isDataValid = false;
+        }
+        return isDataValid;
+
+    }
     //abilita os inputs de pessoa jurídica
     $('#btn-juridical-person').on('click', function (e) {
         e.preventDefault();
@@ -511,17 +634,6 @@ $(document).ready(function () {
         $('#btn-physical-person').hide();
         $(this).hide();
         $("#btn-go").show();
-    });
-
-    ///  radio button escolhe tipo de projeto
-    $("#btnBrasil").click(function () {
-        $("#eua-form").hide();
-        $("#brasil-form").show();
-    });
-
-    $("#btnUSA").click(function () {
-        //$("#brasil-form").hide();
-        //$("#eua-form").show();
     });
 
     //verifica CEP
@@ -545,6 +657,31 @@ $(document).ready(function () {
                 }
                 if (response.logradouro) {
                     $("#street").val(unescape(response.logradouro));
+                }
+            }
+        });
+    });
+    //verifica CEP Empresa
+    $("#zip_code_company").on("input", function () {
+        var zip_code = $('#zip_code_company').val().replace(/[^0-9]/g, '');
+        if (zip_code.length !== 8) return false;
+        $.ajax({
+            url: "https://viacep.com.br/ws/" + zip_code + "/json/",
+            type: "GET",
+            cache: false,
+            async: false,
+            success: function success(response) {
+                if (response.localidade) {
+                    $("#city_company").val(unescape(response.localidade));
+                }
+                if (response.bairro) {
+                    $("#neighborhood_company").val(unescape(response.bairro));
+                }
+                if (response.uf) {
+                    $("#state_company").val(unescape(response.uf));
+                }
+                if (response.logradouro) {
+                    $("#street_company").val(unescape(response.logradouro));
                 }
             }
         });
@@ -624,6 +761,20 @@ $(document).ready(function () {
         });
         return result;
     }
+    $.ajax({
+        method: "GET",
+        url: "/api/register/getbanks/",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        error: function error(response) {
+        },
+        success: function success(response) {
+            $.each(response.banks, function (index, value) {
+                $("#bank").append("<option value='" + value.code + "'>" + value.name + "</option>")
+            });
+        }
+    });
     function alertCustom(type, message) {
 
         swal({
@@ -663,4 +814,9 @@ $(document).ready(function () {
             return false;
         }
     }
+    $('#form-register input').on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            return false;
+        }
+    });
 });
