@@ -119,7 +119,7 @@ $(document).ready(function () {
         $("#loaderLine").remove();
         let dados = '';
         if (dataTable.length == 0) {
-            $("#table-body-documents-person-fisic").append('<span>Nenhum documento enviado</span>')
+            $("#table-body-documents-person-fisic").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>')
         } else {
             $("#document-person-fisic-refused-motived").html('');
             $("#table-body-documents-person-fisic").html('');

@@ -311,7 +311,7 @@ $(document).ready(function () {
 
         let dados = '';
         if (dataTable.length == 0) {
-            $("#table-body-document-person-juridic").append('<span>Nenhum documento enviado</span>');
+            $("#table-body-document-person-juridic").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
         } else {
             $("#table-body-document-person-juridic").html('');
             $.each(dataTable, function (index, value) {

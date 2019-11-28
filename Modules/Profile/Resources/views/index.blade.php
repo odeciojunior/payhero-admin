@@ -175,17 +175,6 @@
                                     </div>
                                 </div>
                                 <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
-                                    {{--<div class="col-lg-6">
-                                        <div id="dropzone">
-                                            <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                                @csrf
-                                                <div class="dz-message needsclick text-dropzone">
-                                                    Arraste ou clique para fazer upload.<br/>
-                                                </div>
-                                                <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
-                                            </form>
-                                        </div>
-                                    </div>--}}
                                     <div class="col-lg-12">
                                         <table class="table table-hover">
                                             <thead>
@@ -204,9 +193,6 @@
                                                         </small>
                                                     </td>
                                                     <td id="td_personal_status"></td>
-                                                    {{--<td>
-                                                        <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
-                                                    </td>--}}
                                                     <td>
                                                         <i title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
@@ -219,9 +205,6 @@
                                                         </small>
                                                     </td>
                                                     <td id="td_address_status"></td>
-                                                    {{--<td>
-                                                        <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
-                                                    </td>--}}
                                                     <td>
                                                         <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                     </td>
@@ -308,36 +291,6 @@
                                         <p class="sub-pad"> Defina quais notificações deseja receber </p>
                                     </div>
                                     <div class='row mt-15 col-12'>
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Nova afiliação</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="new_affiliation_switch" name="new_affiliation" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Pedido de afiliação</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="new_affiliation_request_switch" name="new_affiliation_request" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Afiliação aprovada</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="approved_affiliation_switch" name="approved_affiliation" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
                                                 <label for="billet_generated" class="mb-10">Boleto gerado</label>
@@ -388,16 +341,6 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Saque Aprovado</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="withdrawal_approved_switch" name="withdrawal_approved" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
                                                 <label for="released_balance" class="mb-10">Saldo liberado</label>
@@ -428,16 +371,6 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Integração com shopify</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="user_shopify_integration_store_switch" name="user_shopify_integration_store" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>
@@ -467,6 +400,7 @@
                     </div>
                 </div>
             </div>
+
             {{--Modal Verificação Celular--}}
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_cellphone" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-simple">
@@ -495,6 +429,7 @@
                     </div>
                 </div>
             </div>
+
             {{--Modal Verificação Email--}}
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_email" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-simple">
@@ -523,6 +458,7 @@
                     </div>
                 </div>
             </div>
+
             {{-- Modal detalhes --}}
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-details-document" aria-hidden="true"
                  aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -540,7 +476,7 @@
                         </div>
                         <div class="modal-body" style="margin-top: 10px">
                             <div class='row'>
-                                <div class='col-lg-12' id='table-documents' style='min-height:150px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
+                                <div class='col-lg-12' id='table-documents' style='min-height:100px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
                                     <table class="table table-striped table-hover table-sm table-striped">
                                         <thead>
                                             <tr>

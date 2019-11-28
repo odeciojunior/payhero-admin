@@ -80,6 +80,7 @@ class User extends Authenticable
     protected $dispatchesEvents = [
         'created' => UserRegistrationEvent::class,
     ];
+
     /**
      * @var array
      */

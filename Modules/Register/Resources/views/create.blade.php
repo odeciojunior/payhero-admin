@@ -48,12 +48,8 @@
     <link rel="stylesheet" href="{{ asset('modules/register/css/animateColor.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
-    <script src="https://code.jquery.com/jquery-3.4.1.js"
-            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 </head>
 <body id='register-body' style='padding-top:0px;background-color:white;'>
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
@@ -78,8 +74,6 @@
                 <h4 class="bold title-content">
                     Dados básicos
                 </h4>
-                {{--                <p class="desc"> Seu dado.--}}
-                {{--                </p>--}}
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="input-holder d-flex flex-column">
@@ -136,7 +130,7 @@
                                     <label for="email">E-mail</label>
                                     <input type="email" name="email" id="email" value="" placeholder="Digite seu email" required>
                                     <p class='sm-tex text-danger' id='emailError' style='display:none;'>O campo E-mail é obrigatório</p>
-                                    <p class='sm-tex text-danger' id='emailExistError' style='display:none;'>Esse E-mail já está cadastrado na plataforma</p>
+                                    <p class='sm-tex text-danger' id='emailExistError' style='display:none;'>Esse email já está cadastrado na plataforma</p>
                                 </div>
                             </div>
                         </div>
@@ -377,7 +371,7 @@
                 <h4 class="bold title-content">
                     Dados residenciais da empresa
                 </h4>
-                <p class="desc"> Os dados da sua empresa.
+                <p class="desc"> Onde sua empresa está localizada.
                 </p>
                 <div class='row'>
                     <div class="col">
@@ -412,14 +406,14 @@
                     <div class="col-lg-4">
                         <div class="input-holder d-flex flex-column">
                             <label for="neighborhood_company">Bairro</label>
-                            <input type="text" name="neighborhood_company" id="neighborhood_company" placeholder="Digite o nome do seu bairro" required>
+                            <input type="text" name="neighborhood_company" id="neighborhood_company" placeholder="Digite o bairro" required>
                             <p class='sm-tex text-danger' id='neighborhoodCompanyError' style='display:none;'>O campo Bairro é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-holder d-flex flex-column">
                             <label for="city_company">Cidade</label>
-                            <input type="text" name="city_company" id="city_company" placeholder="Digite o nome da sua cidade" required>
+                            <input type="text" name="city_company" id="city_company" placeholder="Digite o nome da cidade" required>
                             <p class='sm-tex text-danger' id='cityCompanyError' style='display:none;'>O campo Cidade é obrigatório</p>
                         </div>
                     </div>
@@ -439,31 +433,7 @@
     <div class="container">
         <div class="p-10">
             <div class="row justify-content-between align-items-center">
-                {{-- <div class="col-3">
-                    <div class="btn-voltar d-flex">
-                        <a href="#" class="d-flex">
-                            <div id="btnBack" style="display:none;">
-                                <div class="btn-voltar">
-                                    <span class="icon-back mr10">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24">
-                                            <path d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12-5.373-12-12-12-12 5.373-12 12zm7.58 0l5.988-5.995 1.414 1.416-4.574 4.579 4.574 4.59-1.414 1.416-5.988-6.006z"/>
-                                        </svg>
-                                    </span>
-                                    <span class="bold hidden-m back" id="back">
-                                        Voltar
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div> --}}
                 <div class="col-12 d-flex align-items-center justify-content-end">
-                    {{--                    <div class="btn-voltar d-flex mr15">--}}
-                    {{--                            <span>--}}
-                    {{--                                <a href="#" id="jump" class="bold" style="display:none;">Pular</a>--}}
-                    {{--                            </span>--}}
-                    {{--                    </div>--}}
                     <div class="btn-holder footer">
                         <button class="btn btn-primary" id='btn-go'>Prosseguir</button>
                     </div>
@@ -473,7 +443,6 @@
     </div>
 </footer>
 <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
-{{--<script src="{{asset('modules/global/js/global.js')}}"></script>--}}
 <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
@@ -481,7 +450,6 @@
 <script src="{{asset('modules/register/js/register.js?v=7')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
-{{--<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>--}}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
@@ -501,12 +469,8 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
-{{--<script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>--}}
-{{--<script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>--}}
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js') }}"></script>
-{{--<script src="https://js.pusher.com/4.4/pusher.min.js"></script>--}}
-{{--<script src="{{ asset('modules/global/js/notifications.js') }}"></script>--}}
 </body>
 </html>
 

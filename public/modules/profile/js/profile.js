@@ -654,11 +654,10 @@ $(document).ready(function () {
     }
 
     function htmlTableDocuments(data) {
-        console.log(data);
         let dados = '';
         let verifyReason = false;
         if (data.length == 0) {
-            $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
+            $("#profile-documents-modal").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
         } else {
             $("#document-refused-motived").html('');
             $.each(data, function (index, value) {
