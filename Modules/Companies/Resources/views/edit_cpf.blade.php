@@ -11,7 +11,7 @@
         <div class="page-header container">
             <h1 class="page-title">Editar empresa (Pessoa física)</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" id="redirect_back_link" href="/companies">
+                <a class="btn btn-primary float-right" href="/companies">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
             </div>
@@ -53,7 +53,7 @@
                                 <div class="form-group col-xl-2">
                                     <label for="update_bank_data"></label>
                                     <input id="update_bank_data" type="button" class="btn btn-success mt-30" value="Atualizar" style="width: auto;">
-                                </div>        
+                                </div>
                             </div>
                         </form>
                         <div class="col-lg-12 mb-40 mt-15">
@@ -104,7 +104,7 @@
                              style='min-height: 100px; max-height: 150px; overflow-x: hidden; overflow-y: scroll; margin-bottom: 20px;'>
                             <table class='table table-striped table-hover table-sm' id='table-documents-person-fisic'>
                                 <thead>
-                                    <tr> 
+                                    <tr>
                                         <th class='text-center' scope='col'>Data Envio</th>
                                         <th class='text-center' scope='col'>Status</th>
                                         <th class='text-center' scope='col'></th>

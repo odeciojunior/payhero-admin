@@ -12,7 +12,7 @@
         <div class="page-header container">
             <h1 class="page-title">Editar empresa</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" id="redirect_back_link">
+                <a class="btn btn-primary float-right" href="/companies">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
             </div>
