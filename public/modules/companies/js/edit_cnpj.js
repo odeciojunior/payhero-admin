@@ -102,34 +102,38 @@ $(document).ready(function () {
                 fillAllFormInputsWithModel('company_bank_update_form', company, lists, functions);
                 $("#company_id").attr('value', company.id_code);
 
-                $("#td-bank-status").append(`
-                    <span class='badge ${companyStatus[company.bank_document_status]}'>
-                        ${companyStatusTranslated[company.bank_document_status]} 
-                    </span>
-                    `);
-
                 if (companyStatusTranslated[company.bank_document_status] === 'Aprovado') {
                     $("#details-document-person-juridic-bank-document").hide();
                 } else {
                     $("#details-document-person-juridic-bank-document").show();
                 }
                 if (companyStatusTranslated[company.address_document_status] === 'Aprovado') {
+                    $(".info-complemented").attr('disabled', 'disabled');
                     $("#details-document-person-juridic-address").hide();
                 } else {
+                    $(".info-complemented").removeAttr('disabled');
                     $("#details-document-person-juridic-address").show();
                 }
                 if (companyStatusTranslated[company.contract_document_status] === 'Aprovado') {
+                    $("#company_document").attr('disabled', 'disabled');
                     $("#details-document-person-juridic-contract").hide();
                 } else {
+                    $("#company_document").removeAttr('disabled');
                     $("#details-document-person-juridic-contract").show();
                 }
 
-                $("#td-address-status").append(`
+                $("#td-bank-status").html('').append(`
+                    <span class='badge ${companyStatus[company.bank_document_status]}'>
+                        ${companyStatusTranslated[company.bank_document_status]} 
+                    </span>
+                `);
+
+                $("#td-address-status").html('').append(`
                     <span class='badge ${companyStatus[company.address_document_status]}'>
                         ${companyStatusTranslated[company.address_document_status]} 
                     </span>
                     `);
-                $("#td-contract-status").append(`
+                $("#td-contract-status").html('').append(`
                     <span class='badge ${companyStatus[company.contract_document_status]}'>
                         ${companyStatusTranslated[company.contract_document_status]} 
                     </span>
@@ -172,6 +176,9 @@ $(document).ready(function () {
     function configSubmits() {
         companyUpdateForm.on("submit", function (event) {
             event.preventDefault();
+            $("#company_document").remove('disabled');
+            $(".info-complemented").removeAttr('disabled');
+
             let form_data = new FormData(document.getElementById('company_update_form'));
             loadingOnScreen();
             $.ajax({
@@ -187,10 +194,13 @@ $(document).ready(function () {
                 data: form_data,
                 error: function (response) {
                     errorAjaxResponse(response);
+                    $("#company_document").attr('disabled', 'disabled');
                 },
                 success: function success(response) {
                     alertCustom('success', response.message);
                     loadingOnScreenRemove();
+                    $("#company_document").attr('disabled', 'disabled');
+
                 }
             });
         });
