@@ -192,7 +192,7 @@
                                                     <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                 </td>--}}
                                                 <td>
-                                                    <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    <i title='Enviar Documento' class='icon wb-upload gradient details-document-person-juridic' data-document='address_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -207,7 +207,7 @@
                                                     <i class="icon fa-cloud-upload" style="font-size: 30px;"></i>
                                                 </td>--}}
                                                 <td>
-                                                    <i title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='contract_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    <i title='Enviar Documento' class='icon wb-upload gradient details-document-person-juridic' data-document='contract_document_status' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
