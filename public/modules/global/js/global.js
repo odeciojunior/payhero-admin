@@ -478,7 +478,7 @@ function ajaxVerifyDocumentPending(){
         success: response => {
             sessionStorage.setItem('documentsPending', JSON.stringify(response));
             if (response.pending) {
-                $('.document-pending').addClass('show');
+                $('.document-pending').show();
                 $('.btn-finalize').attr('href', response.link);
             }
         },
@@ -486,6 +486,12 @@ function ajaxVerifyDocumentPending(){
 }
 
 function verifyDocumentPending(){
+
+    if(window.location.href.includes('/dashboard')){
+        sessionStorage.removeItem('documentsPending');
+        $('.document-pending').hide();
+    }
+
     if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
         let documentsPending = sessionStorage.getItem('documentsPending');
         if (documentsPending === null) {
@@ -493,7 +499,7 @@ function verifyDocumentPending(){
         } else {
             documentsPending = JSON.parse(documentsPending);
             if (documentsPending.pending) {
-                $('.document-pending').addClass('show');
+                $('.document-pending').show();
                 $('.btn-finalize').attr('href', documentsPending.link);
             }
         }
