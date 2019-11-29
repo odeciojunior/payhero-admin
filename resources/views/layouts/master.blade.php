@@ -123,7 +123,7 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script>
+    {{-- <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script> --}}
 
     <script type='text/javascript' src='https://inveniochatapi.azurewebsites.net/chat.js'></script>
 
