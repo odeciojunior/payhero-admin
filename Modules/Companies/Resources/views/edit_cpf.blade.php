@@ -23,6 +23,12 @@
                         <form method="POST" enctype="multipart/form-data" id='company_update_bank_form' class='form-basic-informations'>
                             @method('PUT')
                             <h3 class="mb-15 mt-10">Conta bancária</h3>
+                            <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+                                <strong>Atenção! </strong> O limite de saque mensal é de R$ R$ 1.900,00 para empresas cadastradas como pessoa física!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                             <div class="row">
                                 <div class="col-xl-4">
                                     <div class='form-group'>
@@ -136,6 +142,34 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .select2-selection--single{
+            border: 1px solid #dddddd !important;
+            border-radius: .215rem !important;
+            height: 43px !important;
+        }
+
+        .select2-selection__rendered {
+            color: #707070 !important;
+            font-size: 16px !important;
+            font-family: 'Muli', sans-serif;
+            line-height: 43px !important;
+            padding-left: 14px !important;
+            padding-right: 38px !important;
+        }
+
+        .select2-selection__arrow{
+            height: 43px !important;
+            right: 10px !important;
+        }
+        .select2-selection__arrow b {
+            border-color: #8f9ca2 transparent transparent transparent !important;
+        }
+        .select2-container--open .select2-selection__arrow b{
+            border-color: transparent transparent #8f9ca2 transparent !important;
+        }
+    </style>
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>

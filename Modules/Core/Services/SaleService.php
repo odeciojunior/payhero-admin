@@ -359,7 +359,8 @@ class SaleService
                     if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
                         $shopifyService = new ShopifyService();
 
-                        $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
+                        $shopifyService->refundOrder($shopifyIntegration, $sale);
+                        $shopifyService->saveSaleShopifyRequest();
                     }
                     DB::commit();
                 }
@@ -384,10 +385,14 @@ class SaleService
     public function recalcSaleRefund($sale, $refundAmount)
     {
         try {
-            $companyModel       = new Company();
-            $transferModel      = new Transfer();
-            $totalPaidValue     = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
-            $percentRefund      = (int) round((($refundAmount / $totalPaidValue) * 100));
+            $companyModel   = new Company();
+            $transferModel  = new Transfer();
+            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+            if ($totalPaidValue > 0) {
+                $percentRefund = (int) round((($refundAmount / $totalPaidValue) * 100));
+            } else {
+                $percentRefund = 100;
+            }
             $refundTransactions = $sale->transactions;
             foreach ($refundTransactions as $refundTransaction) {
                 //calcula valor que deve ser estornado da transação
