@@ -109,7 +109,7 @@ class ShopifyApiController extends Controller
             $project     = $projectModel->create([
                                                      'name'                       => $shopifyName,
                                                      'status'                     => $projectModel->present()
-                                                                                                  ->getStatus('approved'),
+                                                                                                  ->getStatus('active'),
                                                      'visibility'                 => 'private',
                                                      'percentage_affiliates'      => '0',
                                                      'description'                => $shopifyName,
@@ -140,7 +140,6 @@ class ShopifyApiController extends Controller
                                                                                'project_id'    => $project->id,
                                                                                'status'        => 1,
                                                                            ]);
-                                                                           dd('heyyy');
 
                     if (!empty($shopifyIntegration)) {
                         $companyId = current(Hashids::decode($dataRequest['company']));
