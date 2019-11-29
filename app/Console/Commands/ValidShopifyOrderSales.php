@@ -12,6 +12,10 @@ use Modules\Core\Services\ShopifyService;
 class ValidShopifyOrderSales extends Command
 {
     /**
+     * @var ShopifyService|null
+     */
+    private $shopifyService;
+    /**
      * The name and signature of the console command.
      * @var string
      */
@@ -47,15 +51,35 @@ class ValidShopifyOrderSales extends Command
                                    ->get();
 
             foreach ($sales as $sale) {
-                $lastId             = $sale->id;
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                /** @var ShopifyService $shopifyService */
-                $shopifyService = new ShopifyService($shopifyIntegration);
-                $shopifyService->newOrder($sale);
+                $this->setShopifyService($sale);
+                $lastId = $sale->id;
+
+                if ($this->shopifyService) {
+                    $this->shopifyService->newOrder($sale);
+                    $this->shopifyService->saveSaleShopifyRequest();
+                }
             }
         } catch (Exception $e) {
             Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $lastId);
             report($e);
+        }
+    }
+
+    /**
+     * @param $sale
+     * @return void
+     */
+    private function setShopifyService($sale)
+    {
+        try {
+            $shopifyIntegration   = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+            $this->shopifyService = new ShopifyService($shopifyIntegration);
+
+            return;
+        } catch (Exception $ex) {
+            report($ex);
+
+            return;
         }
     }
 }

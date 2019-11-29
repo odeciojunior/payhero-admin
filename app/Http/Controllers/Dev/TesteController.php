@@ -71,6 +71,30 @@ class TesteController extends Controller
 
     public function index()
     {
+        $sale               = Sale::with("project")->orderBy("created_at", "DESC")->first();
+        $shopifyIntegration = ShopifyIntegration::where("project_id", $sale->project_id)->first();
+
+        $credential = new PublicAppCredential($shopifyIntegration->token);
+
+        $client = new Client($credential, $shopifyIntegration->url_store, [
+            'metaCacheDir' => '/var/tmp',
+        ]);
+        $order  = $client->getOrderManager()->find($sale->shopify_order);
+        if (!FoxUtils::isEmpty($order)) {
+            if ($order->getFinancialStatus() == 'pending') {
+                $data               = $sale->shopify_order;
+                $result             = $client->getOrderManager()->cancel($data);
+            } else {
+                $transaction        = [
+                    "kind"   => "refund",
+                    "source" => "external",
+                ];
+                $result             = $client->getTransactionManager()->create($sale->shopify_order, $transaction);
+            }
+        } else {
+            throw new Exception('Ordem não encontrado no shopify para a venda - ' . $order);
+        }
+        dd('ab');
         $this->tgFunction();
         dd('tg');
 
@@ -344,14 +368,14 @@ class TesteController extends Controller
         $saleModel                = new Sale();
         $productPlanModel         = new ProductPlan();
         $currencyQuotationService = new CurrencyQuotationService();
-        $notazzInvoice = $notazzInvoiceModel->with([
-                                                       'sale',
-                                                       'sale.client',
-                                                       'sale.delivery',
-                                                       'sale.shipping',
-                                                       'sale.plansSales.plan.products',
-                                                       'sale.project.notazzIntegration',
-                                                   ])->find(6157);
+        $notazzInvoice            = $notazzInvoiceModel->with([
+                                                                  'sale',
+                                                                  'sale.client',
+                                                                  'sale.delivery',
+                                                                  'sale.shipping',
+                                                                  'sale.plansSales.plan.products',
+                                                                  'sale.project.notazzIntegration',
+                                                              ])->find(6157);
 
         $sale = $notazzInvoice->sale;
         if ($sale) {
@@ -422,51 +446,48 @@ class TesteController extends Controller
             }
         }
 
-
-
         //nada
-
 
         dd('nada');
 
-//---------------------------------------------------------------------------
-//        $notazInvoiceModel = new NotazzInvoice();
-//        $nservice          = new NotazzService();
-//
-//        $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
-//                                      ->where('status', '!=', 5)
-//                                      ->get();
-//
-//        try {
-//            $count = 0;
-//            foreach ($invoices as $invoice) {
-//                if ($count > 90) {
-//                    break;
-//                }
-//                $ret = $nservice->deleteNfse($invoice->id);
-//                if ($ret == false) {
-//                    $invoice->update([
-//                                         'status'           => 5,
-//                                     ]);
-//                    continue;
-//                }
-//
-//                $invoice->update([
-//                                     'status'           => 5,
-//                                     'return_message'   => $ret->statusProcessamento,
-//                                     'return_http_code' => $ret->codigoProcessamento,
-//                                 ]);
-//
-//                $count = $count + 1;
-//            }
-//
-//            dd('ok');
-//        } catch (Exception $ex) {
-//            dd($ex);
-//        }
-//
-//        dd($invoices);
-//---------------------------------------------------------------------------
+        //---------------------------------------------------------------------------
+        //        $notazInvoiceModel = new NotazzInvoice();
+        //        $nservice          = new NotazzService();
+        //
+        //        $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+        //                                      ->where('status', '!=', 5)
+        //                                      ->get();
+        //
+        //        try {
+        //            $count = 0;
+        //            foreach ($invoices as $invoice) {
+        //                if ($count > 90) {
+        //                    break;
+        //                }
+        //                $ret = $nservice->deleteNfse($invoice->id);
+        //                if ($ret == false) {
+        //                    $invoice->update([
+        //                                         'status'           => 5,
+        //                                     ]);
+        //                    continue;
+        //                }
+        //
+        //                $invoice->update([
+        //                                     'status'           => 5,
+        //                                     'return_message'   => $ret->statusProcessamento,
+        //                                     'return_http_code' => $ret->codigoProcessamento,
+        //                                 ]);
+        //
+        //                $count = $count + 1;
+        //            }
+        //
+        //            dd('ok');
+        //        } catch (Exception $ex) {
+        //            dd($ex);
+        //        }
+        //
+        //        dd($invoices);
+        //---------------------------------------------------------------------------
 
         //$ret = $nservice->deleteNfse(123);
         //dd($ret);
