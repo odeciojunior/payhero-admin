@@ -9,7 +9,7 @@ use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\PerfectLogService;
+use Modules\Core\Services\AftershipService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -54,7 +54,7 @@ class VerifyTrackings extends Command
             $productPlanSaleModel = new ProductPlanSale();
             $trackingModel = new Tracking();
             $trackingService = new TrackingService();
-            $perfectLogService = new PerfectLogService();
+            $aftershipService = new AftershipService();
             $productService = new ProductService();
 
             //DB::beginTransaction();
@@ -99,7 +99,7 @@ class VerifyTrackings extends Command
                                                 $tracking = $trackingService->createTracking($fulfillment->tracking_number, $productPlanSale);
                                             }
                                             $this->line('Enviando para a PerfectLog...');
-                                            $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
+                                            $aftershipService->createTracking($tracking->tracking_code);
                                         }catch (\Exception $ex){
                                             $this->line('Erro: ' . $ex->getMessage());
                                             Log::error($ex->getMessage());

@@ -165,9 +165,7 @@ class CompaniesApiController extends Controller
 
             $company = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
-                if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
-                    $company->bank_document_status = $companyModel->present()->getBankDocumentStatus('pending');
-                }
+
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);
 

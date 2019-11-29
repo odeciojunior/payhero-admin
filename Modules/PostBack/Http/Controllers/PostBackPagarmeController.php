@@ -182,7 +182,8 @@ class PostBackPagarmeController extends Controller
                               ]);
                 if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                    $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
+                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+                    $shopifyService->saveSaleShopifyRequest();
                 }
                 $transferModel = new Transfer();
 
@@ -232,7 +233,8 @@ class PostBackPagarmeController extends Controller
                               ]);
                 if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                    $shopifyService->refundOrder($shopifyIntegration, $sale->shopify_order);
+                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+                    $shopifyService->saveSaleShopifyRequest();
                 }
                 $transferModel = new Transfer();
 
