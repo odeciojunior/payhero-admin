@@ -80,7 +80,7 @@ class PostBackShopifyController extends Controller
                                         $tracking = $productPlanSale->tracking;
                                         if (isset($tracking)) {
                                             //caso seja diferente, atualiza o registro e dispara o e-mail
-                                            if ($tracking->tracking_code != $fulfillment["tracking_number"]) {
+                                            if ($tracking->tracking_code != $fulfillment["tracking_number"] && $fulfillment["tracking_number"] != "" ) {
 
                                                 $tracking->update(['tracking_code' => $fulfillment["tracking_number"]]);
 

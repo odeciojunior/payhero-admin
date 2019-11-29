@@ -13,7 +13,7 @@ class ProfileUploadDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            'document_type' => 'required|numeric|in:1,2,3',
+            'document_type' => 'required',
             'file'          => 'required|mimes:jpeg,jpg,png,doc,pdf',
         ];
     }

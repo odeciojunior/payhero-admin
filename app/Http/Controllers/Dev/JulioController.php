@@ -44,26 +44,30 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        $userModel = new User();
+        $companyModel = new Company();
 
-        $invites = Invitation::where('status', 1)->whereNull('company_id')->whereNotNull('invite')->get();
+        $companies = $companyModel->all();
 
-        foreach($invites as $invite){
+        // foreach($companies as $company) {
 
-            $user = $userModel->find($invite->invite);
+        //     $document = preg_replace("/[^0-9]/", "", $company->company_document);
 
-            $companyId = $user->companies()->first()->id;
+        //     if(strlen($document) == 11){
+        //         $company->update([
+        //             'company_type' => $companyModel->present()->getCompanyType('physical person')
+        //         ]);
+        //     }
+        //     else {
+        //         $company->update([
+        //             'company_type' => $companyModel->present()->getCompanyType('juridical person')
+        //         ]);
+        //     }
 
-            if(!empty($companyId)){
-                $invite->update([
-                    'company_id' => $companyId,
-                ]);
-            }
+        // }
 
-        }
-
-        dd("heyyy");
     }
+
+
 
 }
 

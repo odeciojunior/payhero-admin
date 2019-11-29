@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\UserDocumentPresenter;
 
 /**
  * @property integer $id
@@ -16,24 +18,24 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserDocument extends Model
 {
+    use PresentableTrait;
+    protected $presenter = UserDocumentPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id', 
-        'document_url', 
-        'document_type_enum', 
+        'user_id',
+        'document_url',
+        'document_type_enum',
         'status',
         'refused_reason',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**

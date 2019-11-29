@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -87,7 +88,7 @@ class SalesApiController extends Controller
 
             $user = auth()->user();
 
-            $filename = 'sales_report_' . Hashids::encode($user->id) . '.'. $dataRequest['format'];
+            $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
             (new SaleReportExport($dataRequest, auth()->user(), $filename))->queue($filename);
 
@@ -169,6 +170,10 @@ class SalesApiController extends Controller
                 $result = $saleService->refund($saleId);
             }
             if ($result['status'] == 'success') {
+                $sale->update([
+                                  'date_refunded' => Carbon::now(),
+                              ]);
+
                 return response()->json(['message' => $result['message']], Response::HTTP_OK);
             } else {
                 return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
@@ -196,7 +201,6 @@ class SalesApiController extends Controller
             event(new BilletPaidEvent($plan, $sale, $sale->client));
 
             return response()->json(['message' => 'success'], Response::HTTP_OK);
-
         } catch (Exception $e) {
             Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
             report($e);

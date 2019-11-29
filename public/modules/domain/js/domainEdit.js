@@ -254,7 +254,7 @@ $(document).ready(function () {
     $("#type-register").change(function () {
         if ($("#type-register option:selected").val() === 'MX') {
             $("#name-register").parent().removeClass('col-lg-10').addClass('col-lg-8');
-
+            $("#div-input-priority").remove();
             $("#name-register").parent().after(
                 ' <div id="div-input-priority" class="col-sm-12 col-md-5 col-lg-2 mb-3">' +
                 '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
@@ -266,10 +266,13 @@ $(document).ready(function () {
             $('#value-priority').mask('0#');
 
         } else if ($("#type-register option:selected").val() === 'TXT') {
+            $("#div-input-priority").remove();
+
             $("#proxy-active").attr('disabled', true);
             $("#proxy-select").val('0').change();
 
         } else {
+            $("#div-input-priority").remove();
 
             $("#proxy-active").removeAttr('disabled');
 
@@ -353,6 +356,8 @@ $(document).ready(function () {
                     $(".swal2-container, #modal-backdrop, #loaderLine").remove();
                     removeLoad();
                     errorAjaxResponse(response);
+                    updateTableRecords(domainId);
+
                 },
                 success: function (response) {
                     $(".swal2-container").remove();
@@ -574,7 +579,6 @@ $(document).ready(function () {
                     $("#content-modal-recheck-dns-success").hide();
 
                     $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
-
                 }
 
                 $("#modal-info-dns").modal('show');
@@ -599,7 +603,7 @@ $(document).ready(function () {
      * Recheck dominio
      */
     $(".btn-verify-domain").unbind('click');
-    $(document).on('click', '.btn-verify-domain',function () {
+    $(document).on('click', '.btn-verify-domain', function () {
         let domainId = $("#domain").val();
         $("#modal-title-dns-recheck").hide();
 

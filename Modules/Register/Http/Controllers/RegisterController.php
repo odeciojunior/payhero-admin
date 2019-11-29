@@ -17,13 +17,13 @@ use Modules\Register\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
-
     public function create($parameter)
     {
         return view('register::create');
     }
 
-    public function loginAsSomeUser($userId){
+    public function loginAsSomeUser($userId)
+    {
 
         auth()->loginUsingId($userId);
 

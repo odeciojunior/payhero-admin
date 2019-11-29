@@ -16,10 +16,12 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
+use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -353,6 +355,13 @@ class SaleService
             if ($checktRecalc) {
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
+                    $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+                    if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
+                        $shopifyService = new ShopifyService();
+
+                        $shopifyService->refundOrder($shopifyIntegration, $sale);
+                        $shopifyService->saveSaleShopifyRequest();
+                    }
                     DB::commit();
                 }
 
@@ -376,10 +385,14 @@ class SaleService
     public function recalcSaleRefund($sale, $refundAmount)
     {
         try {
-            $companyModel       = new Company();
-            $transferModel      = new Transfer();
-            $totalPaidValue     = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
-            $percentRefund      = (int) round((($refundAmount / $totalPaidValue) * 100));
+            $companyModel   = new Company();
+            $transferModel  = new Transfer();
+            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+            if ($totalPaidValue > 0) {
+                $percentRefund = (int) round((($refundAmount / $totalPaidValue) * 100));
+            } else {
+                $percentRefund = 100;
+            }
             $refundTransactions = $sale->transactions;
             foreach ($refundTransactions as $refundTransaction) {
                 //calcula valor que deve ser estornado da transação
@@ -458,6 +471,13 @@ class SaleService
                                               ]);
                 sleep(7);
                 if (!empty($refundedTransaction)) {
+                    SaleRefundHistory::create([
+                                                  'sale_id'          => $sale->id,
+                                                  'refunded_amount'  => $sale->original_total_paid_value ?? 0,
+                                                  'date_refunded'    => Carbon::now(),
+                                                  'gateway_response' => json_encode($refundedTransaction),
+                                              ]);
+
                     return
                         [
                             'status'  => 'success',

@@ -3,12 +3,13 @@
 namespace Modules\Companies\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Presenters\CompanyPresenter;
-use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\CompanyService;
+use Illuminate\Http\Resources\Json\Resource;
+use Modules\Core\Presenters\CompanyPresenter;
+use Laracasts\Presenter\Exceptions\PresenterException;
 
 /**
  * Class CompanyResource
@@ -29,7 +30,6 @@ class CompanyResource extends Resource
      */
     public function toArray($request)
     {
-        /** @var CompanyPresenter $presenter */
         $presenter        = $this->resource->present();
         $documentStatus   = $presenter->allStatusPending() ? $presenter->getStatus(3) : $presenter->getStatus(1);
         $companyService   = new CompanyService();
@@ -41,7 +41,7 @@ class CompanyResource extends Resource
             'support_email'               => $this->resource->support_email ?? '',
             'support_telephone'           => $this->resource->support_telephone ?? '',
             'fantasy_name'                => $this->resource->fantasy_name ?? '',
-            'company_document'            => $this->resource->company_document ?? '',
+            'company_document'            => strlen($this->resource->company_document) == 14 ? FoxUtils::mask($this->resource->company_document, '##.###.###/####-##') : (strlen($this->resource->company_document) == 11 ? FoxUtils::mask($this->resource->company_document, '###.###.###-##') : $this->resource->company_document),
             'zip_code'                    => $this->resource->zip_code ?? '',
             'country'                     => $this->resource->country ?? '',
             'state'                       => $this->resource->state ?? '',
@@ -56,13 +56,14 @@ class CompanyResource extends Resource
             'account'                     => $this->resource->account ?? '',
             'account_digit'               => $this->resource->account_digit ?? '',
             'document_status'             => $documentStatus,
-            'bank_document_status'        => $this->resource->bank_document_status,
-            'address_document_status'     => $this->resource->address_document_status,
-            'contract_document_status'    => $this->resource->contract_document_status,
+            'bank_document_status'        => $presenter->getBankDocumentStatus($this->resource->bank_document_status),
+            'address_document_status'     => $presenter->getAddressDocumentStatus($this->resource->address_document_status),
+            'contract_document_status'    => $presenter->getContractDocumentStatus($this->resource->contract_document_status),
             'bank_document_translate'     => __('definitions.enum.status.' . $presenter->getBankDocumentStatus()),
             'address_document_translate'  => __('definitions.enum.status.' . $presenter->getAddressDocumentStatus()),
             'contract_document_translate' => __('definitions.enum.status.' . $presenter->getContractDocumentStatus()),
             'refusedDocuments'            => $refusedDocuments,
+            'type'                        => $this->company_type,
         ];
     }
 }

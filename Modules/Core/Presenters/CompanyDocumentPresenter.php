@@ -37,4 +37,29 @@ class CompanyDocumentPresenter extends Presenter
             return '';
         }
     }
+
+    public function getDocumentType($type)
+    {
+        if (is_numeric($type)) {
+            switch ($type) {
+                case 1:
+                    return 'bank_document_status';
+                case 2:
+                    return 'address_document_status';
+                case 3:
+                    return 'contract_document_status';
+            }
+        } else {
+            switch ($type) {
+                case 'bank_document_status':
+                    return 1;
+                case 'address_document_status':
+                    return 2;
+                case 'contract_document_status':
+                    return 3;
+            }
+        }
+
+        return '';
+    }
 }

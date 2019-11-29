@@ -1,3 +1,19 @@
+let documentType = '';
+let bagder = '';
+let badgeArray = {
+    'pending': 'badge-primary',
+    'analyzing': 'badge-pending',
+    'approved': 'badge-success',
+    'refused': 'badge-danger',
+};
+
+let statusArray = {
+    'pending': 'Pendente',
+    'analyzing': 'Em análise',
+    'approved': 'Aprovado',
+    'refused': 'Recusado',
+};
+
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -132,11 +148,38 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#email').val(response.data.email);
+
+                /**
+                 * Dados Pessoais
+                 */
+                if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
+                    $('#document').attr('disabled', 'disabled');
+                } else {
+                    $('#document').removeAttr('disabled');
+                }
+
                 $('#name').val(response.data.name);
+                $('#email').val(response.data.email);
                 $('#document').val(response.data.document);
                 $('#cellphone').val(response.data.cellphone);
                 $('#date_birth').val(response.data.date_birth);
+
+                /**
+                 * Imagem Perfil
+                 */
+                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
+                });
+
+                /**
+                 * Dados Residenciais
+                 */
+                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
+                    $('.dados-residenciais').attr('disabled', 'disabled');
+                } else {
+                    $('.dados-residenciais').removeAttr('disabled');
+                }
                 $('#zip_code').val(response.data.zip_code);
                 $('#street').val(response.data.street);
                 $('#number').val(response.data.number);
@@ -144,31 +187,10 @@ $(document).ready(function () {
                 $('#complement').val(response.data.complement);
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
-                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function () {
-                    $(this).attr('src', '/modules/global/img/user-default.png');
-                });
-                var valuecss = '';
 
-                if (response.data.personal_document_status === 1) {
-                    valuecss = 'primary';
-                } else if (response.data.personal_document_status === 2) {
-                    valuecss = 'pendente';
-                } else if (response.data.personal_document_status === 3) {
-                    valuecss = 'success';
-                } else {
-                    valuecss = 'danger';
-                }
-
-                // if (response.data.new_affiliation) {
-                //     $("#new_affiliation_switch").attr("checked", "checked");
-                // }
-                // if (response.data.new_affiliation_request) {
-                //     $("#new_affiliation_request_switch").attr("checked", "checked");
-                // }
-                // if (response.data.approved_affiliation) {
-                //     $("#approved_affiliation_switch").attr("checked", "checked");
-                // }
+                /**
+                 * Notificações
+                 */
                 if (response.data.boleto_compensated) {
                     $("#boleto_compensated_switch").attr("checked", "checked");
                 }
@@ -178,9 +200,7 @@ $(document).ready(function () {
                 if (response.data.notazz) {
                     $("#notazz_switch").attr("checked", "checked");
                 }
-                // if (response.data.withdrawal_approved) {
-                //     $("#withdrawal_approved_switch").attr("checked", "checked");
-                // }
+
                 if (response.data.released_balance) {
                     $("#released_balance_switch").attr("checked", "checked");
                 }
@@ -190,9 +210,7 @@ $(document).ready(function () {
                 if (response.data.shopify) {
                     $("#shopify_switch").attr("checked", "checked");
                 }
-                // if (response.data.user_shopify_integration_store) {
-                //     $("#user_shopify_integration_store_switch").attr("checked", "checked");
-                // }
+
                 if (response.data.billet_generated) {
                     $("#billet_generated_switch").attr("checked", "checked");
                 }
@@ -216,26 +234,30 @@ $(document).ready(function () {
                     emailNotVerified();
                 }
 
-                var linha = '<span class="badge badge-' + valuecss + '" id="personal_document_badge">' + response.data.personal_document_translate + '</span>';
-                $("#td_personal_status").append(linha);
+                /**
+                 * Documentos
+                 */
 
-                if (response.data.address_document_status === 1) {
-                    valuecss = 'primary';
-                } else if (response.data.address_document_status === 2) {
-                    valuecss = 'pendente';
-                } else if (response.data.address_document_status === 3) {
-                    valuecss = 'success';
-                } else {
-                    valuecss = 'danger';
-                }
+                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
 
-                linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
-                $("#td_address_status").append(linha);
+                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
-                getRefusedDocuments(response.data.refusedDocuments);
+                // getRefusedDocuments(response.data.refusedDocuments);
                 verifyUserAddress(response.data);
+
+                if (response.data.address_document_status === 3) {
+                    $("#address-document-id").hide();
+                } else {
+                    $("#address-document-id").show();
+                }
+                if (response.data.personal_document_status === 3) {
+                    $("#personal-document-id").hide();
+                } else {
+                    $("#personal-document-id").show();
+                }
+
             }
         });
     }
@@ -269,6 +291,9 @@ $(document).ready(function () {
     }
 
     $("#profile_update_form").on("submit", function (event) {
+        $('.dados-residenciais').removeAttr('disabled');
+        $('#document').removeAttr('disabled');
+
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
         loadingOnScreen();
@@ -286,8 +311,10 @@ $(document).ready(function () {
             data: form_data,
             error: function (response) {
                 errorAjaxResponse(response);
+
             },
             success: function success(response) {
+
                 loadingOnScreenRemove();
                 $(".div1").hide();
                 $(".div2").show();
@@ -636,9 +663,119 @@ $(document).ready(function () {
                 '</div>');
         });
     }
+
+    function htmlTableDocuments(data) {
+        let dados = '';
+        let verifyReason = false;
+        if (data.length == 0) {
+            $("#profile-documents-modal").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
+        } else {
+            $("#document-refused-motived").html('');
+            $.each(data, function (index, value) {
+                dados = `<tr>
+                        <td class='text-center'>${value.date}</td>
+                        <td class='text-center' style='cursor: pointer;'>
+                            <span class='badge ${badgeArray[value.status]}'>
+                                    ${statusArray[value.status]}</td>
+                               </span>
+                        </td>`;
+
+                if (value.refused_reason != '' && value.refused_reason != null) {
+                    dados += `
+                                <td class='text-center' style='color:red;'>${value.refused_reason}</td>
+                             `;
+
+                } else {
+                    dados += `
+                                <td class='text-center' style='color:red;'></td>
+                             `;
+                }
+                dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                        </td>
+                        
+                    </tr>`;
+                $("#profile-documents-modal").append(dados);
+
+            });
+        }
+
+    }
+
+    function getDocumentsProfile(document_type) {
+        $.ajax({
+            url: "/api/profile/getdocuments",
+            type: "POST",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                'document_type': document_type
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                $("#loaderLine").remove();
+
+            },
+            success: function success(response) {
+                htmlTableDocuments(response.data);
+                $("#loaderLine").remove();
+
+            }
+        });
+    }
+
+    $(".details-document").on('click', function () {
+        $("#profile-documents-modal").html('');
+        $("#document-refused-motived").css('display', 'none');
+        loadOnTable('#profile-documents-modal', '#table-documents');
+
+        documentType = $(this).data('document');
+        getDocumentsProfile(documentType);
+
+        Dropzone.forElement('#dropzoneDocuments').removeAllFiles(true);
+
+        $("#document_type").val($(this).data('document'));
+
+        if ($(this).data('document') == 'personal_document') {
+            $("#modal-title-documents").html('Documento Pessoal');
+            $("#modal-title-documents-info").html(`<br><small class="" style="line-height: 1.5;">'
+                                                                            <br><b>Documentos aceitos (Desde que contenham o CPF):</b><br>
+                                                                            <ul>
+                                                                            <li class='text-left'><b>RG (Carteira de Identidade )</b></li>
+                                                                            <li class='text-left'><b>CNH (Carteira Nacional de Habilitação)</b></li>
+                                                                            <li class='text-left'><b>Carteira Funcional</b></li>
+                                                                            <li class='text-left'><b>CPTS (Carteira de Trabalho e Previdência Social)</b></li>
+                                                                            <li class='text-left'><b>Passaporte</b></li>
+                                                                            </ul>
+                
+                 
+                                                                        </small>`);
+        } else {
+            $("#modal-title-documents").html('Documento Compravante de Residência');
+            $("#modal-title-documents-info").html(`<br><small class="" style="line-height: 1.5;">
+                <br><b>Comp. de Residência aceitos:</b><br>
+                <ul>
+                <li class='text-left'><b>Água</b></li>
+                <li class='text-left'><b>Energia</b></li>
+                <li class='text-left'><b>Gás Encanado</b></li>
+                <li class='text-left'><b>Internet</b></li>
+                <li class='text-left'><b>Telefone Fixo ou Móvel</b></li>
+                <li class='text-left'><b>Contrato de Locação em nome do usuário ou dos Pais</b></li>
+                </ul>
+                <b>Se nome de terceiro, anexar junto declaração de endereço do titular da conta e RG do titular da conta.</b>
+                </small>`);
+        }
+
+        $("#modal-details-document").modal('show');
+    });
+
 });
 
-Dropzone.options.dropzoneDocuments = {
+Dropzone.autoDiscover = false;
+
+const myDropzone = new Dropzone('#dropzoneDocuments', {
     headers: {
         'Authorization': $('meta[name="access-token"]').attr('content'),
         'Accept': 'application/json',
@@ -647,56 +784,15 @@ Dropzone.options.dropzoneDocuments = {
     maxFilesize: 2,
     url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
-    accept: function accept(file, done) {
-        var dropz = this;
-
-        swal({
-            title: 'Qual é o tipo do documento?',
-            type: 'warning',
-            input: 'select',
-            inputPlaceholder: 'Selecione o documento',
-            inputOptions: {
-                '1': 'Documento de identidade',
-                '2': 'Comprovante de residência'
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#3085D6',
-            cancelButtonColor: '#DD3333',
-            confirmButtonText: 'Enviar'
-        }).then(function (data) {
-            if (data.value) {
-                //ok
-                $('#document_type').val(data.value);
-                done();
-            } else {
-                //cancel
-                dropz.removeFile(file);
-            }
-        }).catch(function (reason) {
-            //close
-            dropz.removeFile(file);
-        });
-    },
+    previewsContainer: ".dropzone-previews",
     success: function success(file, response) {
-        //update table
-        if (response.personal_document_translate === 'Em análise') {
-            $('#personal_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.personal_document_translate);
-        }
-        if (response.address_document_translate === 'Em análise') {
+        alertCustom('success', response.message);
 
-            $('#address_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.address_document_translate);
+        if (file.previewElement) {
+            return file.previewElement.classList.add('dz-success');
         }
 
-        swal({
-            position: 'bottom',
-            type: 'success',
-            toast: 'true',
-            title: response.message,
-            showConfirmButton: false,
-            timer: 6000
-        });
-    },
-    error: function error(file, response) {
+    }, error: function (file, response) {
 
         if (response.search('Max filesize') > 0) {
             response = 'O documento é muito grande. Tamanho maximo: 2mb.';
@@ -704,18 +800,67 @@ Dropzone.options.dropzoneDocuments = {
             response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.';
         }
 
-        swal({
-            position: 'bottom',
-            type: 'error',
-            toast: 'true',
-            title: response,
-            showConfirmButton: false,
-            timer: 6000
+        errorAjaxResponse(response);
+        myDropzone.removeFile(file);
+    }, complete: function () {
+        loadOnTable('#profile-documents-modal', '#table-documents');
+
+        $.ajax({
+            url: "/api/profile/getdocuments",
+            type: "POST",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                'document_type': documentType
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                $("#loaderLine").remove();
+            },
+            success: function success(response) {
+                $("#loaderLine").remove();
+
+                let dados = '';
+                if (response.data.length == 0) {
+                    $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
+                } else {
+                    $("#document-refused-motived").html('');
+                    $.each(response.data, function (index, value) {
+                        dados = `<tr>
+                        <td class='text-center'>${value.date}</td>
+                        <td class='text-center' style='cursor: pointer;'>
+                            <span class='badge ${badgeArray[value.status]}'>
+                                    ${statusArray[value.status]}</td>
+                               </span>
+                        </td>`;
+
+                        if (value.refused_reason != '' && value.refused_reason != null) {
+                            dados += `
+                                <td class='text-center' style='color:red;'>${value.refused_reason}</td>
+                             `;
+
+                        } else {
+                            dados += `
+                                <td class='text-center' style='color:red;'></td>
+                             `;
+                        }
+                        dados += `<td class='text-center'>
+                            <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
+                        </td>
+                        
+                    </tr>`;
+                        $("#profile-documents-modal").append(dados);
+
+                    });
+                }
+
+            }
         });
 
-        this.removeFile(file);
+        ajaxVerifyDocumentPending();
     }
 
-};
-
+});
 
