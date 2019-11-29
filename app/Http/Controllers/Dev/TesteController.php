@@ -33,6 +33,7 @@ use Modules\Core\Entities\Product;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Transfer;
+use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Core\Entities\Transaction;
@@ -71,30 +72,7 @@ class TesteController extends Controller
 
     public function index()
     {
-        $sale               = Sale::with("project")->orderBy("created_at", "DESC")->first();
-        $shopifyIntegration = ShopifyIntegration::where("project_id", $sale->project_id)->first();
 
-        $credential = new PublicAppCredential($shopifyIntegration->token);
-
-        $client = new Client($credential, $shopifyIntegration->url_store, [
-            'metaCacheDir' => '/var/tmp',
-        ]);
-        $order  = $client->getOrderManager()->find($sale->shopify_order);
-        if (!FoxUtils::isEmpty($order)) {
-            if ($order->getFinancialStatus() == 'pending') {
-                $data               = $sale->shopify_order;
-                $result             = $client->getOrderManager()->cancel($data);
-            } else {
-                $transaction        = [
-                    "kind"   => "refund",
-                    "source" => "external",
-                ];
-                $result             = $client->getTransactionManager()->create($sale->shopify_order, $transaction);
-            }
-        } else {
-            throw new Exception('Ordem não encontrado no shopify para a venda - ' . $order);
-        }
-        dd('ab');
         $this->tgFunction();
         dd('tg');
 
@@ -363,92 +341,102 @@ class TesteController extends Controller
      */
     public function tgFunction()
     {
-        $notazzInvoiceModel       = new NotazzInvoice();
-        $notazzSentHistoryModel   = new NotazzSentHistory();
-        $saleModel                = new Sale();
-        $productPlanModel         = new ProductPlan();
-        $currencyQuotationService = new CurrencyQuotationService();
-        $notazzInvoice = $notazzInvoiceModel->with([
-                                                       'sale',
-                                                       'sale.client',
-                                                       'sale.delivery',
-                                                       'sale.shipping',
-                                                       'sale.plansSales.plan.products',
-                                                       'sale.project.notazzIntegration',
-                                                   ])->find(8177);
-
-        $sale = $notazzInvoice->sale;
-        if ($sale) {
-            //venda encontrada
-
-            $sale = $saleModel->with(['plansSales'])->find($sale->id);
-
-            $productsSale = collect();
-            /** @var PlanSale $planSale */
-            foreach ($sale->plansSales as $planSale) {
-                /** @var ProductPlan $productPlan */
-                foreach ($planSale->plan->productsPlans as $productPlan) {
-
-                    $product = $productPlan->product()->first();
-
-                    if (!empty($productPlan->cost)) {
-                        //pega os valores de productplan
-                        $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
-                        $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
-                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
-                    } else {
-                        //pega os valores de produto
-                        if (!empty($product->cost)) {
-                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
-                            $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
-                        } else {
-                            $product['product_cost'] = 0;
-                        }
-
-                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
-                    }
-
-                    $product['product_amount'] = ($productPlan->amount * $planSale->amount) ?? 1;
-
-                    $productsSale->add($product);
-                }
-            }
-
-            $products = $productsSale;
-
-            if ($products) {
-                $costTotal = 0;
-                foreach ($products as $product) {
-
-                    if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
-                        //moeda USD
-                        $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
-                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
-                    }
-
-                    $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
-                }
-
-                $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-
-                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
-                $baseValue = ($subTotal + $shippingCost) - $costTotal;
-
-                $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
-
-                if ($totalValue <= 0) {
-                    $totalValue = 1;
-                }
-
-                $tokenApi = $sale->project->notazzIntegration->token_api;
-
-                $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
-            }
-        }
 
         //nada
 
+
         dd('nada');
+
+//        $notazzService = new NotazzService();
+//
+//
+//        $result = $notazzService->sendNfse(2622);
+
+
+//        $notazzInvoiceModel       = new NotazzInvoice();
+//        $notazzSentHistoryModel   = new NotazzSentHistory();
+//        $saleModel                = new Sale();
+//        $productPlanModel         = new ProductPlan();
+//        $currencyQuotationService = new CurrencyQuotationService();
+//        $notazzInvoice = $notazzInvoiceModel->with([
+//                                                       'sale',
+//                                                       'sale.client',
+//                                                       'sale.delivery',
+//                                                       'sale.shipping',
+//                                                       'sale.plansSales.plan.products',
+//                                                       'sale.project.notazzIntegration',
+//                                                   ])->find(8177);
+//
+//        $sale = $notazzInvoice->sale;
+//        if ($sale) {
+//            //venda encontrada
+//
+//            $sale = $saleModel->with(['plansSales'])->find($sale->id);
+//
+//            $productsSale = collect();
+//            /** @var PlanSale $planSale */
+//            foreach ($sale->plansSales as $planSale) {
+//                /** @var ProductPlan $productPlan */
+//                foreach ($planSale->plan->productsPlans as $productPlan) {
+//
+//                    $product = $productPlan->product()->first();
+//
+//                    if (!empty($productPlan->cost)) {
+//                        //pega os valores de productplan
+//                        $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
+//                        $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
+//                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
+//                    } else {
+//                        //pega os valores de produto
+//                        if (!empty($product->cost)) {
+//                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+//                            $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
+//                        } else {
+//                            $product['product_cost'] = 0;
+//                        }
+//
+//                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
+//                    }
+//
+//                    $product['product_amount'] = ($productPlan->amount * $planSale->amount) ?? 1;
+//
+//                    $productsSale->add($product);
+//                }
+//            }
+//
+//            $products = $productsSale;
+//
+//            if ($products) {
+//                $costTotal = 0;
+//                foreach ($products as $product) {
+//
+//                    if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
+//                        //moeda USD
+//                        $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
+//                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
+//                    }
+//
+//                    $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
+//                }
+//
+//                $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+//
+//                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
+//                $baseValue = ($subTotal + $shippingCost) - $costTotal;
+//
+//                $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
+//
+//                if ($totalValue <= 0) {
+//                    $totalValue = 1;
+//                }
+//
+//                $tokenApi = $sale->project->notazzIntegration->token_api;
+//
+//                $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
+//            }
+//        }
+
+
 
         //---------------------------------------------------------------------------
         //        $notazInvoiceModel = new NotazzInvoice();
