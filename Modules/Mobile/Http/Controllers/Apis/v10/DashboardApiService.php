@@ -78,13 +78,14 @@ class DashboardApiService {
         $saleSumFloat        = 0;
         $withDrawalsFloat    = 0;
         $accumulated         = [];
+        $accumulatedValue    = 0;
 
         $companies = auth()->user()->companies()->get() ?? collect();
 
         for ($i = 1; $i <= 3; $i++) {
 
-            $dateInit = $dateInit->add(-1, 'month');
-            $dateEnd = $dateEnd->add(-1, 'month');
+            $dateInit = $dateInit->subMonths(1);
+            $dateEnd = $dateEnd->subMonths(1);
 
             $salesSum = $salesModel
                 ->select(\DB::raw('(CASE
@@ -108,19 +109,30 @@ class DashboardApiService {
                 ->whereIn('company_id', $companies->pluck('id'))
                 ->first();
 
-            //$saleSumFloat = (float)$salesSum->total_sales;
-            //$withDrawalsStr = $withDrawals->saque;
-            //$withDrawalsFloat = $withDrawalsStr != 0 ? substr_replace($withDrawalsStr, ",", $withDrawalsStr.length - 2, 0) : 0;
+            $saleSumStr = str_replace('.', '', $salesSum->total_sales);
+            $withDrawalsStr = $withDrawals->saque;
+            $withDrawalsStr = number_format($withDrawalsStr,0,'.','');
+
+
+            if ($saleSumStr != "0") {
+                $accumulatedValue = $saleSumStr - $withDrawalsStr;
+
+                if ($accumulatedValue < 0) {
+                    $accumulatedValue = 0;
+                }
+            }
 
             $accumulated[] = [
-                'month'     => 'a',
-                'value'     => ''
+                'month'     => strtoupper($dateInit->locale('pt')->getTranslatedShortMonthName('MMM')),
+                'value'     => $accumulatedValue
             ];
+
+            $accumulatedValue = 0;
         }
 
 
-        //return $accumulated;
-        return [10,20,30];
+        return $accumulated;
+        //return [10,20,30];
     }
 
 
