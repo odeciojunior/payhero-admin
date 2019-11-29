@@ -22,8 +22,15 @@ class AftershipService
     /**
      * @var string
      */
-//    private $apiKey = '4c0b6d9a-415f-41ab-a7d3-bb8460aa23fc';
-      private $apiKey = '90b34792-cf7a-4114-9a77-50c12d9a3659';
+    private $apiKey;
+
+    /**
+     * AftershipService constructor.
+     */
+    public function __construct()
+    {
+        $this->apiKey = getenv('AFTERSHIP_KEY') ?? '';
+    }
 
     /**
      * @param null $filters
