@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Withdrawal;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Plan;
 use Illuminate\Http\JsonResponse;
@@ -66,11 +67,65 @@ class DashboardApiService {
     }
 
     public function getAccumulated() {
-        return [];
+
+        $salesModel = new Sale();
+        $withdrawalModel  = new Withdrawal();
+
+        $dateInit            = new Carbon('first day of this month');
+        $dateEnd             = new Carbon('last day of this month');
+        $minuteInit          = ' 00:00:00';
+        $minuteEnd           = ' 23:59:59';
+        $saleSumFloat        = 0;
+        $withDrawalsFloat    = 0;
+        $accumulated         = [];
+
+        $companies = auth()->user()->companies()->get() ?? collect();
+
+        for ($i = 1; $i <= 3; $i++) {
+
+            $dateInit = $dateInit->add(-1, 'month');
+            $dateEnd = $dateEnd->add(-1, 'month');
+
+            $salesSum = $salesModel
+                ->select(\DB::raw('(CASE
+                                        WHEN SUM(total_paid_value) IS NULL
+                                        THEN 0
+                                        ELSE SUM(total_paid_value)
+                                    END) as total_sales'))
+                ->where('sales.status', 1)
+                ->where('sales.owner_id', auth()->user()->id)
+                ->whereBetween('start_date', [$dateInit->format('Y-m-d') . $minuteInit, $dateEnd->format('Y-m-d') . $minuteEnd])
+                ->first();
+
+            $withDrawals = $withdrawalModel
+                ->select(\DB::raw('(CASE
+                                        WHEN SUM(value) IS NULL
+                                        THEN 0
+                                        ELSE SUM(value)
+                                    END) as saque'))
+                ->where('status', 3)
+                ->whereBetween('created_at', [$dateInit->format('Y-m-d') . $minuteInit, $dateEnd->format('Y-m-d') . $minuteEnd])
+                ->whereIn('company_id', $companies->pluck('id'))
+                ->first();
+
+            //$saleSumFloat = (float)$salesSum->total_sales;
+            //$withDrawalsStr = $withDrawals->saque;
+            //$withDrawalsFloat = $withDrawalsStr != 0 ? substr_replace($withDrawalsStr, ",", $withDrawalsStr.length - 2, 0) : 0;
+
+            $accumulated[] = [
+                'month'     => 'a',
+                'value'     => ''
+            ];
+        }
+
+
+        //return $accumulated;
+        return [10,20,30];
     }
 
+
     public function getMetrics() {
-        return [];
+        return -1;
     }
 
     /**
