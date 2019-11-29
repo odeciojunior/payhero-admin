@@ -2,7 +2,9 @@
 
 namespace Modules\Core\Services;
 
+use App\Entities\Sale;
 use Exception;
+use Modules\Core\Entities\SaleShopifyRequest;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -13,7 +15,6 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Modules\Core\Entities\ProductPlan;
@@ -54,6 +55,30 @@ class ShopifyService
      * @var
      */
     private $theme;
+    /**
+     * @var int
+     */
+    private $saleId;
+    /**
+     * @var array
+     */
+    private $sendData = [];
+    /**
+     * @var array
+     */
+    private $receivedData = [];
+    /**
+     * @var array
+     */
+    private $exceptions = [];
+    /**
+     * @var string
+     */
+    private $method;
+    /**
+     * @var string
+     */
+    private $project = "admin";
 
     /**
      * ShopifyService constructor.
@@ -1242,6 +1267,309 @@ class ShopifyService
             }
         } else {
             return null;
+        }
+    }
+
+    /**
+     * @param Sale $sale
+     */
+    public function newOrder(Sale $sale)
+    {
+        try {
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            $delivery     = $sale->delivery;
+            $client       = $sale->client;
+
+            $totalValue = $sale->present()->getSubTotal();
+
+            $firstProduct = true;
+            $items        = [];
+            foreach ($sale->plansSales as $planSale) {
+
+                foreach ($planSale->plan->productsPlans as $productPlan) {
+
+                    $productPrice = 0;
+                    if ($firstProduct) {
+                        if (!empty($sale->shopify_discount)) {
+                            $totalValue -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                        }
+
+                        if ($productPlan->amount * $planSale->amount > 1) {
+                            $productPrice = intval($totalValue / ($productPlan->amount * $planSale->amount));
+                        } else {
+                            $productPrice = $totalValue;
+                        }
+                        $productPrice = substr_replace($productPrice, '.', strlen($productPrice) - 2, 0);
+                        $firstProduct = false;
+                    }
+
+                    $items[] = [
+                        "grams"             => 500,
+                        "id"                => $planSale->plan->id,
+                        "price"             => $productPrice,
+                        "product_id"        => $productPlan->product->shopify_id,
+                        "quantity"          => $productPlan->amount * $planSale->amount,
+                        "requires_shipping" => true,
+                        "sku"               => $productPlan->product->sku,
+                        "title"             => $planSale->plan->name,
+                        "variant_id"        => $productPlan->product->shopify_variant_id,
+                        "variant_title"     => $planSale->plan->name,
+                        "name"              => $planSale->plan->name,
+                        "gift_card"         => false,
+                    ];
+                }
+            }
+
+            $address = $delivery->street . ' - ' . $delivery->number;
+            if ($delivery->complement != '') {
+                $address .= ' - ' . $delivery->complement;
+            }
+            $address .= ' - ' . $delivery->neighborhood;
+
+            $shippingAddress = [
+                "address1"      => $address,
+                "address2"      => "",
+                "city"          => $delivery->city,
+                "company"       => $client->document,
+                "country"       => "Brasil",
+                "first_name"    => $delivery->present()->getReceiverFirstName(),
+                "last_name"     => $delivery->present()->getReceiverLastName(),
+                "phone"         => $client->present()->getTelephoneShopify(),
+                "province"      => $delivery->state,
+                "zip"           => FoxUtils::formatCEP($delivery->zip_code),
+                "name"          => $client->name,
+                "country_code"  => "BR",
+                "province_code" => $delivery->state,
+            ];
+
+            $orderData = [
+                "accepts_marketing"       => false,
+                "currency"                => "BRL",
+                "email"                   => $client->email,
+                "phone"                   => $client->present()->getTelephoneShopify(),
+                "first_name"              => $delivery->present()->getReceiverFirstName(),
+                "last_name"               => $delivery->present()->getReceiverLastName(),
+                "buyer_accepts_marketing" => false,
+                "line_items"              => $items,
+                "shipping_address"        => $shippingAddress,
+            ];
+
+            if ($sale->payment_method == 1) {
+
+                $orderData += [
+                    "transactions" => [
+                        [
+                            "kind"   => "sale",
+                            "status" => "success",
+                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        ],
+                    ],
+                ];
+            } else if ($sale->payment_method == 2) {
+
+                $orderData += [
+                    "financial_status" => "pending",
+                    //                    "transactions"     => [
+                    //                        [
+                    //                            "kind"    => "Boleto",
+                    //                            "gateway" => "Boleto",
+                    //                            "status"  => "success",
+                    //                            "amount"  => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                    //                        ],
+                    //                    ],
+                ];
+            }
+
+            $this->sendData     = $orderData;
+            $order              = $this->shopifyClient->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
+            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+                $sale->update([
+                                  'shopify_order' => 000,
+                              ]);
+            }
+            $sale->update([
+                              'shopify_order' => $order->getId(),
+                          ]);
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
+            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
+            report($e);
+            //            $shippingAddress['phone']      = '+5555959844325';
+            //            $orderData['phone']            = '+5555959844325';
+            //            $orderData['shipping_address'] = $shippingAddress;
+            //            $order                         = $this->shopifyClient->getOrderManager()->create($orderData);
+            //            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+            $sale->update([
+                              'shopify_order' => 000,
+                          ]);
+            //            }
+            //            $sale->update([
+            //                              'shopify_order' => $order->getId(),
+            //                          ]);
+        }
+    }
+
+    /**
+     * @param ShopifyIntegration $shopifyIntegration
+     * @param $sale
+     * @throws Exception
+     */
+    public function refundOrder(ShopifyIntegration $shopifyIntegration, $sale)
+    {
+        try {
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            $credential   = new PublicAppCredential($shopifyIntegration->token);
+
+            $client = new Client($credential, $shopifyIntegration->url_store, [
+                'metaCacheDir' => '/var/tmp',
+            ]);
+            $order  = $client->getOrderManager()->find($sale->shopify_order);
+            if (!FoxUtils::isEmpty($order)) {
+                if ($order->getFinancialStatus() == 'pending') {
+                    $data               = $sale->shopify_order;
+                    $this->sendData     = $data;
+                    $result             = $client->getOrderManager()->cancel($data);
+                    $this->receivedData = $this->convertToArray($result);
+                } else {
+                    $transaction        = [
+                        "kind"   => "refund",
+                        "source" => "external",
+                    ];
+                    $this->sendData     = $transaction;
+                    $result             = $client->getTransactionManager()->create($sale->shopify_order, $transaction);
+                    $this->receivedData = $this->convertToArray($result);
+                }
+            } else {
+                throw new Exception('Ordem não encontrado no shopify para a venda - ' . $order);
+            }
+        } catch (Exception $ex) {
+            $this->exceptions[] = $ex->getMessage();
+            throw $ex;
+        }
+    }
+
+    /**
+     * @param $object
+     * @return array
+     * @author Fausto Marins
+     */
+    public function convertToArray($object)
+    {
+        try {
+            $result = [];
+            foreach ((object) (array) $object as $key => $value) {
+                if (is_string($value) || is_null($value)) {
+                    $result[$key] = $value;
+                } else if (is_array($value)) {
+                    $sub = [];
+                    foreach ($value as $arrayKey => $arrayValue) {
+                        foreach ((object) (array) $arrayValue as $k => $v) {
+                            $sub[$arrayKey][$k] = $v;
+                        }
+                    }
+                    $result[$key] = $sub;
+                } else {
+                    $sub = [];
+                    foreach ((object) (array) $value as $k => $v) {
+                        $sub[$k] = $v;
+                    }
+                    $result[$key] = $sub;
+                }
+            }
+
+            return $result;
+        } catch (Exception $ex) {
+            $this->exceptions[] = $ex->getMessage();
+            report($ex);
+
+            return [];
+        }
+    }
+
+    /**
+     * @return int
+     */
+    private function getSaleId()
+    {
+        return $this->saleId;
+    }
+
+    /**
+     * @return array
+     */
+    private function getSendData()
+    {
+        return json_encode($this->sendData ?? []);
+    }
+
+    /**
+     * @return array
+     */
+    private function getReceivedData()
+    {
+        return json_encode($this->receivedData ?? []);
+    }
+
+    /**
+     * @return false|string|null
+     */
+    private function getExceptions()
+    {
+        $exceptions = $this->exceptions ?? [];
+        if (FoxUtils::isEmpty($exceptions)) {
+            return null;
+        } else {
+            return json_encode($exceptions);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @return string
+     */
+    private function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllData()
+    {
+        return [
+            "project"       => $this->getProject(),
+            "method"        => $this->getMethod(),
+            "sale_id"       => $this->getSaleId(),
+            "send_data"     => $this->getSendData(),
+            "received_data" => $this->getReceivedData(),
+            "exceptions"    => $this->getExceptions(),
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    public function saveSaleShopifyRequest()
+    {
+        try {
+            SaleShopifyRequest::create($this->getAllData());
+
+            return;
+        } catch (Exception $ex) {
+            report($ex);
+
+            return;
         }
     }
 }

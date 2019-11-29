@@ -150,6 +150,19 @@ class FoxUtils
     }
 
     /**
+     * @param $cep
+     * @return string|null
+     */
+    public static function formatCEP($cep)
+    {
+        if (self::isEmpty($cep) || strlen($cep) < 8) {
+            return null;
+        }
+
+        return substr($cep, 0, 5) . "-" . substr($cep, 5);
+    }
+
+    /**
      * @param $hash
      * @return mixed
      */
@@ -181,12 +194,8 @@ class FoxUtils
         return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
     }
 
-    // public static function removeSpecialChars($string){
-
-    //     return preg_replace('/[^\x00-\x7F]+/', "", $string);
-    // }
-
-    public static function removeSpecialChars($string){
+    public static function removeSpecialChars($string)
+    {
 
         return preg_replace('/([^a-zà-úA-ZÀ-Ú0-9 ]|[äåæËÎÏÐðÑ×÷ØÝÞßÆøÆø])/u', "", $string);
     }
@@ -272,4 +281,27 @@ class FoxUtils
 
         return $result;
     }
+
+    //mask($cnpj,'##.###.###/####-##');
+    //mask($cpf,'###.###.###-##');
+    //mask($cep,'#####-###');
+    //mask($data,'##/##/####');
+    public static function mask($val, $mask)
+    {
+        $maskared = '';
+        $k        = 0;
+        for ($i = 0; $i <= strlen($mask) - 1; $i++) {
+            if ($mask[$i] == '#') {
+                if (isset($val[$k]))
+                    $maskared .= $val[$k++];
+            } else {
+                if (isset($mask[$i]))
+                    $maskared .= $mask[$i];
+            }
+        }
+
+        return $maskared;
+    }
 }
+
+

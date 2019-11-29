@@ -3,26 +3,29 @@
 namespace Modules\Profile\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\User;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
+use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Http\RedirectResponse;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\UserDocument;
-use Modules\Profile\Transformers\UserResource;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Profile\Transformers\ProfileTaxResource;
-use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
+use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
+use Modules\Profile\Transformers\ProfileDocumentsResource;
+use Modules\Profile\Transformers\ProfileTaxResource;
+use Modules\Profile\Transformers\UserResource;
 
 /**
  * Class ProfileApiController
@@ -379,6 +382,7 @@ class ProfileApiController
 
                 $digitalOceanFileService = app(DigitalOceanFileService::class);
                 $userDocument            = new UserDocument();
+                $userModel               = new User();
 
                 $dataForm = $request->validated();
 
@@ -386,25 +390,31 @@ class ProfileApiController
 
                 $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents', $document, null, null, 'private');
 
-                $userDocument->create([
-                                          'user_id'            => auth()->user()->account_owner_id,
-                                          'document_url'       => $digitalOceanPath,
-                                          'document_type_enum' => $dataForm["document_type"],
-                                          'status'             => null,
-                                      ]);
+                $documentType = $userModel->present()
+                                          ->getDocumentType($dataForm["document_type"]);
 
-                if (($dataForm["document_type"] ?? '') == $user->present()->getDocumentType('personal_document')) {
+                $documentSaved = $userDocument->create([
+                                                           'user_id'            => auth()->user()->account_owner_id,
+                                                           'document_url'       => $digitalOceanPath,
+                                                           'document_type_enum' => $documentType,
+                                                           'status'             => $userDocument->present()
+                                                                                                ->getTypeEnum('analyzing'),
+                                                       ]);
+
+                if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
                     $user->update([
                                       'personal_document_status' => $user->present()
                                                                          ->getPersonalDocumentStatus('analyzing'),
                                   ]);
-                }
-
-                if (($dataForm["document_type"] ?? '') == $user->present()->getDocumentType('address_document')) {
+                } else if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
                     $user->update([
                                       'address_document_status' => $user->present()
                                                                         ->getAddressDocumentStatus('analyzing'),
                                   ]);
+                } else {
+                    $documentSaved->delete();
+
+                    return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
                 }
 
                 return response()->json([
@@ -523,6 +533,67 @@ class ProfileApiController
         } catch (Exception $e) {
             Log::warning('Erro ao acessar documento do usuário  ProfileApiController - openDocument');
             report($e);
+        }
+    }
+
+    public function getDocuments(Request $request)
+    {
+        try {
+            if (!empty($request->input('document_type'))) {
+                $userDocumentModel = new UserDocument();
+                $userModel         = new User();
+
+                $documentType = $userModel->present()->getDocumentType($request->input('document_type'));
+
+                $userDocuments = $userDocumentModel->where('user_id', auth()->user()->account_owner_id)
+                                                   ->where('document_type_enum', $documentType)->get();
+
+                return ProfileDocumentsResource::collection($userDocuments);
+            } else {
+
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
+        }
+    }
+
+
+    /**
+     * @return JsonResponse
+     */
+    public function verifyDocuments()
+    {
+        try {
+            $companyService           = new CompanyService();
+            $userService              = new UserService();
+
+            $companyDocumentPending = $companyService->haveAnyDocumentPending();
+            $userDocumentPending = $userService->haveAnyDocumentPending();
+
+            $link = null;
+
+            if ($userDocumentPending) {
+                $link = '/profile';
+            } elseif ($companyDocumentPending) {
+                $link = '/companies';
+            }
+
+            $result = $companyDocumentPending || $userDocumentPending;
+
+            return response()->json(['message' => 'Documentos verificados!', 'pending' => $result, 'link' => $link], 200);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao verificar documentos ProfileApiController - verifyDocuments');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao verificar documentos'], 400);
         }
     }
 }

@@ -72,30 +72,16 @@ function alertCustom(type, message) {
 }
 
 $(document).ajaxStart(function (event, jqXHR, ajaxOptions, data) {
-    /*$(".foxLoader").fadeIn('slow').attr('src', '../modules/global/gif/cloudfox-loading-1.gif');*/
     $("#loader").addClass("loader").fadeIn('slow');
     $("#loaderCard").addClass("loader").fadeIn('slow');
 })
 
 $(document).ajaxError(function (event, jqXHR, ajaxOptions, data) {
-    //$(".loading").css("visibility", "hidden");
-    /*$(".foxLoader").fadeOut('slow');*/
-    /*setTimeout(function(){
-        $("#loader").removeClass('loader');
-        $(".foxLoader").fadeOut('slow');
-    },2000);*/
     $("#loader").removeClass('loader').fadeOut('slow');
     $("#loaderCard").removeClass('loader').fadeOut('slow');
-
 })
 
 $(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
-    //$(".loading").css("visibility", "hidden");
-    /*$(".foxLoader").fadeOut('slow');*/
-    /*setTimeout(function () {
-        $(".foxLoader").fadeOut('slow');
-        $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
-    }, 2000);*/
     $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
 });
 
@@ -359,7 +345,6 @@ function fillAllFormInputsWithModel(formId, model, lists = null, functions = nul
                 fillInputWithModelField(element, model);
             } else if (element.is('select')) {
                 if (lists === undefined || lists === null) {
-                    console.log('select lists not available!');
                 } else {
                     fillSelectAndCheckWithModelFields(
                         element,
@@ -369,11 +354,8 @@ function fillAllFormInputsWithModel(formId, model, lists = null, functions = nul
                 }
 
             } else if (element.is('textarea')) {
-                console.log('textarea type not implemented!');
             } else {
-                console.log('element type not implemented: ' + element[0].nodeName);
             }
-            // console.log('Type: ' + input.attr('type') + ', Name: ' + input.attr('name') + ', Value: ' + input.val());
         }
     )
     return true;
@@ -479,3 +461,50 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
     }, 1000);
     alert("Link " + $(inputId).val() + " copiado com Sucesso!");
 });
+
+/* Document Pending Alert */
+
+function ajaxVerifyDocumentPending(){
+    $.ajax({
+        method: 'GET',
+        url: '/api/profile/verifydocuments',
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: response => {
+            errorAjaxResponse(response);
+        },
+        success: response => {
+            sessionStorage.setItem('documentsPending', JSON.stringify(response));
+            if (response.pending) {
+                $('.document-pending').show();
+                $('.btn-finalize').attr('href', response.link);
+            }
+        },
+    });
+}
+
+function verifyDocumentPending(){
+
+    if(window.location.href.includes('/dashboard')){
+        sessionStorage.removeItem('documentsPending');
+        $('.document-pending').hide();
+    }
+
+    if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
+        let documentsPending = sessionStorage.getItem('documentsPending');
+        if (documentsPending === null) {
+            ajaxVerifyDocumentPending();
+        } else {
+            documentsPending = JSON.parse(documentsPending);
+            if (documentsPending.pending) {
+                $('.document-pending').show();
+                $('.btn-finalize').attr('href', documentsPending.link);
+            }
+        }
+    }
+}
+
+/* End - Document Pending Alert */
+

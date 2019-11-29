@@ -3,13 +3,14 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
-use Illuminate\Contracts\View\Factory;
+use Throwable;
+use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Request;
 use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
-use Throwable;
 
 /**
  * Class CompaniesController
@@ -22,7 +23,6 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        //        dd("foi");
         return view('companies::index');
     }
 
@@ -41,37 +41,27 @@ class CompaniesController extends Controller
     {
 
     }
+
     /**
      * @param $encodedId
      * @return Factory|View
      */
     public function edit($encodedId)
     {
-        return view('companies::edit', compact('encodedId'));
-    }
 
-    /**
-     * @param CompanyCreateFormRequest $request
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function getCreateForm(CompanyCreateFormRequest $request)
-    {
-        try {
-            if ($request->get('country') == 'usa') {
-                $view = view('companies::create_american_company');
-            } else {
-                $view = view('companies::create_brazilian_company');
-            }
+        if(Request::input('type') == 2){ // pessoa jurídica
 
-            return response()->json($view->render());
-        } catch (Exception $e) {
-            Log::warning('Erro ao criar form de cadastro da empresa (CompaniesController - getCreateForm)');
-            report($e);
-
-            return response()->json('erro', 400);
+            return view('companies::edit_cnpj');
         }
+
+        elseif(Request::input('type') == 1){ // pessoa física
+
+            return view('companies::edit_cpf');
+        }
+
+        return "";
     }
+
 }
 
 

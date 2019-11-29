@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(
     [
         'middleware' => ['web'],
-        'prefix' => 'register'
+        'prefix'     => 'register',
     ],
     function() {
         Route::get('/{parametro}', 'RegisterController@create');
@@ -14,9 +16,13 @@ Route::group(
 Route::group(
     [
         'middleware' => ['web'],
-        'prefix'     => 'api/register', 
+        'prefix'     => 'api/register',
     ],
     function() {
         Route::post('/', 'RegisterApiController@store');
+        Route::post('/verifycpf', 'RegisterApiController@verifyCpf');
+        Route::post('/verifycnpj', 'RegisterApiController@verifyCnpj');
+        Route::post('/verifyemail', 'RegisterApiController@verifyEmail');
+        Route::get('/getbanks', 'RegisterApiController@getBanks');
     }
 );

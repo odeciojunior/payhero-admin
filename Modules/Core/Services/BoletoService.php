@@ -19,29 +19,6 @@ use Modules\Core\Events\BoletoPaidEvent;
  */
 class BoletoService
 {
-    /**
-     *
-     */
-    public function verifyBoletosExpired()
-    {
-        //        $date = now()->subDay('1')->toDateString();
-        //
-        //        $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
-        //                       ->with('clientModel', 'plansSales.plan.products')
-        //                       ->get();
-        //
-        //        foreach ($boletos as $boleto) {
-        //            $sendEmail   = new SendgridService();
-        //            $clientName  = $boleto->clientModel->name;
-        //            $clientEmail = $boleto->clientModel->email;
-        //
-        //            $emailValidated = FoxUtils::validateEmail($clientEmail);
-        //
-        //            if ($emailValidated) {
-        //                $sendEmail->sendEmail('Verifiquei aqui está pendente o pagamento', 'noreply@cloudfox.net', 'cloudfox', '', '', '');
-        //            }
-        //        }
-    }
 
     /**
      * Hoje vence o seu pedido
@@ -57,6 +34,8 @@ class BoletoService
                                         ->with('client', 'plansSales.plan.products')
                                         ->get();
             foreach ($boletoDueToday as $boleto) {
+
+
                 try {
                     $sendEmail     = new SendgridService();
                     $checkoutModel = new Checkout();
@@ -430,8 +409,8 @@ class BoletoService
                             ON u.id = c.user_id
                             INNER JOIN sales s
                             ON u.id = s.owner_id
-                            INNER JOIN transactions t 
-                            ON t.sale_id = s.id 
+                            INNER JOIN transactions t
+                            ON t.sale_id = s.id
                             AND t.company_id = c.id
                             WHERE 1 = 1
                             AND s.payment_method = 2

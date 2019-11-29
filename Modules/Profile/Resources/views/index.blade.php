@@ -128,33 +128,33 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="input-pad" id="zip_code" placeholder="digite seu CEP">
+                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="input-pad dados-residenciais" id="zip_code" placeholder="digite seu CEP">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="street">Rua</label>
-                                            <input name="street" value="" type="text" class="input-pad" id="street" placeholder="Rua">
+                                            <input name="street" value="" type="text" class="input-pad dados-residenciais" id="street" placeholder="Rua">
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Número</label>
-                                            <input name="number" value="" type="text" data-mask="0#" class="input-pad" id="number" placeholder="Número">
+                                            <input name="number" value="" type="text" data-mask="0#" class="input-pad dados-residenciais" id="number" placeholder="Número">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="" type="text" class="input-pad" id="neighborhood" placeholder="Bairro">
+                                            <input name="neighborhood" value="" type="text" class="input-pad dados-residenciais" id="neighborhood" placeholder="Bairro">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="" type="text" class="input-pad" id="complement" placeholder="Complemento">
+                                            <input name="complement" value="" type="text" class="input-pad dados-residenciais" id="complement" placeholder="Complemento">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="" type="text" class="input-pad" id="city" placeholder="Cidade">
+                                            <input name="city" value="" type="text" class="input-pad dados-residenciais" id="city" placeholder="Cidade">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="" type="text" class="input-pad" id="state" placeholder="Estado">
+                                            <input name="state" value="" type="text" class="input-pad dados-residenciais" id="state" placeholder="Estado">
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10">
@@ -175,46 +175,43 @@
                                     </div>
                                 </div>
                                 <div class="row mt-15" id='row_dropzone_documents' style='display:none;'>
-                                    <div class="col-lg-6">
-                                        <div id="dropzone">
-                                            <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                                @csrf
-                                                <div class="dz-message needsclick text-dropzone">
-                                                    Arraste ou clique para fazer upload.<br/>
-                                                </div>
-                                                <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Documento</th>
                                                     <th scope="col">Status</th>
+                                                    <th scope="col"></th>
                                                 </tr>
                                             </thead>
                                             <tbody class="custom-t-body">
                                                 <tr>
-                                                    <td>Documento com foto</td>
+                                                    <td>
+                                                        Documento com foto
+                                                    </td>
                                                     <td id="td_personal_status"></td>
+                                                    <td>
+                                                        <i id='personal-document-id' title='Enviar documento' class='icon wb-upload gradient details-document' data-document='personal_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Comprovante de residência</td>
+                                                    <td>
+                                                        Comprovante de residência
+                                                    </td>
                                                     <td id="td_address_status"></td>
+                                                    <td>
+                                                        <i id='address-document-id' title='Enviar Documento' class='icon wb-upload gradient details-document' data-document='address_document' aria-hidden="true" style="cursor:pointer; font-size: 20px"></i>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-lg-12 mt-10">
-                                        <small class="text-muted" style="line-height: 1.5;"> Documentos aceitos: RG ou CNH (oficial e com foto)
-                                            <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
-                                        </small>
-                                    </div>
                                 </div>
                                 <div class='row'>
                                     <div class='col-md-12'>
-                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'><p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p></div>
+                                        <div id='div_address_pending' class='alert alert-info text-center my-20' style='display:none;'>
+                                            <p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class='row'>
@@ -288,36 +285,6 @@
                                         <p class="sub-pad"> Defina quais notificações deseja receber </p>
                                     </div>
                                     <div class='row mt-15 col-12'>
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Nova afiliação</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="new_affiliation_switch" name="new_affiliation" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Pedido de afiliação</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="new_affiliation_request_switch" name="new_affiliation_request" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Afiliação aprovada</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="approved_affiliation_switch" name="approved_affiliation" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
                                                 <label for="billet_generated" class="mb-10">Boleto gerado</label>
@@ -368,16 +335,6 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Saque Aprovado</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="withdrawal_approved_switch" name="withdrawal_approved" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
                                                 <label for="released_balance" class="mb-10">Saldo liberado</label>
@@ -408,16 +365,6 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        {{--                                        <div class="col-4 mt-4">--}}
-                                        {{--                                            <div class="switch-holder">--}}
-                                        {{--                                                <label for="token" class="mb-10">Integração com shopify</label>--}}
-                                        {{--                                                <br>--}}
-                                        {{--                                                <label class="switch">--}}
-                                        {{--                                                    <input type="checkbox" id="user_shopify_integration_store_switch" name="user_shopify_integration_store" class="check notification_switch" value='1'>--}}
-                                        {{--                                                    <span class="slider round"></span>--}}
-                                        {{--                                                </label>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>
@@ -496,6 +443,58 @@
                                     <i class='fas fa-check'></i> Verificar
                                 </button>
                             </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Modal detalhes --}}
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-details-document" aria-hidden="true"
+                 aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_documents">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <div style="width: 100%; text-align:center">
+                                <h4 id='modal-title-documents' class="modal-title"></h4>
+                                <div id='modal-title-documents-info'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="margin-top: 10px">
+                            <div class='row'>
+                                <div class='col-lg-12' id='table-documents' style='min-height:100px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
+                                    <table class="table table-striped table-hover table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class='text-center' scope="col">Data Envio</th>
+                                                <th class='text-center' scope="col">Status</th>
+                                                <th class='text-center' scope="col"></th>
+                                                <th class='text-center' scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id='profile-documents-modal' class="custom-t-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class='col-lg-12' id='document-refused-motived' style='display:none;'>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div id="dropzone">
+                                        <form method="POST" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                            @csrf
+                                            <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
+                                                Arraste ou clique para fazer upload.<br/>
+                                            </div>
+                                            <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>

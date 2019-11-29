@@ -4,13 +4,17 @@ namespace Modules\Register\Http\Controllers;
 
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\UserNotification;
+use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\SendgridService;
@@ -25,11 +29,11 @@ class RegisterApiController extends Controller
     public function store(RegisterRequest $request)
     {
         try {
-            $requestData = $request->validated();
-
-            $userModel    = new User();
-            $inviteModel  = new Invitation();
-            $companyModel = new Company();
+            $requestData           = $request->validated();
+            $userModel             = new User();
+            $inviteModel           = new Invitation();
+            $companyModel          = new Company();
+            $userNotificationModel = new UserNotification();
 
             $parameter = $requestData['parameter'];
 
@@ -80,6 +84,49 @@ class RegisterApiController extends Controller
             $user->update(['account_owner_id' => $user->id]);
 
             $user->assignRole('account_owner');
+
+            $streetCompany       = $requestData['street_company'] ?? null;
+            $numberCompany       = $requestData['number_company'] ?? null;
+            $neighborhoodCompany = $requestData['neighborhood_company'] ?? null;
+            $complementCompany   = $requestData['complement_company'] ?? null;
+            $stateCompany        = $requestData['state_company'] ?? null;
+            $cityCompany         = $requestData['city_company'] ?? null;
+            $supportEmail        = $requestData['support_email'] ?? null;
+            $supportPhone        = $requestData['support_telephone'] ?? null;
+
+            $companyModel->create([
+                                      'user_id'           => $user->account_owner_id,
+                                      'fantasy_name'      => ($requestData['company_type'] == $companyModel->present()
+                                                                                                           ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
+                                      'company_document'  => ($requestData['company_type'] == $companyModel->present()
+                                                                                                           ->getCompanyType('physical person')) ? $requestData['document'] : $requestData['company_document'],
+                                      'company_type'      => $requestData['company_type'],
+                                      'support_email'     => $supportEmail,
+                                      'support_telephone' => $supportPhone,
+                                      'street'            => $streetCompany,
+                                      'number'            => $numberCompany,
+                                      'neighborhood'      => $neighborhoodCompany,
+                                      'complement'        => $complementCompany,
+                                      'state'             => $stateCompany,
+                                      'city'              => $cityCompany,
+                                      'bank'              => $requestData['bank'],
+                                      'agency'            => $requestData['agency'],
+                                      'agency_digit'      => $requestData['agency_digit'],
+                                      'account'           => $requestData['account'],
+                                      'account_digit'     => $requestData['account_digit'],
+                                  ]);
+
+            if (!empty($user)) {
+                $user->load(["userNotification"]);
+                $userNotification = $user->userNotification ?? collect();
+                if ($userNotification->isEmpty()) {
+                    $userNotificationModel->create(
+                        [
+                            "user_id" => $user->id,
+                        ]
+                    );
+                }
+            }
 
             auth()->loginUsingId($user->id, true);
 
@@ -148,5 +195,67 @@ class RegisterApiController extends Controller
         if ($emailValidated) {
             $sendgridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
         }
+    }
+
+    public function verifyCpf(Request $request)
+    {
+        $data        = $request->all();
+        $userService = new UserService();
+        $cpf         = $userService->verifyCpf($data['document']);
+        if ($cpf) {
+            return response()->json([
+                                        'cpf_exist' => 'true',
+                                        'message'   => 'Esse CPF já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'cpf_exist' => 'false',
+                                    ]);
+        }
+    }
+
+    public function verifyCnpj(Request $request)
+    {
+        $data           = $request->all();
+        $companyService = new CompanyService();
+        $cnpj           = $companyService->verifyCnpj($data['company_document']);
+        if ($cnpj) {
+            return response()->json([
+                                        'cnpj_exist' => 'true',
+                                        'message'    => 'Esse CNPJ já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'cnpj_exist' => 'false',
+                                    ]);
+        }
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $data      = $request->all();
+        $userModel = new User();
+
+        $user = $userModel->where('email', 'like', '%' . $data['email'] . '%')->first();
+        if (!empty($user)) {
+            return response()->json([
+                                        'email_exist' => 'true',
+                                        'message'     => 'Esse Email já está cadastrado na plataforma',
+                                    ]);
+        } else {
+            return response()->json([
+                                        'email_exist' => 'false',
+                                    ]);
+        }
+    }
+
+    public function getBanks()
+    {
+        $bankService = new BankService();
+        $banks       = $bankService->getBanks('BR');
+
+        return response([
+                            'banks' => $banks,
+                        ], 200);
     }
 }
