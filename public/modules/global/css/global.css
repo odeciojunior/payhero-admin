@@ -233,3 +233,64 @@ body {
 .swal2-toast .swal2-title {
     text-align: start !important;
 }
+
+/* Document Pending Alert */
+.document-pending {
+    height: 80px;
+    width: 100%;
+    position: fixed;
+    background: rgba(255, 193, 7, 0.9);
+    z-index: 1101;
+    margin: 0;
+    padding: 0 20px 0 80px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-finalize {
+    display: block;
+    background: rgba(85,85,85,0.3);
+    color: #fff !important;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 10px;
+    text-align: center;
+}
+.btn-finalize:hover {
+    background: rgba(0,0,0,0.3);
+}
+.message-pending{
+    color:#000;
+    font-size: 20px
+}
+.message-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.document-pending-close {
+    font-size: 30px;
+    color: #000;
+    cursor: pointer;
+}
+@media (max-width: 768px) {
+    .document-pending {
+        padding: 10px 20px;
+    }
+    .message-pending{
+        font-size: inherit;
+    }
+}
+/* End - Document Pending Alert */
+
+.modal-sidebar{
+    width: 500px;
+}
+
+@media (max-width: 500px) {
+    .modal-sidebar{
+        width: 100% !important;
+    }
+}
