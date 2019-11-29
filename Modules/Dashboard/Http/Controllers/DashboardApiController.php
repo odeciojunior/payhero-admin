@@ -104,12 +104,9 @@ class DashboardApiController extends Controller
                             $pendingBalance += $pendingTransaction->value;
                         }
                     }
-                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
-                                                  ->pluck('id')
-                                                  ->toArray();
                     $sales         = $saleModel->with([
-                                                          'transactions' => function($query) use ($userCompanies) {
-                                                              $query->whereIn('company_id', $userCompanies);
+                                                          'transactions' => function($query) use ($companyId) {
+                                                              $query->where('company_id', $companyId);
                                                           },
                                                           //])->whereIn('status', [1, 20])
                                                       ])->where('status', 1)
