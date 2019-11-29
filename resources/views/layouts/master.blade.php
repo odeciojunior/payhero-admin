@@ -107,6 +107,10 @@
 {{--    verifyDocumentPending();--}}
 {{--</script>--}}
 
+<script>
+    console.log($('meta[name="access-token"]').attr('content'));
+</script>
+
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
