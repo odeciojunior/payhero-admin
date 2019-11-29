@@ -145,9 +145,9 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadingOnScreenRemove();
-                window.location.href = response.data.auth_shopify_url;
+                // window.location.href = response.data.auth_shopify_url;
                 // index();
-                // alertCustom('success', response.message);
+                alertCustom('success', response.message);
             }
         });
     }
