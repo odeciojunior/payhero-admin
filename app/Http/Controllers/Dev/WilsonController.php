@@ -19,35 +19,35 @@ class WilsonController extends Controller
 {
     public function wilsonFunction(Request $request)
     {
-        //        $salesArray = [
-        //            '8gmDNvGB',
-        //            '436ELygQ',
-        //            'kZ7K4NZ0',
-        //            'jZD5KWGp',
-        //            '83EB0lZP',
-        //            '0glxB6gV',
-        //            //            'aGnjnjGw', ?????
-        //            'PZvkMYGm',
-        //            '0ZOlXXGE',
-        //            'R3A7X9Gd',
-        //        ];
-        //
-        //        $salesId = [];
-        //
-        //        foreach ($salesArray as $saleCode) {
-        //            $salesId[] = Hashids::connection('sale_id')->decode($saleCode)[0];
+        //        //        $salesArray = [
+        //        //            '8gmDNvGB',
+        //        //            '436ELygQ',
+        //        //            'kZ7K4NZ0',
+        //        //            'jZD5KWGp',
+        //        //            '83EB0lZP',
+        //        //            '0glxB6gV',
+        //        //            //            'aGnjnjGw', ?????
+        //        //            'PZvkMYGm',
+        //        //            '0ZOlXXGE',
+        //        //            'R3A7X9Gd',
+        //        //        ];
+        //        //
+        //        //        $salesId = [];
+        //        //
+        //        //        foreach ($salesArray as $saleCode) {
+        //        //            $salesId[] = Hashids::connection('sale_id')->decode($saleCode)[0];
+        //        //        }
+        //        //
+        //        //        dd($salesId);
+        //        if (($request->cancelPayment ?? false) == true && isset($request->saleId)) {
+        //            $saleModel       = new Sale();
+        //            $sale            = $saleModel->with('transactions')->find($request->saleId);
+        //            $checkoutService = new CheckoutService();
+        //            $refundAmount    = $sale->original_total_paid_value;
+        //            $checkoutService->cancelPayment($sale, $refundAmount);
+        //            $sale = $saleModel->with('transactions')->find($request->saleId);
+        //            dd($sale);
         //        }
-        //
-        //        dd($salesId);
-        if (($request->cancelPayment ?? false) == true && isset($request->saleId)) {
-            $saleModel       = new Sale();
-            $sale            = $saleModel->with('transactions')->find($request->saleId);
-            $checkoutService = new CheckoutService();
-            $refundAmount    = $sale->original_total_paid_value;
-            $checkoutService->cancelPayment($sale, $refundAmount);
-            $sale = $saleModel->with('transactions')->find($request->saleId);
-            dd($sale);
-        }
         //        $body  = new Dom();
         //        $body2 = new Dom();
         //        $body->loadFromUrl('https://api-boleto-production.s3.amazonaws.com/72664906b4444f0fa900098844baf84b/43e2543afd5c45e7b219a26c36551bdf/5dd7fb3c55065a15068e1379.html');
