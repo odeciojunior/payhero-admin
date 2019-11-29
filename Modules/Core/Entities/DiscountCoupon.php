@@ -44,6 +44,7 @@ class DiscountCoupon extends Model
         'value', 
         'code', 
         'status', 
+        'rule_value',
         'created_at', 
         'updated_at', 
         'deleted_at'

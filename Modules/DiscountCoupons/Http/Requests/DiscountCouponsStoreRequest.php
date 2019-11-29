@@ -18,6 +18,7 @@ class DiscountCouponsStoreRequest extends FormRequest
             'value'      => 'required|string|max:30',
             'code'       => 'required|string|max:30',
             'status'     => 'nullable',
+            'rule_value' => 'nullable',
         ];
     }
 

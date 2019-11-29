@@ -72,6 +72,10 @@ class DiscountCouponsApiController extends Controller
                 $requestData = $request->validated();
                 $requestData["project_id"] = current(Hashids::decode($projectId));
                 $requestData['value'] = preg_replace("/[^0-9]/", "", $requestData['value']);
+                $requestData['rule_value'] = preg_replace("/[^0-9]/", "", $requestData['rule_value']);
+                if(empty($requestData['rule_value'])) {
+                    $requestData['rule_value'] = 0;
+                }
 
                 $project = $projectModel->find($requestData["project_id"]);
 
@@ -165,6 +169,7 @@ class DiscountCouponsApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
                         $coupon->makeHidden(['id', 'project_id']);
+                        $coupon->rule_value = number_format($coupon->rule_value / 100, 2, ',', '.');
                         return response()->json($coupon, 200);
                     } else {
                         return response()->json(['message' => 'Erro ao atualizar Cupom'], 400);
@@ -199,12 +204,15 @@ class DiscountCouponsApiController extends Controller
                 $requestValidated = $request->validated();
 
                 $coupon = $discountCouponsModel->find(current(Hashids::decode($id)));
-                $project =  $projectModel->find(current(Hashids::decode($projectId)));;
+                $project =  $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 
                     $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
-
+                    $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
+                    if(empty($requestValidated['rule_value'])) {
+                        $requestValidated['rule_value'] = 0;
+                    }
                     $couponUpdated = $coupon->update($requestValidated);
 
                     if ($couponUpdated) {

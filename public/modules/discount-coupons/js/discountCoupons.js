@@ -16,6 +16,17 @@ $(function () {
             $('.coupon-value').mask('00%', {reverse: true});
         }
     });
+    $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+
+    $('.rule-value').on('blur', function () {
+        if ($(this).val().length == 1) {
+            let val = '0,0'+$(this).val();
+            $('.rule-value').val(val);
+        } else if($(this).val().length == 2) {
+            let val = '0,'+$(this).val();
+            $('.rule-value').val(val);
+        }
+    });
 
     $('#tab_coupons').on('click', function () {
         atualizarCoupon();
@@ -43,6 +54,7 @@ $(function () {
                 $('#modal-detail-coupon .coupon-code').html(response.data.code);
                 $('#modal-detail-coupon .coupon-type').html(response.data.type);
                 $('#modal-detail-coupon .coupon-value').html(response.data.type == 'Valor' ? 'R$ ' + response.data.value : response.data.value + '%');
+                $('#modal-detail-coupon .rule-value').html('R$ ' + response.data.rule_value);
                 $('#modal-detail-coupon .coupon-status').html(response.data.status == '1'
                     ? '<span class="badge badge-success text-left">Ativo</span>'
                     : '<span class="badge badge-danger">Desativado</span>');
@@ -69,6 +81,8 @@ $(function () {
                 $('#modal-edit-coupon .coupon-id').val(coupon);
                 $('#modal-edit-coupon .coupon-name').val(response.name);
                 $('#modal-edit-coupon .coupon-value').val(response.value);
+                $('#modal-edit-coupon .rule-value').val(response.rule_value);
+                $('#modal-edit-coupon .rule-value').trigger('input');
                 if (response.type == 1) {
                     $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 1).change();
                 } else {
@@ -234,6 +248,7 @@ $(function () {
         $('.coupon-name').val('');
         $('.coupon-value').val('');
         $('.coupon-code').val('');
+        $('.rule-value').val('');
 
     }
     // function pagination(response) {

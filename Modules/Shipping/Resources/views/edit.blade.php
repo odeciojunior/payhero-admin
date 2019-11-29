@@ -60,4 +60,10 @@
             </div>
         </div>
     </div>
+    <div class='row'>
+        <div class='form-group col-12'>
+            <label for='zip-code-origin'>Disponível para compras acima de: </label>
+            <input name='rule_value' type='text' class='input-pad rule-shipping-value' value='0' placeholder=''>
+        </div>
+    </div>
 </form>

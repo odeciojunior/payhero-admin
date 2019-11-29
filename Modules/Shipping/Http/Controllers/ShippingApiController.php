@@ -97,6 +97,10 @@ class ShippingApiController extends Controller
                             $shippings->update(['pre_selected' => 0]);
                         }
                     }
+                    $shippingValidated['rule_value'] =  preg_replace( '/[^0-9]/', '', $shippingValidated['rule_value']);
+                    if(empty($shippingValidated['rule_value'])) {
+                        $shippingValidated['rule_value'] = 0;
+                    }
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
@@ -138,6 +142,7 @@ class ShippingApiController extends Controller
 
                     if ($shipping) {
                         $shipping->makeHidden(['id', 'project_id', 'campaing_id']);
+                        $shipping->rule_value = number_format($shipping->rule_value / 100, 2, ',', '.');
                         return response()->json($shipping, 200);
                     } else {
                         return response()->json(['message' => 'Erro ao tentar visualizar frete!'], 400);
@@ -172,6 +177,7 @@ class ShippingApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($shipping) {
                         $shipping->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
+                        $shipping->rule_value = number_format($shipping->rule_value / 100, 2, ',', '.');
                         return response()->json($shipping, 200);
                     } else {
                         return response()->json(['message' => 'Erro ao tentar editar o frete!'], 400);
@@ -225,7 +231,10 @@ class ShippingApiController extends Controller
                             $s->update(['pre_selected' => 0]);
                         }
                     }
-
+                    $requestValidated['rule_value'] =  preg_replace( '/[^0-9]/', '', $requestValidated['rule_value']);
+                    if(empty($requestValidated['rule_value'])) {
+                        $requestValidated['rule_value'] = 0;
+                    }
                     $shippingUpdated = $shipping->update($requestValidated);
 
                     if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
