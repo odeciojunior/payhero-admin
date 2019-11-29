@@ -145,4 +145,13 @@ class CompanyService
                              ]);
         }
     }
+
+    public function getChangesUpdateCNPJ($company, $documentType)
+    {
+        $companyChanges = $company->getChanges();
+
+        if (!empty($documentType) && $documentType != $company->company_document) {
+            $company->contract_document_status = $company->presenter()->getStatus('pending');
+        }
+    }
 }

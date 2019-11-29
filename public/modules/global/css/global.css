@@ -284,3 +284,13 @@ body {
     }
 }
 /* End - Document Pending Alert */
+
+.modal-sidebar{
+    width: 500px;
+}
+
+@media (max-width: 500px) {
+    .modal-sidebar{
+        width: 100% !important;
+    }
+}
