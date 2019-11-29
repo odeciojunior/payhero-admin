@@ -357,7 +357,7 @@ class SaleService
                 if ($checktUpdate) {
                     $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                     if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
-                        $shopifyService = new ShopifyService();
+                        $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                         $shopifyService->refundOrder($shopifyIntegration, $sale);
                         $shopifyService->saveSaleShopifyRequest();
