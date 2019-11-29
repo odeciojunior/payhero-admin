@@ -60,26 +60,26 @@ $(document).ready(function () {
 
     // monta html com as notificações
     function getNotifications() {
-        loadOnNotification('#notificationTemplate');
-        $.ajax({
-            method: 'GET',
-            url: '/api/notifications/unread',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function () {
-                //
-            },
-            success: function (response) {
-                $("#notificationTemplate").html('');
-                $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
-                $(response.data).each(function(index, data){
-                    $("#notificationTemplate").append(notificationTemplate(data));
-                });
-                markNotificationsAsRead();
-            }
-        });
+        // loadOnNotification('#notificationTemplate');
+        // $.ajax({
+        //     method: 'GET',
+        //     url: '/api/notifications/unread',
+        //     headers: {
+        //         'Authorization': $('meta[name="access-token"]').attr('content'),
+        //         'Accept': 'application/json',
+        //     },
+        //     error: function () {
+        //         //
+        //     },
+        //     success: function (response) {
+        //         $("#notificationTemplate").html('');
+        //         $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
+        //         $(response.data).each(function(index, data){
+        //             $("#notificationTemplate").append(notificationTemplate(data));
+        //         });
+        //         markNotificationsAsRead();
+        //     }
+        // });
     }
 
     // notification template
