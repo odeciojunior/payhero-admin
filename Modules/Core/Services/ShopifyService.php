@@ -4,7 +4,7 @@ namespace Modules\Core\Services;
 
 use App\Entities\Sale;
 use Exception;
-use Modules\Core\Services\FoxUtils;
+use Modules\Core\Entities\SaleShopifyRequest;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -55,6 +55,30 @@ class ShopifyService
      * @var
      */
     private $theme;
+    /**
+     * @var int
+     */
+    private $saleId;
+    /**
+     * @var array
+     */
+    private $sendData = [];
+    /**
+     * @var array
+     */
+    private $receivedData = [];
+    /**
+     * @var array
+     */
+    private $exceptions = [];
+    /**
+     * @var string
+     */
+    private $method;
+    /**
+     * @var string
+     */
+    private $project = "admin";
 
     /**
      * ShopifyService constructor.
@@ -72,7 +96,7 @@ class ShopifyService
 
             $this->credential = new PublicAppCredential($token);
             $this->client     = new Client($this->credential, $urlStore, [
-                'metaCacheDir' => $cache // Metadata cache dir, required
+                'metaCacheDir' => $cache // Metadata cache dir, required 
             ]);
         } catch (Exception $e) {
             Log::warning('__construct - Erro ao criar servico do shopify');
@@ -1246,12 +1270,16 @@ class ShopifyService
         }
     }
 
+    /**
+     * @param Sale $sale
+     */
     public function newOrder(Sale $sale)
     {
-
         try {
-            $delivery = $sale->delivery;
-            $client   = $sale->client;
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            $delivery     = $sale->delivery;
+            $client       = $sale->client;
 
             $totalValue = $sale->present()->getSubTotal();
 
@@ -1309,7 +1337,7 @@ class ShopifyService
                 "last_name"     => $delivery->present()->getReceiverLastName(),
                 "phone"         => $client->present()->getTelephoneShopify(),
                 "province"      => $delivery->state,
-                "zip"           => $delivery->zip_code,
+                "zip"           => FoxUtils::formatCEP($delivery->zip_code),
                 "name"          => $client->name,
                 "country_code"  => "BR",
                 "province_code" => $delivery->state,
@@ -1353,7 +1381,9 @@ class ShopifyService
                 ];
             }
 
-            $order = $this->shopifyClient->getOrderManager()->create($orderData);
+            $this->sendData     = $orderData;
+            $order              = $this->shopifyClient->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
             if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
                 $sale->update([
                                   'shopify_order' => 000,
@@ -1362,7 +1392,8 @@ class ShopifyService
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
             Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
             report($e);
             //            $shippingAddress['phone']      = '+5555959844325';
@@ -1380,30 +1411,165 @@ class ShopifyService
         }
     }
 
-    public function refundOrder(ShopifyIntegration $shopifyIntegration, $shopifyOrder)
+    /**
+     * @param ShopifyIntegration $shopifyIntegration
+     * @param $sale
+     * @throws Exception
+     */
+    public function refundOrder(ShopifyIntegration $shopifyIntegration, $sale)
     {
         try {
-            $credential = new PublicAppCredential($shopifyIntegration->token);
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            $credential   = new PublicAppCredential($shopifyIntegration->token);
 
             $client = new Client($credential, $shopifyIntegration->url_store, [
                 'metaCacheDir' => '/var/tmp',
             ]);
-            $order  = $client->getOrderManager()->find($shopifyOrder);
+            $order  = $client->getOrderManager()->find($sale->shopify_order);
             if (!FoxUtils::isEmpty($order)) {
                 if ($order->getFinancialStatus() == 'pending') {
-                    $client->getOrderManager()->cancel($shopifyOrder);
+                    $data               = $sale->shopify_order;
+                    $this->sendData     = $data;
+                    $result             = $client->getOrderManager()->cancel($data);
+                    $this->receivedData = $this->convertToArray($result);
                 } else {
-                    $transaction = [
+                    $transaction        = [
                         "kind"   => "refund",
                         "source" => "external",
                     ];
-                    $client->getTransactionManager()->create($shopifyOrder, $transaction);
+                    $this->sendData     = $transaction;
+                    $result             = $client->getTransactionManager()->create($sale->shopify_order, $transaction);
+                    $this->receivedData = $this->convertToArray($result);
                 }
             } else {
-                throw new Exception('Ordem não encontrado no shopigy papra a venda - ' . $order);
+                throw new Exception('Ordem não encontrado no shopify para a venda - ' . $order);
             }
         } catch (Exception $ex) {
+            $this->exceptions[] = $ex->getMessage();
             throw $ex;
+        }
+    }
+
+    /**
+     * @param $object
+     * @return array
+     * @author Fausto Marins
+     */
+    public function convertToArray($object)
+    {
+        try {
+            $result = [];
+            foreach ((object) (array) $object as $key => $value) {
+                if (is_string($value) || is_null($value)) {
+                    $result[$key] = $value;
+                } else if (is_array($value)) {
+                    $sub = [];
+                    foreach ($value as $arrayKey => $arrayValue) {
+                        foreach ((object) (array) $arrayValue as $k => $v) {
+                            $sub[$arrayKey][$k] = $v;
+                        }
+                    }
+                    $result[$key] = $sub;
+                } else {
+                    $sub = [];
+                    foreach ((object) (array) $value as $k => $v) {
+                        $sub[$k] = $v;
+                    }
+                    $result[$key] = $sub;
+                }
+            }
+
+            return $result;
+        } catch (Exception $ex) {
+            $this->exceptions[] = $ex->getMessage();
+            report($ex);
+
+            return [];
+        }
+    }
+
+    /**
+     * @return int
+     */
+    private function getSaleId()
+    {
+        return $this->saleId;
+    }
+
+    /**
+     * @return array
+     */
+    private function getSendData()
+    {
+        return json_encode($this->sendData ?? []);
+    }
+
+    /**
+     * @return array
+     */
+    private function getReceivedData()
+    {
+        return json_encode($this->receivedData ?? []);
+    }
+
+    /**
+     * @return false|string|null
+     */
+    private function getExceptions()
+    {
+        $exceptions = $this->exceptions ?? [];
+        if (FoxUtils::isEmpty($exceptions)) {
+            return null;
+        } else {
+            return json_encode($exceptions);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @return string
+     */
+    private function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllData()
+    {
+        return [
+            "project"       => $this->getProject(),
+            "method"        => $this->getMethod(),
+            "sale_id"       => $this->getSaleId(),
+            "send_data"     => $this->getSendData(),
+            "received_data" => $this->getReceivedData(),
+            "exceptions"    => $this->getExceptions(),
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    public function saveSaleShopifyRequest()
+    {
+        try {
+            SaleShopifyRequest::create($this->getAllData());
+
+            return;
+        } catch (Exception $ex) {
+            report($ex);
+
+            return;
         }
     }
 }

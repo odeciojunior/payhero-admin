@@ -74,7 +74,9 @@ class CheckoutService
     {
         $total = 0;
         foreach ($checkoutPlans as $checkoutPlan) {
-            $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+            if (!empty($checkoutPlan->plan)) {
+                $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+            }
         }
 
         return $total;
@@ -194,8 +196,10 @@ class CheckoutService
                 $dataUpdate = (array) $response->response->response;
                 $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
                                         ->update(array_merge($dataUpdate,
-                                                             ['start_date' => Carbon::now()
-                                                             ,'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0)]));
+                                                             [
+                                                                 'start_date'         => Carbon::now()
+                                                                 , 'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
+                                                             ]));
                 if ($check) {
                     $transactionModel = new Transaction();
                     $sale             = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')

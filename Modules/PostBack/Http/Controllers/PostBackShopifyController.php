@@ -11,7 +11,7 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Services\PerfectLogService;
+use Modules\Core\Services\AftershipService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -35,7 +35,7 @@ class PostBackShopifyController extends Controller
         $projectModel = new Project();
         $productService = new ProductService();
         $trackingService = new TrackingService();
-        $perfectLogService = new PerfectLogService();
+        $aftershipService = new AftershipService();
 
         $requestData = $request->all();
 
@@ -87,7 +87,7 @@ class PostBackShopifyController extends Controller
                                                 //atualiza no array de produtos para enviar no email
                                                 $product->tracking_code = $fulfillment["tracking_number"];
                                                 event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                $perfectLogService->track(Hashids::encode($tracking->id), $fulfillment["tracking_number"]);
+                                                $aftershipService->createTracking($fulfillment["tracking_number"]);
                                             }
                                         } else { //senao cria o tracking
 
@@ -97,7 +97,7 @@ class PostBackShopifyController extends Controller
                                                 //atualiza no array de produtos para enviar no email
                                                 $product->tracking_code = $fulfillment["tracking_number"];
                                                 event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                $perfectLogService->track(Hashids::encode($tracking->id), $fulfillment["tracking_number"]);
+                                                $aftershipService->createTracking($fulfillment["tracking_number"]);
                                             }
                                         }
                                     }

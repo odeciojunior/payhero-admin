@@ -44,7 +44,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=4') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=2') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')
@@ -66,16 +66,6 @@
 </div>
 
 @include("layouts.menu-principal")
-
-<div class="alert alert-dismissible fade document-pending show" style="display:none;">
-    <div class="message-container">
-        <span class="message-pending">Existem itens pendentes em seu cadastro</span>
-        <a href="/companies" class="btn-finalize">Finalizar cadastro</a>
-    </div>
-    <a data-dismiss="alert" role="button">
-        <i class="material-icons document-pending-close">close</i>
-    </a>
-</div>
 
 @yield('content')
 
@@ -102,10 +92,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=4') }}"></script>
-<script>
-    verifyDocumentPending();
-</script>
+<script src="{{ asset('modules/global/js/global.js?v=2') }}"></script>
 
 @stack('scripts')
 
