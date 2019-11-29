@@ -96,7 +96,7 @@ class ShopifyService
 
             $this->credential = new PublicAppCredential($token);
             $this->client     = new Client($this->credential, $urlStore, [
-                'metaCacheDir' => $cache // Metadata cache dir, required
+                'metaCacheDir' => $cache // Metadata cache dir, required 
             ]);
         } catch (Exception $e) {
             Log::warning('__construct - Erro ao criar servico do shopify');

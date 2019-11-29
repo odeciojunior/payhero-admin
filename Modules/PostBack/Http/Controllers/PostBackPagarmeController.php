@@ -40,7 +40,6 @@ class PostBackPagarmeController extends Controller
      */
     public function postBackListener(Request $request)
     {
-        $shopifyService = new ShopifyService();
         $requestData    = $request->all();
 
         $postBackLogModel = new PostbackLog();
@@ -62,6 +61,10 @@ class PostBackPagarmeController extends Controller
 
             $sale               = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
             $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+            if(!empty($shopifyIntegration)){
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+            }
+
             if (empty($sale)) {
                 Log::warning('VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
 

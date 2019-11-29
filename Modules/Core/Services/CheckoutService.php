@@ -74,7 +74,9 @@ class CheckoutService
     {
         $total = 0;
         foreach ($checkoutPlans as $checkoutPlan) {
-            $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+            if (!empty($checkoutPlan->plan)) {
+                $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+            }
         }
 
         return $total;

@@ -34,6 +34,7 @@ Route::group(
         Route::post('/{version}/finance/withdraw', 'MobileController@financeWithdraw');
         Route::post('/{version}/finance/account', 'MobileController@financeAccountInformation');
         Route::post('/{version}/profile', 'MobileController@profileGetData');
+        Route::post('/{version}/profile/password', 'MobileController@profileChangePassword');
         Route::post('/{version}/sales', 'MobileController@salesByFilter');
         Route::post('/{version}/sales/details', 'MobileController@getSaleDetails');
         Route::post('/{version}/projects', 'MobileController@getUserProjects');
