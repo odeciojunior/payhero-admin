@@ -368,14 +368,14 @@ class TesteController extends Controller
         $saleModel                = new Sale();
         $productPlanModel         = new ProductPlan();
         $currencyQuotationService = new CurrencyQuotationService();
-        $notazzInvoice            = $notazzInvoiceModel->with([
-                                                                  'sale',
-                                                                  'sale.client',
-                                                                  'sale.delivery',
-                                                                  'sale.shipping',
-                                                                  'sale.plansSales.plan.products',
-                                                                  'sale.project.notazzIntegration',
-                                                              ])->find(6157);
+        $notazzInvoice = $notazzInvoiceModel->with([
+                                                       'sale',
+                                                       'sale.client',
+                                                       'sale.delivery',
+                                                       'sale.shipping',
+                                                       'sale.plansSales.plan.products',
+                                                       'sale.project.notazzIntegration',
+                                                   ])->find(8177);
 
         $sale = $notazzInvoice->sale;
         if ($sale) {
