@@ -107,6 +107,10 @@
 {{--    verifyDocumentPending();--}}
 {{--</script>--}}
 
+<script>
+    console.log($('meta[name="access-token"]').attr('content'));
+</script>
+
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
@@ -123,7 +127,7 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    {{-- <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script> --}}
+{{--    <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script>--}}
 
     <script type='text/javascript' src='https://inveniochatapi.azurewebsites.net/chat.js'></script>
 
