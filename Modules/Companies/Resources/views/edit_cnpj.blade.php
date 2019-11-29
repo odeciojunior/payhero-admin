@@ -71,37 +71,37 @@
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="form-control" id="zip_code" placeholder='CEP'>
+                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-5">
                                             <label for="street">Rua/Avenida</label>
-                                            <input name="street" value="" type="text" class="form-control" id="street" placeholder='Rua/Avenida' maxlength='40'>
+                                            <input name="street" value="" type="text" class="form-control info-complemented" id="street" placeholder='Rua/Avenida' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Nº</label>
-                                            <input name="number" value="" type="text" data-mask="0#########" class="form-control" id="number" placeholder='Nº' maxlength='10'>
+                                            <input name="number" value="" type="text" data-mask="0#########" class="form-control info-complemented" id="number" placeholder='Nº' maxlength='10'>
                                         </div>
                                         <div class="form-group col-xl-5">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="" type="text" class="form-control" id="neighborhood" placeholder='Bairro' maxlength='30'>
+                                            <input name="neighborhood" value="" type="text" class="form-control info-complemented" id="neighborhood" placeholder='Bairro' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="" type="text" class="form-control" id="complement" placeholder='Complemento' maxlength='30'>
+                                            <input name="complement" value="" type="text" class="form-control info-complemented" id="complement" placeholder='Complemento' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="" type="text" class="form-control" id="state" placeholder='Estado' maxlength='30'>
+                                            <input name="state" value="" type="text" class="form-control info-complemented" id="state" placeholder='Estado' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="" type="text" class="form-control" id="city" placeholder='Cidade' maxlength='30'>
+                                            <input name="city" value="" type="text" class="form-control info-complemented" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-6">
                                             <label for="country">Country</label>
-                                            <input name="country" value="" type="text" class="form-control" id="country">
+                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
@@ -168,7 +168,6 @@
                                             <tr>
                                                 <td>
                                                     Comprovante de extrato bancário
-
                                                 </td>
                                                 <td id="td-bank-status"></td>
                                                 <td>
@@ -178,7 +177,6 @@
                                             <tr>
                                                 <td>
                                                     Comprovante de endereço
-
                                                 </td>
                                                 <td id="td-address-status"></td>
                                                 <td>
@@ -188,7 +186,6 @@
                                             <tr>
                                                 <td>
                                                     Comprovante de contrato social
-
                                                 </td>
                                                 <td id="td-contract-status"></td>
                                                 <td>

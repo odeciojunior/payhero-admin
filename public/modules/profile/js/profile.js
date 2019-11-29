@@ -148,11 +148,38 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#email').val(response.data.email);
+
+                /**
+                 * Dados Pessoais
+                 */
+                if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
+                    $('#document').attr('disabled', 'disabled');
+                } else {
+                    $('#document').removeAttr('disabled');
+                }
+
                 $('#name').val(response.data.name);
+                $('#email').val(response.data.email);
                 $('#document').val(response.data.document);
                 $('#cellphone').val(response.data.cellphone);
                 $('#date_birth').val(response.data.date_birth);
+
+                /**
+                 * Imagem Perfil
+                 */
+                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
+                });
+
+                /**
+                 * Dados Residenciais
+                 */
+                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
+                    $('.dados-residenciais').attr('disabled', 'disabled');
+                } else {
+                    $('.dados-residenciais').removeAttr('disabled');
+                }
                 $('#zip_code').val(response.data.zip_code);
                 $('#street').val(response.data.street);
                 $('#number').val(response.data.number);
@@ -160,31 +187,10 @@ $(document).ready(function () {
                 $('#complement').val(response.data.complement);
                 $('#city').val(response.data.city);
                 $('#state').val(response.data.state);
-                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function () {
-                    $(this).attr('src', '/modules/global/img/user-default.png');
-                });
-                var valuecss = '';
 
-                if (response.data.personal_document_status === 1) {
-                    valuecss = 'primary';
-                } else if (response.data.personal_document_status === 2) {
-                    valuecss = 'pendente';
-                } else if (response.data.personal_document_status === 3) {
-                    valuecss = 'success';
-                } else {
-                    valuecss = 'danger';
-                }
-
-                // if (response.data.new_affiliation) {
-                //     $("#new_affiliation_switch").attr("checked", "checked");
-                // }
-                // if (response.data.new_affiliation_request) {
-                //     $("#new_affiliation_request_switch").attr("checked", "checked");
-                // }
-                // if (response.data.approved_affiliation) {
-                //     $("#approved_affiliation_switch").attr("checked", "checked");
-                // }
+                /**
+                 * Notificações
+                 */
                 if (response.data.boleto_compensated) {
                     $("#boleto_compensated_switch").attr("checked", "checked");
                 }
@@ -194,9 +200,7 @@ $(document).ready(function () {
                 if (response.data.notazz) {
                     $("#notazz_switch").attr("checked", "checked");
                 }
-                // if (response.data.withdrawal_approved) {
-                //     $("#withdrawal_approved_switch").attr("checked", "checked");
-                // }
+
                 if (response.data.released_balance) {
                     $("#released_balance_switch").attr("checked", "checked");
                 }
@@ -206,9 +210,7 @@ $(document).ready(function () {
                 if (response.data.shopify) {
                     $("#shopify_switch").attr("checked", "checked");
                 }
-                // if (response.data.user_shopify_integration_store) {
-                //     $("#user_shopify_integration_store_switch").attr("checked", "checked");
-                // }
+
                 if (response.data.billet_generated) {
                     $("#billet_generated_switch").attr("checked", "checked");
                 }
@@ -232,22 +234,13 @@ $(document).ready(function () {
                     emailNotVerified();
                 }
 
-                var linha = '<span class="badge badge-' + valuecss + '" id="personal_document_badge">' + response.data.personal_document_translate + '</span>';
-                $("#td_personal_status").append(linha);
+                /**
+                 * Documentos
+                 */
 
-                if (response.data.address_document_status === 1) {
-                    $("#address-document-id").hide();
-                    valuecss = 'primary';
-                } else if (response.data.address_document_status === 2) {
-                    valuecss = 'pendente';
-                } else if (response.data.address_document_status === 3) {
-                    valuecss = 'success';
-                } else {
-                    valuecss = 'danger';
-                }
+                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
 
-                linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
-                $("#td_address_status").append(linha);
+                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
@@ -298,6 +291,9 @@ $(document).ready(function () {
     }
 
     $("#profile_update_form").on("submit", function (event) {
+        $('.dados-residenciais').removeAttr('disabled');
+        $('#document').removeAttr('disabled');
+
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
         loadingOnScreen();
@@ -315,8 +311,10 @@ $(document).ready(function () {
             data: form_data,
             error: function (response) {
                 errorAjaxResponse(response);
+
             },
             success: function success(response) {
+
                 loadingOnScreenRemove();
                 $(".div1").hide();
                 $(".div2").show();
@@ -721,7 +719,6 @@ $(document).ready(function () {
 
             },
             success: function success(response) {
-                console.log(response.data);
                 htmlTableDocuments(response.data);
                 $("#loaderLine").remove();
 
@@ -788,8 +785,6 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
     url: '/api/profile/uploaddocuments',
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     previewsContainer: ".dropzone-previews",
-    thumbnailWidth: 100,
-    thumbnailHeight: 100,
     success: function success(file, response) {
         alertCustom('success', response.message);
 
