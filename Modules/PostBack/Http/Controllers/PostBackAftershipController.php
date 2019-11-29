@@ -46,7 +46,7 @@ class PostBackAftershipController extends Controller
         } catch (\Exception $ex) {
             report($ex);
             Log:info($ex->getMessage());
-            return response()->json(['message' => 'Postback listerner error'], 400);
+            return response()->json(['message' => 'Postback listerner error']);
         }
     }
 }
