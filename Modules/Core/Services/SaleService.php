@@ -355,6 +355,7 @@ class SaleService
             if ($checktRecalc) {
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
+                    DB::commit();
                     $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                     if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
                         $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
@@ -362,7 +363,6 @@ class SaleService
                         $shopifyService->refundOrder($shopifyIntegration, $sale);
                         $shopifyService->saveSaleShopifyRequest();
                     }
-                    DB::commit();
                 }
 
                 return true;

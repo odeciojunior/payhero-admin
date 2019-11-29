@@ -125,7 +125,7 @@ class CheckoutService
             if (($response->status ?? '') == 'success') {
                 $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
                 if ($checkUpdate) {
-                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+                    $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
                     $transaction   = $transactionModel->where('sale_id', $sale->id)
                                                       ->whereIn('company_id', $userCompanies)
                                                       ->first();
@@ -194,8 +194,10 @@ class CheckoutService
                 $dataUpdate = (array) $response->response->response;
                 $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
                                         ->update(array_merge($dataUpdate,
-                                                             ['start_date' => Carbon::now()
-                                                             ,'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0)]));
+                                                             [
+                                                                 'start_date'         => Carbon::now()
+                                                                 , 'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
+                                                             ]));
                 if ($check) {
                     $transactionModel = new Transaction();
                     $sale             = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
