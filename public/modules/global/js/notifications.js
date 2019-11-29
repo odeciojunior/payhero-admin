@@ -40,23 +40,23 @@ $(document).ready(function () {
     }
 
     // verifica se existem novas notificações
-    function updateUnreadNotificationsAmount() {
-        $.ajax({
-            method: 'GET',
-            url: '/api/notifications/unreadamount',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function () {
-                //
-            },
-            success: function (response) {
-                $("#notification-amount").html(response.qtd_notification);
-                $('#notificationBadge').html('New ' + response.qtd_notification)
-            }
-        });
-    }
+    // function updateUnreadNotificationsAmount() {
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: '/api/notifications/unreadamount',
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: function () {
+    //             //
+    //         },
+    //         success: function (response) {
+    //             $("#notification-amount").html(response.qtd_notification);
+    //             $('#notificationBadge').html('New ' + response.qtd_notification)
+    //         }
+    //     });
+    // }
 
     // monta html com as notificações
     function getNotifications() {
