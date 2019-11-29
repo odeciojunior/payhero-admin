@@ -4,9 +4,6 @@
 namespace Modules\Core\Services;
 
 
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\Tracking;
-
 class PerfectLogService
 {
     private const API_URL = 'https://log.perfectpay.com.br';
@@ -40,64 +37,6 @@ class PerfectLogService
         return json_decode($result);
     }
 
-    /**
-     * @param $reference
-     * @return mixed
-     */
-    public function find($tracking)
-    {
-        $data = [
-            'tracking' => $tracking,
-            'token_user' => self::API_USER_TOKEN,
-            'system' => self::API_SYSTEM_TOKEN,
-        ];
-
-        $result = $this->call('/api/tracking/search', $data);
-
-        $result = json_decode($result);
-
-        if (!empty($result->data)) {
-            return end($result->data);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @param $apiStatus
-     * @return mixed
-     * @throws PresenterException
-     */
-    public function parseStatus($apiStatus)
-    {
-        $trackingModel = new Tracking();
-
-        $status = 1;
-
-        switch ($apiStatus) {
-            //case 'pending':
-            case 'preparation':
-                $status = $trackingModel->present()->getTrackingStatusEnum('posted');
-            case 'sent':
-            case 'resend':
-                $status = $trackingModel->present()->getTrackingStatusEnum('dispatched');
-                break;
-            case 'delivered':
-                $status = $trackingModel->present()->getTrackingStatusEnum('delivered');
-                break;
-            case 'out_for_delivery':
-                $status = $trackingModel->present()->getTrackingStatusEnum('out_for_delivery');
-                break;
-            case 'canceled':
-            case 'erro_fiscal':
-            case 'returned':
-                $status = $trackingModel->present()->getTrackingStatusEnum('exception');
-                break;
-            default:
-                $status = $trackingModel->present()->getTrackingStatusEnum('posted');
-        }
-        return $status;
-    }
 
     /**
      * @param string $uri
