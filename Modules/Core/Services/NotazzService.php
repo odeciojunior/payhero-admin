@@ -978,7 +978,8 @@ class NotazzService
                 $notazzInvoice->update([
                                            'return_message'   => 'Venda não localizada',
                                            'return_http_code' => '500',
-                                           'schedule'         => $notazzInvoice->schedule,
+                                           'schedule'         => Carbon::now()
+                                                                       ->addHour()->toDateTime(),
                                            'date_error'       => Carbon::now(),
                                            'status'           => $notazzInvoiceModel->present()
                                                                                     ->getStatus('error'), //error
