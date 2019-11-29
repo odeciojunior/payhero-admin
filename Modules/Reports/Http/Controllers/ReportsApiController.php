@@ -103,10 +103,11 @@ class ReportsApiController extends Controller
                     // calculos dashboard
                     $salesDetails = $salesModel->select([
                                                             DB::raw('SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesAproved'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 2 OR sales.status = 7 THEN 1 ELSE 0 END) AS contSalesPending'),
+                                                            DB::raw('SUM(CASE WHEN sales.status = 2 THEN 1 ELSE 0 END) AS contSalesPending'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 3 THEN 1 ELSE 0 END) AS contSalesRecused'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),
+                                                            DB::raw('SUM(CASE WHEN sales.status = 7 THEN 1 ELSE 0 END) AS contSalesRefunded'),
                                                         ])
                                                ->where('owner_id', auth()->user()->account_owner_id)
                                                ->where('project_id', $projectId);
@@ -126,6 +127,7 @@ class ReportsApiController extends Controller
                     $countSalesPending     = $details[0]->contSalesPending;
                     $countSalesRecused     = $details[0]->contSalesRecused;
                     $countSalesChargeBack  = $details[0]->contSalesChargeBack;
+                    $countSalesRefunded    = $details[0]->contSalesRefunded;
                     $countSalesCanceled    = $details[0]->contSalesCanceled;
                     $totalValueCreditCard  = 0;
                     $contCreditCardAproved = 0;
@@ -222,6 +224,7 @@ class ReportsApiController extends Controller
                                         'contRecused'            => $countSalesRecused ?? 0,
                                         'contChargeBack'         => $countSalesChargeBack ?? 0,
                                         'contPending'            => $countSalesPending ?? 0,
+                                        'contRefunded'           => $countSalesRefunded ?? 0,
                                         'contCanceled'           => $countSalesCanceled ?? 0,
                                         'totalPercentCartao'     => $totalPercentPaidCredit ?? 0,
                                         'totalPercentPaidBoleto' => $totalPercentPaidBoleto ?? 0,

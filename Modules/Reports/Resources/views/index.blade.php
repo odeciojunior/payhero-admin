@@ -51,32 +51,36 @@
                             <div class="card shadow">
                                 <div class="wrap">
                                     <div class="row justify-content-between gutter_top">
-                                        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+                                        <div class="col">
                                             <h6 class="label-price relatorios"> Receita gerada </h6>
                                             <h4 id='revenue-generated' class="number green" style='color:green'>0</h4>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+                                        <div class="col">
                                             <h6 class="label-price relatorios"> Aprovadas </h6>
                                             <h4 id='qtd-aproved' class="number green" style='color:green'>0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
-                                            <h6 class="label-price relatorios"> Aguardando Pagamento </h6>
+                                        <div class="col">
+                                            <h6 class="label-price relatorios"> Pendentes </h6>
                                             <h4 id='qtd-pending' class="number blue-800" style='color:blue'>0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+                                        <div class="col">
                                             <h6 class="label-price relatorios"> Canceladas </h6>
                                             <h4 id='qtd-canceled' class="number red" style='color:red'>0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+                                        <div class="col">
                                             <h6 class="label-price relatorios"> Recusadas </h6>
                                             <h4 id='qtd-recusadas' class="number red" style='color:red'>0</h4>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+                                        <div class="col">
                                             <h6 class="label-price relatorios"> Reembolsos </h6>
                                             <h4 id='qtd-reembolso' class="number purple" style='color:purple'>0</h4>
+                                        </div>
+                                        <div class="col">
+                                            <h6 class="label-price relatorios"> ChargeBack </h6>
+                                            <h4 id='qtd-chargeback' class="number purple" style='color:purple'>0</h4>
                                         </div>
                                         <!--div class="col-lg-12">
                                             <div class="grafico">
@@ -331,6 +335,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=2')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=3')}}'></script>
 @endpush
 

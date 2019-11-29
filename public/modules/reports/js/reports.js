@@ -41,7 +41,7 @@ $(function () {
     function updateReports() {
         var date_range = $('#date_range_requests').val();
 
-        $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-reembolso, #qtd-pending, #qtd-canceled' + '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert' + '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled').html("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+        $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled' + '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert' + '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled').html("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable('#origins-table-itens', '.table-vendas-itens');
 
         $.ajax({
@@ -67,7 +67,8 @@ $(function () {
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
                 $("#qtd-recusadas").html(response.contRecused);
-                $("#qtd-reembolso").html(response.contChargeBack);
+                $("#qtd-reembolso").html(response.contRefunded);
+                $("#qtd-chargeback").html(response.contChargeBack);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
                 $("#percent-credit-card").html(response.totalPercentCartao + '%');
