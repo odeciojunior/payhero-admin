@@ -218,9 +218,11 @@ $(() => {
                 'Accept': 'application/json',
             },
             error: response => {
+                console.log(response);
                 errorAjaxResponse(response);
             },
             success: response => {
+                console.log(response);
                 $('#dados_tabela').html('');
 
                 let grayRow = false;
