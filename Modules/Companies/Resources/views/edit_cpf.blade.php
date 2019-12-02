@@ -29,6 +29,12 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                            <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents-cpf' role="alert" style='display:none;'>
+                                <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem avisados.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
                             <div class="row">
                                 <div class="col-xl-4">
                                     <div class='form-group'>
@@ -63,6 +69,7 @@
                             </div>
                         </form>
                         <div class="col-lg-12 mb-40 mt-15">
+
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -76,7 +83,7 @@
                                         <td class='text-center'>
                                             Comprovante de extrato bancário
                                         </td>
-                                        <td class='text-center'>
+                                        <td class='text-center' id='td-status-document-person-fisic'>
                                             <span id='status-document-fisic'></span>
                                         </td>
                                         <td class='text-center'>

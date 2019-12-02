@@ -30,7 +30,8 @@ class CompanyResource extends Resource
      */
     public function toArray($request)
     {
-        $presenter        = $this->resource->present();
+        $presenter = $this->resource->present();
+
         $documentStatus   = $presenter->allStatusPending() ? $presenter->getStatus(3) : $presenter->getStatus(1);
         $companyService   = new CompanyService();
         $refusedDocuments = $companyService->getRefusedDocuments($this->resource->id);
