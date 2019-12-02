@@ -16,9 +16,9 @@ class TrackingService
 
         return $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
 
-        //$aftershipService = new AftershipService();
-
-        //return $aftershipService->createTracking($tracking->tracking_code);
+//        $aftershipService = new AftershipService();
+//
+//        return $aftershipService->createTracking($tracking->tracking_code);
     }
 
     public function findTrackingApi(Tracking $tracking)
@@ -37,21 +37,21 @@ class TrackingService
 
         return $apiTracking;
 
-        /*$aftershipService = new AftershipService();
-
-        $apiTracking =  $aftershipService->getAllTrackings(['keyword' => $tracking->tracking_code]);
-
-        $apiTracking = $response->data->trackings[0] ?? null;
-
-        if(isset($apiTracking->tag)){
-            $status = $trackingService->parseStatusApi($apiTracking->tag);
-            if($tracking->tracking_status_enum != $status){
-                $tracking->tracking_status_enum = $status;
-                $tracking->save();
-            }
-        }
-
-        return $apiTracking;*/
+//        $aftershipService = new AftershipService();
+//
+//        $response =  $aftershipService->getAllTrackings(['keyword' => $tracking->tracking_code]);
+//
+//        $apiTracking = $response->data->trackings[0] ?? null;
+//
+//        if(isset($apiTracking->tag)){
+//            $status = $this->parseStatusApi($apiTracking->tag);
+//            if($tracking->tracking_status_enum != $status){
+//                $tracking->tracking_status_enum = $status;
+//                $tracking->save();
+//            }
+//        }
+//
+//        return $apiTracking;
     }
 
     public function parseStatusApi($status)
@@ -60,9 +60,9 @@ class TrackingService
 
         return $perfectLogService->parseStatus($status);
 
-        //$aftershipService = new AftershipService();
-
-        //return $aftershipService->parseStatus($status);
+//        $aftershipService = new AftershipService();
+//
+//        return $aftershipService->parseStatus($status);
     }
 
     public function getCheckpointsApi($apiTracking)
@@ -101,7 +101,7 @@ class TrackingService
 
         /*if(!empty($apiTracking->checkpoints)) {
             foreach ($apiTracking->checkpoints as $log){
-                $status_enum = $trackingService->parseStatusApi($apiTracking->tracking_status);
+                $status_enum = $this->parseStatusApi($apiTracking->tracking_status);
                 $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                 $location = $log->location ? (' - ' . $log->location) : '';
