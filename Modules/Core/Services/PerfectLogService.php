@@ -118,6 +118,7 @@ class PerfectLogService
             case 'GET':
                 if ($data)
                     $url = sprintf("%s?%s", $url, http_build_query($data));
+                    report(new \Exception("PerfectLogService - url: " . $url));
                 break;
             default:
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
