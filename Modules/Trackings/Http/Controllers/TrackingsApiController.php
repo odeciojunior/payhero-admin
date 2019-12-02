@@ -84,7 +84,11 @@ class TrackingsApiController extends Controller
 
             $tracking->checkpoints = $checkpoints->unique()->toArray();
 
-            return new TrackingShowResource($tracking);
+            $return = new TrackingShowResource($tracking);
+
+            report(new Exception('RESPONSE: ' . json_encode($return->jsonSerialize(), JSON_PRETTY_PRINT)));
+
+            return $return;
 
         } catch (Exception $e) {
             Log::warning('Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)');
