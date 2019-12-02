@@ -5,6 +5,7 @@ namespace Modules\Core\Listeners;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -134,7 +135,7 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
                     "last_name"     => $names[count($names) - 1],
                     "phone"         => $telephone,
                     "province"      => $event->delivery->state,
-                    "zip"           => $event->delivery->zip_code,
+                    "zip"           => FoxUtils::formatCEP($event->delivery->zip_code),
                     "name"          => $event->client->name,
                     "country_code"  => "BR",
                     "province_code" => $event->delivery->state,
