@@ -6,7 +6,6 @@ namespace Modules\PostBack\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\AftershipService;
 

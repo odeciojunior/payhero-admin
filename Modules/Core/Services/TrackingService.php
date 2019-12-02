@@ -10,6 +10,13 @@ use Vinkla\Hashids\Facades\Hashids;
 class TrackingService
 {
 
+    public function sendTrackingToApi(Tracking $tracking)
+    {
+        $perfectLogService = new PerfectLogService();
+
+        $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
+    }
+
     public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale)
     {
         $trackingModel = new Tracking();

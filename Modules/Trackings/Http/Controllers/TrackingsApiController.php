@@ -171,8 +171,7 @@ class TrackingsApiController extends Controller
 
                         if ($tracking) {
 
-                            $perfectLogService = new PerfectLogService();
-                            $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
+                            $trackingService->sendTrackingToApi($tracking);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio salvo',
@@ -202,8 +201,7 @@ class TrackingsApiController extends Controller
                                                               'tracking_status_enum' => $trackingStatus,
                                                           ]);
 
-                            $perfectLogService = new PerfectLogService();
-                            $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
+                            $trackingService->sendTrackingToApi($tracking);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio alterado',

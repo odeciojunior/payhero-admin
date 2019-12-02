@@ -38,7 +38,6 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
     {
         $saleModel = new Sale();
         $trackingService = new TrackingService();
-        $perfectLogService = new PerfectLogService();
 
         foreach ($collection as $key => $value) {
             if ($key == 0) continue;
@@ -78,11 +77,11 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                             $tracking->update([
                                 'tracking_code' => $row[1],
                             ]);
-                            $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
+                            $trackingService->sendTrackingToApi($tracking);
                         }
                     }else if(isset($row[1])) {
                         $tracking = $trackingService->createTracking($row[1], $productPlanSale);
-                        $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
+                        $trackingService->sendTrackingToApi($tracking);
                     }
                 }
             }
