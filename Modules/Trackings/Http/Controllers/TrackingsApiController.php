@@ -84,27 +84,28 @@ class TrackingsApiController extends Controller
 
             $tracking->checkpoints = $checkpoints->unique()->toArray();
 
-            return response()->json(['data' => [
-                'id' => Hashids::encode($tracking->id),
-                'tracking_code' => $tracking->tracking_code,
-                'tracking_status_enum' => $tracking->tracking_status_enum,
-                'tracking_status' => $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado',
-                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                'amount' => $tracking->amount,
-                'product' => [
-                    'name' => $tracking->product->name,
-                    'description' => $tracking->product->description,
-                    'photo' => $tracking->product->photo,
-                ],
-                'delivery' => [
-                    'street' => $tracking->delivery->street,
-                    'number' => $tracking->delivery->number,
-                    'zip_code' => $tracking->delivery->zip_code,
-                    'city' => $tracking->delivery->city,
-                    'state' => $tracking->delivery->state,
-                ],
-                'checkpoints' => $tracking->checkpoints ?? [],
-            ]
+            return response()->json([
+                'data' => [
+                    'id' => Hashids::encode($tracking->id),
+                    'tracking_code' => $tracking->tracking_code,
+                    'tracking_status_enum' => $tracking->tracking_status_enum,
+                    'tracking_status' => $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado',
+                    'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                    'amount' => $tracking->amount,
+                    'product' => [
+                        'name' => $tracking->product->name,
+                        'description' => $tracking->product->description,
+                        'photo' => $tracking->product->photo,
+                    ],
+                    'delivery' => [
+                        'street' => $tracking->delivery->street,
+                        'number' => $tracking->delivery->number,
+                        'zip_code' => $tracking->delivery->zip_code,
+                        'city' => $tracking->delivery->city,
+                        'state' => $tracking->delivery->state,
+                    ],
+                    'checkpoints' => $tracking->checkpoints ?? [],
+                ]
             ]);
 
             //return new TrackingShowResource($tracking);
