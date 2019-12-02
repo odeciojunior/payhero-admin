@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Services;
 
-use Modules\Core\Entities\Company;
+use Illuminate\Support\Carbon;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
@@ -14,7 +14,127 @@ class TrackingService
     {
         $perfectLogService = new PerfectLogService();
 
-        $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
+        return $perfectLogService->track(Hashids::encode($tracking->id), $tracking->tracking_code);
+
+        //$aftershipService = new AftershipService();
+
+        //return $aftershipService->createTracking($tracking->tracking_code);
+    }
+
+    public function findTrackingApi(Tracking $tracking)
+    {
+        $perfectLogService = new PerfectLogService();
+
+        $apiTracking = $perfectLogService->find($tracking->tracking_code);
+
+        if (isset($apiTracking->tracking_status)) {
+            $status = $this->parseStatusApi($apiTracking->tracking_status);
+            if ($tracking->tracking_status_enum != $status) {
+                $tracking->tracking_status_enum = $status;
+                $tracking->save();
+            }
+        }
+
+        return $apiTracking;
+
+        /*$aftershipService = new AftershipService();
+
+        $apiTracking =  $aftershipService->getAllTrackings(['keyword' => $tracking->tracking_code]);
+
+        $apiTracking = $response->data->trackings[0] ?? null;
+
+        if(isset($apiTracking->tag)){
+            $status = $trackingService->parseStatusApi($apiTracking->tag);
+            if($tracking->tracking_status_enum != $status){
+                $tracking->tracking_status_enum = $status;
+                $tracking->save();
+            }
+        }
+
+        return $apiTracking;*/
+    }
+
+    public function parseStatusApi($status)
+    {
+        $perfectLogService = new PerfectLogService();
+
+        return $perfectLogService->parseStatus($status);
+
+        //$aftershipService = new AftershipService();
+
+        //return $aftershipService->parseStatus($status);
+    }
+
+    public function getCheckpointsApi($apiTracking)
+    {
+        $trackingModel = new Tracking();
+
+        $checkpoints = collect();
+
+        if (!empty($apiTracking->trail)) {
+            foreach ($apiTracking->trail as $log) {
+                $status_enum = $this->parseStatusApi($log->tracking_status);
+                $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                $event = $log->event;
+
+                //remove caracteres chineses e informações indesejadas
+                preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                $event = str_replace([
+                    'Clique aquiMinhas Importações - ',
+                    'CHINA/',
+                    'CHINA /',
+                    'Paísem'
+                ], '', $event);
+                $event = str_replace([
+                    'de País em',
+                ], 'do exterior', $event);
+
+                $checkpoints->add([
+                    'tracking_status_enum' => $status_enum,
+                    'tracking_status' => $status,
+                    'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
+                    'event' => $nonLatinChars ? 'Encomenda no exterior' : $event,
+                ]);
+            }
+        }
+
+        /*if(!empty($apiTracking->checkpoints)) {
+            foreach ($apiTracking->checkpoints as $log){
+                $status_enum = $trackingService->parseStatusApi($apiTracking->tracking_status);
+                $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                $location = $log->location ? (' - ' . $log->location) : '';
+
+                $event = $log->message . $location;
+
+                //remove caracteres chineses e informações indesejadas
+                preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                $event = str_replace([
+                    'Clique aquiMinhas Importações - ',
+                    'CHINA/',
+                    'CHINA /',
+                    'Paísem'
+                ], '', $event);
+                $event = str_replace([
+                    'de País em',
+                ], 'do exterior', $event);
+
+                if(strlen($log->checkpoint_time) < 25){
+                    $data = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i:s', $log->checkpoint_time);
+                }else{
+                    $data = Carbon::createFromFormat('Y-m-d\TH:i:sP', $log->checkpoint_time);
+                }
+                $checkpoints->add([
+                    'tracking_status_enum' => $status_enum,
+                    'tracking_status' => $status,
+                    'created_at' => Carbon::parse($data)->format('d/m/Y'),
+                    'event' => $nonLatinChars ? 'Encomenda no exterior' :  $event,
+                ]);
+            }
+        }*/
+
+        return $checkpoints;
     }
 
     public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale)
@@ -71,8 +191,8 @@ class TrackingService
                     ->where('status', 1)
                     ->where('owner_id', auth()->user()->account_owner_id);
 
-                if(isset($filters['sale'])){
-                    $saleId =  current(Hashids::connection('sale_id')->decode($filters['sale']));
+                if (isset($filters['sale'])) {
+                    $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
                     $query->where('id', $saleId);
                 }
             });

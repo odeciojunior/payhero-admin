@@ -155,7 +155,6 @@ class AftershipService
 
     public function parseStatus($status)
     {
-
         $trackingModel = new Tracking();
 
         $statusEnum = 0;

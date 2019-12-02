@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,12 +18,10 @@ use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
-use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -58,6 +57,7 @@ class TrackingsApiController extends Controller
     {
         try {
             $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
 
             $trackingId = current(Hashids::decode($id));
 
@@ -66,6 +66,23 @@ class TrackingsApiController extends Controller
                 'delivery',
                 'history'
             ])->find($trackingId);
+
+            $apiTracking = $trackingService->findTrackingApi($tracking);
+
+            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
+            $checkpoints = collect();
+
+            //objeto postado
+            $checkpoints->add([
+                'tracking_status_enum' => $postedStatus,
+                'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
+                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                'event' => 'Código de rastreio informado',
+            ]);
+
+            $checkpoints = $checkpoints->merge($trackingService->getCheckpointsApi($apiTracking));
+
+            $tracking->checkpoints = $checkpoints->unique()->toArray();
 
             return new TrackingShowResource($tracking);
 

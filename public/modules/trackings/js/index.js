@@ -185,6 +185,21 @@ $(() => {
         });
     }
 
+    function getStatusBadge(status) {
+        switch (status) {
+            case 1:
+            case 2:
+            case 4:
+                return 'primary';
+            case 3:
+                return 'success';
+            case 5:
+                return 'warning';
+            default:
+                return 'danger';
+        }
+    }
+
     function index(link = null) {
 
         if (link == null) {
@@ -212,54 +227,42 @@ $(() => {
                 let lastSale = '';
 
                 if (isEmpty(response.data)) {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='4' style='height: 70px;vertical-align: middle'> Nenhuma rastreamento encontrada</td></tr>");
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='5' style='height: 70px;vertical-align: middle'> Nenhum rastreamento encontrada</td></tr>");
                 } else {
                     $.each(response.data, function (index, tracking) {
 
-                        let badge;
+                        let badge = getStatusBadge(tracking.tracking_status_enum);
 
-                        switch (tracking.tracking_status_enum) {
-                            case 1:
-                            case 2:
-                            case 4:
-                                badge = 'primary';
-                                break;
-                            case 3:
-                                badge = 'success';
-                                break;
-                            case 5:
-                                badge = 'warning';
-                                break;
-                            default:
-                                badge = 'danger';
-                                break;
-                        }
-
-                        if(lastSale !==  tracking.sale){
+                        if (lastSale !== tracking.sale) {
                             grayRow = !grayRow;
                         }
 
                         let dados = `<tr ${grayRow ? 'class="td-odd"' : ''}>
                                          ${
                                             lastSale !== tracking.sale
-                                            ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>` 
-                                            : `<td></td>`
+                                                ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
+                                                : `<td></td>`
                                          }
-                                         <td>${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}</td>
+                                         <td>${tracking.approved_date}</td>
+                                         <td>
+                                             <span style="max-width: 330px; display:block; margin:0 auto;">
+                                                ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}
+                                            </span>
+                                        </td>
                                          <td class="td-status">
                                             <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                          </td>
                                          <td>
                                             <input maxlength="16" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
-                                         <td style="min-width: 100px; text-align: right">
+                                         <td class="text-md-right" style="min-width: 100px;">
                                             <a class='tracking-save pointer mr-10' title="Salvar" product='${tracking.product.id}'
                                              sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
-                                         ${ tracking.tracking_status_enum
-                                            ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
+                                         ${tracking.tracking_status_enum
+                            ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
                                                <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
-                                            : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                                         }
+                            : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
+                        }
                                            <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
@@ -277,6 +280,117 @@ $(() => {
 
     //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
+
+        loadOnAny('#modal-tracking-details');
+        $('#modal-tracking').modal('show');
+
+        $.ajax({
+            method: 'GET',
+            url: '/api/tracking/' + $(this).attr('tracking'),
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                loadOnAny('#modal-tracking-details', true);
+                errorAjaxResponse(response);
+            },
+            success: response => {
+
+                let tracking = response.data;
+
+                //preenche os campos
+                $('#tracking-code').text(tracking.tracking_code);
+                $('#tracking-product-image').attr('src', tracking.product.photo);
+                $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
+                $('#tracking-product-amount').text(tracking.amount);
+                $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
+                $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
+                $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
+                $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
+
+                //GRAFICO DO STATUS DA ENTREGA
+
+                //clean modal
+                $('#table-checkpoint').html('');
+                $('.tracking-timeline .tracking-timeline-row').html('');
+
+                if (!isEmpty(tracking.checkpoints)) {
+                    let resume = [];
+                    for (let checkpoint of tracking.checkpoints) {
+
+                        $('#table-checkpoint').append(`<tr>
+                                                      <td>${checkpoint.created_at}</td>
+                                                      <td>
+                                                          <span class="badge badge-${getStatusBadge(checkpoint.tracking_status_enum)}">${checkpoint.tracking_status}</span>
+                                                      </td>
+                                                      <td>${checkpoint.event}</td>
+                                                </tr>`);
+
+                        switch (checkpoint.tracking_status_enum) {
+                            case 1: //postado
+                                resume[0] = checkpoint;
+                                break;
+                            case 2: //dispatched
+                                resume[1] = checkpoint;
+                                break;
+                            case 4: // out_for_delivery
+                                resume[2] = checkpoint;
+                                break;
+                            case 3: //delivered
+                                resume[3] = checkpoint;
+                                break;
+                            case 5: //exception
+                                resume[4] = checkpoint;
+                                break;
+                        }
+                    }
+
+                    resume[1] = resume[1] || {tracking_status: 'Em trânsito'};
+
+                    if (resume[3] && !resume[2]) {
+                        resume[2] = {tracking_status: 'Saiu para a entrega', created_at: resume[3].created_at};
+                    } else {
+                        resume[2] = resume[2] || {tracking_status: 'Saiu para a entrega'};
+                    }
+
+                    resume[3] = resume[3] || {tracking_status: 'Entregue'};
+
+                    for (let key in resume) {
+                        let value = resume[key];
+                        $('.tracking-timeline .tracking-timeline-row').eq(0)
+                            .append(`<div class="date-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">${value.created_at || ''}</div>`);
+                        $('.tracking-timeline .tracking-timeline-row').eq(1)
+                            .append(`<div class="step-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">
+                                        <span class="step-line"></span>
+                                        <span class="step-dot"></span>
+                                        <span class="step-line"></span>
+                                    </div>`);
+                        $('.tracking-timeline .tracking-timeline-row').eq(2)
+                            .append(`<div class="status-item ${value.created_at ? key === 'exception' ? 'exception' : 'active' : ''}">${value.tracking_status}</div>`);
+                    }
+                }
+
+                let statusBadge = $(this).parent()
+                    .parent()
+                    .find('td .badge');
+
+                if (statusBadge.html() !== tracking.tracking_status) {
+                    statusBadge.removeClass('badge-success badge-warning badge-danger badge-primary')
+                        .addClass('badge-' + getStatusBadge(tracking.tracking_status_enum))
+                        .html(tracking.tracking_status);
+                }
+
+                //FIM - GRAFICO DO STATUS DA ENTREGA
+
+                loadOnAny('#modal-tracking-details', true);
+            }
+        });
+
+    });
+
+    /*$(document).on('click', '.tracking-detail', function () {
 
         $.ajax({
             method: 'GET',
@@ -385,12 +499,12 @@ $(() => {
             }
         });
 
-    });
+    });*/
 
-    $(document).on('click', '.input-tracking-code', function(){
+    $(document).on('click', '.input-tracking-code', function () {
         let row = $(this).parent().parent();
         row.find('.tracking-edit, .tracking-add').click();
-        $(this).one('focusout', function(){
+        $(this).one('focusout', function () {
             row.find('.tracking-close').click();
         });
     });
@@ -434,7 +548,7 @@ $(() => {
     });
 
     //enviar e-mail com o codigo de rastreio
-    $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function(){
+    $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function () {
         let tracking_id = $(this).attr('tracking');
         $.ajax({
             method: "POST",
@@ -462,7 +576,7 @@ $(() => {
         trackingsExport('xlsx');
     });
 
-    function trackingsExport(fileFormat){
+    function trackingsExport(fileFormat) {
         let data = getFilters();
         data['format'] = fileFormat;
         $.ajax({
@@ -473,27 +587,21 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            // xhrFields: {
-            //     responseType: 'blob'
-            // },
             error: response => {
                 errorAjaxResponse(response);
             },
             success: () => {
                 alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
             },
-            // success: (response, textStatus, request) => {
-            //     downloadFile(response, request);
-            // }
         });
     }
 
     //importar excel
-    $('#btn-import-xls').on('click', function(){
+    $('#btn-import-xls').on('click', function () {
         $('#input-import-xls').click();
     });
 
-    $('#input-import-xls').on('change', function(){
+    $('#input-import-xls').on('change', function () {
         $('#btn-import-xls').prop('disabled', true);
         let form = new FormData();
         form.append('import.xlsx', this.files[0]);
