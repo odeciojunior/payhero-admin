@@ -19,10 +19,10 @@ class SmsService
     public function sendSms($number, $message)
     {
         try {
-            $zenvia = new ZenviaSmsService();
-            $zenvia->sendSms($number, $message);
+            //            $zenvia = new ZenviaSmsService();
+            //            $zenvia->sendSms($number, $message);
 
-            //            DisparoProService::sendMessage($number, $message);
+            DisparoProService::sendMessage($number, $message);
 
             return true;
         } catch (Exception $e) {
