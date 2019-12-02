@@ -127,7 +127,7 @@ class CheckoutService
             if (($response->status ?? '') == 'success') {
                 $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
                 if ($checkUpdate) {
-                    $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+                    $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
                     $transaction   = $transactionModel->where('sale_id', $sale->id)
                                                       ->whereIn('company_id', $userCompanies)
                                                       ->first();

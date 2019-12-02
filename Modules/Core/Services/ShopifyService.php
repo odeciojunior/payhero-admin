@@ -1437,6 +1437,7 @@ class ShopifyService
                     $transaction        = [
                         "kind"   => "refund",
                         "source" => "external",
+                        "amount" => "",
                     ];
                     $this->sendData     = $transaction;
                     $result             = $client->getTransactionManager()->create($sale->shopify_order, $transaction);

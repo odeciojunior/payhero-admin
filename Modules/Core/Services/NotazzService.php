@@ -14,6 +14,7 @@ use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Notifications\Notifications\RetroactiveNotazzNotification;
+use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
@@ -163,6 +164,19 @@ class NotazzService
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 
+                $generateZeroInvoiceFlag = $sale->project->notazzIntegration->generate_zero_invoice_flag ?? 1;
+
+                if (($generateZeroInvoiceFlag == false) && ($totalValue <= 0)) {
+                    //negativo ou zero, nao gerar nota
+                    $result                      = new stdClass();
+                    $result->codigoProcessamento = '000';
+                    $result->motivo              = 'Nota sem valor, configurada para não ser gerada';
+                    $result->statusProcessamento = '0';
+                    $result->id                  = '0';
+
+                    return $result;
+                }
+
                 if ($totalValue <= 0) {
                     $totalValue = 1;
                 }
@@ -250,7 +264,8 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public function updateNfse($notazzInvoiceId)
+    public
+    function updateNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel       = new NotazzInvoice();
         $notazzSentHistoryModel   = new NotazzSentHistory();
@@ -416,7 +431,8 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public function consultNfse($notazzInvoiceId)
+    public
+    function consultNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel     = new NotazzInvoice();
         $notazzSentHistoryModel = new NotazzSentHistory();
@@ -476,7 +492,8 @@ class NotazzService
      * @param null $invoiceNumber
      * @return bool|mixed
      */
-    public function consultAllNfse($notazzInvoiceId, $startDate = null, $finalDate = null, $status = null, $invoiceNumber = null)
+    public
+    function consultAllNfse($notazzInvoiceId, $startDate = null, $finalDate = null, $status = null, $invoiceNumber = null)
     {
         $notazzInvoiceModel = new NotazzInvoice();
 
@@ -530,7 +547,8 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public function cancelNfse($notazzInvoiceId)
+    public
+    function cancelNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel = new NotazzInvoice();
 
@@ -574,7 +592,8 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public function deleteNfse($notazzInvoiceId)
+    public
+    function deleteNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel = new NotazzInvoice();
 
@@ -620,7 +639,8 @@ class NotazzService
      * @param $city
      * @return mixed
      */
-    public function checkCity($tokenApi, $state, $city)
+    public
+    function checkCity($tokenApi, $state, $city)
     {
         $fields = json_encode([
                                   'METHOD' => 'cidades_atendidas',//Método a ser utilizado
@@ -635,37 +655,44 @@ class NotazzService
         return $this->sendRequest($fields);
     }
 
-    public function createNfe55($data)
+    public
+    function createNfe55($data)
     {
 
     }
 
-    public function updateNfe55($data)
+    public
+    function updateNfe55($data)
     {
 
     }
 
-    public function consultNfe55($data)
+    public
+    function consultNfe55($data)
     {
 
     }
 
-    public function consultAllNfe55($data)
+    public
+    function consultAllNfe55($data)
     {
 
     }
 
-    public function cancelNfe55($data)
+    public
+    function cancelNfe55($data)
     {
 
     }
 
-    public function deleteNfe55($data)
+    public
+    function deleteNfe55($data)
     {
 
     }
 
-    public function updateStock($data)
+    public
+    function updateStock($data)
     {
 
     }
@@ -673,7 +700,8 @@ class NotazzService
     /**
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function verifyPendingInvoices()
+    public
+    function verifyPendingInvoices()
     {
 
         $notazzInvoiceModel = new NotazzInvoice();
@@ -710,7 +738,8 @@ class NotazzService
      * @return bool
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function createInvoice($notazzIntegrationId, $saleId, $invoiceType = 1, $invoiceSchedule = null)
+    public
+    function createInvoice($notazzIntegrationId, $saleId, $invoiceType = 1, $invoiceSchedule = null)
     {
 
         if (!empty($saleId) && !empty($notazzIntegrationId)) {
@@ -755,7 +784,8 @@ class NotazzService
      * @return int
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function createOldInvoices($startData, $projectId = null)
+    public
+    function createOldInvoices($startData, $projectId = null)
     {
         $saleModel    = new Sale();
         $createdCount = 0;
@@ -796,7 +826,8 @@ class NotazzService
     /**
      * Gerar todas as invoices
      */
-    public function generateRetroactiveInvoices()
+    public
+    function generateRetroactiveInvoices()
     {
         try {
 
@@ -840,7 +871,8 @@ class NotazzService
     /**
      * Gerar as notas das vendas aprovadas
      */
-    public function generateInvoicesSalesApproved()
+    public
+    function generateInvoicesSalesApproved()
     {
         try {
 
@@ -866,7 +898,8 @@ class NotazzService
      * @param $notazzInvoiceId
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function sendInvoice($notazzInvoiceId)
+    public
+    function sendInvoice($notazzInvoiceId)
     {
         $notazzService      = new NotazzService();
         $notazzInvoiceModel = new NotazzInvoice();
@@ -945,7 +978,8 @@ class NotazzService
                 $notazzInvoice->update([
                                            'return_message'   => 'Venda não localizada',
                                            'return_http_code' => '500',
-                                           'schedule'         => $notazzInvoice->schedule,
+                                           'schedule'         => Carbon::now()
+                                                                       ->addHour()->toDateTime(),
                                            'date_error'       => Carbon::now(),
                                            'status'           => $notazzInvoiceModel->present()
                                                                                     ->getStatus('error'), //error
