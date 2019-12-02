@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dev;
 
 use App\Jobs\SendNotazzInvoiceJob;
 use Exception;
+use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\NotazzSentHistory;
@@ -11,6 +12,7 @@ use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\SentEmail;
+use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\CurrencyQuotationService;
@@ -344,99 +346,95 @@ class TesteController extends Controller
 
         //nada
 
-
         dd('nada');
 
-//        $notazzService = new NotazzService();
-//
-//
-//        $result = $notazzService->sendNfse(2622);
+        //        $notazzService = new NotazzService();
+        //
+        //
+        //        $result = $notazzService->sendNfse(2622);
 
-
-//        $notazzInvoiceModel       = new NotazzInvoice();
-//        $notazzSentHistoryModel   = new NotazzSentHistory();
-//        $saleModel                = new Sale();
-//        $productPlanModel         = new ProductPlan();
-//        $currencyQuotationService = new CurrencyQuotationService();
-//        $notazzInvoice = $notazzInvoiceModel->with([
-//                                                       'sale',
-//                                                       'sale.client',
-//                                                       'sale.delivery',
-//                                                       'sale.shipping',
-//                                                       'sale.plansSales.plan.products',
-//                                                       'sale.project.notazzIntegration',
-//                                                   ])->find(8177);
-//
-//        $sale = $notazzInvoice->sale;
-//        if ($sale) {
-//            //venda encontrada
-//
-//            $sale = $saleModel->with(['plansSales'])->find($sale->id);
-//
-//            $productsSale = collect();
-//            /** @var PlanSale $planSale */
-//            foreach ($sale->plansSales as $planSale) {
-//                /** @var ProductPlan $productPlan */
-//                foreach ($planSale->plan->productsPlans as $productPlan) {
-//
-//                    $product = $productPlan->product()->first();
-//
-//                    if (!empty($productPlan->cost)) {
-//                        //pega os valores de productplan
-//                        $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
-//                        $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
-//                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
-//                    } else {
-//                        //pega os valores de produto
-//                        if (!empty($product->cost)) {
-//                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
-//                            $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
-//                        } else {
-//                            $product['product_cost'] = 0;
-//                        }
-//
-//                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
-//                    }
-//
-//                    $product['product_amount'] = ($productPlan->amount * $planSale->amount) ?? 1;
-//
-//                    $productsSale->add($product);
-//                }
-//            }
-//
-//            $products = $productsSale;
-//
-//            if ($products) {
-//                $costTotal = 0;
-//                foreach ($products as $product) {
-//
-//                    if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
-//                        //moeda USD
-//                        $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
-//                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
-//                    }
-//
-//                    $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
-//                }
-//
-//                $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-//
-//                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
-//                $baseValue = ($subTotal + $shippingCost) - $costTotal;
-//
-//                $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
-//
-//                if ($totalValue <= 0) {
-//                    $totalValue = 1;
-//                }
-//
-//                $tokenApi = $sale->project->notazzIntegration->token_api;
-//
-//                $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
-//            }
-//        }
-
-
+        //        $notazzInvoiceModel       = new NotazzInvoice();
+        //        $notazzSentHistoryModel   = new NotazzSentHistory();
+        //        $saleModel                = new Sale();
+        //        $productPlanModel         = new ProductPlan();
+        //        $currencyQuotationService = new CurrencyQuotationService();
+        //        $notazzInvoice = $notazzInvoiceModel->with([
+        //                                                       'sale',
+        //                                                       'sale.client',
+        //                                                       'sale.delivery',
+        //                                                       'sale.shipping',
+        //                                                       'sale.plansSales.plan.products',
+        //                                                       'sale.project.notazzIntegration',
+        //                                                   ])->find(8177);
+        //
+        //        $sale = $notazzInvoice->sale;
+        //        if ($sale) {
+        //            //venda encontrada
+        //
+        //            $sale = $saleModel->with(['plansSales'])->find($sale->id);
+        //
+        //            $productsSale = collect();
+        //            /** @var PlanSale $planSale */
+        //            foreach ($sale->plansSales as $planSale) {
+        //                /** @var ProductPlan $productPlan */
+        //                foreach ($planSale->plan->productsPlans as $productPlan) {
+        //
+        //                    $product = $productPlan->product()->first();
+        //
+        //                    if (!empty($productPlan->cost)) {
+        //                        //pega os valores de productplan
+        //                        $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
+        //                        $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
+        //                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
+        //                    } else {
+        //                        //pega os valores de produto
+        //                        if (!empty($product->cost)) {
+        //                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+        //                            $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
+        //                        } else {
+        //                            $product['product_cost'] = 0;
+        //                        }
+        //
+        //                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
+        //                    }
+        //
+        //                    $product['product_amount'] = ($productPlan->amount * $planSale->amount) ?? 1;
+        //
+        //                    $productsSale->add($product);
+        //                }
+        //            }
+        //
+        //            $products = $productsSale;
+        //
+        //            if ($products) {
+        //                $costTotal = 0;
+        //                foreach ($products as $product) {
+        //
+        //                    if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
+        //                        //moeda USD
+        //                        $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
+        //                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
+        //                    }
+        //
+        //                    $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
+        //                }
+        //
+        //                $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+        //
+        //                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
+        //                $baseValue = ($subTotal + $shippingCost) - $costTotal;
+        //
+        //                $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
+        //
+        //                if ($totalValue <= 0) {
+        //                    $totalValue = 1;
+        //                }
+        //
+        //                $tokenApi = $sale->project->notazzIntegration->token_api;
+        //
+        //                $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
+        //            }
+        //        }
 
         //---------------------------------------------------------------------------
         //        $notazInvoiceModel = new NotazzInvoice();
@@ -1029,18 +1027,68 @@ class TesteController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function heroFunction(Request $request)
+    public function documentStatus()
     {
-        $tes             = 0;
-        $data            = [
-            'name'        => 'Hero Produtor',
-            'transaction' => 'nao tem', // code da venda
-            'date'        => Carbon::now()->format('d/m/Y H:i:s'), //data da aprovacao
-        ];
-        $sendGridService = new SendgridService();
-        $sendGridService->sendEmail('noreply', 'Cloudfox', 'emailteste@gmail.com', 'Hero Produtor', 'd-d65e83a8aa7e44c19b13d8b1cce0176c', $data);
+        $userDocumentModel = new UserDocument();
+        $userModel         = new User();
+        $companyDocument   = new CompanyDocument();
+        $companyModel      = new Company();
+
+        //Verifica os documentos aprovados do usuario
+        $userAddressDocuments  = $userDocumentModel->where('status', 3)
+                                                   ->where('document_type_enum', $userModel->present()
+                                                                                           ->getDocumentType('address_document'))
+                                                   ->with('user')
+                                                   ->whereHas('user', function($query) {
+                                                       $query->where('address_document_status', '!=', 3);
+                                                   })->get();
+        $userPersonalDocuments = $userDocumentModel->where('status', 3)
+                                                   ->where('document_type_enum', $userModel->present()
+                                                                                           ->getDocumentType('personal_document'))
+                                                   ->with('user')
+                                                   ->whereHas('user', function($query) {
+                                                       $query->where('personal_document_status', '!=', 3);
+                                                   })->get();
+
+        foreach ($userAddressDocuments as $document) {
+            $document->user->update(['address_document_status' => $document->status]);
+        }
+        foreach ($userPersonalDocuments as $document) {
+            $document->user->update(['personal_document_status' => $document->status]);
+        }
+
+        //Verifica os documentos aprovados da empresa
+        $companyBankDocuments    = $companyDocument->where('status', 3)->with('company')
+                                                   ->where('document_type_enum', $companyModel->present()
+                                                                                              ->getDocumentType('bank_document_status'))
+                                                   ->whereHas('company', function($query) {
+                                                       $query->where('bank_document_status', '!=', 3);
+                                                   })->get();
+        $companyAddressDocuments = $companyDocument->where('status', 3)->with('company')
+                                                   ->where('document_type_enum', $companyModel->present()
+                                                                                              ->getDocumentType('address_document_status'))
+                                                   ->whereHas('company', function($query) {
+                                                       $query->where('address_document_status', '!=', 3);
+                                                   })->get();
+
+        $companyContractDocuments = $companyDocument->where('status', 3)->with('company')
+                                                    ->where('document_type_enum', $companyModel->present()
+                                                                                               ->getDocumentType('contract_document_status'))
+                                                    ->whereHas('company', function($query) {
+                                                        $query->where('contract_document_status', '!=', 3);
+                                                    })->get();
+
+        foreach ($companyBankDocuments as $document) {
+            $document->company->update(['bank_document_status' => $document->status]);
+        }
+        foreach ($companyAddressDocuments as $document) {
+            $document->company->update(['address_document_status' => $document->status]);
+        }
+        foreach ($companyContractDocuments as $document) {
+            $document->company->update(['contract_document_status' => $document->status]);
+        }
     }
 }
 
