@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\TrackingsImportedEvent;
-use Modules\Core\Services\AftershipService;
+use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -38,7 +38,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
     {
         $saleModel = new Sale();
         $trackingService = new TrackingService();
-        $aftershipService = new AftershipService();
+        $perfectLogService = new PerfectLogService();
 
         foreach ($collection as $key => $value) {
             if ($key == 0) continue;
@@ -78,11 +78,11 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                             $tracking->update([
                                 'tracking_code' => $row[1],
                             ]);
-                            $aftershipService->createTracking($row[1]);
+                            $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
                         }
                     }else if(isset($row[1])) {
                         $tracking = $trackingService->createTracking($row[1], $productPlanSale);
-                        $aftershipService->createTracking($row[1]);
+                        $perfectLogService->track(Hashids::encode($tracking->id), $row[1]);
                     }
                 }
             }
