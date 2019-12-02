@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use DateTime;
+use Gateway;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -211,5 +212,13 @@ class Sale extends Model
     public function productsPlansSale()
     {
         return $this->hasMany('Modules\Core\Entities\ProductPlanSale');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function gateway()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Gateway');
     }
 }
