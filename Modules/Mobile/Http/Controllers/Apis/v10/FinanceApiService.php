@@ -43,7 +43,7 @@ class FinanceApiService {
             $balances = $this->getBalances($request);
             $transactions = $this->getTransactions($request);
 
-            return response()->json(compact('balances', 'transactions', 'bankAccount'), 200);
+            return response()->json(compact('balances', 'transactions'), 200);
 
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da dashboard (FinanceApiService - financeGetData)');
