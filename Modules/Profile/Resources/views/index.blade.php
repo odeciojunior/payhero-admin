@@ -167,9 +167,15 @@
                             </div>
                             <div class="tab-pane fade" id="tab_documentos" role="tabpanel">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
                                         <h5 class="title-pad"> Documentos </h5>
                                         <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de algumas comprovações. </p>
+                                        <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents-cpf' role="alert" style='display:none;'>
+                                            <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="col">
                                     </div>

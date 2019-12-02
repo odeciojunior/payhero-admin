@@ -17,7 +17,7 @@ let companyTypeDocument = {
     address_document_status: 'Comprovante de endereço',
     contract_document_status: 'Comprovante de contrato social'
 };
-
+var initForm = null;
 $(document).ready(function () {
     //On Ready
     //Clear all content of form
@@ -25,7 +25,6 @@ $(document).ready(function () {
     let companyUpdateForm = $("#company_update_form");
     let companyBankUpdateForm = $("#company_bank_update_form");
     initLinks();
-    initForm();
 
     $(document).on("blur", '#routing_number', function () {
         $.ajax({
@@ -78,7 +77,7 @@ $(document).ready(function () {
         companyBankUpdateForm.attr('action', (apiPath + "/" + encodedId));
     }
 
-    function initForm() {
+    initForm = function () {
         //Get CompanyId from path
         let encodedId = extractIdFromPathName();
         //Get Company data from laravel api
@@ -171,6 +170,8 @@ $(document).ready(function () {
             }
         });
     }
+
+    initForm();
 
     //Config Submit
     function configSubmits() {
@@ -437,6 +438,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
                 $("#loaderLine").remove();
             }, success: function (response) {
                 htmlTableDocumentJuridic(response.data);
+                initForm();
             }
         });
 

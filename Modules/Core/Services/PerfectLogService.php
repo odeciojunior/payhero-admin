@@ -133,7 +133,6 @@ class PerfectLogService
 
         $result = curl_exec($curl);
 
-        dd($result);
         curl_close($curl);
         return $result;
     }

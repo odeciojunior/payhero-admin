@@ -12,13 +12,12 @@ let companyStatusTranslated = {
     refused: 'Recusado',
 };
 
-let documentType = '';
+var initForm = null;
 
 $(document).ready(function () {
 
-    initForm();
+    initForm = function () {
 
-    function initForm() {
         let encodedId = extractIdFromPathName();
 
         $.ajax({
@@ -44,7 +43,16 @@ $(document).ready(function () {
                 $("#account").val(response.company.account);
                 $("#account_digit").val(response.company.account_digit);
 
-                $("#status-document-fisic").addClass(companyStatus[response.company.document_status]).html(companyStatusTranslated[response.company.document_status]);
+                $("#td-status-document-person-fisic").html('');
+                $("#td-status-document-person-fisic").append(`<span class='badge ${companyStatus[response.company.document_status]}'>${companyStatusTranslated[response.company.document_status]}</span>`);
+
+                if (response.company.document_status === 'pending' || response.company.document_status === 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                    $(".details-document-person-fisic").show();
+                } else if (response.company.document_status === 'analyzing' || response.company.document_status === 'approved') {
+                    $("#text-alert-documents-cpf").hide();
+                    $(".details-document-person-fisic").hide();
+                }
 
                 $(".details-document-person-fisic").on('click', function () {
 
@@ -56,7 +64,9 @@ $(document).ready(function () {
 
             }
         });
-    }
+    };
+
+    initForm();
 
     $("#update_bank_data").on("click", function (event) {
         event.preventDefault();
@@ -81,6 +91,7 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 loadingOnScreenRemove();
+                initForm();
                 alertCustom('success', response.message);
             }
         });
@@ -206,9 +217,8 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
 
             },
             success: function success(response) {
-                console.log(response.data);
                 htmlTableDoc(response.data);
-
+                initForm();
             }
         });
 

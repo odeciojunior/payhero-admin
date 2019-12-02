@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyDocument;
 
 /**
  * Class CompaniesService
@@ -47,7 +48,7 @@ class CompanyService
         $company          = $companyModel->find($companyId);
         $companyPresenter = $companyModel->present();
         if (!empty($company)) {
-            if ($company->company_type = $companyPresenter->getCompanyType('juridical person')) {
+            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
                 if ($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') &&
                     $company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') &&
                     $company->contract_document_status == $companyPresenter->getContractDocumentStatus('approved')) {
