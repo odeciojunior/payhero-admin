@@ -162,9 +162,11 @@ class SalesApiController extends Controller
             $checkoutService = new CheckoutService();
             $saleService     = new SaleService();
             $saleModel       = new Sale();
-            $sale            = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))->first();
+            $sale            = $saleModel->with('gateway')->where('id', Hashids::connection('sale_id')->decode($saleId))
+                                         ->first();
             $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
-            if (in_array($sale->gateway_id, [3, 4])) {
+            if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
+                // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
             } else {
                 $result = $saleService->refund($saleId);
