@@ -29,13 +29,13 @@ class TrackingShowResource extends Resource
                 'city' => $this->delivery->city,
                 'state' => $this->delivery->state,
             ],
-            'checkpoints' => $this->checkpoints ?? [],
-            //'history' => $this->history->map(function($item){
-            //    return [
-            //      'tracking_status_enum' => $item->tracking_status_enum,
-            //      'created_at' => Carbon::parse($item->created_at)->format('d/m/Y'),
-            //    ];
-            //}),
+            //'checkpoints' => $this->checkpoints ?? [],
+            'history' => $this->history->map(function($item){
+                return [
+                  'tracking_status_enum' => $item->tracking_status_enum,
+                  'created_at' => Carbon::parse($item->created_at)->format('d/m/Y'),
+                ];
+            }),
         ];
     }
 }
