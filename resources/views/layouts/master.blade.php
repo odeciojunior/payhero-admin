@@ -107,6 +107,7 @@
     verifyDocumentPending();
 </script>
 
+
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
@@ -125,18 +126,24 @@
 
     <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script>
 
-    <script type='text/javascript' src='https://inveniochatapi.azurewebsites.net/chat.js'></script>
-
-    <script type='text/javascript'>
-        chatRobbu.init('D11C0731357383EA', {
-            theme: 'sunset',
-            delay: 500,
-            open: false,
-            call: 'Iniciar Atendimento',
-            logo: 'https://cloudfox.net/img/cloudfox-100-100.png',
-            wallet_customer_code: null,
-        });
+    <!-- Init code pzw.io -->
+    <script>
+        var $_PowerZAP = {
+            defaultCountry: '+55',
+            widget_id: '15840',
+            company: "19537"
+        }; (function(i,s,o,g,r,a,m){
+            i[r]={
+                context:{
+                    id:'74ec354f8be1e7eb7f15b56a6e23fd69'
+                }
+            };
+            a=o;o=s.createElement(o);
+            o.async=1;o.src=g;m=s.getElementsByTagName(a)[0];
+            m.parentNode.insertBefore(o,m);
+        })(window,document,'script','https://js.huggy.chat/widget.min.js?v=8.0.0','pwz');
     </script>
+    <!-- End code pzw.io  -->
 @endif
 
 </body>
