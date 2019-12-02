@@ -4,10 +4,8 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\AftershipService;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\TrackingService;
 
 class UpdateTrackingStatus extends Command
 {
@@ -45,7 +43,7 @@ class UpdateTrackingStatus extends Command
         try{
 
             $trackingModel = new Tracking();
-            $aftershipService = new AftershipService();
+            $trackingService = new TrackingService();
 
             $trackings = $trackingModel->all();
 
@@ -59,7 +57,7 @@ class UpdateTrackingStatus extends Command
                     return;
                 }*/
 
-                $response =  $aftershipService->createTracking($tracking->tracking_code);
+                $response =  $trackingService->sendTrackingToApi($tracking);
 
                 if(isset($response->tracking)){
 

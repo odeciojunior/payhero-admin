@@ -240,6 +240,7 @@
                         <thead>
                         <tr>
                             <td class="table-title">Venda</td>
+                            <td class="table-title">Data de Aprovação</td>
                             <td class="table-title">Produto</td>
                             <td class="table-title">Status</td>
                             <td class="table-title">Código de Rastreio</td>
@@ -262,6 +263,72 @@
             <!-- End Modal -->
 
             <!-- Modal detalhes tracking -->
+{{--            <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog" tabindex="-1">--}}
+{{--                <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg" style="width: 500px;">--}}
+{{--                    <div id='modal-tracking-details' class="modal-content">--}}
+{{--                        <div class="modal-header simple-border-bottom justify-content-center">--}}
+{{--                            <h4> Detalhes do rastreamento </h4>--}}
+{{--                        </div>--}}
+{{--                        <a data-dismiss="modal" role="button" style="position: absolute;right: 20px;top: 25px;">--}}
+{{--                            <i class="material-icons pointer">close</i>--}}
+{{--                        </a>--}}
+{{--                        <div class="modal-body">--}}
+{{--                            <h3 id="tracking-code" class="text-uppercase"></h3>--}}
+{{--                            <div class="p-10">--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-lg-10 col-9"><p class="table-title"> Produto </p></div>--}}
+{{--                                    <div class="col-lg-2 col-3 text-center"><p class="table-title"> Qtde </p></div>--}}
+{{--                                </div>--}}
+{{--                                <div class="row align-items-center mb-20">--}}
+{{--                                    <div class="col-lg-10 col-9">--}}
+{{--                                        <div class="row align-items-center pl-10">--}}
+{{--                                            <img id="tracking-product-image" src="" width="50px" style="border-radius: 6px;">--}}
+{{--                                            <h4 id="tracking-product-name" class="table-title ml-10 ellipsis" style="flex: 1"></h4>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-3 text-center">--}}
+{{--                                        <span id="tracking-product-amount" class="sm-text text-muted"></span>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+
+{{--                                <!-- js carrega... -->--}}
+{{--                                <div class="tracking-timeline">--}}
+{{--                                    <div class="tracking-timeline-row">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="tracking-timeline-row">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="tracking-timeline-row">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+
+{{--                                <h4 style="margin-top: 40px"> Destino </h4>--}}
+{{--                                <span id="tracking-delivery-address" class="table-title gray"></span>--}}
+{{--                                <br>--}}
+{{--                                <span id="tracking-delivery-zipcode" class="table-title gray"></span>--}}
+{{--                                <br>--}}
+{{--                                <span id="tracking-delivery-city" class="table-title gray"></span>--}}
+{{--                                <a class='btn p-0 mt-sm-0 mt-10 pointer float-right btn-notify-trackingcode'--}}
+{{--                                   title='Enviar e-mail com codigo de rastreio para o cliente'>--}}
+{{--                                    <i class='icon wb-envelope' aria-hidden='true'></i>--}}
+{{--                                    Enviar e-mail para o cliente--}}
+{{--                                </a>--}}
+
+{{--                                <table class="table">--}}
+{{--                                    <thead>--}}
+{{--                                    <tr>--}}
+{{--                                        <th>Data</th>--}}
+{{--                                        <th>Status</th>--}}
+{{--                                        <th>Evento</th>--}}
+{{--                                    </tr>--}}
+{{--                                    </thead>--}}
+{{--                                    <tbody id="table-checkpoint"></tbody>--}}
+{{--                                </table>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+
             <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered modal-simple">
                     <div id='modal-tracking-details' class="modal-content">
@@ -341,15 +408,16 @@
                     </div>
                 </div>
             </div>
+
             <!-- End Nodal -->
+
         </div>
     </div>
 
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=8') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=3') }}"></script>
     @endpush
 
 @endsection
-

@@ -29,6 +29,7 @@ class TrackingShowResource extends Resource
                 'city' => $this->delivery->city,
                 'state' => $this->delivery->state,
             ],
+            //'checkpoints' => $this->checkpoints ?? [],
             'history' => $this->history->map(function($item){
                 return [
                   'tracking_status_enum' => $item->tracking_status_enum,

@@ -132,12 +132,42 @@ class DashboardApiService {
 
 
         return $accumulated;
-        //return [10,20,30];
     }
 
 
     public function getMetrics() {
-        return -1;
+
+        $salesModel = new Sale();
+        $withdrawalModel  = new Withdrawal();
+
+        $today               = Carbon::now();
+        $yesterday           = Carbon::yesterday();
+        $minuteInit          = ' 00:00:00';
+        $minuteEnd           = ' 23:59:59';
+
+        $salesSumToday = $salesModel
+            ->select(\DB::raw('(CASE
+                                    WHEN SUM(total_paid_value) IS NULL
+                                    THEN 0
+                                    ELSE SUM(total_paid_value)
+                                END) as total_sales'))
+            ->where('sales.status', 1)
+            ->where('sales.owner_id', auth()->user()->id)
+            ->whereBetween('start_date', [$today->format('Y-m-d') . $minuteInit, $today->format('Y-m-d') . $minuteEnd])
+            ->first();
+
+        $salesSumYesterday = $salesModel
+            ->select(\DB::raw('(CASE
+                                    WHEN SUM(total_paid_value) IS NULL
+                                    THEN 0
+                                    ELSE SUM(total_paid_value)
+                                END) as total_sales'))
+            ->where('sales.status', 1)
+            ->where('sales.owner_id', auth()->user()->id)
+            ->whereBetween('start_date', [$yesterday->format('Y-m-d') . $minuteInit, $yesterday->format('Y-m-d') . $minuteEnd])
+            ->first();
+
+        return $salesSumYesterday->total_sales > 0 ? (($salesSumToday->total_sales / $salesSumYesterday->total_sales) * 100) : $salesSumToday->total_sales > 0 ? 100 : 0;
     }
 
     /**
@@ -148,12 +178,12 @@ class DashboardApiService {
 
         try {
             $projectId  = current(Hashids::decode($request->input('project')));
+            $companies = auth()->user()->companies()->get() ?? collect();
 
             if ($request->input('company') != "") {
                 $companyId  = current(Hashids::decode($request->input('company')));
                 $values    = $this->getDataValues($request->input('company') ?? null);
             } else {
-                $companies = auth()->user()->companies()->get() ?? collect();
                 $values    = $this->getDataValues($companies->first()->id_code ?? null);
             }
 

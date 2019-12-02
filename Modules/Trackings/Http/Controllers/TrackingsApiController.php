@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,12 +18,10 @@ use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
-use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\TrackingService;
 use Modules\Trackings\Http\Requests\TrackingStoreRequest;
 use Modules\Trackings\Transformers\TrackingResource;
 use Modules\Trackings\Transformers\TrackingShowResource;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingsApiController extends Controller
@@ -58,6 +57,7 @@ class TrackingsApiController extends Controller
     {
         try {
             $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
 
             $trackingId = current(Hashids::decode($id));
 
@@ -66,6 +66,35 @@ class TrackingsApiController extends Controller
                 'delivery',
                 'history'
             ])->find($trackingId);
+
+            $apiTracking = $trackingService->findTrackingApi($tracking);
+
+            Log::warning("\n\nTRACKING - resposta da api: " . json_encode($apiTracking));
+
+            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
+            $checkpoints = collect();
+
+            //objeto postado
+            $checkpoints->add([
+                'tracking_status_enum' => $postedStatus,
+                'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
+                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                'event' => 'Código de rastreio informado',
+            ]);
+
+            Log::warning("\n\nTRACKING - objeto $checkpoints: " . json_encode($checkpoints->toArray()));
+
+            $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
+
+            Log::warning("\n\nTRACKING - parse checkpoints: " . json_encode($checkpoints->toArray()));
+
+            $checkpoints = $checkpoints->merge($checkpointsApi);
+
+            Log::warning("\n\nTRACKING - merge checkpoints: " . json_encode($checkpoints->toArray()));
+
+            $tracking->checkpoints = $checkpoints->unique()->toArray();
+
+            Log::warning("\n\nTRACKING - objeto $tracking: " . json_encode($tracking->toArray()));
 
             return new TrackingShowResource($tracking);
 
@@ -171,8 +200,7 @@ class TrackingsApiController extends Controller
 
                         if ($tracking) {
 
-                            $perfectLogService = new PerfectLogService();
-                            $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
+                            $trackingService->sendTrackingToApi($tracking);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio salvo',
@@ -202,8 +230,7 @@ class TrackingsApiController extends Controller
                                                               'tracking_status_enum' => $trackingStatus,
                                                           ]);
 
-                            $perfectLogService = new PerfectLogService();
-                            $perfectLogService->track(Hashids::encode($tracking->id), $data['tracking_code']);
+                            $trackingService->sendTrackingToApi($tracking);
 
                             return response()->json([
                                                         'message' => 'Código de rastreio alterado',

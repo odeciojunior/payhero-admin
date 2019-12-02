@@ -35,7 +35,6 @@ class PostBackShopifyController extends Controller
         $projectModel = new Project();
         $productService = new ProductService();
         $trackingService = new TrackingService();
-        $perfectLogService = new PerfectLogService();
 
         $requestData = $request->all();
 
@@ -87,7 +86,7 @@ class PostBackShopifyController extends Controller
                                                 //atualiza no array de produtos para enviar no email
                                                 $product->tracking_code = $fulfillment["tracking_number"];
                                                 event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                $perfectLogService->track(Hashids::encode($tracking->id), $fulfillment["tracking_number"]);
+                                                $trackingService->sendTrackingToApi($tracking);
                                             }
                                         } else { //senao cria o tracking
 
@@ -97,7 +96,7 @@ class PostBackShopifyController extends Controller
                                                 //atualiza no array de produtos para enviar no email
                                                 $product->tracking_code = $fulfillment["tracking_number"];
                                                 event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                $perfectLogService->track(Hashids::encode($tracking->id), $fulfillment["tracking_number"]);
+                                                $trackingService->sendTrackingToApi($tracking);
                                             }
                                         }
                                     }
