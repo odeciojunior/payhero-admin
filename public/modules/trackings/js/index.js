@@ -279,7 +279,7 @@ $(() => {
     }
 
     //modal de detalhes
-    $(document).on('click', '.tracking-detail', function () {
+    /*$(document).on('click', '.tracking-detail', function () {
 
         loadOnAny('#modal-tracking-details');
         $('#modal-tracking').modal('show');
@@ -388,9 +388,9 @@ $(() => {
             }
         });
 
-    });
+    });*/
 
-    /*$(document).on('click', '.tracking-detail', function () {
+    $(document).on('click', '.tracking-detail', function () {
 
         $.ajax({
             method: 'GET',
@@ -499,7 +499,7 @@ $(() => {
             }
         });
 
-    });*/
+    });
 
     $(document).on('click', '.input-tracking-code', function () {
         let row = $(this).parent().parent();
