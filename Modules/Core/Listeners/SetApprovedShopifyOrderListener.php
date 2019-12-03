@@ -36,7 +36,7 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
         $productPlanModel        = new ProductPlan();
         $saleService             = new SaleService();
 
-        if ($event->sale->payment_method == 1) {
+        if ($event->sale->payment_method == 1 || $event->sale->payment_method == 3) {
             $shopifyIntegration = $shopifyIntegrationModel->where('project', $event->project->id)->first();
 
             if (!empty($shopifyIntegration)) {

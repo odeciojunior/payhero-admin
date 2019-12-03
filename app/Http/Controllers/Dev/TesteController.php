@@ -1012,9 +1012,11 @@ class TesteController extends Controller
                     'invites_amount'                      => "1",
                     'installment_tax'                     => "1",
                     'credit_card_release_money_days'      => "1",
+                    'debit_card_release_money_days'      => "1",
                     'boleto_release_money_days'           => "1",
                     'boleto_tax'                          => "1",
                     'credit_card_tax'                     => "1",
+                    'debit_card_tax'                     => "1",
                 ]
             );
             $user = auth()->user();

@@ -139,7 +139,6 @@ class ProfileApiController
 
     public function updateTaxes(Request $request)
     {
-
         try {
             $requestData = $request->all();
 
@@ -564,31 +563,29 @@ class ProfileApiController
         }
     }
 
-
     /**
      * @return JsonResponse
      */
     public function verifyDocuments()
     {
         try {
-            $companyService           = new CompanyService();
-            $userService              = new UserService();
+            $companyService = new CompanyService();
+            $userService    = new UserService();
 
             $companyDocumentPending = $companyService->haveAnyDocumentPending();
-            $userDocumentPending = $userService->haveAnyDocumentPending();
+            $userDocumentPending    = $userService->haveAnyDocumentPending();
 
             $link = null;
 
             if ($userDocumentPending) {
                 $link = '/profile';
-            } elseif ($companyDocumentPending) {
+            } else if ($companyDocumentPending) {
                 $link = '/companies';
             }
 
             $result = $companyDocumentPending || $userDocumentPending;
 
             return response()->json(['message' => 'Documentos verificados!', 'pending' => $result, 'link' => $link], 200);
-
         } catch (Exception $e) {
             Log::warning('Erro ao verificar documentos ProfileApiController - verifyDocuments');
             report($e);

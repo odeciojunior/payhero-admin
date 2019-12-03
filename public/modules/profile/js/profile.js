@@ -586,8 +586,10 @@ $(document).ready(function () {
 
     function setValuesHtml(data) {
         $("#credit-card-tax").val(data.credit_card_tax + '%');
+        $("#debit-card-tax").val(data.debit_card_tax + '%');
         $("#boleto-tax").val(data.boleto_tax + '%');
         $("#credit-card-release").val('plan-' + data.credit_card_release_money);
+        $("#debit-card-release").val(data.debit_card_release_money);
         $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
