@@ -49,11 +49,13 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
         $this->saleService->getDetails($sale, $userCompany);
         foreach ($sale->plansSales as &$planSale) {
             $plan = $planSale->plan;
-            foreach ($plan->productsPlans as $productPlan) {
-                $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
-                $productPlan->product['plan_name'] = $plan->name;
-                $productPlan->product['plan_price'] = $plan->price;
-                $sale->products->add($productPlan->product);
+            if(isset($plan)) {
+                foreach ($plan->productsPlans as $productPlan) {
+                    $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
+                    $productPlan->product['plan_name'] = $plan->name;
+                    $productPlan->product['plan_price'] = $plan->price;
+                    $sale->products->add($productPlan->product);
+                }
             }
         }
 
