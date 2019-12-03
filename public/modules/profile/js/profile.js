@@ -148,7 +148,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response);
                 /**
                  * Dados Pessoais
                  */
