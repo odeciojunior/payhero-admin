@@ -170,7 +170,7 @@ class CheckoutService
         }
     }
 
-    public function regenerateBilletZoop($saleId, $totalPaidValue, $dueDate)
+    public function regenerateBillet($saleId, $totalPaidValue, $dueDate)
     {
 
         try {
