@@ -731,56 +731,7 @@ class TesteController extends Controller
 
     public function joaoLucasFunctionDomain()
     {
-        $domainModel       = new Domain();
-        $domainRecordModel = new DomainRecord();
 
-        $domains = $domainModel->whereNull('cloudflare_domain_id')->get();
-
-        $cloudFlareService = new CloudFlareService();
-
-        /*foreach ($domains as $domain) {
-            if (!empty($domain)) {
-
-                $domainCloudflare = $cloudFlareService->getZones($domain->name);
-                if (!empty($domainCloudflare)) {
-
-                    foreach ($domainCloudflare as $dom) {
-
-                        $domain->update([
-                                            'cloudflare_domain_id' => $dom->id,
-                                        ]);
-                    }
-                } else {
-                    $domainRecordModel->where('domain_id', $domain->id)->delete();
-                    $domain->delete();
-                }
-            }
-        }*/
-
-        $domainRecords = $domainRecordModel->with('domain')->where('cloudflare_record_id', '')->get();
-
-        foreach ($domainRecords as $domainRecord) {
-            if (empty($domainRecord->cloudflare_record_id)) {
-                if (empty($domainRecord->domain)) {
-                } else {
-
-                    $domainRecordCloudflare = $cloudFlareService->getRecords($domainRecord->domain->name);
-                    foreach ($domainRecordCloudflare as $item) {
-                        if ($domainRecord->type == $item->type && $domainRecord->name == $item->name && $domainRecord->content == $item->content) {
-
-                            $domainRecord->update([
-                                                      'cloudflare_record_id' => $item->id,
-                                                  ]);
-                        }
-                    }
-                }
-            }
-        }
-
-        dd($domainRecords = $domainRecordModel->with('domain')->get());
-        /*$domainRecordModel->where('domain_id', $domain->id)->update([
-                                                                        'cloudflare_record_id' => $domainCloudflare->id,
-                                                                    ]);*/
     }
 
     /**
@@ -788,7 +739,7 @@ class TesteController extends Controller
      */
     public function removeSpecialCharacter()
     {
-        $productsModel = new Product();
+        /*$productsModel = new Product();
 
         $productsSearch = $productsModel->where('shopify', 1)->get();
         foreach ($productsSearch as $product) {
@@ -796,43 +747,18 @@ class TesteController extends Controller
                                  'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->name, 0, 100)),
                                  'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->description, 0, 100)),
                              ]);
-        }
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function thalesFunction(Request $request)
-    {
-        //        (new BoletoService())->verifyBoletoPaid();
-        /** @var Sale $saleModel */
-        $saleModel = new Sale();
-        /** @var Carbon $date */
-        $start   = now()->startOfDay()->subDays(70);//->toDateString();
-        $end     = now()->endOfDay()->subDays(70);//->toDateString();
-        $boletos = $saleModel->newQuery()
-                             ->with(['client', 'plansSales.plan.products'])
-                             ->whereBetween('start_date', [$start, $end])
-                             ->where(
-                                 [
-                                     ['payment_method', '=', '2'],
-                                     ['status', '=', '2'],
-                                 ]
-                             )->get();
-        dd($start, $end, $boletos);
+        }*/
     }
 
     public function joaoLucasFunction()
     {
-        $pixels = Pixel::where('platform', 'like', '%google%')->get();
-
-        foreach ($pixels as $pixel) {
-            $pixel->update([
-                               'platform' => 'google_adwords',
-                           ]);
+        $companies = Company::where('country', 'like' ,'%brasil%')->get();
+        foreach ($companies as $company) {
+            $company->update([
+                                 'country' => 'brazil',
+                             ]);
         }
-
-        dd($pixels);
+        dd($companies);
     }
 
     /**
@@ -840,7 +766,7 @@ class TesteController extends Controller
      */
     public function trackingCodeFunction()
     {
-        $saleModel            = new Sale();
+        /*$saleModel            = new Sale();
         $productPlanSaleModel = new ProductPlanSale();
         $sales                = $saleModel->whereHas('delivery', function($query) {
             $query->where('tracking_code', '!=', null);
@@ -856,7 +782,7 @@ class TesteController extends Controller
             }
         }
 
-        return 'Pronto!';
+        return 'Pronto!';*/
     }
 
     /**
