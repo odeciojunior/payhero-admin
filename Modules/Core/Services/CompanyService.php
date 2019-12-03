@@ -69,7 +69,7 @@ class CompanyService
         $companyPresenter = $companyModel->present();
 
         foreach ($companies as $company) {
-            if ($company->company_type = $companyPresenter->getCompanyType('juridical person')) {
+            if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
                 if (($company->bank_document_status == $companyPresenter->getBankDocumentStatus('approved') ||
                         $company->bank_document_status == $companyPresenter->getBankDocumentStatus('analyzing')) &&
                     ($company->address_document_status == $companyPresenter->getAddressDocumentStatus('approved') ||
