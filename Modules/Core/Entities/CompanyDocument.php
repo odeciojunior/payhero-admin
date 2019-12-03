@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyDocumentPresenter;
@@ -21,6 +22,9 @@ use Modules\Core\Presenters\CompanyDocumentPresenter;
 class CompanyDocument extends Model
 {
     use PresentableTrait, FoxModelTrait;
+    /**
+     * @var string
+     */
     protected $presenter = CompanyDocumentPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
@@ -41,7 +45,7 @@ class CompanyDocument extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {

@@ -148,14 +148,16 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-
                 /**
                  * Dados Pessoais
                  */
-                if (statusArray[response.data.personal_document_translate] === 'Aprovado') {
+                if (response.data.personal_document_translate == 'pending' || response.data.personal_document_translate == 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                }
+
+                if (response.data.personal_document_translate == 'approved' || response.data.personal_document_translate == 'analyzing') {
                     $('#document').attr('disabled', 'disabled');
-                } else {
-                    $('#document').removeAttr('disabled');
+                    $("#personal-document-id").hide();
                 }
 
                 $('#name').val(response.data.name);
@@ -177,7 +179,9 @@ $(document).ready(function () {
                  */
                 if (statusArray[response.data.address_document_translate] === 'Aprovado') {
                     $('.dados-residenciais').attr('disabled', 'disabled');
+
                 } else {
+                    $("#text-alert-documents").show();
                     $('.dados-residenciais').removeAttr('disabled');
                 }
                 $('#zip_code').val(response.data.zip_code);
@@ -237,6 +241,15 @@ $(document).ready(function () {
                 /**
                  * Documentos
                  */
+                if (response.data.address_document_translate == 'pending' || response.data.address_document_translate == 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                    $("#address-document-id").show();
+                }
+
+                if (response.data.address_document_translate == 'approved' || response.data.address_document_translate == 'analyzing') {
+                    $('#document').attr('disabled', 'disabled');
+                    $("#address-document-id").hide();
+                }
 
                 $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
 
@@ -244,20 +257,7 @@ $(document).ready(function () {
                 user = response.data.id_code;
 
                 verifyDocuments(response.data);
-                // getRefusedDocuments(response.data.refusedDocuments);
                 verifyUserAddress(response.data);
-
-                if (response.data.address_document_status === 3) {
-                    $("#address-document-id").hide();
-                } else {
-                    $("#address-document-id").show();
-                }
-                if (response.data.personal_document_status === 3) {
-                    $("#personal-document-id").hide();
-                } else {
-                    $("#personal-document-id").show();
-                }
-
             }
         });
     }

@@ -11,7 +11,34 @@ let companyStatusTranslated = {
     approved: 'Aprovado',
     refused: 'Recusado',
 };
+
+let companyType = {
+    1: 'physical person',
+    2: 'juridical person',
+};
+
+
 $(document).ready(function () {
+    function statusCompanyJuridicalPerson(company) {
+        if (companyStatusTranslated[company.contract_document_status] === 'Aprovado'
+            && companyStatusTranslated[company.address_document_status] === 'Aprovado'
+            && companyStatusTranslated[company.bank_document_status] === 'Aprovado') {
+            return 'approved';
+        } else if (companyStatusTranslated[company.contract_document_status] === 'Pendente'
+            || companyStatusTranslated[company.address_document_status] === 'Pendente'
+            || companyStatusTranslated[company.bank_document_status] === 'Pendente') {
+            return 'pending';
+        } else if (companyStatusTranslated[company.contract_document_status] === 'Recusado'
+            || companyStatusTranslated[company.address_document_status] === 'Recusado'
+            || companyStatusTranslated[company.bank_document_status] === 'Recusado') {
+            return 'refused';
+        } else if (companyStatusTranslated[company.contract_document_status] === 'Em análise'
+            || companyStatusTranslated[company.address_document_status] === 'Em análise'
+            || companyStatusTranslated[company.bank_document_status] === 'Em análise') {
+            return 'analyzing';
+
+        }
+    }
 
     atualizar(1);
 
@@ -42,8 +69,15 @@ $(document).ready(function () {
                             <td>${value.fantasy_name}</td>
                             <td>${value.company_document}</td>
                             <td>
-                                <span class='badge ${companyStatus[value.document_status]}'>${companyStatusTranslated[value.document_status]}</span>
-                            </td>
+                            `;
+
+                        if (companyType[value.type] === 'physical person') {
+                            dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
+                        } else {
+                            dados += `<span class='badge ${companyStatus[statusCompanyJuridicalPerson(value)]}'>${companyStatusTranslated[statusCompanyJuridicalPerson(value)]}</span>`;
+                        }
+
+                        dados += `</td>
                             <td><a title='Editar' href="/companies/${value.id_code}/edit?type=${value.type}" class='edit-company' data-company='${value.id_code}' role='button'><i class='material-icons gradiente'>edit</i></a></td>
                             <td><a title='Excluir' class='pointer delete-company' company='${value.id_code}' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>
                         </tr>

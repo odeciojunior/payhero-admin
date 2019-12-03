@@ -148,9 +148,15 @@
                             </div>
                             <div class="tab-pane" id="tab_documentos" role="tabpanel">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
                                         <h5 class="title-pad"> Comprovantes </h5>
                                         <p class="sub-pad"> Para fazer movimentações externas, precisamos de documentos da sua empresa. </p>
+                                        <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents' role="alert" style='display:block;'>
+                                            <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="col">
                                     </div>

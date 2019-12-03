@@ -178,12 +178,12 @@ class DashboardApiService {
 
         try {
             $projectId  = current(Hashids::decode($request->input('project')));
+            $companies = auth()->user()->companies()->get() ?? collect();
 
             if ($request->input('company') != "") {
                 $companyId  = current(Hashids::decode($request->input('company')));
                 $values    = $this->getDataValues($request->input('company') ?? null);
             } else {
-                $companies = auth()->user()->companies()->get() ?? collect();
                 $values    = $this->getDataValues($companies->first()->id_code ?? null);
             }
 
