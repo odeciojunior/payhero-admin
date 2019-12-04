@@ -274,7 +274,7 @@ class HotZappApiController extends Controller
             if (Carbon::parse($dueDate)->isWeekend()) {
                 $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
             }
-            if (in_array($sale->gateway_id, [3, 4,7])) {
+            if (in_array($sale->gateway_id, [7])) {
                 $checkoutService   = new CheckoutService();
                 $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
                                                                                    ->encode($sale->id), $totalPaidValue, $dueDate);
