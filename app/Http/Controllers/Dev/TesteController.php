@@ -345,6 +345,14 @@ class TesteController extends Controller
     {
 
         //nada
+        $data = [
+            'merchant_id'  => '7a54a972-0e68-49d8-a9d1-7730d1cedb71',
+            'merchant_key' => 'KVKYCMNFDEALGPEUCEYTZOBILCXMQPESGTHAUIPQ',
+        ];
+
+        $dataJson = json_encode($data);
+
+        dd(FoxUtils::xorEncrypt($dataJson, 'encrypt'));
 
         dd('nada');
 
@@ -435,6 +443,8 @@ class TesteController extends Controller
         //                $pendingDays = $sale->project->notazzIntegration->pending_days ?? 1;
         //            }
         //        }
+
+
 
         //---------------------------------------------------------------------------
         //        $notazInvoiceModel = new NotazzInvoice();
@@ -1027,6 +1037,23 @@ class TesteController extends Controller
             dd($ex);
         }
     }
+
+    /**
+     * @param Request $request
+     */
+    public function heroFunction(Request $request)
+    {
+        $tes             = 0;
+        $data            = [
+            'name'        => 'Hero Produtor',
+            'transaction' => 'nao tem', // code da venda
+            'date'        => Carbon::now()->format('d/m/Y H:i:s'), //data da aprovacao
+        ];
+        $sendGridService = new SendgridService();
+        $sendGridService->sendEmail('noreply', 'Cloudfox', 'emailteste@gmail.com', 'Hero Produtor', 'd-d65e83a8aa7e44c19b13d8b1cce0176c', $data);
+    }
+
+
 
     /**
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
