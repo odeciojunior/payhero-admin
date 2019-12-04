@@ -244,7 +244,7 @@ class SalesRecoveryService
         }
 
         if ($checkout->status != 'recovered') {
-            if ($sale->payment_method == 1) {
+            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
                 $status = 'Recusado';
             } else {
                 $status = 'Expirado';

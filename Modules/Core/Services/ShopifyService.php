@@ -1355,7 +1355,7 @@ class ShopifyService
                 "shipping_address"        => $shippingAddress,
             ];
 
-            if ($sale->payment_method == 1) {
+            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
 
                 $orderData += [
                     "transactions" => [

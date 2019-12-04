@@ -18,6 +18,8 @@ class TransactionResource extends Resource
             $flag = $sale->flag;
         } else if ($sale->payment_method == 1 && empty($sale->flag)) {
             $flag = 'generico';
+        } else if ($sale->payment_method == 3 && empty($sale->flag)) {
+            $flag = 'debito';
         } else {
             $flag = 'boleto';
         }

@@ -41,7 +41,7 @@ class PusherNotificationApprovedSaleListener implements ShouldQueue
 
             $user = $userModel->find($event->sale->owner);
 
-            if ($event->sale->payment_method == 1 && !empty($user)) {
+            if (($event->sale->payment_method == 1 || $event->sale->payment_method == 3) && !empty($user)) {
                 $message = 'Venda aprovada no projeto ' . $event->project->name;
 
                 $data = [
