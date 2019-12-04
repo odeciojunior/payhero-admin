@@ -138,6 +138,7 @@ class PagarmeService
         }
 
         $this->sale->update([
+                                'gateway_id'             => 1, //marretado 1 do pagarme
                                 'gateway_transaction_id' => $transaction->tid,
                                 'gateway_status'         => $transaction->status,
                                 'boleto_digitable_line'  => $transaction->boleto_barcode,

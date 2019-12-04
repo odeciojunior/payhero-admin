@@ -345,18 +345,43 @@ class TesteController extends Controller
     {
 
         //nada
-        $data = [
-            'merchant_id'  => '7a54a972-0e68-49d8-a9d1-7730d1cedb71',
-            'merchant_key' => 'KVKYCMNFDEALGPEUCEYTZOBILCXMQPESGTHAUIPQ',
-        ];
+        $notazInvoiceModel = new NotazzInvoice();
+        $nservice          = new NotazzService();
 
-        $dataJson = json_encode($data);
+        $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+                                      ->where('status', '!=', 5)
+                                      ->limit(50)
+                                      ->get();
 
-        dd(FoxUtils::xorEncrypt($dataJson, 'encrypt'));
+        try {
+            $count = 0;
+            foreach ($invoices as $invoice) {
+                if ($count > 90) {
+                    break;
+                }
+                $ret = $nservice->deleteNfse($invoice->id);
+                if ($ret == false) {
+                    $invoice->update([
+                                         'status' => 5,
+                                     ]);
+                    continue;
+                }
 
-        dd('nada');
+                $invoice->update([
+                                     'status'           => 5,
+                                     'return_message'   => $ret->statusProcessamento,
+                                     'return_http_code' => $ret->codigoProcessamento,
+                                 ]);
 
-        $shopifyService->updateCartTemplate($html, 'x.com');
+                $count = $count + 1;
+            }
+
+            dd('ok');
+        } catch (Exception $ex) {
+            dd($ex);
+        }
+
+        dd($invoices);
 
         dd('aa');
     }
@@ -384,7 +409,7 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-        $companies = Company::where('country', 'like' ,'%brasil%')->get();
+        $companies = Company::where('country', 'like', '%brasil%')->get();
         foreach ($companies as $company) {
             $company->update([
                                  'country' => 'brazil',
@@ -570,11 +595,11 @@ class TesteController extends Controller
                     'invites_amount'                      => "1",
                     'installment_tax'                     => "1",
                     'credit_card_release_money_days'      => "1",
-                    'debit_card_release_money_days'      => "1",
+                    'debit_card_release_money_days'       => "1",
                     'boleto_release_money_days'           => "1",
                     'boleto_tax'                          => "1",
                     'credit_card_tax'                     => "1",
-                    'debit_card_tax'                     => "1",
+                    'debit_card_tax'                      => "1",
                 ]
             );
             $user = auth()->user();
@@ -601,8 +626,6 @@ class TesteController extends Controller
         $sendGridService->sendEmail('noreply', 'Cloudfox', 'emailteste@gmail.com', 'Hero Produtor', 'd-d65e83a8aa7e44c19b13d8b1cce0176c', $data);
     }
 
-
-
     /**
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
@@ -614,23 +637,21 @@ class TesteController extends Controller
         $companyModel      = new Company();
 
         //Verifica os documentos aprovados do usuario
-        $userAddressDocuments  = $userDocumentModel->where('status', 3)
-                                                   ->where('document_type_enum', 2)
-                                                   ->with('user')
-                                                   ->get();
+        $userAddressDocuments = $userDocumentModel->where('status', 3)
+                                                  ->where('document_type_enum', 2)
+                                                  ->with('user')
+                                                  ->get();
 
         $count = 0;
 
-        foreach($userAddressDocuments as $userAddressDocument){
+        foreach ($userAddressDocuments as $userAddressDocument) {
 
-            if($userAddressDocument->user->address_document_status != 3){
+            if ($userAddressDocument->user->address_document_status != 3) {
                 $count++;
             }
-
         }
 
         dd($count);
-
     }
 }
 
