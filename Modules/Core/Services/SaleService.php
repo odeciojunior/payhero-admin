@@ -207,7 +207,7 @@ class SaleService
         $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
-        if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
+        if ((!$sale->flag || empty($sale->flag)) && ($sale->payment_method == 1 || $sale->payment_method == 3)) {
             $sale->flag = 'generico';
         } else if (!$sale->flag || empty($sale->flag)) {
             $sale->flag = 'boleto';
