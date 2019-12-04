@@ -135,6 +135,7 @@ class BoletoService
             $domainModel          = new Domain();
             $startDate            = now()->startOfDay()->subDay();
             $endDate              = now()->endOfDay()->subDay();
+
             $boletoWaitingPayment = $saleModel->with('client', 'plansSales.plan.products')
                                               ->whereBetween('start_date', [$startDate, $endDate])
                                               ->where(
@@ -143,6 +144,7 @@ class BoletoService
                                                       ['status', '=', '2'],
                                                   ]
                                               )->get();
+
             foreach ($boletoWaitingPayment as $boleto) {
                 try {
                     $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
@@ -299,96 +301,6 @@ class BoletoService
             Log::warning('Erro ao enviar boletos para e-mails - Vamos ter que liberar sua mercadoria');
             report($e);
         }
-    }
-
-    /**
-     *
-     */
-    public function verifyBoletoExpired3()
-    {
-        //        $date          = now()->subDay('3')->toDateString();
-        //        $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
-        //                             ->with('clientModel')->get();
-        //        foreach ($boletoExpired as $boleto) {
-        //            $sendEmail       = new SendgridService();
-        //            $clientName      = $boleto->clientModel->name;
-        //            $clientEmail     = $boleto->clientModel->email;
-        //            $clientTelephone = $boleto->clientModel->telephone;
-        //
-        //            $emailValidated     = FoxUtils::validateEmail($clientEmail);
-        //            $telephoneValidated = FoxUtils::prepareCellPhoneNumber($clientTelephone);
-        //            if ($telephoneValidated != '') {
-        //                $zenviaSms = new ZenviaSmsService();
-        //                $zenviaSms->sendSms('Promoção relâmpago por 24h', $telephoneValidated);
-        //            }
-        //            if ($emailValidated) {
-        //                $totalValue = $boleto->total_paid_value;
-        //                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
-        //                $sendEmail->sendEmail('Promoção relâmpago por 24h', 'noreply@cloudfox.net', 'cloudfox', '', '', '');
-        //            }
-        //        }
-    }
-
-    /**
-     *
-     */
-    public function verifyBoletoExpired4()
-    {
-        //        $date          = now()->subDay('4')->toDateString();
-        //        $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
-        //                             ->with('clientModel')->get();
-        //        foreach ($boletoExpired as $boleto) {
-        //            $sendEmail          = new SendgridService();
-        //            $clientName         = $boleto->clientModel->name;
-        //            $clientEmail        = $boleto->clientModel->email;
-        //            $products           = [];
-        //            $data               = [];
-        //            $subTotal           = 0;
-        //            $iof                = preg_replace("/[^0-9]/", "", $boleto->iof);
-        //            $clientNameExploded = explode(' ', $clientName);
-        //            if ($boleto->iof > '0') {
-        //                $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-        //                $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-        //            }
-        //            foreach ($boleto->plansSales as $plansSale) {
-        //                $plan     = Plan::find($plansSale['plan']);
-        //                $project  = Project::find($plan['project']);
-        //                $subTotal += str_replace('.', '', $plan['price']) * $plansSale["amount"];
-        //                foreach ($plansSale->getRelation('plan')->products as $product) {
-        //                    $productArray               = [];
-        //                    $productArray["photo"]      = $product->photo;
-        //                    $productArray["name"]       = $product->name;
-        //                    $productArray["name"]       = $product->name;
-        //                    $productArray["amount"]     = $plansSale->amount;
-        //                    $productArray["plan_value"] = $plansSale->plan_value;
-        //                    $products[]                 = $productArray;
-        //                }
-        //                $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-        //                $iof                     = substr_replace($iof, ',', strlen($iof) - 2, 0);
-        //                $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-        //                $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-        //                $boletoDigitableLine     = [];
-        //                $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-        //                $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-        //                $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
-        //                $data                    = [
-        //                    "name"                  => $clientNameExploded[0],
-        //                    "boleto_link"           => $boleto->boleto_link,
-        //                    "boleto_digitable_line" => $boletoDigitableLine,
-        //                    "boleto_due_date"       => $boleto->boleto_due_date,
-        //                    "total_paid_value"      => $boleto->total_paid_value,
-        //                    "shipment_value"        => $boleto->shipment_value,
-        //                    "subtotal"              => strval($subTotal),
-        //                    "iof"                   => $iof,
-        //                    "project_logo"          => $project->logo,
-        //                    "products"              => $products,
-        //                ];
-        //            }
-        //            $emailValidated = FoxUtils::validateEmail($clientEmail);
-        //            if ($emailValidated) {
-        //                $sendEmail->sendEmail('Últimas horas para acabar', 'noreply@cloudfox.net', 'cloudfox', '', '', 'd-0a12383664cc44538fdee997bd3456d1', $data);
-        //            }
-        //        }
     }
 
     /**

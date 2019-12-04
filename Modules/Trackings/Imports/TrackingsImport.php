@@ -48,7 +48,6 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
             $productId = str_replace('#', '', $row[2]);
 
             $saleId = current(Hashids::connection('sale_id')->decode($saleId));
-            $productId = current(Hashids::decode($productId));
 
             $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
                 ->where('id', $saleId)
@@ -70,18 +69,20 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                     $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
                         ->first();
 
-                    $tracking = $productPlanSale->tracking;
+                    if (isset($productPlanSale)) {
+                        $tracking = $productPlanSale->tracking;
 
-                    if(isset($tracking) && isset($row[1])){
-                        if($tracking->tracking_code != $row[1]){
-                            $tracking->update([
-                                'tracking_code' => $row[1],
-                            ]);
+                        if (isset($tracking) && isset($row[1])) {
+                            if ($tracking->tracking_code != $row[1]) {
+                                $tracking->update([
+                                    'tracking_code' => $row[1],
+                                ]);
+                                $trackingService->sendTrackingToApi($tracking);
+                            }
+                        } else if (isset($row[1])) {
+                            $tracking = $trackingService->createTracking($row[1], $productPlanSale);
                             $trackingService->sendTrackingToApi($tracking);
                         }
-                    }else if(isset($row[1])) {
-                        $tracking = $trackingService->createTracking($row[1], $productPlanSale);
-                        $trackingService->sendTrackingToApi($tracking);
                     }
                 }
             }

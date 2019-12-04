@@ -33,6 +33,7 @@ class Kernel extends ConsoleKernel
 
         //generate all sale approved invoices
         $schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
+
         //verify pending notazz invoices
         $schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
 
@@ -42,25 +43,23 @@ class Kernel extends ConsoleKernel
         // notify user to paid boletos
         $schedule->command('verify:boletopaid')->dailyAt('10:00');
 
-        //boletos 
-        $schedule->command('verify:boletowaitingpayment')->dailyAt('12:00');
-        $schedule->command('verify:boleto2')->dailyAt('12:30');
-        $schedule->command('verify:boletoexpiring')->dailyAt('13:00');
-
-        // $schedule->command('verify:boletoexpired')->dailyAt('10:00');
-        // $schedule->command('verify:boletoexpired3')->dailyAt('10:00');
-        // $schedule->command('verify:boletoexpired4')->dailyAt('10:00');
+        //boletos
+        $schedule->command('verify:boletowaitingpayment')->dailyAt('08:00');
+        $schedule->command('verify:boleto2')->dailyAt('09:00');
+        $schedule->command('verify:boletoexpiring')->dailyAt('09:30');
 
         //abandoned carts
         $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
-        $schedule->command('verify:abandonedcarts2')->dailyAt('11:30');
+
+        $schedule->command('verify:abandonedcarts2')->dailyAt('10:00');
 
         //Alterar status do boletos de pendente para cancelado
-        $schedule->command('change:boletopendingtocanceled')->dailyAt('08:30');
+        $schedule->command('change:boletopendingtocanceled')->dailyAt('04:30');
 
-        $schedule->command('command:UpdateListsFoxActiveCampaign')->hourly();
+        $schedule->command('command:UpdateListsFoxActiveCampaign')->cron('0 */12 * * *');
 
-        $schedule->command('command:UpdateCheckoutIdLogs')->everyMinute()->withoutOverlapping();
+        //restart queues running on supervisor
+        $schedule->command('queue:restart')->hourly();
     }
 
     /**
