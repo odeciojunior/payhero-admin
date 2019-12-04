@@ -278,6 +278,11 @@ class DomainRecordsApiController extends Controller
                 $cloudFlareService = new CloudFlareService();
 
                 $recordId = current(Hashids::decode($record));
+                if (empty($recordId)) {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                            ], 400);
+                }
 
                 $record = $domainRecordModel->with(['domain', 'domain.project'])->find($recordId);
 

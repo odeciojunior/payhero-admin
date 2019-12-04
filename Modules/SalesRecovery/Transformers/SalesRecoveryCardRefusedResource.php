@@ -23,7 +23,7 @@ class SalesRecoveryCardRefusedResource extends Resource
         $domain  = $project->domains->first();
 
         $status = 'Recuperado';
-        if ($this->payment_method == 1) {
+        if ($this->payment_method == 1 || $this->payment_method == 3) {
             $status = 'Recusado';
             $type   = 'cart_refundend';
         } else {

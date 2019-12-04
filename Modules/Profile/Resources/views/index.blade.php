@@ -228,6 +228,7 @@
                             </div>
                             <div class='tab-pane fade' id='tab_taxs' role='tabpanel'>
                                 <div class='row' style='padding:0 30px 0 30px'>
+                                    {{--CARTAO DE CRÉDITO--}}
                                     <div class='col-lg-12'>
                                         <h6 class='title-pad'>Cartão de crédito:</h6>
                                     </div>
@@ -248,6 +249,26 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{--CARTAO DE CRÉDITO--}}
+                                    {{--CARTAO DE DEBITO--}}
+                                    <div class='col-lg-12'>
+                                        <h6 class='title-pad'>Cartão de débito:</h6>
+                                    </div>
+                                    <div class='col'></div>
+                                    <div class='row mt-15 col-xl-12'>
+                                        <div class='form-group col-xl-5'>
+                                            <label for='debit-card-tax'>Por venda (porcentagem):</label>
+                                            <input id='debit-card-tax' disabled='disabled' class="form-control">
+                                        </div>
+                                        <div class='form-group col-xl-5'>
+                                            <div class='form-group'>
+                                                <label for='debit-card-release'>Dias para liberação:</label>
+                                                <input id='debit-card-release' disabled='disabled' class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--CARTAO DE DEBITO--}}
+                                    {{--BOLETO--}}
                                     <div class='col-lg-12'>
                                         <h6 class='title-pad'>Boleto:</h6>
                                     </div>
@@ -282,6 +303,7 @@
                                             <button id="update_taxes" type="button" class="btn btn-success mr-100">Atualizar taxas</button>
                                         </div>
                                     </div>
+                                    {{--BOLETO--}}
                                 </div>
                             </div>
                             <div class='tab-pane fade' id='tab_notifications' role='tabpanel'>

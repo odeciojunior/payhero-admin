@@ -148,17 +148,18 @@ class ReportsApiController extends Controller
 
                     if (count($sales) > 0) {
                         foreach ($sales as $sale) {
-                            if ($sale->payment_method == 1 && $sale->status == 1 && $sale->value != null) {
+                            if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1 && $sale->value != null) {
                                 $totalValueCreditCard += $sale->value;
                                 $contCreditCardAproved++;
                             }
+
                             if ($sale->payment_method == 2 && $sale->status == 1 && $sale->value != null) {
                                 $totalValueBoleto += $sale->value;
                                 $contBoletoAproved++;
                             }
 
                             // cartao
-                            if ($sale->payment_method == 1) {
+                            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
                                 $contCreditCard++;
                             }
                             // boleto
