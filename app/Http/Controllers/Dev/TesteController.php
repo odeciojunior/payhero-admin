@@ -993,57 +993,22 @@ class TesteController extends Controller
 
         //Verifica os documentos aprovados do usuario
         $userAddressDocuments  = $userDocumentModel->where('status', 3)
-                                                   ->where('document_type_enum', $userModel->present()
-                                                                                           ->getDocumentType('address_document'))
+                                                   ->where('document_type_enum', 2)
                                                    ->with('user')
-                                                   ->whereHas('user', function($query) {
-                                                       $query->where('address_document_status', '!=', 3);
-                                                   })->get();
-        $userPersonalDocuments = $userDocumentModel->where('status', 3)
-                                                   ->where('document_type_enum', $userModel->present()
-                                                                                           ->getDocumentType('personal_document'))
-                                                   ->with('user')
-                                                   ->whereHas('user', function($query) {
-                                                       $query->where('personal_document_status', '!=', 3);
-                                                   })->get();
+                                                   ->get();
 
-        foreach ($userAddressDocuments as $document) {
-            $document->user->update(['address_document_status' => $document->status]);
-        }
-        foreach ($userPersonalDocuments as $document) {
-            $document->user->update(['personal_document_status' => $document->status]);
+        $count = 0;
+
+        foreach($userAddressDocuments as $userAddressDocument){
+
+            if($userAddressDocument->user->address_document_status != 3){
+                $count++;
+            }
+
         }
 
-        //Verifica os documentos aprovados da empresa
-        $companyBankDocuments    = $companyDocument->where('status', 3)->with('company')
-                                                   ->where('document_type_enum', $companyModel->present()
-                                                                                              ->getDocumentType('bank_document_status'))
-                                                   ->whereHas('company', function($query) {
-                                                       $query->where('bank_document_status', '!=', 3);
-                                                   })->get();
-        $companyAddressDocuments = $companyDocument->where('status', 3)->with('company')
-                                                   ->where('document_type_enum', $companyModel->present()
-                                                                                              ->getDocumentType('address_document_status'))
-                                                   ->whereHas('company', function($query) {
-                                                       $query->where('address_document_status', '!=', 3);
-                                                   })->get();
+        dd($count);
 
-        $companyContractDocuments = $companyDocument->where('status', 3)->with('company')
-                                                    ->where('document_type_enum', $companyModel->present()
-                                                                                               ->getDocumentType('contract_document_status'))
-                                                    ->whereHas('company', function($query) {
-                                                        $query->where('contract_document_status', '!=', 3);
-                                                    })->get();
-
-        foreach ($companyBankDocuments as $document) {
-            $document->company->update(['bank_document_status' => $document->status]);
-        }
-        foreach ($companyAddressDocuments as $document) {
-            $document->company->update(['address_document_status' => $document->status]);
-        }
-        foreach ($companyContractDocuments as $document) {
-            $document->company->update(['contract_document_status' => $document->status]);
-        }
     }
 }
 
