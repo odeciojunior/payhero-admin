@@ -159,7 +159,7 @@
                                     <span class='swal2-x-mark-line-right'></span>
                                 </span>
                             </div>
-                            <h3 align='center'>Para enviar convites todos os documentos da empresa precisam estar aprovados!</h3>
+                            <h3 align='center'>Para enviar convites todos os documentos precisam estar aprovados!</h3>
                         </div>
                         <div style='width:100%; text-align: center; padding-top: 3%;'>
                             <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
@@ -218,7 +218,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=1') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=4') }}"></script>
     @endpush
 
 @endsection
