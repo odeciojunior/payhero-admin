@@ -2,7 +2,14 @@ var statusInvite = {
     1: 'success',
     2: 'danger',
     3: 'warning',
-}
+};
+
+var statusDocumentUser = {
+    pending: 'Pendente',
+    analyzing: 'Em análise',
+    approved: 'Aprovado',
+    refused: 'Recusado',
+};
 
 let disabledCompany = true;
 
@@ -159,6 +166,7 @@ $(document).ready(function () {
                     $("#modal-not-approved-document-companies").hide();
                     $("#modal-not-companies").show();
                 } else {
+
                     loadingOnScreenRemove();
 
                     let contCompanies = 0;
@@ -170,12 +178,25 @@ $(document).ready(function () {
                     disabledCompany = true;
                     $.each(response.data, function (index, value) {
                         contCompanies++;
-                        if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado') {
-                            disabledCompany = false;
-                            contCompaniesNotApproved++;
-                            selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
-                        } else {
-                            selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+
+                        if (value.type_company === 'physical person') {
+                            if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
+                                disabledCompany = false;
+                                contCompaniesNotApproved++;
+                                selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                            } else {
+                                selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+
+                            }
+
+                        } else if (value.type_company === 'juridical person') {
+                            if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
+                                disabledCompany = false;
+                                contCompaniesNotApproved++;
+                                selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                            } else {
+                                selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+                            }
                         }
                     });
                     selCompany += '</select>';

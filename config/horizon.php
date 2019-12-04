@@ -141,12 +141,23 @@ return [
 
     'environments' => [
         'production' => [
+<<<<<<< HEAD
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 1,
+=======
+            'supervisor-production' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'simple',
+                'processes' => 20,
+                'tries' => 3,
+                'timeout' => 0,
+                'delay' => 1,
+>>>>>>> ac86022ef3c2cd8b67aca748e08a8ead0ec7bf22
             ],
         ],
 
@@ -157,6 +168,11 @@ return [
                 'balance' => 'simple',
                 'processes' => 3,
                 'tries' => 1,
+<<<<<<< HEAD
+=======
+                'timeout' => 0,
+                'delay' => 1,
+>>>>>>> ac86022ef3c2cd8b67aca748e08a8ead0ec7bf22
             ],
         ],
     ],
