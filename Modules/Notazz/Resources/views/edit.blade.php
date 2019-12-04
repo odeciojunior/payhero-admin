@@ -69,7 +69,7 @@
                         <span class="slider round"></span>
                     </label>
                     <br>
-                    <small>Emitir notas com valor zerado.</small>
+                    <small>Emitir notas com valor zero, para vendas sem valor.</small>
                 </div>
             </div>
             <div class="col-6">
