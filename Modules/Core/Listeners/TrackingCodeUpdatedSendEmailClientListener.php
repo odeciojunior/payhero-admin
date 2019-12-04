@@ -27,19 +27,19 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
      */
     public function handle(TrackingCodeUpdatedEvent $event)
     {
-        $sendGridService = new SendgridService();
-        $smsService      = new SmsService();
-        $linkShortenerService = new LinkShortenerService();
-        $domainModel     = new Domain();
-
-        $clientName      = $event->sale->client->present()->getFirstName();
-        $clientEmail     = $event->sale->client->email;
-
-        $projectName     = $event->sale->project->name;
-        $projectContact  = $event->sale->project->contact;
-        $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
-
         try{
+            $sendGridService = new SendgridService();
+            $smsService      = new SmsService();
+            $linkShortenerService = new LinkShortenerService();
+            $domainModel     = new Domain();
+
+            $clientName      = $event->sale->client->present()->getFirstName();
+            $clientEmail     = $event->sale->client->email;
+
+            $projectName     = $event->sale->project->name;
+            $projectContact  = $event->sale->project->contact;
+            $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
+
             if (isset($domain)) {
                 $data = [
                     'name'            => $clientName,
