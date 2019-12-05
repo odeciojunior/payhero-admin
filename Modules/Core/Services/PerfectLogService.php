@@ -125,7 +125,6 @@ class PerfectLogService
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
                 break;
         }
-
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',

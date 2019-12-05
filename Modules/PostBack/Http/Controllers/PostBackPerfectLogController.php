@@ -64,7 +64,8 @@ class PostBackPerfectLogController extends Controller
             }
             return response()->json(['message' => 'Postback received']);
         } catch (\Exception $exception){
-            //Log::warning('Invalid postback - ' . $exception->getMessage());
+            report($exception);
+            Log::warning('Invalid postback - ' . $exception->getMessage());
             return response()->json(['message' => 'Invalid postback'], 400);
         }
     }

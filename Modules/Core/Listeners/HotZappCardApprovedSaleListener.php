@@ -35,7 +35,7 @@ class HotZappCardApprovedSaleListener implements ShouldQueue
             $planSaleModel           = new PlanSale();
             $planModel               = new Plan();
 
-            if ($event->sale->payment_method == 1) {
+            if ($event->sale->payment_method == 1 || $event->sale->payment_method == 3) {
                 $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $event->plan->project)
                                                               ->where('credit_card_paid', 1)->first();
             } else {
@@ -61,7 +61,7 @@ class HotZappCardApprovedSaleListener implements ShouldQueue
                     ];
                 }
 
-                if ($event->sale->payment_method == 1) {
+                if ($event->sale->payment_method == 1 || $event->sale->payment_method == 3) {
                     $hotZappService->creditCardPaid($event->sale, $plans);
                 } else {
                     $hotZappService->boletoPaid($event->sale, $plans);

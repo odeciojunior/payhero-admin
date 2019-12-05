@@ -10,6 +10,20 @@ use Modules\Core\Presenters\GatewayPresenter;
 /**
  * Class Gateway
  * @package App\Entities
+ * /**
+ * @property integer $id
+ * @property boolean $gateway_enum
+ * @property string $name
+ * @property string $json_config
+ * @property boolean $production_flag
+ * @property boolean $enabled_flag
+ * @property string $deleted_at
+ * @property string $created_at
+ * @property string $updated_at
+ * @property GatewayFlag[] $gatewayFlags
+ * @property GatewayPostback[] $gatewayPostbacks
+ * @property SaleGatewayRequest[] $saleGatewayRequests
+ * @property Sale[] $sales
  */
 class Gateway extends Model
 {
@@ -17,6 +31,7 @@ class Gateway extends Model
      * The "type" of the auto-incrementing ID.
      * @var string
      */
+
     use PresentableTrait, SoftDeletes;
     /**
      * @var string
@@ -39,7 +54,40 @@ class Gateway extends Model
         'json_config',
         'production_flag',
         'enabled_flag',
+        'deleted_at',
         'created_at',
         'updated_at',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function gatewayFlags()
+    {
+        return $this->hasMany('ModulesCoreEntities\GatewayFlag');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function gatewayPostbacks()
+    {
+        return $this->hasMany('ModulesCoreEntities\GatewayPostback');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function saleGatewayRequests()
+    {
+        return $this->hasMany('ModulesCoreEntities\SaleGatewayRequest');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sales()
+    {
+        return $this->hasMany('ModulesCoreEntities\Sale');
+    }
 }

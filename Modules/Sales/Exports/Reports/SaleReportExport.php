@@ -49,11 +49,13 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
         $this->saleService->getDetails($sale, $userCompany);
         foreach ($sale->plansSales as &$planSale) {
             $plan = $planSale->plan;
-            foreach ($plan->productsPlans as $productPlan) {
-                $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
-                $productPlan->product['plan_name'] = $plan->name;
-                $productPlan->product['plan_price'] = $plan->price;
-                $sale->products->add($productPlan->product);
+            if(isset($plan)) {
+                foreach ($plan->productsPlans as $productPlan) {
+                    $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
+                    $productPlan->product['plan_name'] = $plan->name;
+                    $productPlan->product['plan_price'] = $plan->price;
+                    $sale->products->add($productPlan->product);
+                }
             }
         }
 
@@ -63,7 +65,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 //sale
                 'sale_code' => '#' . Hashids::connection('sale_id')->encode($sale->id),
                 'shopify_order' => strval($sale->shopify_order),
-                'payment_form' => $sale->payment_method == 2 ? 'Boleto' : ($sale->payment_method == 1 ? 'Cartão' : ''),
+                'payment_form' => $sale->payment_method == 2 ? 'Boleto' : (($sale->payment_method == 1 || $sale->payment_method == 3) ? 'Cartão' : ''),
                 'installments_amount' => $sale->installments_amount ?? '',
                 'flag' => $sale->flag ?? '',
                 'boleto_link' => $sale->boleto_link ?? '',
