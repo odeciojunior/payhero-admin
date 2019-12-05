@@ -155,11 +155,10 @@ class PostBackShopifyController extends Controller
             $project = $projectModel->find($projectId);
 
             if (!$project) {
-                Log::warning('projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
 
                 return response()->json([
                     'message' => 'error',
-                ], 400);
+                ], 200);
             }
 
             $userProject = $userProjectModel->where([
@@ -180,7 +179,7 @@ class PostBackShopifyController extends Controller
             } catch (\Exception $e) {
                 return response()->json([
                     'message' => 'Dados do shopify inválidos, revise os dados informados',
-                ], 400);
+                ], 200);
             }
 
             $variant = current($requestData['variants']);
@@ -194,7 +193,7 @@ class PostBackShopifyController extends Controller
             //hash invalido
             return response()->json([
                 'message' => 'Projeto não encontrado',
-            ], 400);
+            ], 200);
         }
     }
 }
