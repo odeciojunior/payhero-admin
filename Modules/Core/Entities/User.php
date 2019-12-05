@@ -74,7 +74,6 @@ class User extends Authenticable
      * @var string
      */
     protected $presenter = UserPresenter::class;
-
     /**
      * @var array
      */
@@ -114,9 +113,11 @@ class User extends Authenticable
         'invites_amount',
         'installment_tax',
         'credit_card_release_money_days',
+        'debit_card_release_money_days',
         'boleto_release_money_days',
         'boleto_tax',
         'credit_card_tax',
+        'debit_card_tax',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -14,7 +14,7 @@
                     <label for="select_invoice_type_create">Tipo de nota fiscal emitida para o projeto</label>
                     <select class="select-pad" id="select_invoice_type_create" name="select_invoice_type_create">
                         <option value='1'>Nota de Serviço (nfse)</option>
-{{--                        <option value='2'>Nota de Produto (nfe)</option>--}}
+                        {{--                        <option value='2'>Nota de Produto (nfe)</option>--}}
                     </select>
                 </div>
             </div>
@@ -58,6 +58,30 @@
                         <option value='60'>60</option>
                     </select>
                     <small>Quantidade de dias que a notazz vai aguardar para efetivamente emitir a nota fiscal.</small>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>Emitir nota zerada</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" id='emit_zero' name="emit_zero" class='check shipping-pre-selected' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                    <br>
+                    <small>Emitir notas com valor zero, para vendas sem valor.</small>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>Remover taxa</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" id='remove_tax' name="remove_tax" class='check shipping-pre-selected' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                    <br>
+                    <small>Remover da nota fiscal o valor cobrado pela plataforma.</small>
                 </div>
             </div>
         </div>

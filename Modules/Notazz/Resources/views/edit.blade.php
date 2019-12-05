@@ -60,6 +60,30 @@
                     <small>Quantidade de dias que a notazz vai aguardar para efetivamente emitir a nota fiscal.</small>
                 </div>
             </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>Emitir nota zerada</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" id='emit_zero' name="emit_zero" class='check shipping-pre-selected' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                    <br>
+                    <small>Emitir notas com valor zero, para vendas sem valor.</small>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>Remover taxa</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" id='remove_tax' name="remove_tax" class='check shipping-pre-selected' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                    <br>
+                    <small>Remover da nota fiscal o valor cobrado pela plataforma.</small>
+                </div>
+            </div>
         </div>
     </div>
 </form>

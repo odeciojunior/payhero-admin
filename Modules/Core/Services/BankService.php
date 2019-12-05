@@ -122,6 +122,7 @@ class BankService
             ['code' => '301', 'name' => 'BPP Instituição de Pagamento S.A'],
             ['code' => '318', 'name' => 'Banco BMG'],
             ['code' => '320', 'name' => 'Banco Industrial e Comercial'],
+            ['code' => '323', 'name' => 'Mercado Pago'],
             ['code' => '356', 'name' => 'ABN Amro Real'],
             ['code' => '341', 'name' => 'Itau'],
             ['code' => '347', 'name' => 'Sudameris'],

@@ -244,6 +244,8 @@ $(document).ready(function () {
                         var token_logistics_create = $('#token_logistics_create').val();
                         var start_date_create = $('#start_date_create').val();
                         var select_pending_days_create = $('#select_pending_days_create').val();
+                        var emit_zero = $('#emit_zero').is(":checked");
+                        var remove_tax = $('#remove_tax').is(":checked");
 
                         if ($('#start_date_create').val() != '') {
                             swal({
@@ -274,7 +276,9 @@ $(document).ready(function () {
                                             token_webhook_create: token_webhook_create,
                                             token_logistics_create: token_logistics_create,
                                             start_date_create: start_date_create,
-                                            select_pending_days_create: select_pending_days_create
+                                            select_pending_days_create: select_pending_days_create,
+                                            remove_tax: remove_tax,
+                                            emit_zero: emit_zero
                                         },
                                         error: function error(response) {
                                             if (response.status === 422) {
