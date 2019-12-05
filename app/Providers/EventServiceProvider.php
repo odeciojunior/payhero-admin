@@ -68,6 +68,13 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\WithdrawalRequestEvent'          => [
             'Modules\Core\Listeners\WithdrawalRequestSendEmailListener',
         ],
+        'Modules\Core\Events\SendEmailEvent'                  => [
+            'Modules\Core\Listeners\SendEmailListener',
+        ],
+        'Modules\Core\Events\SendSmsEvent'                    => [
+            'Modules\Core\Listeners\SendSmsListener',
+        ],
+
     ];
 
     /**

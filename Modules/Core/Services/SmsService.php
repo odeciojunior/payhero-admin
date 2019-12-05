@@ -22,12 +22,18 @@ class SmsService
             //            $zenvia = new ZenviaSmsService();
             //            $zenvia->sendSms($number, $message);
 
+/*            if (env('APP_ENV') != 'production') {
+                $number = getenv('APP_NUMBER_PHONE_TEST');
+            }*/
+
             DisparoProService::sendMessage($number, $message);
 
             return true;
         } catch (Exception $e) {
             Log::warning('erro ao enviar sms');
             report($e);
+
+            return false;
         }
     }
 }

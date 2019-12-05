@@ -12,6 +12,8 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\BoletoPaidEvent;
+use Modules\Core\Events\SendEmailEvent;
+use Modules\Core\Events\SendSmsEvent;
 
 /**
  * Class BoletoService
@@ -19,102 +21,115 @@ use Modules\Core\Events\BoletoPaidEvent;
  */
 class BoletoService
 {
-
     /**
      * Hoje vence o seu pedido
      */
     public function verifyBoletosExpiring()
     {
         try {
-            $saleModel      = new Sale();
-            $saleService    = new SaleService();
-            $projectModel   = new Project();
-            $domainModel    = new Domain();
-            $boletoDueToday = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
-                                        ->with('client', 'plansSales.plan.products')
-                                        ->get();
-            foreach ($boletoDueToday as $boleto) {
+            $saleModel            = new Sale();
+            $saleService          = new SaleService();
+            $projectModel         = new Project();
+            $domainModel          = new Domain();
+            $checkoutModel        = new Checkout();
+            $linkShortenerService = new LinkShortenerService();
 
+            $saleModel->where([
+                                  ['payment_method', '=', '2'], ['status', '=', '2'],
+                                  [
+                                      DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString(),
+                                  ],
+                              ])
+                      ->with('client', 'plansSales.plan.products')
+                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $linkShortenerService) {
 
-                try {
-                    $sendEmail     = new SendgridService();
-                    $checkoutModel = new Checkout();
-                    $checkout      = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                    $clientName    = $boleto->client->name;
-                    $clientEmail   = $boleto->client->email;
+                          foreach ($boletoDueToday as $boleto) {
+                              $checkout    = $checkoutModel->where('id', $boleto->checkout_id)
+                                                           ->first();
+                              $clientName  = $boleto->client->name;
+                              $clientEmail = $boleto->client->email;
 
-                    $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
-                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+                              $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
+                              $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
+                              $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
 
-                    if ($iof == 0) {
-                        $iof = '';
-                    } else {
-                        $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
-                    }
-                    if ($discount == 0 || $discount == null) {
-                        $discount = '';
-                    }
-                    if ($discount != '') {
-                        $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
-                    }
-                    $clientNameExploded = explode(' ', $clientName);
+                              if ($iof == 0) {
+                                  $iof = '';
+                              } else {
+                                  $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                              }
 
-                    $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-                    if ($discount != '') {
-                        $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
-                    }
-                    $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
+                              if ($discount == 0 || $discount == null) {
+                                  $discount = '';
+                              }
+                              if ($discount != '') {
+                                  $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                              }
 
-                    $products = $saleService->getEmailProducts($boleto->id);
-                    $project  = $projectModel->find($boleto->project_id);
-                    $domain   = $domainModel->where('project_id', $project->id)->first();
+                              $clientNameExploded       = explode(' ', $clientName);
+                              $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                              if ($discount != '') {
+                                  $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                              }
+                              $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
-                    $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                    $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                    $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                    $boletoDigitableLine     = [];
-                    $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-                    $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                    $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
+                              $products = $saleService->getEmailProducts($boleto->id);
+                              $project  = $projectModel->find($boleto->project_id);
+                              $domain   = $domainModel->where('project_id', $project->id)
+                                                      ->where('status', 3)
+                                                      ->first(); // dominio tem que estar aprovado
 
-                    $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
+                              $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                              $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                              $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                              $boletoDigitableLine     = [];
+                              $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
+                              $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                              $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
+                                                               ->format('d/m/y');
 
-                    $linkShortenerService = new LinkShortenerService();
-                    $link                 = $linkShortenerService->shorten($boleto->boleto_link);
-                    if (!empty($link) && !empty($telephoneValidated)) {
-                        $message    = 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link;
-                        $smsService = new SmsService();
-                        $smsService->sendSms($telephoneValidated, $message);
+                              $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
 
-                        $checkout->increment('sms_sent_amount');
-                    }
+                              $link = $linkShortenerService->shorten($boleto->boleto_link);
+                              if (!empty($link) && !empty($telephoneValidated)) {
+                                  $data = [
+                                      'message'   => 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link,
+                                      'telephone' => $telephoneValidated,
+                                      'checkout'  => $checkout,
 
-                    $data           = [
-                        "name"                  => $clientNameExploded[0],
-                        "boleto_link"           => $boleto->boleto_link,
-                        "boleto_digitable_line" => $boletoDigitableLine,
-                        "boleto_due_date"       => $boleto->boleto_due_date,
-                        "total_paid_value"      => $boleto->total_paid_value,
-                        "shipment_value"        => $boleto->shipment_value,
-                        "subtotal"              => strval($subTotal),
-                        "iof"                   => $iof,
-                        'discount'              => $discount,
-                        "project_logo"          => $project->logo,
-                        "project_contact"       => $project->contact,
-                        "products"              => $products,
-                    ];
-                    $emailValidated = FoxUtils::validateEmail($clientEmail);
-                    if ($emailValidated) {
-                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
+                                  ];
+                                  event(new SendSmsEvent($data));
+                              }
 
-                        $checkout->increment('email_sent_amount');
-                    }
-                } catch (Exception $e) {
-                    Log::warning('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
-                    report($e);
-                }
-            }
+                              $data = [
+                                  "name"                  => $clientNameExploded[0],
+                                  "boleto_link"           => $boleto->boleto_link,
+                                  "boleto_digitable_line" => $boletoDigitableLine,
+                                  "boleto_due_date"       => $boleto->boleto_due_date,
+                                  "total_paid_value"      => $boleto->total_paid_value,
+                                  "shipment_value"        => $boleto->shipment_value,
+                                  "subtotal"              => strval($subTotal),
+                                  "iof"                   => $iof,
+                                  'discount'              => $discount,
+                                  "project_logo"          => $project->logo,
+                                  "project_contact"       => $project->contact,
+                                  "products"              => $products,
+                              ];
+
+                              if (!empty($domain) && !empty($clientEmail)) {
+                                  $dataEmail = [
+                                      'domainName'  => $domain['name'],
+                                      'projectName' => $project['name'] ?? '',
+                                      'clientEmail' => $clientEmail,
+                                      'clientName'  => $clientNameExploded[0] ?? '',
+                                      'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
+                                      'bodyEmail'   => $data,
+                                      'checkout'    => $checkout,
+                                  ];
+                                  event(new SendEmailEvent($dataEmail));
+                              }
+                          }
+                      });
         } catch (Exception $e) {
             Log::warning('Erro ao enviar boletos para e-mails - Boleto vencendo');
             report($e);
@@ -127,85 +142,89 @@ class BoletoService
     public function verifyBoletoWaitingPayment()
     {
         try {
-            $saleModel            = new Sale();
-            $saleService          = new SaleService();
-            $sendEmail            = new SendgridService();
-            $checkoutModel        = new Checkout();
-            $projectModel         = new Project();
-            $domainModel          = new Domain();
-            $startDate            = now()->startOfDay()->subDay();
-            $endDate              = now()->endOfDay()->subDay();
+            $saleModel     = new Sale();
+            $saleService   = new SaleService();
+            $checkoutModel = new Checkout();
+            $projectModel  = new Project();
+            $domainModel   = new Domain();
+            $startDate     = now()->startOfDay()->subDay();
+            $endDate       = now()->endOfDay()->subDay();
 
-            $boletoWaitingPayment = $saleModel->with('client', 'plansSales.plan.products')
-                                              ->whereBetween('start_date', [$startDate, $endDate])
-                                              ->where(
-                                                  [
-                                                      ['payment_method', '=', '2'],
-                                                      ['status', '=', '2'],
-                                                  ]
-                                              )->get();
+            $saleModel->with('client', 'plansSales.plan.products')
+                      ->whereBetween('start_date', [$startDate, $endDate])
+                      ->where(
+                          [
+                              ['payment_method', '=', '2'],
+                              ['status', '=', '2'],
+                          ]
+                      )->chunk(100, function($boletos) use ($checkoutModel, $saleService, $projectModel, $domainModel) {
+                    foreach ($boletos as $boleto) {
 
-            foreach ($boletoWaitingPayment as $boleto) {
-                try {
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                    $clientName  = $boleto->client->name;
-                    $clientEmail = $boleto->client->email;
-                    $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
-                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
-                    if ($iof == 0) {
-                        $iof = '';
-                    } else {
-                        $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
-                    }
-                    if ($discount == 0 || $discount == null) {
-                        $discount = '';
-                    }
-                    if ($discount != '') {
-                        $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
-                    }
-                    $clientNameExploded       = explode(' ', $clientName);
-                    $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-                    if ($discount != '') {
-                        $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
-                    }
-                    $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $saleService->getEmailProducts($boleto->id);
-                    $project                  = $projectModel->find($boleto->project_id);
-                    $domain                   = $domainModel->where('project_id', $project->id)->first();
-                    $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                    $boleto->shipment_value   = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                    $boleto->shipment_value   = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                    $boletoDigitableLine      = [];
-                    $boletoDigitableLine[0]   = substr($boleto->boleto_digitable_line, 0, 24);
-                    $boletoDigitableLine[1]   = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                    $boleto->boleto_due_date  = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
-                    $data                     = [
-                        "name"                  => $clientNameExploded[0],
-                        "boleto_link"           => $boleto->boleto_link,
-                        "boleto_digitable_line" => $boletoDigitableLine,
-                        "boleto_due_date"       => $boleto->boleto_due_date,
-                        "total_paid_value"      => $boleto->total_paid_value,
-                        "shipment_value"        => $boleto->shipment_value,
-                        "subtotal"              => strval($subTotal),
-                        "iof"                   => $iof,
-                        'discount'              => $discount,
-                        "project_logo"          => $project->logo,
-                        "project_contact"       => $project->contact,
-                        "products"              => $products,
-                    ];
-                    $emailValidated           = FoxUtils::validateEmail($clientEmail);
+                        $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                        $clientName  = $boleto->client->name;
+                        $clientEmail = $boleto->client->email;
+                        $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
+                        $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                        $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
 
-                    if ($emailValidated) {
-                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
+                        if ($iof == 0) {
+                            $iof = '';
+                        } else {
+                            $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                        }
+                        if ($discount == 0 || $discount == null) {
+                            $discount = '';
+                        }
+                        if ($discount != '') {
+                            $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
+                        }
 
-                        $checkout->increment('email_sent_amount');
+                        $clientNameExploded       = explode(' ', $clientName);
+                        $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                        if ($discount != '') {
+                            $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                        }
+
+                        $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
+                        $products                 = $saleService->getEmailProducts($boleto->id);
+                        $project                  = $projectModel->find($boleto->project_id);
+                        $domain                   = $domainModel->where('project_id', $project->id)->where('status', 3)
+                                                                ->first();
+                        $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                        $boleto->shipment_value   = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                        $boleto->shipment_value   = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                        $boletoDigitableLine      = [];
+                        $boletoDigitableLine[0]   = substr($boleto->boleto_digitable_line, 0, 24);
+                        $boletoDigitableLine[1]   = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                        $boleto->boleto_due_date  = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
+                        $data                     = [
+                            "name"                  => $clientNameExploded[0],
+                            "boleto_link"           => $boleto->boleto_link,
+                            "boleto_digitable_line" => $boletoDigitableLine,
+                            "boleto_due_date"       => $boleto->boleto_due_date,
+                            "total_paid_value"      => $boleto->total_paid_value,
+                            "shipment_value"        => $boleto->shipment_value,
+                            "subtotal"              => strval($subTotal),
+                            "iof"                   => $iof,
+                            'discount'              => $discount,
+                            "project_logo"          => $project->logo,
+                            "project_contact"       => $project->contact,
+                            "products"              => $products,
+                        ];
+                        if (!empty($domain) && !empty($clientEmail)) {
+                            $dataEmail = [
+                                'domainName'  => $domain['name'],
+                                'projectName' => $project['name'] ?? '',
+                                'clientEmail' => $clientEmail,
+                                'clientName'  => $clientNameExploded[0] ?? '',
+                                'templateId'  => 'd-59dab7e71d4045e294cb6a14577da236',
+                                'bodyEmail'   => $data,
+                                'checkout'    => $checkout,
+                            ];
+                            event(new SendEmailEvent($dataEmail));
+                        }
                     }
-                } catch (Exception $e) {
-                    Log::warning('Erro ao enviar boletos par e-mail no foreach - Já separamos seu pedido');
-                    report($e);
-                }
-            }
+                });
         } catch (Exception $e) {
             Log::warning('Erro ao enviar boletos para e-mails - Já separamos seu pedido');
             report($e);
@@ -223,80 +242,89 @@ class BoletoService
             $projectModel  = new Project();
             $domainModel   = new Domain();
             $checkoutModel = new Checkout();
-            $startDate     = now()->startOfDay()->subDays(2);
+            $startDate     = now()->startOfDay()->subDays(50);
             $endDate       = now()->endOfDay()->subDays(2);
 
-            $boletos = $saleModel->with('client', 'plansSales.plan.products')
-                                 ->whereBetween('start_date', [$startDate, $endDate])
-                                 ->where(
-                                     [
-                                         ['payment_method', '=', '2'],
-                                         ['status', '=', '2'],
-                                     ]
-                                 )->get();
+            $saleModel->with('client', 'plansSales.plan.products')
+                      ->whereBetween('start_date', [$startDate, $endDate])
+                      ->where(
+                          [
+                              ['payment_method', '=', '2'],
+                              ['status', '=', '2'],
+                          ]
+                      )
+                      ->chunk(100, function($boletos) use ($checkoutModel, $saleService, $projectModel, $domainModel) {
+                          foreach ($boletos as $boleto) {
+                              try {
+                                  $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                                  $clientName  = $boleto->client->name;
+                                  $clientEmail = $boleto->client->email;
+                                  $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
+                                  $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                                  $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+                                  if ($iof == 0) {
+                                      $iof = '';
+                                  } else {
+                                      $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                                  }
+                                  if ($discount == 0 || $discount == null) {
+                                      $discount = '';
+                                  }
+                                  if ($discount != '') {
+                                      $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
+                                  }
+                                  $clientNameExploded       = explode(' ', $clientName);
+                                  $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                                  if ($discount != '') {
+                                      $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                                  }
+                                  $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
+                                  $products                 = $saleService->getEmailProducts($boleto->id);
+                                  $project                  = $projectModel->find($boleto->project_id);
+                                  $domain                   = $domainModel->where('project_id', $project->id)
+                                                                          ->where('status', 3)
+                                                                          ->first();
 
-            foreach ($boletos as $boleto) {
-                try {
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                    $clientName  = $boleto->client->name;
-                    $clientEmail = $boleto->client->email;
-                    $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
-                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
-                    if ($iof == 0) {
-                        $iof = '';
-                    } else {
-                        $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
-                    }
-                    if ($discount == 0 || $discount == null) {
-                        $discount = '';
-                    }
-                    if ($discount != '') {
-                        $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
-                    }
-                    $clientNameExploded       = explode(' ', $clientName);
-                    $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-                    if ($discount != '') {
-                        $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
-                    }
-                    $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    $products                 = $saleService->getEmailProducts($boleto->id);
-                    $project                  = $projectModel->find($boleto->project_id);
-                    $domain                   = $domainModel->where('project_id', $project->id)->first();
-
-                    $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                    $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                    $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                    $boletoDigitableLine     = [];
-                    $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-                    $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                    $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
-                    $data                    = [
-                        "name"                  => $clientNameExploded[0],
-                        "boleto_link"           => $boleto->boleto_link,
-                        "boleto_digitable_line" => $boletoDigitableLine,
-                        "boleto_due_date"       => $boleto->boleto_due_date,
-                        "total_paid_value"      => $boleto->total_paid_value,
-                        "shipment_value"        => $boleto->shipment_value,
-                        "subtotal"              => strval($subTotal),
-                        "iof"                   => $iof,
-                        'discount'              => $discount,
-                        "project_logo"          => $project->logo,
-                        "project_contact"       => $project->contact,
-                        "products"              => $products,
-                    ];
-                    $emailValidated          = FoxUtils::validateEmail($clientEmail);
-                    if ($emailValidated) {
-                        $sendEmail = new SendgridService();
-
-                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
-                        $checkout->increment('email_sent_amount');
-                    }
-                } catch (Exception $e) {
-                    Log::warning('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');
-                    report($e);
-                }
-            }
+                                  $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                                  $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                                  $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                                  $boletoDigitableLine     = [];
+                                  $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
+                                  $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                                  $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
+                                                                   ->format('d/m/y');
+                                  $data                    = [
+                                      "name"                  => $clientNameExploded[0],
+                                      "boleto_link"           => $boleto->boleto_link,
+                                      "boleto_digitable_line" => $boletoDigitableLine,
+                                      "boleto_due_date"       => $boleto->boleto_due_date,
+                                      "total_paid_value"      => $boleto->total_paid_value,
+                                      "shipment_value"        => $boleto->shipment_value,
+                                      "subtotal"              => strval($subTotal),
+                                      "iof"                   => $iof,
+                                      'discount'              => $discount,
+                                      "project_logo"          => $project->logo,
+                                      "project_contact"       => $project->contact,
+                                      "products"              => $products,
+                                  ];
+                                  if (!empty($domain) && !empty($clientEmail)) {
+                                      $dataEmail = [
+                                          'domainName'  => $domain['name'],
+                                          'projectName' => $project['name'] ?? '',
+                                          'clientEmail' => $clientEmail,
+                                          'clientName'  => $clientNameExploded[0] ?? '',
+                                          'templateId'  => 'd-690a6140f72643c1af280b079d5e84c5',
+                                          'bodyEmail'   => $data,
+                                          'checkout'    => $checkout,
+                                      ];
+                                      event(new SendEmailEvent($dataEmail));
+                                  }
+                              } catch (Exception $e) {
+                                  Log::warning('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');
+                                  report($e);
+                              }
+                          }
+                      });
         } catch (Exception $e) {
             Log::warning('Erro ao enviar boletos para e-mails - Vamos ter que liberar sua mercadoria');
             report($e);
@@ -364,18 +392,20 @@ class BoletoService
     public function changeBoletoPendingToCanceled()
     {
         $saleModel = new Sale();
-        $date      = Carbon::now()->subDay('4')->toDateString();
 
-        $boletos = $saleModel->where([
-                                         ['payment_method', '=', '2'],
-                                         ['status', '=', '2'],
-                                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', $date],
-                                     ])
-                             ->get();
-        /** @var Sale $boleto */
-        foreach ($boletos as $boleto) {
-            $boleto->update(['status' => 5]);
-        }
+        $saleModel->where([
+                              ['payment_method', '=', '2'],
+                              ['status', '=', '2'],
+                              [
+                                  DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()->subDay('1')
+                                                                                                    ->toDateString(),
+                              ],
+                          ])
+                  ->chunk(100, function($boletos) {
+                      foreach ($boletos as $boleto) {
+                          $boleto->update(['status' => 5]);
+                      }
+                  });
     }
 }
 
