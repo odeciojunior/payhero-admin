@@ -46,7 +46,7 @@
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="fantasy_name">Razão Social</label>
-                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão Social" maxlength='250'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="company_document">CNPJ</label>
@@ -151,7 +151,7 @@
                                     <div class="col-lg-12">
                                         <h5 class="title-pad"> Comprovantes </h5>
                                         <p class="sub-pad"> Para fazer movimentações externas, precisamos de documentos da sua empresa. </p>
-                                        <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents' role="alert" style='display:block;'>
+                                        <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents' role="alert" style='display:none;'>
                                             <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
@@ -259,7 +259,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=5')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=1')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
