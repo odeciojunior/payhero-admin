@@ -28,6 +28,7 @@ class TransfersService
                                                      ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                      ['status', 'paid'],
                                                  ])->get();
+
         $transfers    = [];
 
         foreach ($transactions as $transaction) {
