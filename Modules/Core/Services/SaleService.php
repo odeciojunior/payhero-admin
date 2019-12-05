@@ -426,7 +426,7 @@ class SaleService
                                                'user_id'        => $company->user_id,
                                                'value'          => $refundTransaction->antecipable_value,
                                                'type'           => 'out',
-                                               'reason'         => 'chargedback',
+                                               'reason'         => 'refunded',
                                                'company_id'     => $company->id,
                                            ]);
 
