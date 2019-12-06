@@ -109,7 +109,7 @@ class NotazzService
         if ($sale) {
             //venda encontrada
 
-            $sale = $saleModel->with(['plansSales'])->find($sale->id);
+            $sale = $saleModel->with(['plansSales', 'transactions'])->find($sale->id);
 
             $productsSale = collect();
             /** @var PlanSale $planSale */
@@ -155,6 +155,17 @@ class NotazzService
                     }
 
                     $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
+                }
+
+                $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
+                if ($discountPlataformTax == true) {
+
+                    foreach ($sale->transactions as $transaction) {
+                        if ($transaction->company_id == null) {
+                            //plataforma
+                            $costTotal += (int) $transaction->value;
+                        }
+                    }
                 }
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
