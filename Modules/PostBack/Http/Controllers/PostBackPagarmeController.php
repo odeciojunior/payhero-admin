@@ -144,39 +144,6 @@ class PostBackPagarmeController extends Controller
                 $sale->load('client');
                 event(new BilletPaidEvent($plan, $sale, $sale->client));
 
-                // try {
-                //     $hotZappIntegrationModel = new HotZappIntegration();
-                //     $hotzappIntegration      = $hotZappIntegrationModel->where('project_id', $plan->project_id)
-                //                                                        ->first();
-
-                //     if (!empty($hotzappIntegration)) {
-                //         $hotZappService = new HotZappService($hotzappIntegration->link);
-                //         $hotZappService->boletoPaid($sale);
-                //     }
-
-                //     $convertaxIntegrationModel = new ConvertaxIntegration();
-                //     $convertaxIntegration      = $convertaxIntegrationModel->where('project_id', $plan->project_id)
-                //                                                            ->first();
-
-                //     if (!empty($convertaxIntegration)) {
-                //         $hotZappService = new HotZappService($convertaxIntegration->link);
-                //         $hotZappService->boletoPaid($sale);
-                //     }
-                // } catch (Exception $e) {
-                //     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
-                //     report($e);
-                // }
-
-                // try {
-                //     $activeCampaignService = new ActiveCampaignService();
-                //     $sale->load('client');
-                //     // $saleId, $eventSale, $name, $phone, $email, $projectId
-                //     $activeCampaignService->execute($sale->id, 2, $sale->client->name, $sale->client->telephone, $sale->client->email, $sale->project_id, 'sale');
-
-                // } catch (Exception $e) {
-                //     Log::warning('Erro ao enviar lead para ActiveCampaign na venda ' . $sale->id);
-                //     report($e);
-                // }
             } else if ($requestData['transaction']['status'] == 'chargedback') {
                 $sale->update([
                                   'gateway_status' => 'chargedback',

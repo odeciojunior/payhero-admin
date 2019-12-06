@@ -44,27 +44,22 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        $companyModel = new Company();
+        $sales = Sale::where([
+            ['payment_method', 2],
+            ['status', 1]
+        ])
+        ->with('transactions')
+        ->whereHas('transactions', function($query){
+            $query->whereNotIn('status', ['paid', 'transfered']);
+            $query->whereNotNull('company_id');
+            $query->whereNull('invitation_id');
+        })
+        ->orderBy('created_at', 'desc')
+        // ->first();
+        // ->limit(10)
+        ->get()->toArray();
 
-        $companies = $companyModel->all();
-
-        // foreach($companies as $company) {
-
-        //     $document = preg_replace("/[^0-9]/", "", $company->company_document);
-
-        //     if(strlen($document) == 11){
-        //         $company->update([
-        //             'company_type' => $companyModel->present()->getCompanyType('physical person')
-        //         ]);
-        //     }
-        //     else {
-        //         $company->update([
-        //             'company_type' => $companyModel->present()->getCompanyType('juridical person')
-        //         ]);
-        //     }
-
-        // }
-
+        dd(count($sales));
     }
 
 
