@@ -35,14 +35,16 @@ class SendEmailListener implements ShouldQueue
     public function handle(SendEmailEvent $event)
     {
         $data      = $event->request;
+        $this->tag = !empty($data['tag']) ? $data['tag'] : 'sendEmailListener';
+
         $smsReturn = $this->sendGridService->sendEmail('noreply@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
         if ($smsReturn) {
             $data['checkout']->increment('email_sent_amount');
         }
     }
 
-    public function tags(SendEmailEvent $event)
+    public function tags()
     {
-        return ['listener:' . static::class, isset($event->request['tag'])? $event->request['tag'] : 'sendEmailListener' ];
+        return ['listener:' . static::class, !empty($this->tag) ? $this->tag : 'sendEmailListener'];
     }
 }

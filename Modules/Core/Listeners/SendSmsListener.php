@@ -15,6 +15,7 @@ class SendSmsListener implements ShouldQueue
      * @var SmsService
      */
     private $smsService;
+    private $tag;
 
     /**
      * SendSmsListener constructor.
@@ -31,16 +32,16 @@ class SendSmsListener implements ShouldQueue
      */
     public function handle(SendSmsEvent $event)
     {
-        $data = $event->request;
-
-        $sendSms = $this->smsService->sendSms($data['telephone'], $data['message']);
+        $data      = $event->request;
+        $this->tag = !empty($data['tag']) ? $data['tag'] : 'sendSmsListener';
+        $sendSms   = $this->smsService->sendSms($data['telephone'], $data['message']);
         if ($sendSms) {
             $data['checkout']->increment('sms_sent_amount');
         }
     }
 
-    public function tags(SendSmsEvent $event)
+    public function tags()
     {
-        return ['listener:' . static::class, isset($event->request['tag']) ? $event->request['tag'] : 'sendSmsListener'];
+        return ['listener:' . static::class, !empty($this->tag) ? $this->tag : 'sendSmsListener'];
     }
 }
