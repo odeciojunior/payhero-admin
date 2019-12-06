@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch" style="display:none!important;">
                 <div class="card" onclick="window.location.href='/apps/whatsapp2'" style='width:300px;'>
                     <a id="whatsapp2-bt" href="/apps/whatsapp2" class="add-btn"><i id="whatsapp2-icon" class="icon wb-plus" aria-hidden="true"></i></a>
                     <img class="card-img-top" src="{!! asset('modules/global/img/whatsapp2.png') !!}" alt="" align="middle">
