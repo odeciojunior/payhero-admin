@@ -57,6 +57,16 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                <div class="card" onclick="window.location.href='/apps/whatsapp2'" style='width:300px;'>
+                    <a id="whatsapp2-bt" href="/apps/whatsapp2" class="add-btn"><i id="whatsapp2-icon" class="icon wb-plus" aria-hidden="true"></i></a>
+                    <img class="card-img-top" src="{!! asset('modules/global/img/whatsapp2.png') !!}" alt="" align="middle">
+                    <div class="card-body">
+                        <h5 class="card-title">Whatsapp 2.0</h5>
+                        <p class="card-text sm">Integre seus projetos com Whatsapp 2.0 </p>
+                    </div>
+                </div>
+            </div>
             {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                 <div class="card" onclick="window.location.href='/apps/digitalmanager'" style='width:300px;'>
                     <a id="digitalmanager-bt" href="/apps/digitalmanager" class="add-btn"><i id="digitalmanager-icon" class="icon wb-plus" aria-hidden="true"></i></a>
@@ -72,5 +82,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('modules/apps/js/index.js?v=1') }}"></script>
+    <script src="{{ asset('modules/apps/js/index.js?v=2') }}"></script>
 @endpush

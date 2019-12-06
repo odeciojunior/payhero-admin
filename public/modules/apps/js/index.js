@@ -39,7 +39,10 @@ $(document).ready(function(){
                     $('#digitalmanager-bt').addClass('added');
                     $('#digitalmanager-icon').removeClass('wb-plus').addClass('wb-check');
                 }
-                
+                if(response.whatsapp2Integrations > 0){
+                    $('#whatsapp2-bt').addClass('added');
+                    $('#whatsapp2-icon').removeClass('wb-plus').addClass('wb-check');
+                }
             }
         });
     }

@@ -53,6 +53,10 @@ return [
             'salt'   => '7d124336feb18d280c0f32d7fc5e57a1',
             'length' => '50',
         ],
+        'whatsapp2_token' => [
+            'salt'   => '7d124336feb18d280c0f32d7fc5e57a1',
+            'length' => '40',
+        ],
     ],
 
 ];
