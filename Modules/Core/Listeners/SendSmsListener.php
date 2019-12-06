@@ -4,7 +4,6 @@ namespace Modules\Core\Listeners;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Services\SmsService;
 
@@ -42,6 +41,6 @@ class SendSmsListener implements ShouldQueue
 
     public function tags()
     {
-        return ['listener:' . static::class, !empty($this->tag) ? $this->tag : 'sendSmsListener'];
+        return [!empty($this->tag) ? $this->tag : 'sendSmsListener'];
     }
 }

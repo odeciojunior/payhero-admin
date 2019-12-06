@@ -45,6 +45,6 @@ class SendEmailListener implements ShouldQueue
 
     public function tags()
     {
-        return ['listener:' . static::class, !empty($this->tag) ? $this->tag : 'sendEmailListener'];
+        return [!empty($this->tag) ? $this->tag : 'sendEmailListener'];
     }
 }
