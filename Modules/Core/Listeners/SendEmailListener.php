@@ -18,6 +18,7 @@ class SendEmailListener implements ShouldQueue
      * @var SendgridService
      */
     private $sendGridService;
+    private $tag;
 
     /**
      * Create the event listener.
@@ -38,5 +39,10 @@ class SendEmailListener implements ShouldQueue
         if ($smsReturn) {
             $data['checkout']->increment('email_sent_amount');
         }
+    }
+
+    public function tags(SendEmailEvent $event)
+    {
+        return ['listener:' . static::class, isset($event->request['tag'])? $event->request['tag'] : 'sendEmailListener' ];
     }
 }

@@ -4,6 +4,7 @@ namespace Modules\Core\Listeners;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Services\SmsService;
 
@@ -36,5 +37,10 @@ class SendSmsListener implements ShouldQueue
         if ($sendSms) {
             $data['checkout']->increment('sms_sent_amount');
         }
+    }
+
+    public function tags(SendSmsEvent $event)
+    {
+        return ['listener:' . static::class, isset($event->request['tag']) ? $event->request['tag'] : 'sendSmsListener'];
     }
 }
