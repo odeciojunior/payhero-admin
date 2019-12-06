@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/whatsapp2",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Whatsapp2\\Providers\\Whatsapp2ServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Whatsapp2\\": ""
+        }
+    }
+}

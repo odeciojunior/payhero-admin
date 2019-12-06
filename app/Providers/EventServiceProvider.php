@@ -9,6 +9,7 @@ use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\UserRegistrationListener;
 use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
+use Modules\Core\Listeners\BilletPaidWhatsapp2Listener;
 
 // use Modules\Core\Listeners\BilletPaidDigitalManagerListener;
 
@@ -23,6 +24,7 @@ class EventServiceProvider extends ServiceProvider
             BilletPaidActiveCampaignListener::class,
             BilletPaidHotZappListener::class,
             BilletPaidSendEmailListener::class,
+            BilletPaidWhatsapp2Listener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',
@@ -68,6 +70,13 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\WithdrawalRequestEvent'          => [
             'Modules\Core\Listeners\WithdrawalRequestSendEmailListener',
         ],
+        'Modules\Core\Events\SendEmailEvent'                  => [
+            'Modules\Core\Listeners\SendEmailListener',
+        ],
+        'Modules\Core\Events\SendSmsEvent'                    => [
+            'Modules\Core\Listeners\SendSmsListener',
+        ],
+
     ];
 
     /**

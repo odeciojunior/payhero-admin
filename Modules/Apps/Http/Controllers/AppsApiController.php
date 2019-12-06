@@ -11,7 +11,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Core\Entities\DigitalmanagerIntegration;
-
+use Modules\Core\Entities\Whatsapp2Integration;
 
 class AppsApiController extends Controller
 {
@@ -27,6 +27,7 @@ class AppsApiController extends Controller
         $convertaxIntegrationModel      = new ConvertaxIntegration();
         $activecampaignIntegrationModel = new ActivecampaignIntegration();
         $digitalmanagerIntegrationModel = new DigitalmanagerIntegration();
+        $whatsapp2IntegrationModel      = new Whatsapp2Integration();
 
         return response()->json([
             'hotzappIntegrations'        => $hotzappIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
@@ -35,6 +36,7 @@ class AppsApiController extends Controller
             'convertaxIntegrations'      => $convertaxIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'activecampaignIntegrations' => $activecampaignIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'digitalmanagerIntegrations' => $digitalmanagerIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+            'whatsapp2Integrations'      => $whatsapp2IntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
         ]);
     }
 
