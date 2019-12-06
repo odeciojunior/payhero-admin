@@ -118,6 +118,7 @@ class BankService
             ['code' => '263', 'name' => 'Banco Cacique'],
             ['code' => '265', 'name' => 'Banco Fator'],
             ['code' => '266', 'name' => 'Banco Cédula'],
+            ['code' => '290', 'name' => 'Pagseguro Internet S.A'],
             ['code' => '300', 'name' => 'Banco de la Nación Argentina'],
             ['code' => '301', 'name' => 'BPP Instituição de Pagamento S.A'],
             ['code' => '318', 'name' => 'Banco BMG'],
