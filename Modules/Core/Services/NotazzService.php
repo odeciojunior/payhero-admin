@@ -66,7 +66,7 @@ class NotazzService
         $ch = curl_init();
 
         //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, 'https://app.notazz.com/api');
+        curl_setopt($ch, CURLOPT_URL, 'https://apap.anotazz.caom/api');
         curl_setopt($ch, CURLOPT_POST, count($fields));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -109,7 +109,7 @@ class NotazzService
         if ($sale) {
             //venda encontrada
 
-            $sale = $saleModel->with(['plansSales', 'transactions'])->find($sale->id);
+            $sale = $saleModel->with(['plansSales', 'transactions.company.user'])->find($sale->id);
 
             $productsSale = collect();
             /** @var PlanSale $planSale */
@@ -157,21 +157,24 @@ class NotazzService
                     $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
                 }
 
-                $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
-                if ($discountPlataformTax == true) {
-
-                    foreach ($sale->transactions as $transaction) {
-                        if ($transaction->company_id == null) {
-                            //plataforma
-                            $costTotal += (int) $transaction->value;
-                        }
-                    }
-                }
-
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
                 $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
                 $baseValue = ($subTotal + $shippingCost) - $costTotal;
+
+
+                $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
+                if ($discountPlataformTax == true) {
+
+                    foreach ($sale->transactions as $transaction) {
+                        if ($transaction->company->user->id == $sale->owner_id) {
+                            //plataforma
+                            $costTotal += (int) $transaction->transaction_rate * 100;
+
+                            $costTotal += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
+                        }
+                    }
+                }
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 
