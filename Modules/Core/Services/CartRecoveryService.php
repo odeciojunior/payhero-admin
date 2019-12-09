@@ -73,6 +73,7 @@ class CartRecoveryService
                                                   'message'   => 'Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link,
                                                   'telephone' => $telephoneValidated,
                                                   'checkout'  => $abandonedCart,
+                                                  'tag'       => 'smsRecoveryCartVerifyAbandonedCarts',
                                               ];
                                               event(new SendSmsEvent($dataSms));
                                           }
@@ -94,6 +95,8 @@ class CartRecoveryService
                                                   'templateId'  => 'd-538d3405815c43debcf48aa44ceab965',
                                                   'bodyEmail'   => $bodyEmail,
                                                   'checkout'    => $abandonedCart,
+                                                  'tag'         => 'emailRecoveryCartVerifyAbandonedCarts',
+
                                               ];
 
                                               event(new SendEmailEvent($dataEmail));
@@ -164,6 +167,7 @@ class CartRecoveryService
                                               'message'   => 'Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link,
                                               'telephone' => $telephoneValidated,
                                               'checkout'  => $abandonedCart,
+                                              'tag'       => 'smsRecoveryCartVerifyAbandonedCarts2',
                                           ];
                                           event(new SendSmsEvent($dataSms));
                                       }
@@ -185,6 +189,7 @@ class CartRecoveryService
                                               'templateId'  => 'd-84ef2d36b629496da42c1a8bcbf6ed53',
                                               'bodyEmail'   => $bodyEmail,
                                               'checkout'    => $abandonedCart,
+                                              'tag'         => 'emailRecoveryCartVerifyAbandonedCarts2',
                                           ];
 
                                           event(new SendEmailEvent($dataEmail));

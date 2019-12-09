@@ -44,25 +44,64 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
+        $transactions = Transaction::where([
+            ['status', 'paid'],
+            ['release_date', '2019-12-21']
+        ])
+        ->whereHas('sale',function($query){
+            $query->where('payment_method', 2);
+        })
+        ->get();
+
+        foreach($transactions as $transaction){
+            $transaction->update([
+                'release_date' => '2019-12-01'
+            ]);
+        }
+
+
+
+        dd("foii");
+
+
+
+
         $sales = Sale::where([
             ['payment_method', 2],
             ['status', 1]
         ])
-        ->with('transactions')
+        ->with('transactions', 'client')
         ->whereHas('transactions', function($query){
-            $query->whereNotIn('status', ['paid', 'transfered']);
+            $query->where('status', 'waiting_payment');
             $query->whereNotNull('company_id');
             $query->whereNull('invitation_id');
         })
-        ->orderBy('created_at', 'desc')
-        // ->first();
-        // ->limit(10)
-        ->get()->toArray();
+        ->orderBy('created_at', 'asc')
+        ->get();
 
         dd(count($sales));
+
+        $totalValue = 0;
+        $count      = 0;
+
+        foreach($sales as $sale){
+            foreach($sale->transactions as $transaction){
+                if(!empty($transaction->company)){
+                    $transaction->update([
+                        'status' => 'paid',
+                        'release_date' => '2019-12-21',
+                    ]);
+                }
+                else{
+                    $transaction->update([
+                        'status' => 'paid',
+                    ]);
+                }
+            }
+        }
+
+        dd($totalValue, $count);
     }
-
-
 
 }
 

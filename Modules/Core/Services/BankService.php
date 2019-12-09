@@ -186,7 +186,7 @@ class BankService
             ['code' => '752', 'name' => 'BNP Paribas'],
             ['code' => '753', 'name' => 'Banco Comercial Uruguai'],
             ['code' => '755', 'name' => 'Banco Merrill Lynch'],
-            ['code' => '756', 'name' => 'Banco Cooperativo do Brasil'],
+            ['code' => '756', 'name' => 'Banco Cooperativo do Brasil S.A. (BANCOOB – SICOOB) '],
             ['code' => '757', 'name' => 'KEB'],
         ];
 
