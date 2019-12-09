@@ -82,10 +82,10 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'comission' => $sale->details->comission,
                 //plan
                 'project_name' => $sale->project->name ?? '',
-                'plan' => $product->plan_name,
+                'plan' => preg_replace('/[^\w\s]/u', '',$product->plan_name) ?? '',
                 'price' => $product->plan_price,
                 'product_id' => '#' . Hashids::encode($product->id),
-                'product' => $product->name . ($product->description ? ' (' . $product->description . ')' : ''),
+                'product' => preg_replace('/[^\w\s]/u', '',$product->name . ($product->description ? ' (' . $product->description . ')' : '')) ?? '',
                 'product_shopify_id' => $product->shopify_id,
                 'product_shopify_variant_id' => $product->shopify_variant_id,
                 'amount' => $product->amount,

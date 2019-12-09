@@ -344,44 +344,66 @@ class TesteController extends Controller
     public function tgFunction()
     {
 
-        //nada
-        $notazInvoiceModel = new NotazzInvoice();
-        $nservice          = new NotazzService();
+        $saleModel = new Sale();
 
-        $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
-                                      ->where('status', '!=', 5)
-                                      ->limit(50)
-                                      ->get();
+        $sale = $saleModel->with(['plansSales', 'transactions'])->find(25922);
 
-        try {
-            $count = 0;
-            foreach ($invoices as $invoice) {
-                if ($count > 90) {
-                    break;
+        $costTotaldsadsadasasd = 1;
+
+
+        $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
+        if ($discountPlataformTax == false) {
+
+            foreach ($sale->transactions as $transaction) {
+                if ($transaction->company_id == null) {
+                    //plataforma
+                    $costTotaldsadsadasasd += (int) $transaction->value;
                 }
-                $ret = $nservice->deleteNfse($invoice->id);
-                if ($ret == false) {
-                    $invoice->update([
-                                         'status' => 5,
-                                     ]);
-                    continue;
-                }
-
-                $invoice->update([
-                                     'status'           => 5,
-                                     'return_message'   => $ret->statusProcessamento,
-                                     'return_http_code' => $ret->codigoProcessamento,
-                                 ]);
-
-                $count = $count + 1;
             }
-
-            dd('ok');
-        } catch (Exception $ex) {
-            dd($ex);
         }
 
-        dd($invoices);
+        dd($costTotaldsadsadasasd);
+
+        dd('aa');
+
+        //        //nada
+        //        $notazInvoiceModel = new NotazzInvoice();
+        //        $nservice          = new NotazzService();
+        //
+        //        $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+        //                                      ->where('status', '!=', 5)
+        //                                      ->limit(50)
+        //                                      ->get();
+        //
+        //        try {
+        //            $count = 0;
+        //            foreach ($invoices as $invoice) {
+        //                if ($count > 90) {
+        //                    break;
+        //                }
+        //                $ret = $nservice->deleteNfse($invoice->id);
+        //                if ($ret == false) {
+        //                    $invoice->update([
+        //                                         'status' => 5,
+        //                                     ]);
+        //                    continue;
+        //                }
+        //
+        //                $invoice->update([
+        //                                     'status'           => 5,
+        //                                     'return_message'   => $ret->statusProcessamento,
+        //                                     'return_http_code' => $ret->codigoProcessamento,
+        //                                 ]);
+        //
+        //                $count = $count + 1;
+        //            }
+        //
+        //            dd('ok');
+        //        } catch (Exception $ex) {
+        //            dd($ex);
+        //        }
+        //
+        //        dd($invoices);
 
         dd('aa');
     }
