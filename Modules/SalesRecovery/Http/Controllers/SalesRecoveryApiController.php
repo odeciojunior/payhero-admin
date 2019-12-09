@@ -201,7 +201,7 @@ class SalesRecoveryApiController extends Controller
 //                    if (in_array($sale->gateway_id, [7])) {
                         $checkoutService   = new CheckoutService();
                         $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
-                                                                                           ->encode($sale->id), $totalPaidValue, $dueDate);
+                                                                                           ->encode($sale->id), ($totalPaidValue + $shippingPrice), $dueDate);
 //                    } else {
 //                        $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
 //
