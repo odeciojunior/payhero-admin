@@ -160,13 +160,12 @@ class NotazzService
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
                 $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
-                $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
                 if ($discountPlataformTax == true) {
 
                     foreach ($sale->transactions as $transaction) {
-                        if ($transaction->company->user->id == $sale->owner_id) {
+                        if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
                             //plataforma
                             $costTotal += (int) $transaction->transaction_rate * 100;
 
@@ -174,6 +173,8 @@ class NotazzService
                         }
                     }
                 }
+
+                $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
 
@@ -721,12 +722,14 @@ class NotazzService
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
-            $notazzInvoice->update([
-                                       'status' => $notazzInvoiceModel->present()
-                                                                      ->getStatus('in_process'),
-                                   ]);
+            if ($notazzInvoice->id == 17798) {
+                $notazzInvoice->update([
+                                           'status' => $notazzInvoiceModel->present()
+                                                                          ->getStatus('in_process'),
+                                       ]);
 
-            SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
+                SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
+            }
         }
     }
 
