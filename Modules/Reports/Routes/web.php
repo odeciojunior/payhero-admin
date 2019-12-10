@@ -14,6 +14,8 @@
 Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
     Route::get('/', 'ReportsController@index')->name('reports.index')->middleware('role:account_owner|admin');
 
+    Route::get('/checkouts', 'ReportsController@checkouts')->name('reports.checkouts')->middleware('role:account_owner|admin');
+
     Route::get('/getValues/{project_id}', 'ReportsController@getValues')->name('reports.values')->middleware('role:account_owner|admin');
     Route::get('/getsalesbyorigin', 'ReportsController@getSalesByOrigin')->name('reports.salesbyorigin')->middleware('role:account_owner|admin');
 });
