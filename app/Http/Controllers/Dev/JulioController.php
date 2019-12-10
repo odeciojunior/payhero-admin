@@ -44,6 +44,8 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
+        dd(Company::with('user')->find(Hashids::decode('n4KovG1Y8GyDEmO')));
+
         $transactions = Transaction::where([
             ['status', 'paid'],
             ['release_date', '2019-12-21']
