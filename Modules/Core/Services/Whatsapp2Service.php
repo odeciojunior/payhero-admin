@@ -94,6 +94,9 @@ class Whatsapp2Service
 
             $status = ($eventSale == 2 || $eventSale == 3) ? 'paid' : 'pending';
 
+            $totalValue = preg_replace("/[^0-9]/", "", $sale->sub_total) + preg_replace("/[^0-9]/", "", $sale->shipment_value);
+            $totalValue = substr_replace($totalValue, '.', strlen($totalValue) - 2, 0);
+
             $data = [
                 'type'      => 'order',
                 'api_token' => $this->apiToken,
@@ -105,8 +108,9 @@ class Whatsapp2Service
                     'checkout_url'     => "https://checkout." . $domain->name . "/recovery/" . $sale->checkout->id_log_session,
                     'id'               => $sale->id,
                     'status'           => $status,
+                    "codigo_barras"    => $sale->boleto_digitable_line,
                     'values'           => [
-                        'total' => $sale->total_paid_value,
+                        'total' => $totalValue,
                     ],
                     'costumer'         => [
                         'name'             => $sale->client->name,

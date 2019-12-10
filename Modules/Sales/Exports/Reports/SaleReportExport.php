@@ -82,10 +82,10 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'comission' => $sale->details->comission,
                 //plan
                 'project_name' => $sale->project->name ?? '',
-                'plan' => preg_replace('/[^\w\s]/u', '',$product->plan_name) ?? '',
+                'plan' => $product->plan_name,
                 'price' => $product->plan_price,
                 'product_id' => '#' . Hashids::encode($product->id),
-                'product' => preg_replace('/[^\w\s]/u', '',$product->name . ($product->description ? ' (' . $product->description . ')' : '')) ?? '',
+                'product' => $product->name . ($product->description ? ' (' . $product->description . ')' : ''),
                 'product_shopify_id' => $product->shopify_id,
                 'product_shopify_variant_id' => $product->shopify_variant_id,
                 'amount' => $product->amount,
@@ -109,9 +109,13 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'utm_medium' => $sale->checkout->utm_medium ?? '',
                 'utm_campaign' => $sale->checkout->utm_campaign ?? '',
                 'utm_term' => $sale->checkout->utm_term ?? '',
-                'utm_content' => $sale->checkout->utm_content ?? '',
+                'utm_content' =>  preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', $sale->checkout->utm_content) ?? '',
             ];
         }
+
+        //foreach ($saleData as &$value){
+        //    $value = preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '!Te peguei!', $value);
+        //}
 
         return $saleData;
     }
