@@ -118,7 +118,7 @@ class CheckoutService
                                                                                                           ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                   ->encode($sale->id);
+                                                                                                ->encode($sale->id);
             }
             $dataCancel = [
                 'refundAmount' => $refundAmount,
@@ -191,7 +191,7 @@ class CheckoutService
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
-            if ($response->status == 'success') {
+            if ($response->status == 'success' && $response->response->status == 'success') {
                 $saleModel  = new Sale();
                 $dataUpdate = (array) $response->response->response;
                 $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
@@ -219,14 +219,16 @@ class CheckoutService
                 } else {
                     $result = [
                         'status'   => 'error',
-                        'message'  => print_r($response->message, true) ?? '',
+                        'error'    => 'error',
+                        'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
                         'response' => $response,
                     ];
                 }
             } else {
                 $result = [
                     'status'   => 'error',
-                    'message'  => print_r($response->message, true) ?? '',
+                    'error'    => 'error',
+                    'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
                     'response' => $response,
                 ];
             }
@@ -237,7 +239,7 @@ class CheckoutService
 
             return [
                 'status'  => 'error',
-                'message' => 'Error ao tentar cancelar venda.',
+                'message' => 'Error ao tentar regerar boleto.',
                 'error'   => $ex->getMessage(),
             ];
         }
