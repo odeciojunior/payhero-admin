@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Lcobucci\JWT\Parser;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserDevice;
 use Modules\Core\Services\FoxUtils;
 use stringEncode\Exception;
@@ -45,7 +46,8 @@ class AuthApiService
                                     ->first();
             //VERIFICA SE JA EXISTE UM USUARIO COM O MOBILE TOKEN, CASO NAO EXISTA, CRIA, SE EXISTIR APENAS ATUALIZA O STATUS PARA ONLINE.
             if (!FoxUtils::isEmpty($userDevice)) {
-                $userDevice->online = true;
+                UserDevice::where('player_id', $request['mobile_push_token'])->where('user_id', $user->id)
+                          ->update(['online' => true]);
             } else {
                 $deviceInformation = json_decode($this->getDeviceInformation($request), true);
                 $createUserDevices = [
@@ -116,6 +118,14 @@ class AuthApiService
             if ($value) {
                 $id      = (new Parser())->parse($value)->getHeader('jti');
                 $revoked = DB::table('oauth_access_tokens')->where('id', '=', $id)->update(['revoked' => 1]);
+            }
+
+            //ATUALIZA O USER DEVICE PARA OFF QUANDO FOR EFETUADO O LOGOUT
+            if (!FoxUtils::isEmpty($request['mobile_push_token'])) {
+                $user = User::where('email', $request['email'])->first();
+                UserDevice::where('player_id', $request['mobile_push_token'])
+                          ->where('user_id', $user->id)
+                          ->update(['online' => false]);
             }
 
             Auth::logout();
