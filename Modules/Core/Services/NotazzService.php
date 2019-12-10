@@ -722,14 +722,12 @@ class NotazzService
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
-            if ($notazzInvoice->id == 17798) {
                 $notazzInvoice->update([
                                            'status' => $notazzInvoiceModel->present()
                                                                           ->getStatus('in_process'),
                                        ]);
 
                 SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
-            }
         }
     }
 
