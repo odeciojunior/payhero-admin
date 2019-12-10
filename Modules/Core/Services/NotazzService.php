@@ -66,7 +66,7 @@ class NotazzService
         $ch = curl_init();
 
         //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, 'https://apap.anotazz.caom/api');
+        curl_setopt($ch, CURLOPT_URL, 'https://app.notazz.com/api');
         curl_setopt($ch, CURLOPT_POST, count($fields));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
