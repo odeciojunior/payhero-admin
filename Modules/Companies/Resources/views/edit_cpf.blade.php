@@ -30,7 +30,7 @@
                                 </button>
                             </div>
                             <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents-cpf' role="alert" style='display:none;'>
-                                <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem avisados.
+                                <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
