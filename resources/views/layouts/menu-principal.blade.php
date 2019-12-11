@@ -95,7 +95,7 @@
         <!-- End Site Navbar Seach -->
     </div>
 </nav>
-    
+
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
@@ -118,7 +118,6 @@
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
-                    <!-- <i class="material-icons align-middle"><span class="mm-opended-hidden">shopping_basket</span></i> -->
                     <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <path d="M0 0h24v24H0z" fill="none"/>
                         <path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1h-4.79zM9 9l3-4.4L15 9H9zm3 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
@@ -171,11 +170,6 @@
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub  disabled">
-                {{--            <a href="javascript:void(0)" class="disabled">--}}
-                {{--                <i class="material-icons">people</i>--}}
-                {{--                <span class="site-menu-title">Afiliados (em breve)</span>--}}
-                {{--                <span class="site-menu-arrow"></span>--}}
-                {{--            </a>--}}
                 <ul class="site-menu-sub">
                     <li class="site-menu-item">
                         <a href="{!! route('afiliados.minhasafiliacoes') !!}">
@@ -199,32 +193,27 @@
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub">
-                <a href="{!! route('reports.index') !!}">
-                    <i class="material-icons">insert_chart_outlined</i>
-                    <span class="site-menu-title">Relatórios</span>
-                </a>
-            </li>
-
-            {{-- <li class="site-menu-item has-sub">
-                <a href="javascript:void(0)" id="reports-link">
-                    <i class="material-icons">insert_chart_outlined</i>
-                    <span class="site-menu-title">Relatórios</span>
-                    <span class="site-menu-arrow"></span>
-                </a>
-                <ul class="site-menu-sub">
-                    <li class="site-menu-item has-sub">
-                        <a href="{!! route('reports.index') !!}">
-                            <span class="site-menu-title">Vendas</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="{{ route('reports.checkouts') }}">
-                            <span class="site-menu-title">Acessos</span>
-                        </a>
-                    </li>
-                </ul>
-            </li> --}}
+                <li class="site-menu-item has-sub">
+                    <a href="javascript:void(0)" id="reports-link">
+                        <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path fill="none" d="M0 0h24v24H0z"/>
+                        </svg>
+                        <span class="site-menu-title">Relatórios</span>
+                        <span class="site-menu-arrow"></span>
+                    </a>
+                    <ul class="site-menu-sub">
+                        <li class="site-menu-item has-sub">
+                            <a href="{!! route('reports.index') !!}">
+                                <span class="site-menu-title">Vendas</span>
+                            </a>
+                        </li>
+                        <li class="site-menu-item">
+                            <a href="{{ route('reports.checkouts') }}">
+                                <span class="site-menu-title">Acessos</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
@@ -242,12 +231,6 @@
                 </a>
             </li>
         @endif
-        {{-- <li class="site-menu-item has-sub">
-            <a href="{{ route('integrations.index') }}">
-                <i class="material-icons">devices_other</i>
-                <span class="site-menu-title">Integrações</span>
-            </a>
-        </li> --}}
         @if(auth()->user()->hasRole('account_owner'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">

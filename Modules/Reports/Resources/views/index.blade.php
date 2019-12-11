@@ -1,5 +1,5 @@
 @extends("layouts.master")
-@section('title', '- Relatórios')
+@section('title', '- Relatório de Vendas')
 
 @section('content')
 
@@ -14,7 +14,7 @@
         <div class="page-header container">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="page-title">Relatórios</h1>
+                    <h1 class="page-title">Relatório de Vendas</h1>
                     <span type="hidden" class="error-data"></span>
                 </div>
             </div>
