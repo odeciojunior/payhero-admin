@@ -20,15 +20,13 @@
             </div>
         </div>
         <div id="reports-content" class="page-content container" style="display:none">
-            <div class="row align-items-center">
+            <div class="row align-items-center justify-content-between">
                 <div class="col-sm-6 col-m-3 col-lg-3">
-                    <div class="">
                         <select id='select_projects' class="form-control select-pad">
                             {{-- JS carrega.. --}}
                         </select>
-                    </div>
                 </div>
-                <div class="offset-lg-5 offset-m-3 col-sm-6 col-m-3 col-lg-3">
+                <div class="col-sm-6 col-m-3 col-lg-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text px-1 px-md-2" style="background-color: none; border: none;">
                             <i class="material-icons gradient"> calendar_today </i>
@@ -47,26 +45,26 @@
                                     <div class="row justify-content-between gutter_top">
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Acessados </h6>
-                                            <h4 id='qtd-acessed' class="number green" style='color:green'>0</h4>
+                                            <h4 id='qtd-acessed' class="number blue-800">0</h4>
                                         </div>
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Abandonos </h6>
-                                            <h4 id='qtd-abandoned' class="number green" style='color:green'>0<i class="fas fa-check"></i>
+                                            <h4 id='qtd-abandoned' class="number red-500">0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Recuperados </h6>
-                                            <h4 id='qtd-recovered' class="number blue-800" style='color:blue'>0<i class="fas fa-check"></i>
+                                            <h4 id='qtd-recovered' class="number green-500">0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Venda Finalizada </h6>
-                                            <h4 id='qtd-finalized' class="number red" style='color:red'>0<i class="fas fa-check"></i>
+                                            <h4 id='qtd-finalized' class="number green-500">0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Total </h6>
-                                            <h4 id='qtd-total-checkouts' class="number red" style='color:red'>0<i class="fas fa-check"></i>
+                                            <h4 id='qtd-total-checkouts' class="number blue-800">0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
                                     </div>
