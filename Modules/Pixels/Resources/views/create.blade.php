@@ -10,7 +10,7 @@
                     </div>
                     <div class="form-group col-6">
                         <label for="platform">Plataforma</label>
-                        <select name="platform" type="text" class="form-control pixel-platform">
+                        <select name="platform" type="text" id='select-platform' class="form-control pixel-platform">
                             <option value="facebook">Facebook</option>
                             <option value="google_adwords">Google Adwords</option>
                             <option value="google_analytics">Google Analytics</option>
@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="code">Código</label>
-                        <input name="code" type="text" class="form-control pixel-code" placeholder="Código" maxlength='30'>
+                        <input name="code" type="text" id='code-pixel' class="form-control pixel-code" placeholder="52342343245553" maxlength='30'>
                     </div>
                 </div>
                 <div class='mb-1'>
