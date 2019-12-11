@@ -114,8 +114,9 @@ class CheckoutService
             }
             $domain = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $urlCancelPayment = 'https://checkout.' . $domain->name . '/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                          ->encode($sale->id);
+                $domainName       = $domain->name ?? 'cloudfox.net';
+                $urlCancelPayment = 'https://checkout.' . $domainName . '/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                        ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                 ->encode($sale->id);
