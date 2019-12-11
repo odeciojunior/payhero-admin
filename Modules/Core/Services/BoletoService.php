@@ -3,10 +3,12 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use function foo\func;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
@@ -247,7 +249,7 @@ class BoletoService
             $projectModel  = new Project();
             $domainModel   = new Domain();
             $checkoutModel = new Checkout();
-            $startDate     = now()->startOfDay()->subDays(50);
+            $startDate     = now()->startOfDay()->subDays(2);
             $endDate       = now()->endOfDay()->subDays(2);
 
             $saleModel->with('client', 'plansSales.plan.products')
@@ -399,24 +401,17 @@ class BoletoService
         try {
 
             $saleModel = new Sale();
-
-            $boletos = $saleModel->where([
-                                             ['payment_method', '=', '2'],
-                                             ['status', '=', '2'],
-                                             [
-                                                 DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
-                                                                                                                   ->subDay('1')
-                                                                                                                   ->toDateString(),
-                                             ],
-                                         ])->get();
-
-            foreach ($boletos as $boleto) {
-                try {
-                    $boleto->update(['status' => 5]);
-                } catch (Exception $e) {
-                    Log::warning('Erro ao atualizar boleto para status 5 - changeBoletoPendingToCanceled');
-                    report($e);
-                }
+            $boletos   = $saleModel->where([
+                                               ['payment_method', ' = ', '2'],
+                                               ['status', ' = ', '2'],
+                                               [
+                                                   DB::raw("(DATE_FORMAT(boleto_due_date,' % Y -%m -%d'))"), ' <= ', Carbon::now()
+                                                                                                                           ->subDay('1')
+                                                                                                                           ->toDateString(),
+                                               ],
+                                           ]);
+            foreach ($boletos->cursor() as $boleto) {
+                $boleto->update(['status' => 5]);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao atualizar boleto para status 5 - changeBoletoPendingToCanceled');

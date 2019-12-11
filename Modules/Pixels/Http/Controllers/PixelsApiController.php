@@ -2,7 +2,6 @@
 
 namespace Modules\Pixels\Http\Controllers;
 
-
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -22,7 +21,6 @@ use Modules\Pixels\Transformers\PixelsResource;
  */
 class PixelsApiController extends Controller
 {
-
     /**
      * @param $projectId
      * @return JsonResponse|AnonymousResourceCollection
@@ -31,7 +29,7 @@ class PixelsApiController extends Controller
     {
         try {
             if (!empty($projectId)) {
-                $pixelModel = new Pixel();
+                $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
@@ -41,21 +39,21 @@ class PixelsApiController extends Controller
                     return PixelsResource::collection($pixels->orderBy('id', 'DESC')->paginate(5));
                 } else {
                     return response()->json([
-                        'message' => 'Sem permissão para listar pixels',
-                    ], 403);
+                                                'message' => 'Sem permissão para listar pixels',
+                                            ], 403);
                 }
             } else {
                 return response()->json([
-                    'message' => 'Erro ao listar dados de pixels',
-                ], 400);
+                                            'message' => 'Erro ao listar dados de pixels',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar pixels (PixelsController - index)');
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao listar dados de pixels',
-            ], 400);
+                                        'message' => 'Erro ao listar dados de pixels',
+                                    ], 400);
         }
     }
 
@@ -67,7 +65,7 @@ class PixelsApiController extends Controller
     public function store(PixelStoreRequest $request, $projectId)
     {
         try {
-            $pixelModel = new Pixel();
+            $pixelModel   = new Pixel();
             $projectModel = new Project();
 
             $validator = $request->validated();
@@ -81,6 +79,12 @@ class PixelsApiController extends Controller
             $project = $projectModel->find($validator['project_id']);
 
             if (Gate::allows('edit', [$project])) {
+
+                if ($validator['platform'] != 'outbrain' || $validator['platform'] != 'taboola') {
+                    $order             = ['UA-', 'AW-'];
+                    $validator['code'] = str_replace($order, '', $validator['code']);
+                }
+
                 $pixel = $pixelModel->create($validator);
 
                 if ($pixel) {
@@ -94,6 +98,7 @@ class PixelsApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro tentar salvar pixel (PixelsController - store)');
             report($e);
+
             return response()->json('Erro ao criar pixel', 400);
         }
     }
@@ -109,13 +114,18 @@ class PixelsApiController extends Controller
         $validated = $request->validated();
         try {
             if (isset($validated) && isset($id) && isset($projectId)) {
-                $pixelModel = new Pixel();
+                $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
+
+                    if ($validated['platform'] != 'outbrain' || $validated['platform'] != 'taboola') {
+                        $order             = ['UA-', 'AW-', 'AG-'];
+                        $validated['code'] = str_replace($order, '', $validated['code']);
+                    }
 
                     $pixelUpdated = $pixel->update($validated);
                     if ($pixelUpdated) {
@@ -127,10 +137,12 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para atualizar pixels'], 403);
                 }
             }
+
             return response()->json(['message' => 'Pixel nao encontrado'], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar fazer update dos dados do pixel (PixelsController - update)');
             report($e);
+
             return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
         }
     }
@@ -144,12 +156,12 @@ class PixelsApiController extends Controller
     {
         try {
             if (isset($id) && isset($projectId)) {
-                $pixelModel = new Pixel();
+                $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $pixel     = $pixelModel->find(current(Hashids::decode($id)));
                 $projectId = current(Hashids::decode($projectId));
-                $project = $projectModel->find($projectId);
+                $project   = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
                     $pixelDeleted = $pixel->delete();
@@ -162,10 +174,12 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para remover pixels'], 403);
                 }
             }
+
             return response()->json(['message' => 'Pixel nao encontrado'], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir pixel (PixelsController - destroy)');
             report($e);
+
             return response()->json(['message' => 'Erro ao tentar excluir pixel'], 400);
         }
     }
@@ -179,16 +193,17 @@ class PixelsApiController extends Controller
     {
         try {
             if (isset($id) && isset($projectId)) {
-                $pixelModel = new Pixel();
+                $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 
                     if ($pixel) {
                         $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+
                         return response()->json($pixel);
                     } else {
                         return response()->json('Erro ao buscar pixel', 400);
@@ -197,10 +212,12 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
                 }
             }
+
             return response()->json('Pixel nao encontrado', 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar detalhes do pixel (PixelController - show)');
             report($e);
+
             return response()->json('Erro ao buscar pixel', 400);
         }
     }
@@ -214,16 +231,17 @@ class PixelsApiController extends Controller
     {
         try {
             if (isset($projectId) && isset($id)) {
-                $pixelModel = new Pixel();
+                $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel = $pixelModel->find(current(Hashids::decode($id)));
+                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 
                     if ($pixel) {
                         $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+
                         return response()->json($pixel);
                     } else {
                         return response()->json('Erro ao buscar pixel', 400);
@@ -232,11 +250,12 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
                 }
             }
-            return response()->json('Erro ao buscar pixel', 400);
 
+            return response()->json('Erro ao buscar pixel', 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar pixel (PixelsController - edit)');
             report($e);
+
             return response()->json('Erro ao buscar pixel', 400);
         }
     }
