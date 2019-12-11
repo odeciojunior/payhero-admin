@@ -26,7 +26,7 @@ class ClientCard extends Model
     /**
      * @var array
      */
-    protected $fillable = ['client_id', 'first_four_digits', 'last_four_digits', 'card_token', 'association_code', 'created_at', 'updated_at'];
+    protected $fillable = ['browser_fingerprint', 'client_id', 'first_four_digits', 'last_four_digits', 'card_token', 'association_code', 'created_at', 'updated_at'];
 
     /**
      * @return BelongsTo

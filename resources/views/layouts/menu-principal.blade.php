@@ -205,6 +205,26 @@
                     <span class="site-menu-title">Relatórios</span>
                 </a>
             </li>
+
+            {{-- <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)" id="reports-link">
+                    <i class="material-icons">insert_chart_outlined</i>
+                    <span class="site-menu-title">Relatórios</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item has-sub">
+                        <a href="{!! route('reports.index') !!}">
+                            <span class="site-menu-title">Vendas</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('reports.checkouts') }}">
+                            <span class="site-menu-title">Acessos</span>
+                        </a>
+                    </li>
+                </ul>
+            </li> --}}
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
