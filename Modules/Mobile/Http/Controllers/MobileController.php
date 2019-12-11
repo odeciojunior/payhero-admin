@@ -257,6 +257,10 @@ class MobileController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUserProjects(Request $request)
     {
         try {
@@ -270,6 +274,10 @@ class MobileController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendMessage(Request $request)
     {
         try {
@@ -283,10 +291,31 @@ class MobileController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         try {
             return $this->integrationApiService->logout($request);
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                                        'message' => __('definitions.message.search.error'),
+                                    ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logoutDevice(Request $request)
+    {
+        try {
+            return $this->integrationApiService->logoutDevice($request);
         } catch (Exception $ex) {
             report($ex);
 

@@ -120,14 +120,6 @@ class AuthApiService
                 $revoked = DB::table('oauth_access_tokens')->where('id', '=', $id)->update(['revoked' => 1]);
             }
 
-            //ATUALIZA O USER DEVICE PARA OFF QUANDO FOR EFETUADO O LOGOUT
-            if (!FoxUtils::isEmpty($request['mobile_push_token'])) {
-                $user = User::where('email', $request['email'])->first();
-                UserDevice::where('player_id', $request['mobile_push_token'])
-                          ->where('user_id', $user->id)
-                          ->update(['online' => false]);
-            }
-
             Auth::logout();
 
             return response()->json([
@@ -162,5 +154,37 @@ class AuthApiService
         curl_close($ch);
 
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logoutDevice(Request $request)
+    {
+        try {
+            //ATUALIZA O USER DEVICE PARA OFF QUANDO FOR EFETUADO O LOGOUT
+            if (!FoxUtils::isEmpty($request[0])) {
+                $user = User::where('email', $request[1])->first();
+                UserDevice::where('player_id', $request[0])
+                          ->where('user_id', $user->id)
+                          ->update(['online' => false]);
+            } else {
+                return response()->json([
+                                            'status'  => 'error',
+                                            'message' => 'Não foi possivel desvincular o device.',
+                                        ], 400);
+            }
+
+            return response()->json([
+                                        'status'  => 'success',
+                                        'message' => 'Deslogado com sucesso',
+                                    ], 200);
+        } catch (Exception $ex) {
+            return response()->json([
+                                        'status'  => 'error',
+                                        'message' => 'Erro ao deslogar',
+                                    ], 400);
+        }
     }
 }

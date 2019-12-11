@@ -37,6 +37,7 @@ class IntegrationApiService
             if (!$this->authApiService) {
                 $this->getIntegrationApiService('auth');
             }
+
             return $this->authApiService->login($request);
         } catch (Exception $ex) {
             return response()->json([
@@ -59,6 +60,27 @@ class IntegrationApiService
             }
 
             return $this->authApiService->logout($request);
+        } catch (Exception $ex) {
+            return response()->json([
+                                        'status'  => 'error',
+                                        'message' => 'Erro ao fazer logout',
+                                    ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function logoutDevice(Request $request)
+    {
+        try {
+            if (!$this->authApiService) {
+                $this->getIntegrationApiService('auth');
+            }
+
+            return $this->authApiService->logoutDevice($request);
         } catch (Exception $ex) {
             return response()->json([
                                         'status'  => 'error',
