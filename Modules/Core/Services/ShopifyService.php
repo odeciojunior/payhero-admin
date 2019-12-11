@@ -2,9 +2,8 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Sale;
 use Exception;
-use Modules\Core\Entities\SaleShopifyRequest;
+use App\Entities\Sale;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -15,6 +14,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Modules\Core\Entities\ProductPlan;
@@ -23,6 +23,7 @@ use Slince\Shopify\Manager\Theme\Theme;
 use Slince\Shopify\PublicAppCredential;
 use PHPHtmlParser\Exceptions\CurlException;
 use Slince\Shopify\Manager\Webhook\Webhook;
+use Modules\Core\Entities\SaleShopifyRequest;
 use Modules\Core\Entities\ShopifyIntegration;
 use PHPHtmlParser\Exceptions\StrictException;
 use Slince\Shopify\Manager\ProductImage\Image;
@@ -96,7 +97,7 @@ class ShopifyService
 
             $this->credential = new PublicAppCredential($token);
             $this->client     = new Client($this->credential, $urlStore, [
-                'metaCacheDir' => $cache // Metadata cache dir, required 
+                'metaCacheDir' => $cache // Metadata cache dir, required
             ]);
         } catch (Exception $e) {
             Log::warning('__construct - Erro ao criar servico do shopify');
@@ -208,15 +209,14 @@ class ShopifyService
      */
     public function getThemeByRole(string $role)
     {
-        /** @var \Slince\Shopify\Theme\Theme[] $themes */
         $themes = $this->getAllThemes();
-        /** @var \Slince\Shopify\Theme\Theme $theme */
+
         foreach ($themes as $theme) {
             if ($theme->getRole() == $role)
                 return $theme;
         }
 
-        return null; //throwl
+        return null;
     }
 
     /**
@@ -381,7 +381,7 @@ class ShopifyService
         $scriptFox = "<!-- start cloudfox utm script -->
         <div id='foxScriptUtm'>
         <script>
-    
+
             var url_string = window.location.href;
             var url = new URL(url_string);
             var src = url.searchParams.get('src');
@@ -400,7 +400,7 @@ class ShopifyService
 
                 document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate;
             }
-    
+
         </script>
         </div>
         <!-- end cloudfox utm script -->";
@@ -487,13 +487,13 @@ class ShopifyService
             url: '/cart.js',
             dataType: 'json',
             error: function error(response) {
-                
+
             },
             success: function success(response) {
               var form = document.createElement('form');
               form.method = 'POST';
-              form.action = 'https://checkout." . $domain . "/';   
-              
+              form.action = 'https://checkout." . $domain . "/';
+
               for(x=0;x < response.items.length;x++)
               {
                 var product_id = document.createElement('input');
@@ -501,13 +501,13 @@ class ShopifyService
                 var product_price = document.createElement('input');
                 var product_image = document.createElement('input');
                 var product_amount = document.createElement('input');
-                
+
                 product_id.name = 'product_id_' + (parseInt(x) + parseInt(1));
                 variant_id.name = 'variant_id_' + (parseInt(x) + parseInt(1));
                 product_price.name = 'product_price_' + (parseInt(x) + parseInt(1));
                 product_image.name = 'product_image_' + (parseInt(x) + parseInt(1));
                 product_amount.name = 'product_amount_' + (parseInt(x) + parseInt(1));
-                
+
                 product_id.value = response.items[x].id;
                 variant_id.value = response.items[x].variant_id;
                 product_price.value = response.items[x].price;
@@ -727,7 +727,7 @@ class ShopifyService
                          $('[data-fox=cart_form]').attr('action', '/cart');
                         $('[data-fox=cart_form]').submit();
                     });
-                    
+
                     $('[data-fox=cart_form]').submit(function(){
                         var discount=0;
                         $( '[data-integration-price-saved=1]' ).each(function( key, value ) {
@@ -1573,6 +1573,168 @@ class ShopifyService
             return;
         }
     }
+
+    /**
+     * @return boolean
+     *
+     * Ensure if the token entered at integration
+     * creation has the required permissions
+     */
+    public function verifyPermissions(){
+
+        if(!$this->testOrdersPermissions()){
+            return false;
+        }
+
+        if(!$this->testProductsPermissions()){
+            return false;
+        }
+
+        if(!$this->testThemePermissions()){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return boolean
+     *
+     * Verify if the informed token has permission to manage orders on shopify
+     */
+    private function testOrdersPermissions(){
+
+        try {
+
+            $items = array();
+
+            $items[] = [
+                "grams"             => 500,
+                "id"                => 100,
+                "price"             => 100.00,
+                "product_id"        => 1000,
+                "quantity"          => 1,
+                "requires_shipping" => true,
+                "sku"               => 1234566789,
+                "title"             => 'Cloudfox Test',
+                "variant_id"        => 20000,
+                "variant_title"     => 'Cloudfox Test',
+                "name"              => 'Cloudfox Test',
+                "gift_card"         => false,
+            ];
+
+            $shippingAddress = [
+                "address1"      => "Rio Grande do Sul - RS",
+                "address2"      => "",
+                "city"          => "Porto Alegre",
+                "company"       => "25800004021",
+                "country"       => "Brasil",
+                "first_name"    => 'Cloud',
+                "last_name"     => 'Fox',
+                "phone"         => '+5524999999999',
+                "province"      => 'RS',
+                "zip"           => '',
+                "name"          => 'Cloudfox',
+                "country_code"  => "BR",
+                "province_code" => '',
+            ];
+
+            $orderData = [
+                "accepts_marketing"       => false,
+                "currency"                => "BRL",
+                "email"                   => 'test@cloudfox.net',
+                "phone"                   => '+5524999999999',
+                "first_name"              => 'Cloud',
+                "last_name"               => 'Fox',
+                "buyer_accepts_marketing" => false,
+                "line_items"              => $items,
+                "shipping_address"        => $shippingAddress,
+            ];
+
+            $orderData += [
+                "transactions" => [
+                    [
+                        "kind"   => "sale",
+                        "status" => "success",
+                        "amount" => 100.00,
+                    ],
+                ],
+            ];
+
+            $order = $this->client->getOrderManager()->create($orderData);
+
+            if (empty($order) || empty($order->getId())) {
+                return false;
+            }
+
+            $this->client->getOrderManager()->remove($order->getId());
+
+            return true;
+
+        } catch (Exception $e) {
+            return false;
+        }
+
+    }
+
+
+    /**
+     * @return boolean
+     *
+     * Verify if the informed token has permission to manage products on shopify
+     */
+    private function testProductsPermissions(){
+
+        try{
+            $products = $this->client->getProductManager()->findAll();
+
+            if(empty($products)){
+                return false;
+            }
+
+            foreach($products as $product){
+
+                foreach ($product->getVariants() as $variant) {
+                    $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                    break;
+                }
+
+                return true;
+            }
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
+
+
+    /**
+     * @return boolean
+     *
+     * Verify if the informed token has permission to edit theme assets on shopify
+     */
+    private function testThemePermissions(){
+
+        try{
+
+            $this->setThemeByRole('main');
+
+            if(empty($this->theme)){
+                return false;
+            }
+
+            $this->client->getAssetManager()->update($this->theme->getId(), [
+                "key"   => 'templates/404.liquid',
+                "value" => $this->getTemplateHtml('templates/404.liquid')
+            ]);
+
+            return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
+
 }
 
 
