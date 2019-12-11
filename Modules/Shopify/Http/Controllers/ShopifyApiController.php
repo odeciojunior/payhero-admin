@@ -105,6 +105,10 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
             }
 
+            if(!$shopifyService->verifyPermissions()){
+                return response()->json(['message' => 'As permissões do token criado são insuficientes!'], 400);
+            }
+
             $shopifyName = $shopifyService->getShopName();
             $project     = $projectModel->create([
                                                      'name'                       => $shopifyName,
@@ -155,7 +159,9 @@ class ShopifyApiController extends Controller
                                                       'status'               => 'active',
                                                   ]);
                         if (!empty($userProjectModel)) {
+
                             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
+
                         } else {
                             $shippingModel->delete();
                             $shopifyIntegration->delete();

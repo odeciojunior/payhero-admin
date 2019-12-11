@@ -4,6 +4,7 @@ namespace Modules\Core\Listeners;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Services\SmsService;
 
@@ -14,7 +15,6 @@ class SendSmsListener implements ShouldQueue
      * @var SmsService
      */
     private $smsService;
-    private $tag;
 
     /**
      * SendSmsListener constructor.
@@ -31,9 +31,9 @@ class SendSmsListener implements ShouldQueue
      */
     public function handle(SendSmsEvent $event)
     {
-        $data      = $event->request;
-        $this->tag = !empty($data['tag']) ? $data['tag'] : 'sendSmsListener';
-        $sendSms   = $this->smsService->sendSms($data['telephone'], $data['message']);
+        $data = $event->request;
+
+        $sendSms = $this->smsService->sendSms($data['telephone'], $data['message']);
         if ($sendSms) {
             $data['checkout']->increment('sms_sent_amount');
         }
@@ -41,6 +41,6 @@ class SendSmsListener implements ShouldQueue
 
     public function tags()
     {
-        return [!empty($this->tag) ? $this->tag : 'sendSmsListener'];
+        return ['listener:' . static::class, 'sendEmailListener'];
     }
 }
