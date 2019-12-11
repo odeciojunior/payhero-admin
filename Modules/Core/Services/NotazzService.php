@@ -109,7 +109,7 @@ class NotazzService
         if ($sale) {
             //venda encontrada
 
-            $sale = $saleModel->with(['plansSales', 'transactions.company.user'])->find($sale->id);
+            $sale = $saleModel->with(['plansSales', 'transactions.company.user', 'project'])->find($sale->id);
 
             $productsSale = collect();
             /** @var PlanSale $planSale */
@@ -167,9 +167,12 @@ class NotazzService
                     foreach ($sale->transactions as $transaction) {
                         if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
                             //plataforma
-                            $costTotal += (int) $transaction->transaction_rate * 100;
-
+                            $trasactionRate =  preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
+                            $costTotal += (int) $trasactionRate;
                             $costTotal += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
+
+                            $installmentTaxValue = $sale->installment_tax_value ?? 0;
+                            $costTotal += (int) ($installmentTaxValue);
                         }
                     }
                 }
