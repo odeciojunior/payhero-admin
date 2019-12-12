@@ -37,6 +37,11 @@ class CreateUsersDeviceTable extends Migration
             $table->integer('test_type')->nullable();
             $table->string('ip')->nullable();
             $table->string('external_user_id')->nullable();
+            $table->boolean('sale_notification');
+            $table->boolean('billet_notification');
+            $table->boolean('payment_notification');
+            $table->boolean('withdraw_notification');
+            $table->boolean('invitation_sale_notification');
             $table->timestamps();
         });
         Schema::table('user_devices', function(Blueprint $table) {
