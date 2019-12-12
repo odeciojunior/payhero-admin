@@ -151,7 +151,7 @@ class NotazzService
                     if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
                         //moeda USD
                         $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
-                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
+                        $product['product_cost'] = (int) round(($product['product_cost'] * ($lastUsdQuotation->value / 100)));
                     }
 
                     $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
