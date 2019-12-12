@@ -51,6 +51,14 @@ class NotificationApiService
      */
     public function sendMessage(Request $request)
     {
+        $notificationChannel = [
+            'nil'              => 'nil',
+            'venda'            => '2a478392-e1b7-4e35-a80c-3942c893c20f',
+            'boleto'           => '532e65cb-a690-4438-ab8e-8739d82eb4da',
+            'notificacao'      => '803f7e0a-687b-40d5-9cd2-2972bc94fc19',
+            'pedido_afiliacao' => '6cef3efa-2acf-43eb-b9d8-b5f90dcb1143',
+        ];
+
         $headings = [
             "en" => $request['headings'],
         ];
@@ -58,17 +66,17 @@ class NotificationApiService
             "en" => $request['content'],
         ];
         $fields   = [
-            'app_id'            => env('ONESIGNAL_APP_ID'),
-            'included_segments' => $request['included_segments'],
-            'contents'          => $content,
-            'headings'          => $headings,
+            'app_id'             => env('ONESIGNAL_APP_ID'),
+            'android_channel_id' => $notificationChannel[$request['notification_sound']],
+            'included_segments'  => $request['included_segments'],
+            'contents'           => $content,
+            'headings'           => $headings,
+            'ios_sound'          => $request['notification_sound'] . '.wav',
         ];
 
         //        return $fields['included_segments'];
 
         $fields = json_encode($fields);
-        print("\nJSON sent:\n");
-        print($fields);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
