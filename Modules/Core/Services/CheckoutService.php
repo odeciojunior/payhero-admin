@@ -113,12 +113,17 @@ class CheckoutService
                 ];
             }
             $domain = $sale->project->domains->where('status', 3)->first();
-            if (FoxUtils::isProduction()) {
-                $urlCancelPayment = 'https://checkout.' . $domain->name . '/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                          ->encode($sale->id);
+            if (FoxUtils::isEmpty($domain)) {
+                $urlCancelPayment = 'https://checkout.cloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                 ->encode($sale->id);;
             } else {
-                $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                ->encode($sale->id);
+                if (FoxUtils::isProduction()) {
+                    $urlCancelPayment = 'https://checkout.' . $domain->name . '/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                              ->encode($sale->id);
+                } else {
+                    $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                    ->encode($sale->id);
+                }
             }
             $dataCancel = [
                 'refundAmount' => $refundAmount,
@@ -178,10 +183,14 @@ class CheckoutService
             $sale      = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
                                                                                  ->decode($saleId))->first();
             $domain    = $sale->project->domains->where('status', 3)->first();
-            if (FoxUtils::isProduction()) {
-                $regenerateBilletUrl = 'https://checkout.' . $domain->name . '/api/payment/regeneratebillet';
+            if (FoxUtils::isEmpty($domain)) {
+                $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
             } else {
-                $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
+                if (FoxUtils::isProduction()) {
+                    $regenerateBilletUrl = 'https://checkout.' . $domain->name . '/api/payment/regeneratebillet';
+                } else {
+                    $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
+                }
             }
 
             $data = [
