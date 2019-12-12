@@ -20,7 +20,6 @@
                     <div id="panel-login">
                         <h3 class="text-center"> Access your account </h3>
 
-                        /* blocked account */
                         @if($errors->any())
                             <strong><h4 style="color: red">{{$errors->first()}}</h4></strong>
                         @endif
