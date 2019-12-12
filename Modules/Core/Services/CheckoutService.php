@@ -180,7 +180,8 @@ class CheckoutService
                                                                                  ->decode($saleId))->first();
             $domain    = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $regenerateBilletUrl = 'https://checkout.' . $domain->name . '/api/payment/regeneratebillet';
+                $domainName = $domain->name ?? 'cloudfox.net';
+                $regenerateBilletUrl = 'https://checkout.' . $domainName . '/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
             }
