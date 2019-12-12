@@ -109,7 +109,7 @@ class NotazzService
         if ($sale) {
             //venda encontrada
 
-            $sale = $saleModel->with(['plansSales'])->find($sale->id);
+            $sale = $saleModel->with(['plansSales', 'transactions.company.user', 'project'])->find($sale->id);
 
             $productsSale = collect();
             /** @var PlanSale $planSale */
@@ -151,7 +151,7 @@ class NotazzService
                     if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
                         //moeda USD
                         $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
-                        $product['product_cost'] = (int) ($product['product_cost'] * ($lastUsdQuotation->value / 100));
+                        $product['product_cost'] = (int) round(($product['product_cost'] * ($lastUsdQuotation->value / 100)));
                     }
 
                     $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
@@ -160,6 +160,23 @@ class NotazzService
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
                 $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
+
+                $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
+                if ($discountPlataformTax == true) {
+
+                    foreach ($sale->transactions as $transaction) {
+                        if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
+                            //plataforma
+                            $trasactionRate =  preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
+                            $costTotal += (int) $trasactionRate;
+                            $costTotal += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
+
+                            $installmentTaxValue = $sale->installment_tax_value ?? 0;
+                            $costTotal += (int) ($installmentTaxValue);
+                        }
+                    }
+                }
+
                 $baseValue = ($subTotal + $shippingCost) - $costTotal;
 
                 $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
@@ -211,7 +228,8 @@ class NotazzService
 
                                           'DOCUMENT_BASEVALUE'   => $totalValue,//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
                                           'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em intermediação de compra, desconsiderando outros custos',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
-                                          'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
+                                          'DOCUMENT_COMPETENCE'  => ($sale->project->notazzIntegration->id == 5) ? Carbon::parse($sale->end_date)
+                                                                                                                         ->format("Y-m-d") : date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
                                           //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
                                           //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
                                           //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
@@ -264,8 +282,7 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public
-    function updateNfse($notazzInvoiceId)
+    public function updateNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel       = new NotazzInvoice();
         $notazzSentHistoryModel   = new NotazzSentHistory();
@@ -431,8 +448,7 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public
-    function consultNfse($notazzInvoiceId)
+    public function consultNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel     = new NotazzInvoice();
         $notazzSentHistoryModel = new NotazzSentHistory();
@@ -492,8 +508,7 @@ class NotazzService
      * @param null $invoiceNumber
      * @return bool|mixed
      */
-    public
-    function consultAllNfse($notazzInvoiceId, $startDate = null, $finalDate = null, $status = null, $invoiceNumber = null)
+    public function consultAllNfse($notazzInvoiceId, $startDate = null, $finalDate = null, $status = null, $invoiceNumber = null)
     {
         $notazzInvoiceModel = new NotazzInvoice();
 
@@ -547,8 +562,7 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public
-    function cancelNfse($notazzInvoiceId)
+    public function cancelNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel = new NotazzInvoice();
 
@@ -592,8 +606,7 @@ class NotazzService
      * @param $notazzInvoiceId
      * @return bool|mixed
      */
-    public
-    function deleteNfse($notazzInvoiceId)
+    public function deleteNfse($notazzInvoiceId)
     {
         $notazzInvoiceModel = new NotazzInvoice();
 
@@ -639,8 +652,7 @@ class NotazzService
      * @param $city
      * @return mixed
      */
-    public
-    function checkCity($tokenApi, $state, $city)
+    public function checkCity($tokenApi, $state, $city)
     {
         $fields = json_encode([
                                   'METHOD' => 'cidades_atendidas',//Método a ser utilizado
@@ -655,44 +667,37 @@ class NotazzService
         return $this->sendRequest($fields);
     }
 
-    public
-    function createNfe55($data)
+    public function createNfe55($data)
     {
 
     }
 
-    public
-    function updateNfe55($data)
+    public function updateNfe55($data)
     {
 
     }
 
-    public
-    function consultNfe55($data)
+    public function consultNfe55($data)
     {
 
     }
 
-    public
-    function consultAllNfe55($data)
+    public function consultAllNfe55($data)
     {
 
     }
 
-    public
-    function cancelNfe55($data)
+    public function cancelNfe55($data)
     {
 
     }
 
-    public
-    function deleteNfe55($data)
+    public function deleteNfe55($data)
     {
 
     }
 
-    public
-    function updateStock($data)
+    public function updateStock($data)
     {
 
     }
@@ -700,8 +705,7 @@ class NotazzService
     /**
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public
-    function verifyPendingInvoices()
+    public function verifyPendingInvoices()
     {
 
         $notazzInvoiceModel = new NotazzInvoice();
@@ -721,12 +725,12 @@ class NotazzService
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
-            $notazzInvoice->update([
-                                       'status' => $notazzInvoiceModel->present()
-                                                                      ->getStatus('in_process'),
-                                   ]);
+                $notazzInvoice->update([
+                                           'status' => $notazzInvoiceModel->present()
+                                                                          ->getStatus('in_process'),
+                                       ]);
 
-            SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
+                SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
         }
     }
 
@@ -738,8 +742,7 @@ class NotazzService
      * @return bool
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public
-    function createInvoice($notazzIntegrationId, $saleId, $invoiceType = 1, $invoiceSchedule = null)
+    public function createInvoice($notazzIntegrationId, $saleId, $invoiceType = 1, $invoiceSchedule = null)
     {
 
         if (!empty($saleId) && !empty($notazzIntegrationId)) {
@@ -784,8 +787,7 @@ class NotazzService
      * @return int
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public
-    function createOldInvoices($startData, $projectId = null)
+    public function createOldInvoices($startData, $projectId = null)
     {
         $saleModel    = new Sale();
         $createdCount = 0;
@@ -826,8 +828,7 @@ class NotazzService
     /**
      * Gerar todas as invoices
      */
-    public
-    function generateRetroactiveInvoices()
+    public function generateRetroactiveInvoices()
     {
         try {
 
@@ -871,8 +872,7 @@ class NotazzService
     /**
      * Gerar as notas das vendas aprovadas
      */
-    public
-    function generateInvoicesSalesApproved()
+    public function generateInvoicesSalesApproved()
     {
         try {
 
@@ -898,8 +898,7 @@ class NotazzService
      * @param $notazzInvoiceId
      * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public
-    function sendInvoice($notazzInvoiceId)
+    public function sendInvoice($notazzInvoiceId)
     {
         $notazzService      = new NotazzService();
         $notazzInvoiceModel = new NotazzInvoice();

@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=1') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
     <!-- Plugins -->
@@ -44,7 +44,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=5') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=6') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')
@@ -102,7 +102,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=5') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=6') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

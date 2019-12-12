@@ -31,7 +31,8 @@ class HotZappApiController extends Controller
             $userProjectModel   = new UserProject();
             $projectModel       = new Project();
 
-            $hotzappIntegrations = $hotzappIntegration->where('user_id',auth()->user()->account_owner_id)->with('project')->get();
+            $hotzappIntegrations = $hotzappIntegration->where('user_id', auth()->user()->account_owner_id)
+                                                      ->with('project')->get();
 
             $projects     = collect();
             $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->get();
@@ -257,46 +258,44 @@ class HotZappApiController extends Controller
         }
     }
 
-    public function regenerateBoleto(Request $request){
+    public function regenerateBoleto(Request $request)
+    {
 
         $saleId = current(Hashids::decode($request->boleto_id));
 
         $sale = Sale::find($saleId);
 
-        if(!empty($sale)){
+        if (!empty($sale)) {
 
             $project = $sale->project;
 
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
             $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-            $dueDays = $project->boleto_due_days ?? 3;
-            $dueDate = Carbon::now()->addDays($dueDays)->format('Y-m-d');
+            $dueDays        = $project->boleto_due_days ?? 3;
+            $dueDate        = Carbon::now()->addDays($dueDays)->format('Y-m-d');
             if (Carbon::parse($dueDate)->isWeekend()) {
                 $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
             }
-            if (in_array($sale->gateway_id, [7])) {
-                $checkoutService   = new CheckoutService();
-                $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
-                                                                                   ->encode($sale->id), $totalPaidValue, $dueDate);
-            } else {
-                $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
-    
-                $boletoRegenerated = $pagarmeService->boletoPayment($dueDate);
-            }
+            //            if (in_array($sale->gateway_id, [7])) {
+            $checkoutService   = new CheckoutService();
+            $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
+                                                                           ->encode($sale->id), ($totalPaidValue + $shippingPrice), $dueDate);
+            //            } else {
+            //                $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
+            //
+            //                $boletoRegenerated = $pagarmeService->boletoPayment($dueDate);
+            //            }
 
             $sale = Sale::find($saleId);
 
             return response()->json([
-                'boleto_link'    => $sale->boleto_link,
-                'digitable_line' => $sale->boleto_digitable_line
-            ], 200);
-        }
-        else{
+                                        'boleto_link'    => $sale->boleto_link,
+                                        'digitable_line' => $sale->boleto_digitable_line,
+                                    ], 200);
+        } else {
             return response()->json([
-                'error' => 'sale not found'
-            ], 400);
+                                        'error' => 'sale not found',
+                                    ], 400);
         }
     }
-
-
 }

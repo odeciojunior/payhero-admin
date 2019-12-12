@@ -118,10 +118,12 @@ class BankService
             ['code' => '263', 'name' => 'Banco Cacique'],
             ['code' => '265', 'name' => 'Banco Fator'],
             ['code' => '266', 'name' => 'Banco Cédula'],
+            ['code' => '290', 'name' => 'Pagseguro Internet S.A'],
             ['code' => '300', 'name' => 'Banco de la Nación Argentina'],
             ['code' => '301', 'name' => 'BPP Instituição de Pagamento S.A'],
             ['code' => '318', 'name' => 'Banco BMG'],
             ['code' => '320', 'name' => 'Banco Industrial e Comercial'],
+            ['code' => '323', 'name' => 'Mercado Pago'],
             ['code' => '356', 'name' => 'ABN Amro Real'],
             ['code' => '341', 'name' => 'Itau'],
             ['code' => '347', 'name' => 'Sudameris'],
@@ -184,7 +186,7 @@ class BankService
             ['code' => '752', 'name' => 'BNP Paribas'],
             ['code' => '753', 'name' => 'Banco Comercial Uruguai'],
             ['code' => '755', 'name' => 'Banco Merrill Lynch'],
-            ['code' => '756', 'name' => 'Banco Cooperativo do Brasil'],
+            ['code' => '756', 'name' => 'Banco Cooperativo do Brasil S.A. (BANCOOB – SICOOB) '],
             ['code' => '757', 'name' => 'KEB'],
         ];
 

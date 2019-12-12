@@ -395,6 +395,8 @@
                                 <h4 style="margin-top: 40px"> Destino </h4>
                                 <span id="tracking-delivery-address" class="table-title gray">Endereço: Avenida General Afonseca, 1475</span>
                                 <br>
+                                <span id="tracking-delivery-neighborhood" class="table-title gray">Bairro: Manejo</span>
+                                <br>
                                 <span id="tracking-delivery-zipcode" class="table-title gray">CEP: 27520174</span>
                                 <br>
                                 <span id="tracking-delivery-city" class="table-title gray">Cidade: Resende/RJ</span>
@@ -417,7 +419,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=3') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=4') }}"></script>
     @endpush
 
 @endsection

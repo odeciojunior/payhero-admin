@@ -370,7 +370,7 @@
             </div>
             <div class='div7' style="display:none;">
                 <h4 class="bold title-content">
-                    Dados residenciais da empresa
+                    Endereço comercial da empresa
                 </h4>
                 <p class="desc"> Onde sua empresa está localizada.
                 </p>

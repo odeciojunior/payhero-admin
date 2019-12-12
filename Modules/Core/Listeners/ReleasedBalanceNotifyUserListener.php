@@ -53,7 +53,6 @@ class ReleasedBalanceNotifyUserListener implements ShouldQueue
                 $user    = $userModel->find($user_id);
                 $message = 'O valor de R$' . number_format(intval($value) / 100, 2, ',', '.') . ' foi acrescentado ao saldo disponível.';
 
-                /** @var UserNotificationService $userNotificationService */
                 $userNotificationService = app(UserNotificationService::class);
                 if ($userNotificationService->verifyUserNotification($user, $this->userNotification)) {
                     $user->notify(new ReleasedBalanceNotification($message));

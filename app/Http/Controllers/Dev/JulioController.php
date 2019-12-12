@@ -44,30 +44,66 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        $companyModel = new Company();
+        dd(Company::with('user')->find(Hashids::decode('n4KovG1Y8GyDEmO')));
 
-        $companies = $companyModel->all();
+        $transactions = Transaction::where([
+            ['status', 'paid'],
+            ['release_date', '2019-12-21']
+        ])
+        ->whereHas('sale',function($query){
+            $query->where('payment_method', 2);
+        })
+        ->get();
 
-        // foreach($companies as $company) {
+        foreach($transactions as $transaction){
+            $transaction->update([
+                'release_date' => '2019-12-01'
+            ]);
+        }
 
-        //     $document = preg_replace("/[^0-9]/", "", $company->company_document);
 
-        //     if(strlen($document) == 11){
-        //         $company->update([
-        //             'company_type' => $companyModel->present()->getCompanyType('physical person')
-        //         ]);
-        //     }
-        //     else {
-        //         $company->update([
-        //             'company_type' => $companyModel->present()->getCompanyType('juridical person')
-        //         ]);
-        //     }
 
-        // }
+        dd("foii");
 
+
+
+
+        $sales = Sale::where([
+            ['payment_method', 2],
+            ['status', 1]
+        ])
+        ->with('transactions', 'client')
+        ->whereHas('transactions', function($query){
+            $query->where('status', 'waiting_payment');
+            $query->whereNotNull('company_id');
+            $query->whereNull('invitation_id');
+        })
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+        dd(count($sales));
+
+        $totalValue = 0;
+        $count      = 0;
+
+        foreach($sales as $sale){
+            foreach($sale->transactions as $transaction){
+                if(!empty($transaction->company)){
+                    $transaction->update([
+                        'status' => 'paid',
+                        'release_date' => '2019-12-21',
+                    ]);
+                }
+                else{
+                    $transaction->update([
+                        'status' => 'paid',
+                    ]);
+                }
+            }
+        }
+
+        dd($totalValue, $count);
     }
-
-
 
 }
 

@@ -14,6 +14,10 @@ body {
     border-image-slice: 2;
 }
 
+.menu-active .site-menu-item i {
+    display: none;
+}
+
 .menu-img-active {
     height: 30px;
     width: 30px;

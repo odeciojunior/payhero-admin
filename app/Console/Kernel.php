@@ -25,6 +25,9 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, 'pt_BR');
 
+        // snapshot for horizon metrics
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
         // transfer money from transactions for user companies
         $schedule->command('verify:transfers')->dailyAt('03:00');
 
@@ -32,10 +35,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:pendingdomains')->hourly();
 
         //generate all sale approved invoices
-        $schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
+        //$schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
 
         //verify pending notazz invoices
-        $schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
+        //$schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
 
         //pega as ultimas quotacoes das moedas
         $schedule->command('update:currencyquotation')->dailyAt('12:00');

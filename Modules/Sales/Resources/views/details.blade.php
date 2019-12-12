@@ -123,6 +123,8 @@
                         <h4> Entrega </h4>
                         <span id="delivery-address" class="table-title gray"></span>
                         <br>
+                        <span id="delivery-neighborhood" class="table-title gray"></span>
+                        <br>
                         <span id="delivery-zipcode" class="table-title gray"></span>
                         <br>
                         <span id="delivery-city" class="table-title gray"></span>
@@ -216,6 +218,6 @@
     </div>
 </div>
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=3') }}"></script>
+        <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
     @endpush
 </div>

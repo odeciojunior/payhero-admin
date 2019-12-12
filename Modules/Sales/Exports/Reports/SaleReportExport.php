@@ -109,9 +109,13 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'utm_medium' => $sale->checkout->utm_medium ?? '',
                 'utm_campaign' => $sale->checkout->utm_campaign ?? '',
                 'utm_term' => $sale->checkout->utm_term ?? '',
-                'utm_content' => $sale->checkout->utm_content ?? '',
+                'utm_content' =>  preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', $sale->checkout->utm_content) ?? '',
             ];
         }
+
+        //foreach ($saleData as &$value){
+        //    $value = preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '!Te peguei!', $value);
+        //}
 
         return $saleData;
     }

@@ -2,22 +2,23 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
-use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Events\WithdrawalRequestEvent;
-use Modules\Core\Services\BankService;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Events\WithdrawalRequestEvent;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class WithdrawalsApiController
@@ -159,16 +160,16 @@ class WithdrawalsApiController extends Controller
      */
     public function getAccountInformation($companyId)
     {
-        /** @var Company $companyModel */
         $companyModel = new Company();
-        /** @var BankService $bankService */
+
         $bankService = new BankService();
-        /** @var User $userModel */
+        $companyService = new CompanyService();
+
         $userModel = new User();
-        /** @var Company $company */
+
         $company = $companyModel->find(current(Hashids::decode($companyId)));
         if (Gate::allows('edit', [$company])) {
-            /** @var User $user */
+
             $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
             if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
                 $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
@@ -204,12 +205,9 @@ class WithdrawalsApiController extends Controller
                 );
             }
 
-            if ($company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') &&
-                $company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') &&
-                $company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
+            if ($companyService->isDocumentValidated($company->id)) {
 
                 // Verificar se telefone e e-mail estão verificados
-
                 return response()->json(
                     [
                         'message' => 'success',

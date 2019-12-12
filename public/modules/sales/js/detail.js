@@ -427,7 +427,7 @@ $(() => {
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code
-            if (value.sale_status == 1) {
+            if (value.sale_status == 1 || value.sale_status == 4) {
                 let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
@@ -469,6 +469,7 @@ $(() => {
     function renderDelivery(delivery) {
         $('.btn-save-trackingcode').attr('delivery', delivery.id);
         $('#delivery-address').text('Endereço: ' + delivery.street + ', ' + delivery.number);
+        $('#delivery-neighborhood').text('Bairro: ' + delivery.neighborhood);
         $('#delivery-zipcode').text('CEP: ' + delivery.zip_code);
         $('#delivery-city').text('Cidade: ' + delivery.city + '/' + delivery.state);
     }

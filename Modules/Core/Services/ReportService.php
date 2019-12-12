@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Checkout;
 use Illuminate\Support\Facades\Auth;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
@@ -498,5 +499,364 @@ class ReportService
             report($e);
         }
     }
+
+    /**
+     * @param $date
+     * @param $projectId
+     * @return array|null
+     */
+    public function getChartDataCheckouts($date, $projectId)
+    {
+        if ($date['startDate'] == $date['endDate']) { 
+            return $this->getCheckoutsByHours($date, $projectId);
+        } else if ($date['startDate'] != $date['endDate']) {
+            $data       = null;
+            $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+            $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+            $diffInDays = $endDate->diffInDays($startDate);
+            if ($projectId) {
+                if ($diffInDays <= 20) {
+                    return $this->getCheckoutsByDays($date, $projectId);
+                } else if ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getCheckoutsByTwentyDays($date, $projectId);
+                } else if ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getCheckoutsByFortyDays($date, $projectId);
+                } else if ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getCheckoutsByWeek($date, $projectId);
+                } else if ($diffInDays > 140) {
+                    return $this->getCheckoutsByMonth($date, $projectId);
+                }
+            } else {
+
+                return [
+                    'label_list'    => ['', ''],
+                    'checkout_data' => [0, 0],
+                ];
+            }
+        }
+    }
+
+     /**
+     * @param $date
+     * @param $projectId
+     * @return array
+     */
+    private function getCheckoutsByWeek($date, $projectId)
+    {
+        try {
+            $checkoutModel = new Checkout();
+
+            $labelList    = [];
+            $dataFormated = Carbon::parse($date['startDate'])->addDays(6);
+            $endDate      = Carbon::parse($date['endDate']);
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays(7);
+                if ($dataFormated->diffInDays($endDate) < 7) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    break;
+                }
+            }
+            $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
+
+            $orders = $checkoutModel
+                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->where('project_id', $projectId)
+                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->groupBy('date')
+                ->get()->toArray();
+
+            $checkoutData = [];
+            foreach ($labelList as $label) {
+                $checkoutValue = 0;
+                foreach ($orders as $order) {
+                    for ($x = 1; $x <= 6; $x++) {
+                        if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
+                            $checkoutValue += $order['count'];
+                        }
+                    }
+                }
+                array_push($checkoutData, $checkoutValue);
+            }
+
+            return [
+                'label_list'    => $labelList,
+                'checkout_data' => $checkoutData,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+        }
+    }
+
+    /**
+     * @param $date
+     * @param $projectId
+     * @return array
+     */
+    private function getCheckoutsByMonth($date, $projectId)
+    {
+        try {
+
+            $checkoutModel = new Checkout();
+
+            $labelList    = [];
+            $dataFormated = Carbon::parse($date['startDate']);
+            $endDate      = Carbon::parse($date['endDate']);
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('m/y'));
+                $dataFormated = $dataFormated->addMonths(1);
+            }
+
+            $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
+
+            $orders = $checkoutModel
+                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->where('project_id', $projectId)
+                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->groupBy('date')
+                ->get()->toArray();
+                // dd($orders);
+
+            $checkoutData = [];
+            foreach ($labelList as $label) {
+                $checkoutValue = 0;
+                foreach ($orders as $order) {
+                    if (Carbon::parse($order['date'])->format('m/y') == $label) {
+                        $checkoutValue += $order['count'];
+                    }
+                }
+                array_push($checkoutData, $checkoutValue);
+            }
+
+            return [
+                'label_list'    => $labelList,
+                'checkout_data' => $checkoutData,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+        }
+    }
+
+     /**
+     * @param $date
+     * @param $projectId
+     * @return array
+     */
+    private function getCheckoutsByFortyDays($date, $projectId)
+    {
+        try {
+
+            $checkoutModel = new Checkout();
+
+            $labelList    = [];
+            $dataFormated = Carbon::parse($date['startDate'])->addDays(2);
+            $endDate      = Carbon::parse($date['endDate']);
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays(3);
+                if ($dataFormated->diffInDays($endDate) < 3) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    break;
+                }
+            }
+
+            $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
+
+            $orders = $checkoutModel
+                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->where('project_id', $projectId)
+                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->groupBy('date')
+                ->get()->toArray();
+
+            $checkoutData = [];
+            foreach ($labelList as $label) {
+                $checkoutValue = 0;
+
+                foreach ($orders as $order) {
+                    for ($x = 1; $x <= 3; $x++) {
+                        if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
+                            $checkoutValue += $order['count'];
+                        }
+                    }
+                }
+                array_push($checkoutData, $checkoutValue);
+            }
+
+            return [
+                'label_list'    => $labelList,
+                'checkout_data' => $checkoutData,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados ReportsController - getCheckoutsByFortyDays');
+            report($e);
+        }
+    }
+
+     /**
+     * @param $date
+     * @param $projectId
+     * @return array
+     */
+    private function getCheckoutsByTwentyDays($date, $projectId)
+    {
+        try {
+
+            $checkoutModel = new Checkout();
+
+            $labelList    = [];
+            $dataFormated = Carbon::parse($date['startDate'])->addDays(1);
+            $endDate      = Carbon::parse($date['endDate']);
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays(2);
+                if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    break;
+                }
+            }
+            $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
+
+            $orders = $checkoutModel
+                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->where('project_id', $projectId)
+                ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                ->groupBy('date')
+                ->get()->toArray();
+
+            $checkoutData = [];
+            foreach ($labelList as $label) {
+                $checkoutValue = 0;
+                foreach ($orders as $order) {
+                    if ((Carbon::parse($order['date'])->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])->format('d/m') == $label)) {
+                        $checkoutValue += $order['count'];
+                    }
+                }
+                array_push($checkoutData, $checkoutValue);
+            }
+
+            return [
+                'label_list'    => $labelList,
+                'checkout_data' => $checkoutData,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+        }
+    }
+
+     /**
+     * @param $data
+     * @param $projectId
+     * @return array
+     */
+    private function getCheckoutsByDays($data, $projectId)
+    {
+        try {
+            $checkoutModel = new Checkout();
+
+            $labelList    = [];
+            $dataFormated = Carbon::parse($data['startDate']);
+            $endDate      = Carbon::parse($data['endDate']);
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d-m'));
+                $dataFormated = $dataFormated->addDays(1);
+            }
+
+            $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
+
+            $orders = $checkoutModel
+                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->where('project_id', $projectId)
+                ->whereBetween('created_at', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
+                ->groupBy('date')
+                ->get()->toArray();
+
+            $checkoutData = [];
+
+            foreach ($labelList as $label) {
+                $checkoutValue = 0;
+                foreach ($orders as $order) {
+                    if (Carbon::parse($order['date'])->format('d-m') == $label) {
+                        $checkoutValue = $order['count'];
+                    }
+                }
+                array_push($checkoutData, $checkoutValue);
+            }
+
+            return [
+                'label_list'    => $labelList,
+                'checkout_data' => $checkoutData,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+        }
+    }
+
+     /**
+     * @param $data
+     * @param $projectId
+     * @return array
+     */
+    private function getCheckoutsByHours($data, $projectId)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $checkoutModel = new Checkout();
+
+        if (Carbon::parse($data['startDate'])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
+
+            $labelList   = [];
+            $currentHour = date('H');
+            $startHour   = 0;
+            while ($startHour <= $currentHour) {
+                array_push($labelList, $startHour . 'h');
+                $startHour++;
+            }
+        } else {
+            $labelList = [
+                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
+                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+            ];
+        }
+
+        $orders = $checkoutModel
+            ->select(\DB::raw('count(*) as count, HOUR(created_at) as hour'))
+            ->where('project_id', $projectId)
+            ->whereDate('created_at', $data['startDate'])
+            ->groupBy('hour')
+            ->get()->toArray();
+
+        $checkoutData = [];
+        foreach ($labelList as $label) {
+            $checkoutValue = 0;
+            foreach ($orders as $order) {
+                if ($order['hour'] == preg_replace("/[^0-9]/", "", $label)) {
+                    $checkoutValue = $order['count'];
+                }
+            }
+            array_push($checkoutData, $checkoutValue);
+        }
+
+        return [
+            'label_list'    => $labelList,
+            'checkout_data' => $checkoutData,
+        ];
+    }
+
 }
 

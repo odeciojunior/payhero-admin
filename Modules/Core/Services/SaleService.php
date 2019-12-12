@@ -417,6 +417,22 @@ class SaleService
                     $company->update([
                                          'balance' => $company->balance -= $transactionRefundAmount,
                                      ]);
+                } else if ($refundTransaction->status == 'anticipated') {
+
+                    $company = $companyModel->find($refundTransaction->company_id);
+
+                    $transferModel->create([
+                                               'transaction_id' => $refundTransaction->id,
+                                               'user_id'        => $company->user_id,
+                                               'value'          => $refundTransaction->antecipable_value,
+                                               'type'           => 'out',
+                                               'reason'         => 'refunded',
+                                               'company_id'     => $company->id,
+                                           ]);
+
+                    $company->update([
+                                         'balance' => $company->balance -= $refundTransaction->antecipable_value,
+                                     ]);
                 }
                 if ($transactionRefundAmount == $transactionValue) {
                     $refundTransaction->status = 'refunded';

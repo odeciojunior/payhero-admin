@@ -114,11 +114,12 @@ class CheckoutService
             }
             $domain = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $urlCancelPayment = 'https://checkout.' . $domain->name . '/api/payment/cancel/' . Hashids::connection('sale_id')
+                $domainName = $domain->name ?? 'cloudfox.net';
+                $urlCancelPayment = 'https://checkout.' . $domainName . '/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                           ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                   ->encode($sale->id);
+                                                                                                ->encode($sale->id);
             }
             $dataCancel = [
                 'refundAmount' => $refundAmount,
@@ -179,7 +180,8 @@ class CheckoutService
                                                                                  ->decode($saleId))->first();
             $domain    = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $regenerateBilletUrl = 'https://checkout.' . $domain->name . '/api/payment/regeneratebillet';
+                $domainName = $domain->name ?? 'cloudfox.net';
+                $regenerateBilletUrl = 'https://checkout.' . $domainName . '/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
             }
@@ -191,7 +193,7 @@ class CheckoutService
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
-            if ($response->status == 'success') {
+            if ($response->status == 'success' && $response->response->status == 'success') {
                 $saleModel  = new Sale();
                 $dataUpdate = (array) $response->response->response;
                 $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
@@ -219,14 +221,16 @@ class CheckoutService
                 } else {
                     $result = [
                         'status'   => 'error',
-                        'message'  => print_r($response->message, true) ?? '',
+                        'error'    => 'error',
+                        'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
                         'response' => $response,
                     ];
                 }
             } else {
                 $result = [
                     'status'   => 'error',
-                    'message'  => print_r($response->message, true) ?? '',
+                    'error'    => 'error',
+                    'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
                     'response' => $response,
                 ];
             }
@@ -237,7 +241,7 @@ class CheckoutService
 
             return [
                 'status'  => 'error',
-                'message' => 'Error ao tentar cancelar venda.',
+                'message' => 'Error ao tentar regerar boleto.',
                 'error'   => $ex->getMessage(),
             ];
         }

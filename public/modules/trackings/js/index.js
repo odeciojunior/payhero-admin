@@ -306,6 +306,7 @@ $(() => {
                 $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
                 $('#tracking-product-amount').text(tracking.amount);
                 $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
+                $('#tracking-delivery-neighborhood').text('Bairro: ' + tracking.delivery.neighborhood);
                 $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
                 $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
                 $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
@@ -413,6 +414,7 @@ $(() => {
                 $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
                 $('#tracking-product-amount').text(tracking.amount);
                 $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
+                $('#tracking-delivery-neighborhood').text('Bairro: ' + tracking.delivery.neighborhood);
                 $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
                 $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
                 $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);

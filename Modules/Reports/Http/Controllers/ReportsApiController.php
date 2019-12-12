@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ReportService;
 use Modules\Reports\Transformers\SalesByOriginResource;
+use Modules\Reports\Transformers\CheckoutsByOriginResource;
 
 class ReportsApiController extends Controller
 {
@@ -282,6 +284,153 @@ class ReportsApiController extends Controller
                     ->orderBy('sales_amount', 'DESC');
 
                 return SalesByOriginResource::collection($orders->paginate(6));
+            }
+
+            return response()->json('project not found');
+        } catch (Exception $e) {
+            Log::warning('erro na tabela de origens');
+
+            return response()->json('Ocorreu algum erro');
+        }
+    }
+
+    public function checkouts(Request $request)
+    {
+        try {
+            $userProjectModel = new UserProject();
+            $planModel        = new Plan();
+            $checkoutsModel   = new Checkout();
+
+            $dataSearch = $request->all();
+            $projectId  = current(Hashids::decode($request->input('project')));
+
+            $requestStartDate = $request->input('startDate');
+            $requestEndDate   = $request->input('endDate');
+            if ($projectId) {
+                $userProject = $userProjectModel->where([
+                                                            ['user_id', auth()->user()->account_owner_id],
+                                                            ['type', 'producer'],
+                                                            ['project_id', $projectId],
+                                                        ])->first();
+
+                if ($userProject)
+                {
+                    $itens = $checkoutsModel
+                        ->select(\DB::raw('count(*) as count'), 'plan_checkout.plan_id')
+                        ->leftJoin('checkout_plans as plan_checkout', function($join) {
+                            $join->on('plan_checkout.checkout_id', '=', 'checkouts.id');
+                        })
+                        ->where('project_id', $projectId);
+
+                    if (!empty($requestStartDate) && !empty($requestEndDate)) {
+                        $itens->whereBetween('checkouts.created_at', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
+                    } else {
+                        if (!empty($requestStartDate)) {
+                            $itens->whereDate('checkouts.start_date', '>=', $requestStartDate);
+                        }
+
+                        if (!empty($requestEndDate)) {
+                            $itens->whereDate('checkouts.start_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                        }
+                    }
+
+                    $itens = $itens->groupBy('plan_checkout.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
+                    $plans = [];
+                    foreach ($itens as $key => $iten) {
+                        $plan                      = $planModel->with('products')->find($iten['plan_id']);
+                        $plans[$key]['name']       = $plan->name . ' - ' . $plan->description;
+                        $plans[$key]['photo']      = $plan->products[0]->photo;
+                        $plans[$key]['quantidade'] = $iten['count'];
+                        unset($plan);
+                    }
+
+                    // calculos dashboard
+                    $checkoutsDetails = $checkoutsModel->select([
+                                                            DB::raw('SUM(CASE WHEN checkouts.status = "accessed" THEN 1 ELSE 0 END) AS contCheckoutsAcessed'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status = "abandoned cart" THEN 1 ELSE 0 END) AS contCheckoutsAbandoned'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status = "recovered" THEN 1 ELSE 0 END) AS contCheckoutsRecovered'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status = "sale finalized" THEN 1 ELSE 0 END) AS contCheckoutsFinalized'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.is_mobile = 0 THEN 1 ELSE 0 END) AS contCheckoutsDesktop'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.is_mobile = 1 THEN 1 ELSE 0 END) AS contCheckoutsMobile'),
+                                                        ])
+                                               ->where('project_id', $projectId);
+                    if ($requestStartDate != '' && $requestEndDate != '') {
+                        $checkoutsDetails->whereBetween('created_at', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
+                    } else {
+                        if (!empty($requestStartDate)) {
+                            $checkoutsDetails->whereDate('created_at', '>=', $requestStartDate);
+                        }
+
+                        if (!empty($requestEndDate)) {
+                            $checkoutsDetails->whereDate('updated_at', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                        }
+                    }
+                    $details               = $checkoutsDetails->get();
+
+                    $countCheckoutsAcessed   = $details[0]->contCheckoutsAcessed;
+                    $countCheckoutsAbandoned = $details[0]->contCheckoutsAbandoned;
+                    $countCheckoutsRecovered = $details[0]->contCheckoutsRecovered;
+                    $countCheckoutsFinalized = $details[0]->contCheckoutsFinalized;
+                    $contMobile              = $details[0]->contCheckoutsMobile;
+                    $contDesktop             = $details[0]->contCheckoutsDesktop;
+
+                    $reportService = new ReportService();
+
+                    $chartData = $reportService->getChartDataCheckouts($dataSearch, $projectId);
+
+                    $contCheckouts = $contMobile + $contDesktop;
+                    if ($contCheckouts > 0) {
+                        $conversaoMobile  = number_format((intval($contMobile) * 100) / intval($contCheckouts), 2, ',', ' . ');
+                        $conversaoDesktop = number_format((intval($contDesktop) * 100) / intval($contCheckouts), 2, ',', ' . ');
+                    } else {
+                        $conversaoMobile  = "0.00";
+                        $conversaoDesktop = "0.00";
+                    }
+                }
+            }
+            if (empty($chartData)) {
+                $chartData = [
+                    'label_list'       => ['', ''],
+                    'checkout_data' => [0, 0],
+                ];
+            }
+
+            return response()->json([
+                                        'contAcessed'            => $countCheckoutsAcessed ?? 0,
+                                        'contAbandoned'          => $countCheckoutsAbandoned ?? 0,
+                                        'contRecovered'          => $countCheckoutsRecovered ?? 0,
+                                        'contFinalized'          => $countCheckoutsFinalized ?? 0,
+                                        'contCheckouts'          => $countCheckoutsAcessed + $countCheckoutsAbandoned + $countCheckoutsRecovered + $countCheckoutsFinalized,
+                                        'chartData'              => $chartData,
+                                        'conversaoMobile'        => $conversaoMobile ?? 0,
+                                        'conversaoDesktop'       => $conversaoDesktop ?? 0,
+                                        'plans'                  => $plans ?? 0,
+                                    ]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados - ReportsController - checkouts');
+            report($e);
+
+            return response()->json(null);
+        }
+    }
+
+    public function getCheckoutsByOrigin(Request $request)
+    {
+        try {
+            $checkoutModel = new Checkout();
+
+            if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
+
+                $orders = $checkoutModel
+                    ->select(\DB::raw('count(*) as qtd_checkout, ' . $request->origin . ' as origin'))
+                    ->where('project_id', current(Hashids::decode($request->project_id)))
+                    ->whereBetween('created_at', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
+                    ->whereNotIn($request->origin, ['', 'null'])
+                    ->whereNotNull($request->origin)
+                    ->groupBy($request->origin)
+                    ->orderBy('qtd_checkout', 'DESC');
+
+                return CheckoutsByOriginResource::collection($orders->paginate(6));
             }
 
             return response()->json('project not found');
