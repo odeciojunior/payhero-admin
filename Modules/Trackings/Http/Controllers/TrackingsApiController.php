@@ -69,8 +69,6 @@ class TrackingsApiController extends Controller
 
             $apiTracking = $trackingService->findTrackingApi($tracking);
 
-            Log::warning("\n\nTRACKING - resposta da api: " . json_encode($apiTracking));
-
             $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
             $checkpoints = collect();
 
@@ -82,19 +80,11 @@ class TrackingsApiController extends Controller
                 'event' => 'Código de rastreio informado',
             ]);
 
-            Log::warning("\n\nTRACKING - objeto $checkpoints: " . json_encode($checkpoints->toArray()));
-
             $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
-
-            Log::warning("\n\nTRACKING - parse checkpoints: " . json_encode($checkpoints->toArray()));
 
             $checkpoints = $checkpoints->merge($checkpointsApi);
 
-            Log::warning("\n\nTRACKING - merge checkpoints: " . json_encode($checkpoints->toArray()));
-
             $tracking->checkpoints = $checkpoints->unique()->toArray();
-
-            Log::warning("\n\nTRACKING - objeto $tracking: " . json_encode($tracking->toArray()));
 
             return new TrackingShowResource($tracking);
 
