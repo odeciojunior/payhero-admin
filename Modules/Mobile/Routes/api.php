@@ -29,6 +29,9 @@ Route::group(
     ],
     function() {
 
+        /**
+         * App APIs
+         */
         Route::post('/{version}/dashboard', 'MobileController@dashboardGetData');
         Route::post('/{version}/finance', 'MobileController@financeGetData');
         Route::post('/{version}/finance/withdraw', 'MobileController@financeWithdraw');
@@ -38,5 +41,19 @@ Route::group(
         Route::post('/{version}/sales', 'MobileController@salesByFilter');
         Route::post('/{version}/sales/details', 'MobileController@getSaleDetails');
         Route::post('/{version}/projects', 'MobileController@getUserProjects');
+
+    }
+);
+
+Route::group(
+    [
+        'middleware' => ['InternalApiAuth'],
+    ],
+    function() {
+
+        /**
+         * Notification APIs
+         */
+        Route::post('/{version}/notification', 'MobileController@sendNotification');
     }
 );

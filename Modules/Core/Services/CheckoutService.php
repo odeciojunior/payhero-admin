@@ -114,9 +114,9 @@ class CheckoutService
             }
             $domain = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $domainName       = $domain->name ?? 'cloudfox.net';
+                $domainName = $domain->name ?? 'cloudfox.net';
                 $urlCancelPayment = 'https://checkout.' . $domainName . '/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                        ->encode($sale->id);
+                                                                                                          ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                 ->encode($sale->id);
@@ -180,7 +180,8 @@ class CheckoutService
                                                                                  ->decode($saleId))->first();
             $domain    = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $regenerateBilletUrl = 'https://checkout.' . $domain->name . '/api/payment/regeneratebillet';
+                $domainName = $domain->name ?? 'cloudfox.net';
+                $regenerateBilletUrl = 'https://checkout.' . $domainName . '/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
             }

@@ -258,9 +258,27 @@ class MobileController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUserProjects(Request $request) {
         try {
             return $this->integrationApiService->getUserProjects($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+
+    public function sendNotification(Request $request) {
+        try {
+            return $this->integrationApiService->sendNotification($request);
 
         } catch (Exception $ex) {
             report($ex);
