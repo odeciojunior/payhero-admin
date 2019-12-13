@@ -40,6 +40,11 @@ class AuthApiService
                                         ], 401);
             }
 
+            //TODO COMENTAR ESSA LINHA QUANDO NAO FOR TESTE
+            if ($request['mobile_push_token'] == 'null') {
+                $request['mobile_push_token'] = '66421f99-fbca-447c-ae0e-513275c9fe81';
+            }
+
             $user = $request->user();
 
             $userDevice = UserDevice::where('player_id', $request['mobile_push_token'])->where('user_id', $user->id)
@@ -51,33 +56,37 @@ class AuthApiService
             } else {
                 $deviceInformation = json_decode($this->getDeviceInformation($request), true);
                 $createUserDevices = [
-                    'user_id'             => $user->id,
-                    'player_id'           => $request['mobile_push_token'],
-                    'online'              => true,
-                    'identifier'          => $deviceInformation['identifier'],
-                    'session_count'       => $deviceInformation['session_count'],
-                    'language'            => $deviceInformation['language'],
-                    'timezone'            => $deviceInformation['timezone'],
-                    'game_version'        => $deviceInformation['game_version'],
-                    'device_os'           => $deviceInformation['device_os'],
-                    'device_type'         => $deviceInformation['device_type'],
-                    'device_model'        => $deviceInformation['device_model'],
-                    'ad_id'               => $deviceInformation['ad_id'],
-                    'tags'                => json_encode($deviceInformation['tags']),
-                    'last_active'         => $deviceInformation['last_active'],
-                    'playtime'            => $deviceInformation['playtime'],
-                    'amount_spent'        => $deviceInformation['amount_spent'],
-                    'onsignal_created_at' => $deviceInformation['created_at'],
-                    'invalid_identifier'  => $deviceInformation['invalid_identifier'],
-                    'badge_count'         => $deviceInformation['badge_count'],
-                    'sdk'                 => $deviceInformation['sdk'],
-                    'test_type'           => $deviceInformation['test_type'],
-                    'ip'                  => $deviceInformation['ip'],
-                    'external_user_id'    => $deviceInformation['external_user_id'],
+                    'user_id'                      => $user->id,
+                    'player_id'                    => $request['mobile_push_token'],
+                    'online'                       => true,
+                    'identifier'                   => $deviceInformation['identifier'],
+                    'session_count'                => $deviceInformation['session_count'],
+                    'language'                     => $deviceInformation['language'],
+                    'timezone'                     => $deviceInformation['timezone'],
+                    'game_version'                 => $deviceInformation['game_version'],
+                    'device_os'                    => $deviceInformation['device_os'],
+                    'device_type'                  => $deviceInformation['device_type'],
+                    'device_model'                 => $deviceInformation['device_model'],
+                    'ad_id'                        => $deviceInformation['ad_id'],
+                    'tags'                         => json_encode($deviceInformation['tags']),
+                    'last_active'                  => $deviceInformation['last_active'],
+                    'playtime'                     => $deviceInformation['playtime'],
+                    'amount_spent'                 => $deviceInformation['amount_spent'],
+                    'onsignal_created_at'          => $deviceInformation['created_at'],
+                    'invalid_identifier'           => $deviceInformation['invalid_identifier'],
+                    'badge_count'                  => $deviceInformation['badge_count'],
+                    'sdk'                          => $deviceInformation['sdk'],
+                    'test_type'                    => $deviceInformation['test_type'],
+                    'ip'                           => $deviceInformation['ip'],
+                    'external_user_id'             => $deviceInformation['external_user_id'],
+                    'sale_notification'            => true,
+                    'billet_notification'          => true,
+                    'payment_notification'         => true,
+                    'withdraw_notification'        => true,
+                    'invitation_sale_notification' => true,
                 ];
                 UserDevice::create($createUserDevices);
             }
-
             $tokenResult = $user->createToken('personal_access_token', ['admin']);
             $token       = $tokenResult->token;
             $token->save();
