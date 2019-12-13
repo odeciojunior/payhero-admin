@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
-
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -26,13 +24,12 @@ use Vinkla\Hashids\Facades\Hashids;
  * Class SalesApiService
  * @package Modules\Mobile\Http\Controllers\Apis\v10
  */
-class SalesApiService {
-
+class SalesApiService
+{
     /**
      * SalesApiService constructor.
      */
-    public function __construct() {   }
-
+    public function __construct() { }
 
     /**
      * @param Request $request
@@ -42,12 +39,11 @@ class SalesApiService {
     {
         try {
             $saleService = new SaleService();
-            $data = $request->all();
-            $sales = $saleService->getPaginetedSales($data);
+            $data        = $request->all();
+            $sales       = $saleService->getPaginetedSales($data);
             TransactionResource::collection($sales);
 
             return response()->json(compact('sales'), 200);
-
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesApiService - salesByFilter');
             report($e);
@@ -56,28 +52,27 @@ class SalesApiService {
         }
     }
 
-
-    public function getSaleDetails(Request $request) {
+    public function getSaleDetails(Request $request)
+    {
 
         try {
             /**
              * TODO: Colocar tudo em uma consulta com relacionamento
              */
-            $sale = $this->saleById($request["saleCode"]);
-            $client = $this->clientById($sale->client_id);
+            $sale         = $this->saleById($request["saleCode"]);
+            $client       = $this->clientById($sale->client_id);
             $productsSale = $this->productBySale($request["saleCode"]);
-            $delivery = $this->deliveryById($sale->delivery_id);
-            $checkout = $this->checkoutById($sale->checkout_id);
+            $delivery     = $this->deliveryById($sale->delivery_id);
+            $checkout     = $this->checkoutById($sale->checkout_id);
 
             return response()->json(compact('sale', 'client', 'productsSale', 'delivery', 'checkout'), 200);
-
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da venda (SalesApiService - getSalesDetails)');
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
         }
     }
 
@@ -92,8 +87,8 @@ class SalesApiService {
             $saleService = new SaleService();
 
             if (isset($id)) {
-                $sale = $saleService->getSaleWithDetails($id);
-                $saleResource =  new SalesResource($sale);
+                $sale         = $saleService->getSaleWithDetails($id);
+                $saleResource = new SalesResource($sale);
 
                 return $saleResource;
             }
@@ -125,25 +120,24 @@ class SalesApiService {
                     return new ClientResource($client);
                 } else {
                     return response()->json([
-                        'message' => 'Ocorreu um erro, cliente não encontrado',
-                    ], 400);
+                                                'message' => 'Ocorreu um erro, cliente não encontrado',
+                                            ], 400);
                 }
             } else {
                 // Hash invalido
                 return response()->json([
-                    'message' => 'Ocorreu um erro, cliente não encontrado',
-                ], 400);
+                                            'message' => 'Ocorreu um erro, cliente não encontrado',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar cliente, (SalesApiService - clientById)');
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, cliente não encontrado',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, cliente não encontrado',
+                                    ], 400);
         }
     }
-
 
     /**
      * @param $saleId
@@ -169,8 +163,6 @@ class SalesApiService {
         }
     }
 
-
-
     public function deliveryById($deliveryId)
     {
         try {
@@ -183,21 +175,21 @@ class SalesApiService {
                     return new DeliveryResource($delivery);
                 } else {
                     return response()->json([
-                        'message' => 'Ocorreu um erro,dados invalidos',
-                    ], 400);
+                                                'message' => 'Ocorreu um erro,dados invalidos',
+                                            ], 400);
                 }
             } else {
                 return response()->json([
-                    'message' => 'Ocorreu um erro,dados invalidos',
-                ], 400);
+                                            'message' => 'Ocorreu um erro,dados invalidos',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados delivery (DeliveryApiController - show)');
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
         }
     }
 
@@ -206,7 +198,7 @@ class SalesApiService {
         try {
             if (isset($id)) {
                 $checkoutModel = new Checkout();
-                $checkout = $checkoutModel->find($id);
+                $checkout      = $checkoutModel->find($id);
 
                 return new CheckoutResource($checkout);
             } else {
