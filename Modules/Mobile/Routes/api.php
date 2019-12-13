@@ -59,5 +59,7 @@ Route::group(
          * Notification APIs
          */
         Route::post('/{version}/notification', 'MobileController@sendNotification');
+
     }
 );
+

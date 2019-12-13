@@ -3,6 +3,7 @@
 namespace Modules\Mobile\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use stringEncode\Exception;
@@ -261,7 +262,8 @@ class MobileController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUserProjects(Request $request) {
+    public function getUserProjects(Request $request)
+    {
         try {
             return $this->integrationApiService->getUserProjects($request);
         } catch (Exception $ex) {
@@ -324,6 +326,10 @@ class MobileController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendNotification(Request $request) {
         try {
             return $this->integrationApiService->sendNotification($request);
