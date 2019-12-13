@@ -14,6 +14,35 @@ class UserPresenter extends Presenter
         return number_format($this->transaction_rate, 2, ',', '.');
     }
 
+    public function getStatus($status)
+    {
+
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'active';
+                case 2:
+                    return 'withdrawal blocked';
+                case 3:
+                    return 'account blocked';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'active':
+                    return 1;
+                case 'withdrawal blocked':
+                    return 2;
+                case 'account blocked':
+                    return 3;
+            }
+
+            return '';
+        }
+    }
+
+
     public function getAddressDocumentStatus($status)
     {
 

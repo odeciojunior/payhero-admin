@@ -20,7 +20,6 @@ class MobileController extends Controller
      */
     private $integrationApiService;
 
-
     /**
      * MobileController constructor.
      * @param Request $request
@@ -322,8 +321,8 @@ class MobileController extends Controller
             report($ex);
 
             return response()->json([
-                'message' => __('definitions.message.search.error'),
-            ], 400);
+                                        'message' => __('definitions.message.search.error'),
+                                    ], 400);
         }
     }
 
@@ -339,8 +338,8 @@ class MobileController extends Controller
             report($ex);
 
             return response()->json([
-                'message' => __('definitions.message.search.error'),
-            ], 400);
+                                        'message' => __('definitions.message.search.error'),
+                                    ], 400);
         }
     }
 }

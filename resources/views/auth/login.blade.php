@@ -19,6 +19,11 @@
                 <div class="panel">
                     <div id="panel-login">
                         <h3 class="text-center"> Access your account </h3>
+
+                        @if($errors->any())
+                            <strong><h4 style="color: red">{{$errors->first()}}</h4></strong>
+                        @endif
+
                         <form autocomplete="off" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
                             @csrf
                             <div class="input-holder">
@@ -87,7 +92,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         $(document).ready(function () {

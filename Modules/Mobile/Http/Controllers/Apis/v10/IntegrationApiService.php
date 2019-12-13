@@ -10,8 +10,8 @@ use stringEncode\Exception;
  * Class IntegrationApiService
  * @package Modules\Mobile\Http\Controllers\Apis\v10
  */
-class IntegrationApiService {
-
+class IntegrationApiService
+{
     const version = 'v10';
     private $dashboardApiService;
     private $authApiService;
@@ -211,7 +211,6 @@ class IntegrationApiService {
         }
     }
 
-
     /**
      * @param Request $request
      * @return JsonResponse
@@ -349,8 +348,7 @@ class IntegrationApiService {
      * @return JsonResponse
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getUserProjects(Request $request)
-    {
+    public function getUserProjects(Request $request) {
         try {
 
             if (!$this->projectApiService) {

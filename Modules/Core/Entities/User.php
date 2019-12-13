@@ -81,6 +81,7 @@ class User extends Authenticable
         'name',
         'email',
         'email_verified',
+        'status',
         'password',
         'remember_token',
         'cellphone',
