@@ -20,6 +20,8 @@ Route::group(
     function() {
         Route::post('/{version}/login', 'MobileController@login');
         Route::post('/{version}/logout', 'MobileController@logout');
+        Route::post('/{version}/logoutdevice', 'MobileController@logoutDevice');
+        Route::post('/{version}/notification', 'MobileController@sendMessage');
     }
 );
 
