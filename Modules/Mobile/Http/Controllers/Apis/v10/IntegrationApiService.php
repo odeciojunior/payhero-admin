@@ -20,7 +20,6 @@ class IntegrationApiService {
     private $salesApiService;
     private $notificationApiService;
     private $projectApiService;
-    private $notificationService;
 
     /**
      * IntegrationApiService constructor.
@@ -118,9 +117,6 @@ class IntegrationApiService {
                 break;
             case 'project':
                 $this->projectApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\" . self::version . "\ProjectApiService");
-                break;
-            case 'notification':
-                $this->notificationService = app()->make("Modules\Mobile\Http\Controllers\Apis\\". self::version ."\NotificationService");
                 break;
             default:
                 throw new Exception('Classe inválida.');
@@ -400,15 +396,17 @@ class IntegrationApiService {
     public function sendNotification(Request $request) {
         try {
 
-            if (!$this->notificationService) {
+            if (!$this->notificationApiService) {
                 $this->getIntegrationApiService('notification');
             }
 
-            return $this->notificationService->processPostback($request);
+            return $this->notificationApiService->processPostback($request);
 
         } catch (Exception $ex) {
-            return response()->json(['status' => 'error',
-                'message' => 'Erro ao recuperar os projetos'], 400);
+            return response()->json([
+                                        'status' => 'error',
+                                        'message' => 'Erro ao recuperar os projetos'
+                                    ], 400);
         }
     }
 }

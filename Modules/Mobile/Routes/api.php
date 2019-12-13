@@ -43,19 +43,20 @@ Route::group(
         Route::post('/{version}/sales', 'MobileController@salesByFilter');
         Route::post('/{version}/sales/details', 'MobileController@getSaleDetails');
         Route::post('/{version}/projects', 'MobileController@getUserProjects');
-
-    }
-);
-
-Route::group(
-    [
-        'middleware' => ['InternalApiAuth'],
-    ],
-    function() {
-
-        /**
-         * Notification APIs
-         */
         Route::post('/{version}/notification', 'MobileController@sendNotification');
+
     }
 );
+
+//Route::group(
+//    [
+//        'middleware' => ['InternalApiAuth'],
+//    ],
+//    function() {
+//
+//        /**
+//         * Notification APIs
+//         */
+//        Route::post('/{version}/notification', 'MobileController@sendNotification');
+//    }
+//);
