@@ -106,6 +106,7 @@ class AuthApiService
                                         'token_type'   => 'Bearer',
                                         'email'        => $user->email,
                                         'name'         => $user->name,
+                                        'status'       => $user->status
                                     ]);
         } catch (Exception $ex) {
             return response()->json([
