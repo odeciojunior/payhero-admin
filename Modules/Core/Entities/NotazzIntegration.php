@@ -43,6 +43,8 @@ class NotazzIntegration extends Model
         'retroactive_generated_date',    //data da geração das notas retroativas
         'invoice_type',
         'pending_days',
+        'generate_zero_invoice_flag',
+        'discount_plataform_tax_flag',
         'created_at',
         'updated_at',
         'deleted_at',
