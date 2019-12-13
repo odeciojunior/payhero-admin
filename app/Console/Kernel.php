@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         setlocale(LC_ALL, 'pt_BR');
 
         // snapshot for horizon metrics
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        // $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
         // transfer money from transactions for user companies
         $schedule->command('verify:transfers')->dailyAt('03:00');
