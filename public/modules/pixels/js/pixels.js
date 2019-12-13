@@ -30,12 +30,16 @@ $(function () {
         let value = $(this).val();
 
         if (value === 'facebook') {
+            $("#input-code-pixel").html('').hide();
             $("#code-pixel").attr("placeholder", '52342343245553');
         } else if (value === 'google_adwords') {
+            $("#input-code-pixel").html('AW-').show();
             $("#code-pixel").attr("placeholder", '8981445741-4');
         } else if (value === 'google_analytics') {
+            $("#input-code-pixel").html('UA-').show();
             $("#code-pixel").attr("placeholder", '8984567741-3');
         } else {
+            $("#input-code-pixel").html('').hide();
             $("#code-pixel").attr("placeholder", 'Código');
         }
 
@@ -102,12 +106,16 @@ $(function () {
                     let value = $(this).val();
 
                     if (value === 'facebook') {
+                        $("#code-pixel-edit").html('').hide();
                         $("#code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
+                        $("#code-pixel-edit").html('AW-').show();
                         $("#code-pixel").attr("placeholder", '8981445741-4');
                     } else if (value === 'google_analytics') {
+                        $("#code-pixel-edit").html('UA-').show();
                         $("#code-pixel").attr("placeholder", '8984567741-3');
                     } else {
+                        $("#code-pixel-edit").html('').hide();
                         $("#code-pixel").attr("placeholder", 'Código');
                     }
 
@@ -323,6 +331,25 @@ $(function () {
 
                 }
                 pagination(response, 'pixels', atualizarPixel);
+
+                $("#select-platform").change(function () {
+                    let value = $(this).val();
+
+                    if (value === 'facebook') {
+                        $("#input-code-pixel").html('').hide();
+                        $("#code-pixel").attr("placeholder", '52342343245553');
+                    } else if (value === 'google_adwords') {
+                        $("#input-code-pixel").html('AW-').show();
+                        $("#code-pixel").attr("placeholder", '8981445741-4');
+                    } else if (value === 'google_analytics') {
+                        $("#input-code-pixel").html('UA-').show();
+                        $("#code-pixel").attr("placeholder", '8984567741-3');
+                    } else {
+                        $("#input-code-pixel").html('').hide();
+                        $("#code-pixel").attr("placeholder", 'Código');
+                    }
+
+                });
             }
         });
     }
