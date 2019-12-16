@@ -63,6 +63,9 @@ class Kernel extends ConsoleKernel
 
         //restart queues running on supervisor
         $schedule->command('queue:restart')->hourly();
+
+        //
+        $schedule->command('command:validateLastDomains')->dailyAt('02:00');
     }
 
     /**
