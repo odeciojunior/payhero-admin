@@ -83,6 +83,7 @@ class Whatsapp2Service
     public function sendSale($sale, $planSales, $domain, $eventSale)
     {
         try {
+            $checkout = $sale->checkout;
 
             $dataProducts = [];
             foreach ($planSales as $planSale) {
@@ -109,7 +110,7 @@ class Whatsapp2Service
                     'billet_url'       => $sale->boleto_link,
                     'gateway'          => 'cloudfox',
                     'checkout_url'     => "https://checkout." . $domain->name . "/recovery/" . $sale->checkout->id_log_session,
-                    'id'               => $sale->id,
+                    'id'               => $checkout->present()->getCheckoutIdIntegrations(),
                     'status'           => $status,
                     "codigo_barras"    => $sale->boleto_digitable_line,
                     'values'           => [

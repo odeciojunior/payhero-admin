@@ -75,4 +75,12 @@ class CheckoutPresenter extends Presenter
             return '';
         }
     }
+
+    /**
+     * @return float|int
+     */
+    public function getCheckoutIdIntegrations()
+    {
+        return 15 * $this->id;
+    }
 }
