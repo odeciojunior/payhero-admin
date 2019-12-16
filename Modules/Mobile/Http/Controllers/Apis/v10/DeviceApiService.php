@@ -55,11 +55,7 @@ class DeviceApiService
             $userDevice = UserDevice::where('player_id', $request['mobile_push_token'])->where('user_id', $user->id)
                                     ->first();
             $userDevice->update([
-                                    'sale_notification'            => $request['sale_notification'],
-                                    'billet_notification'          => $request['billet_notification'],
-                                    'payment_notification'         => $request['payment_notification'],
-                                    'withdraw_notification'        => $request['withdraw_notification'],
-                                    'invitation_sale_notification' => $request['invitation_sale_notification'],
+                                    $request['notification_permision'] => $request['notification_state'],
                                 ]);
 
             return response()->json([

@@ -40,11 +40,6 @@ class AuthApiService
                                         ], 401);
             }
 
-            //TODO COMENTAR ESSA LINHA QUANDO NAO FOR TESTE
-            if ($request['mobile_push_token'] == 'null') {
-                $request['mobile_push_token'] = '66421f99-fbca-447c-ae0e-513275c9fe81';
-            }
-
             $user = $request->user();
 
             $userDevice = UserDevice::where('player_id', $request['mobile_push_token'])->where('user_id', $user->id)
