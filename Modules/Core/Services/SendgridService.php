@@ -114,7 +114,7 @@ class SendgridService
         $sendgridDomains = json_decode($response->body());
         foreach ($sendgridDomains as $sendgridDomain) {
 
-            if ($sendgridDomain->domain == $domain) {
+            if (!empty($sendgridDomain->domain) && $sendgridDomain->domain == $domain) {
                 return $sendgridDomain;
             }
         }
@@ -334,9 +334,9 @@ class SendgridService
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
             try {
-                $response   = $this->sendgrid()->send($email);
+                $response = $this->sendgrid()->send($email);
                 $statusCode = $response->statusCode();
-                $body       = $response->body();
+                $body = $response->body();
 
                 if (in_array($statusCode, [200, 201, 202])) {
                     $status = "success";
@@ -346,15 +346,15 @@ class SendgridService
 
                 SentEmail::create(
                     [
-                        'from_email'    => $fromEmail,
-                        'from_name'     => $fromName,
-                        'to_email'      => $toEmail,
-                        'to_name'       => $toName,
-                        'template_id'   => $templateId,
+                        'from_email' => $fromEmail,
+                        'from_name' => $fromName,
+                        'to_email' => $toEmail,
+                        'to_name' => $toName,
+                        'template_id' => $templateId,
                         'template_data' => json_encode($data),
-                        'status_code'   => $statusCode,
-                        'status'        => $status,
-                        'log_error'     => $body,
+                        'status_code' => $statusCode,
+                        'status' => $status,
+                        'log_error' => $body,
                     ]
                 );
 
@@ -364,15 +364,15 @@ class SendgridService
 
                 SentEmail::create(
                     [
-                        'from_email'    => $fromEmail,
-                        'from_name'     => $fromName,
-                        'to_email'      => $toEmail,
-                        'to_name'       => $toName,
-                        'template_id'   => $templateId,
+                        'from_email' => $fromEmail,
+                        'from_name' => $fromName,
+                        'to_email' => $toEmail,
+                        'to_name' => $toName,
+                        'template_id' => $templateId,
                         'template_data' => json_encode($data),
-                        'status_code'   => 400,
-                        'status'        => "error",
-                        'log_error'     => $e->getMessage(),
+                        'status_code' => 400,
+                        'status' => "error",
+                        'log_error' => $e->getMessage(),
                     ]
                 );
 
@@ -382,15 +382,15 @@ class SendgridService
             report($e);
             SentEmail::create(
                 [
-                    'from_email'    => $fromEmail,
-                    'from_name'     => $fromName,
-                    'to_email'      => $toEmail,
-                    'to_name'       => $toName,
-                    'template_id'   => $templateId,
+                    'from_email' => $fromEmail,
+                    'from_name' => $fromName,
+                    'to_email' => $toEmail,
+                    'to_name' => $toName,
+                    'template_id' => $templateId,
                     'template_data' => json_encode($data),
-                    'status_code'   => 400,
-                    'status'        => "error",
-                    'log_error'     => $e->getMessage(),
+                    'status_code' => 400,
+                    'status' => "error",
+                    'log_error' => $e->getMessage(),
                 ]
             );
 
