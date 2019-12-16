@@ -297,7 +297,7 @@ class CheckoutService
 
         $cloudFlareService = new CloudFlareService();
 
-        if (!$cloudFlareService->checkHtmlMetadata('http://localhost:8080/nyOeXZKkxZAQap9', 'checkout-cloudfox', '1')) {
+        if (!$cloudFlareService->checkHtmlMetadata('https://checkout.natuprocaps.com/', 'checkout-cloudfox', '1')) {
 
             // checkout OFF
 
