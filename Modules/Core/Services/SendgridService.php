@@ -268,7 +268,7 @@ class SendgridService
     public function validateDomain($domainId)
     {
         if (!empty($domainId)) {
-            $response = $this->sendgrid(true)->client->whitelabel()->domains()->_($domainId)->validate()->post();
+            $response = $this->sendgrid()->client->whitelabel()->domains()->_($domainId)->validate()->post();
             $response = json_decode($response->body());
 
             if ($response->valid == true) {
@@ -288,7 +288,7 @@ class SendgridService
     public function validateBrandLink($linkId)
     {
         if (!empty($linkId)) {
-            $response = $this->sendgrid(true)->client->whitelabel()->links()->_($linkId)->validate()->post();
+            $response = $this->sendgrid()->client->whitelabel()->links()->_($linkId)->validate()->post();
             $response = json_decode($response->body());
 
             if ($response->valid == true) {
