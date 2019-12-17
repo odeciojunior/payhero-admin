@@ -50,6 +50,8 @@ class SalesResource extends Resource
 
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
+        } else {
+            $data['has_shopify_integration'] = null;
         }
 
         return $data;
