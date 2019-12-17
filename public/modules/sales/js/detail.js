@@ -562,7 +562,7 @@ $(() => {
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: '/api/sales/refund/' + sale,
+            url: '/api/sales/newordershopify/' + sale,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
