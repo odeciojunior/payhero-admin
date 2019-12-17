@@ -305,6 +305,18 @@ class TesteController extends Controller
 
             $result = curl_exec($curl);
 
+            $result = json_decode($result);
+
+            if (!empty($result->data)) {
+                $result =  end($result->data);
+            } else {
+                $result = null;
+            }
+
+            $trackingService = new TrackingService();
+
+            $result = $trackingService->getCheckpointsApi($result);
+
             dd($result);
 
         } catch (Exception $e) {
