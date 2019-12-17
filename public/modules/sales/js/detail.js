@@ -172,24 +172,32 @@ $(() => {
         $('#comission-value').text(sale.comission ? sale.comission : '');
 
         //Detalhes do shopify
-        if (sale.has_shopify_integration) {
+        if (!sale.has_shopify_integration) {
             if (sale.shopify_order) {
-                $('#shopify-order').text('TEM ORDER');
+                // $('#shopify-order').text('TEM ORDER');
+                $('#resendShopifyOrder').addClass('d-none')
+                $('#resendeShopifyOrderButton').attr('sale', '')
             } else {
-                $('#shopify-order').text('Ordem não foi gerada no shopify!');
-                $('#div_details_shopify').html('<button class="btn btn-secondary btn-sm btn_new_order_shopify" sale=' + sale.id + '>Gerar ordem Shopify</button>');
-                $(".btn_new_order_shopify").unbind('click');
-                $(".btn_new_order_shopify").on('click', function () {
-                    var sale = $(this).attr('sale');
-                    $('#modal-new-order-shopify').modal('show');
-                    $('#modal_detalhes').modal('hide');
-                    $(".btn-confirm-new-order-shopify").unbind('click');
-                    $(".btn-confirm-new-order-shopify").on('click', function () {
-                        newOrderClick(sale);
-                    })
-                });
+                /*                $('#shopify-order').text('Ordem não foi gerada no shopify!');
+                                $('#div_details_shopify').html('<button class="btn btn-secondary btn-sm btn_new_order_shopify" sale=' + sale.id + '>Gerar ordem Shopify</button>');
+                                $(".btn_new_order_shopify").unbind('click');
+                                $(".btn_new_order_shopify").on('click', function () {
+                                    var sale = $(this).attr('sale');
+                                    $('#modal-new-order-shopify').modal('show');
+                                    $('#modal_detalhes').modal('hide');
+                                    $(".btn-confirm-new-order-shopify").unbind('click');
+                                    $(".btn-confirm-new-order-shopify").on('click', function () {
+                                        newOrderClick(sale);
+                                    })
+                                });*/
+                $('#resendShopfyOrder').removeClass('d-none')
+                $('#resendShopfyOrder').addClass('d-block')
+                $('#resendeShopifyOrderButton').attr('sale', sale.id)
             }
             $('#details-shopify').show();
+        } else {
+            $('#resendShopfyOrder').addClass('d-none')
+            $('#resendeShopifyOrderButton').attr('sale', '')
         }
         //Detalhes da venda
         if (sale.payment_method === 1) {
@@ -554,7 +562,6 @@ $(() => {
             }
         });
     }
-
 
     //Gera ordem shopify
     function newOrderClick(sale) {
