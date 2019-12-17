@@ -281,65 +281,7 @@ class TesteController extends Controller
 
     public function jeanFunction(Request $request)
     {
-        try {
-            $trackingModel = new Tracking();
-            $trackingService = new TrackingService();
-
-            $trackingCode = $request->tracking ?? '';
-
-            $tracking = $trackingModel->with([
-                'product',
-                'delivery',
-                'history'
-            ])->where('tracking_code', $trackingCode)->first();
-
-            $apiTracking = $trackingService->findTrackingApi($tracking);
-
-            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
-            $checkpoints = collect();
-
-            //objeto postado
-            $checkpoints->add([
-                'tracking_status_enum' => $postedStatus,
-                'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
-                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                'event' => 'Código de rastreio informado',
-            ]);
-
-            $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
-
-            $checkpoints = $checkpoints->merge($checkpointsApi);
-
-            $tracking->checkpoints = $checkpoints->unique()->toArray();
-
-            $trackingArray = [
-                'id' => Hashids::encode($tracking->id),
-                'tracking_code' => $tracking->tracking_code,
-                'tracking_status_enum' => $tracking->tracking_status_enum,
-                'tracking_status' => $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado',
-                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                'amount' => $tracking->amount,
-                'product' => [
-                    'name' => $tracking->product->name,
-                    'description' => $tracking->product->description,
-                    'photo' => $tracking->product->photo,
-                ],
-                'delivery' => [
-                    'street' => $tracking->delivery->street,
-                    'number' => $tracking->delivery->number,
-                    'neighborhood' => $tracking->delivery->neighborhood,
-                    'zip_code' => $tracking->delivery->zip_code,
-                    'city' => $tracking->delivery->city,
-                    'state' => $tracking->delivery->state,
-                ],
-                'checkpoints' => $tracking->checkpoints ?? [],
-            ];
-
-            dd($trackingArray);
-
-        } catch (Exception $e) {
-            dd($e->getMessage());
-        }
+        dd('oi');
     }
 
     public function julioFunction()
