@@ -327,7 +327,7 @@ class TesteController extends Controller
                     $event = $log->event;
 
                     //remove caracteres chineses e informações indesejadas
-                    //preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                    preg_match('/[^\p{Common}\p{Latin}]+/u', $event, $nonLatinChars);
                     $event = str_replace([
                         'Clique aquiMinhas Importações - ',
                         'CHINA/',
@@ -342,7 +342,7 @@ class TesteController extends Controller
                         'tracking_status_enum' => $status_enum,
                         'tracking_status' => $status,
                         'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
-                        'event' => $event,
+                        'event' => $nonLatinChars ? 'Encomenda no exterior' : $event,
                     ]);
                 }
             }
