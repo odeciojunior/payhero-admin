@@ -175,14 +175,15 @@ $(() => {
         if (sale.has_shopify_integration) {
             if (sale.shopify_order || sale.status == 20) {
                 // $('#shopify-order').text('TEM ORDER');
-                $('#resendShopfyOrder').addClass('d-none')
-                $('#resendeShopifyOrderButton').attr('sale', '')
+                $('#resendShopfyOrder').addClass('d-none');
+                $('#resendShopfyOrder').removeClass('d-block');
+                $('#resendeShopifyOrderButton').attr('sale', '');
             } else {/*
                 $('#shopify-order').text('Ordem não foi gerada no shopify!');
                 $('#div_details_shopify').html('<button class="btn btn-secondary btn-sm btn_new_order_shopify" sale=' + sale.id + '>Gerar ordem Shopify</button>');*/
-                $('#resendShopfyOrder').removeClass('d-none')
-                $('#resendShopfyOrder').addClass('d-block')
-                $('#resendeShopifyOrderButton').attr('sale', sale.id)
+                $('#resendShopfyOrder').removeClass('d-none');
+                $('#resendShopfyOrder').addClass('d-block');
+                $('#resendeShopifyOrderButton').attr('sale', sale.id);
                 $(".btn_new_order_shopify").unbind('click');
                 $(".btn_new_order_shopify").on('click', function () {
                     var sale = $(this).attr('sale');
@@ -197,7 +198,8 @@ $(() => {
             }
             $('#details-shopify').show();
         } else {
-            $('#resendShopfyOrder').addClass('d-none')
+            $('#resendShopfyOrder').addClass('d-none');
+            $('#resendShopfyOrder').removeClass('d-block');
             $('#resendeShopifyOrderButton').attr('sale', '')
         }
         //Detalhes da venda
