@@ -279,7 +279,7 @@ $(() => {
     }
 
     //modal de detalhes
-    /*$(document).on('click', '.tracking-detail', function () {
+    $(document).on('click', '.tracking-detail', function () {
 
         loadOnAny('#modal-tracking-details');
         $('#modal-tracking').modal('show');
@@ -388,119 +388,6 @@ $(() => {
                 loadOnAny('#modal-tracking-details', true);
             }
         });
-
-    });*/
-
-    $(document).on('click', '.tracking-detail', function () {
-
-        $.ajax({
-            method: 'GET',
-            url: '/api/tracking/' + $(this).attr('tracking'),
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-
-                let tracking = response.data;
-
-                //preenche os campos
-                $('#tracking-code').text(tracking.tracking_code);
-                $('#tracking-product-image').attr('src', tracking.product.photo);
-                $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
-                $('#tracking-product-amount').text(tracking.amount);
-                $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
-                $('#tracking-delivery-neighborhood').text('Bairro: ' + tracking.delivery.neighborhood);
-                $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
-                $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
-                $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
-
-                //GRAFICO DO STATUS DA ENTREGA
-
-                //reset modal
-                $('.tracking-timeline .date-item, .tracking-timeline .step-item, .tracking-timeline .status-item').removeClass('active');
-                $('.tracking-timeline .exception').remove();
-                $('.tracking-timeline .date-item').text('');
-
-                switch (tracking.tracking_status_enum) {
-                    case 1: // caso o status seja 'postado', marca o circulo inicial
-                        $('.tracking-timeline .date-item').eq(0).addClass('active').text(tracking.created_at);
-                        $('.tracking-timeline .step-item').eq(0).addClass('active');
-                        $('.tracking-timeline .status-item').eq(0).addClass('active');
-                        break;
-                    case 2: // caso o status seja 'em transito', marca o 2º e o anterior
-                        for (let i = 0; i < 2; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
-                            $('.tracking-timeline .step-item').eq(i).addClass('active');
-                            $('.tracking-timeline .status-item').eq(i).addClass('active');
-                        }
-                        break;
-                    case 3: // caso o status seja 'entregue', marca o 4º e os anteriores
-                        for (let i = 0; i < 4; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
-                            $('.tracking-timeline .step-item').eq(i).addClass('active');
-                            $('.tracking-timeline .status-item').eq(i).addClass('active');
-                        }
-                        break;
-                    case 4: // caso o status seja 'entregue', marca o 3º e os anteriores
-                        for (let i = 0; i < 3; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
-                            $('.tracking-timeline .step-item').eq(i).addClass('active');
-                            $('.tracking-timeline .status-item').eq(i).addClass('active');
-                        }
-                        break;
-                    case 5: // caso o status seja 'problema na entrega'
-                        //verifica o ultimo status do historico e encontra sua posicao no grafico
-                        lastItem = tracking.history[tracking.history.length - 1];
-                        let index = 0;
-                        if (lastItem) {
-                            if (lastItem.tracking_status_enum === 2) {
-                                index = 1;
-                            }
-                            if (lastItem.tracking_status_enum === 3) {
-                                index = 2;
-                            }
-                        }
-
-                        //adiciona um circulo representando 'problema na entrega' apos o ultimo status do historico
-                        $('<div class="date-item exception">' + tracking.created_at + '</div>').insertAfter($('.tracking-timeline .date-item').eq(index));
-                        $('<div class="step-item exception"><span class="step-line"></span><span class="step-dot"></span><span class="step-line"></span></div>').insertAfter($('.tracking-timeline .step-item').eq(index));
-                        $('<div class="status-item exception">Problema na entrega</div>').insertAfter($('.tracking-timeline .status-item').eq(index));
-
-                        //marca todos os circulos anteriores
-                        for (let i = 0; i <= index; i++) {
-                            $('.tracking-timeline .date-item').eq(i).addClass('active').text(tracking.created_at);
-                            $('.tracking-timeline .step-item').eq(i).addClass('active');
-                            $('.tracking-timeline .status-item').eq(i).addClass('active');
-                        }
-                        break;
-                }
-
-                //verifica se registro no historico de atualizacoes do tracking, caso exista usa a data do registro
-                for (let register of tracking.history) {
-                    switch (register.tracking_status_enum) {
-                        case 1:
-                            $('.tracking-timeline .date-item').eq(0).text(register.created_at);
-                            break;
-                        case 2:
-                            $('.tracking-timeline .date-item').eq(1).text(register.created_at);
-                            break;
-                        case 4:
-                            $('.tracking-timeline .date-item').eq(2).text(register.created_at);
-                            break;
-                    }
-                }
-
-                //FIM - GRAFICO DO STATUS DA ENTREGA
-
-                $('#modal-tracking').modal('show')
-            }
-        });
-
     });
 
     $(document).on('click', '.input-tracking-code', function () {

@@ -143,6 +143,11 @@
             m.parentNode.insertBefore(o,m);
         })(window,document,'script','https://js.huggy.chat/widget.min.js?v=8.0.0','pwz');
     </script>
+    <style>
+        .powerzap_open_button_iframe {
+            bottom: 40px !important;
+        }
+    </style>
     <!-- End code pzw.io  -->
 @endif
 

@@ -3,7 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use App\Entities\Sale;
+use Modules\Core\Entities\Sale;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -1280,6 +1280,7 @@ class ShopifyService
             $this->saleId = $sale->id;
             $delivery     = $sale->delivery;
             $client       = $sale->client;
+            $checkout     = $sale->checkout;
 
             $totalValue = $sale->present()->getSubTotal();
 
@@ -1313,7 +1314,7 @@ class ShopifyService
                         "requires_shipping" => true,
                         "sku"               => $productPlan->product->sku,
                         "title"             => $planSale->plan->name,
-                        "variant_id"        => $productPlan->product->shopify_variant_id,
+                        "variant_id"        => $planSale->plan->shopify_variant_id,
                         "variant_title"     => $planSale->plan->name,
                         "name"              => $planSale->plan->name,
                         "gift_card"         => false,
@@ -1353,6 +1354,11 @@ class ShopifyService
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
+                "note_attributes"         => [
+
+                    "name"  => "token_cloudfox",
+                    "value" => $checkout->present()->getCheckoutIdIntegrations(),
+                ],
             ];
 
             if ($sale->payment_method == 1 || $sale->payment_method == 3) {
@@ -1576,24 +1582,21 @@ class ShopifyService
 
     /**
      * @return boolean
-     *
      * Ensure if the token entered at integration
      * creation has the required permissions
      */
-    public function verifyPermissions(){
+    public function verifyPermissions()
+    {
 
-        if(!$this->testOrdersPermissions()){
-            dd("orders");
+        if (!$this->testOrdersPermissions()) {
             return false;
         }
 
-        if(!$this->testProductsPermissions()){
-            dd("products");
+        if (!$this->testProductsPermissions()) {
             return false;
         }
 
-        if(!$this->testThemePermissions()){
-            dd("theme");
+        if (!$this->testThemePermissions()) {
             return false;
         }
 
@@ -1602,14 +1605,14 @@ class ShopifyService
 
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage orders on shopify
      */
-    private function testOrdersPermissions(){
+    private function testOrdersPermissions()
+    {
 
         try {
 
-            $items = array();
+            $items = [];
 
             $items[] = [
                 "grams"             => 500,
@@ -1673,29 +1676,26 @@ class ShopifyService
             $this->client->getOrderManager()->remove($order->getId());
 
             return true;
-
         } catch (Exception $e) {
             return false;
         }
-
     }
-
 
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage products on shopify
      */
-    private function testProductsPermissions(){
+    private function testProductsPermissions()
+    {
 
-        try{
+        try {
             $products = $this->client->getProductManager()->findAll();
 
-            if(empty($products)){
+            if (empty($products)) {
                 return false;
             }
 
-            foreach($products as $product){
+            foreach ($products as $product) {
 
                 foreach ($product->getVariants() as $variant) {
                     $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
@@ -1704,40 +1704,36 @@ class ShopifyService
 
                 return true;
             }
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }
 
-
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to edit theme assets on shopify
      */
-    private function testThemePermissions(){
+    private function testThemePermissions()
+    {
 
-        try{
+        try {
 
             $this->setThemeByRole('main');
 
-            if(empty($this->theme)){
+            if (empty($this->theme)) {
                 return false;
             }
 
             $this->client->getAssetManager()->update($this->theme->getId(), [
                 "key"   => 'templates/404.liquid',
-                "value" => $this->getTemplateHtml('templates/404.liquid')
+                "value" => $this->getTemplateHtml('templates/404.liquid'),
             ]);
 
             return true;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }
-
 }
 
 
