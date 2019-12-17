@@ -54,6 +54,7 @@ $(document).ready(function () {
                         // updateWithdrawalsTable();
                     });
 
+                    checkAllowed();
                     updateBalances();
                     updateTransfersTable();
                 } else {
@@ -84,6 +85,30 @@ $(document).ready(function () {
         //     $("#antecipa-popover").fadeOut(100);
         // }
     });
+
+    function checkAllowed() {
+        $.ajax({
+            url: "/api/withdrawals/checkallowed",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+                $('#bt-withdrawal').prop('disabled', true).addClass('disabled');
+            },
+            success: response => {
+                if (response.allowed) {
+                    $('#bt-withdrawal').prop('disabled', false).removeClass('disabled');
+                    $('#blocked-withdrawal').hide();
+                } else {
+                    $('#bt-withdrawal').prop('disabled', true).addClass('disabled');
+                    $('#blocked-withdrawal').show();
+                }
+            }
+        });
+    }
 
     function updateBalances() {
         loadOnAny('.price', false, {
@@ -246,6 +271,7 @@ $(document).ready(function () {
                                             'Accept': 'application/json',
                                         },
                                         error: (response) => {
+                                            console.log(response)
                                             loadingOnScreenRemove();
                                             errorAjaxResponse(response);
                                         },
