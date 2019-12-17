@@ -1364,8 +1364,8 @@ class ShopifyService
                 ],
             ];
 
-            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
-                //cartao
+            if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1) {
+                //cartao aprovado
 
                 $orderData += [
                     "transactions" => [
@@ -1376,8 +1376,8 @@ class ShopifyService
                         ],
                     ],
                 ];
-            } else if ($sale->payment_method == 2) {
-                //boleto
+            } else if (($sale->payment_method == 2) && $sale->status == 2) {
+                //boleto pending
 
                 $orderData += [
                     "financial_status" => "pending",
@@ -1389,6 +1389,18 @@ class ShopifyService
                     //                            "amount"  => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
                     //                        ],
                     //                    ],
+                ];
+            } else if (($sale->payment_method == 2) && $sale->status == 1) {
+                //boleto pago
+
+                $orderData += [
+                    "transactions" => [
+                        [
+                            "kind"   => "sale",
+                            "status" => "success",
+                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        ],
+                    ],
                 ];
             }
 
