@@ -288,7 +288,7 @@
                                             <p class='info' style='font-size: 10px; margin-top: -10px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de R$
                                                 <label id="installment-tax" style="color: gray"></label>
-                                                %.
+                                                % ao mês.
                                             </p>
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
