@@ -12,6 +12,7 @@ use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\SentEmail;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -19,6 +20,7 @@ use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserNotificationService;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
@@ -277,25 +279,67 @@ class TesteController extends Controller
         return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
     }
 
-    public function jeanFunction()
+    public function jeanFunction(Request $request)
     {
-        //        //update sem where! popula a coluno sub_total
-        //        try {
-        //            DB::beginTransaction();
-        //
-        //            DB::statement('update sales s
-        //            set s.sub_total =
-        //            (select sum(cast((cast(plan_value as decimal(8,2)) * cast(amount as signed)) as decimal(8,2))) as sub_total
-        //            from plans_sales ps
-        //            where ps.sale_id = s.id) where 1=1');
-        //
-        //            DB::commit();
-        //
-        //            return "Ok!";
-        //        } catch (Exception $e) {
-        //            DB::rollBack();
-        //            dd($e);
-        //        }
+        try {
+            $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
+
+            $trackingId = $request->tracking ?? 0;
+
+            $tracking = $trackingModel->with([
+                'product',
+                'delivery',
+                'history'
+            ])->find($trackingId);
+
+            $apiTracking = $trackingService->findTrackingApi($tracking);
+
+            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
+            $checkpoints = collect();
+
+            //objeto postado
+            $checkpoints->add([
+                'tracking_status_enum' => $postedStatus,
+                'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
+                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                'event' => 'Código de rastreio informado',
+            ]);
+
+            $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
+
+            $checkpoints = $checkpoints->merge($checkpointsApi);
+
+            $tracking->checkpoints = $checkpoints->unique()->toArray();
+
+            $trackingArray = [
+                'id' => Hashids::encode($tracking->id),
+                'tracking_code' => $tracking->tracking_code,
+                'tracking_status_enum' => $tracking->tracking_status_enum,
+                'tracking_status' => $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado',
+                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                'amount' => $tracking->amount,
+                'product' => [
+                    'name' => $tracking->product->name,
+                    'description' => $tracking->product->description,
+                    'photo' => $tracking->product->photo,
+                ],
+                'delivery' => [
+                    'street' => $tracking->delivery->street,
+                    'number' => $tracking->delivery->number,
+                    'neighborhood' => $tracking->delivery->neighborhood,
+                    'zip_code' => $tracking->delivery->zip_code,
+                    'city' => $tracking->delivery->city,
+                    'state' => $tracking->delivery->state,
+                ],
+                'checkpoints' => $tracking->checkpoints ?? [],
+            ];
+
+            dd($trackingArray);
+
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function julioFunction()
