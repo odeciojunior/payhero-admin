@@ -18,6 +18,7 @@ use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\TrackingService;
@@ -313,11 +314,40 @@ class TesteController extends Controller
                 $result = null;
             }
 
-            $trackingService = new TrackingService();
+            $trackingModel = new Tracking();
+            $perfectlogService = new PerfectLogService();
 
-            $result = $trackingService->getCheckpointsApi($result);
+            $checkpoints = collect();
 
-            dd($result);
+            if (!empty($result->trail)) {
+                foreach ($result->trail as $log) {
+                    $status_enum = $perfectlogService->parseStatus($log->tracking_status);
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                    $event = $log->event;
+
+                    //remove caracteres chineses e informações indesejadas
+                    //preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                    $event = str_replace([
+                        'Clique aquiMinhas Importações - ',
+                        'CHINA/',
+                        'CHINA /',
+                        'Paísem'
+                    ], '', $event);
+                    $event = str_replace([
+                        'de País em',
+                    ], 'do exterior', $event);
+
+                    $checkpoints->add([
+                        'tracking_status_enum' => $status_enum,
+                        'tracking_status' => $status,
+                        'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
+                        'event' => $event,
+                    ]);
+                }
+            }
+
+            dd($checkpoints);
 
         } catch (Exception $e) {
             dd($e->getMessage());
