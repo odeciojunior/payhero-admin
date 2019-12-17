@@ -148,6 +148,12 @@
                     </div>
                     <!-- DETALHES  -->
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <div id="details-shopify" style="display:none">
+                            <h4> Dados Shopify </h4>
+                            <span id="shopify-order" class="table-title gray text-capitalize"></span>
+                            <br>
+                            <div id='div_details_shopify' class='mt-20'></div>
+                        </div>
                         <h4> Dados Gerais </h4>
                         <div id="details-card" style="display:none">
                             <span id="card-flag" class="table-title gray text-capitalize"></span>
@@ -158,13 +164,13 @@
                         <div id="details-boleto" style="display:none">
             <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
                                                                                    style='cursor:pointer;' link='' title='Copiar link'><i
-                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
                                                                                                           class='copy_link'
                                                                                                           style='cursor:pointer;'
                                                                                                           digitable-line='' title='Copiar link'><i
-                                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
@@ -217,7 +223,7 @@
         </div>
     </div>
 </div>
-    @push('scripts')
-        <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
+@push('scripts')
+    <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
     @endpush
-</div>
+    </div>

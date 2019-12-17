@@ -188,6 +188,38 @@ class SalesApiController extends Controller
         }
     }
 
+    public function newOrderShopify(Request $request, $saleId)
+    {
+        try {
+            $checkoutService = new CheckoutService();
+            $saleService     = new SaleService();
+            $saleModel       = new Sale();
+            $sale            = $saleModel->with('gateway')->where('id', Hashids::connection('sale_id')->decode($saleId))
+                                         ->first();
+            $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
+                // Zoop e Cielo CancelPayment
+                $result = $checkoutService->cancelPayment($sale, $refundAmount);
+            } else {
+                $result = $saleService->refund($saleId);
+            }
+            if ($result['status'] == 'success') {
+                $sale->update([
+                                  'date_refunded' => Carbon::now(),
+                              ]);
+
+                return response()->json(['message' => $result['message']], Response::HTTP_OK);
+            } else {
+                return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function saleProcess(Request $request)
     {
         try {

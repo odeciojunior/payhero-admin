@@ -236,6 +236,27 @@
     </div>
     <!-- End Modal -->
 
+    <!-- Modal gerar ordem shopify -->
+    <div id="modal-new-order-shopify" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-simple">
+            <div class="modal-content p-10">
+                <div class='my-20 mx-20 text-center'>
+                    <h3 class="black"> Confirma pedido de
+                        gerar ordem no shopify? </h3>
+                </div>
+                <div class="modal-footer">
+                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                        Fechar
+                    </a>
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-new-order-shopify" data-dismiss="modal">
+                        Gerar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js?v=5') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
