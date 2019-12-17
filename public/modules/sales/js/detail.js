@@ -177,22 +177,23 @@ $(() => {
                 // $('#shopify-order').text('TEM ORDER');
                 $('#resendShopifyOrder').addClass('d-none')
                 $('#resendeShopifyOrderButton').attr('sale', '')
-            } else {
-                /*                $('#shopify-order').text('Ordem não foi gerada no shopify!');
-                                $('#div_details_shopify').html('<button class="btn btn-secondary btn-sm btn_new_order_shopify" sale=' + sale.id + '>Gerar ordem Shopify</button>');
-                                $(".btn_new_order_shopify").unbind('click');
-                                $(".btn_new_order_shopify").on('click', function () {
-                                    var sale = $(this).attr('sale');
-                                    $('#modal-new-order-shopify').modal('show');
-                                    $('#modal_detalhes').modal('hide');
-                                    $(".btn-confirm-new-order-shopify").unbind('click');
-                                    $(".btn-confirm-new-order-shopify").on('click', function () {
-                                        newOrderClick(sale);
-                                    })
-                                });*/
+            } else {/*
+                $('#shopify-order').text('Ordem não foi gerada no shopify!');
+                $('#div_details_shopify').html('<button class="btn btn-secondary btn-sm btn_new_order_shopify" sale=' + sale.id + '>Gerar ordem Shopify</button>');*/
                 $('#resendShopfyOrder').removeClass('d-none')
                 $('#resendShopfyOrder').addClass('d-block')
                 $('#resendeShopifyOrderButton').attr('sale', sale.id)
+                $(".btn_new_order_shopify").unbind('click');
+                $(".btn_new_order_shopify").on('click', function () {
+                    var sale = $(this).attr('sale');
+                    console.log(sale)
+                    $('#modal-new-order-shopify').modal('show');
+                    $('#modal_detalhes').modal('hide');
+                    $(".btn-confirm-new-order-shopify").unbind('click');
+                    $(".btn-confirm-new-order-shopify").on('click', function () {
+                        newOrderClick(sale);
+                    })
+                });
             }
             $('#details-shopify').show();
         } else {
