@@ -1,3 +1,6 @@
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+@endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
      role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -159,12 +162,12 @@
                     </div>
                     <!-- DETALHES  -->
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-{{--                        <div id="details-shopify" style="display:none">
-                            <h4> Dados Shopify </h4>
-                            <span id="shopify-order" class="table-title gray text-capitalize"></span>
-                            <br>
-                            <div id='div_details_shopify' class='mt-20'></div>
-                        </div>--}}
+                        {{--                        <div id="details-shopify" style="display:none">
+                                                    <h4> Dados Shopify </h4>
+                                                    <span id="shopify-order" class="table-title gray text-capitalize"></span>
+                                                    <br>
+                                                    <div id='div_details_shopify' class='mt-20'></div>
+                                                </div>--}}
                         <h4> Dados Gerais </h4>
                         <div id="details-card" style="display:none">
                             <span id="card-flag" class="table-title gray text-capitalize"></span>
