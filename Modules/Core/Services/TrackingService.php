@@ -80,7 +80,7 @@ class TrackingService
                 $event = $log->event;
 
                 //remove caracteres chineses e informações indesejadas
-                preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                preg_match('/[^\p{Common}\p{Latin}]+/u', $event, $nonLatinChars);
                 $event = str_replace([
                     'Clique aquiMinhas Importações - ',
                     'CHINA/',

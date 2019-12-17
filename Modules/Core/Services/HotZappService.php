@@ -29,7 +29,7 @@ class HotZappService
     function boletoPaid(Sale $sale)
     {
         $data = [
-            'transaction_id'        => Hashids::encode($sale->id),
+            'transaction_id'        => Hashids::connection('sale_id')->encode($sale->id),
             'name'                  => $sale->client->name,
             'phone'                 => $sale->client->telephone,
             'email'                 => $sale->client->email,
