@@ -172,7 +172,7 @@ $(() => {
         $('#comission-value').text(sale.comission ? sale.comission : '');
 
         //Detalhes do shopify
-        if (!sale.has_shopify_integration) {
+        if (sale.has_shopify_integration) {
             if (sale.shopify_order) {
                 // $('#shopify-order').text('TEM ORDER');
                 $('#resendShopifyOrder').addClass('d-none')

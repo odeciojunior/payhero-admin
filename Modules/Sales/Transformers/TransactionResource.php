@@ -24,7 +24,7 @@ class TransactionResource extends Resource
             $flag = 'boleto';
         }
 
-        return [
+        $data                = [
             'sale_code'        => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'               => Hashids::connection('sale_id')->encode($sale->id),
             'id_default'       => Hashids::encode($this->sale->id),
@@ -44,6 +44,14 @@ class TransactionResource extends Resource
             'recovery_status'  => $sale->checkout ? ($sale->checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado') : '',
             'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber(preg_replace('/\D/', '', $sale->client->telephone)) . '&text=Olá ' . explode(' ', preg_replace('/\D/', '', $sale->client->name))[0],
             'total',
+            'shopify_order'    => $sale->shopify_order ?? null,
         ];
+        $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
+
+        if (count($shopifyIntegrations) > 0) {
+            $data['has_shopify_integration'] = true;
+        }
+
+        return $data;
     }
 }
