@@ -211,7 +211,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
                         let tableClass = '';
-                        if (value.has_shopify_integration != null && value.shopify_order == null) {
+                        if (value.has_shopify_integration != null && value.shopify_order == null && value.status != 20) {
                             tableClass = 'table-warning-roll'
                         } else {
                             tableClass = ''

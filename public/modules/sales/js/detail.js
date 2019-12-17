@@ -173,7 +173,7 @@ $(() => {
 
         //Detalhes do shopify
         if (sale.has_shopify_integration) {
-            if (sale.shopify_order) {
+            if (sale.shopify_order && sale.status != 20) {
                 // $('#shopify-order').text('TEM ORDER');
                 $('#resendShopifyOrder').addClass('d-none')
                 $('#resendeShopifyOrderButton').attr('sale', '')
