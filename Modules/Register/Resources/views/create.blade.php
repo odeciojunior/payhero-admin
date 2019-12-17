@@ -456,7 +456,7 @@
     <div class="content-error d-flex text-center">
         <img class="svgorange" src="{!! asset('modules/global/img/error.png') !!}">
         <h1 class="big"> Aviso! </h1>
-        <h3>A versão beta foi encerrada, aguarde a versão oficial para juntar-se a nós!</h3>
+        <h3>O limite de usuários da versão beta foi atingido, aguarde a versão oficial para juntar-se a nós!</h3>
     </div>
 </div>
 <!-- Scripts -->
