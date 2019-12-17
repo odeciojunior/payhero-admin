@@ -77,98 +77,135 @@
             <ul id="pagination-invites" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
-            <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div id='mainModalBody' class="modal-dialog modal-simple">
-                    <!-- Tem company -->
-                    <div id='modal-then-companies' class='modal-content' style='display:none;'>
-                        <div class='modal-header'>
-                            <button type='button' id='btn-close-invite' class='close' data-dismiss='modal' aria-label='Close'>
+        {{--<div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div id='mainModalBody' class="modal-dialog modal-simple">
+                --}}{{--<!-- Tem company -->
+                <div id='modal-then-companies' class='modal-content' style='display:none;'>
+                    <div class='modal-header'>
+                        <button type='button' id='btn-close-invite' class='close' data-dismiss='modal' aria-label='Close'>
+                            <span aria-hidden='true'>×</span>
+                        </button>
+                        <h4 id='modal-reverse-title' class='modal-title' style='width:100%; text-align:center'></h4>
+                    </div>
+                    <div id='modal-reverse-body' class='modal-body'>
+                        <div id='body-modal'>
+                            <div class='row'>
+                                <div class='form-group col-12'>
+                                    <label for='email'>Email do convidado</label>
+                                    <input name='email_invited' type='text' class='form-control' id='email' placeholder='Email'>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='form-group col-12'>
+                                    <label for='company'>
+                                        Empresa para receber
+                                    </label>
+                                    <div id='company-list'></div>
+                                    Para enviar convites todos os documentos da empresa precisam estar aprovados
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <label for='email'>Link do Convite</label>
+                                </div>
+                                <div id='invite-link-select' class='input-group col-12'>
+                                    <input type='text' class='form-control' id='invite-link' value='' readonly>
+                                    <span class='input-group-btn'>
+                                        <button id='copy-link' class='btn btn-default' type='button'>Copiar</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class='row' style='margin-top: 35px'>
+                                <div class='form-group col-12'>
+                                    <input id='btn-send-invite' type='button' class='form-control btn col-sm-12 col-m-3 col-lg-3' value='Enviar Convite' style='color:white; background-image: linear-gradient(to right, #e6774c, #f92278); position: relative; float: right;'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Not Company -->
+                <div id='modal-not-companies' class='modal-content p-10' style='display: none;'>
+                    <div class='header-modal simple-border-bottom'>
+                        <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
+                    </div>
+                    <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
+                        <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                            <span class='swal2-x-mark'>
+                                <span class='swal2-x-mark-line-left'></span>
+                                <span class='swal2-x-mark-line-right'></span>
+                            </span>
+                        </div>
+                        <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
+                        <h5 align='center'>
+                            Deseja cadastrar uma empresa?
+                            <a class='red pointer' href='/companies'>Clique aqui</a>
+                        </h5>
+                    </div>
+                    <div style='width:100%; text-align: center; padding-top: 3%;'>
+                        <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                            Retornar
+                        </span>
+                    </div>
+                </div>
+                <!-- Not Approved documents companies -->
+                <div id='modal-not-approved-document-companies' class='modal-content p-10' style='display: none;'>
+                    <div class='header-modal simple-border-bottom'>
+                        <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
+                    </div>
+                    <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
+                        <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                            <span class='swal2-x-mark'>
+                                <span class='swal2-x-mark-line-left'></span>
+                                <span class='swal2-x-mark-line-right'></span>
+                            </span>
+                        </div>
+                        <h3 align='center'>Para enviar convites todos os documentos precisam estar aprovados!</h3>
+                    </div>
+                    <div style='width:100%; text-align: center; padding-top: 3%;'>
+                        <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                            Retornar
+                        </span>
+                    </div>
+                </div>--}}{{--
+                <!-- Não pode enviar mais convites-->
+                <div id='modal-not-invites-today' class='modal-content p-10' style=''>
+                    <div class='header-modal simple-border-bottom'>
+                        <h2 class='modal-title'></h2>
+                    </div>
+                    <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1%;'>
+                        <div></div>
+                        <h3>O limite de convites para a versão beta foi atingindo, aguarde a versão oficial para poder enviar novos convites!</h3>
+                        <h3></h3>
+                    </div>
+                    <div style='width: 100%; text-align: center; padding-top: 3%;'>
+                        <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
+                            Retornar
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>--}}
+
+        <!-- End Modal -->
+            <div id='modal-invite' class='modal fade show' aria-labelledby='modal-invite' role='dialog' tabindex='-1' style=' padding-right: 12px;'>
+                <div class='modal-dialog modal-simple modal-center'>
+                    <div class='modal-content text-center'>
+                        <div class='modal-header text-center'>
+                            {{--<button class='close' type='button' data-dismiss='modal' aria-label='Close'>
                                 <span aria-hidden='true'>×</span>
-                            </button>
-                            <h4 id='modal-reverse-title' class='modal-title' style='width:100%; text-align:center'></h4>
+                            </button>--}}
+                            <h4 class='modal-title' >Aviso</h4>
                         </div>
-                        <div id='modal-reverse-body' class='modal-body'>
-                            <div id='body-modal'>
-                                <div class='row'>
-                                    <div class='form-group col-12'>
-                                        <label for='email'>Email do convidado</label>
-                                        <input name='email_invited' type='text' class='form-control' id='email' placeholder='Email'>
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class='form-group col-12'>
-                                        <label for='company'>
-                                            Empresa para receber
-                                        </label>
-                                        <div id='company-list'></div>
-                                        Para enviar convites todos os documentos da empresa precisam estar aprovados
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        <label for='email'>Link do Convite</label>
-                                    </div>
-                                    <div id='invite-link-select' class='input-group col-12'>
-                                        <input type='text' class='form-control' id='invite-link' value='' readonly>
-                                        <span class='input-group-btn'>
-                                            <button id='copy-link' class='btn btn-default' type='button'>Copiar</button>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class='row' style='margin-top: 35px'>
-                                    <div class='form-group col-12'>
-                                        <input id='btn-send-invite' type='button' class='form-control btn col-sm-12 col-m-3 col-lg-3' value='Enviar Convite' style='color:white; background-image: linear-gradient(to right, #e6774c, #f92278); position: relative; float: right;'>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class='modal-body text-center'>
+                            <h3>O limite de convites para a versão beta foi atingido, aguarde a versão oficial para poder enviar novos convites!</h3>
                         </div>
-                    </div>
-                    <!-- Not Company -->
-                    <div id='modal-not-companies' class='modal-content p-10' style='display: none;'>
-                        <div class='header-modal simple-border-bottom'>
-                            <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
-                        </div>
-                        <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
-                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
-                                <span class='swal2-x-mark'>
-                                    <span class='swal2-x-mark-line-left'></span>
-                                    <span class='swal2-x-mark-line-right'></span>
-                                </span>
-                            </div>
-                            <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
-                            <h5 align='center'>
-                                Deseja cadastrar uma empresa?
-                                <a class='red pointer' href='/companies'>Clique aqui</a>
-                            </h5>
-                        </div>
-                        <div style='width:100%; text-align: center; padding-top: 3%;'>
-                            <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
-                                Retornar
-                            </span>
-                        </div>
-                    </div>
-                    <!-- Not Approved documents companies -->
-                    <div id='modal-not-approved-document-companies' class='modal-content p-10' style='display: none;'>
-                        <div class='header-modal simple-border-bottom'>
-                            <h2 id='modal-tile' class='modal-title'>Ooooppsssss!</h2>
-                        </div>
-                        <div class='modal-body simple-border-bottom' style='padding-bottom: 1%; padding-top: 1% ;'>
-                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
-                                <span class='swal2-x-mark'>
-                                    <span class='swal2-x-mark-line-left'></span>
-                                    <span class='swal2-x-mark-line-right'></span>
-                                </span>
-                            </div>
-                            <h3 align='center'>Para enviar convites todos os documentos precisam estar aprovados!</h3>
-                        </div>
-                        <div style='width:100%; text-align: center; padding-top: 3%;'>
-                            <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>
-                                Retornar
-                            </span>
+                        <div class='modal-footer' style='text-align: center; padding-top: 3%;'>
+                            <button class='btn btn-danger' type='button' data-dismiss='modal' style='font-size: 15px;'>Fechar</button>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- End Modal -->
         </div>
     </div>
     <!-- Modal padrão para excluir -->
