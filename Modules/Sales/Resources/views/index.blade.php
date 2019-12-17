@@ -241,14 +241,13 @@
         <div class="modal-dialog modal-dialog-centered modal-simple">
             <div class="modal-content p-10">
                 <div class='my-20 mx-20 text-center'>
-                    <h3 class="black"> Confirma pedido de
-                        gerar ordem no shopify? </h3>
+                    <h3 class="black"> Realmente deseja regerar ordem no <b>SHOPIFY</b>? </h3>
                 </div>
                 <div class="modal-footer">
-                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                    <a id="btn-mobile-modal-close" class="btn btn-primary" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
                     </a>
-                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-new-order-shopify" data-dismiss="modal">
+                    <button type="button" class="btn btn-success btn-confirm-new-order-shopify" data-dismiss="modal">
                         Gerar
                     </button>
                 </div>
