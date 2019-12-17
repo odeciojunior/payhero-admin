@@ -29,6 +29,8 @@ class NotazzResource extends Resource
             'project_name'    => substr($this->project->name, 0, 20),
             'project_photo'   => $this->project->photo,
             'pending_days'    => $this->pending_days,
+            'remove_tax'      => $this->discount_plataform_tax_flag,
+            'emit_zero'       => $this->generate_zero_invoice_flag,
             'created_at'      => $this->created_at->format('d/m/Y'),
         ];
     }

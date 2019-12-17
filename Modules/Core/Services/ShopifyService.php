@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\FoxUtilsService;
 use Exception;
 use Modules\Core\Entities\Sale;
 use PHPHtmlParser\Dom;
@@ -1272,6 +1273,7 @@ class ShopifyService
 
     /**
      * @param Sale $sale
+     * @return bool
      */
     public function newOrder(Sale $sale)
     {
@@ -1330,6 +1332,7 @@ class ShopifyService
 
             $shippingAddress = [
                 "address1"      => $address,
+                //                "address2"      => "(" . FoxUtilsService::formatDocument($client->document) . ")",
                 "address2"      => "",
                 "city"          => $delivery->city,
                 "company"       => $client->document,
@@ -1362,6 +1365,7 @@ class ShopifyService
             ];
 
             if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+                //cartao
 
                 $orderData += [
                     "transactions" => [
@@ -1373,6 +1377,7 @@ class ShopifyService
                     ],
                 ];
             } else if ($sale->payment_method == 2) {
+                //boleto
 
                 $orderData += [
                     "financial_status" => "pending",
@@ -1388,32 +1393,38 @@ class ShopifyService
             }
 
             $this->sendData     = $orderData;
-            $order              = $this->shopifyClient->getOrderManager()->create($orderData);
+            $order              = $this->client->getOrderManager()->create($orderData);
             $this->receivedData = $this->convertToArray($order);
-            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
-                $sale->update([
-                                  'shopify_order' => 000,
-                              ]);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
+
+            return true;
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
+            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
             report($e);
-            //            $shippingAddress['phone']      = '+5555959844325';
-            //            $orderData['phone']            = '+5555959844325';
-            //            $orderData['shipping_address'] = $shippingAddress;
-            //            $order                         = $this->shopifyClient->getOrderManager()->create($orderData);
-            //            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+
+            $shippingAddress['phone']      = '+5555959844325';
+            $orderData['phone']            = '+5555959844325';
+            $orderData['shipping_address'] = $shippingAddress;
+
+            $this->sendData     = $orderData;
+            $order              = $this->client->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
+            }
             $sale->update([
-                              'shopify_order' => 000,
+                              'shopify_order' => $order->getId(),
                           ]);
-            //            }
-            //            $sale->update([
-            //                              'shopify_order' => $order->getId(),
-            //                          ]);
+
+            return true;
         }
     }
 

@@ -171,6 +171,35 @@ $(() => {
 
         $('#comission-value').text(sale.comission ? sale.comission : '');
 
+        //Detalhes do shopify
+        if (sale.has_shopify_integration) {
+            if (sale.shopify_order) {
+                // $('#shopify-order').text('TEM ORDER');
+                $('#resendShopifyOrder').addClass('d-none')
+                $('#resendeShopifyOrderButton').attr('sale', '')
+            } else {/*
+                $('#shopify-order').text('Ordem não foi gerada no shopify!');
+                $('#div_details_shopify').html('<button class="btn btn-secondary btn-sm btn_new_order_shopify" sale=' + sale.id + '>Gerar ordem Shopify</button>');*/
+                $('#resendShopfyOrder').removeClass('d-none')
+                $('#resendShopfyOrder').addClass('d-block')
+                $('#resendeShopifyOrderButton').attr('sale', sale.id)
+                $(".btn_new_order_shopify").unbind('click');
+                $(".btn_new_order_shopify").on('click', function () {
+                    var sale = $(this).attr('sale');
+                    console.log(sale)
+                    $('#modal-new-order-shopify').modal('show');
+                    $('#modal_detalhes').modal('hide');
+                    $(".btn-confirm-new-order-shopify").unbind('click');
+                    $(".btn-confirm-new-order-shopify").on('click', function () {
+                        newOrderClick(sale);
+                    })
+                });
+            }
+            $('#details-shopify').show();
+        } else {
+            $('#resendShopfyOrder').addClass('d-none')
+            $('#resendeShopifyOrderButton').attr('sale', '')
+        }
         //Detalhes da venda
         if (sale.payment_method === 1) {
             $('#details-card #card-flag').text('Bandeira: ' + sale.flag);
@@ -516,6 +545,32 @@ $(() => {
         $.ajax({
             method: "POST",
             url: '/api/sales/refund/' + sale,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+                atualizar(currentPage);
+            },
+            success: (response) => {
+                console.log(response);
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                atualizar(currentPage);
+            }
+        });
+    }
+
+    //Gera ordem shopify
+    function newOrderClick(sale) {
+        console.log(currentPage)
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/sales/newordershopify/' + sale,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

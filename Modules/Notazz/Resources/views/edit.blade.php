@@ -65,7 +65,7 @@
                     <label for="token" class='mb-10'>Emitir nota zerada</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" id='emit_zero' name="emit_zero" class='check shipping-pre-selected' value='0'>
+                        <input type="checkbox" id='emit_zero_edit' name="emit_zero_edit" class='check emit_zero_edit' value='0'>
                         <span class="slider round"></span>
                     </label>
                     <br>
@@ -77,7 +77,7 @@
                     <label for="token" class='mb-10'>Remover taxa</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" id='remove_tax' name="remove_tax" class='check shipping-pre-selected' value='0'>
+                        <input type="checkbox" id='remove_tax_edit' name="remove_tax_edit" class='check remove_tax_edit' value='0'>
                         <span class="slider round"></span>
                     </label>
                     <br>

@@ -95,4 +95,19 @@ class NotificationApiService
 
         return $response;
     }
+
+    /**
+     * @param Request $request
+     */
+    public function processPostback(Request $request)
+    {
+        try {
+
+            $notificationMachine = new NotificationMachine();
+            $notificationMachine->init($request);
+        } catch (Exception $ex) {
+            $this->exceptions[] = $ex->getMessage();
+            throw $ex;
+        }
+    }
 }

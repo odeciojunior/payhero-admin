@@ -4,10 +4,6 @@ namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Lcobucci\JWT\Parser;
 use stringEncode\Exception;
 
 /**
@@ -24,6 +20,7 @@ class IntegrationApiService
     private $salesApiService;
     private $notificationApiService;
     private $projectApiService;
+    private $deviceApiService;
 
     /**
      * IntegrationApiService constructor.
@@ -121,6 +118,9 @@ class IntegrationApiService
                 break;
             case 'project':
                 $this->projectApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\" . self::version . "\ProjectApiService");
+                break;
+            case 'device':
+                $this->deviceApiService = app()->make("Modules\Mobile\Http\Controllers\Apis\\" . self::version . "\DeviceApiService");
                 break;
             default:
                 throw new Exception('Classe inválida.');
@@ -390,18 +390,69 @@ class IntegrationApiService
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getDeviceData(Request $request)
+    {
+        try {
+
+            if (!$this->deviceApiService) {
+                $this->getIntegrationApiService('device');
+            }
+
+            return $this->deviceApiService->getDeviceData($request);
+        } catch (Exception $ex) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Erro ao recuperar os dados do device',
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function updateNotificationPermission(Request $request)
+    {
+        try {
+
+            if (!$this->deviceApiService) {
+                $this->getIntegrationApiService('device');
+            }
+
+            return $this->deviceApiService->updateNotificationPermission($request);
+        } catch (Exception $ex) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Erro ao recuperar as notificações',
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function sendNotification(Request $request) {
         try {
 
-            if (!$this->notificationService) {
+            if (!$this->notificationApiService) {
                 $this->getIntegrationApiService('notification');
             }
 
-            return $this->notificationService->processPostback($request);
+            return $this->notificationApiService->processPostback($request);
 
         } catch (Exception $ex) {
-            return response()->json(['status' => 'error',
-                                     'message' => 'Erro ao recuperar os projetos'], 400);
+            return response()->json([
+                                        'status' => 'error',
+                                        'message' => 'Erro ao recuperar os projetos'
+                                    ], 400);
         }
     }
 }
