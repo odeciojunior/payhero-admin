@@ -2,8 +2,9 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\FoxUtilsService;
 use Exception;
-use App\Entities\Sale;
+use Modules\Core\Entities\Sale;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -1272,6 +1273,7 @@ class ShopifyService
 
     /**
      * @param Sale $sale
+     * @return bool
      */
     public function newOrder(Sale $sale)
     {
@@ -1329,6 +1331,7 @@ class ShopifyService
 
             $shippingAddress = [
                 "address1"      => $address,
+                //                "address2"      => "(" . FoxUtilsService::formatDocument($client->document) . ")",
                 "address2"      => "",
                 "city"          => $delivery->city,
                 "company"       => $client->document,
@@ -1356,6 +1359,7 @@ class ShopifyService
             ];
 
             if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+                //cartao
 
                 $orderData += [
                     "transactions" => [
@@ -1367,6 +1371,7 @@ class ShopifyService
                     ],
                 ];
             } else if ($sale->payment_method == 2) {
+                //boleto
 
                 $orderData += [
                     "financial_status" => "pending",
@@ -1382,32 +1387,38 @@ class ShopifyService
             }
 
             $this->sendData     = $orderData;
-            $order              = $this->shopifyClient->getOrderManager()->create($orderData);
+            $order              = $this->client->getOrderManager()->create($orderData);
             $this->receivedData = $this->convertToArray($order);
-            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
-                $sale->update([
-                                  'shopify_order' => 000,
-                              ]);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
+
+            return true;
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
+            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
             report($e);
-            //            $shippingAddress['phone']      = '+5555959844325';
-            //            $orderData['phone']            = '+5555959844325';
-            //            $orderData['shipping_address'] = $shippingAddress;
-            //            $order                         = $this->shopifyClient->getOrderManager()->create($orderData);
-            //            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+
+            $shippingAddress['phone']      = '+5555959844325';
+            $orderData['phone']            = '+5555959844325';
+            $orderData['shipping_address'] = $shippingAddress;
+
+            $this->sendData     = $orderData;
+            $order              = $this->client->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
+            }
             $sale->update([
-                              'shopify_order' => 000,
+                              'shopify_order' => $order->getId(),
                           ]);
-            //            }
-            //            $sale->update([
-            //                              'shopify_order' => $order->getId(),
-            //                          ]);
+
+            return true;
         }
     }
 
@@ -1576,21 +1587,21 @@ class ShopifyService
 
     /**
      * @return boolean
-     *
      * Ensure if the token entered at integration
      * creation has the required permissions
      */
-    public function verifyPermissions(){
+    public function verifyPermissions()
+    {
 
-        if(!$this->testOrdersPermissions()){
+        if (!$this->testOrdersPermissions()) {
             return false;
         }
 
-        if(!$this->testProductsPermissions()){
+        if (!$this->testProductsPermissions()) {
             return false;
         }
 
-        if(!$this->testThemePermissions()){
+        if (!$this->testThemePermissions()) {
             return false;
         }
 
@@ -1599,14 +1610,14 @@ class ShopifyService
 
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage orders on shopify
      */
-    private function testOrdersPermissions(){
+    private function testOrdersPermissions()
+    {
 
         try {
 
-            $items = array();
+            $items = [];
 
             $items[] = [
                 "grams"             => 500,
@@ -1670,29 +1681,26 @@ class ShopifyService
             $this->client->getOrderManager()->remove($order->getId());
 
             return true;
-
         } catch (Exception $e) {
             return false;
         }
-
     }
-
 
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage products on shopify
      */
-    private function testProductsPermissions(){
+    private function testProductsPermissions()
+    {
 
-        try{
+        try {
             $products = $this->client->getProductManager()->findAll();
 
-            if(empty($products)){
+            if (empty($products)) {
                 return false;
             }
 
-            foreach($products as $product){
+            foreach ($products as $product) {
 
                 foreach ($product->getVariants() as $variant) {
                     $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
@@ -1701,40 +1709,36 @@ class ShopifyService
 
                 return true;
             }
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }
 
-
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to edit theme assets on shopify
      */
-    private function testThemePermissions(){
+    private function testThemePermissions()
+    {
 
-        try{
+        try {
 
             $this->setThemeByRole('main');
 
-            if(empty($this->theme)){
+            if (empty($this->theme)) {
                 return false;
             }
 
             $this->client->getAssetManager()->update($this->theme->getId(), [
                 "key"   => 'templates/404.liquid',
-                "value" => $this->getTemplateHtml('templates/404.liquid')
+                "value" => $this->getTemplateHtml('templates/404.liquid'),
             ]);
 
             return true;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }
-
 }
 
 

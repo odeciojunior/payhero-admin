@@ -63,7 +63,13 @@ class ClientPresenter extends Presenter
             return '';
         }
     }
-
+    /**
+     * @return string
+     */
+    public function getTelephoneShopify()
+    {
+        return "+55" . preg_replace("/[^0-9]/", "", $this->telephone);
+    }
     /**
      * @return string|string[]|null
      */
