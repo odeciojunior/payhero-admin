@@ -175,7 +175,7 @@ $(() => {
         if (sale.has_shopify_integration) {
             if (sale.shopify_order || sale.status == 20) {
                 // $('#shopify-order').text('TEM ORDER');
-                $('#resendShopifyOrder').addClass('d-none')
+                $('#resendShopfyOrder').addClass('d-none')
                 $('#resendeShopifyOrderButton').attr('sale', '')
             } else {/*
                 $('#shopify-order').text('Ordem não foi gerada no shopify!');
