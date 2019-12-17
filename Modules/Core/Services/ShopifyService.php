@@ -1583,14 +1583,17 @@ class ShopifyService
     public function verifyPermissions(){
 
         if(!$this->testOrdersPermissions()){
+            dd("orders");
             return false;
         }
 
         if(!$this->testProductsPermissions()){
+            dd("products");
             return false;
         }
 
         if(!$this->testThemePermissions()){
+            dd("theme");
             return false;
         }
 
