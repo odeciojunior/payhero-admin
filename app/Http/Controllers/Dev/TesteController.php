@@ -18,6 +18,7 @@ use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\TrackingService;
@@ -282,60 +283,71 @@ class TesteController extends Controller
     public function jeanFunction(Request $request)
     {
         try {
-            $trackingModel = new Tracking();
-            $trackingService = new TrackingService();
 
-            $trackingId = $request->tracking ?? 0;
+            $tracking = $request->tracking ?? '';
 
-            $tracking = $trackingModel->with([
-                'product',
-                'delivery',
-                'history'
-            ])->find($trackingId);
-
-            $apiTracking = $trackingService->findTrackingApi($tracking);
-
-            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
-            $checkpoints = collect();
-
-            //objeto postado
-            $checkpoints->add([
-                'tracking_status_enum' => $postedStatus,
-                'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
-                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                'event' => 'Código de rastreio informado',
-            ]);
-
-            $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
-
-            $checkpoints = $checkpoints->merge($checkpointsApi);
-
-            $tracking->checkpoints = $checkpoints->unique()->toArray();
-
-            $trackingArray = [
-                'id' => Hashids::encode($tracking->id),
-                'tracking_code' => $tracking->tracking_code,
-                'tracking_status_enum' => $tracking->tracking_status_enum,
-                'tracking_status' => $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado',
-                'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                'amount' => $tracking->amount,
-                'product' => [
-                    'name' => $tracking->product->name,
-                    'description' => $tracking->product->description,
-                    'photo' => $tracking->product->photo,
-                ],
-                'delivery' => [
-                    'street' => $tracking->delivery->street,
-                    'number' => $tracking->delivery->number,
-                    'neighborhood' => $tracking->delivery->neighborhood,
-                    'zip_code' => $tracking->delivery->zip_code,
-                    'city' => $tracking->delivery->city,
-                    'state' => $tracking->delivery->state,
-                ],
-                'checkpoints' => $tracking->checkpoints ?? [],
+            $data = [
+                'tracking' => $tracking,
+                'token_user' => '27aa6d41fd15ba3118159146fd7f89f2',
+                'system' => 'd2cfc007a524529536dfb43f779ba9fa0711023859ad105aedcfa86252d89ec9',
             ];
 
-            dd($trackingArray);
+            $url = 'https://log.perfectpay.com.br/api/tracking/search';
+
+            $curl = curl_init();
+
+            $url = sprintf("%s?%s", $url, http_build_query($data));
+
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+            ]);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+            $result = curl_exec($curl);
+
+            $result = json_decode($result);
+
+            if (!empty($result->data)) {
+                $result =  end($result->data);
+            } else {
+                $result = null;
+            }
+
+            $trackingModel = new Tracking();
+            $perfectlogService = new PerfectLogService();
+
+            $checkpoints = collect();
+
+            if (!empty($result->trail)) {
+                foreach ($result->trail as $log) {
+                    $status_enum = $perfectlogService->parseStatus($log->tracking_status);
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                    $event = $log->event;
+
+                    //remove caracteres chineses e informações indesejadas
+                    //preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                    $event = str_replace([
+                        'Clique aquiMinhas Importações - ',
+                        'CHINA/',
+                        'CHINA /',
+                        'Paísem'
+                    ], '', $event);
+                    $event = str_replace([
+                        'de País em',
+                    ], 'do exterior', $event);
+
+                    $checkpoints->add([
+                        'tracking_status_enum' => $status_enum,
+                        'tracking_status' => $status,
+                        'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
+                        'event' => $event,
+                    ]);
+                }
+            }
+
+            dd($checkpoints);
 
         } catch (Exception $e) {
             dd($e->getMessage());
