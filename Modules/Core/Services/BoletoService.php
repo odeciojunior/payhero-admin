@@ -405,7 +405,7 @@ class BoletoService
                                                ['payment_method', '=', '2'],
                                                ['status', '=', '2'],
                                                [
-                                                   DB::raw("(DATE_FORMAT(boleto_due_date,' %Y-%m-%d'))"), '<=', Carbon::now()
+                                                   DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
                                                                                                                            ->subDay('1')
                                                                                                                            ->toDateString(),
                                                ],
