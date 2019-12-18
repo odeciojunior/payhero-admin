@@ -191,9 +191,7 @@ $(() => {
     }
 
     function renderProjectConfig(data) {
-        console.log(data);
         let {project, companies, userProject, shopifyIntegrations} = data;
-
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
         $('#update-project #name').val(project.name);
         $('#cost_currency_type').val(project.cost_currency_type);
@@ -234,7 +232,9 @@ $(() => {
         if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
             if (shopifyIntegrations.length !== 0) {
-
+                $('#div-shopify-token').show();
+                $('#div-shopify-permissions').show();
+                $('#shopify-token').val(shopifyIntegrations[0].token);
                 if (shopifyIntegrations[0].status !== 1) {
                     $('#bt-change-shopify-integration')
                         .attr('integration-status', shopifyIntegrations[0].status)
@@ -667,13 +667,11 @@ $(() => {
                     project_id: projectId
                 },
                 error: function (response) {
-                    console.log(response);
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
                     window.location.reload();
                 },
                 success: function (response) {
-                    console.log(response);
                     loadingOnScreenRemove();
                     alertCustom('success', response.message);
                 }
@@ -682,5 +680,69 @@ $(() => {
 
     });
 
+    let btnTokenClick = "enable click";
+    $('.btn-edit-token').on('click', function (event) {
+        event.preventDefault();
+        if (btnTokenClick == "enable click") {
+            btnTokenClick = "update click";
+            $('#shopify-token').prop("disabled", false);
+            $('.btn-edit-token').text('Atualizar Token');
+        } else {
+            if ($('#shopify-token').val() == '') {
+                alertCustom('error', 'Token inválido');
+                return false;
+            }
+            loadingOnScreen();
+            $.ajax({
+                method: 'POST',
+                url: '/api/apps/shopify/updatetoken',
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: {
+                    project_id: projectId,
+                    token: $('#shopify-token').val(),
+                },
+                error: function (response) {
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    loadingOnScreenRemove();
+                    btnTokenClick = "enable click";
+                    $('#shopify-token').prop("disabled", true);
+                    $('.btn-edit-token').text('Alterar Token');
+                    alertCustom('success', response.message);
+                }
+            });
+        }
+    });
+
+    $('#bt-shopify-verify-permissions').on('click', function (event) {
+        event.preventDefault();
+        loadingOnScreen();
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/verifypermissions',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+            },
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+            }
+        });
+    });
 });
 
