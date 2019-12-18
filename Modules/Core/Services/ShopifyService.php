@@ -1358,9 +1358,7 @@ class ShopifyService
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
                 "note_attributes"         => [
-
-                    "name"  => "token_cloudfox",
-                    "value" => $checkout->present()->getCheckoutIdIntegrations(),
+                    "token_cloudfox" => $checkout->present()->getCheckoutIdIntegrations(),
                 ],
             ];
 
