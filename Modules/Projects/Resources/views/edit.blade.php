@@ -342,7 +342,7 @@
                             </div>
                             {{--                            <input id='shopify-token' class='form-control' style='display:none;'>--}}
                         </div>
-                        <div id='div-shopify-permissions' class='col-md-5 mt-40' style='display:none;'>
+                        <div id='div-shopify-permissions' class='col-md-5 mt-45' style='display:none;'>
                             <a id="bt-shopify-verify-permissions" role="button"
                                integration-status=""
                                class="pointer align-items-center">
