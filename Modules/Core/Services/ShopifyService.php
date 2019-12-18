@@ -1709,7 +1709,7 @@ class ShopifyService
             //            return true;
 
         } catch (Exception $e) {
-            Log::warning(print_r($e));
+            Log::warning(print_r($e,true));
 
             return [
                 'status'  => 'error',
