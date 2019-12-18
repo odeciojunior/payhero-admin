@@ -193,9 +193,9 @@ class CompaniesApiController extends Controller
             $projectModel = new Project();
 
             $company = $companyModel->with('usersProjects')->withCount([
-                                                                                                    'transactions',
-                                                                                                    'usersProjects',
-                                                                                                ])
+                                                                            'transactions',
+                                                                            'usersProjects',
+                                                                        ])
                                     ->find(current(Hashids::decode($encodedId)));
             if ($company) {
                 if (Gate::allows('destroy', [$company])) {

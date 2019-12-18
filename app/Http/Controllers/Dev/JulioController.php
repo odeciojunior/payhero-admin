@@ -43,6 +43,9 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
+
+        dd("heyyy");
+
         $users = User::all();
 
         foreach($users as $user){
