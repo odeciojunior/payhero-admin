@@ -537,15 +537,24 @@ class ShopifyApiController extends Controller
             if ($projectId) {
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
                 try {
-                    $shopify = new ShopifyService($integration->url_store, $integration->token);
+                    $shopify = new ShopifyService($integration->url_store, $data['token']);
                     if (empty($shopify->getClient())) {
                         return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
                     }
                 } catch (Exception $e) {
                     report($e);
 
-                    return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                    return response()->json(['message' => 'Novo token inválido'], 400);
                 }
+
+                $permissions = $shopify->verifyPermissions();
+
+                if ($permissions['status'] == 'error') {
+                    return response()->json([
+                                                'message' => $permissions['message'],
+                                            ], 400);
+                }
+
                 $integrationUpdated = $integration->update(['token' => $data['token']]);
 
                 if ($integrationUpdated) {
@@ -572,6 +581,7 @@ class ShopifyApiController extends Controller
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+
                 try {
                     $shopify = new ShopifyService($integration->url_store, $integration->token);
                     if (empty($shopify->getClient())) {
@@ -579,9 +589,9 @@ class ShopifyApiController extends Controller
                     }
                 } catch (Exception $e) {
                     report($e);
-
-                    return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                    return response()->json(['message' => 'Token inválido'], 400);
                 }
+
                 $permissions = $shopify->verifyPermissions();
 
                 if ($permissions['status'] == 'error') {

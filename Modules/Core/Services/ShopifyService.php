@@ -89,21 +89,18 @@ class ShopifyService
      */
     public function __construct(string $urlStore, string $token)
     {
-        try {
-            if (!$this->cacheDir) {
-                $cache = '/var/tmp';
-            } else {
-                $cache = $this->cacheDir;
-            }
-
-            $this->credential = new PublicAppCredential($token);
-            $this->client     = new Client($this->credential, $urlStore, [
-                'metaCacheDir' => $cache // Metadata cache dir, required
-            ]);
-        } catch (Exception $e) {
-            Log::warning('__construct - Erro ao criar servico do shopify');
-            report($e);
+        if (!$this->cacheDir) {
+            $cache = '/var/tmp';
+        } else {
+            $cache = $this->cacheDir;
         }
+
+        $this->credential = new PublicAppCredential($token);
+        $this->client     = new Client($this->credential, $urlStore, [
+            'metaCacheDir' => $cache // Metadata cache dir, required
+        ]);
+
+        $this->getAllThemes();
     }
 
     /**
@@ -1613,6 +1610,7 @@ class ShopifyService
         if ($permissions['status'] == 'error') {
             return $permissions;
         }
+
         $permissions = $this->testProductsPermissions();
 
         if ($permissions['status'] == 'error') {
@@ -1635,7 +1633,6 @@ class ShopifyService
     {
 
         try {
-
             $items = [];
 
             $items[] = [
@@ -1698,7 +1695,6 @@ class ShopifyService
                     'status'  => 'error',
                     'message' => 'Erro na permissão de pedidos',
                 ];
-                //                return false;
             }
 
             $this->client->getOrderManager()->remove($order->getId());
@@ -1706,16 +1702,13 @@ class ShopifyService
             return [
                 'status' => 'success',
             ];
-            //            return true;
 
         } catch (Exception $e) {
-            Log::warning(print_r($e));
-
+            report($e);
             return [
                 'status'  => 'error',
                 'message' => 'Erro na permissão de pedidos',
             ];
-            //            return false;
         }
     }
 
@@ -1736,7 +1729,6 @@ class ShopifyService
                     'status'  => 'error',
                     'message' => 'Erro na permissão de produtos',
                 ];
-                //                return false;
             }
 
             foreach ($products as $product) {
@@ -1749,14 +1741,12 @@ class ShopifyService
                 return [
                     'status' => 'success',
                 ];
-                //                return true;
             }
         } catch (Exception $e) {
             return [
                 'status'  => 'error',
                 'message' => 'Erro na permissão de produtos',
             ];
-            //            return false;
         }
     }
 
@@ -1776,7 +1766,6 @@ class ShopifyService
                     'status'  => 'error',
                     'message' => 'Erro na permissão de tema',
                 ];
-                //                return false;
             }
 
             $this->client->getAssetManager()->update($this->theme->getId(), [
@@ -1787,13 +1776,11 @@ class ShopifyService
             return [
                 'status' => 'success',
             ];
-            //            return true;
         } catch (Exception $e) {
             return [
                 'status'  => 'error',
                 'message' => 'Erro na permissão de tema',
             ];
-            //            return false;
         }
     }
 }
