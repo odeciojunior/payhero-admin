@@ -325,6 +325,32 @@
                             </a>
                         </div>
                     </div>
+                    <div class='row mx-30'>
+                        <div id='div-shopify-token' class='col-md-5 mt-10' style='display:none;'>
+                            {{--                            <a id="bt-shopify-verify-permissions" role="button"--}}
+                            {{--                               integration-status=""--}}
+                            {{--                               class="pointer align-items-center">--}}
+                            {{--                                <i class="material-icons gray"> sync </i>--}}
+                            {{--                                <span class="gray"> Atualizar token </span>--}}
+                            {{--                            </a>--}}
+                            <label for="shopify-token">Token(password) da integração</label>
+                            <div class="input-group">
+                                <input id='shopify-token' class="form-control" name="token" type="text" disabled/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary btn-edit-token" type="button">Alterar token</button>
+                                </div>
+                            </div>
+                            {{--                            <input id='shopify-token' class='form-control' style='display:none;'>--}}
+                        </div>
+                        <div id='div-shopify-permissions' class='col-md-5 mt-40' style='display:none;'>
+                            <a id="bt-shopify-verify-permissions" role="button"
+                               integration-status=""
+                               class="pointer align-items-center">
+                                <i class="material-icons gray"> sync </i>
+                                <span class="gray"> Verificar permissões do Token</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

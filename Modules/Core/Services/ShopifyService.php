@@ -1576,37 +1576,40 @@ class ShopifyService
 
     /**
      * @return boolean
-     *
      * Ensure if the token entered at integration
      * creation has the required permissions
      */
-    public function verifyPermissions(){
+    public function verifyPermissions()
+    {
+        $permissions = $this->testOrdersPermissions();
 
-        if(!$this->testOrdersPermissions()){
-            return false;
+        if ($permissions['status'] == 'error') {
+            return $permissions;
+        }
+        $permissions = $this->testProductsPermissions();
+
+        if ($permissions['status'] == 'error') {
+            return $permissions;
+        }
+        $permissions = $this->testThemePermissions();
+
+        if ($permissions['status'] == 'error') {
+            return $permissions;
         }
 
-        if(!$this->testProductsPermissions()){
-            return false;
-        }
-
-        if(!$this->testThemePermissions()){
-            return false;
-        }
-
-        return true;
+        return $permissions;
     }
 
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage orders on shopify
      */
-    private function testOrdersPermissions(){
+    public function testOrdersPermissions()
+    {
 
         try {
 
-            $items = array();
+            $items = [];
 
             $items[] = [
                 "grams"             => 500,
@@ -1664,77 +1667,106 @@ class ShopifyService
             $order = $this->client->getOrderManager()->create($orderData);
 
             if (empty($order) || empty($order->getId())) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro na permissão de pedidos',
+                ];
+                //                return false;
             }
 
             $this->client->getOrderManager()->remove($order->getId());
 
-            return true;
+            return [
+                'status' => 'success',
+            ];
+            //            return true;
 
         } catch (Exception $e) {
-            return false;
+            Log::warning(print_r($e));
+
+            return [
+                'status'  => 'error',
+                'message' => 'Erro na permissão de pedidos',
+            ];
+            //            return false;
         }
-
     }
-
 
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage products on shopify
      */
-    private function testProductsPermissions(){
+    public function testProductsPermissions()
+    {
 
-        try{
+        try {
             $products = $this->client->getProductManager()->findAll();
 
-            if(empty($products)){
-                return false;
+            if (empty($products)) {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro na permissão de produtos',
+                ];
+                //                return false;
             }
 
-            foreach($products as $product){
+            foreach ($products as $product) {
 
                 foreach ($product->getVariants() as $variant) {
                     $productCost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
                     break;
                 }
 
-                return true;
+                return [
+                    'status' => 'success',
+                ];
+                //                return true;
             }
-        }
-        catch(Exception $e){
-            return false;
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Erro na permissão de produtos',
+            ];
+            //            return false;
         }
     }
 
-
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to edit theme assets on shopify
      */
-    private function testThemePermissions(){
+    public function testThemePermissions()
+    {
 
-        try{
+        try {
 
             $this->setThemeByRole('main');
 
-            if(empty($this->theme)){
-                return false;
+            if (empty($this->theme)) {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro na permissão de tema',
+                ];
+                //                return false;
             }
 
             $this->client->getAssetManager()->update($this->theme->getId(), [
                 "key"   => 'templates/404.liquid',
-                "value" => $this->getTemplateHtml('templates/404.liquid')
+                "value" => $this->getTemplateHtml('templates/404.liquid'),
             ]);
 
-            return true;
-        }
-        catch(Exception $e){
-            return false;
+            return [
+                'status' => 'success',
+            ];
+            //            return true;
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Erro na permissão de tema',
+            ];
+            //            return false;
         }
     }
-
 }
 
 
