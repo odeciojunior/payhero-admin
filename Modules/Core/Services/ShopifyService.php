@@ -1273,7 +1273,7 @@ class ShopifyService
 
     /**
      * @param Sale $sale
-     * @return bool
+     * @return array
      */
     public function newOrder(Sale $sale)
     {
@@ -1402,6 +1402,11 @@ class ShopifyService
                         ],
                     ],
                 ];
+            } else {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
+                ];
             }
 
             $this->sendData     = $orderData;
@@ -1409,13 +1414,19 @@ class ShopifyService
             $this->receivedData = $this->convertToArray($order);
 
             if (FoxUtils::isEmpty($order->getId())) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Error ao tentar gerar ordem no shopify.',
+                ];
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
 
-            return true;
+            return [
+                'status'  => 'success',
+                'message' => 'Ordem gerada com sucesso.',
+            ];
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
             Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
@@ -1430,13 +1441,19 @@ class ShopifyService
             $this->receivedData = $this->convertToArray($order);
 
             if (FoxUtils::isEmpty($order->getId())) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Error ao tentar gerar ordem no shopify.',
+                ];
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
 
-            return true;
+            return [
+                'status'  => 'success',
+                'message' => 'Ordem gerada com sucesso.',
+            ];
         }
     }
 
