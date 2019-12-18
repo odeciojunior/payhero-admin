@@ -178,13 +178,13 @@
                         <div id="details-boleto" style="display:none">
             <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
                                                                                    style='cursor:pointer;' link='' title='Copiar link'><i
-                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
                                                                                                           class='copy_link'
                                                                                                           style='cursor:pointer;'
                                                                                                           digitable-line='' title='Copiar link'><i
-                                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
@@ -238,6 +238,6 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=6') }}"></script>
     @endpush
     </div>
