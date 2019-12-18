@@ -11,6 +11,7 @@ use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
 use Modules\Core\Entities\Project;
 use Modules\Notazz\Http\Requests\NotazzStoreRequest;
+use Modules\Notazz\Http\Requests\NotazzUpdateRequest;
 use Modules\Notazz\Transformers\NotazzInvoiceResource;
 use Modules\Notazz\Transformers\NotazzResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -76,16 +77,20 @@ class NotazzApiController extends Controller
                                                     'message' => 'Projeto já integrado',
                                                 ], 400);
                     }
-                    $integrationCreated = $notazzIntegrationModel->create([
-                                                                              'token_api'       => $data['token_api_create'],
-                                                                              'invoice_type'    => $data['select_invoice_type_create'],
-                                                                              'token_webhook'   => $data['token_webhook_create'],
-                                                                              'token_logistics' => $data['token_logistics_create'] ?? null,
-                                                                              'project_id'      => $projectId,
-                                                                              'user_id'         => auth()->user()->account_owner_id,
-                                                                              'start_date'      => $data['start_date_create'],
-                                                                              'pending_days'    => $data['select_pending_days_create'],
-                                                                          ]);
+                    $integrationCreated = $notazzIntegrationModel->create(array_filter([
+                                                                                           'token_api'                   => $data['token_api_create'],
+                                                                                           'invoice_type'                => $data['select_invoice_type_create'],
+                                                                                           'token_webhook'               => $data['token_webhook_create'],
+                                                                                           'token_logistics'             => $data['token_logistics_create'] ?? null,
+                                                                                           'project_id'                  => $projectId,
+                                                                                           'user_id'                     => auth()->user()->account_owner_id,
+                                                                                           'start_date'                  => $data['start_date_create'],
+                                                                                           'pending_days'                => $data['select_pending_days_create'],
+                                                                                           'discount_plataform_tax_flag' => $data['remove_tax'] ?? 0,
+                                                                                           'generate_zero_invoice_flag'  => $data['emit_zero'] ?? 0,
+                                                                                       ], function($value) {
+                        return !is_null($value);
+                    }));
                     if ($integrationCreated) {
                         if (!empty($data['start_date_create'])) {
                             return response()->json([
@@ -156,11 +161,11 @@ class NotazzApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param NotazzUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(NotazzUpdateRequest $request, $id)
     {
         try {
 
@@ -171,15 +176,17 @@ class NotazzApiController extends Controller
             if ($integrationId) {
                 //hash ok
 
-                $dataRequest = $request->all();
+                $dataRequest = $request->validated();
 
                 $integrationNotazz = $notazzIntegrationModel->find($integrationId);
 
                 $integrationNotazz->update([
-                                               'token_webhook'   => $dataRequest['token_webhook_edit'],
-                                               'token_api'       => $dataRequest['token_api_edit'],
-                                               'token_logistics' => $dataRequest['token_logistics_edit'],
-                                               'pending_days'    => $dataRequest['select_pending_days_edit'],
+                                               'token_webhook'               => $dataRequest['token_webhook_edit'],
+                                               'token_api'                   => $dataRequest['token_api_edit'],
+                                               'token_logistics'             => $dataRequest['token_logistics_edit'],
+                                               'pending_days'                => $dataRequest['select_pending_days_edit'],
+                                               'discount_plataform_tax_flag' => $dataRequest['remove_tax_edit'] ?? null,
+                                               'generate_zero_invoice_flag'  => $dataRequest['emit_zero_edit'] ?? null,
                                            ]);
 
                 return response()->json([

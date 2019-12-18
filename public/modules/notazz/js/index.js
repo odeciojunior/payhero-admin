@@ -1,5 +1,12 @@
 $(document).ready(function () {
-
+//checkbox
+    $('.check').on('click', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
     index();
 
     function index() {
@@ -132,10 +139,15 @@ $(document).ready(function () {
                                         $('#start_date_edit').val(response.data.start_date);
                                         $('#select_pending_days_edit').val(response.data.pending_days);
 
+                                        $("#emit_zero_edit").val(response.data.emit_zero);
+                                        $("#emit_zero_edit").prop('checked', ($("#emit_zero_edit").val() == '1'));
+
+                                        $("#remove_tax_edit").val(response.data.remove_tax);
+                                        $("#remove_tax_edit").prop('checked', ($("#remove_tax_edit").val() == '1'));
+
                                         $("#modal_add_integracao").modal('show');
                                         $("#form_add_integration").hide();
                                         $("#form_update_integration").show();
-
                                         $("#bt_integration").addClass('btn-update');
                                         $("#bt_integration").removeClass('btn-save');
                                         $("#bt_integration").text('Atualizar');
@@ -193,9 +205,8 @@ $(document).ready(function () {
             }
         });
     }
-
     function create() {
-
+        clearForm()
         $.ajax({
             method: "GET",
             url: "/api/projects?select=true",
@@ -315,7 +326,9 @@ $(document).ready(function () {
                                     token_webhook_create: token_webhook_create,
                                     token_logistics_create: token_logistics_create,
                                     start_date_create: start_date_create,
-                                    select_pending_days_create: select_pending_days_create
+                                    select_pending_days_create: select_pending_days_create,
+                                    remove_tax: remove_tax,
+                                    emit_zero: emit_zero
                                 },
                                 error: function error(response) {
                                     if (response.status === 422) {
@@ -338,7 +351,19 @@ $(document).ready(function () {
             }
         });
     }
+//reset the intergation modal
+    function clearForm() {
+        $('#integration_id').val('');
+        $('#start_date_create').val('');
+        $('#token_api_create').val('');
+        $('#token_webhook_create').val('');
+        $('#token_logistics_create').val('');
+        $(':checkbox').prop('checked', false).val(0);
+        $('#select_projects_create').prop("selectedIndex", 0).change();
+        $('#select_invoice_type_create').prop("selectedIndex", 0).change();
+        $('#select_pending_days_create').prop("selectedIndex", 0).change();
 
+    }
     $("#btn-add-integration").on("click", function () {
         create();
     });

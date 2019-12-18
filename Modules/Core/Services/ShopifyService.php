@@ -2,8 +2,9 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\FoxUtilsService;
 use Exception;
-use App\Entities\Sale;
+use Modules\Core\Entities\Sale;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -1272,6 +1273,7 @@ class ShopifyService
 
     /**
      * @param Sale $sale
+     * @return bool
      */
     public function newOrder(Sale $sale)
     {
@@ -1280,6 +1282,7 @@ class ShopifyService
             $this->saleId = $sale->id;
             $delivery     = $sale->delivery;
             $client       = $sale->client;
+            $checkout     = $sale->checkout;
 
             $totalValue = $sale->present()->getSubTotal();
 
@@ -1313,7 +1316,7 @@ class ShopifyService
                         "requires_shipping" => true,
                         "sku"               => $productPlan->product->sku,
                         "title"             => $planSale->plan->name,
-                        "variant_id"        => $productPlan->product->shopify_variant_id,
+                        "variant_id"        => $planSale->plan->shopify_variant_id,
                         "variant_title"     => $planSale->plan->name,
                         "name"              => $planSale->plan->name,
                         "gift_card"         => false,
@@ -1329,6 +1332,7 @@ class ShopifyService
 
             $shippingAddress = [
                 "address1"      => $address,
+                //                "address2"      => "(" . FoxUtilsService::formatDocument($client->document) . ")",
                 "address2"      => "",
                 "city"          => $delivery->city,
                 "company"       => $client->document,
@@ -1353,9 +1357,15 @@ class ShopifyService
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
+                "note_attributes"         => [
+
+                    "name"  => "token_cloudfox",
+                    "value" => $checkout->present()->getCheckoutIdIntegrations(),
+                ],
             ];
 
-            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+            if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1) {
+                //cartao aprovado
 
                 $orderData += [
                     "transactions" => [
@@ -1366,7 +1376,8 @@ class ShopifyService
                         ],
                     ],
                 ];
-            } else if ($sale->payment_method == 2) {
+            } else if (($sale->payment_method == 2) && $sale->status == 2) {
+                //boleto pending
 
                 $orderData += [
                     "financial_status" => "pending",
@@ -1379,35 +1390,53 @@ class ShopifyService
                     //                        ],
                     //                    ],
                 ];
+            } else if (($sale->payment_method == 2) && $sale->status == 1) {
+                //boleto pago
+
+                $orderData += [
+                    "transactions" => [
+                        [
+                            "kind"   => "sale",
+                            "status" => "success",
+                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        ],
+                    ],
+                ];
             }
 
             $this->sendData     = $orderData;
-            $order              = $this->shopifyClient->getOrderManager()->create($orderData);
+            $order              = $this->client->getOrderManager()->create($orderData);
             $this->receivedData = $this->convertToArray($order);
-            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
-                $sale->update([
-                                  'shopify_order' => 000,
-                              ]);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
+
+            return true;
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
+            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
             report($e);
-            //            $shippingAddress['phone']      = '+5555959844325';
-            //            $orderData['phone']            = '+5555959844325';
-            //            $orderData['shipping_address'] = $shippingAddress;
-            //            $order                         = $this->shopifyClient->getOrderManager()->create($orderData);
-            //            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+
+            $shippingAddress['phone']      = '+5555959844325';
+            $orderData['phone']            = '+5555959844325';
+            $orderData['shipping_address'] = $shippingAddress;
+
+            $this->sendData     = $orderData;
+            $order              = $this->client->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
+            }
             $sale->update([
-                              'shopify_order' => 000,
+                              'shopify_order' => $order->getId(),
                           ]);
-            //            }
-            //            $sale->update([
-            //                              'shopify_order' => $order->getId(),
-            //                          ]);
+
+            return true;
         }
     }
 
@@ -1692,8 +1721,10 @@ class ShopifyService
         }
     }
 
+
     /**
      * @return boolean
+     *
      * Verify if the informed token has permission to manage products on shopify
      */
     public function testProductsPermissions()

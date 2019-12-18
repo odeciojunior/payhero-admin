@@ -13,7 +13,7 @@
     @endif
 
     <!-- access token used for api ajax requests -->
-    <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
+    <meta name="access-token" content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
@@ -143,6 +143,11 @@
             m.parentNode.insertBefore(o,m);
         })(window,document,'script','https://js.huggy.chat/widget.min.js?v=8.0.0','pwz');
     </script>
+    <style>
+        .powerzap_open_button_iframe {
+            bottom: 40px !important;
+        }
+    </style>
     <!-- End code pzw.io  -->
 @endif
 

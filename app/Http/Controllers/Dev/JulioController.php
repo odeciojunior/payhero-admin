@@ -43,67 +43,31 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
+        $users = User::all();
 
-        dd(Company::with('user')->find(Hashids::decode('n4KovG1Y8GyDEmO')));
+        foreach($users as $user){
 
-        $transactions = Transaction::where([
-            ['status', 'paid'],
-            ['release_date', '2019-12-21']
-        ])
-        ->whereHas('sale',function($query){
-            $query->where('payment_method', 2);
-        })
-        ->get();
+            $sales = Sale::where('owner_id', $user->id)->get();
 
-        foreach($transactions as $transaction){
-            $transaction->update([
-                'release_date' => '2019-12-01'
-            ]);
-        }
-
-
-
-        dd("foii");
-
-
-
-
-        $sales = Sale::where([
-            ['payment_method', 2],
-            ['status', 1]
-        ])
-        ->with('transactions', 'client')
-        ->whereHas('transactions', function($query){
-            $query->where('status', 'waiting_payment');
-            $query->whereNotNull('company_id');
-            $query->whereNull('invitation_id');
-        })
-        ->orderBy('created_at', 'asc')
-        ->get();
-
-        dd(count($sales));
-
-        $totalValue = 0;
-        $count      = 0;
-
-        foreach($sales as $sale){
-            foreach($sale->transactions as $transaction){
-                if(!empty($transaction->company)){
-                    $transaction->update([
-                        'status' => 'paid',
-                        'release_date' => '2019-12-21',
-                    ]);
-                }
-                else{
-                    $transaction->update([
-                        'status' => 'paid',
-                    ]);
-                }
+            if(count($sales) > 0){
+                //
+            }
+            else{
+                $user->update([
+                    'debit_card_tax'                 => '5.9',
+                    'debit_card_release_money_days'  => '30',
+                    'credit_card_tax'                => '5.9',
+                    'credit_card_release_money_days' => '30',
+                    'boleto_tax'                     => '5.9',
+                    'boleto_release_money_days'      => '30'
+                ]);
             }
         }
 
-        dd($totalValue, $count);
+        dd("howwww");
+
     }
+
 
 }
 

@@ -306,7 +306,7 @@ class DomainsApiController extends Controller
             $domain = $domainModel->with('domainsRecords', 'project', 'project.shopifyIntegrations')
                                   ->find($domainId);
 
-            if (Gate::allows('edit', [$domain->project])) {
+            if (!empty($domain->project) && Gate::allows('edit', [$domain->project])) {
                 if (!empty($domain->cloudflare_domain_id)) {
                     if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
                         //zona deletada
@@ -400,9 +400,9 @@ class DomainsApiController extends Controller
                                 try {
                                     if (!empty($domain->project->shopifyIntegrations)) {
                                         $domain->update([
-                                            'status' => $domainModel->present()
-                                                                    ->getStatus('approved'),
-                                        ]);
+                                                            'status' => $domainModel->present()
+                                                                                    ->getStatus('approved'),
+                                                        ]);
 
                                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
@@ -446,15 +446,15 @@ class DomainsApiController extends Controller
                                                             //template ajax
                                                             $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
 
-                                                             $shopifyIntegration->update([
-                                                                                             'theme_type' => $shopifyIntegration->present()
-                                                                                                                                ->getThemeType('ajax_theme'),
-                                                                                             'theme_name' => $shopify->getThemeName(),
-                                                                                             'theme_file' => 'snippets/ajax-cart-template.liquid',
-                                                                                             'theme_html' => $htmlCart,
-                                                                                         ]);
+                                                            $shopifyIntegration->update([
+                                                                                            'theme_type' => $shopifyIntegration->present()
+                                                                                                                               ->getThemeType('ajax_theme'),
+                                                                                            'theme_name' => $shopify->getThemeName(),
+                                                                                            'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                                            'theme_html' => $htmlCart,
+                                                                                        ]);
 
-                                                             $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                                            $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                                         }
 
                                                         //inserir o javascript para o trackeamento (src, utm)

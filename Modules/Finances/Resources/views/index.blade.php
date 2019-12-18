@@ -37,6 +37,14 @@
                              aria-labelledby="nav-home-tab">
                             <div class="row justify-content-start align-items-baseline">
                                 <div class="col-12 mb-3">
+
+                                    <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
+                                        <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais informações.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+
                                     <h5 class="title-pad"> Nova transferência </h5>
                                     <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                     </p>
@@ -145,8 +153,8 @@
                                                            aria-describedby="basic-addon1">
                                                 </div>
                                                 <button id="bt-withdrawal"
-                                                        class="btn btn-success btn-sacar ml-3 col-sm-12 col-md-12 col-lg-5"
-                                                        data-toggle="modal">
+                                                        class="btn btn-success disabled btn-sacar ml-3 col-sm-12 col-md-12 col-lg-5"
+                                                        data-toggle="modal" disabled>
                                                     <svg class="mr-2" style="fill: white; vertical-align: middle;"
                                                          xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                          viewBox="0 0 24 24">
@@ -294,7 +302,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/finances/js/index.js?v=5') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=6') }}"></script>
     @endpush
 
 @endsection

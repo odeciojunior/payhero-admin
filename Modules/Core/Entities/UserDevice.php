@@ -43,6 +43,11 @@ class UserDevice extends Model
         'test_type',
         'ip',
         'external_user_id',
+        'sale_notification',
+        'billet_notification',
+        'payment_notification',
+        'withdraw_notification',
+        'invitation_sale_notification',
         'created_at',
         'updated_at',
     ];

@@ -34,7 +34,7 @@
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
                 @if(!auth()->user()->hasRole('attendance'))
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-                    <span class="nav-link" data-toggle="dropdown" title="Notificações" id='notification'
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification'
                           aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                         <i class="material-icons">notifications_none</i>
                         <span class="badge badge-danger badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>

@@ -2,20 +2,24 @@
 
 namespace Modules\Core\Services;
 
-use Carbon\Carbon;
+use SendGrid;
 use Exception;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Domain;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Company;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Presenters\SalePresenter;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\SmsService;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Presenters\SalePresenter;
+use Modules\Core\Services\CloudFlareService;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class CheckoutService
@@ -287,4 +291,61 @@ class CheckoutService
             throw $ex;
         }
     }
+
+
+    public function verifyCheckoutStatus(){
+
+        $cloudFlareService = new CloudFlareService();
+
+        if (!$cloudFlareService->checkHtmlMetadata('https://checkout.natuprocaps.com/', 'checkout-cloudfox', '1')) {
+
+            // checkout OFF
+
+            // email addresses for notify
+            $emails = [
+                'julioleichtweis@gmail.com',
+                'felixlorram@gmail.com'
+            ];
+
+            // phone numbers for notify
+            $phoneNumbers = [
+                '5555996931098',
+                '5522981071202'
+            ];
+
+            $sendgrid =  new SendGrid(getenv('SENDGRID_API_KEY'));
+            $smsService = new SmsService();
+
+            foreach($emails as $email){
+
+                try{
+                    $sendgridMail = new \SendGrid\Mail\Mail();
+                    $sendgridMail->setFrom('noreply@cloudfox.net', 'cloudfox');
+                    $sendgridMail->addTo($email, 'cloudfox');
+                    $sendgridMail->setTemplateId('d-f44033c3eaec46d2a6226f796313d9fc');
+
+                    $response   = $sendgrid->send($sendgridMail);
+                }
+                catch(Exception $e){
+                    //
+                }
+
+            }
+
+            foreach($phoneNumbers as $phoneNumber){
+
+                try{
+                    $smsService->sendSms($phoneNumber, 'Checkout caiu');
+                }
+                catch(Exception $e){
+                    //
+                }
+            }
+
+            return true;
+        }
+
+    }
+
+
 }

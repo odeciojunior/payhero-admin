@@ -241,7 +241,7 @@
                                         <div class='form-group col-xl-5'>
                                             <div class='form-group'>
                                                 <label for='credit-card-release'>Dias para liberação:</label>
-                                                <select id="credit-card-release" class="form-control">
+                                                <select id="credit-card-release" class="form-control" disabled>
                                                     <option value="plan-30">30 dias (taxa de 5.9%)</option>
                                                     <option value="plan-15">15 dias (taxa de 6.5%)</option>
                                                     <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)</option>
@@ -288,7 +288,7 @@
                                             <p class='info' style='font-size: 10px; margin-top: -10px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de R$
                                                 <label id="installment-tax" style="color: gray"></label>
-                                                %.
+                                                % ao mês.
                                             </p>
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$

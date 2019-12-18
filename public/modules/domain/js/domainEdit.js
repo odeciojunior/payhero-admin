@@ -477,7 +477,7 @@ $(document).ready(function () {
                 cont++;
                 let enabledA = '';
                 let enabledEntrada = 'disabled';
-                if ((value.type === 'A' && value.name === value.domain_name) || (value.type === 'CNAME' && value.name === 'www')) {
+                if ((value.type === 'A' && value.name === value.domain_name) || (value.type === 'CNAME' && value.name === 'www') || (value.type === 'CNAME' && value.name.indexOf('mail.') === 0)) {
                     enabledA = "<td><button style='background-color: transparent;' role='button' title='Excluir' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
                 } else {
                     enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " + enabledEntrada + "><i class='material-icons gradient' >delete_outline</i> </a></td>";
@@ -527,6 +527,9 @@ $(document).ready(function () {
                 dataType: 'json',
                 error: function (response) {
                     errorAjaxResponse(response);
+                    $("#table-body-new-records").html('');
+                    updateTableRecords(domain);
+
                 },
                 success: function (response) {
                     alertCustom('success', response.message);
