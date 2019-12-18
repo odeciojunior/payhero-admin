@@ -9,3 +9,5 @@ Route::group(
         Route::resource('/trackings', 'TrackingsController')->only('index');
     }
 );
+
+Route::get('/tracking-page/{trackingCode?}', 'TrackingsController@trackingPage');

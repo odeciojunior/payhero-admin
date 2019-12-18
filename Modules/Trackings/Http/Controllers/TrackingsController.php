@@ -19,6 +19,14 @@ class TrackingsController extends Controller
     }
 
     /**
+     * @return Factory|View
+     */
+    public function trackingPage()
+    {
+        return view('trackings::tracking-page');
+    }
+
+    /**
      * @param $filename
      * @return BinaryFileResponse
      */
