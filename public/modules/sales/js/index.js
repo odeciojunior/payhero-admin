@@ -210,7 +210,14 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-                        dados = `<tr>
+                        let tableClass = '';
+                        if (value.has_shopify_integration != null && value.shopify_order == null && value.status != 20) {
+                            tableClass = 'table-warning-roll'
+                        } else {
+                            tableClass = ''
+                        }
+
+                        dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
                                     <td>${value.project}</td>
                                     <td>${value.product}</td>

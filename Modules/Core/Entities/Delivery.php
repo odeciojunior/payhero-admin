@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\DeliveryPresenter;
 
 /**
  * @property integer $id
@@ -33,7 +35,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Delivery extends Model
 {
+    use PresentableTrait;
     use SoftDeletes, FoxModelTrait;
+
+    protected $presenter = DeliveryPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

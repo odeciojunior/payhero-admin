@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use App\Services\FoxUtilsService;
 use Exception;
 use Modules\Core\Entities\Sale;
 use PHPHtmlParser\Dom;
@@ -1272,6 +1273,7 @@ class ShopifyService
 
     /**
      * @param Sale $sale
+     * @return bool
      */
     public function newOrder(Sale $sale)
     {
@@ -1330,6 +1332,7 @@ class ShopifyService
 
             $shippingAddress = [
                 "address1"      => $address,
+                //                "address2"      => "(" . FoxUtilsService::formatDocument($client->document) . ")",
                 "address2"      => "",
                 "city"          => $delivery->city,
                 "company"       => $client->document,
@@ -1361,7 +1364,8 @@ class ShopifyService
                 ],
             ];
 
-            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+            if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1) {
+                //cartao aprovado
 
                 $orderData += [
                     "transactions" => [
@@ -1372,7 +1376,8 @@ class ShopifyService
                         ],
                     ],
                 ];
-            } else if ($sale->payment_method == 2) {
+            } else if (($sale->payment_method == 2) && $sale->status == 2) {
+                //boleto pending
 
                 $orderData += [
                     "financial_status" => "pending",
@@ -1385,35 +1390,53 @@ class ShopifyService
                     //                        ],
                     //                    ],
                 ];
+            } else if (($sale->payment_method == 2) && $sale->status == 1) {
+                //boleto pago
+
+                $orderData += [
+                    "transactions" => [
+                        [
+                            "kind"   => "sale",
+                            "status" => "success",
+                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                        ],
+                    ],
+                ];
             }
 
             $this->sendData     = $orderData;
-            $order              = $this->shopifyClient->getOrderManager()->create($orderData);
+            $order              = $this->client->getOrderManager()->create($orderData);
             $this->receivedData = $this->convertToArray($order);
-            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
-                $sale->update([
-                                  'shopify_order' => 000,
-                              ]);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
+
+            return true;
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id);
+            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
             report($e);
-            //            $shippingAddress['phone']      = '+5555959844325';
-            //            $orderData['phone']            = '+5555959844325';
-            //            $orderData['shipping_address'] = $shippingAddress;
-            //            $order                         = $this->shopifyClient->getOrderManager()->create($orderData);
-            //            if (isset($order->id) || FoxUtils::isEmpty($order->getId())) {
+
+            $shippingAddress['phone']      = '+5555959844325';
+            $orderData['phone']            = '+5555959844325';
+            $orderData['shipping_address'] = $shippingAddress;
+
+            $this->sendData     = $orderData;
+            $order              = $this->client->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
+
+            if (FoxUtils::isEmpty($order->getId())) {
+                return false;
+            }
             $sale->update([
-                              'shopify_order' => 000,
+                              'shopify_order' => $order->getId(),
                           ]);
-            //            }
-            //            $sale->update([
-            //                              'shopify_order' => $order->getId(),
-            //                          ]);
+
+            return true;
         }
     }
 
@@ -1587,27 +1610,30 @@ class ShopifyService
      */
     public function verifyPermissions()
     {
+        $permissions = $this->testOrdersPermissions();
 
-        if (!$this->testOrdersPermissions()) {
-            return false;
+        if ($permissions['status'] == 'error') {
+            return $permissions;
+        }
+        $permissions = $this->testProductsPermissions();
+
+        if ($permissions['status'] == 'error') {
+            return $permissions;
+        }
+        $permissions = $this->testThemePermissions();
+
+        if ($permissions['status'] == 'error') {
+            return $permissions;
         }
 
-        if (!$this->testProductsPermissions()) {
-            return false;
-        }
-
-        if (!$this->testThemePermissions()) {
-            return false;
-        }
-
-        return true;
+        return $permissions;
     }
 
     /**
      * @return boolean
      * Verify if the informed token has permission to manage orders on shopify
      */
-    private function testOrdersPermissions()
+    public function testOrdersPermissions()
     {
 
         try {
@@ -1670,29 +1696,49 @@ class ShopifyService
             $order = $this->client->getOrderManager()->create($orderData);
 
             if (empty($order) || empty($order->getId())) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro na permissão de pedidos',
+                ];
+                //                return false;
             }
 
             $this->client->getOrderManager()->remove($order->getId());
 
-            return true;
+            return [
+                'status' => 'success',
+            ];
+            //            return true;
+
         } catch (Exception $e) {
-            return false;
+            Log::warning(print_r($e));
+
+            return [
+                'status'  => 'error',
+                'message' => 'Erro na permissão de pedidos',
+            ];
+            //            return false;
         }
     }
 
+
     /**
      * @return boolean
+     *
      * Verify if the informed token has permission to manage products on shopify
      */
-    private function testProductsPermissions()
+    public function testProductsPermissions()
     {
 
         try {
             $products = $this->client->getProductManager()->findAll();
 
             if (empty($products)) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro na permissão de produtos',
+                ];
+                //                return false;
             }
 
             foreach ($products as $product) {
@@ -1702,10 +1748,17 @@ class ShopifyService
                     break;
                 }
 
-                return true;
+                return [
+                    'status' => 'success',
+                ];
+                //                return true;
             }
         } catch (Exception $e) {
-            return false;
+            return [
+                'status'  => 'error',
+                'message' => 'Erro na permissão de produtos',
+            ];
+            //            return false;
         }
     }
 
@@ -1713,7 +1766,7 @@ class ShopifyService
      * @return boolean
      * Verify if the informed token has permission to edit theme assets on shopify
      */
-    private function testThemePermissions()
+    public function testThemePermissions()
     {
 
         try {
@@ -1721,7 +1774,11 @@ class ShopifyService
             $this->setThemeByRole('main');
 
             if (empty($this->theme)) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Erro na permissão de tema',
+                ];
+                //                return false;
             }
 
             $this->client->getAssetManager()->update($this->theme->getId(), [
@@ -1729,9 +1786,16 @@ class ShopifyService
                 "value" => $this->getTemplateHtml('templates/404.liquid'),
             ]);
 
-            return true;
+            return [
+                'status' => 'success',
+            ];
+            //            return true;
         } catch (Exception $e) {
-            return false;
+            return [
+                'status'  => 'error',
+                'message' => 'Erro na permissão de tema',
+            ];
+            //            return false;
         }
     }
 }

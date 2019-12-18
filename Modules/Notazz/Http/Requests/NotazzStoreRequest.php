@@ -20,7 +20,20 @@ class NotazzStoreRequest extends FormRequest
             'token_logistics_create'     => 'nullable|string|max:255',
             'start_date_create'          => 'nullable|date',
             'select_pending_days_create' => 'required|numeric|digits_between:1,70',
+            'remove_tax'                 => 'nullable|boolean',
+            'emit_zero'                  => 'nullable|boolean',
         ];
+    }
+
+    public function getValidatorInstance()
+    {
+
+        $this->merge([
+                         'remove_tax' => $this->request->get('remove_tax', 'false') == 'true' ? 1 : 0,
+                         'emit_zero'  => $this->request->get('emit_zero', 'false') == 'true' ? 1 : 0,
+                     ]);
+
+        return parent::getValidatorInstance();
     }
 
     /**

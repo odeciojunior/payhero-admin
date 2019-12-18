@@ -43,6 +43,8 @@ Route::group(
         Route::post('/{version}/sales', 'MobileController@salesByFilter');
         Route::post('/{version}/sales/details', 'MobileController@getSaleDetails');
         Route::post('/{version}/projects', 'MobileController@getUserProjects');
+        Route::post('/{version}/updatenotification', 'MobileController@updateNotificationPermission');
+        Route::post('/{version}/device', 'MobileController@getDeviceData');
 
     }
 );
@@ -57,5 +59,7 @@ Route::group(
          * Notification APIs
          */
         Route::post('/{version}/notification', 'MobileController@sendNotification');
+
     }
 );
+

@@ -1,4 +1,7 @@
-
+.table-warning-roll {
+    color: #EB6707 !important;
+    background-color: #FDE2CE !important;
+}
 
 .table-responsive {
     overflow-x: hidden;

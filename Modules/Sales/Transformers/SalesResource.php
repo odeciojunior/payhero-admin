@@ -9,7 +9,7 @@ class SalesResource extends Resource
 {
     public function toArray($request)
     {
-        return [
+        $data                = [
             //hide ids
             'id'                    => Hashids::connection('sale_id')->encode($this->id),
             'delivery_id'           => Hashids::encode($this->delivery_id),
@@ -44,6 +44,16 @@ class SalesResource extends Resource
             'taxaReal'              => $this->details->taxaReal ?? null,
             'installment_tax_value' => $this->present()->getInstallmentValue,
             'release_date'          => $this->details->release_date,
+            'shopify_order'         => $this->shopify_order ?? null,
         ];
+        $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
+
+        if (count($shopifyIntegrations) > 0) {
+            $data['has_shopify_integration'] = true;
+        } else {
+            $data['has_shopify_integration'] = null;
+        }
+
+        return $data;
     }
 }
