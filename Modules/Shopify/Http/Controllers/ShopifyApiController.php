@@ -535,7 +535,17 @@ class ShopifyApiController extends Controller
         if (!empty($data['token'])) {
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
-                $integration        = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+                try {
+                    $shopify = new ShopifyService($integration->url_store, $integration->token);
+                    if (empty($shopify->getClient())) {
+                        return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                    }
+                } catch (Exception $e) {
+                    report($e);
+
+                    return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                }
                 $integrationUpdated = $integration->update(['token' => $data['token']]);
 
                 if ($integrationUpdated) {
@@ -562,23 +572,21 @@ class ShopifyApiController extends Controller
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
-                $shopify     = new ShopifyService($integration->url_store, $integration->token);
+                try {
+                    $shopify = new ShopifyService($integration->url_store, $integration->token);
+                    if (empty($shopify->getClient())) {
+                        return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                    }
+                } catch (Exception $e) {
+                    report($e);
 
-                $orderPermission   = $shopify->testOrdersPermissions();
-                $productPermission = $shopify->testProductsPermissions();
-                $themePermission   = $shopify->testThemePermissions();
+                    return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                }
+                $permissions = $shopify->verifyPermissions();
 
-                if ($orderPermission['status'] == 'error') {
+                if ($permissions['status'] == 'error') {
                     return response()->json([
-                                                'message' => $orderPermission['message'],
-                                            ], 400);
-                } else if ($productPermission['status'] == 'error') {
-                    return response()->json([
-                                                'message' => $productPermission['message'],
-                                            ], 400);
-                } else if ($themePermission['status'] == 'error') {
-                    return response()->json([
-                                                'message' => $themePermission['message'],
+                                                'message' => $permissions['message'],
                                             ], 400);
                 } else {
                     return response()->json([
