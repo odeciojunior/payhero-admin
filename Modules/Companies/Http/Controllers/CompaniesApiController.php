@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Modules\Companies\Transformers\CompanyDocumentsResource;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Project;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -166,8 +167,6 @@ class CompaniesApiController extends Controller
             $company = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
 
-
-
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);
 
@@ -191,17 +190,33 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
+            $projectModel = new Project();
 
-            $company = $companyModel->newQuery()->withCount([
-                                                                'transactions',
-                                                                'usersProjects',
-                                                            ])->find(current(Hashids::decode($encodedId)));
+            $company = $companyModel->with('usersProjects')->withCount([
+                                                                            'transactions',
+                                                                            'usersProjects',
+                                                                        ])
+                                    ->find(current(Hashids::decode($encodedId)));
             if ($company) {
                 if (Gate::allows('destroy', [$company])) {
                     if ($company->transactions_count > 0) {
                         return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], Response::HTTP_BAD_REQUEST);
                     } else if ($company->users_projects_count > 0) {
-                        return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], Response::HTTP_BAD_REQUEST);
+                        $projects = [];
+                        foreach ($company->usersProjects as $userProject) {
+                            $projects = $projectModel->where('id', $userProject->project->id)
+                                                     ->where('status', $projectModel->present()
+                                                                                    ->getStatus('active'))
+                                                     ->get();
+                        }
+
+                        if (count($projects) > 0) {
+                            return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], Response::HTTP_BAD_REQUEST);
+                        } else {
+                            $company->delete();
+
+                            return response()->json(['message' => 'Empresa removida com sucesso'], Response::HTTP_OK);
+                        }
                     } else {
                         $company->delete();
 

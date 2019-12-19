@@ -104,9 +104,9 @@ class ShopifyApiController extends Controller
 
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
             }
-
-            if(!$shopifyService->verifyPermissions()){
-                return response()->json(['message' => 'As permissões do token criado são insuficientes!'], 400);
+            $tokenPermissions = $shopifyService->verifyPermissions();
+            if ($tokenPermissions['status'] == 'error') {
+                return response()->json(['message' => $tokenPermissions['message']], 400);
             }
 
             $shopifyName = $shopifyService->getShopName();
@@ -161,7 +161,6 @@ class ShopifyApiController extends Controller
                         if (!empty($userProjectModel)) {
 
                             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
-
                         } else {
                             $shippingModel->delete();
                             $shopifyIntegration->delete();
@@ -191,7 +190,6 @@ class ShopifyApiController extends Controller
 
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
         }
-
     }
 
     /**
@@ -526,6 +524,93 @@ class ShopifyApiController extends Controller
 
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
+        }
+    }
+
+    public function updateToken(Request $request)
+    {
+        $data                    = $request->all();
+        $shopifyIntegrationModel = new ShopifyIntegration();
+        if (!empty($data['token'])) {
+            $projectId = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+                try {
+                    $shopify = new ShopifyService($integration->url_store, $data['token']);
+                    if (empty($shopify->getClient())) {
+                        return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                    }
+                } catch (Exception $e) {
+                    report($e);
+
+                    return response()->json(['message' => 'Novo token inválido'], 400);
+                }
+
+                $permissions = $shopify->verifyPermissions();
+
+                if ($permissions['status'] == 'error') {
+                    return response()->json([
+                                                'message' => $permissions['message'],
+                                            ], 400);
+                }
+
+                $integrationUpdated = $integration->update(['token' => $data['token']]);
+
+                if ($integrationUpdated) {
+                    return response()->json(['message' => 'Token atualizado com sucesso'], 200);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
+                                        ], 400);
+            }
+        } else {
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
+                                    ], 400);
+        }
+    }
+
+    public function verifyPermission(Request $request)
+    {
+        $data                    = $request->all();
+        $shopifyIntegrationModel = new ShopifyIntegration();
+
+        if (!empty($data['project_id'])) {
+            $projectId = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+
+                try {
+                    $shopify = new ShopifyService($integration->url_store, $integration->token);
+                    if (empty($shopify->getClient())) {
+                        return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+                    }
+                } catch (Exception $e) {
+                    report($e);
+                    return response()->json(['message' => 'Token inválido'], 400);
+                }
+
+                $permissions = $shopify->verifyPermissions();
+
+                if ($permissions['status'] == 'error') {
+                    return response()->json([
+                                                'message' => $permissions['message'],
+                                            ], 400);
+                } else {
+                    return response()->json([
+                                                'message' => 'Todas as permissões estão funcionando corretamente',
+                                            ], 200);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde',
+                                        ], 400);
+            }
+        } else {
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde',
                                     ], 400);
         }
     }

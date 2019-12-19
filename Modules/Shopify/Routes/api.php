@@ -32,5 +32,15 @@ Route::group(
             'uses' => 'ShopifyApiController@synchronizeTemplates',
             'as'   => 'shopify.synchronize.template',
         ]);
+
+        Route::post('/apps/shopify/updatetoken', [
+            'uses' => 'ShopifyApiController@updateToken',
+            'as'   => 'shopify.updatetoken',
+        ]);
+
+        Route::post('/apps/shopify/verifypermissions', [
+            'uses' => 'ShopifyApiController@verifyPermission',
+            'as'   => 'shopify.verifypermissions',
+        ]);
     }
 );
