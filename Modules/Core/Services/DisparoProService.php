@@ -25,7 +25,7 @@ class DisparoProService
                                              "numero"      => $number,
                                              "servico"     => "short",
                                              "mensagem"    => $textMessage,
-                                             "codificacao" => "1",
+                                             "codificacao" => "0",
                                          ]);
 
             curl_setopt_array($curl, [
