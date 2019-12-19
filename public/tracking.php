@@ -6,14 +6,11 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @if(getenv('APP_ENV') === 'production')
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    @endif
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="modules/global/adminremark/global/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="modules/global/css/materialdesignicons.min.css">
     <style>
         body {
             background: linear-gradient(90deg, #fafafa 36px, transparent 1%) center, linear-gradient(#fafafa 36px, transparent 1%) center, #e5e5e5;
@@ -86,7 +83,7 @@
             color: #ffffff;
         }
 
-        .loader{
+        .loader {
             width: 75px;
             height: 75px;
             margin: 150px auto;
@@ -101,22 +98,19 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
-
     </style>
 
     <!-- Scripts -->
-    @if(env('APP_ENV', 'production') == 'production')
-        <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
-        <script>
-            Sentry.init({dsn: 'https://4b81ab6a91684acd888b817f34bd755b@sentry.io/1542991'});
-        </script>
-    @endif
-    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
+    <script src="modules/global/adminremark/global/vendor/jquery/jquery.min.js"></script>
+    <script src="modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js"></script>
+    <script src="modules/global/adminremark/global/vendor/bootstrap/bootstrap.js"></script>
 </head>
 <body class="h-100">
 <div class="container py-5">
@@ -153,14 +147,16 @@
                             <tbody id="table-tracking">
                             </tbody>
                         </table>
-                        <button class="btn bg-dark text-white text-uppercase float-right" id="btn-see-more">Ver mais</button>
+                        <button class="btn bg-dark text-white text-uppercase float-right" id="btn-see-more">Ver mais
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="row" id="div-unavailable" style="display: none">
                 <div class="col pt-5 text-center">
                     <h3 class="mb-5">O rastreamento não está disponível</h3>
-                    <svg version="1.1" width="150px" height="150px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 512 512">
+                    <svg version="1.1" width="150px" height="150px" xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
                         <path style="fill:#d69a73;" d="M248.768,1.654L19.499,112.336c-2.875,1.388-4.701,4.298-4.701,7.49v272.348
                             c0,3.192,1.827,6.102,4.701,7.49l229.269,110.682c4.569,2.206,9.895,2.206,14.464,0l229.269-110.682
                             c2.875-1.388,4.701-4.298,4.701-7.49V119.826c0-3.192-1.827-6.102-4.701-7.49L263.232,1.654
@@ -175,7 +171,8 @@
                         <path style="fill:#FFF6D8;" d="M115.986,356.45c-1.21,0-2.445-0.268-3.606-0.828l-67.928-32.79
                             c-4.134-1.998-5.872-6.969-3.874-11.103c1.99-4.126,6.985-5.856,11.103-3.874l67.927,32.79c4.134,1.998,5.872,6.969,3.874,11.103
                             C122.054,354.719,119.081,356.45,115.986,356.45z"/>
-                        <polygon style="fill:#64d8d6;" points="414.549,154.373 173.887,38.11 110.447,68.86 351.649,185.303 "/>
+                        <polygon style="fill:#64d8d6;"
+                                 points="414.549,154.373 173.887,38.11 110.447,68.86 351.649,185.303 "/>
                         <path style="fill:#47c1bf;" d="M351.649,185.303v90.207c0,3.066,3.205,5.078,5.967,3.745l52.232-25.215
                             c2.875-1.388,4.701-4.298,4.701-7.49v-92.176L351.649,185.303z"/>
                     </svg>
@@ -226,7 +223,7 @@
                 let delivered = 0;
                 let exception = 0;
 
-                for (let checkpoint of checkpoints){
+                for (let checkpoint of checkpoints) {
                     switch (checkpoint.tracking_status_enum) {
                         case 2: //dispatched
                             dispatched = 1;
@@ -245,18 +242,18 @@
 
                 let position = 0;
 
-                if(delivered){
+                if (delivered) {
                     $('.tracking-icon').addClass('active');
-                }else if (out_for_delivery){
+                } else if (out_for_delivery) {
                     $('.tracking-icon').eq(2).addClass('active');
                     $('.tracking-icon').eq(1).addClass('active');
-                    if(exception) position = 2;
-                }else if (dispatched){
+                    if (exception) position = 2;
+                } else if (dispatched) {
                     $('.tracking-icon').eq(1).addClass('active');
-                    if(exception) position = 1;
+                    if (exception) position = 1;
                 }
 
-                if(position){
+                if (position) {
                     $('<div class="tracking-icon exception"><i class="material-icons">error</i></div><div class="line"></div>').insertAfter($('.line').eq(position));
                 }
 
