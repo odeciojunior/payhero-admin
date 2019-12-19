@@ -26,11 +26,12 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <label for="code">Código</label>
-                        <input name="code" type="text" id='code-pixel' class="form-control pixel-code" placeholder="52342343245553" maxlength='30'>
+                <label for="code">Código</label>
+                <div class="input-group mb-3">
+                    <div class='input-group-prepend'>
+                        <span class='input-group-text' id='input-code-pixel' style='background:#f3f3f3;display:none'></span>
                     </div>
+                    <input name="code" type="text" id='code-pixel' class="form-control pixel-code" placeholder="52342343245553" maxlength='30' aria-describedby="input-code-pixel">
                 </div>
                 <div class='mb-1'>
                     <label>Rodar Pixel:</label>

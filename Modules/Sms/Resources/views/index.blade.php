@@ -137,7 +137,7 @@
                         <td class="" style="vertical-align: middle;">Email</td>
                         <td class="display-m-none display-sm-none" style="vertical-align: middle;">Boleto gerado</td>
                         <td class="" style="vertical-align: middle;">10:00 horas 2 dias após</td>
-                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">Olá {primeiro_nome}, por falta de pagamento vamos ter que liberar sua mercadoria para o estoque novamente. Isso siginigfica que se você não efetuar o pagamento, cancelaremos seu pedido!</td>
+                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">Caso você tenha pago o boleto, desconsidere esse e-mail. Olá {primeiro_nome}, por falta de pagamento vamos ter que liberar sua mercadoria para o estoque novamente. Isso siginigfica que se você não efetuar o pagamento, cancelaremos seu pedido!</td>
                         <td class="shipping-status " style="vertical-align: middle;">
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
@@ -211,6 +211,25 @@
                         <td class="" style="vertical-align: middle;">Imediato</td>
                         <td class="shipping-zip-code-origin " style="vertical-align:middle;">
                             Olá {primeiro_nome}, seu pedido foi confirmado! Em breve lhe enviaremos o código de rastreio</td>
+                        <td class="shipping-status " style="vertical-align: middle;">
+                            <span class="badge badge-success mb-1">Ativo</span>
+                            <span class="badge badge-primary">Grátis</span>
+                        </td>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'>remove_red_eye</i></a>
+                            <a role='button' class='pointer disabled edit-sms mg-responsive' data-target='#modal-content' data-toggle='modal'>
+                                <i class='material-icons gradient'> edit </i></a>
+                            <a role='button' class='pointer disabled delete-sms mg-responsive' data-toggle='modal' data-target='#modal-delete'>
+                                <i class='material-icons gradient'> delete_outline </i></a>
+                        </td>
+                    </tr>
+                    <tr class='page-3' style='display:none;'>
+                        <td class="" style="vertical-align: middle;">Email</td>
+                        <td class="display-m-none display-sm-none" style="vertical-align: middle;">Compra no cartão</td>
+                        <td class="" style="vertical-align: middle;">Imediato</td>
+                        <td class="shipping-zip-code-origin " style="vertical-align:middle;">
+                            Olá {primeiro_nome}, Seu pedido {codigo_pedido} foi confirmado. Aqui estão as informações e os detalhes da sua compra. {nome_produto} {qtde_produto} {valor_compra}</td>
                         <td class="shipping-status " style="vertical-align: middle;">
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>

@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\FoxUtilsService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -14,9 +15,12 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Services\CheckoutService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
+use Modules\Core\Services\ShopifyService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
@@ -185,6 +189,36 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function newOrderShopify(Request $request, $saleId)
+    {
+        try {
+            if (FoxUtils::isProduction()) {
+                $result             = false;
+                $saleModel          = new Sale();
+                $sale               = $saleModel->find(Hashids::connection('sale_id')->decode($saleId))->first();
+                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+                if (!FoxUtils::isEmpty($shopifyIntegration)) {
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                    $result = $shopifyService->newOrder($sale);
+                    $shopifyService->saveSaleShopifyRequest();
+                }
+                if ($result['status'] == 'success') {
+                    return response()->json(['message' => $result['message']], Response::HTTP_OK);
+                } else {
+                    return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                return response()->json(['message' => 'Funcionalidade habilitada somente em produção =)'], Response::HTTP_OK);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar gerar ordem no Shopify SalesApiController - newOrderShopify');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao tentar gerar ordem no Shopify.'], Response::HTTP_BAD_REQUEST);
         }
     }
 
