@@ -9,3 +9,4 @@ Route::group(
         Route::resource('/trackings', 'TrackingsController')->only('index');
     }
 );
+
