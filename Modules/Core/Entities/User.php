@@ -273,4 +273,12 @@ class User extends Authenticable
     {
         return $this->hasOne(UserNotification::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function userDevices()
+    {
+        return $this->hasMany('Modules\Core\Entities\UserDevice');
+    }
 }
