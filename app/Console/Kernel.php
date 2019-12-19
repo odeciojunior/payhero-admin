@@ -67,6 +67,9 @@ class Kernel extends ConsoleKernel
         // verify checkout status (ON - OFF)
         $schedule->command('verify:checkout-status')->everyTenMinutes();
 
+        // verify redis status (ON - OFF)
+        $schedule->command('verify:redis')->everyThirtyMinutes();
+
         //verify last domains on sendgrid
         $schedule->command('command:validateLastDomains')->dailyAt('02:00');
     }
