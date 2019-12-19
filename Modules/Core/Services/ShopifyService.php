@@ -1346,7 +1346,18 @@ class ShopifyService
                 "country_code"  => "BR",
                 "province_code" => $delivery->state,
             ];
-
+            $shippingValue   = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
+            if ($shippingValue <= 0) {
+                $shippingTitle = 'Free Shipping';
+            } else {
+                $shippingTitle = 'Standard Shipping';
+                $totalValue    += $shippingValue;
+            }
+            $shipping[] = [
+                "custom" => true,
+                "price"  => $shippingValue <= 0 ? 0.0 : substr_replace($shippingValue, '.', strlen($shippingValue) - 2, 0),
+                "title"  => $shippingTitle,
+            ];
             $orderData = [
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
@@ -1357,11 +1368,13 @@ class ShopifyService
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
+                "shipping_lines"          => $shipping,
                 "note_attributes"         => [
 
                     "name"  => "token_cloudfox",
                     "value" => $checkout->present()->getCheckoutIdIntegrations(),
                 ],
+                "total_price"             => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
             ];
 
             if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1) {
