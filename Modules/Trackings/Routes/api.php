@@ -20,6 +20,9 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::apiResource('tracking', 'TrackingsApiController')->only( 'index', 'show', 'store')->names('api.trackings');
 });
 
+Route::get('/tracking/detail/{trackingCode}', 'TrackingsApiController@detail');
+
+
 //Route::middleware('auth:api')->get('/trackings', function (Request $request) {
 //    return $request->user();
 //});
