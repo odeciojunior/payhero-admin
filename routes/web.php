@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 //    return true;
 //})->middleware('broadcast')->name('broadcast.auth');
 
+//Tracking Page
+Route::pattern('domain', 'tracking.*');
+Route::group(['domain' => '{domain}',  'namespace' => '\Modules\Trackings\Http\Controllers'], function () {
+    Route::get('/{trackingCode?}', 'TrackingsController@trackingPage');
+});
+
 Route::get('/', function() {
     return view('auth.login');
 });

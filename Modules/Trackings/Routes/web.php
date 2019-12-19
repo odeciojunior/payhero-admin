@@ -10,4 +10,3 @@ Route::group(
     }
 );
 
-Route::get('/tracking-page/{trackingCode?}', 'TrackingsController@trackingPage');

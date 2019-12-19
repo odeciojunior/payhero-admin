@@ -153,7 +153,7 @@
                             <tbody id="table-tracking">
                             </tbody>
                         </table>
-                        <button class="btn btn-dark text-uppercase float-right" id="btn-see-more">Ver mais</button>
+                        <button class="btn bg-dark text-white text-uppercase float-right" id="btn-see-more">Ver mais</button>
                     </div>
                 </div>
             </div>
