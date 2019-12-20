@@ -44,7 +44,7 @@ class BilletPaidSendEmailListener implements ShouldQueue
             $client          = $event->client;
             $saleCode        = Hashids::connection('sale_id')->encode($sale->id);
             $project         = $projectModel->find($event->plan->project_id);
-            $domain          = $domainModel->where('project_id', $project->id)->first();
+            $domain          = $domainModel->where('project_id', $project->id)->where('status', 3)->first();
             $products        = $saleService->getEmailProducts($sale->id);
 
             $subTotal               = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -80,7 +80,9 @@ class BilletPaidSendEmailListener implements ShouldQueue
                 "iof"              => $iof,
                 'discount'         => $discount,
             ];
-            $sendGridService->sendEmail('noreply@' . $domain['name'], $project['name'], $client['email'], $client['name'], 'd-c1e4278e88dd417aa38a18fc03694718', $data);
+            if (!empty($domain['name'])) {
+                $sendGridService->sendEmail('noreply@' . $domain['name'], $project['name'], $client['email'], $client['name'], 'd-c1e4278e88dd417aa38a18fc03694718', $data);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao enviar email de boleto pago');
             report($e);

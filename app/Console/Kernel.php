@@ -35,10 +35,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:pendingdomains')->hourly();
 
         // generate all sale approved invoices
-        //$schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
+        $schedule->command('generate:notazzinvoicessalesapproved')->everyFiveMinutes();
 
         // verify pending notazz invoices
-        //$schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
+        $schedule->command('verify:pendingnotazzinvoices')->everyMinute()->withoutOverlapping();
 
         // pega as ultimas quotacoes das moedas
         $schedule->command('update:currencyquotation')->dailyAt('12:00');
@@ -66,6 +66,9 @@ class Kernel extends ConsoleKernel
 
         // verify checkout status (ON - OFF)
         $schedule->command('verify:checkout-status')->everyTenMinutes();
+
+        // verify redis status (ON - OFF)
+        $schedule->command('verify:redis')->everyThirtyMinutes();
 
         //verify last domains on sendgrid
         $schedule->command('command:validateLastDomains')->dailyAt('02:00');

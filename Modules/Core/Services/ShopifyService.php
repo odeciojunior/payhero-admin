@@ -1312,10 +1312,10 @@ class ShopifyService
                         "quantity"          => $productPlan->amount * $planSale->amount,
                         "requires_shipping" => true,
                         "sku"               => $productPlan->product->sku,
-                        "title"             => $planSale->plan->name,
-                        "variant_id"        => $planSale->plan->shopify_variant_id,
-                        "variant_title"     => $planSale->plan->name,
-                        "name"              => $planSale->plan->name,
+                        "title"             => $productPlan->product->name,
+                        "variant_id"        => $productPlan->product->shopify_variant_id,
+                        "variant_title"     => $productPlan->product->name,
+                        "name"              => $productPlan->product->name,
                         "gift_card"         => false,
                     ];
                 }
@@ -1702,9 +1702,9 @@ class ShopifyService
             return [
                 'status' => 'success',
             ];
-
         } catch (Exception $e) {
             report($e);
+
             return [
                 'status'  => 'error',
                 'message' => 'Erro na permissão de pedidos',
@@ -1712,10 +1712,8 @@ class ShopifyService
         }
     }
 
-
     /**
      * @return boolean
-     *
      * Verify if the informed token has permission to manage products on shopify
      */
     public function testProductsPermissions()
