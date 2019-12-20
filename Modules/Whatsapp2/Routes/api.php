@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['auth:api']], function() {
+Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
 
     Route::apiResource('apps/whatsapp2', 'Whatsapp2ApiController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');

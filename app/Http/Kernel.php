@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'broadcast'             => \App\Http\Middleware\Broadcast::class,
         'role'                  => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'InternalApiAuth'       => \App\Http\Middleware\InternalApiAuth::class,
+        'setUserAsLogged'       => \App\Http\Middleware\SetUserAsLogged::class,
     ];
 }

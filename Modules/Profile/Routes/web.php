@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['web', 'auth', 'setUserAsLogged'],
     ],
     function() {
         Route::resource('/profile', 'ProfileController')->only('index', 'edit', 'create');

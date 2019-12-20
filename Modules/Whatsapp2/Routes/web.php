@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
 
     Route::Resource('apps/whatsapp2', 'Whatsapp2Controller')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');

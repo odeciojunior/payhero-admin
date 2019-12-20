@@ -2,11 +2,12 @@
 
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
-use App\Entities\Sale;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\PushNotification;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\SaleService;
-use Modules\Sales\Transformers\SalesResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class NotificationMachine {
@@ -23,6 +24,9 @@ class NotificationMachine {
         4  => 'ignorePostback',
         5  => 'checkWithdrawalsNotification',
         6  => 'findSale',
+        7  => 'getUserDevices',
+        8  => 'makeNotification',
+        9  => 'sendNotification',
     ];
 
     /**
@@ -47,17 +51,17 @@ class NotificationMachine {
     ];
 
     /**
+     * @var PushNotification
+     */
+    private $pushNotification;
+    /**
      * @var integer
      */
     private $actualState;
     /**
      * @var
      */
-    private $postbackJson;
-    /**
-     * @var Request
-     */
-    private $postback;
+    private $requestJson;
     /**
      * @var NotificationApiService
      */
@@ -92,22 +96,21 @@ class NotificationMachine {
     }
 
     /**
-     * @param Request $postback
+     * @param PushNotification $pushNotification
      * @return array
      */
-    public function init(Request $postback)
+    public function init(PushNotification $pushNotification)
     {
         try {
             $this->setState(__FUNCTION__);
 
-            //$this->$notificationService = new NotificationApiService();
+            $this->notificationService = new NotificationApiService();
 
             $this->result['status'] = 1;
-
-            $this->postback     = $postback;
-            $this->postbackJson = json_decode($postback->getContent());
-
-            $this->foxSale      = null;
+            $this->pushNotification = $pushNotification;
+            $this->foxSale          = null;
+            $this->requestJson      = json_decode($pushNotification->postback_data);
+            //$code = Hashids::connection('sale_id')->encode($this->requestJson->sale_id);
 
             return $this->validateRequest();
         } catch (Exception $ex) {
@@ -126,7 +129,7 @@ class NotificationMachine {
         try {
             $this->setState(__FUNCTION__);
 
-            if (!empty($this->postbackJson->notification_type) && !empty($this->postbackJson->external_reference)) {
+            if (!empty($this->requestJson->notification_type) && !empty($this->requestJson->external_reference)) {
                 return $this->checkSaleNotification();
             } else {
                 return $this->ignorePostback();
@@ -147,10 +150,10 @@ class NotificationMachine {
         try {
             $this->setState(__FUNCTION__);
 
-            if ($this->postbackJson->notification_type == 'sale') {
+            if ($this->requestJson->notification_type == 'sale') {
                 return $this->findSale();
             } else {
-                //return $this->checkWithdrawalsNotification();
+                return $this->checkWithdrawalsNotification();
             }
         } catch (Exception $ex) {
             Log::warning('NotificaionMachine - ' . __FUNCTION__);
@@ -169,8 +172,8 @@ class NotificationMachine {
         try {
             $this->setState(__FUNCTION__);
 
-            if ($this->postbackJson->notification_type == 'withdrawals') {
-                return $this->checkEventConfirmed();
+            if ($this->requestJson->notification_type == 'withdrawals') {
+                //return $this->checkEventConfirmed();
             } else {
                 return $this->ignorePostback();
             }
@@ -190,38 +193,16 @@ class NotificationMachine {
     {
         try {
             $this->setState(__FUNCTION__);
-
-            $saleId = current(Hashids::connection('sale_id')->decode($this->postbackJson->external_reference));
-
-            $saleService = new SaleService();
-
-            if (isset($this->postbackJson->external_reference)) {
-                $sale         = $saleService->getSaleWithDetails($this->postbackJson->external_reference);
-                $this->foxSale = new SalesResource($sale);
-
-                if ($this->foxSale) {
-
-                }
-            }
-
             $saleModel = new Sale();
 
-            $saleId = current(Hashids::connection('sale_id')->decode($this->postbackJson->externalReference));
-
-            if ($saleId) {
-                //$this->foxSale = $saleModel->with(['transactions.company.user', 'client'])->find($saleId);
-                $this->foxSale = $saleModel->find($saleId);
-
+            if (isset($this->requestJson->external_reference)) {
+                $saleId = current(Hashids::connection('sale_id')->decode($this->requestJson->external_reference));
+                $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])->find($saleId);
                 if ($this->foxSale) {
-
+                    return $this->getUserDevices();
                 }
             }
-
-            if ($this->postbackJson->external_reference == 'withdrawals') {
-                return $this->checkEventConfirmed();
-            } else {
-                return $this->ignorePostback();
-            }
+            return $this->failState(__FUNCTION__, 'NotificaionMachine [findSale] - Venda não encontrada no banco de dados!');
         } catch (Exception $ex) {
             Log::warning('NotificaionMachine - ' . __FUNCTION__);
             report($ex);
@@ -230,22 +211,38 @@ class NotificationMachine {
         }
     }
 
-
     /**
      * @return array
      */
-    public function ignorePostback()
+    public function getUserDevices()
     {
         try {
             $this->setState(__FUNCTION__);
 
-            $this->postback->update([
+            $userDevices = [];
+            foreach ($this->foxSale->transactions as $transaction) {
+                if (isset($transaction->company->user->userDevices)) {
+                    foreach ($transaction->company->user->userDevices as $device) {
+                        if ($device->online) { // verifica se o device está ativo
+                            if ($this->foxSale->payment_method == 1) { // venda
+                                if ($device->sale_notification) { // verifica se o usuário quer ser notificado na venda
+                                    $userDevices[] = $device->player_id;
+                                }
+                            } else { // boleto
+                                if ($device->billet_notification) { // verifica se o usuário quer ser notificado no boleto
+                                    $userDevices[] = $device->player_id;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-                'processed_flag'      => true,
-                'postback_valid_flag' => true,
-            ]);
-
-            return $this->finish();
+            if (sizeof($userDevices) == 0) {
+                return $this->ignorePostback();
+            } else {
+                return $this->makeNotification($userDevices);
+            }
         } catch (Exception $ex) {
             Log::warning('NotificaionMachine - ' . __FUNCTION__);
             report($ex);
@@ -257,7 +254,100 @@ class NotificationMachine {
     /**
      * @return array
      */
-    private function finish()
+    public function makeNotification($userDevices)
+    {
+        try {
+            $this->setState(__FUNCTION__);
+
+            $heading = '';
+            $sound = '';
+            $saleService = new SaleService();
+            $products = $saleService->getProducts($this->foxSale->id);
+
+            $content = $products[0]->name . " - R$ " . number_format($this->foxSale->total_paid_value, 2, ',', '.');
+
+            // venda cartão
+            if ($this->foxSale->payment_method == 1) {
+                $heading = 'CloudFox - Venda realizada';
+                $sound = 'venda';
+            } else { // venda boleto
+                if ($this->foxSale->status == 1) { // boleto pago
+                    $heading = 'CloudFox - Boleto pago';
+                    $sound = 'boleto';
+                } else { // boleto gerado
+                    $heading = 'CloudFox - Boleto gerado';
+                    $sound = 'boleto';
+                }
+            }
+
+            $notification = [
+                "headings" => $heading,
+                "content" => $content,
+                "notification_sound" => $sound,
+                "include_player_ids" => $userDevices
+            ];
+
+            return $this->sendNotification($notification);
+
+
+        } catch (Exception $ex) {
+            Log::warning('NotificaionMachine - ' . __FUNCTION__);
+            report($ex);
+
+            return $this->failState(__FUNCTION__, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function sendNotification($notification)
+    {
+        try {
+            $this->setState(__FUNCTION__);
+
+            $response = $this->notificationService->sendNotification($notification);
+
+            if ($response["status"] == 200) {
+                return $this->ignorePostback($response);
+            } else {
+                return $this->failState(__FUNCTION__, $response->response);
+            }
+
+        } catch (Exception $ex) {
+            Log::warning('NotificaionMachine - ' . __FUNCTION__);
+            report($ex);
+
+            return $this->failState(__FUNCTION__, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function ignorePostback($response)
+    {
+        try {
+            $this->setState(__FUNCTION__);
+
+            $this->pushNotification->update([
+                'processed_flag'      => true,
+                'postback_valid_flag' => true,
+            ]);
+
+            return $this->finish($response);
+        } catch (Exception $ex) {
+            Log::warning('NotificaionMachine - ' . __FUNCTION__);
+            report($ex);
+
+            return $this->failState(__FUNCTION__, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function finish($response)
     {
         try {
             $this->setState(__FUNCTION__);
@@ -267,10 +357,9 @@ class NotificationMachine {
                 'state'  => $this->actualState,
             ];
 
-            $this->postback->update([
-                'machine_result' => json_encode($returnData),
-                'sale_id' => Hashids::connection('sale_id')->decode($this->postbackJson->payment->externalReference)[0],
-                'reference_id' => $this->postbackJson->payment->externalReference
+            $this->pushNotification->update([
+                'machine_result'     => json_encode($returnData),
+                'onesignal_response' => $response["response"]
             ]);
 
             return $returnData;

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(
     [
         'prefix'     => 'finances',
-        'middleware' => ['auth:api'],
+        'middleware' => ['auth:api', 'setUserAsLogged'],
     ],
     function() {
         // rotas autenticadas

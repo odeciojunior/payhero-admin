@@ -62,7 +62,9 @@ class CollaboratorsApiController extends Controller
             $data['score']                               = '0';
             $data['sms_zenvia_amount']                   = '0';
             $data['invites_amount']                      = 1;
-            $data['account_owner_id']                       = auth()->user()->account_owner_id;
+            $data['address_document_status']             = 3;
+            $data['personal_document_status']            = 3;
+            $data['account_owner_id']                    = auth()->user()->account_owner_id;
             $user                                        = $userModel->create($data);
             $user->assignRole($data['role']);
             if (!empty($user)) {

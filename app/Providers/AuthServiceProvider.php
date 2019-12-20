@@ -24,15 +24,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        //-------------------------------
         Passport::routes();
-        //        Passport::tokensExpireIn(now()->addMinutes('30'));
         Passport::loadKeysFrom(app_path() . '/Credentials/Passport');
         Passport::tokensCan(ApiToken::$tokenScopes);
-        //tokens duram 5 anos
-        /** @var Carbon $expireAt */
-        $expireAt = now()->addYears(5);
+        $expireAt = now()->addDays(1);
         Passport::personalAccessTokensExpireIn($expireAt);
-        //-------------------------------
+
     }
 }

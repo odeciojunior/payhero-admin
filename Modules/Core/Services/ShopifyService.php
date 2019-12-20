@@ -1270,7 +1270,7 @@ class ShopifyService
 
     /**
      * @param Sale $sale
-     * @return bool
+     * @return array
      */
     public function newOrder(Sale $sale)
     {
@@ -1343,7 +1343,18 @@ class ShopifyService
                 "country_code"  => "BR",
                 "province_code" => $delivery->state,
             ];
-
+            $shippingValue   = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
+            if ($shippingValue <= 0) {
+                $shippingTitle = 'Free Shipping';
+            } else {
+                $shippingTitle = 'Standard Shipping';
+                $totalValue    += $shippingValue;
+            }
+            $shipping[] = [
+                "custom" => true,
+                "price"  => $shippingValue <= 0 ? 0.0 : substr_replace($shippingValue, '.', strlen($shippingValue) - 2, 0),
+                "title"  => $shippingTitle,
+            ];
             $orderData = [
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
@@ -1354,9 +1365,11 @@ class ShopifyService
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
+                "shipping_lines"          => $shipping,
                 "note_attributes"         => [
                     "token_cloudfox" => $checkout->present()->getCheckoutIdIntegrations(),
                 ],
+                "total_price"             => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
             ];
 
             if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1) {
@@ -1397,6 +1410,11 @@ class ShopifyService
                         ],
                     ],
                 ];
+            } else {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
+                ];
             }
 
             $this->sendData     = $orderData;
@@ -1404,13 +1422,19 @@ class ShopifyService
             $this->receivedData = $this->convertToArray($order);
 
             if (FoxUtils::isEmpty($order->getId())) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Error ao tentar gerar ordem no shopify.',
+                ];
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
 
-            return true;
+            return [
+                'status'  => 'success',
+                'message' => 'Ordem gerada com sucesso.',
+            ];
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
             Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
@@ -1425,13 +1449,19 @@ class ShopifyService
             $this->receivedData = $this->convertToArray($order);
 
             if (FoxUtils::isEmpty($order->getId())) {
-                return false;
+                return [
+                    'status'  => 'error',
+                    'message' => 'Error ao tentar gerar ordem no shopify.',
+                ];
             }
             $sale->update([
                               'shopify_order' => $order->getId(),
                           ]);
 
-            return true;
+            return [
+                'status'  => 'success',
+                'message' => 'Ordem gerada com sucesso.',
+            ];
         }
     }
 
