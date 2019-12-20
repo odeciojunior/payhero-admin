@@ -40,6 +40,8 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $projectContact = $event->sale->project->contact;
             $domain         = $domainModel->where('project_id', $event->sale->project->id)->first();
 
+            $linkBase = 'https://tracking.' . $domain->name . '/';
+
             if (isset($domain)) {
                 $data = [
                     'name'            => $clientName,
@@ -47,12 +49,13 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                     'tracking_code'   => $event->tracking->tracking_code,
                     'project_contact' => $projectContact,
                     "products"        => $event->products,
+                    "link"            => $linkBase,
                 ];
 
                 $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
 
                 $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
-                $link            = $linkShortenerService->shorten('https://www.linkcorreios.com.br/?id=' . $data['tracking_code']);
+                $link            = $linkShortenerService->shorten($linkBase . $data['tracking_code']);
 
                 if (!empty($clientTelephone) && !empty($link)) {
                     $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
