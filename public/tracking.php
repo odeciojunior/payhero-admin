@@ -32,6 +32,7 @@
 
         .tracking-icon i {
             font-size: 50px;
+            color: #999999;
         }
 
         .line {
