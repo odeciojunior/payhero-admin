@@ -130,7 +130,7 @@ class TrackingService
                     'tracking_status_enum' => $status_enum,
                     'tracking_status' => $status,
                     'created_at' => Carbon::parse($data)->format('d/m/Y'),
-                    'event' => $nonLatinChars ? 'Encomenda no exterior' :  $event,
+                    'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' :  $event,
                 ]);
             }
         }*/
