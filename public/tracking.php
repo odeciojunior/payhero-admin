@@ -207,8 +207,6 @@
             success: response => {
                 if (response.data) {
 
-                    console.log(response.data)
-
                     $('#tracking-code').text('Objeto #' + response.data.tracking_code);
                     $('title').html('Rastreamento - ' + response.data.tracking_code);
 
