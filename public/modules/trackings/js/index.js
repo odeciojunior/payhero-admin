@@ -304,7 +304,7 @@ $(() => {
                 $('#tracking-code').text(tracking.tracking_code);
                 $('#tracking-product-image').attr('src', tracking.product.photo);
                 $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
-                $('#tracking-product-amount').text(tracking.amount);
+                $('#tracking-product-amount').text(tracking.amount + 'x');
                 $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
                 $('#tracking-delivery-neighborhood').text('Bairro: ' + tracking.delivery.neighborhood);
                 $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
