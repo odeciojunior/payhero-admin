@@ -22,15 +22,11 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-
     /**
      * Handle a login request to the application.
-     *
      * Overwritten from trait AuthenticatesUsers for handle user with account blocked
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
@@ -41,7 +37,7 @@ class LoginController extends Controller
 
         $user = $userModel->where('email', $request->email)->first();
 
-        if(!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')){
+        if (!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')) {
 
             return response()->redirectTo('/')->withErrors(['accountErrors' => 'Blocked account']);
         }
@@ -57,6 +53,8 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            auth()->user()->update(['last_login' => now()->toDateTimeString()]);
+
             return $this->sendLoginResponse($request);
         }
 
@@ -67,7 +65,6 @@ class LoginController extends Controller
 
         return $this->sendFailedLoginResponse($request);
     }
-
 
     /**
      *  default -> protected $redirectTo = '/dashboard';
