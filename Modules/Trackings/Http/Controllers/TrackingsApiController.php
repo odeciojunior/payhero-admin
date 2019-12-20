@@ -62,7 +62,7 @@ class TrackingsApiController extends Controller
             $trackingId = current(Hashids::decode($id));
 
             $tracking = $trackingModel->with([
-                'product',
+                'product.project.domains',
                 'delivery',
                 'history'
             ])->find($trackingId);
@@ -84,7 +84,7 @@ class TrackingsApiController extends Controller
 
             $checkpoints = $checkpoints->merge($checkpointsApi);
 
-            $tracking->checkpoints = $checkpoints->unique()->toArray();
+            $tracking->checkpoints = $checkpoints->unique()->sortKeysDesc()->toArray();
 
             return new TrackingShowResource($tracking);
 
