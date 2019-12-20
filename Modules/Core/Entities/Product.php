@@ -117,4 +117,12 @@ class Product extends Model
     {
         return $this->hasMany(ProductPlan::class);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

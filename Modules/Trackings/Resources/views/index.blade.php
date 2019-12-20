@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=3') }}">
     @endpush
 
     <!-- Page -->
@@ -291,27 +291,25 @@
                                     </div>
                                 </div>
 
-                                <!-- js carrega... -->
-                                <div class="tracking-timeline">
-                                    <div class="tracking-timeline-row">
-                                    </div>
-                                    <div class="tracking-timeline-row">
-                                    </div>
-                                    <div class="tracking-timeline-row">
-                                    </div>
+                                <div>
+                                    <h4> Destino </h4>
+                                    <span id="tracking-delivery-address" class="table-title gray"></span>
+                                    <br>
+                                    <span id="tracking-delivery-neighborhood" class="table-title gray"></span>
+                                    <br>
+                                    <span id="tracking-delivery-zipcode" class="table-title gray"></span>
+                                    <br>
+                                    <span id="tracking-delivery-city" class="table-title gray"></span>
                                 </div>
 
-                                <h4 style="margin-top: 40px"> Destino </h4>
-                                <span id="tracking-delivery-address" class="table-title gray"></span>
-                                <br>
-                                <span id="tracking-delivery-zipcode" class="table-title gray"></span>
-                                <br>
-                                <span id="tracking-delivery-city" class="table-title gray"></span>
-                                <a class='btn p-0 mt-sm-0 mt-10 pointer float-right btn-notify-trackingcode'
-                                   title='Enviar e-mail com codigo de rastreio para o cliente'>
-                                    <i class='icon wb-envelope' aria-hidden='true'></i>
-                                    Enviar e-mail para o cliente
+                                <a class='btn mt-10 pl-0 pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                    <i class='icon wb-envelope'></i>
+                                    Enviar e-mail/sms para o cliente
                                 </a>
+
+                                <p class="mt-5" id="link-tracking"><i class="material-icons">link</i>
+                                    <a target="_blank" class="pointer text-body">Acessar link do cliente</a>
+                                </p>
 
                                 <table class="table">
                                     <thead>
@@ -337,7 +335,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=5') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=6') }}"></script>
     @endpush
 
 @endsection
