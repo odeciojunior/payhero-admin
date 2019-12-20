@@ -10,6 +10,8 @@ class TrackingShowResource extends Resource
 {
     public function toArray($request)
     {
+        $linkBase = $this->product->project->domains->first()->name ?? '';
+
         return [
             'id' => Hashids::encode($this->id),
             'tracking_code' => $this->tracking_code,
@@ -31,6 +33,7 @@ class TrackingShowResource extends Resource
                 'state' => $this->delivery->state,
             ],
             'checkpoints' => $this->checkpoints ?? [],
+            'link' => $linkBase ? 'https://tracking.' . $linkBase . '/' . $this->tracking_code : '',
         ];
     }
 }
