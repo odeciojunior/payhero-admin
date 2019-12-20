@@ -8,9 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="modules/global/adminremark/global/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="modules/global/css/materialdesignicons.min.css">
     <style>
         body {
             background: linear-gradient(90deg, #fafafa 36px, transparent 1%) center, linear-gradient(#fafafa 36px, transparent 1%) center, #e5e5e5;
@@ -32,6 +32,7 @@
 
         .tracking-icon i {
             font-size: 50px;
+            color: #999999;
         }
 
         .line {
@@ -106,11 +107,6 @@
             }
         }
     </style>
-
-    <!-- Scripts -->
-    <script src="modules/global/adminremark/global/vendor/jquery/jquery.min.js"></script>
-    <script src="modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js"></script>
-    <script src="modules/global/adminremark/global/vendor/bootstrap/bootstrap.js"></script>
 </head>
 <body class="h-100">
 <div class="container py-5">
@@ -182,100 +178,114 @@
         </div>
     </div>
 </div>
-
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 <script>
 
-    let trackingCode = $(window.location.pathname.split('/')).get(-1);
-    let checkpoints = [];
+    $(document).ready(function () {
 
-    function isEmpty(obj) {
-        return Object.keys(obj ? obj : {}).length === 0;
-    }
+        let trackingCode = $(window.location.pathname.split('/')).get(-1);
+        let checkpoints = [];
 
-    $.ajax({
-        url: '/api/tracking/detail/' + trackingCode,
-        error: response => {
-            $('.loader').hide();
-            $('#div-unavailable').show();
-        },
-        success: response => {
-            if (response.data) {
+        function isEmpty(obj) {
+            return Object.keys(obj ? obj : {}).length === 0;
+        }
 
-                console.log(response.data)
+        $.ajax({
+            url: '/api/tracking/detail/' + trackingCode,
+            error: response => {
+                $('.loader').hide();
+                $('#div-unavailable').show();
+            },
+            success: response => {
+                if (response.data) {
 
-                $('#tracking-code').text('Objeto #' + response.data.tracking_code);
-                $('title').html('Rastreamento - ' + response.data.tracking_code);
+                    console.log(response.data)
 
-                checkpoints = response.data.checkpoints;
+                    $('#tracking-code').text('Objeto #' + response.data.tracking_code);
+                    $('title').html('Rastreamento - ' + response.data.tracking_code);
 
-                let max = checkpoints.length > 3 ? 3 : checkpoints.length;
+                    checkpoints = response.data.checkpoints;
 
-                for (let i = 0; i < max; i++) {
-                    let data = `<tr>
+                    if(checkpoints.length <= 3){
+                        $('#btn-see-more').hide();
+                    }
+
+                    let max = checkpoints.length > 3 ? 3 : checkpoints.length;
+
+                    for (let i = 0; i < max; i++) {
+                        let data = `<tr>
                                     <td>${checkpoints[i].created_at}</td>
                                     <td>${checkpoints[i].event}</td>
                                 </tr>`;
-                    $('#table-tracking').append(data);
-                }
-
-                let dispatched = 0;
-                let out_for_delivery = 0;
-                let delivered = 0;
-                let exception = 0;
-
-                for (let checkpoint of checkpoints) {
-                    switch (checkpoint.tracking_status_enum) {
-                        case 2: //dispatched
-                            dispatched = 1;
-                            break;
-                        case 4: // out_for_delivery
-                            out_for_delivery = 1;
-                            break;
-                        case 3: //delivered
-                            delivered = 1;
-                            break;
-                        case 5: //exception
-                            exception = 1;
-                            break;
+                        $('#table-tracking').append(data);
                     }
+
+                    let dispatched = 0;
+                    let out_for_delivery = 0;
+                    let delivered = 0;
+                    let exception = 0;
+
+                    for (let checkpoint of checkpoints) {
+                        switch (checkpoint.tracking_status_enum) {
+                            case 2: //dispatched
+                                dispatched = 1;
+                                break;
+                            case 4: // out_for_delivery
+                                out_for_delivery = 1;
+                                break;
+                            case 3: //delivered
+                                delivered = 1;
+                                break;
+                            case 5: //exception
+                                exception = 1;
+                                break;
+                        }
+                    }
+
+                    let position = 0;
+
+                    if (delivered) {
+                        $('.tracking-icon').addClass('active');
+                    } else if (out_for_delivery) {
+                        $('.tracking-icon').eq(2).addClass('active');
+                        $('.tracking-icon').eq(1).addClass('active');
+                        if (exception) position = 2;
+                    } else if (dispatched) {
+                        $('.tracking-icon').eq(1).addClass('active');
+                        if (exception) position = 1;
+                    }
+
+                    if (position) {
+                        $('<div class="tracking-icon exception"><i class="material-icons">error</i></div><div class="line"></div>').insertAfter($('.line').eq(position));
+                    }
+
+                    $('.loader').hide();
+                    $('#div-tracking-info').show();
+                } else {
+                    $('.loader').hide();
+                    $('#div-unavailable').show();
                 }
-
-                let position = 0;
-
-                if (delivered) {
-                    $('.tracking-icon').addClass('active');
-                } else if (out_for_delivery) {
-                    $('.tracking-icon').eq(2).addClass('active');
-                    $('.tracking-icon').eq(1).addClass('active');
-                    if (exception) position = 2;
-                } else if (dispatched) {
-                    $('.tracking-icon').eq(1).addClass('active');
-                    if (exception) position = 1;
-                }
-
-                if (position) {
-                    $('<div class="tracking-icon exception"><i class="material-icons">error</i></div><div class="line"></div>').insertAfter($('.line').eq(position));
-                }
-
-                $('.loader').hide();
-                $('#div-tracking-info').show();
-            } else {
-                $('.loader').hide();
-                $('#div-unavailable').show();
             }
-        }
-    });
+        });
 
-
-    $('#btn-see-more').on('click', function () {
-        for (let i = 3; i < checkpoints.length; i++) {
-            let data = `<tr>
+        $('#btn-see-more').on('click', function () {
+            for (let i = 3; i < checkpoints.length; i++) {
+                let data = `<tr>
                             <td>${checkpoints[i].created_at}</td>
                             <td>${checkpoints[i].event}</td>
                         </tr>`;
-            $('#table-tracking').append(data);
-        }
-        $(this).hide();
+                $('#table-tracking').append(data);
+            }
+            $(this).hide();
+        });
     });
 </script>
 </body>

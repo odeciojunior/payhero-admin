@@ -330,15 +330,80 @@ class TesteController extends Controller
     public function tgFunction()
     {
 
+
         dd(\Carbon\Carbon::now()
                          ->addDays(0)
                          ->toDateTimeString());
-/*
-        $notazzInvoiceModel       = new NotazzInvoice();
-        $notazzSentHistoryModel   = new NotazzSentHistory();
-        $saleModel                = new Sale();
-        $productPlanModel         = new ProductPlan();
-        $currencyQuotationService = new CurrencyQuotationService();
+
+
+
+
+        //---------------------------------------------- chargeback
+//        $transferModel = new Transfer();
+//        $saleModel     = new Sale();
+//
+//        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find(41227);
+//
+//        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+//
+//        try {
+//            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+//            $shopifyService->refundOrder($shopifyIntegration, $sale);
+//        } catch (Exception $ex) {
+//
+//        }
+//
+//        $sale->update([
+//                          'gateway_status' => 'chargedback',
+//                          'status'         => '4',
+//                      ]);
+//
+//        foreach ($sale->transactions as $transaction) {
+//
+//            if ($transaction->status == 'transfered') {
+//
+//                $transferModel->create([
+//                                           'transaction_id' => $transaction->id,
+//                                           'user_id'        => $transaction->company->user_id,
+//                                           'value'          => $transaction->value,
+//                                           'type'           => 'out',
+//                                           'reason'         => 'chargedback',
+//                                           'company_id'     => $transaction->company->id,
+//                                       ]);
+//
+//                $transaction->company->update([
+//                                                  'balance' => $transaction->company->balance -= $transaction->value,
+//                                              ]);
+//            }
+//
+//            $transaction->update([
+//                                     'status' => 'chargedback',
+//                                 ]);
+//        }
+//
+//        dd('chargeback feito');
+
+
+        //---------------------------------------------- chargeback
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+                $notazzInvoiceModel       = new NotazzInvoice();
+                $notazzSentHistoryModel   = new NotazzSentHistory();
+                $saleModel                = new Sale();
+                $productPlanModel         = new ProductPlan();
+                $currencyQuotationService = new CurrencyQuotationService();
 
         $saleModel = new Sale();
 
@@ -488,13 +553,18 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-        $companies = Company::where('country', 'like', '%brasil%')->get();
-        foreach ($companies as $company) {
-            $company->update([
-                                 'country' => 'brazil',
-                             ]);
+        /*$users  = User::get();
+        $userss = [];
+        foreach ($users as $user) {
+            if ($user->id != $user->account_owner_id) {
+                $user->update([
+                                  'address_document_status'  => 3,
+                                  'personal_document_status' => 3,
+                              ]);
+                $userss [] = $user->name;
+            }
         }
-        dd($companies);
+        dd($userss);*/
     }
 
     /**
