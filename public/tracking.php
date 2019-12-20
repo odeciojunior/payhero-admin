@@ -214,6 +214,10 @@
 
                     checkpoints = response.data.checkpoints;
 
+                    if(checkpoints.length <= 3){
+                        $('#btn-see-more').hide();
+                    }
+
                     let max = checkpoints.length > 3 ? 3 : checkpoints.length;
 
                     for (let i = 0; i < max; i++) {
