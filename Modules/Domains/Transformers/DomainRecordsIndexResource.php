@@ -2,9 +2,7 @@
 
 namespace Modules\Domains\Transformers;
 
-use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -34,6 +32,7 @@ class DomainRecordsIndexResource extends Resource
                     $content = "Servidores Shopify";
                     break;
                 CASE $cloudFlareService::checkoutIp:
+                CASE $cloudFlareService::adminIp:
                     $content = "Servidores CloudFox";
                     break;
                 default:

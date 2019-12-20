@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
-use Slince\Shopify\Client;
+use Predis\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Plan;
@@ -23,6 +23,7 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Transaction;
@@ -43,28 +44,15 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-        $users = User::all();
 
-        foreach($users as $user){
+        try{
+            $redisClient = new Client();
 
-            $sales = Sale::where('owner_id', $user->id)->get();
-
-            if(count($sales) > 0){
-                //
-            }
-            else{
-                $user->update([
-                    'debit_card_tax'                 => '5.9',
-                    'debit_card_release_money_days'  => '30',
-                    'credit_card_tax'                => '5.9',
-                    'credit_card_release_money_days' => '30',
-                    'boleto_tax'                     => '5.9',
-                    'boleto_release_money_days'      => '30'
-                ]);
-            }
+            $redisClient->get('test-connection');
         }
-
-        dd("howwww");
+        catch(Exception $e){
+            dd('erro');
+        }
 
     }
 

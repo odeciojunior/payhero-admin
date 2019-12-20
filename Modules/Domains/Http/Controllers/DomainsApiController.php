@@ -240,6 +240,7 @@ class DomainsApiController extends Controller
                                 //$content = "Servidores Shopify";
                                 break;
                             CASE $cloudFlareService::checkoutIp:
+                            CASE $cloudFlareService::adminIp:
                                 $content = "Servidores CloudFox";
                                 break;
                             default:
