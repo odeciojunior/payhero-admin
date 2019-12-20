@@ -32,6 +32,8 @@ class CloudFlareService
     const checkoutIp  = '104.248.122.89';
     const sacIp       = '104.248.122.89';
     const affiliateIp = '104.248.122.89';
+    const adminIp     = '165.22.13.237';
+
     /**
      * @var APIKey
      */
@@ -422,6 +424,16 @@ class CloudFlareService
                                                       'system_flag'          => 1,
                                                   ]);
 
+            $recordId = $this->addRecord("A", 'tracking', self::adminIp);
+            $this->getDomainRecordModel()->create([
+                'domain_id'            => $domainModelId,
+                'cloudflare_record_id' => $recordId,
+                'type'                 => 'A',
+                'name'                 => 'tracking',
+                'content'              => self::adminIp,
+                'system_flag'          => 1,
+            ]);
+
             $this->getSendgridService()->deleteZone($newZone->name);
             $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
 
@@ -545,6 +557,16 @@ class CloudFlareService
                                                       'content'              => self::affiliateIp,
                                                       'system_flag'          => 1,
                                                   ]);
+
+            $recordId = $this->addRecord("A", 'tracking', self::adminIp);
+            $this->getDomainRecordModel()->create([
+                'domain_id'            => $domainModelId,
+                'cloudflare_record_id' => $recordId,
+                'type'                 => 'A',
+                'name'                 => 'tracking',
+                'content'              => self::adminIp,
+                'system_flag'          => 1,
+            ]);
 
             $this->getSendgridService()->deleteZone($newZone->name);
             $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
