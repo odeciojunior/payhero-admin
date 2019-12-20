@@ -41,21 +41,30 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $domain         = $domainModel->where('project_id', $event->sale->project->id)->first();
 
             if (isset($domain)) {
-                $data = [
-                    'name'            => $clientName,
-                    'project_logo'    => $event->sale->project->logo,
-                    'tracking_code'   => $event->tracking->tracking_code,
-                    'project_contact' => $projectContact,
-                    "products"        => $event->products,
-                ];
 
-                $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+                $link = $linkShortenerService->shorten('https://tracking.' . $domain->name . '/' . $event->tracking->tracking_code);
 
-                $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
-                $link            = $linkShortenerService->shorten('https://www.linkcorreios.com.br/?id=' . $data['tracking_code']);
+                if (!empty($link)) {
+                    $data = [
+                        'name' => $clientName,
+                        'project_logo' => $event->sale->project->logo,
+                        'tracking_code' => $event->tracking->tracking_code,
+                        'project_contact' => $projectContact,
+                        'products' => $event->products,
+                        'link' => $link
+                    ];
 
-                if (!empty($clientTelephone) && !empty($link)) {
-                    $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                    $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+                    //test
+                    $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, 'rotiya2927@mailart.top', $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+
+                    $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+
+                    if (!empty($clientTelephone)) {
+                        $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                        //test
+                        $smsService->sendSms('5524998345779', 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                    }
                 }
             }
         } catch (Exception $e) {
