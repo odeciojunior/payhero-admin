@@ -11,7 +11,7 @@
 |
 */
 
-Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
+Route::middleware(['web', 'auth', 'setUserAsLogged'])->prefix('reports')->group(function() {
     Route::get('/sales', 'ReportsController@index')->name('reports.index')->middleware('role:account_owner|admin');
 
     Route::get('/checkouts', 'ReportsController@checkouts')->name('reports.checkouts')->middleware('role:account_owner|admin');

@@ -2,7 +2,7 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth']
+        'middleware' => ['web', 'auth', 'setUserAsLogged']
     ],
     function () {
 

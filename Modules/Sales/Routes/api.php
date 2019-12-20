@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'role:account_owner|admin|attendance'],
+        'middleware' => ['auth:api', 'role:account_owner|admin|attendance', 'setUserAsLogged'],
         'prefix'     => 'sales',
     ],
     function() {
@@ -29,12 +29,12 @@ Route::group(
 
 Route::apiResource('sales', 'SalesApiController')
      ->only('index', 'show')
-     ->middleware(['auth:api']);
+     ->middleware(['auth:api', 'setUserAsLogged']);
 
 
 Route::group(
     [
-        'middleware' => ['InternalApiAuth'],
+        'middleware' => ['InternalApiAuth', 'setUserAsLogged'],
         'prefix'     => 'sales',
     ],
     function() {
