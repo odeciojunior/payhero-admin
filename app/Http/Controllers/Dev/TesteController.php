@@ -330,137 +330,202 @@ class TesteController extends Controller
     public function tgFunction()
     {
 
+
         dd(\Carbon\Carbon::now()
                          ->addDays(0)
                          ->toDateTimeString());
-/*
-        $notazzInvoiceModel       = new NotazzInvoice();
-        $notazzSentHistoryModel   = new NotazzSentHistory();
-        $saleModel                = new Sale();
-        $productPlanModel         = new ProductPlan();
-        $currencyQuotationService = new CurrencyQuotationService();
 
-        $saleModel = new Sale();
 
-        $sale = $saleModel->with(['plansSales', 'transactions'])->find(105195);
 
-        if ($sale) {
-            //venda encontrada
 
-            $sale = $saleModel->with(['plansSales', 'transactions.company.user', 'project'])->find($sale->id);
+        //---------------------------------------------- chargeback
+//        $transferModel = new Transfer();
+//        $saleModel     = new Sale();
+//
+//        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find(41227);
+//
+//        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+//
+//        try {
+//            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+//            $shopifyService->refundOrder($shopifyIntegration, $sale);
+//        } catch (Exception $ex) {
+//
+//        }
+//
+//        $sale->update([
+//                          'gateway_status' => 'chargedback',
+//                          'status'         => '4',
+//                      ]);
+//
+//        foreach ($sale->transactions as $transaction) {
+//
+//            if ($transaction->status == 'transfered') {
+//
+//                $transferModel->create([
+//                                           'transaction_id' => $transaction->id,
+//                                           'user_id'        => $transaction->company->user_id,
+//                                           'value'          => $transaction->value,
+//                                           'type'           => 'out',
+//                                           'reason'         => 'chargedback',
+//                                           'company_id'     => $transaction->company->id,
+//                                       ]);
+//
+//                $transaction->company->update([
+//                                                  'balance' => $transaction->company->balance -= $transaction->value,
+//                                              ]);
+//            }
+//
+//            $transaction->update([
+//                                     'status' => 'chargedback',
+//                                 ]);
+//        }
+//
+//        dd('chargeback feito');
 
-            $productsSale = collect();
-            foreach ($sale->plansSales as $planSale) {
-                foreach ($planSale->plan->productsPlans as $productPlan) {
 
-                    $product = $productPlan->product()->first();
+        //---------------------------------------------- chargeback
 
-                    if (!empty($productPlan->cost)) {
-                        //pega os valores de productplan
-                        $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
-                        $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
-                        $product['currency_type_enum'] = $productPlan->currency_type_enum;
-                    } else {
-                        //pega os valores de produto
-                        if (!empty($product->cost)) {
-                            $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
-                            $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
-                        } else {
-                            $product['product_cost'] = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+                $notazzInvoiceModel       = new NotazzInvoice();
+                $notazzSentHistoryModel   = new NotazzSentHistory();
+                $saleModel                = new Sale();
+                $productPlanModel         = new ProductPlan();
+                $currencyQuotationService = new CurrencyQuotationService();
+
+                $saleModel = new Sale();
+
+                $sale = $saleModel->with(['plansSales', 'transactions'])->find(105195);
+
+                if ($sale) {
+                    //venda encontrada
+
+                    $sale = $saleModel->with(['plansSales', 'transactions.company.user', 'project'])->find($sale->id);
+
+                    $productsSale = collect();
+                    foreach ($sale->plansSales as $planSale) {
+                        foreach ($planSale->plan->productsPlans as $productPlan) {
+
+                            $product = $productPlan->product()->first();
+
+                            if (!empty($productPlan->cost)) {
+                                //pega os valores de productplan
+                                $product['product_cost']       = preg_replace("/[^0-9]/", "", $productPlan->cost);
+                                $product['product_cost']       = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
+                                $product['currency_type_enum'] = $productPlan->currency_type_enum;
+                            } else {
+                                //pega os valores de produto
+                                if (!empty($product->cost)) {
+                                    $product['product_cost'] = preg_replace("/[^0-9]/", "", $product->cost);
+                                    $product['product_cost'] = (is_numeric($product['product_cost'])) ? $product['product_cost'] : 0;
+                                } else {
+                                    $product['product_cost'] = 0;
+                                }
+
+                                $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
+                            }
+
+                            $product['product_amount'] = ($planSale->amount * $productPlan->amount) ?? 1;
+
+                            $productsSale->add($product);
+                        }
+                    }
+
+                    $products = $productsSale;
+
+                    if ($products) {
+                        $costTotal = 0;
+                        foreach ($products as $product) {
+
+                            if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
+                                //moeda USD
+                                $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
+                                $product['product_cost'] = (int) round(($product['product_cost'] * ($lastUsdQuotation->value / 100)));
+                            }
+
+                            $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
                         }
 
-                        $product['currency_type_enum'] = $product->currency_type_enum ?? 1;
-                    }
+                        $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-                    $product['product_amount'] = ($planSale->amount * $productPlan->amount) ?? 1;
+                        $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
 
-                    $productsSale->add($product);
-                }
-            }
+                        $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
+                        if ($discountPlataformTax == true) {
 
-            $products = $productsSale;
+                            foreach ($sale->transactions as $transaction) {
+                                if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
+                                    //plataforma
+                                    $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
+                                    $costTotal      += (int) $trasactionRate;
+                                    $costTotal      += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
 
-            if ($products) {
-                $costTotal = 0;
-                foreach ($products as $product) {
-
-                    if ($product['currency_type_enum'] == $productPlanModel->present()->getCurrency('USD')) {
-                        //moeda USD
-                        $lastUsdQuotation        = $currencyQuotationService->getLastUsdQuotation();
-                        $product['product_cost'] = (int) round(($product['product_cost'] * ($lastUsdQuotation->value / 100)));
-                    }
-
-                    $costTotal += (int) ($product['product_cost'] * $product['product_amount']);
-                }
-
-                $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-
-                $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
-
-                $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
-                if ($discountPlataformTax == true) {
-
-                    foreach ($sale->transactions as $transaction) {
-                        if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
-                            //plataforma
-                            $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
-                            $costTotal      += (int) $trasactionRate;
-                            $costTotal      += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
-
-                            $installmentTaxValue = $sale->installment_tax_value ?? 0;
-                            $costTotal           += (int) ($installmentTaxValue);
+                                    $installmentTaxValue = $sale->installment_tax_value ?? 0;
+                                    $costTotal           += (int) ($installmentTaxValue);
+                                }
+                            }
                         }
+
+                        $baseValue = ($subTotal + $shippingCost) - $costTotal;
+
+                        $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
                     }
                 }
 
-                $baseValue = ($subTotal + $shippingCost) - $costTotal;
-
-                $totalValue = substr_replace($baseValue, '.', strlen($baseValue) - 2, 0);
-            }
-        }
-
-        dd($totalValue);
-*/
+                dd($totalValue);
+        */
         //dd('aa');
 
-//                //nada
-//                $notazInvoiceModel = new NotazzInvoice();
-//                $nservice          = new NotazzService();
-//
-//                $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
-//                                              ->where('status', '=', 2)
-//                                              ->limit(50)
-//                                              ->get();
-//
-//                try {
-//                    $count = 0;
-//                    foreach ($invoices as $invoice) {
-//                        if ($count > 90) {
-//                            break;
-//                        }
-//                        $ret = $nservice->deleteNfse($invoice->id);
-//                        if ($ret == false) {
-//                            $invoice->update([
-//                                                 'status' => 5,
-//                                             ]);
-//                            continue;
-//                        }
-//
-//                        $invoice->update([
-//                                             'status'           => 5,
-//                                             'return_message'   => $ret->statusProcessamento,
-//                                             'return_http_code' => $ret->codigoProcessamento,
-//                                         ]);
-//
-//                        $count = $count + 1;
-//                    }
-//
-//                    dd('ok');
-//                } catch (Exception $ex) {
-//                    dd($ex);
-//                }
-//
-//                dd($invoices);
+        //                //nada
+        //                $notazInvoiceModel = new NotazzInvoice();
+        //                $nservice          = new NotazzService();
+        //
+        //                $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+        //                                              ->where('status', '=', 2)
+        //                                              ->limit(50)
+        //                                              ->get();
+        //
+        //                try {
+        //                    $count = 0;
+        //                    foreach ($invoices as $invoice) {
+        //                        if ($count > 90) {
+        //                            break;
+        //                        }
+        //                        $ret = $nservice->deleteNfse($invoice->id);
+        //                        if ($ret == false) {
+        //                            $invoice->update([
+        //                                                 'status' => 5,
+        //                                             ]);
+        //                            continue;
+        //                        }
+        //
+        //                        $invoice->update([
+        //                                             'status'           => 5,
+        //                                             'return_message'   => $ret->statusProcessamento,
+        //                                             'return_http_code' => $ret->codigoProcessamento,
+        //                                         ]);
+        //
+        //                        $count = $count + 1;
+        //                    }
+        //
+        //                    dd('ok');
+        //                } catch (Exception $ex) {
+        //                    dd($ex);
+        //                }
+        //
+        //                dd($invoices);
 
         dd('aa');
     }
