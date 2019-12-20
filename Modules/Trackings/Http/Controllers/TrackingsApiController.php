@@ -118,7 +118,7 @@ class TrackingsApiController extends Controller
                 'tracking_status_enum' => $postedStatus,
                 'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($postedStatus)),
                 'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                'event' => 'Código de rastreio informado',
+                'event' => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
             ]);
 
             $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);

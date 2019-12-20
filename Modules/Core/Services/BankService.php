@@ -92,6 +92,7 @@ class BankService
             ['code' => '151', 'name' => 'Nossa Caixa'],
             ['code' => '175', 'name' => 'Banco Finasa'],
             ['code' => '184', 'name' => 'Banco Itaú BBA'],
+            ['code' => '197', 'name' => 'Stone Pagamentos S.A'],
             ['code' => '204', 'name' => 'American Express Bank'],
             ['code' => '208', 'name' => 'Banco Pactual'],
             ['code' => '212', 'name' => 'Banco Original'],

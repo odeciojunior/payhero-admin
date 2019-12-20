@@ -206,8 +206,8 @@ class SalesApiController extends Controller
                     $result = $shopifyService->newOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
-                if ($result) {
-                    return response()->json(['message' => 'Ordem gerada com sucesso'], Response::HTTP_OK);
+                if ($result['status'] == 'success') {
+                    return response()->json(['message' => $result['message']], Response::HTTP_OK);
                 } else {
                     return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
                 }

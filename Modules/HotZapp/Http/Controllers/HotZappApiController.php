@@ -263,7 +263,7 @@ class HotZappApiController extends Controller
 
         $saleId = current(Hashids::decode($request->boleto_id));
 
-        $sale = Sale::find($saleId);
+        $sale = Sale::with(['project'])->find($saleId);
 
         if (!empty($sale)) {
 
