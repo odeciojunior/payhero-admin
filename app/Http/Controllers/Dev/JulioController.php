@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
-use Predis\Client;
+use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Plan;
@@ -45,15 +45,22 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        try{
-            $redisClient = new Client();
+        $shopifyIntegration = ShopifyIntegration::where('project_id', 351)->first();
 
-            $redisClient->get('test-connection');
-        }
-        catch(Exception $e){
-            dd('erro');
-        }
+        $credential = new PublicAppCredential($shopifyIntegration->token);
 
+        $client = new Client($credential, $shopifyIntegration->url_store, [
+            'metaCacheDir' => './tmp',
+        ]);
+
+
+        $client->getTransactionManager()->create(1946052427850, [
+            "kind"    => "sale",
+            "source"  => "external",
+            "gateway" => "Boleto",
+        ]);
+
+        dd("feitoo");
     }
 
 
