@@ -63,8 +63,7 @@ class TrackingsApiController extends Controller
 
             $tracking = $trackingModel->with([
                 'product.project.domains',
-                'delivery',
-                'history'
+                'delivery'
             ])->find($trackingId);
 
             $apiTracking = $trackingService->findTrackingApi($tracking);
