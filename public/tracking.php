@@ -116,7 +116,7 @@
                 <h3 class="mb-5 text-center" id="tracking-code">Objeto #PM441390955BR</h3>
                 <div class="justify-content-between mb-5" style="display: flex;">
                     <div class="tracking-icon active">
-                        <i class="material-icons">markunread_mailbox</i>
+                        <i class="material-icons" style="font-size: 38px; margin: 6px;">markunread_mailbox</i>
                     </div>
                     <div class="line"></div>
                     <div class="tracking-icon">
