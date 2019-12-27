@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=3') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=4') }}">
     @endpush
 
     <!-- Page -->
