@@ -12,11 +12,14 @@ $(() => {
         updateConfiguracoes();
     });
 
-    $('#toggler').on('click', function () {
-        if ($("#collapseOne").hasClass('show')) {
-            $('#showMore').text('exibir mais')
+    $('.toggler').on('click', function () {
+
+        let target = $(this).data('target');
+
+        if ($(target).hasClass('show')) {
+            $(this).find('.showMore').html('<i class="material-icons">add</i>');
         } else {
-            $('#showMore').text('exibir menos')
+            $(this).find('.showMore').html('<i class="material-icons">remove</i>');
         }
     });
 
