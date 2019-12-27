@@ -238,10 +238,10 @@ class SalesApiController extends Controller
 
             return response()->json(['message' => 'success'], Response::HTTP_OK);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
+            Log::warning('Erro ao processar boletos venda  SalesApiController - saleProcess');
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => 'Erro ao processar boleto.'], Response::HTTP_BAD_REQUEST);
         }
     }
 }
