@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use Exception;
-use Predis\Client;
+use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Plan;
@@ -45,15 +45,9 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        try{
-            $redisClient = new Client();
+        $sales = Sale::whereNull('gateway_id')->where('status', '!=', 10)->limit( 10)->orderBy('id', 'desc')->count();
 
-            $redisClient->get('test-connection');
-        }
-        catch(Exception $e){
-            dd('erro');
-        }
-
+        dd($sales);
     }
 
 
