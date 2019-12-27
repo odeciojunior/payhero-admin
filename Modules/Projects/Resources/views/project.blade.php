@@ -170,7 +170,7 @@
         <script src="{{asset('modules/sms-message/js/smsMessage.js?v=2')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=1')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js?v=5')}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js?v=6')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
     @endpush
 @endsection

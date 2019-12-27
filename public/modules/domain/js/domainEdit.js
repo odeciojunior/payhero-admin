@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
-    let btnAddDomain = $("#btn-add-domain");
+    let btnAddDomain = $("#add-domain");
     let btnDeleteDomain = $("#btn-delete-domain");
     let btnAddDomainModal = $("#btn-modal-add-domain");
 

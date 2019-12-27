@@ -6,9 +6,9 @@
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div id="add-domain" class="d-flex align-items-center justify-content-end">
-            <span class="link-button-dependent red pointer"> Adicionar domínio </span>
-            <a class="ml-10 rounded-add pointer" id='btn-add-domain'>
+        <div id="add-domain" class="d-flex align-items-center justify-content-end pointer">
+            <span class="link-button-dependent red"> Adicionar domínio </span>
+            <a class="ml-10 rounded-add" id='btn-add-domain'>
                 <i class="icon wb-plus" aria-hidden="true"></i></a>
         </div>
     </div>
