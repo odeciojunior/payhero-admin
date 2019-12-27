@@ -45,22 +45,9 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        $shopifyIntegration = ShopifyIntegration::where('project_id', 351)->first();
+        $sales = Sale::whereNull('gateway_id')->where('status', '!=', 10)->limit( 10)->orderBy('id', 'desc')->count();
 
-        $credential = new PublicAppCredential($shopifyIntegration->token);
-
-        $client = new Client($credential, $shopifyIntegration->url_store, [
-            'metaCacheDir' => './tmp',
-        ]);
-
-
-        $client->getTransactionManager()->create(1946052427850, [
-            "kind"    => "sale",
-            "source"  => "external",
-            "gateway" => "Boleto",
-        ]);
-
-        dd("feitoo");
+        dd($sales);
     }
 
 
