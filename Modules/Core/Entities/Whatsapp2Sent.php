@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
@@ -21,18 +22,14 @@ class Whatsapp2Sent extends Model
 {
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'whatsapp2_sent';
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -45,11 +42,29 @@ class Whatsapp2Sent extends Model
         'instance_id',
         'instance',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function whatsapp2Integration()
     {

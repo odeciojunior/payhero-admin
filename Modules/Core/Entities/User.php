@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Events\UserRegistrationEvent;
+use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,7 +70,7 @@ use Modules\Core\Presenters\UserPresenter;
  */
 class User extends Authenticable
 {
-    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait, FoxModelTrait;
+    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait, FoxModelTrait, CausesActivity;
     /**
      * @var string
      */

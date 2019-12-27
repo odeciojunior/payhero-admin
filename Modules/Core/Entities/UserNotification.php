@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class UserNotification
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class UserNotification extends Model
 {
+    use LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -46,6 +48,24 @@ class UserNotification extends Model
         'billet_generated',
         'credit_card_in_proccess',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo
