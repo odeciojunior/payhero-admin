@@ -686,7 +686,7 @@ $(() => {
         if (btnTokenClick == "enable click") {
             btnTokenClick = "update click";
             $('#shopify-token').prop("disabled", false);
-            $('.btn-edit-token').text('Atualizar Token');
+            $('.btn-edit-token').text('Salvar').addClass('bg-grey-700');
         } else {
             if ($('#shopify-token').val() == '') {
                 alertCustom('error', 'Token inválido');
@@ -713,7 +713,7 @@ $(() => {
                     loadingOnScreenRemove();
                     btnTokenClick = "enable click";
                     $('#shopify-token').prop("disabled", true);
-                    $('.btn-edit-token').text('Alterar Token');
+                    $('.btn-edit-token').text('Alterar').removeClass('bg-grey-700');
                     alertCustom('success', response.message);
                 }
             });
