@@ -157,7 +157,7 @@
 <!-- Modal Excluir Modal -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-domain" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1" style='padding-right: 15px;'>
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
-        <div class="modal-content" id='modal-content-domain-delete'>
+        <div class="modal-content" id='modal-content-domain-delete' style="height: 294px;">
             <div class="modal-header text-center">
                 <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete-domain">
                     <i class="material-icons md-16">close</i>
