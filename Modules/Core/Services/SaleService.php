@@ -202,8 +202,15 @@ class SaleService
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         $taxa = 0;
-        //            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
-        $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+        if(preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0){
+            $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
+        }
+        else{
+            $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+        }
+
+
+
         $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
@@ -225,6 +232,13 @@ class SaleService
         } else {
             $userTransaction->release_date = null;
         }
+
+        // if(preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0){
+
+        //     $comission = preg_replace("/[^0-9]/", "", $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
+
+        //     $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($comission, ',', strlen($comission) - 2, 0);
+        // }
 
         //add details to sale
         $sale->details = (object) [
