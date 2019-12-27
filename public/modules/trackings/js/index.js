@@ -318,6 +318,7 @@ $(() => {
                     $('#link-tracking').hide();
                 }
 
+                $('#table-checkpoint').html('');
                 if (!isEmpty(tracking.checkpoints)) {
                     for (let checkpoint of tracking.checkpoints) {
 

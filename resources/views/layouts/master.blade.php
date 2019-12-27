@@ -124,7 +124,7 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=9') }}"></script>
 
     <!-- Init code pzw.io -->
     <script>
