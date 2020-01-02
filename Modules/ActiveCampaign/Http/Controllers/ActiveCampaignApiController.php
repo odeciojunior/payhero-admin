@@ -95,7 +95,7 @@ class ActiveCampaignApiController extends Controller
 
                 $activecampaignService = new ActiveCampaignService();
                 $activecampaignService->setAccess($data['api_url'], $data['api_key'], 1);
-                $listTest = json_decode($activecampaignService->getLists(), true);
+                $listTest = $activecampaignService->getLists();
 
                 if(isset($listTest['lists'])) {
                     $integrationCreated = $activecampaignIntegrationModel->create([
@@ -210,7 +210,7 @@ class ActiveCampaignApiController extends Controller
 
             $activecampaignService = new ActiveCampaignService();
             $activecampaignService->setAccess($data['api_url'], $data['api_key'], $integrationId);
-            $listTest = json_decode($activecampaignService->getLists(), true);
+            $listTest = $activecampaignService->getLists();
 
             if(isset($listTest['lists'])) {
                 $integrationUpdated = $activecampaignIntegration->update([

@@ -59,7 +59,18 @@ class ActiveCampaignService
      */
     public function getTags()
     {
-        return $this->sendDataActiveCampaign('', 'tags', 'GET');
+        $tags = $this->sendDataActiveCampaign('', 'tags?limit=100', 'GET');
+        $tags = json_decode($tags, true);
+        $total = (int)$tags['meta']['total'] ?? 0;
+        $pages = ($total > 0) ? ceil($total/100) : 0;
+        $return = $tags;
+
+        for ($i=1; $i < $pages; $i++) { 
+            $tags = $this->sendDataActiveCampaign('', 'tags?limit=100&offset=' . ($i*100), 'GET');
+            $tags = json_decode($tags, true);
+            $return = array_merge_recursive($return, $tags);
+        }
+        return $return;
     }
 
     /**
@@ -125,7 +136,18 @@ class ActiveCampaignService
      */
     public function getLists()
     {
-        return $this->sendDataActiveCampaign('', 'lists', 'GET');
+        $lists = $this->sendDataActiveCampaign('', 'lists?limit=100', 'GET');
+        $lists = json_decode($lists, true);
+        $total = (int)$lists['meta']['total'] ?? 0;
+        $pages = ($total > 0) ? ceil($total/100) : 0;
+        $return = $lists;
+
+        for ($i=1; $i < $pages; $i++) { 
+            $lists = $this->sendDataActiveCampaign('', 'lists?limit=100&offset=' . ($i*100), 'GET');
+            $lists = json_decode($lists, true);
+            $return = array_merge_recursive($return, $lists);
+        }
+        return $return;
     }
 
     /**
