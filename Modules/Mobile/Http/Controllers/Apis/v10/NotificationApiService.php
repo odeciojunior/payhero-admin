@@ -49,6 +49,24 @@ class NotificationApiService
         }
     }
 
+    public function getPushNotifications()
+    {
+        try {
+            $notifications = PushNotification::where('user_id', auth()->user()->id)->get();
+                //auth()->user()->unreadNotifications;
+
+
+            return response()->json(compact('$notifications'), 200);
+        } catch (Exception $e) {
+            Log::warning('Erro ao obter push notificações');
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao carregar as notificações - NotificationApiService - getPushNotifications',
+            ], 400);
+        }
+    }
+
     /**
      * @param Request $request
      * @return bool|string
@@ -180,6 +198,7 @@ class NotificationApiService
             $saleId = current(Hashids::connection('sale_id')->decode($request->external_reference));
             $pushNotification = PushNotification::create([
                 'sale_id' => $saleId,
+                'user_id' => auth()->user()->id,
                 'postback_data' => $request->getContent(),
             ]);
 
