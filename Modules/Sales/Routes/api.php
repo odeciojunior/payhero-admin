@@ -34,7 +34,7 @@ Route::apiResource('sales', 'SalesApiController')
 
 Route::group(
     [
-        'middleware' => ['InternalApiAuth', 'setUserAsLogged'],
+        'middleware' => ['InternalApiAuth'],
         'prefix'     => 'sales',
     ],
     function() {
