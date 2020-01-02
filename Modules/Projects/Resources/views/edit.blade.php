@@ -144,8 +144,7 @@
             <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
                  aria-controls="collapseOne">
                 <h3>Configurações Avançadas
-{{--                    <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>--}}
-                    <span class="showMore"><i class="material-icons">add</i></span>
+                    <i class="material-icons showMore">add</i>
                 </h3>
             </div>
         </div>
@@ -290,8 +289,7 @@
                 <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOneShopify"
                      aria-expanded="true" aria-controls="collapseOne">
                     <h3>Configurações Shopify
-{{--                        <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>--}}
-                        <span class="showMore"><i class="material-icons">add</i></span>
+                        <i class="material-icons showMore">add</i>
                     </h3>
                 </div>
             </div>
