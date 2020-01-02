@@ -3,9 +3,11 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\GatewayPresenter;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class Gateway
@@ -32,7 +34,7 @@ class Gateway extends Model
      * @var string
      */
 
-    use PresentableTrait, SoftDeletes;
+    use PresentableTrait, SoftDeletes, LogsActivity;
     /**
      * @var string
      */
@@ -58,9 +60,27 @@ class Gateway extends Model
         'created_at',
         'updated_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function gatewayFlags()
     {
@@ -68,7 +88,7 @@ class Gateway extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function gatewayPostbacks()
     {
@@ -76,7 +96,7 @@ class Gateway extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function saleGatewayRequests()
     {
@@ -84,7 +104,7 @@ class Gateway extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function sales()
     {

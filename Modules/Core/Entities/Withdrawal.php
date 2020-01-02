@@ -26,6 +26,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Withdrawal extends Model
 {
     use PresentableTrait, LogsActivity;
+    /**
+     * @var string
+     */
     protected $presenter = WithdrawalPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.

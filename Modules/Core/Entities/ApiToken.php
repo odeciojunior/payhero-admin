@@ -16,6 +16,7 @@ use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\PersonalAccessTokenResult;
 use Laravel\Passport\Token;
 use Modules\Core\Presenters\ApiTokenPresenter;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class ApiToken
@@ -36,7 +37,7 @@ use Modules\Core\Presenters\ApiTokenPresenter;
  */
 class ApiToken extends Model
 {
-    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes;
+    use FoxModelTrait, PaginatableTrait, PresentableTrait, SoftDeletes, LogsActivity;
     const TOKEN_SCOPE_ADMIN   = "admin";
     const TOKEN_SCOPE_USER    = "user";
     const TOKEN_SCOPE_SALE    = "sale";
@@ -83,6 +84,24 @@ class ApiToken extends Model
         'user_id',
         'token_id',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo

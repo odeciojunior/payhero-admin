@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class SentEmail
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SentEmail extends Model
 {
+    use LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -38,4 +40,22 @@ class SentEmail extends Model
         'status',
         'log_error',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 }

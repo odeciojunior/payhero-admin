@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Events\UserRegistrationEvent;
 use Spatie\Activitylog\Traits\CausesActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -70,7 +71,7 @@ use Modules\Core\Presenters\UserPresenter;
  */
 class User extends Authenticable
 {
-    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait, FoxModelTrait, CausesActivity;
+    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait, FoxModelTrait, CausesActivity, LogsActivity;
     /**
      * @var string
      */
@@ -126,6 +127,24 @@ class User extends Authenticable
         'last_login',
         'account_owner_id',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return HasMany

@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class UserDevice
@@ -10,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserDevice extends Model
 {
+    use LogsActivity;
+
     //    protected $table = 'users_device';
     /**
      * The "type" of the auto-incrementing ID.
@@ -51,7 +55,28 @@ class UserDevice extends Model
         'created_at',
         'updated_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
+    /**
+     * @return BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User');

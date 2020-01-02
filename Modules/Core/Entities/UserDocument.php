@@ -51,12 +51,12 @@ class UserDocument extends Model
      */
     protected static $logUnguarded = true;
     /**
-     * Registra apenas os atributos alterados
+     * Registra apenas os atributos alterados no log
      * @var bool
      */
     protected static $logOnlyDirty = true;
     /**
-     * Impede que o pacote armazene logs vazios
+     * Impede que armazene logs vazios
      * @var bool
      */
     protected static $submitEmptyLogs = false;

@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class GatewayFlag extends Model
 {
+    use LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -27,7 +29,32 @@ class GatewayFlag extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'slug', 'card_flag_enum', 'active_flag', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'name',
+        'slug',
+        'card_flag_enum',
+        'active_flag',
+        'created_at',
+        'updated_at',
+    ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return HasMany

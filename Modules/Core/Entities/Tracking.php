@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TrackingPresenter;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -26,9 +27,11 @@ use Modules\Core\Presenters\TrackingPresenter;
  */
 class Tracking extends Model
 {
-    use PresentableTrait;
+    use PresentableTrait, LogsActivity;
+    /**
+     * @var string
+     */
     protected $presenter = TrackingPresenter::class;
-
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -49,6 +52,24 @@ class Tracking extends Model
         'updated_at',
         'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo
@@ -66,11 +87,13 @@ class Tracking extends Model
         return $this->belongsTo(ProductPlanSale::class);
     }
 
-    public function sale(){
+    public function sale()
+    {
         return $this->belongsTo(Sale::class);
     }
 
-    public function product(){
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
 }

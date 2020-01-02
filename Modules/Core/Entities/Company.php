@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class Company
@@ -58,7 +59,7 @@ use Modules\Core\Presenters\CompanyPresenter;
  */
 class Company extends Model
 {
-    use SoftDeletes, PaginatableTrait, PresentableTrait, FoxModelTrait;
+    use SoftDeletes, PaginatableTrait, PresentableTrait, FoxModelTrait, LogsActivity;
     /**
      * @var string
      */
@@ -104,6 +105,24 @@ class Company extends Model
         'deleted_at',
         'updated_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo
