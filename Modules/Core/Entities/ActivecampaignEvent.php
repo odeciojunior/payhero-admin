@@ -77,11 +77,11 @@ class ActivecampaignEvent extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Evento foi deletado para ActivecampaignEvent.';
+            $activity->description = 'Evento foi deletado para ActivecampaignEvent';
         } else if ($eventName == 'updated') {
-            $activity->description = 'Evento foi atualizado para ActivecampaignEvent.';
+            $activity->description = 'Evento foi atualizado para ActivecampaignEvent';
         } else if ($eventName == 'created') {
-            $activity->description = 'Evento foi criado para ActivecampaignEvent .';
+            $activity->description = 'Evento foi criado para ActivecampaignEvent';
         } else {
             $activity->description = $eventName;
         }

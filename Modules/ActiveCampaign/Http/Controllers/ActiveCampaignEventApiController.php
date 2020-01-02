@@ -37,7 +37,7 @@ class ActiveCampaignEventApiController extends Controller
             activity()->on($activecampaignIntegrationModel)->tap(function(Activity $activity) use ($data) {
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::decode($data['integration']));
-            })->log('Visualizou tela todos os eventos ActiveCampaign');
+            })->log('Visualizou tela todos os eventos do ActiveCampaign');
 
             $activecampaignIntegration = $activecampaignIntegrationModel->where('user_id', auth()->id())->with('events')
                                                                         ->where('id', $id)->first();
@@ -226,7 +226,6 @@ class ActiveCampaignEventApiController extends Controller
                     $event             = new ActivecampaignEventResource($event);
 
                     return response()->json(['tags' => $tags, 'lists' => $lists, 'event' => $event], 200);
-
                 } else {
                     return response()->json([
                                                 'message' => 'Ocorreu um erro, tente novamente mais tarde!',
@@ -310,12 +309,13 @@ class ActiveCampaignEventApiController extends Controller
 
             $eventId = current(Hashids::decode($data['event_id_edit']));
 
-            $eventUpdate = $activecampaignEventModel->where('id', $eventId)->update([
-                                                                                        'add_tags'    => $addTags ?? null,
-                                                                                        'remove_tags' => $removeTags ?? null,
-                                                                                        'add_list'    => $addList ?? null,
-                                                                                        'remove_list' => $removeList ?? null,
-                                                                                    ]);
+            $activeCampaignEventUpdated = $activecampaignEventModel->where('id', $eventId)->first();
+            $eventUpdate                = $activeCampaignEventUpdated->update([
+                                                                                  'add_tags'    => $addTags ?? null,
+                                                                                  'remove_tags' => $removeTags ?? null,
+                                                                                  'add_list'    => $addList ?? null,
+                                                                                  'remove_list' => $removeList ?? null,
+                                                                              ]);
 
             if ($eventUpdate) {
                 return response()->json([
@@ -401,8 +401,7 @@ class ActiveCampaignEventApiController extends Controller
             }
 
             return response()->json(['tags' => $tags, 'lists' => $lists, 'events' => $events], 200);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             // dd($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
