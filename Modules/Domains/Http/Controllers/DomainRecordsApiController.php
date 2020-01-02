@@ -110,8 +110,7 @@ class DomainRecordsApiController extends Controller
                 $subdomain = "http://" . $subdomain;
                 $subdomain = parse_url($subdomain, PHP_URL_HOST);
 
-                // if ((strpos($subdomain, '.') === false) || ($subdomain == $domain->name)) {
-                if ($subdomain == $domain->name) {
+                if ((strpos($subdomain, '.') === false) || ($subdomain == $domain->name)) {
                     //dominio não tem "ponto" ou é igual ao dominio
                     if ($domain->domainsRecords->where('type', $requestData['type-register'])->where('name', $subdomain)
                                                ->where('content', $requestData['type-register'])->count() == 0) {

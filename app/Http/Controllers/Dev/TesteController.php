@@ -15,6 +15,7 @@ use Modules\Core\Entities\SentEmail;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserNotification;
+use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
@@ -74,10 +75,10 @@ class TesteController extends Controller
         dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
     }
 
-    public function index()
+    public function index(Request $request)
     {
 
-        $this->tgFunction();
+        $this->tgFunction($request);
         dd('tg');
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
@@ -327,76 +328,94 @@ class TesteController extends Controller
     /**
      * Funcao utilizada pelo tg
      */
-    public function tgFunction()
+    public function tgFunction($request)
     {
 
+        dd('xXx');
 
-        dd(\Carbon\Carbon::now()
-                         ->addDays(0)
-                         ->toDateTimeString());
-
-
-
-
-        //---------------------------------------------- chargeback
-//        $transferModel = new Transfer();
 //        $saleModel     = new Sale();
+//        $planSaleModel = new PlanSale();
+//        $planModel     = new Plan();
 //
-//        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find(41227);
+//        $requestData = $request->all();
 //
-//        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+//        if(isset($requestData['boleto']))
+//        {
 //
-//        try {
-//            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-//            $shopifyService->refundOrder($shopifyIntegration, $sale);
-//        } catch (Exception $ex) {
+//            $sales = $saleModel->where('status', 1)
+//                               ->where('payment_method', 2)
+//                               ->where('end_date', '>', '2019-12-21')
+//                               ->paginate(500, ['*'], 'page', $requestData['page']);
 //
-//        }
+//            dd($sales->count());
 //
-//        $sale->update([
-//                          'gateway_status' => 'chargedback',
-//                          'status'         => '4',
-//                      ]);
+//            foreach ($sales as $sale) {
 //
-//        foreach ($sale->transactions as $transaction) {
+//                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
+//                $plan      = $planModel->find($plansSale->plan_id);
 //
-//            if ($transaction->status == 'transfered') {
-//
-//                $transferModel->create([
-//                                           'transaction_id' => $transaction->id,
-//                                           'user_id'        => $transaction->company->user_id,
-//                                           'value'          => $transaction->value,
-//                                           'type'           => 'out',
-//                                           'reason'         => 'chargedback',
-//                                           'company_id'     => $transaction->company->id,
-//                                       ]);
-//
-//                $transaction->company->update([
-//                                                  'balance' => $transaction->company->balance -= $transaction->value,
-//                                              ]);
+//                event(new BilletPaidEvent($plan, $sale, $sale->client));
 //            }
 //
-//            $transaction->update([
-//                                     'status' => 'chargedback',
-//                                 ]);
+//            dd('Fim');
+//
 //        }
 //
-//        dd('chargeback feito');
+//        dd('what');
 
+
+
+
+        //event(new BilletPaidEvent($plan, $sale, $sale->client));
 
         //---------------------------------------------- chargeback
+//                $transferModel = new Transfer();
+//                $saleModel     = new Sale();
+//
+//                $saleId = current(Hashids::connection('sale_id')->decode('n35VVpPZ'));
+//
+//                $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
+//
+//                $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+//
+//                try {
+//                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+//                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+//                } catch (Exception $ex) {
+//
+//                }
+//
+//                $sale->update([
+//                                  'gateway_status' => 'chargedback',
+//                                  'status'         => '4',
+//                              ]);
+//
+//                foreach ($sale->transactions as $transaction) {
+//
+//                    if ($transaction->status == 'transfered') {
+//
+//                        $transferModel->create([
+//                                                   'transaction_id' => $transaction->id,
+//                                                   'user_id'        => $transaction->company->user_id,
+//                                                   'value'          => $transaction->value,
+//                                                   'type'           => 'out',
+//                                                   'reason'         => 'chargedback',
+//                                                   'company_id'     => $transaction->company->id,
+//                                               ]);
+//
+//                        $transaction->company->update([
+//                                                          'balance' => $transaction->company->balance -= $transaction->value,
+//                                                      ]);
+//                    }
+//
+//                    $transaction->update([
+//                                             'status' => 'chargedback',
+//                                         ]);
+//                }
+//
+//                dd('chargeback feito');
 
-
-
-
-
-
-
-
-
-
-
-
+        //---------------------------------------------- chargeback
 
         /*
                 $notazzInvoiceModel       = new NotazzInvoice();
@@ -488,44 +507,44 @@ class TesteController extends Controller
 */
         //dd('aa');
 
-//                //nada
-//                $notazInvoiceModel = new NotazzInvoice();
-//                $nservice          = new NotazzService();
-//
-//                $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
-//                                              ->where('status', '=', 2)
-//                                              ->limit(50)
-//                                              ->get();
-//
-//                try {
-//                    $count = 0;
-//                    foreach ($invoices as $invoice) {
-//                        if ($count > 90) {
-//                            break;
-//                        }
-//                        $ret = $nservice->deleteNfse($invoice->id);
-//                        if ($ret == false) {
-//                            $invoice->update([
-//                                                 'status' => 5,
-//                                             ]);
-//                            continue;
-//                        }
-//
-//                        $invoice->update([
-//                                             'status'           => 5,
-//                                             'return_message'   => $ret->statusProcessamento,
-//                                             'return_http_code' => $ret->codigoProcessamento,
-//                                         ]);
-//
-//                        $count = $count + 1;
-//                    }
-//
-//                    dd('ok');
-//                } catch (Exception $ex) {
-//                    dd($ex);
-//                }
-//
-//                dd($invoices);
+        //                //nada
+        //                $notazInvoiceModel = new NotazzInvoice();
+        //                $nservice          = new NotazzService();
+        //
+        //                $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+        //                                              ->where('status', '=', 2)
+        //                                              ->limit(50)
+        //                                              ->get();
+        //
+        //                try {
+        //                    $count = 0;
+        //                    foreach ($invoices as $invoice) {
+        //                        if ($count > 90) {
+        //                            break;
+        //                        }
+        //                        $ret = $nservice->deleteNfse($invoice->id);
+        //                        if ($ret == false) {
+        //                            $invoice->update([
+        //                                                 'status' => 5,
+        //                                             ]);
+        //                            continue;
+        //                        }
+        //
+        //                        $invoice->update([
+        //                                             'status'           => 5,
+        //                                             'return_message'   => $ret->statusProcessamento,
+        //                                             'return_http_code' => $ret->codigoProcessamento,
+        //                                         ]);
+        //
+        //                        $count = $count + 1;
+        //                    }
+        //
+        //                    dd('ok');
+        //                } catch (Exception $ex) {
+        //                    dd($ex);
+        //                }
+        //
+        //                dd($invoices);
 
         dd('aa');
     }

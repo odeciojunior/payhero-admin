@@ -189,17 +189,14 @@ class DomainService
                         $domain->update([
                                             'status' => $this->getDomainModel()->present()->getStatus('approved'),
                                         ]);
-                        Log::warning('domains update command aqui 1');
                     }
 
                     if (!empty($domain->project->shopify_id)) {
-                        Log::warning('domains update command if ...');
 
                         //dominio shopify, fazer as alteracoes nos templates
                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
                             try {
-                                Log::warning('domains update command foreach ...');
 
                                 $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
@@ -219,8 +216,6 @@ class DomainService
                                     } else {
 
                                         //template normal
-                                        Log::warning('domains update command tema normal ...');
-
                                         $shopifyIntegration->update([
                                                                         'theme_type' => $this->getShopifyIntegrationModel()
                                                                                              ->present()
@@ -234,7 +229,6 @@ class DomainService
                                     }
                                 } else {
                                     //template ajax
-                                    Log::warning('domains update command tema ajax ...');
 
                                     $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
@@ -261,7 +255,6 @@ class DomainService
                                     $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                                 }
                             } catch (\Exception $e) {
-                                Log::warning('Erro ao processar o html na integracao do shopify');
                                 report($e);
                                 //throwl
 
@@ -276,12 +269,10 @@ class DomainService
 
                     event(new DomainApprovedEvent($domain, $domain->project, $domain->project->users));
 
-                    Log::warning('domains update command final');
                 } else {
                     $domain->update([
                                         'status' => $this->getDomainModel()->present()->getStatus('pending'),
                                     ]);
-                    Log::warning('domains update command final else');
 
                     return false;
                 }
@@ -292,9 +283,6 @@ class DomainService
             $domain->update([
                                 'status' => $this->getDomainModel()->present()->getStatus('pending'),
                             ]);
-
-            Log::warning('DomainService - Erro ao verificar dominios pendentes');
-            report($e);
 
             return false;
         }

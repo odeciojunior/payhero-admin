@@ -23,7 +23,7 @@ class TransfersController extends Controller
             $transfersModel = new Transfer();
 
             $transfers = $transfersModel
-                ->select('transfers.*', 'transaction.sale_id', 'transaction.company_id', 'transaction.currency', 'transaction.status',
+                ->select('transfers.*', 'transaction.sale_id', 'transaction.company_id', 'transaction.currency', 'transaction.status', 'transaction.type as transaction_type',
                          'transaction.antecipable_value', 'anticipatedtransaction.anticipation_id', 'anticipatedtransaction.created_at as anticipationCreatedAt')
                 ->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
                 ->leftJoin('anticipated_transactions as anticipatedtransaction', 'anticipatedtransaction.transaction_id', 'transfers.transaction_id')

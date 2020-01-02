@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\PerfectLogService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -27,41 +28,17 @@ class PostBackPerfectLogController extends Controller
             ]);
 
             $trackingModel = new Tracking();
+            $perfectlogService = new PerfectLogService();
 
-            $tracking = $trackingModel->with(['sale'])
-                ->find(current(Hashids::decode($requestValidated['external_reference'])));
+            $trackingStatus = $perfectlogService->parseStatus($requestValidated['status']);
 
-            if(isset($tracking)){
+            $trackings = $trackingModel->where('tracking_code', $requestValidated['tracking'])->get();
 
-                $status = 1;
-
-                switch ($requestValidated['status']) {
-                    //case 'pending':
-                    case 'preparation':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('posted');
-                        break;
-                    case 'sent':
-                    case 'resend':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('dispatched');
-                        break;
-                    case 'delivered':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('delivered');
-                        break;
-                    case 'out_for_delivery':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('out_for_delivery');
-                        break;
-                    case 'canceled':
-                    case 'erro_fiscal':
-                    case 'returned':
-                        $status = $trackingModel->present()->getTrackingStatusEnum('exception');
-                        break;
-                }
-                //ATUALIZAR O STATUS
-                $tracking->update([
-                    'tracking_code' => $requestValidated['tracking'],
-                    'tracking_status_enum' => $status,
-                ]);
+            foreach ($trackings as $tracking){
+                $tracking->tracking_status_enum = $trackingStatus;
+                $tracking->save();
             }
+
             return response()->json(['message' => 'Postback received']);
         } catch (\Exception $exception){
             report($exception);

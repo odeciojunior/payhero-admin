@@ -158,6 +158,7 @@ class BoletoService
                           [
                               ['payment_method', '=', '2'],
                               ['status', '=', '2'],
+                              [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '!=', now()->toDateString()],
                           ]
                       )->chunk(100, function($boletos) use ($checkoutModel, $saleService, $projectModel, $domainModel) {
                     foreach ($boletos as $boleto) {
@@ -258,6 +259,7 @@ class BoletoService
                           [
                               ['payment_method', '=', '2'],
                               ['status', '=', '2'],
+                              [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '!=', now()->toDateString()],
                           ]
                       )
                       ->chunk(100, function($boletos) use ($checkoutModel, $saleService, $projectModel, $domainModel) {
@@ -407,8 +409,8 @@ class BoletoService
                                                ['status', '=', '2'],
                                                [
                                                    DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
-                                                                                                                           ->subDay('1')
-                                                                                                                           ->toDateString(),
+                                                                                                                     ->subDay('1')
+                                                                                                                     ->toDateString(),
                                                ],
                                            ]);
             foreach ($boletos->cursor() as $boleto) {
