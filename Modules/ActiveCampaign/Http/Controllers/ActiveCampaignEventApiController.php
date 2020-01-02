@@ -203,7 +203,7 @@ class ActiveCampaignEventApiController extends Controller
                     $event->event_text = $eventName[0]['name'];
                     $event = new ActivecampaignEventResource($event);
 
-                    return response()->json(['tags' => json_decode($tags, true), 'lists' => json_decode($lists, true), 'event' => $event], 200);
+                    return response()->json(['tags' => $tags, 'lists' => json_decode($lists, true), 'event' => $event], 200);
 
                 } else {
                     return response()->json([
@@ -371,7 +371,7 @@ class ActiveCampaignEventApiController extends Controller
                 $lists = null;
             }
 
-            return response()->json(['tags' => json_decode($tags, true), 'lists' => json_decode($lists, true), 'events' => $events], 200);
+            return response()->json(['tags' => $tags, 'lists' => json_decode($lists, true), 'events' => $events], 200);
         }
         catch(Exception $e){
             // dd($e);
