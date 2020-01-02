@@ -3,9 +3,11 @@
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
 use App\Jobs\SendNotazzInvoiceJob;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PushNotification;
+use Modules\Core\Entities\Sale;
 use Modules\Notifications\Transformers\NotificationResource;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\PushNotificationJob;
@@ -49,16 +51,14 @@ class NotificationApiService
         }
     }
 
-    /**
-     * @return \Illuminate\Http\JsonResponsegetPushNotifications
-     */
     public function getPushNotifications()
     {
         try {
             $notifications = PushNotification::where('user_id', auth()->user()->id)->get();
 
             //auth()->user()->unreadNotifications;
-            return response()->json($notifications, 200);
+
+            return response()->json(compact('$notifications'), 200);
         } catch (Exception $e) {
             Log::warning('Erro ao obter push notificações');
             report($e);
@@ -123,6 +123,7 @@ class NotificationApiService
     /**
      * @param $params
      * @return array
+     * @throws Exception
      */
     public function sendNotification($params)
     {
@@ -191,23 +192,32 @@ class NotificationApiService
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
      */
     public function processPostback(Request $request)
     {
         try {
-            $notificationMachine = new NotificationMachine();
-            $saleId              = current(Hashids::connection('sale_id')->decode($request->external_reference));
-            $pushNotification    = PushNotification::create([
-                                                                'sale_id'       => $saleId,
-                                                                'user_id'       => auth()->user()->id,
-                                                                'postback_data' => $request->getContent(),
-                                                            ]);
+            $saleModel = new Sale();
 
-            PushNotificationJob::dispatch($pushNotification);
+            $saleId = current(Hashids::connection('sale_id')->decode($request->external_reference));
 
-            return response()->json('success', 200);
+            if ($saleId) {
+                //hash ok
+                $sale             = $saleModel->find($saleId);
+                $pushNotification = PushNotification::create([
+                                                                 'sale_id'       => $saleId,
+                                                                 'user_id'       => $sale->owner_id,
+                                                                 'postback_data' => $request->getContent(),
+                                                             ]);
+
+                PushNotificationJob::dispatch($pushNotification);
+
+                return response()->json('success', 200);
+            } else {
+                //hash wrong
+                return response()->json('error', 400);
+            }
         } catch (Exception $ex) {
-            $this->exceptions[] = $ex->getMessage();
             throw $ex;
         }
     }
