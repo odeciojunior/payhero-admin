@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
@@ -58,6 +59,23 @@ class ActivecampaignIntegration extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Integração com ActiveCampaignIntegration foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Integração com ActiveCampaignIntegration foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Integração com ActiveCampaignIntegration foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

@@ -27,6 +27,10 @@ class ActiveCampaignApiController extends Controller
             $activecampaignIntegration = new ActivecampaignIntegration();
             $userProjectModel          = new UserProject();
 
+            activity()->on($activecampaignIntegration)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todas as integrações do ActiveCampaign');
+
             $activecampaignIntegrations = $activecampaignIntegration->where('user_id', auth()->id())->with('project')
                                                                     ->get();
 
@@ -145,6 +149,11 @@ class ActiveCampaignApiController extends Controller
             if (!empty($id)) {
                 $activecampaignIntegrationModel = new ActivecampaignIntegration();
                 $projectService                 = new ProjectService();
+
+                activity()->on($activecampaignIntegrationModel)->tap(function(Activity $activity) use ($id) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })->log('Visualizou tela editar integração ActiveCampaign');
 
                 $projects = $projectService->getMyProjects();
 
