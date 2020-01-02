@@ -6,18 +6,18 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Modules\Core\Events\ResetPasswordEvent;
-use Modules\Core\Events\UserRegistrationEvent;
-use Spatie\Activitylog\Traits\CausesActivity;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Core\Events\ResetPasswordEvent;
+use Modules\Core\Events\UserRegistrationEvent;
+use Modules\Core\Presenters\UserPresenter;
+use Spatie\Activitylog\Traits\CausesActivity;
+use App\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
 use Laracasts\Presenter\PresentableTrait;
 use Laravel\Passport\HasApiTokens;
-use Modules\Core\Presenters\UserPresenter;
 
 /**
  * @property int $id
@@ -128,9 +128,9 @@ class User extends Authenticable
         'account_owner_id',
     ];
     /**
-     * @var bool
+     * @var array
      */
-    protected static $logFillable = true;
+    protected static $logAttributes = ['*'];
     /**
      * @var bool
      */
@@ -145,6 +145,11 @@ class User extends Authenticable
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+    /**
+     * Ignora atributos
+     * @var array
+     */
+    protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
 
     /**
      * @return HasMany
