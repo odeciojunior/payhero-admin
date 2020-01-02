@@ -49,21 +49,23 @@ class NotificationApiService
         }
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponsegetPushNotifications
+     */
     public function getPushNotifications()
     {
         try {
             $notifications = PushNotification::where('user_id', auth()->user()->id)->get();
-                //auth()->user()->unreadNotifications;
 
-
-            return response()->json(compact('$notifications'), 200);
+            //auth()->user()->unreadNotifications;
+            return response()->json($notifications, 200);
         } catch (Exception $e) {
             Log::warning('Erro ao obter push notificações');
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao carregar as notificações - NotificationApiService - getPushNotifications',
-            ], 400);
+                                        'message' => 'Erro ao carregar as notificações - NotificationApiService - getPushNotifications',
+                                    ], 400);
         }
     }
 
@@ -118,36 +120,35 @@ class NotificationApiService
         return $response;
     }
 
-
     /**
-     * @param Request $request
-     * @return bool|string
+     * @param $params
+     * @return array
      */
     public function sendNotification($params)
     {
         try {
 
             $notificationChannel = [
-                'nil' => 'nil',
-                'venda' => '2a478392-e1b7-4e35-a80c-3942c893c20f',
-                'boleto' => '532e65cb-a690-4438-ab8e-8739d82eb4da',
-                'notificacao' => '803f7e0a-687b-40d5-9cd2-2972bc94fc19',
+                'nil'              => 'nil',
+                'venda'            => '2a478392-e1b7-4e35-a80c-3942c893c20f',
+                'boleto'           => '532e65cb-a690-4438-ab8e-8739d82eb4da',
+                'notificacao'      => '803f7e0a-687b-40d5-9cd2-2972bc94fc19',
                 'pedido_afiliacao' => '6cef3efa-2acf-43eb-b9d8-b5f90dcb1143',
             ];
 
             $headings = [
                 "en" => $params['headings'],
             ];
-            $content = [
+            $content  = [
                 "en" => $params['content'],
             ];
-            $fields = [
-                'app_id' => env('ONESIGNAL_APP_ID'),
+            $fields   = [
+                'app_id'             => env('ONESIGNAL_APP_ID'),
                 'android_channel_id' => $notificationChannel[$params['notification_sound']],
                 'include_player_ids' => $params['include_player_ids'],
-                'contents' => $content,
-                'headings' => $headings,
-                'ios_sound' => $params['notification_sound'] . '.wav',
+                'contents'           => $content,
+                'headings'           => $headings,
+                'ios_sound'          => $params['notification_sound'] . '.wav',
             ];
 
             //        return $fields['included_segments'];
@@ -171,13 +172,13 @@ class NotificationApiService
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
-            $response = curl_exec($ch);
+            $response    = curl_exec($ch);
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
             $return = [
                 'response' => $response,
-                'status' => $http_status
+                'status'   => $http_status,
             ];
 
             return $return;
@@ -187,20 +188,20 @@ class NotificationApiService
         }
     }
 
-
     /**
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function processPostback(Request $request)
     {
         try {
             $notificationMachine = new NotificationMachine();
-            $saleId = current(Hashids::connection('sale_id')->decode($request->external_reference));
-            $pushNotification = PushNotification::create([
-                'sale_id' => $saleId,
-                'user_id' => auth()->user()->id,
-                'postback_data' => $request->getContent(),
-            ]);
+            $saleId              = current(Hashids::connection('sale_id')->decode($request->external_reference));
+            $pushNotification    = PushNotification::create([
+                                                                'sale_id'       => $saleId,
+                                                                'user_id'       => auth()->user()->id,
+                                                                'postback_data' => $request->getContent(),
+                                                            ]);
 
             PushNotificationJob::dispatch($pushNotification);
 

@@ -2,14 +2,12 @@
 
 namespace Modules\Core\Entities;
 
-
 use App\Traits\FoxModelTrait;
 use Modules\Core\Events\UserRegistrationEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PushNotificationPresenter;
-
 
 /**
  * @property int $id
@@ -22,15 +20,10 @@ use Modules\Core\Presenters\PushNotificationPresenter;
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
-
  */
-
-
-
-class PushNotification extends Model {
-
+class PushNotification extends Model
+{
     use SoftDeletes, PresentableTrait, FoxModelTrait;
-
     /**
      * @var string
      */
@@ -47,8 +40,7 @@ class PushNotification extends Model {
         'machine_result',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'user_id',
     ];
-
-
 }
