@@ -365,6 +365,7 @@ class BoletoService
                             AND s.payment_method = 2
                             AND s.status = 1
                             AND date(s.end_date) = CURRENT_DATE
+                            AND t.deleted_at IS NULL
                             GROUP BY u.id
                             , u.email';
             $boletosPaid = DB::select($sql);
