@@ -13,7 +13,7 @@ class AddColumnUserIdOnPushNotification extends Migration
     public function up()
     {
         Schema::table('push_notifications', function(Blueprint $table) {
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->after('sale_id')->index();
         });
 
         Schema::table('push_notifications', function(Blueprint $table) {
