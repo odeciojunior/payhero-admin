@@ -33,14 +33,16 @@ class AuthApiService
             $credentials['email']    = $request['email'];
             $credentials['password'] = $request['password'];
 
-            if (!Auth::attempt($credentials)) {
-                return response()->json([
-                                            'status'  => 'success',
-                                            'message' => 'Unauthorized',
-                                        ], 401);
-            }
+//            if (!Auth::attempt($credentials)) {
+//                return response()->json([
+//                                            'status'  => 'success',
+//                                            'message' => 'Unauthorized',
+//                                        ], 401);
+//            }
+//
+//            $user = $request->user();
 
-            $user = $request->user();
+            $user = User::where('email', $request['email'])->first();
 
             $userDevice = UserDevice::where('player_id', $request['mobile_push_token'])->where('user_id', $user->id)
                                     ->first();
