@@ -302,7 +302,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/finances/js/index.js?v=6') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
     @endpush
 
 @endsection

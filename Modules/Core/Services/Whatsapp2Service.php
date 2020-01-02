@@ -110,7 +110,7 @@ class Whatsapp2Service
                     'billet_url'       => $sale->boleto_link,
                     'gateway'          => 'cloudfox',
                     'checkout_url'     => "https://checkout." . $domain->name . "/recovery/" . $sale->checkout->id_log_session,
-                    'id'               => $checkout->present()->getCheckoutIdIntegrations(),
+                    'id'               => $sale->checkout_id,
                     'status'           => $status,
                     "codigo_barras"    => $sale->boleto_digitable_line,
                     'values'           => [

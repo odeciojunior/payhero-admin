@@ -1355,7 +1355,7 @@ class ShopifyService
                 "price"  => $shippingValue <= 0 ? 0.0 : substr_replace($shippingValue, '.', strlen($shippingValue) - 2, 0),
                 "title"  => $shippingTitle,
             ];
-            $orderData = [
+            $orderData  = [
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
                 "email"                   => $client->email,
@@ -1367,7 +1367,7 @@ class ShopifyService
                 "shipping_address"        => $shippingAddress,
                 "shipping_lines"          => $shipping,
                 "note_attributes"         => [
-                    "token_cloudfox" => $checkout->present()->getCheckoutIdIntegrations(),
+                    "token_cloudfox" => Hashids::encode($sale->checkout_id),
                 ],
                 "total_price"             => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
             ];

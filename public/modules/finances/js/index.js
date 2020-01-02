@@ -451,7 +451,11 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, value) {
                         data += '<tr >';
-                        data += '<td style="vertical-align: middle;">' + value.reason +' '+ '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '">' + '<span style="color:black;">' +'#'+ value.transaction_id + '</span>' + '</a></td>';
+                        if (value.is_owner) {
+                            data += '<td style="vertical-align: middle;">' + value.reason + ' <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '"><span style="color:black;">#' + value.transaction_id + '</span></a></td>';
+                        } else {
+                            data += '<td style="vertical-align: middle;">' + value.reason + ' <span>#' + value.transaction_id + '</span></td>';
+                        }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
                             data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';

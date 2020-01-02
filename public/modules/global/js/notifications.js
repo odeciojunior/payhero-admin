@@ -156,6 +156,10 @@ $(document).ready(function () {
                 iconClass = 'tracking-success';
                 link      = '/trackings/download/' + data.message;
                 break;
+            case 'WithdrawalBlockedNotification':
+                message   = 'O saque está bloqueado. Entre em contato com o suporte para mais informações.';
+                iconClass = 'money-error';
+                link      = '/finances';
             default:
                 break;
         }

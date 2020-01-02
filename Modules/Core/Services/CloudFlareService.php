@@ -658,8 +658,6 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao checar dominio');
-            report($e);
 
             return false;
         }
