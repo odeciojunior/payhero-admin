@@ -46,6 +46,11 @@
                 </a>
             </div>
             <div id="modal-add-event-body" class="modal-body" style='min-height: 100px'>
+                <div class="load-list-tags">
+                    <div class="text-center">Carregando tags e listas <br>
+                        <div class="loader loader-circle text-center"></div>
+                    </div>
+                </div>
                 @include('activecampaign::createevent')
                 @include('activecampaign::editevent')
             </div>
