@@ -3,9 +3,11 @@
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
 use App\Jobs\SendNotazzInvoiceJob;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PushNotification;
+use Modules\Core\Entities\Sale;
 use Modules\Notifications\Transformers\NotificationResource;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\PushNotificationJob;
@@ -53,8 +55,8 @@ class NotificationApiService
     {
         try {
             $notifications = PushNotification::where('user_id', auth()->user()->id)->get();
-                //auth()->user()->unreadNotifications;
 
+            //auth()->user()->unreadNotifications;
 
             return response()->json(compact('$notifications'), 200);
         } catch (Exception $e) {
@@ -62,8 +64,8 @@ class NotificationApiService
             report($e);
 
             return response()->json([
-                'message' => 'Erro ao carregar as notificações - NotificationApiService - getPushNotifications',
-            ], 400);
+                                        'message' => 'Erro ao carregar as notificações - NotificationApiService - getPushNotifications',
+                                    ], 400);
         }
     }
 
@@ -118,36 +120,36 @@ class NotificationApiService
         return $response;
     }
 
-
     /**
-     * @param Request $request
-     * @return bool|string
+     * @param $params
+     * @return array
+     * @throws Exception
      */
     public function sendNotification($params)
     {
         try {
 
             $notificationChannel = [
-                'nil' => 'nil',
-                'venda' => '2a478392-e1b7-4e35-a80c-3942c893c20f',
-                'boleto' => '532e65cb-a690-4438-ab8e-8739d82eb4da',
-                'notificacao' => '803f7e0a-687b-40d5-9cd2-2972bc94fc19',
+                'nil'              => 'nil',
+                'venda'            => '2a478392-e1b7-4e35-a80c-3942c893c20f',
+                'boleto'           => '532e65cb-a690-4438-ab8e-8739d82eb4da',
+                'notificacao'      => '803f7e0a-687b-40d5-9cd2-2972bc94fc19',
                 'pedido_afiliacao' => '6cef3efa-2acf-43eb-b9d8-b5f90dcb1143',
             ];
 
             $headings = [
                 "en" => $params['headings'],
             ];
-            $content = [
+            $content  = [
                 "en" => $params['content'],
             ];
-            $fields = [
-                'app_id' => env('ONESIGNAL_APP_ID'),
+            $fields   = [
+                'app_id'             => env('ONESIGNAL_APP_ID'),
                 'android_channel_id' => $notificationChannel[$params['notification_sound']],
                 'include_player_ids' => $params['include_player_ids'],
-                'contents' => $content,
-                'headings' => $headings,
-                'ios_sound' => $params['notification_sound'] . '.wav',
+                'contents'           => $content,
+                'headings'           => $headings,
+                'ios_sound'          => $params['notification_sound'] . '.wav',
             ];
 
             //        return $fields['included_segments'];
@@ -171,13 +173,13 @@ class NotificationApiService
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
-            $response = curl_exec($ch);
+            $response    = curl_exec($ch);
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
             $return = [
                 'response' => $response,
-                'status' => $http_status
+                'status'   => $http_status,
             ];
 
             return $return;
@@ -187,26 +189,35 @@ class NotificationApiService
         }
     }
 
-
     /**
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
      */
     public function processPostback(Request $request)
     {
         try {
-            $notificationMachine = new NotificationMachine();
+            $saleModel = new Sale();
+
             $saleId = current(Hashids::connection('sale_id')->decode($request->external_reference));
-            $pushNotification = PushNotification::create([
-                'sale_id' => $saleId,
-                'user_id' => auth()->user()->id,
-                'postback_data' => $request->getContent(),
-            ]);
 
-            PushNotificationJob::dispatch($pushNotification);
+            if ($saleId) {
+                //hash ok
+                $sale             = $saleModel->find($saleId);
+                $pushNotification = PushNotification::create([
+                                                                 'sale_id'       => $saleId,
+                                                                 'user_id'       => $sale->owner_id,
+                                                                 'postback_data' => $request->getContent(),
+                                                             ]);
 
-            return response()->json('success', 200);
+                PushNotificationJob::dispatch($pushNotification);
+
+                return response()->json('success', 200);
+            } else {
+                //hash wrong
+                return response()->json('error', 400);
+            }
         } catch (Exception $ex) {
-            $this->exceptions[] = $ex->getMessage();
             throw $ex;
         }
     }
