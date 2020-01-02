@@ -451,8 +451,30 @@ class IntegrationApiService
         } catch (Exception $ex) {
             return response()->json([
                                         'status' => 'error',
-                                        'message' => 'Erro ao recuperar os projetos'
+                                        'message' => 'Erro ao enviar notificação'
                                     ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getPushNotifications(Request $request) {
+        try {
+
+            if (!$this->notificationApiService) {
+                $this->getIntegrationApiService('notification');
+            }
+
+            return $this->notificationApiService->getPushNotifications($request);
+
+        } catch (Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erro ao recuperar as notificações'
+            ], 400);
         }
     }
 }

@@ -12,11 +12,14 @@ $(() => {
         updateConfiguracoes();
     });
 
-    $('#toggler').on('click', function () {
-        if ($("#collapseOne").hasClass('show')) {
-            $('#showMore').text('exibir mais')
+    $('.toggler').on('click', function () {
+
+        let target = $(this).data('target');
+
+        if ($(target).hasClass('show')) {
+            $(this).find('.showMore').html('<i class="material-icons">add</i>');
         } else {
-            $('#showMore').text('exibir menos')
+            $(this).find('.showMore').html('<i class="material-icons">remove</i>');
         }
     });
 
@@ -686,7 +689,7 @@ $(() => {
         if (btnTokenClick == "enable click") {
             btnTokenClick = "update click";
             $('#shopify-token').prop("disabled", false);
-            $('.btn-edit-token').text('Atualizar Token');
+            $('.btn-edit-token').text('Salvar').addClass('bg-grey-700');
         } else {
             if ($('#shopify-token').val() == '') {
                 alertCustom('error', 'Token inválido');
@@ -713,7 +716,7 @@ $(() => {
                     loadingOnScreenRemove();
                     btnTokenClick = "enable click";
                     $('#shopify-token').prop("disabled", true);
-                    $('.btn-edit-token').text('Alterar Token');
+                    $('.btn-edit-token').text('Alterar').removeClass('bg-grey-700');
                     alertCustom('success', response.message);
                 }
             });
