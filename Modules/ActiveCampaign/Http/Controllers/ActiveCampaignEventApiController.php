@@ -180,7 +180,6 @@ class ActiveCampaignEventApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao salvar o evento ActiveCampaignEventController - store');
             report($e);
-            dd($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro ao salvar o evento',
@@ -226,7 +225,8 @@ class ActiveCampaignEventApiController extends Controller
                     $event->event_text = $eventName[0]['name'];
                     $event             = new ActivecampaignEventResource($event);
 
-                    return response()->json(['tags' => json_decode($tags, true), 'lists' => json_decode($lists, true), 'event' => $event], 200);
+                    return response()->json(['tags' => $tags, 'lists' => $lists, 'event' => $event], 200);
+
                 } else {
                     return response()->json([
                                                 'message' => 'Ocorreu um erro, tente novamente mais tarde!',
@@ -400,8 +400,9 @@ class ActiveCampaignEventApiController extends Controller
                 $lists = null;
             }
 
-            return response()->json(['tags' => json_decode($tags, true), 'lists' => json_decode($lists, true), 'events' => $events], 200);
-        } catch (Exception $e) {
+            return response()->json(['tags' => $tags, 'lists' => $lists, 'events' => $events], 200);
+        }
+        catch(Exception $e){
             // dd($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }

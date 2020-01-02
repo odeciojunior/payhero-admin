@@ -17,9 +17,9 @@ $(() => {
         let target = $(this).data('target');
 
         if ($(target).hasClass('show')) {
-            $(this).find('.showMore').html('<i class="material-icons">add</i>');
+            $(this).find('.showMore').html('add');
         } else {
-            $(this).find('.showMore').html('<i class="material-icons">remove</i>');
+            $(this).find('.showMore').html('remove');
         }
     });
 
