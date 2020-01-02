@@ -77,7 +77,7 @@ class CompaniesApiController extends Controller
         try {
             $companyModel = new Company();
             $requestData  = $request->validated();
-            $company      = $companyModel->newQuery()->create(
+            $company      = $companyModel->create(
                 [
                     'user_id'          => auth()->user()->account_owner_id,
                     'country'          => $requestData["country"],
