@@ -17,6 +17,10 @@ use Modules\Shipping\Transformers\ShippingResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class ShippingApiController
+ * @package Modules\Shipping\Http\Controllers
+ */
 class ShippingApiController extends Controller
 {
     /**
@@ -144,7 +148,7 @@ class ShippingApiController extends Controller
                 activity()->on($shippingModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela detalhes do frete ' . $shipping->name);
+                })->log('Visualizou tela detalhes do frete ' . $id);
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -181,6 +185,11 @@ class ShippingApiController extends Controller
             if (isset($projectId) && isset($id)) {
                 $shippingModel = new Shipping();
                 $projectModel  = new Project();
+
+                activity()->on($shippingModel)->tap(function(Activity $activity) use ($id) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })->log('Visualizou tela editar configurações do frete: ' . $id);
 
                 $shipping = $shippingModel->find(current(Hashids::decode($id)));
                 $project  = $projectModel->find(current(Hashids::decode($projectId)));

@@ -87,11 +87,11 @@ class Shipping extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Frete ' . $this->name . ' foi deletedo.';
+            $activity->description = 'Frete ' . $this->id_code . ' foi deletedo.';
         } else if ($eventName == 'updated') {
-            $activity->description = 'Frete ' . $this->name . ' foi atualizado.';
+            $activity->description = 'Frete ' . $this->id_code . ' foi atualizado.';
         } else if ($eventName == 'created') {
-            $activity->description = 'Frete ' . $this->name . ' foi criado.';
+            $activity->description = 'Frete ' . $this->id_code . ' foi criado.';
         } else {
             $activity->description = $eventName;
         }
