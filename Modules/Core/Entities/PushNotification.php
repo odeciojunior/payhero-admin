@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PushNotificationPresenter;
+use App\Traits\LogsActivity;
+
 
 /**
  * @property int $id
@@ -23,7 +25,7 @@ use Modules\Core\Presenters\PushNotificationPresenter;
  */
 class PushNotification extends Model
 {
-    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
     /**
      * @var string
      */
@@ -42,6 +44,23 @@ class PushNotification extends Model
         'created_at',
         'updated_at',
         'deleted_at',
-        'user_id',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 }

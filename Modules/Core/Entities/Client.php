@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ClientPresenter;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -23,7 +24,7 @@ use Modules\Core\Presenters\ClientPresenter;
  */
 class Client extends Model
 {
-    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
     /**
      * @var string
      */
@@ -46,6 +47,24 @@ class Client extends Model
         'updated_at',
         'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return HasMany

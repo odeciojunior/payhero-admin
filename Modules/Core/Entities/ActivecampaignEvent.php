@@ -3,9 +3,12 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ActiveCampaignEventPresenter;
+use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -24,18 +27,16 @@ use Modules\Core\Presenters\ActiveCampaignEventPresenter;
  */
 class ActivecampaignEvent extends Model
 {
-    use SoftDeletes;
-    use PresentableTrait;
-
+    use SoftDeletes, PresentableTrait, LogsActivity;
+    /**
+     * @var string
+     */
     protected $presenter = ActiveCampaignEventPresenter::class;
-    
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -48,11 +49,46 @@ class ActivecampaignEvent extends Model
         'add_list',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Evento foi deletado para ActivecampaignEvent';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Evento foi atualizado para ActivecampaignEvent';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Evento foi criado para ActivecampaignEvent';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
+
+    /**
+     * @return BelongsTo
      */
     public function activecampaignIntegration()
     {

@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class GatewayFlagTax extends Model
 {
+    use LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -27,7 +29,34 @@ class GatewayFlagTax extends Model
     /**
      * @var array
      */
-    protected $fillable = ['gateway_id', 'card_flag_id', 'installments', 'type_enum', 'percent', 'active_flag', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'gateway_id',
+        'card_flag_id',
+        'installments',
+        'type_enum',
+        'percent',
+        'active_flag',
+        'created_at',
+        'updated_at',
+    ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo

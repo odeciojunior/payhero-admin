@@ -3,7 +3,11 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Activity;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -19,14 +23,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ActivecampaignIntegration extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -37,11 +39,46 @@ class ActivecampaignIntegration extends Model
         'api_key',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Integração com ActiveCampaignIntegration foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Integração com ActiveCampaignIntegration foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Integração com ActiveCampaignIntegration foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
+
+    /**
+     * @return BelongsTo
      */
     public function project()
     {
@@ -49,14 +86,15 @@ class ActivecampaignIntegration extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User');
     }
+
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function events()
     {

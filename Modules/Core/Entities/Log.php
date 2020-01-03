@@ -26,21 +26,36 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property Checkout $checkout
  */
-
 class Log extends Model
 {
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
-    protected $fillable = ['checkout_id', 'id_log_session', 'plan', 'event', 'name', 'email', 'document', 'telephone', 'zip_code', 'street', 'number', 'neighborhood', 'city', 'state', 'total_value', 'error', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'checkout_id',
+        'id_log_session',
+        'plan',
+        'event',
+        'name',
+        'email',
+        'document',
+        'telephone',
+        'zip_code',
+        'street',
+        'number',
+        'neighborhood',
+        'city',
+        'state',
+        'total_value',
+        'error',
+        'created_at',
+        'updated_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
