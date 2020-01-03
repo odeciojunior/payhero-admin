@@ -19,7 +19,7 @@ class UserResource extends Resource
      */
     public function toArray($request)
     {
-        $userNotification = $this->userNotification ?? collect();
+        $userNotification = $this->userNotification;
         $userService      = new UserService();
         $refusedDocuments = $userService->getRefusedDocuments();
 
