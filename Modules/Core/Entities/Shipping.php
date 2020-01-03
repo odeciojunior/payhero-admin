@@ -87,7 +87,7 @@ class Shipping extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Frete ' . $this->id_code . ' foi deletedo.';
+            $activity->description = 'Frete ' . $this->id_code . ' foi deletado.';
         } else if ($eventName == 'updated') {
             $activity->description = 'Frete ' . $this->id_code . ' foi atualizado.';
         } else if ($eventName == 'created') {
