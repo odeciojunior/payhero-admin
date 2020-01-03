@@ -46,6 +46,7 @@ Route::group(
         Route::post('/{version}/updatenotification', 'MobileController@updateNotificationPermission');
         Route::post('/{version}/device', 'MobileController@getDeviceData');
         Route::post('/{version}/notification/getAll', 'MobileController@getPushNotifications');
+
     }
 );
 
