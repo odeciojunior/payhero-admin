@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -69,6 +70,23 @@ class Whatsapp2Integration extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Integração whatsapp 2.0 para o projeto ' . $this->project->name . ' foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Integração whatsapp 2.0 para o projeto ' . $this->project->name . ' foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Integração whatsapp 2.0 para o projeto ' . $this->project->name . ' foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo
