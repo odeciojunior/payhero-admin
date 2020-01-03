@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Date;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
-use Spatie\Activitylog\Traits\LogsActivity;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id

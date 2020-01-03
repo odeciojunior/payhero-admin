@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -69,6 +70,23 @@ class Withdrawal extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Pedido transferência foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Pedido transferência foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Pedido transferência foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

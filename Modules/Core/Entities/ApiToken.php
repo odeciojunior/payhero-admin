@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use App\Traits\PaginatableTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -16,7 +17,6 @@ use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\PersonalAccessTokenResult;
 use Laravel\Passport\Token;
 use Modules\Core\Presenters\ApiTokenPresenter;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class ApiToken

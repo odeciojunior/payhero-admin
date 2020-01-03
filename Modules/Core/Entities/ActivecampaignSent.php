@@ -4,7 +4,8 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -35,7 +36,17 @@ class ActivecampaignSent extends Model
     /**
      * @var array
      */
-    protected $fillable = ['instance_id', 'instance', 'activecampaign_integration_id', 'data', 'response', 'sent_status', 'event_sale', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'instance_id',
+        'instance',
+        'activecampaign_integration_id',
+        'data',
+        'response',
+        'sent_status',
+        'event_sale',
+        'created_at',
+        'updated_at',
+    ];
     /**
      * @var bool
      */
@@ -54,6 +65,23 @@ class ActivecampaignSent extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'ActivecampaignSent foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'ActivecampaignSent foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'ActivecampaignSent foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

@@ -2,23 +2,24 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
-use Exception;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Events\WithdrawalRequestEvent;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Spatie\Activitylog\Models\Activity;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class WithdrawalsApiController
@@ -38,6 +39,11 @@ class WithdrawalsApiController extends Controller
             /** @var Company $companyModel */
             $companyModel = new Company();
             $companyId    = current(Hashids::decode($request->company));
+
+            activity()->on($withdrawalModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todas as transferências');
+
             if ($companyId) {
                 //id existe
                 $company = $companyModel->find($companyId);
@@ -84,46 +90,48 @@ class WithdrawalsApiController extends Controller
             $companyModel = new Company();
             /** @var Company $company */
             $company = $companyModel->where('user_id', auth()->user()->account_owner_id)
-                ->find(current(Hashids::decode($data['company_id'])));
+                                    ->find(current(Hashids::decode($data['company_id'])));
             if (Gate::allows('edit', [$company])) {
                 if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
-                    !$company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') ||
+                    !$company->address_document_status == $companyModel->present()
+                                                                       ->getAddressDocumentStatus('approved') ||
                     !$company->contract_document_status == $companyModel->present()
-                        ->getContractDocumentStatus('approved')) {
+                                                                        ->getContractDocumentStatus('approved')) {
                     return response()->json([
-                        'message' => 'error',
-                        'data' => [
-                            'documents_status' => 'pending',
-                        ],
-                    ], 400);
+                                                'message' => 'error',
+                                                'data'    => [
+                                                    'documents_status' => 'pending',
+                                                ],
+                                            ], 400);
                 }
                 $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
                 $companyDocument = preg_replace("/[^0-9]/", "", $company->company_document);
 
                 if ($withdrawalValue < 1000) {
                     return response()->json([
-                        'message' => 'Valor de saque precisa ser maior que R$ 10,00',
-                    ], 400);
+                                                'message' => 'Valor de saque precisa ser maior que R$ 10,00',
+                                            ], 400);
                 }
                 if ($withdrawalValue > $company->balance) {
                     return response()->json([
-                        'message' => 'Valor informado inválido',
-                    ], 400);
+                                                'message' => 'Valor informado inválido',
+                                            ], 400);
                 }
 
                 /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
                 if (strlen($companyDocument) == 11) {
-                    $startDate = Carbon::now()->startOfMonth();
-                    $endDate = Carbon::now()->endOfMonth();
+                    $startDate  = Carbon::now()->startOfMonth();
+                    $endDate    = Carbon::now()->endOfMonth();
                     $withdrawal = $withdrawalModel->where('company_id', $company->id)
-                        ->where('status', $withdrawalModel->present()->getStatus('transfered'))
-                        ->whereBetween('created_at', [$startDate, $endDate])->get();
+                                                  ->where('status', $withdrawalModel->present()
+                                                                                    ->getStatus('transfered'))
+                                                  ->whereBetween('created_at', [$startDate, $endDate])->get();
                     if (count($withdrawal) > 0) {
                         $withdrawalSum = $withdrawal->sum('value');
                         if ($withdrawalSum + $withdrawalValue > 190000) {
                             return response()->json([
-                                'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
-                            ], 400);
+                                                        'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
+                                                    ], 400);
                         }
                     }
                 }
@@ -137,14 +145,14 @@ class WithdrawalsApiController extends Controller
 
                 $withdrawal = $withdrawalModel->create(
                     [
-                        'value' => $withdrawalValue,
-                        'company_id' => $company->id,
-                        'bank' => $company->bank,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'account' => $company->account,
+                        'value'         => $withdrawalValue,
+                        'company_id'    => $company->id,
+                        'bank'          => $company->bank,
+                        'agency'        => $company->agency,
+                        'agency_digit'  => $company->agency_digit,
+                        'account'       => $company->account,
                         'account_digit' => $company->account_digit,
-                        'status' => $companyModel->present()->getStatus('pending'),
+                        'status'        => $companyModel->present()->getStatus('pending'),
                     ]
                 );
                 event(new WithdrawalRequestEvent($withdrawal));
@@ -167,7 +175,7 @@ class WithdrawalsApiController extends Controller
     {
         $companyModel = new Company();
 
-        $bankService = new BankService();
+        $bankService    = new BankService();
         $companyService = new CompanyService();
 
         $userModel = new User();
@@ -251,7 +259,10 @@ class WithdrawalsApiController extends Controller
         try {
             $userModel = new User();
 
-            return response()->json(['allowed' => auth()->user()->status != $userModel->present()->getStatus('withdrawal blocked')]);
+            return response()->json([
+                                        'allowed' => auth()->user()->status != $userModel->present()
+                                                                                         ->getStatus('withdrawal blocked'),
+                                    ]);
         } catch (Exception $e) {
             Log::warning('Erro ao verificar permisssão de saqea (WithdrawalsApiController - checkAllowed)');
             report($e);
