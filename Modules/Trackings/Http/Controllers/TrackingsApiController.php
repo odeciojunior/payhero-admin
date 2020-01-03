@@ -97,6 +97,7 @@ class TrackingsApiController extends Controller
     /**
      * @param $trackingCode
      * @return JsonResponse|TrackingShowResource
+     * Rota pública acessada pelo arquivo tracking.php na pasta /public
      */
     public function detail($trackingCode)
     {
