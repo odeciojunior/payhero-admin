@@ -212,7 +212,7 @@ class ShopifyApiController extends Controller
             $projectModel = new Project();
 
             activity()->on($projectModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
+                $activity->log_name = 'updated';
             })->log('Integração com o shopify desfeita para o projeto: ' . $requestData['project_id'] ?? '');
 
             if ($projectId) {
@@ -279,8 +279,10 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel             = new Domain();
 
-            activity()->on($projectModel)
-                      ->log('Reintegração do shopify para o projeto: ' . $requestData['project_id'] ?? '');
+            activity()->on($projectModel)->tap(function(Activity $activity) use ($requestData) {
+                $activity->log_name   = 'updated';
+                $activity->subject_id = current(Hashids::decode($requestData['project_id']));
+            })->log('Reintegração do shopify para o projeto: ' . $requestData['project_id'] ?? '');
 
             if ($projectId) {
                 //id decriptado
@@ -436,7 +438,6 @@ class ShopifyApiController extends Controller
             activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'updated';
             })->log('Sicronizou template do shopify para o projeto: ' . $requestData['project_id'] ?? '');
-
 
             $projectId = current(Hashids::decode($requestData['project_id']));
 

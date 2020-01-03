@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ShippingPresenter;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -78,6 +79,23 @@ class Shipping extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Frete ' . $this->name . ' foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Frete ' . $this->name . ' foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Frete ' . $this->name . ' foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo
