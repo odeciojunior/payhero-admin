@@ -141,9 +141,9 @@ class ShippingApiController extends Controller
                 $shipping = $shippingModel->find(current(Hashids::decode($id)));
                 $project  = $projectModel->find(current(Hashids::decode($projectId)));
 
-                activity()->on($shippingModel)->tap(function(Activity $activity) use ($project) {
+                activity()->on($shippingModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
-                    $activity->subject_id = $project;
+                    $activity->subject_id = current(Hashids::decode($id));
                 })->log('Visualizou tela detalhes do frete ' . $shipping->name);
 
                 if (Gate::allows('edit', [$project])) {
