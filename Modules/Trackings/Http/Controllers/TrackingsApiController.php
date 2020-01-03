@@ -104,8 +104,7 @@ class TrackingsApiController extends Controller
             $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
-            $tracking = $trackingModel->where('tracking_code', $trackingCode)
-            ->first();
+            $tracking = $trackingModel->where('tracking_code', $trackingCode)->first();
 
             $apiTracking = $trackingService->findTrackingApi($tracking);
 
