@@ -3,6 +3,7 @@
 namespace Modules\Mobile\Http\Controllers\Apis\v10;
 
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PushNotification;
@@ -330,7 +331,7 @@ class NotificationMachine {
                 $response = $this->notificationService->sendNotification($notification);
 
                 if ($response["status"] != 200) {
-                    return $this->failState(__FUNCTION__, $response->response);
+                    return $this->failState(__FUNCTION__, $response["response"]);
                 }
             }
             return $this->ignorePostback($response);
