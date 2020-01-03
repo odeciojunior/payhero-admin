@@ -34,10 +34,12 @@ class TrackingsApiController extends Controller
     public function index(Request $request)
     {
         try {
-            activity()->on(new Tracking())->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todos os códigos de rastreios');
+            if (empty($request->input('page')) || $request->input('page') == '1') {
 
+                activity()->on(new Tracking())->tap(function(Activity $activity) {
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os códigos de rastreios');
+            }
             $trackingService = new TrackingService();
 
             $data = $request->all();

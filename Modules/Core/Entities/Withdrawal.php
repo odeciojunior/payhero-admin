@@ -78,11 +78,11 @@ class Withdrawal extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         if ($eventName == 'deleted') {
-            $activity->description = 'Pedido transferência foi deletedo.';
+            $activity->description = 'Pedido saque foi deletedo.';
         } else if ($eventName == 'updated') {
-            $activity->description = 'Pedido transferência foi atualizado.';
+            $activity->description = 'Pedido saque foi atualizado.';
         } else if ($eventName == 'created') {
-            $activity->description = 'Pedido transferência foi criado.';
+            $activity->description = 'Pedido saque foi criado.';
         } else {
             $activity->description = $eventName;
         }

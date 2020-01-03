@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ShopifyIntegrationPresenter;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property int $id
@@ -73,6 +74,23 @@ class ShopifyIntegration extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Integração com shopify foi deleteda.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Integração com shopify foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Integração com shopify foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

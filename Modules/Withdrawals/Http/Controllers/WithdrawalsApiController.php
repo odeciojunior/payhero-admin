@@ -39,10 +39,12 @@ class WithdrawalsApiController extends Controller
             /** @var Company $companyModel */
             $companyModel = new Company();
             $companyId    = current(Hashids::decode($request->company));
-
-            activity()->on($withdrawalModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todas as transferências');
+            
+            if (empty($request->input('page')) || $request->input('page') == '1') {
+                activity()->on($withdrawalModel)->tap(function(Activity $activity) {
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todas as transferências');
+            }
 
             if ($companyId) {
                 //id existe

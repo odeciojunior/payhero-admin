@@ -3,6 +3,7 @@
 namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
+use function foo\func;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,6 +14,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Shipping;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
@@ -37,6 +39,10 @@ class ShopifyApiController extends Controller
         try {
             $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
+
+            activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos as integrações com o shopify');
 
             $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->account_owner_id)->get();
 
@@ -205,8 +211,9 @@ class ShopifyApiController extends Controller
 
             $projectModel = new Project();
 
-            activity()->on($projectModel)
-                      ->log('Integração com o shopify desfeita para o projeto: ' . $requestData['project_id'] ?? '');
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Integração com o shopify desfeita para o projeto: ' . $requestData['project_id'] ?? '');
 
             if ($projectId) {
                 //id decriptado
@@ -384,11 +391,14 @@ class ShopifyApiController extends Controller
     public function synchronizeProducts(Request $request)
     {
         try {
-            $requestData = $request->all();
-            $projectId   = current(Hashids::decode($requestData['project_id']));
-            activity()->log('Sicronizou produtos do shopify para o projeto: ' . $requestData['project_id'] ?? '');
-
+            $requestData  = $request->all();
+            $projectId    = current(Hashids::decode($requestData['project_id']));
             $shopifyModel = new ShopifyIntegration();
+
+            activity()->on($shopifyModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'updated';
+            })->log('Sicronizou produtos do shopify para o projeto: ' . $requestData['project_id'] ?? '');
+
             if (!empty($projectId)) {
 
                 $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
@@ -423,7 +433,10 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel             = new Domain();
 
-            activity()->log('Sicronizou template do shopify para o projeto: ' . $requestData['project_id'] ?? '');
+            activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'updated';
+            })->log('Sicronizou template do shopify para o projeto: ' . $requestData['project_id'] ?? '');
+
 
             $projectId = current(Hashids::decode($requestData['project_id']));
 
@@ -542,7 +555,9 @@ class ShopifyApiController extends Controller
         $data                    = $request->all();
         $shopifyIntegrationModel = new ShopifyIntegration();
 
-        activity()->log('Atualizou token de integração com shopify para o projeto: ' . $data['project_id'] ?? '');
+        activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+            $activity->log_name = 'updated';
+        })->log('Atualizou token de integração do shopify para o projeto: ' . $data['project_id'] ?? '');
 
         if (!empty($data['token'])) {
             $projectId = current(Hashids::decode($data['project_id']));
@@ -589,7 +604,10 @@ class ShopifyApiController extends Controller
 
         $data                    = $request->all();
         $shopifyIntegrationModel = new ShopifyIntegration();
-        activity()->log('Verificação de permissões do token de integração do shopify para o projeto: ' . $data['project_id'] ?? '');
+
+        activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+            $activity->log_name = 'visualization';
+        })->log('Verificação de permissões do token de integração do shopify para o projeto: ' . $data['project_id'] ?? '');
 
         if (!empty($data['project_id'])) {
             $projectId = current(Hashids::decode($data['project_id']));
