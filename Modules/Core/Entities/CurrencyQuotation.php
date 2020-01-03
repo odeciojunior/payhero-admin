@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CurrencyQuotationPresenter;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -19,7 +20,7 @@ use Modules\Core\Presenters\CurrencyQuotationPresenter;
  */
 class CurrencyQuotation extends Model
 {
-    use FoxModelTrait, PresentableTrait;
+    use FoxModelTrait, PresentableTrait, LogsActivity;
     /**
      * @var string
      */
@@ -45,4 +46,22 @@ class CurrencyQuotation extends Model
         'updated_at',
         'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 }

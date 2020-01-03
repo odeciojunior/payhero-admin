@@ -3,7 +3,9 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -23,35 +25,49 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class HotzappIntegration extends Model
 {
-
-    use SoftDeletes;
-
+    use SoftDeletes, LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'user_id', 
-        'link', 
-        'boleto_generated', 
-        'boleto_paid', 
-        'credit_card_refused', 
-        'credit_card_paid', 
-        'abandoned_cart', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'user_id',
+        'link',
+        'boleto_generated',
+        'boleto_paid',
+        'credit_card_refused',
+        'credit_card_paid',
+        'abandoned_cart',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
@@ -59,7 +75,7 @@ class HotzappIntegration extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
