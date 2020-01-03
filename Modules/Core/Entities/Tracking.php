@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TrackingPresenter;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -70,6 +71,23 @@ class Tracking extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Código rastreio foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Código de rastreio foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Código de rastreio foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

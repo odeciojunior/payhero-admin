@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransferPresenter;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -75,6 +76,23 @@ class Transfer extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Extrato foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Extrato foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Extrato foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo
