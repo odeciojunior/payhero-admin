@@ -17,7 +17,6 @@ use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 use Spatie\Activitylog\Models\Activity;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 
 class ActiveCampaignApiController extends Controller

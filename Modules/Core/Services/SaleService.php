@@ -79,7 +79,14 @@ class SaleService
                 $querySale->whereIn('client_id', $customers);
             });
         }
-
+        if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
+            $transactions->whereHas('sale.project.shopifyIntegrations', function($queryShopifyIntegration) {
+                $queryShopifyIntegration->where('status', 2);
+            });
+            $transactions->whereHas('sale', function($querySaleShopify) {
+                $querySaleShopify->whereNull('shopify_order');
+            });
+        }
         if (!empty($filters["payment_method"])) {
             $forma = $filters["payment_method"];
             $transactions->whereHas('sale', function($querySale) use ($forma) {
@@ -202,14 +209,11 @@ class SaleService
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         $taxa = 0;
-        if(preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0){
+        if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
             $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
-        }
-        else{
+        } else {
             $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
         }
-
-
 
         $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
