@@ -13,7 +13,10 @@ class AddColumnUserIdOnPushNotification extends Migration
     public function up()
     {
         Schema::table('push_notifications', function(Blueprint $table) {
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->after('sale_id')->index();
+        });
+
+        Schema::table('push_notifications', function(Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
@@ -26,6 +29,9 @@ class AddColumnUserIdOnPushNotification extends Migration
     {
         Schema::table('push_notifications', function(Blueprint $table) {
             $table->dropForeign(['user_id']);
+        });
+
+        Schema::table('push_notifications', function(Blueprint $table) {
             $table->dropColumn('user_id');
         });
     }

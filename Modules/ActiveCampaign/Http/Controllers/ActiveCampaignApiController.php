@@ -4,18 +4,20 @@
 namespace Modules\Activecampaign\Http\Controllers;
 
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\ActivecampaignIntegration;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
+use Symfony\Component\HttpFoundation\Response;
 use Modules\Core\Services\ActiveCampaignService;
-use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
+use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Projects\Transformers\ProjectsSelectResource;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 
 class ActiveCampaignApiController extends Controller
 {
@@ -40,7 +42,8 @@ class ActiveCampaignApiController extends Controller
                 }
             }
             return response()->json(['integrations' => ActivecampaignResource::collection($activecampaignIntegrations),
-                'projects' => ProjectsSelectResource::collection($projects)]);
+                'projects' => ProjectsSelectResource::collection($projects)
+            ]);
         }
         catch(Exception $e){
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
@@ -55,6 +58,13 @@ class ActiveCampaignApiController extends Controller
 
         $activecampaignIntegrationModel = new ActivecampaignIntegration();
         $activecampaignIntegration      = $activecampaignIntegrationModel->find(current(Hashids::decode($id)));
+
+        if (Gate::denies('show', [$activecampaignIntegration])) {
+            return response()->json([
+                    'message' => 'Sem permissão',
+                ],Response::HTTP_FORBIDDEN
+            );
+        }
 
         return new ActivecampaignResource($activecampaignIntegration);
     }
@@ -85,7 +95,7 @@ class ActiveCampaignApiController extends Controller
 
                 $activecampaignService = new ActiveCampaignService();
                 $activecampaignService->setAccess($data['api_url'], $data['api_key'], 1);
-                $listTest = json_decode($activecampaignService->getLists(), true);
+                $listTest = $activecampaignService->getLists();
 
                 if(isset($listTest['lists'])) {
                     $integrationCreated = $activecampaignIntegrationModel->create([
@@ -142,6 +152,13 @@ class ActiveCampaignApiController extends Controller
                 $projectId   = current(Hashids::decode($id));
                 $integration = $activecampaignIntegrationModel->where('project_id', $projectId)->first();
 
+                if (Gate::denies('edit', [$activecampaignIntegration])) {
+                    return response()->json([
+                            'message' => 'Sem permissão',
+                        ],Response::HTTP_FORBIDDEN
+                    );
+                }
+
                 if ($integration) {
                     return response()->json(['projects' => $projects, 'integration' => $integration]);
                 } else {
@@ -177,7 +194,14 @@ class ActiveCampaignApiController extends Controller
             $data                           = $request->all();
             $integrationId                  = current(Hashids::decode($id));
             $activecampaignIntegration      = $activecampaignIntegrationModel->find($integrationId);
-            
+
+            if (Gate::denies('update', [$activecampaignIntegration])) {
+                return response()->json([
+                        'message' => 'Sem permissão',
+                    ],Response::HTTP_FORBIDDEN
+                );
+            }
+
             if (empty($data['api_url']) || empty($data['api_key'])) {
                 return response()->json([
                     'message' => 'Erro ao atualizar a integração. Campos obrigatórios não informados',
@@ -186,7 +210,7 @@ class ActiveCampaignApiController extends Controller
 
             $activecampaignService = new ActiveCampaignService();
             $activecampaignService->setAccess($data['api_url'], $data['api_key'], $integrationId);
-            $listTest = json_decode($activecampaignService->getLists(), true);
+            $listTest = $activecampaignService->getLists();
 
             if(isset($listTest['lists'])) {
                 $integrationUpdated = $activecampaignIntegration->update([
@@ -227,7 +251,16 @@ class ActiveCampaignApiController extends Controller
             $integrationId                  = current(Hashids::decode($id));
             $activecampaignIntegrationModel = new ActivecampaignIntegration();
             $integration                    = $activecampaignIntegrationModel->find($integrationId);
-            $integrationDeleted             = $integration->delete();
+
+            if (Gate::denies('destroy', [$integration])) {
+                return response()->json([
+                        'message' => 'Sem permissão',
+                    ],Response::HTTP_FORBIDDEN
+                );
+            }
+
+            $integrationDeleted = $integration->delete();
+
             if ($integrationDeleted) {
                 return response()->json([
                     'message' => 'Integração Removida com sucesso!',

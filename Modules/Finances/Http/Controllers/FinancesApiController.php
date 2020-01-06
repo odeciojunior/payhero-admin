@@ -2,16 +2,18 @@
 
 namespace Modules\Finances\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Transaction;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Transaction;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class FinancesApiController
@@ -26,21 +28,25 @@ class FinancesApiController extends Controller
     public function getBalances(Request $request)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
-            /** @var Transaction $transactionModel */
+
             $transactionModel   = new Transaction();
             $antecipableBalance = 0;
             $pendingBalance     = 0;
+
             if ($request->has('company') && !empty($request->input('company'))) {
                 $companyId = current(Hashids::decode($request->input('company')));
-                /** @var Company $company */
-                $company = $companyModel->newQuery()->find($companyId);
+
+                $company = $companyModel->find($companyId);
+
+                if (Gate::denies('edit', [$company])) {
+                    return response()->json([
+                            'message' => 'Sem permissão',
+                        ],Response::HTTP_FORBIDDEN
+                    );
+                }
+
                 if (!empty($company)) {
-                    //                    $pendingTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                    //                                                            ->where('status', 'paid')
-                    //                                                            ->whereDate('release_date', '>', now()->startOfDay())
-                    //                                                            ->get();
 
                     $pendingTransactions     = $transactionModel->newQuery()->where('company_id', $company->id)
                                                                 ->where('status', 'paid')
@@ -61,16 +67,6 @@ class FinancesApiController extends Controller
                                                                 ->select(DB::raw('sum( antecipable_value ) as antecipable_balance'))
                                                                 ->first();
 
-                    /*$pendingAntifraudTransactions = $transactionModel->newQuery()
-                                                                     ->where('company_id', $company->id)
-                                                                     ->where('status', 'pending')
-                                                                     ->whereDate('release_date', '>', now()->startOfDay())
-                                                                     ->whereHas("sale", function($query) {
-                                                                         $query->where("status", 20);
-                                                                     })
-                                                                     ->select(DB::raw('sum( value ) as pending_antifraud_balance'))
-                                                                     ->first();*/
-                    //                    $pendingAntifraudBalance      = $pendingAntifraudTransactions->pending_antifraud_balance;
                     $antecipableBalance += $antecipableTransactions->antecipable_balance;
                     $availableBalance   = $company->balance;
                     $totalBalance       = $availableBalance + $pendingBalance;
@@ -81,7 +77,6 @@ class FinancesApiController extends Controller
                             'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                             'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                            //                            'pending_antifraud_balance' => number_format(intval($pendingAntifraudBalance) / 100, 2, ',', '.'),
                             'currency'            => $company->country == 'usa' ? '$' : 'R$',
                         ]
                     );

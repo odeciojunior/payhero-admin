@@ -97,6 +97,7 @@ class TrackingsApiController extends Controller
     /**
      * @param $trackingCode
      * @return JsonResponse|TrackingShowResource
+     * Rota pública acessada pelo arquivo tracking.php na pasta /public
      */
     public function detail($trackingCode)
     {
@@ -104,8 +105,7 @@ class TrackingsApiController extends Controller
             $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
-            $tracking = $trackingModel->where('tracking_code', $trackingCode)
-            ->first();
+            $tracking = $trackingModel->where('tracking_code', $trackingCode)->first();
 
             $apiTracking = $trackingService->findTrackingApi($tracking);
 

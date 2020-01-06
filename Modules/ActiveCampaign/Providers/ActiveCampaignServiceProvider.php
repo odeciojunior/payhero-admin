@@ -4,9 +4,11 @@ namespace Modules\ActiveCampaign\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\ActiveCampaign\Providers\AuthServiceProvider;
 
 class ActiveCampaignServiceProvider extends ServiceProvider
 {
+
     /**
      * Boot the application events.
      *
@@ -29,6 +31,7 @@ class ActiveCampaignServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**

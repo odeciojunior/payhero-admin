@@ -5,13 +5,14 @@ namespace Modules\Collaborators\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Collaborators\Http\Requests\UpdateCollaboratorRequest;
-use Modules\Collaborators\Transformers\CollaboratorsResource;
-use Modules\Core\Entities\User;
-use Modules\Collaborators\Http\Requests\StoreCollaboratorRequest;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Modules\Collaborators\Transformers\CollaboratorsResource;
+use Modules\Collaborators\Http\Requests\StoreCollaboratorRequest;
+use Modules\Collaborators\Http\Requests\UpdateCollaboratorRequest;
 
 class CollaboratorsApiController extends Controller
 {
@@ -98,6 +99,14 @@ class CollaboratorsApiController extends Controller
 
             if ($userId) {
                 $user = $userModel->with('roles')->find($userId);
+
+                if (Gate::denies('show', [$user])) {
+                    return response()->json([
+                            'message' => 'Sem permissão',
+                        ],Response::HTTP_FORBIDDEN
+                    );
+                }
+
                 if (!empty($user)) {
                     return new CollaboratorsResource($user);
                 } else {
@@ -135,6 +144,14 @@ class CollaboratorsApiController extends Controller
             $userId    = current(Hashids::decode($id));
             if ($userId) {
                 $user = $userModel->find($userId);
+
+                if (Gate::denies('update', [$user])) {
+                    return response()->json([
+                            'message' => 'Sem permissão',
+                        ],Response::HTTP_FORBIDDEN
+                    );
+                }
+
                 if (!empty($data['password'])) {
                     $data['password'] = bcrypt($data['password']);
                 }
@@ -176,6 +193,14 @@ class CollaboratorsApiController extends Controller
         $userId    = current(Hashids::decode($id));
         if ($userId) {
             $user        = $userModel->find($userId);
+
+            if (Gate::denies('destroy', [$user])) {
+                return response()->json([
+                        'message' => 'Sem permissão',
+                    ],Response::HTTP_FORBIDDEN
+                );
+            }
+
             $userDeleted = $user->delete();
             if ($userDeleted) {
                 return response()->json([

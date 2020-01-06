@@ -347,6 +347,23 @@ class MobileController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function getPushNotifications(Request $request) {
+        try {
+            return $this->integrationApiService->getPushNotifications($request);
+
+        } catch (Exception $ex) {
+            report($ex);
+
+            return response()->json([
+                'message' => __('definitions.message.search.error'),
+            ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDeviceData(Request $request)
     {
         try {

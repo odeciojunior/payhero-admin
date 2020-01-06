@@ -4,6 +4,7 @@ namespace Modules\Collaborators\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Collaborators\Providers\AuthServiceProvider;
 
 class CollaboratorsServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,7 @@ class CollaboratorsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**
