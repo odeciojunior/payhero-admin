@@ -20,7 +20,6 @@ Route::group(
     function() {
         Route::post('/{version}/login', 'MobileController@login');
         Route::post('/{version}/logout', 'MobileController@logout');
-        Route::post('/{version}/logoutdevice', 'MobileController@logoutDevice');
         Route::post('/{version}/notification', 'MobileController@sendMessage');
     }
 );
@@ -46,7 +45,7 @@ Route::group(
         Route::post('/{version}/updatenotification', 'MobileController@updateNotificationPermission');
         Route::post('/{version}/device', 'MobileController@getDeviceData');
         Route::post('/{version}/notification/getAll', 'MobileController@getPushNotifications');
-
+        Route::post('/{version}/logoutdevice', 'MobileController@logoutDevice');
     }
 );
 
