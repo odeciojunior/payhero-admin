@@ -1,7 +1,16 @@
 var currentPage = null;
 var atualizar = null;
+
 $(document).ready(function () {
 
+    //checkbox
+    $('.check').on('click', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
@@ -83,6 +92,7 @@ $(document).ready(function () {
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'transaction': $("#transaction").val().replace('#', ''),
+            'shopify_error': $("#shopify_error").val(),
         };
 
         if (urlParams) {
