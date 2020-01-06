@@ -83,7 +83,14 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-1 col-12" style='text-align:center'>
+                            <label for="token" class='mb-10'>Shopify Erros</label>
+                            <label class="switch">
+                                <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
