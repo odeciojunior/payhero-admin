@@ -123,6 +123,9 @@ $(document).ready(function () {
                     loadOnAny('#modal-delete-domain-body', true);
 
                     errorAjaxResponse(response);
+
+                    updateDomains();
+
                 },
                 success: function (response) {
 
