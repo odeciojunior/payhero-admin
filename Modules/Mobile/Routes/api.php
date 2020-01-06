@@ -20,7 +20,7 @@ Route::group(
     function() {
         Route::post('/{version}/login', 'MobileController@login');
         Route::post('/{version}/logout', 'MobileController@logout');
-        Route::post('/{version}/notification', 'MobileController@sendMessage');
+        Route::post('/{version}/pushnotification', 'MobileController@sendMessage');
     }
 );
 
