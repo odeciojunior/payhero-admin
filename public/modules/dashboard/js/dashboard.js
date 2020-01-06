@@ -73,6 +73,8 @@ $(document).ready(function () {
                 $("#total_money").html(data.total_balance);
                 $("#today_money").html(data.today_balance);
 
+                $('#total_sales_approved').text(data.values.total_sales_approved);
+                $('#total_sales_chargeback').text(data.values.total_sales_chargeback);
                 updateProgressBar(data.values.chargeback_tax);
             }
         });
