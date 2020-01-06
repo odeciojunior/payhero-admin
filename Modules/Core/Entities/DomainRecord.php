@@ -22,7 +22,7 @@ use App\Traits\LogsActivity;
  */
 class DomainRecord extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use LogsActivity;
     /**
      * The table associated with the model.
      * @var string
@@ -47,7 +47,6 @@ class DomainRecord extends Model
         'proxy',
         'created_at',
         'updated_at',
-        'deleted_at',
     ];
     /**
      * @var bool
