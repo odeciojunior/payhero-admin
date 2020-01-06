@@ -171,10 +171,9 @@ class AuthApiService
     {
         try {
             //ATUALIZA O USER DEVICE PARA OFF QUANDO FOR EFETUADO O LOGOUT
-            if (!FoxUtils::isEmpty($request[0])) {
-                $user = User::where('email', $request[1])->first();
-                UserDevice::where('player_id', $request[0])
-                          ->where('user_id', $user->id)
+            if (!FoxUtils::isEmpty($request["player_id"]) && !FoxUtils::isEmpty($request["email"])) {
+                UserDevice::where('player_id', $request["player_id"])
+                          ->where('user_id', auth()->user()->id)
                           ->update(['online' => false]);
             } else {
                 return response()->json([
