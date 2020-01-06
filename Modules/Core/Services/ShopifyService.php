@@ -1696,13 +1696,6 @@ class ShopifyService
                 "province_code" => '',
             ];
 
-            $customer = [
-                "first_name" => "Paul",
-                "last_name"  => "Norman",
-                "email"      => "paul.norman@example.com",
-
-            ];
-
             $orderData = [
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
@@ -1713,7 +1706,6 @@ class ShopifyService
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
-                "customer"                => $customer,
 
             ];
 
@@ -1727,7 +1719,11 @@ class ShopifyService
                 ],
             ];
 
-            $order = $this->client->getOrderManager()->create($orderData);
+            try {
+                $order = $this->client->getOrderManager()->create($orderData);
+            } catch (Exception $e) {
+                //
+            }
 
             if (empty($order) || empty($order->getId())) {
                 return [
