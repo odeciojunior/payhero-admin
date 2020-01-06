@@ -1,4 +1,6 @@
-body { font-family: 'Muli', sans-serif !important;}
+body {
+    font-family: 'Muli', sans-serif !important;
+}
 
 .card-desc {
     margin-left: 10px;
@@ -22,14 +24,14 @@ body { font-family: 'Muli', sans-serif !important;}
     letter-spacing: normal;
     color: black;
     margin-right: 15px;
-  }
+}
 
-  .indices {
-      margin-bottom: 25px;
-  }
+.indices {
+    margin-bottom: 25px;
+}
 
 
-  .card-p {
+.card-p {
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
@@ -37,11 +39,10 @@ body { font-family: 'Muli', sans-serif !important;}
     line-height: 1.5;
     letter-spacing: normal;
     color: black;
-  }
+}
 
 
-
-  .text-money {
+.text-money {
     font-family: Muli;
     font-size: 32px;
     color: black;
@@ -50,56 +51,80 @@ body { font-family: 'Muli', sans-serif !important;}
     font-stretch: normal;
     line-height: 0.82;
     letter-spacing: 1px;
-  }
+}
 
-  .card-bottom{
+.card-bottom {
 
-    height:10px;
+    height: 10px;
     background-image: linear-gradient(to right, rgb(15, 4, 41), #000011);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 
-  }
+}
 
-  .card-bottom.green {
+.card-bottom.green {
     background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
-  }
+}
 
-  .card-bottom.blue {
+.card-bottom.blue {
     background-image: linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
-  }
+}
 
-  .card-bottom.orange {
+.card-bottom.orange {
     background-image: linear-gradient(to right, rgb(250, 217, 97), rgb(247, 107, 28));
-  }
+}
 
-  .card-bottom.orangered {
+.card-bottom.red {
+    background-image: linear-gradient(to right, rgb(247, 107, 28), rgb(255, 97, 97));
+}
+
+.card-bottom.orangered {
     background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
-  }
-  .orange-gradient{
-      background: -webkit-linear-gradient(rgb(250, 217, 97),rgb(247, 107, 28));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-  }
-  .green-gradient{
-    background: -webkit-linear-gradient( rgba(63, 218, 88, 1), #51ecc3);
+}
+
+.orange-gradient {
+    background: -webkit-linear-gradient(rgb(250, 217, 97), rgb(247, 107, 28));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
- }
+}
+
+.green-gradient {
+    background: -webkit-linear-gradient(rgba(63, 218, 88, 1), #51ecc3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 
-  .drop-empresas {
+.drop-empresas {
     min-height: 140px;
     border: 2px solid rgba(0, 0, 0, 0.3);
     background: white;
     padding: 20px 20px;
-  }
+}
 
-  .drop-empresas.dz-message {
+.drop-empresas.dz-message {
     text-align: center;
     padding: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     align-content: center;
-  }
+}
+
+/* Progressbar */
+
+.circle {
+    display: inline-block;
+    position: relative;
+}
+
+.circle strong {
+    position: absolute;
+    top: 62px;
+    left: 0;
+    width: 100%;
+    color: #000;
+    font-size: 32px;
+}
+
+/* END - Progressbar */
