@@ -17,6 +17,7 @@ use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
@@ -38,6 +39,8 @@ use Modules\Core\Entities\Product;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Transfer;
+use Slince\Shopify\Manager\Shop\Shop;
+use Spatie\Permission\Models\Role;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
@@ -331,89 +334,103 @@ class TesteController extends Controller
     public function tgFunction($request)
     {
 
+//        $checkser = new CheckoutService();
+//
+//
+//        $sale = Sale::find(191753);
+//
+//        $checkser->cancelPayment($sale, 000);
+//
+//        $shopifyIntegration = ShopifyIntegration::find(154);
+//
+//        //$this->saleId = $sale->id;
+//        $credential   = new PublicAppCredential($shopifyIntegration->token);
+//
+//        $client = new Client($credential, $shopifyIntegration->url_store, [
+//            'metaCacheDir' => '/var/tmp',
+//        ]);
+//        $order  = $client->getOrderManager()->find(1946397605933);
+
         dd('xXx');
 
-//        $saleModel     = new Sale();
-//        $planSaleModel = new PlanSale();
-//        $planModel     = new Plan();
-//
-//        $requestData = $request->all();
-//
-//        if(isset($requestData['boleto']))
-//        {
-//
-//            $sales = $saleModel->where('status', 1)
-//                               ->where('payment_method', 2)
-//                               ->where('end_date', '>', '2019-12-21')
-//                               ->paginate(500, ['*'], 'page', $requestData['page']);
-//
-//            dd($sales->count());
-//
-//            foreach ($sales as $sale) {
-//
-//                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
-//                $plan      = $planModel->find($plansSale->plan_id);
-//
-//                event(new BilletPaidEvent($plan, $sale, $sale->client));
-//            }
-//
-//            dd('Fim');
-//
-//        }
-//
-//        dd('what');
-
-
-
+        //        $saleModel     = new Sale();
+        //        $planSaleModel = new PlanSale();
+        //        $planModel     = new Plan();
+        //
+        //        $requestData = $request->all();
+        //
+        //        if(isset($requestData['boleto']))
+        //        {
+        //
+        //            $sales = $saleModel->where('status', 1)
+        //                               ->where('payment_method', 2)
+        //                               ->where('end_date', '>', '2019-12-21')
+        //                               ->paginate(500, ['*'], 'page', $requestData['page']);
+        //
+        //            dd($sales->count());
+        //
+        //            foreach ($sales as $sale) {
+        //
+        //                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
+        //                $plan      = $planModel->find($plansSale->plan_id);
+        //
+        //                event(new BilletPaidEvent($plan, $sale, $sale->client));
+        //            }
+        //
+        //            dd('Fim');
+        //
+        //        }
+        //
+        //        dd('what');
 
         //event(new BilletPaidEvent($plan, $sale, $sale->client));
 
         //---------------------------------------------- chargeback
-//                $transferModel = new Transfer();
-//                $saleModel     = new Sale();
-//
-//                $saleId = current(Hashids::connection('sale_id')->decode('n35VVpPZ'));
-//
-//                $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
-//
-//                $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
-//
-//                try {
-//                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-//                    $shopifyService->refundOrder($shopifyIntegration, $sale);
-//                } catch (Exception $ex) {
-//
-//                }
-//
-//                $sale->update([
-//                                  'gateway_status' => 'chargedback',
-//                                  'status'         => '4',
-//                              ]);
-//
-//                foreach ($sale->transactions as $transaction) {
-//
-//                    if ($transaction->status == 'transfered') {
-//
-//                        $transferModel->create([
-//                                                   'transaction_id' => $transaction->id,
-//                                                   'user_id'        => $transaction->company->user_id,
-//                                                   'value'          => $transaction->value,
-//                                                   'type'           => 'out',
-//                                                   'reason'         => 'chargedback',
-//                                                   'company_id'     => $transaction->company->id,
-//                                               ]);
-//
-//                        $transaction->company->update([
-//                                                          'balance' => $transaction->company->balance -= $transaction->value,
-//                                                      ]);
-//                    }
-//
-//                    $transaction->update([
-//                                             'status' => 'chargedback',
-//                                         ]);
-//                }
-//
-//                dd('chargeback feito');
+        //                $transferModel = new Transfer();
+        //                $saleModel     = new Sale();
+        //
+        //                $saleId = current(Hashids::connection('sale_id')->decode('OGYEL4GK'));
+        //
+        //                $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
+        //
+        //                $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+        //
+        //                try {
+        //                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+        //                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+        //                } catch (Exception $ex) {
+        //
+        //                }
+        //
+        //                $sale->update([
+        //                                  'gateway_status' => 'chargedback',
+        //                                  'status'         => '4',
+        //                              ]);
+        //
+        //                foreach ($sale->transactions as $transaction) {
+        //
+        //                    if ($transaction->status == 'transfered') {
+        //
+        //                        $transferModel->create([
+        //                                                   'transaction_id' => $transaction->id,
+        //                                                   'user_id'        => $transaction->company->user_id,
+        //                                                   'value'          => $transaction->value,
+        //                                                   'type'           => 'out',
+        //                                                   'reason'         => 'chargedback',
+        //                                                   'company_id'     => $transaction->company->id,
+        //                                               ]);
+        //
+        //                        $transaction->company->update([
+        //                                                          'balance' => $transaction->company->balance -= $transaction->value,
+        //                                                      ]);
+        //                    }
+        //
+        //                    $transaction->update([
+        //                                             'status' => 'chargedback',
+        //                                         ]);
+        //                }
+        //
+        //                dd('chargeback feito');
 
         //---------------------------------------------- chargeback
 
