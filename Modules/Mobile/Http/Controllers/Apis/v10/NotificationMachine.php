@@ -230,24 +230,27 @@ class NotificationMachine
                             if ($device->online) { // verifica se o device está ativo
                                 if ($transaction->type == 3 && $device->invitation_sale_notification) { // notificação de indicação
                                     $userDevices[] = [
-                                        'player_id' => $device->player_id,
-                                        'value'     => $transaction->value,
-                                        'type'      => 3,
+                                        'player_id'   => $device->player_id,
+                                        'value'       => $transaction->value,
+                                        'type'        => 3,
+                                        'device_type' => $device->device_type,
                                     ];
-                                } else if ($this->foxSale->payment_method == 1) { // venda
+                                } else if ($transaction->type == 2 && $this->foxSale->payment_method == 1) { // venda
                                     if ($device->sale_notification) { // verifica se o usuário quer ser notificado na venda
                                         $userDevices[] = [
-                                            'player_id' => $device->player_id,
-                                            'value'     => $transaction->value,
-                                            'type'      => 2,
+                                            'player_id'   => $device->player_id,
+                                            'value'       => $transaction->value,
+                                            'type'        => 2,
+                                            'device_type' => $device->device_type,
                                         ];
                                     }
-                                } else { // boleto
+                                } else if ($transaction->type == 2 && $this->foxSale->payment_method == 2) { // boleto
                                     if ($device->billet_notification) { // verifica se o usuário quer ser notificado no boleto
                                         $userDevices[] = [
-                                            'player_id' => $device->player_id,
-                                            'value'     => $transaction->value,
-                                            'type'      => 2,
+                                            'player_id'   => $device->player_id,
+                                            'value'       => $transaction->value,
+                                            'type'        => 2,
+                                            'device_type' => $device->device_type,
                                         ];
                                     }
                                 }
@@ -307,6 +310,7 @@ class NotificationMachine
                     "content"            => $content,
                     "notification_sound" => $sound,
                     "include_player_ids" => [$device['player_id']],
+                    "device_type"        => $device['device_type'],
                 ];
             }
 

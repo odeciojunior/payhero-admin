@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Date;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -66,7 +67,10 @@ use Modules\Core\Presenters\SalePresenter;
  */
 class Sale extends Model
 {
-    use FoxModelTrait, SoftDeletes, PresentableTrait;
+    use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+    /**
+     * @var string
+     */
     protected $presenter = SalePresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
@@ -117,6 +121,24 @@ class Sale extends Model
         'gateway_tax_percent',
         'gateway_tax_value',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
 
     /**
      * @return BelongsTo

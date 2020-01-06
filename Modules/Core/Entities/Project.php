@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
+use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property int $id
@@ -61,7 +63,7 @@ use Modules\Core\Presenters\ProjectPresenter;
  */
 class Project extends Model
 {
-    use FoxModelTrait, SoftDeletes, PresentableTrait;
+    use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
     /**
      * @var string
      */
@@ -110,6 +112,41 @@ class Project extends Model
         'updated_at',
         'deleted_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Projeto ' . $this->name . ' foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Projeto ' . $this->name . ' foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Projeto ' . $this->name . ' foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return mixed

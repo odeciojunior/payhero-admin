@@ -3,8 +3,8 @@
 namespace Modules\Collaborators\Providers;
 
 use Modules\Core\Entities\User;
-use Modules\Collaborators\Policies\CollaboratorsPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Policies\UsersPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -12,7 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array Access policies
      */
     protected $policies = [
-        User::class => CollaboratorsPolicy::class,
+        User::class => UsersPolicy::class,
     ];
 
     /**
