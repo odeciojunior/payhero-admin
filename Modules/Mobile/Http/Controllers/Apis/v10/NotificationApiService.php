@@ -6,8 +6,12 @@ use App\Jobs\SendNotazzInvoiceJob;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Notification;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\PushNotification;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\UserProject;
 use Modules\Notifications\Transformers\NotificationResource;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\PushNotificationJob;
@@ -51,14 +55,40 @@ class NotificationApiService
         }
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPushNotifications()
     {
         try {
             $notifications = PushNotification::where('user_id', auth()->user()->id)->get();
+            $return        = [];
 
-            //auth()->user()->unreadNotifications;
+            foreach ($notifications as $notification) {
 
-            return response()->json(compact('$notifications'), 200);
+                $notification_text = $this->notificationCreateText($notification);
+
+                /*NOTIFICATION TYPE
+                    1 -> BOLETO PAGO
+                    2 -> BOLETO GERADO
+                    3 -> VENDA POR CARTÃO
+                */
+
+                $retrun_object = [
+                    'user_id'              => $notification['user_id'] ?? '',
+                    'sale_id'              => $notification['sale_id'] ?? '',
+                    'transaction_id'       => $notification['transaction_id'] ?? '',
+                    'notification_company' => $notification_text['notification_company'],
+                    'notification_header'  => $notification_text['notification_header'],
+                    'notification_content' => $notification_text['notification_body'],
+                    'notification_type'    => $notification_text['notification_type'] ?? '',
+                    'notification_date'    => $notification['created_at']->format('d/m/Y'),
+                    'notification_hour'    => $notification['created_at']->format('H:i:s'),
+                ];
+                array_push($return, $retrun_object);
+            }
+
+            return response()->json($return, 200);
         } catch (Exception $e) {
             Log::warning('Erro ao obter push notificações');
             report($e);
@@ -67,6 +97,55 @@ class NotificationApiService
                                         'message' => 'Erro ao carregar as notificações - NotificationApiService - getPushNotifications',
                                     ], 400);
         }
+    }
+
+    /**
+     * @param $params
+     * @return array
+     */
+    public function notificationCreateText($params)
+    {
+        $notificationReturn = [
+            'notification_company' => '',
+            'notification_header'  => '',
+            'notification_body'    => '',
+            'notification_type'    => '',
+        ];
+
+        if (json_decode($params['postback_data'])->notification_type == 'sale') {
+
+            $sale         = Sale::where('id', $params['sale_id'])->first();
+            $user_project = UserProject::where('project_id', $sale->project_id)->first();
+            $companie     = Company::where('id', $user_project->company_id)->first();
+
+            if ($sale->payment_method == '2') {
+
+                if ($sale->status == '1') {
+                    $notificationReturn = [
+                        'notification_company' => $companie->fantasy_name,
+                        'notification_header'  => 'Você acaba de realizar uma venda',
+                        'notification_body'    => 'Um boleto acabou de ser pago',
+                        'notification_type'    => '1',
+                    ];
+                } else {
+                    $notificationReturn = [
+                        'notification_company' => $companie->fantasy_name,
+                        'notification_header'  => 'Você acaba de realizar uma venda',
+                        'notification_body'    => 'Foi realizada uma venda por boleto',
+                        'notification_type'    => '2',
+                    ];
+                }
+            } else {
+                $notificationReturn = [
+                    'notification_company' => $companie->fantasy_name,
+                    'notification_header'  => 'Você acaba de realizar uma venda',
+                    'notification_body'    => 'Foi realizada uma venda por cartão',
+                    'notification_type'    => '3',
+                ];
+            }
+        }
+
+        return $notificationReturn;
     }
 
     /**

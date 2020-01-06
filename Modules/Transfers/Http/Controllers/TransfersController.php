@@ -3,24 +3,35 @@
 namespace Modules\Transfers\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Transfer;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Transfers\Transformers\TransfersResource;
 
+/**
+ * Class TransfersController
+ * @package Modules\Transfers\Http\Controllers
+ */
 class TransfersController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         try {
             $transfersModel = new Transfer();
+
+            activity()->on($transfersModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos os extratos');
 
             $transfers = $transfersModel
                 ->select('transfers.*', 'transaction.sale_id', 'transaction.company_id', 'transaction.currency', 'transaction.status', 'transaction.type as transaction_type',

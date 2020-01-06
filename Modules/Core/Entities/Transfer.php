@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\TransferPresenter;
+use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -25,7 +27,7 @@ use Modules\Core\Presenters\TransferPresenter;
  */
 class Transfer extends Model
 {
-    use FoxModelTrait, PresentableTrait;
+    use FoxModelTrait, PresentableTrait, LogsActivity;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -56,6 +58,41 @@ class Transfer extends Model
         'created_at',
         'updated_at',
     ];
+    /**
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados no log
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Extrato foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Extrato foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Extrato foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

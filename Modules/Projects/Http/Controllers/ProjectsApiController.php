@@ -26,6 +26,7 @@ use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -44,6 +45,10 @@ class ProjectsApiController extends Controller
             $projectModel   = new Project();
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
+
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos os projetos');
 
             if (!empty($request->input('status')) && $request->input('status') == 'active') {
                 $projectStatus = [$projectModel->present()->getStatus('active')];
@@ -68,6 +73,10 @@ class ProjectsApiController extends Controller
     public function create()
     {
         try {
+            activity()->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela criar projeto');
+
             $user = auth()->user()->load('companies');
 
             return response()->json(CompaniesSelectResource::collection($user->companies));
@@ -179,14 +188,20 @@ class ProjectsApiController extends Controller
     public function edit($id)
     {
         try {
+            $projectModel = new Project();
+
+            activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::decode($id));
+            })->log('Visualizou tela editar configurações do projeto: ' . $id);
+
             if (isset($id)) {
-                $projectModel            = new Project();
                 $userProjectModel        = new UserProject();
                 $shopifyIntegrationModel = new ShopifyIntegration();
 
                 $user = auth()->user()->load('companies');
 
-                $idProject = Hashids::decode($id)[0];
+                $idProject = current(Hashids::decode($id));
                 $project   = $projectModel->find($idProject);
 
                 $userProject = $userProjectModel->where('user_id', $user->account_owner_id)
@@ -229,8 +244,12 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
+            $projectId    = current(Hashids::decode($id));
 
-            $projectId = current(Hashids::decode($id));
+            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
+                $activity->log_name   = 'deleted';
+                $activity->subject_id = $projectId;
+            })->log('deleted');
 
             $project = $projectModel->where('id', $projectId)->first();
 
@@ -380,9 +399,12 @@ class ProjectsApiController extends Controller
     public function show($id)
     {
         try {
-            if ($id) {
+            $projectModel = new Project();
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou o projeto: ' . $id);
 
-                $projectModel = new Project();
+            if ($id) {
 
                 $project = $projectModel->where('id', current(Hashids::decode($id)))
                                         ->where('status', $projectModel->present()->getStatus('active'))->first();
@@ -436,6 +458,11 @@ class ProjectsApiController extends Controller
     public function verifySupportphone($projectId, Request $request)
     {
         try {
+            $projectModel = new Project();
+
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela envio de código para verificação de telefone contato do projeto: ' . $projectId);
             $data         = $request->all();
             $supportPhone = $data["support_phone"] ?? null;
             if (FoxUtils::isEmpty($supportPhone)) {
@@ -444,7 +471,7 @@ class ProjectsApiController extends Controller
                         'message' => 'Telefone não pode ser vazio!',
                     ], 400);
             }
-            $project = Project::find(Hashids::decode($projectId))->first();
+            $project = $projectModel->find(Hashids::decode($projectId))->first();
             if ($supportPhone != $project->support_phone) {
                 $project->support_phone = $supportPhone;
                 $project->save();
@@ -480,6 +507,11 @@ class ProjectsApiController extends Controller
     public function matchSupportphoneVerifyCode($projectId, Request $request)
     {
         try {
+            $projectModel = new Project();
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'updated';
+            })->log('Validação código telefone de contato do projeto: ' . $projectId);
+
             $data       = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
             if (empty($verifyCode)) {
@@ -496,7 +528,7 @@ class ProjectsApiController extends Controller
                     ], 400);
             }
 
-            Project::where("id", Hashids::decode($projectId))->update(["support_phone_verified" => true]);
+            $projectModel->where("id", Hashids::decode($projectId))->update(["support_phone_verified" => true]);
 
             return response()->json(
                 [
@@ -521,6 +553,11 @@ class ProjectsApiController extends Controller
     public function verifyContact($projectId, Request $request)
     {
         try {
+            $projectModel = new Project();
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela envio de codigo para verificação email contato do projeto: ' . $projectId);
+
             $data    = $request->all();
             $contact = $data["contact"] ?? null;
             if (FoxUtils::isEmpty($contact)) {
@@ -530,7 +567,7 @@ class ProjectsApiController extends Controller
                     ], 400);
             }
 
-            $project = Project::find(Hashids::decode($projectId))->first();
+            $project = $projectModel->find(Hashids::decode($projectId))->first();
             if ($contact != $project->contact) {
                 $project->contact = $contact;
                 $project->save();
@@ -572,6 +609,10 @@ class ProjectsApiController extends Controller
     public function matchContactVerifyCode($projectId, Request $request)
     {
         try {
+            $projectModel = new Project();
+            activity()->on($projectModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'updated';
+            })->log('Validação código email de contato do projeto: ' . $projectId);
             $data       = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
             if (empty($verifyCode)) {
@@ -588,7 +629,7 @@ class ProjectsApiController extends Controller
                     ], 400);
             }
 
-            Project::where("id", Hashids::decode($projectId))->update(["contact_verified" => true]);
+            $projectModel->where("id", Hashids::decode($projectId))->update(["contact_verified" => true]);
 
             return response()->json(
                 [

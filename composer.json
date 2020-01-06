@@ -37,6 +37,7 @@
         "sentry/sentry-laravel": "1.1.0",
         "slince/shopify-api-php": "2.2.0",
         "socialiteproviders/shopify": "^1.0",
+        "spatie/laravel-activitylog": "^3.9",
         "spatie/laravel-permission": "^2.20",
         "vinkla/hashids": "^5",
         "vitorccsiqueira/zenvia-php": "2.1",
