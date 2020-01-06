@@ -115,7 +115,6 @@ class DashboardApiController extends Controller
                     $chargebackData = $saleModel->selectRaw("SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
                                                              SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved")
                         ->where('payment_method', 1)
-                        ->whereIn('status', [1, 4])
                         ->whereHas('transactions', function ($query) use ($companyId) {
                             $query->where('company_id', $companyId);
                         })->first();
