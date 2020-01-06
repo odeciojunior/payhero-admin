@@ -84,59 +84,72 @@ class DashboardApiController extends Controller
     {
         try {
             if ($companyHash) {
-                $companyModel     = new Company();
-                $saleModel        = new Sale();
+                $companyModel = new Company();
+                $saleModel = new Sale();
                 $transactionModel = new Transaction();
-                $companyId        = current(Hashids::decode($companyHash));
-                $company          = $companyModel->find($companyId);
+                $companyId = current(Hashids::decode($companyHash));
+                $company = $companyModel->find($companyId);
 
                 if (!empty($company)) {
                     $pendingBalance = 0;
-                    $todayBalance   = 0;
+                    $todayBalance = 0;
 
                     $pendingTransactions = $transactionModel->where('company_id', $company->id)
-                                                            ->where('status', 'paid')
-                                                            ->whereDate('release_date', '>', Carbon::today()
-                                                                                                   ->toDateString())
-                                                            ->get();
+                        ->where('status', 'paid')
+                        ->whereDate('release_date', '>', Carbon::today()
+                            ->toDateString())
+                        ->get();
                     if (count($pendingTransactions)) {
                         foreach ($pendingTransactions as $pendingTransaction) {
                             $pendingBalance += $pendingTransaction->value;
                         }
                     }
-                    $sales         = $saleModel->with([
-                                                          'transactions' => function($query) use ($companyId) {
-                                                              $query->where('company_id', $companyId);
-                                                          },
-                                                          //])->whereIn('status', [1, 20])
-                                                      ])->where('status', 1)
-                                               ->whereDate('end_date', Carbon::today()
-                                                                             ->toDateString())->get();
+                    $sales = $saleModel->with([
+                        'transactions' => function ($query) use ($companyId) {
+                            $query->where('company_id', $companyId);
+                        },
+                    ])->where('status', 1)
+                        ->whereDate('end_date', Carbon::today()->toDateString())
+                        ->get();
 
-                    //                    $pendingAntifraudBalance = 0;
-                    if (count($sales)) {
-                        foreach ($sales as $sale) {
-                            foreach ($sale->transactions as $transaction) {
-                                if ($sale->status == 1) {
-                                    $todayBalance += $transaction->value;
-//                                } else if ($sale->status == 20) {
-//                                    $pendingAntifraudBalance += $transaction->value;
-                                } else {
-                                    continue;
-                                }
+                    $chargebackData = $saleModel->selectRaw("SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
+                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved")
+                        ->where('payment_method', 1)
+                        ->whereIn('status', [1, 4])
+                    ->first();
+
+                    $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
+
+                    $totalSalesApproved = $chargebackData->contSalesApproved + $chargebackData->contSalesChargeBack;
+
+                    if ($totalSalesChargeBack) {
+                        $chargebackTax = ($totalSalesChargeBack * 100) /  $totalSalesApproved;
+                    } else {
+                        $chargebackTax = "0.00";
+                    }
+
+                    foreach ($sales as $sale) {
+                        foreach ($sale->transactions as $transaction) {
+                            if ($sale->status == 1) {
+                                $todayBalance += $transaction->value;
+                            } else {
+                                continue;
                             }
                         }
                     }
 
                     $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance /*+ $pendingAntifraudBalance*/;
+                    $totalBalance = $availableBalance + $pendingBalance;
 
                     return [
                         'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                        'total_balance'     => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                        'pending_balance'   => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                        'today_balance'     => number_format(intval($todayBalance) / 100, 2, ',', '.'),
-                        'currency'          => $company->country == 'usa' ? '$' : 'R$',
+                        'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                        'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                        'today_balance' => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                        'currency' => $company->country == 'usa' ? '$' : 'R$',
+                        'total_sales_approved'   => $totalSalesApproved,
+                        'total_sales_chargeback' => $totalSalesChargeBack,
+                        'chargeback_tax'         => $chargebackTax,
                     ];
                 } else {
                     return [];
