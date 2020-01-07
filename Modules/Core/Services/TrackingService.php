@@ -172,7 +172,7 @@ class TrackingService
         return $tracking;
     }
 
-    public function getTrackingsQueryBuilder($filters)
+    public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
@@ -196,7 +196,7 @@ class TrackingService
                 $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
                 $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                     ->whereIn('status', $saleStatus)
-                    ->where('owner_id', auth()->user()->account_owner_id);
+                    ->where('owner_id', $userId ?? auth()->user()->account_owner_id);
 
                 if (isset($filters['sale'])) {
                     $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
