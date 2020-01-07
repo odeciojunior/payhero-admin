@@ -153,7 +153,7 @@ class WithdrawalsApiController extends Controller
                     $withdrawalValue -= 1000;
                 }
 
-                /** Verifica se o usuário já fez alguma solicitação de saque hoje */
+                /** Verifica se o usuário possui algum saque pendente */
                 $withdrawal = $withdrawalModel->where([
                                                           ['company_id', $company->id],
                                                           ['status',     $companyModel->present()->getStatus('pending')],
