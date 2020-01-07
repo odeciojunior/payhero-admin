@@ -73,6 +73,9 @@ return [
                 "approved"   => "Aprovado",
                 "transfered" => "Transferido",
                 "refused"    => "Recusado",
+                'in_review'  => "Em Revisão",
+                'processing' => "Processando",
+                'returned'   => "Retornado",
             ],
         ],
         "invitation"               => [

@@ -1706,6 +1706,7 @@ class ShopifyService
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
                 "shipping_address"        => $shippingAddress,
+
             ];
 
             $orderData += [
@@ -1718,7 +1719,11 @@ class ShopifyService
                 ],
             ];
 
-            $order = $this->client->getOrderManager()->create($orderData);
+            try {
+                $order = $this->client->getOrderManager()->create($orderData);
+            } catch (Exception $e) {
+                //
+            }
 
             if (empty($order) || empty($order->getId())) {
                 return [
