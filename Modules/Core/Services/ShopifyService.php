@@ -1719,11 +1719,7 @@ class ShopifyService
                 ],
             ];
 
-            try {
-                $order = $this->client->getOrderManager()->create($orderData);
-            } catch (Exception $e) {
-                //
-            }
+            $order = $this->client->getOrderManager()->create($orderData);
 
             if (empty($order) || empty($order->getId())) {
                 return [
@@ -1739,6 +1735,8 @@ class ShopifyService
             ];
         } catch (Exception $e) {
             report($e);
+
+            Log::warning(print_r($this->client, true));
 
             return [
                 'status'  => 'error',
