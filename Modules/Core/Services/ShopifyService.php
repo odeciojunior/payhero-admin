@@ -1736,7 +1736,7 @@ class ShopifyService
         } catch (Exception $e) {
             report($e);
 
-            Log::warning(print_r($this->client, true));
+            Log::warning(print_r($this->client->getOrderManager(), true));
 
             return [
                 'status'  => 'error',
