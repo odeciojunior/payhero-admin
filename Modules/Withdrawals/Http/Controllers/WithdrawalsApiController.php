@@ -83,7 +83,7 @@ class WithdrawalsApiController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         $userModel = new User();
 
         if (auth()->user()->status != $userModel->present()->getStatus('withdrawal blocked')) {
@@ -156,7 +156,7 @@ class WithdrawalsApiController extends Controller
                 /** Verifica se o usuário já fez alguma solicitação de saque hoje */
                 $withdrawal = $withdrawalModel->where([
                                                           ['company_id', $company->id],
-                                                          ['status', $companyModel->present()->getStatus('pending')],
+                                                          ['status',     $companyModel->present()->getStatus('pending')],
                                                       ])
                                               ->first();
 
@@ -174,11 +174,6 @@ class WithdrawalsApiController extends Controller
                         ]
                     );
                 } else {
-
-                    /** Taxa de 10 reais para mais de um saque por dia (se for menor de 500,00 já aplicou o desconto antes) */
-                    if ($withdrawalValue >= 50000) {
-                        $withdrawalValue -= 1000;
-                    }
 
                     $withdrawal->update([
                                             'value' => $withdrawal->value + $withdrawalValue,
