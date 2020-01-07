@@ -36,7 +36,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
     public function query()
     {
-        return $this->saleService->getSalesQueryBuilder($this->filters, true);
+        return $this->saleService->getSalesQueryBuilder($this->filters, true, $this->user->account_owner_id);
     }
 
     public function map($row): array
