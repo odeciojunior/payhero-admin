@@ -33,13 +33,13 @@ class ShippingApiController extends Controller
             $shippingModel = new Shipping();
             $projectModel  = new Project();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todos os fretes do projeto: ' . $projectId);
-
             if (isset($projectId)) {
 
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($shippingModel)->tap(function(Activity $activity) {
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os fretes do projeto ' . $project->name);
 
                 if (Gate::allows('edit', [$project])) {
                     $shippings = $shippingModel->where('project_id', $project->id);
@@ -148,7 +148,7 @@ class ShippingApiController extends Controller
                 activity()->on($shippingModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela detalhes do frete ' . $id);
+                })->log('Visualizou tela detalhes do frete ' . $shipping->name);
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -186,13 +186,13 @@ class ShippingApiController extends Controller
                 $shippingModel = new Shipping();
                 $projectModel  = new Project();
 
-                activity()->on($shippingModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar configurações do frete: ' . $id);
-
                 $shipping = $shippingModel->find(current(Hashids::decode($id)));
                 $project  = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($projectModel)->tap(function(Activity $activity) use ($shipping) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = $shipping->id;
+                })->log('Visualizou tela editar configuração do frete ' . $shipping->name);
 
                 if (Gate::allows('edit', [$project])) {
                     if ($shipping) {

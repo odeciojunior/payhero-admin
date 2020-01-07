@@ -94,7 +94,7 @@ class SalesApiController extends Controller
 
             $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
-            (new SaleReportExport($dataRequest, auth()->user(), $filename))->queue($filename);
+            (new SaleReportExport($dataRequest, $user, $filename))->queue($filename);
 
             return response()->json(['message' => 'A exportação começou']);
         } catch (Exception $e) {

@@ -39,7 +39,7 @@ class WithdrawalsApiController extends Controller
             /** @var Company $companyModel */
             $companyModel = new Company();
             $companyId    = current(Hashids::decode($request->company));
-            
+
             if (empty($request->input('page')) || $request->input('page') == '1') {
                 activity()->on($withdrawalModel)->tap(function(Activity $activity) {
                     $activity->log_name = 'visualization';
@@ -83,16 +83,18 @@ class WithdrawalsApiController extends Controller
      */
     public function store(Request $request)
     {
+       
         $userModel = new User();
+
         if (auth()->user()->status != $userModel->present()->getStatus('withdrawal blocked')) {
             $data = $request->all();
-            /** @var Withdrawal $withdrawalModel */
+
             $withdrawalModel = new Withdrawal();
-            /** @var Company $companyModel */
+
             $companyModel = new Company();
-            /** @var Company $company */
-            $company = $companyModel->where('user_id', auth()->user()->account_owner_id)
-                                    ->find(current(Hashids::decode($data['company_id'])));
+
+            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+
             if (Gate::allows('edit', [$company])) {
                 if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
                     !$company->address_document_status == $companyModel->present()
@@ -114,6 +116,7 @@ class WithdrawalsApiController extends Controller
                                                 'message' => 'Valor de saque precisa ser maior que R$ 10,00',
                                             ], 400);
                 }
+
                 if ($withdrawalValue > $company->balance) {
                     return response()->json([
                                                 'message' => 'Valor informado inválido',
@@ -122,14 +125,19 @@ class WithdrawalsApiController extends Controller
 
                 /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
                 if (strlen($companyDocument) == 11) {
-                    $startDate  = Carbon::now()->startOfMonth();
-                    $endDate    = Carbon::now()->endOfMonth();
+                    $startDate = Carbon::now()->startOfMonth();
+
+                    $endDate = Carbon::now()->endOfMonth();
+
                     $withdrawal = $withdrawalModel->where('company_id', $company->id)
                                                   ->where('status', $withdrawalModel->present()
                                                                                     ->getStatus('transfered'))
                                                   ->whereBetween('created_at', [$startDate, $endDate])->get();
+
                     if (count($withdrawal) > 0) {
+
                         $withdrawalSum = $withdrawal->sum('value');
+
                         if ($withdrawalSum + $withdrawalValue > 190000) {
                             return response()->json([
                                                         'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
@@ -145,18 +153,38 @@ class WithdrawalsApiController extends Controller
                     $withdrawalValue -= 1000;
                 }
 
-                $withdrawal = $withdrawalModel->create(
-                    [
-                        'value'         => $withdrawalValue,
-                        'company_id'    => $company->id,
-                        'bank'          => $company->bank,
-                        'agency'        => $company->agency,
-                        'agency_digit'  => $company->agency_digit,
-                        'account'       => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'status'        => $companyModel->present()->getStatus('pending'),
-                    ]
-                );
+                /** Verifica se o usuário já fez alguma solicitação de saque hoje */
+                $withdrawal = $withdrawalModel->where([
+                                                          ['company_id', $company->id],
+                                                          ['status', $companyModel->present()->getStatus('pending')],
+                                                      ])
+                                              ->first();
+
+                if (empty($withdrawal)) {
+                    $withdrawal = $withdrawalModel->create(
+                        [
+                            'value'         => $withdrawalValue,
+                            'company_id'    => $company->id,
+                            'bank'          => $company->bank,
+                            'agency'        => $company->agency,
+                            'agency_digit'  => $company->agency_digit,
+                            'account'       => $company->account,
+                            'account_digit' => $company->account_digit,
+                            'status'        => $companyModel->present()->getStatus('pending'),
+                        ]
+                    );
+                } else {
+
+                    /** Taxa de 10 reais para mais de um saque por dia (se for menor de 500,00 já aplicou o desconto antes) */
+                    if ($withdrawalValue >= 50000) {
+                        $withdrawalValue -= 1000;
+                    }
+
+                    $withdrawal->update([
+                                            'value' => $withdrawal->value + $withdrawalValue,
+                                        ]);
+                }
+
                 event(new WithdrawalRequestEvent($withdrawal));
 
                 return response()->json(['message' => 'Saque pendente'], 200);

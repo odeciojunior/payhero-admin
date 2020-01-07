@@ -42,7 +42,7 @@ class SaleService
         $clientModel      = new Client();
         $transactionModel = new Transaction();
 
-        if (!$userId) {
+        if(!$userId){
             $userId = auth()->user()->account_owner_id;
         }
 

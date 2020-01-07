@@ -171,13 +171,11 @@ class NotificationApiService
         $fields   = [
             'app_id'             => env('ONESIGNAL_APP_ID'),
             'android_channel_id' => $notificationChannel[$request['notification_sound']],
-            'included_segments'  => $request['included_segments'],
+            'include_player_ids' => $request['include_player_ids'],
             'contents'           => $content,
             'headings'           => $headings,
             'ios_sound'          => $request['notification_sound'] . '.wav',
         ];
-
-        //        return $fields['included_segments'];
 
         $fields = json_encode($fields);
 
@@ -220,26 +218,18 @@ class NotificationApiService
                 "en" => $params['headings'],
             ];
 
-            $content  = [
+            $content = [
                 "en" => $params['content'],
             ];
 
-            $fields   = [
+            $fields = [
                 'app_id'             => env('ONESIGNAL_APP_ID'),
+                'android_channel_id' => $notificationChannel[$params['notification_sound']],
                 'include_player_ids' => $params['include_player_ids'],
                 'contents'           => $content,
                 'headings'           => $headings,
+                'ios_sound'          => $params['notification_sound'] . '.wav',
             ];
-
-            if ($params['device_type'] == 0) {
-                $fields[] = [
-                    'ios_sound' => $params['notification_sound'] . '.wav'
-                ];
-            } else {
-                $fields[] = [
-                    'android_channel_id' => $notificationChannel[$params['notification_sound']]
-                ];
-            }
 
             $fields = json_encode($fields);
 

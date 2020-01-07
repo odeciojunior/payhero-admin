@@ -16,6 +16,7 @@ use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Domains\Http\Requests\DomainRecordsRequest;
 use Modules\Domains\Transformers\DomainRecordsIndexResource;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -33,6 +34,11 @@ class DomainRecordsApiController extends Controller
     {
         try {
             $domainModel = new Domain();
+
+            activity()->on($domainModel)->tap(function(Activity $activity) use ($domainId) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::decode($domainId));
+            })->log('Visualizou tela de registros entradas DNS para dominio: ' . $domainId);
 
             $domainId = current(Hashids::decode($domainId));
 
@@ -291,7 +297,8 @@ class DomainRecordsApiController extends Controller
 
                     if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
                         // zona deletada
-                        $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
+                        $recordsFind    = $domainRecordModel->where('id', $record->id)->first();
+                        $recordsDeleted = $recordsFind->delete();
                         if ($recordsDeleted) {
                             return response()->json([
                                                         'message' => 'DNS removido com sucesso!',

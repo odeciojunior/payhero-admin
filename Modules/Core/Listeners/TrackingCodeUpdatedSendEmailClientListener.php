@@ -40,25 +40,28 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $projectContact = $event->sale->project->contact;
             $domain         = $domainModel->where('project_id', $event->sale->project->id)->first();
 
-            $linkBase = 'https://tracking.' . $domain->name . '/';
+            if (!empty($domain)) {
 
-            if (isset($domain)) {
-                $data = [
-                    'name'            => $clientName,
-                    'project_logo'    => $event->sale->project->logo,
-                    'tracking_code'   => $event->tracking->tracking_code,
-                    'project_contact' => $projectContact,
-                    "products"        => $event->products,
-                    "link"            => $linkBase,
-                ];
+                $linkBase = 'https://tracking.' . $domain->name . '/';
 
-                $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+                if (isset($domain)) {
+                    $data = [
+                        'name' => $clientName,
+                        'project_logo' => $event->sale->project->logo,
+                        'tracking_code' => $event->tracking->tracking_code,
+                        'project_contact' => $projectContact,
+                        "products" => $event->products,
+                        "link" => $linkBase,
+                    ];
 
-                $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
-                $link            = $linkShortenerService->shorten($linkBase . $data['tracking_code']);
+                    $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
 
-                if (!empty($clientTelephone) && !empty($link)) {
-                    $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                    $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+                    $link = $linkShortenerService->shorten($linkBase . $data['tracking_code']);
+
+                    if (!empty($clientTelephone) && !empty($link)) {
+                        $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                    }
                 }
             }
         } catch (Exception $e) {
