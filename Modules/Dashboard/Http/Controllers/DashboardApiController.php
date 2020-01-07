@@ -148,8 +148,8 @@ class DashboardApiController extends Controller
                         'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
                         'today_balance' => number_format(intval($todayBalance) / 100, 2, ',', '.'),
                         'currency' => $company->country == 'usa' ? '$' : 'R$',
-                        'total_sales_approved'   => $totalSalesApproved,
-                        'total_sales_chargeback' => $totalSalesChargeBack,
+                        'total_sales_approved'   => $totalSalesApproved ?? 0,
+                        'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                         'chargeback_tax'         => $chargebackTax,
                     ];
                 } else {
