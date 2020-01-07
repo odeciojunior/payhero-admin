@@ -1719,16 +1719,23 @@ class ShopifyService
                 ],
             ];
 
-            $order = $this->client->getOrderManager()->create($orderData);
+            // $order = $this->client->getOrderManager()->create($orderData);
+            $order = $this->client->post('orders', [
+                'order' => $orderData
+            ]);
 
-            if (empty($order) || empty($order->getId())) {
+            // dd($order);
+
+            // if (empty($order) || empty($order->getId())) {
+            if (empty($order) || empty($order['order']['id'])) {
                 return [
                     'status'  => 'error',
                     'message' => 'Erro na permissão de pedidos',
                 ];
             }
 
-            $this->client->getOrderManager()->remove($order->getId());
+            // $this->client->getOrderManager()->remove($order->getId());
+            $this->client->delete('orders/' . $order['order']['id']);
 
             return [
                 'status' => 'success',
