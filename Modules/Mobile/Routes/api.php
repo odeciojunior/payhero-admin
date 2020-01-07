@@ -46,6 +46,7 @@ Route::group(
         Route::post('/{version}/device', 'MobileController@getDeviceData');
         Route::post('/{version}/notification/getAll', 'MobileController@getPushNotifications');
         Route::post('/{version}/logoutdevice', 'MobileController@logoutDevice');
+        //Route::post('/{version}/notification', 'MobileController@sendNotification');
     }
 );
 
@@ -59,7 +60,6 @@ Route::group(
          * Notification APIs
          */
         Route::post('/{version}/notification', 'MobileController@sendNotification');
-
     }
 );
 

@@ -178,6 +178,10 @@ class TrackingService
         $productPlanSaleModel = new ProductPlanSale();
         $salePresenter = (new Sale())->present();
 
+        if(!$userId){
+            $userId = auth()->user()->account_owner_id;
+        }
+
         $saleStatus = [
             $salePresenter->getStatus('approved'),
             $salePresenter->getStatus('charge_back'),
@@ -191,12 +195,12 @@ class TrackingService
                 'sale.client',
                 'product',
             ])
-            ->whereHas('sale', function ($query) use ($filters, $saleStatus) {
+            ->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId) {
                 //tipo da data e periodo obrigatorio
                 $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
                 $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                     ->whereIn('status', $saleStatus)
-                    ->where('owner_id', $userId ?? auth()->user()->account_owner_id);
+                    ->where('owner_id', $userId);
 
                 if (isset($filters['sale'])) {
                     $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));

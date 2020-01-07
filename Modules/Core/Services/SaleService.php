@@ -42,7 +42,11 @@ class SaleService
         $clientModel      = new Client();
         $transactionModel = new Transaction();
 
-        $userCompanies = $companyModel->where('user_id', $userId ?? auth()->user()->account_owner_id)
+        if(!$userId){
+            $userId = auth()->user()->account_owner_id;
+        }
+
+        $userCompanies = $companyModel->where('user_id', $userId)
                                       ->pluck('id')
                                       ->toArray();
 
