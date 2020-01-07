@@ -191,7 +191,7 @@ class TrackingService
                 'sale.client',
                 'product',
             ])
-            ->whereHas('sale', function ($query) use ($filters, $saleStatus) {
+            ->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId) {
                 //tipo da data e periodo obrigatorio
                 $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
                 $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
