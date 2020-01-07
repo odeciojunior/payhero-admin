@@ -293,14 +293,14 @@ class NotificationMachine
 
                 // venda cartão
                 if ($this->foxSale->payment_method == 1) {
-                    $heading = 'CloudFox - Venda realizada teste';
+                    $heading = 'CloudFox - Venda realizada';
                     $sound   = 'venda';
                 } else { // boleto
                     if ($this->foxSale->status == 1) { // boleto pago
-                        $heading = 'CloudFox - Boleto pago teste';
+                        $heading = 'CloudFox - Boleto pago';
                         $sound   = 'boleto';
                     } else { // boleto gerado
-                        $heading = 'CloudFox - Boleto gerado teste';
+                        $heading = 'CloudFox - Boleto gerado';
                         $sound   = 'boleto';
                     }
                 }
