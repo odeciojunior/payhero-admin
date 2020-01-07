@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * Class SentEmail
@@ -58,4 +59,21 @@ class SentEmail extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Email ' . $this->name . ' foi deletado.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Email ' . $this->name . ' foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Email ' . $this->name . ' foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 }
