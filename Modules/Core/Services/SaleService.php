@@ -33,16 +33,15 @@ class SaleService
     /**
      * @param $filters
      * @param bool $withProducts
-     * @param int $userId
      * @return Builder|Transaction
      */
-    public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
+    public function getSalesQueryBuilder($filters, $withProducts = false)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
         $transactionModel = new Transaction();
 
-        $userCompanies = $companyModel->where('user_id', $userId ?? auth()->user()->account_owner_id)
+        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
                                       ->pluck('id')
                                       ->toArray();
 
