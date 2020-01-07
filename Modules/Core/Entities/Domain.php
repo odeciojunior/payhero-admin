@@ -11,6 +11,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DomainPresenter;
 use Modules\Domains\Transformers\DomainResource;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * Class Domain
@@ -73,6 +74,23 @@ class Domain extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Domínio ' . $this->name . ' foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Domínio ' . $this->name . ' foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Domínio ' . $this->name . ' foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo

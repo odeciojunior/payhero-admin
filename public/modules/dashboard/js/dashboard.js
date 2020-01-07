@@ -37,6 +37,10 @@ $(document).ready(function () {
                     $("#total_money").html(data.values.total_balance);
                     $("#today_money").html(data.values.today_balance);
 
+                    $('#total_sales_approved').text(data.values.total_sales_approved);
+                    $('#total_sales_chargeback').text(data.values.total_sales_chargeback);
+                    updateProgressBar(data.values.chargeback_tax);
+
                     $(".content-error").hide();
                     $('#company-select').show();
                 } else {
@@ -62,13 +66,31 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+
                 $(".moeda").html(data.currency);
                 $("#pending_money").html(data.pending_balance);
                 $("#available_money").html(data.available_balance);
                 $("#total_money").html(data.total_balance);
                 $("#today_money").html(data.today_balance);
+
+                $('#total_sales_approved').text(data.total_sales_approved);
+                $('#total_sales_chargeback').text(data.total_sales_chargeback);
+                updateProgressBar(data.chargeback_tax);
             }
         });
+    }
+
+    function updateProgressBar(value){
+        $('.circle').circleProgress({
+            size: 176,
+            startAngle: -Math.PI / 2,
+            value: value / 100,
+            fill: {
+                gradient: ["#f76b1c", "#fa6161"]
+            }
+        });
+
+        $('.circle strong').text(parseFloat(value).toFixed(2) + '%');
     }
 
     $("#closeWelcome").click(function () {
