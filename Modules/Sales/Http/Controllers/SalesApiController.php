@@ -92,6 +92,10 @@ class SalesApiController extends Controller
 
             $user = auth()->user();
 
+            if(empty($user)){
+                return response()->json(['message' => 'Deu ruim'], 400);
+            }
+
             $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
             (new SaleReportExport($dataRequest, auth()->user(), $filename))->queue($filename);
