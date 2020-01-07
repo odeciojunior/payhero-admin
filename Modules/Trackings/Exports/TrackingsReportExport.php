@@ -35,7 +35,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
     {
         $trackingService = new TrackingService();
 
-        return $trackingService->getTrackingsQueryBuilder($this->filters, $this->user->id);
+        return $trackingService->getTrackingsQueryBuilder($this->filters);
     }
 
     public function map($row): array
