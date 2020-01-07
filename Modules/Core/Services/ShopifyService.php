@@ -1736,8 +1736,6 @@ class ShopifyService
         } catch (Exception $e) {
             report($e);
 
-            Log::warning(print_r($this->client->getOrderManager(), true));
-
             return [
                 'status'  => 'error',
                 'message' => 'Erro na permissão de pedidos',
