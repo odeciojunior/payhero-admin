@@ -90,7 +90,7 @@ $(document).ready(function () {
             }
         });
 
-        $('.circle strong').text(value.toFixed(2) + '%');
+        $('.circle strong').text(parseFloat(value).toFixed(2) + '%');
     }
 
     $("#closeWelcome").click(function () {

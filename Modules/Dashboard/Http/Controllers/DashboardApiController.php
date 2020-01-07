@@ -89,6 +89,7 @@ class DashboardApiController extends Controller
                 $transactionModel = new Transaction();
                 $companyId = current(Hashids::decode($companyHash));
                 $company = $companyModel->find($companyId);
+                $userId = auth()->user()->account_owner_id;
 
                 if (!empty($company)) {
                     $pendingBalance = 0;
@@ -115,7 +116,7 @@ class DashboardApiController extends Controller
                     $chargebackData = $saleModel->selectRaw("SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
                                                              SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved")
                         ->where('payment_method', 1)
-                        ->where('owner_id', 14)
+                        ->where('owner_id', $userId)
                         ->whereHas('transactions', function ($query) use ($companyId) {
                             $query->where('company_id', $companyId);
                         })->first();
@@ -151,7 +152,7 @@ class DashboardApiController extends Controller
                         'currency' => $company->country == 'usa' ? '$' : 'R$',
                         'total_sales_approved'   => $totalSalesApproved ?? 0,
                         'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
-                        'chargeback_tax'         => $chargebackTax,
+                        'chargeback_tax'         => $chargebackTax ?? "0.00%",
                     ];
                 } else {
                     return [];
