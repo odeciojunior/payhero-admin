@@ -384,7 +384,7 @@ class SaleService
                         if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
                             $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                            $shopifyService->refundOrder($shopifyIntegration, $sale);
+                            $shopifyService->refundOrder($sale);
                             $shopifyService->saveSaleShopifyRequest();
                         }
                     } catch (Exception $ex) {
