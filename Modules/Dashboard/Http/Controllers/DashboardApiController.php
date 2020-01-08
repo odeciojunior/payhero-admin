@@ -29,9 +29,7 @@ class DashboardApiController extends Controller
 
             $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get() ?? collect();
 
-            $values = $this->getDataValues($companies->first()->id_code ?? null);
-
-            return response()->json(compact('companies', 'values'), 200);
+            return response()->json(compact('companies'), 200);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da dashboard (DashboardApiController - index)');
             report($e);
@@ -144,6 +142,12 @@ class DashboardApiController extends Controller
                     $availableBalance = $company->balance;
                     $totalBalance = $availableBalance + $pendingBalance;
 
+                    $newsData = settings()->group('dashboard_news')->all(true);
+                    $news = [];
+                    foreach ($newsData as $key => $value){
+                        $news[] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
+                    }
+
                     return [
                         'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                         'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
@@ -153,6 +157,7 @@ class DashboardApiController extends Controller
                         'total_sales_approved'   => $totalSalesApproved ?? 0,
                         'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
+                        'news' => $news,
                     ];
                 } else {
                     return [];

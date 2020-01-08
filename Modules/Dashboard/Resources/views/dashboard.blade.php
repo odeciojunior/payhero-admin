@@ -5,6 +5,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=1') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=1') }}">
     @endpush
 
     <div class="page">
@@ -118,24 +119,41 @@
                 </div>
             </div>
 
-            <div class="row" id="cardWelcome">
-                <div class="col-lg-12">
-                    <div class="card shadow br15">
-                        <a class="close-card pointer" id="closeWelcome" role="button">
-                            <i class="material-icons md-16">close</i>
+            <div class="row" id="news-row" style="display:none">
+                <div class="col">
+                    <div id="carouselNews" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                        </ol>
+                        <div class="carousel-inner">
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselNews" role="button" data-slide="prev">
+                            <i class="material-icons font-size-60">navigate_before</i>
                         </a>
-                        <img class="card-img-top product-image br15"
-                             src="{!! asset('modules/global/img/welcome-gradient.png') !!}">
+                        <a class="carousel-control-next" href="#carouselNews" role="button" data-slide="next">
+                            <i class="material-icons font-size-60">navigate_next</i>
+                        </a>
                     </div>
                 </div>
             </div>
+
+{{--            <div class="row" id="cardWelcome">--}}
+{{--                <div class="col-lg-12">--}}
+{{--                    <div class="card shadow br15">--}}
+{{--                        <a class="close-card pointer" id="closeWelcome" role="button">--}}
+{{--                            <i class="material-icons md-16">close</i>--}}
+{{--                        </a>--}}
+{{--                        <img class="card-img-top product-image br15"--}}
+{{--                             src="{!! asset('modules/global/img/welcome-gradient.png') !!}">--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
         @include('companies::empty')
     </div>
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=13') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=14') }}"></script>
     @endpush
 
 @endsection
