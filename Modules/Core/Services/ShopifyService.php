@@ -1417,18 +1417,23 @@ class ShopifyService
                 ];
             }
 
-            $this->sendData     = $orderData;
-            $order              = $this->client->getOrderManager()->create($orderData);
-            $this->receivedData = $this->convertToArray($order);
+            $this->sendData = $orderData;
+            //            $order              = $this->client->getOrderManager()->create($orderData);
 
-            if (FoxUtils::isEmpty($order->getId())) {
+            $order = $this->client->post('orders', [
+                'order' => $orderData,
+            ]);
+            //            $this->receivedData = $this->convertToArray($order);
+            $this->receivedData = $order;
+
+            if (FoxUtils::isEmpty($order['order']['id'])) {
                 return [
                     'status'  => 'error',
                     'message' => 'Error ao tentar gerar ordem no shopify.',
                 ];
             }
             $sale->update([
-                              'shopify_order' => $order->getId(),
+                              'shopify_order' => $order['order']['id'],
                           ]);
 
             return [
@@ -1444,18 +1449,23 @@ class ShopifyService
             $orderData['phone']            = '+5555959844325';
             $orderData['shipping_address'] = $shippingAddress;
 
-            $this->sendData     = $orderData;
-            $order              = $this->client->getOrderManager()->create($orderData);
-            $this->receivedData = $this->convertToArray($order);
+            $this->sendData = $orderData;
+            //            $order              = $this->client->getOrderManager()->create($orderData);
 
-            if (FoxUtils::isEmpty($order->getId())) {
+            $order = $this->client->post('orders', [
+                'order' => $orderData,
+            ]);
+            //            $this->receivedData = $this->convertToArray($order);
+            $this->receivedData = $order;
+
+            if (FoxUtils::isEmpty($order['order']['id'])) {
                 return [
                     'status'  => 'error',
                     'message' => 'Error ao tentar gerar ordem no shopify.',
                 ];
             }
             $sale->update([
-                              'shopify_order' => $order->getId(),
+                              'shopify_order' => $order['order']['id'],
                           ]);
 
             return [
@@ -1466,27 +1476,31 @@ class ShopifyService
     }
 
     /**
-     * @param ShopifyIntegration $shopifyIntegration
      * @param $sale
      * @throws Exception
      */
-    public function refundOrder(ShopifyIntegration $shopifyIntegration, $sale)
+    public function refundOrder($sale)
     {
         try {
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
-            $credential   = new PublicAppCredential($shopifyIntegration->token);
+            //            $credential   = new PublicAppCredential($shopifyIntegration->token);
+            //
+            //            $client = new Client($credential, $shopifyIntegration->url_store, [
+            //                'metaCacheDir' => '/var/tmp',
+            //            ]);
+            //            $order = $client->getOrderManager()->find($sale->shopify_order);
 
-            $client = new Client($credential, $shopifyIntegration->url_store, [
-                'metaCacheDir' => '/var/tmp',
-            ]);
-            $order  = $client->getOrderManager()->find($sale->shopify_order);
+            $order = $this->client->get('orders/' . $sale->shopify_order);
             if (!FoxUtils::isEmpty($order)) {
-                if ($order->getFinancialStatus() == 'pending') {
-                    $data               = $sale->shopify_order;
-                    $this->sendData     = $data;
-                    $result             = $client->getOrderManager()->cancel($data);
+                if ($order['order']['financial_status'] == 'pending') {
+                    $data           = $sale->shopify_order;
+                    $this->sendData = $data;
+                    $result         = $this->client->getOrderManager()->cancel($data);
                     $this->receivedData = $this->convertToArray($result);
+                    // caso getOrderManager->cancel da error, trocar por esse( porem esse deleta a ordem, não cancela)
+                    //                    $result = $this->client->delete('orders/' . $order['order']['id']);
+                    //                    $this->receivedData = $result;
                 } else {
                     $transaction        = [
                         "kind"   => "refund",
@@ -1494,7 +1508,8 @@ class ShopifyService
                         "amount" => "",
                     ];
                     $this->sendData     = $transaction;
-                    $result             = $client->getTransactionManager()->create($sale->shopify_order, $transaction);
+                    $result             = $this->client->getTransactionManager()
+                                                       ->create($sale->shopify_order, $transaction);
                     $this->receivedData = $this->convertToArray($result);
                 }
             } else {
@@ -1721,7 +1736,7 @@ class ShopifyService
 
             // $order = $this->client->getOrderManager()->create($orderData);
             $order = $this->client->post('orders', [
-                'order' => $orderData
+                'order' => $orderData,
             ]);
 
             // dd($order);

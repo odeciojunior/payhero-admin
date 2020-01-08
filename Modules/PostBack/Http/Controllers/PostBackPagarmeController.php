@@ -40,7 +40,7 @@ class PostBackPagarmeController extends Controller
      */
     public function postBackListener(Request $request)
     {
-        $requestData    = $request->all();
+        $requestData = $request->all();
 
         $postBackLogModel = new PostbackLog();
 
@@ -61,7 +61,7 @@ class PostBackPagarmeController extends Controller
 
             $sale               = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
             $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-            if(!empty($shopifyIntegration)){
+            if (!empty($shopifyIntegration)) {
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
             }
 
@@ -143,7 +143,6 @@ class PostBackPagarmeController extends Controller
 
                 $sale->load('client');
                 event(new BilletPaidEvent($plan, $sale, $sale->client));
-
             } else if ($requestData['transaction']['status'] == 'chargedback') {
                 $sale->update([
                                   'gateway_status' => 'chargedback',
@@ -151,7 +150,7 @@ class PostBackPagarmeController extends Controller
                               ]);
                 if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+                    $shopifyService->refundOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
                 $transferModel = new Transfer();
@@ -202,7 +201,7 @@ class PostBackPagarmeController extends Controller
                               ]);
                 if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+                    $shopifyService->refundOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
                 $transferModel = new Transfer();
