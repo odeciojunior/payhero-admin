@@ -1465,7 +1465,7 @@ class ShopifyService
                 ];
             }
             $sale->update([
-                              'shopify_order' => $order->getId(),
+                              'shopify_order' => $order['order']['id'],
                           ]);
 
             return [
