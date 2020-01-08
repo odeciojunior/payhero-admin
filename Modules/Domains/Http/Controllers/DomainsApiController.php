@@ -46,14 +46,15 @@ class DomainsApiController extends Controller
             $domainModel  = new Domain();
             $projectModel = new Project();
 
-            activity()->on($domainModel)->tap(function(Activity $activity) use ($projectId) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todos os domínios para o projeto: ' . $projectId);
-
             if (!empty($projectId)) {
 
                 $projectId = current(Hashids::decode($projectId));
                 $project   = $projectModel->find($projectId);
+
+                activity()->on($domainModel)->tap(function(Activity $activity) use ($projectId) {
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os domínios para o projeto: ' . $project->name);
+
                 if (Gate::allows('index', [$project])) {
                     $domains = $domainModel->with('project')
                                            ->where('project_id', $projectId);
@@ -390,16 +391,18 @@ class DomainsApiController extends Controller
             $domainModel       = new Domain();
             $cloudFlareService = new CloudFlareService();
 
-            activity()->on($domainModel)->tap(function(Activity $activity) use ($domain) {
-                $activity->log_name   = 'visualization';
-                $activity->subject_id = current(Hashids::decode($domain));
-            })->log('Verificação domínio: ' . $domain);
+
 
             $domainId = current(Hashids::decode($domain));
             if (!empty($domainId)) {
                 // hashid ok
                 $domain = $domainModel->with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
                                       ->find($domainId);
+
+                activity()->on($domainModel)->tap(function(Activity $activity) use ($domainId) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = $domainId;
+                })->log('Verificação domínio: ' . $domain->name);
                 if (!empty($domain)) {
 
                     if (Gate::allows('edit', [$domain->project])) {

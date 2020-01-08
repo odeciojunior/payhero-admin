@@ -1,3 +1,6 @@
+let tracking_id = 'undefined';
+
+
 $(() => {
 
     $('#tracking-product-image').on('error', function () {
@@ -278,9 +281,10 @@ $(() => {
         });
     }
 
+
     //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
-
+        tracking_id = $(this).attr('tracking');
         loadOnAny('#modal-tracking-details');
         $('#modal-tracking').modal('show');
 
@@ -395,7 +399,6 @@ $(() => {
 
     //enviar e-mail com o codigo de rastreio
     $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function () {
-        let tracking_id = $(this).attr('tracking');
         $.ajax({
             method: "POST",
             url: '/api/tracking/notify/' + tracking_id,

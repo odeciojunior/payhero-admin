@@ -33,11 +33,13 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                activity()->on($pixelModel)->tap(function(Activity $activity) use ($projectId) {
-                    $activity->log_name = 'visualization';
-                })->log('Visualizou tela todos os pixels para o projeto: ' . $projectId);
-
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($pixelModel)->tap(function(Activity $activity){
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
+
+
                 if (Gate::allows('edit', [$project])) {
                     $pixels = $pixelModel->where('project_id', $project->id);
 
@@ -201,12 +203,15 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                activity()->on($pixelModel)->tap(function(Activity $activity) {
-                    $activity->log_name = 'visualization';
-                })->log('Visualizou tela detalhes do pixel: ' . $id);
-
                 $pixel   = $pixelModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
+
+
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -243,13 +248,14 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
+                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
+
                 activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou tela editar pixel: ' . $id);
+                })->log('Visualizou tela editar pixel: ' . $pixel->name);
 
-                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
 
