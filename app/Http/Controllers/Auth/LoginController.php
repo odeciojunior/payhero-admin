@@ -117,6 +117,10 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+        activity()->tap(function(Activity $activity){
+            $activity->log_name = 'logout';
+        })->log('Logout');
+
         Redis::del('user-logged-' . auth()->user()->id);
 
         $this->guard()->logout();
