@@ -126,7 +126,7 @@ return [
     |
     */
 
-    'memory_limit' => 128,
+    'memory_limit' => 256,
 
     /*
     |--------------------------------------------------------------------------
@@ -145,7 +145,7 @@ return [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'simple',
-                'processes' => 7,
+                'processes' => 15,
                 'tries' => 3,
                 'timeout' => 0,
                 'delay' => 1,
