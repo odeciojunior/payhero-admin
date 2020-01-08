@@ -23,7 +23,7 @@ class WithdrawalResource extends Resource
         return [
             'id'                  => Hashids::encode($this->id),
             'account_information' => $accountName . ' - Agência: ' . $this->agency . ' - Digito: ' . $this->agency_digit . ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit,
-            'date_request'        => $this->created_at->format('d/m/Y'),
+            'date_request'        => $this->created_at->format('d/m/Y H:i:s'),
             'date_release'        => isset($this->release_date) ? date("d/m/Y", strtotime($this->release_date)) : '',
             'value'               => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'status'              => $this->status,
