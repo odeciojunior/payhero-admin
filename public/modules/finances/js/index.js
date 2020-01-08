@@ -271,7 +271,6 @@ $(document).ready(function () {
                                             'Accept': 'application/json',
                                         },
                                         error: (response) => {
-                                            console.log(response)
                                             loadingOnScreenRemove();
                                             errorAjaxResponse(response);
                                         },
@@ -454,7 +453,7 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, value) {
                         data += '<tr >';
-                        if (value.is_owner) {
+                        if (value.is_owner && value.reason != "Saque") {
                             data += '<td style="vertical-align: middle;">' + value.reason + ' <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '"><span style="color:black;">#' + value.transaction_id + '</span></a></td>';
                         } else {
                             data += '<td style="vertical-align: middle;">' + value.reason + ' <span>#' + value.transaction_id + '</span></td>';

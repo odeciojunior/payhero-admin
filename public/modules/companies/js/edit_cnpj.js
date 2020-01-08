@@ -241,7 +241,7 @@ $(document).ready(function () {
                 success: function success(response) {
                     loadingOnScreenRemove();
                     alertCustom('success', response.message);
-
+                    initForm();
                 }
             });
         });
