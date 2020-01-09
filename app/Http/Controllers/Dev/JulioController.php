@@ -23,8 +23,10 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Invitation;
+use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\DomainRecord;
@@ -45,12 +47,26 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        $sales = Sale::whereNull('gateway_id')->where('status', '!=', 10)->limit( 10)->orderBy('id', 'desc')->count();
+        $dataSms = [
+            'message'   => 'teste',
+            'telephone' => '+5555996931098',
+        ];
 
-        dd($sales);
+        event(new SendSmsEvent($dataSms));
+
+
+        // $connection = null;
+        // $default = 'default';
+
+        // Queue::size();
+
+        //For the delayed jobs
+        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':delayed' ,0, -1) );
+
+        //For the reserved jobs
+        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':reserved' ,0, -1) );    }
+
     }
-
-
 }
 
 
