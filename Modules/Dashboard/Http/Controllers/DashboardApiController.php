@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -25,6 +26,10 @@ class DashboardApiController extends Controller
     public function index()
     {
         try {
+            activity()->tap(function(Activity $activity){
+               $activity->log_name = 'visualization';
+            })->log('Visualizou Dashboard');
+
             $companyModel = new Company();
 
             $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get() ?? collect();

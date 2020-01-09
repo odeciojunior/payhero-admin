@@ -292,7 +292,7 @@ class DomainRecordsApiController extends Controller
 
                 $record = $domainRecordModel->with(['domain', 'domain.project'])->find($recordId);
 
-                if (Gate::allows('edit', [$record->domain->project])) {
+                if (!empty($record->domain->project) && Gate::allows('edit', [$record->domain->project])) {
                     $cloudFlareService->setZone($record->domain->name);
 
                     if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
