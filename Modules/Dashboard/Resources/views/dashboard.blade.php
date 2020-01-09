@@ -119,8 +119,8 @@
                 </div>
             </div>
 
-            <div class="row" id="news-row" style="display:none">
-                <div class="col">
+            <div class="row">
+                <div class="col" id="news-col" style="display:none">
                     <div id="carouselNews" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                         </ol>
@@ -134,19 +134,21 @@
                         </a>
                     </div>
                 </div>
+                <div class="col-lg-4" id="releases-col" style="display:none">
+                    <div class="card card-shadow bg-white">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-15">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/releases.svg') }}"
+                                     width="35px">
+                                <span class="card-desc">Atualizações da Plataforma</span>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0 d-flex flex-column justify-content-between" id="releases-div" style="overflow-y: auto; height: 290px;">
+                        </div>
+                        <div class="card-bottom orangered"></div>
+                    </div>
+                </div>
             </div>
-
-{{--            <div class="row" id="cardWelcome">--}}
-{{--                <div class="col-lg-12">--}}
-{{--                    <div class="card shadow br15">--}}
-{{--                        <a class="close-card pointer" id="closeWelcome" role="button">--}}
-{{--                            <i class="material-icons md-16">close</i>--}}
-{{--                        </a>--}}
-{{--                        <img class="card-img-top product-image br15"--}}
-{{--                             src="{!! asset('modules/global/img/welcome-gradient.png') !!}">--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
         </div>
         @include('companies::empty')
     </div>

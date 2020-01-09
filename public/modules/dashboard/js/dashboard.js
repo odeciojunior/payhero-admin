@@ -66,6 +66,7 @@ $(document).ready(function () {
 
                 updateProgressBar(data.chargeback_tax);
                 updateNews(data.news);
+                updateReleases(data.releases);
                 loadOnAny('.page-content', true);
             }
         });
@@ -118,10 +119,45 @@ $(document).ready(function () {
                 $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').show();
             }
 
-            $('#news-row').show();
+            $('#news-col').show();
         } else {
-            $('#news-row').hide();
+            $('#news-col').hide();
         }
+    }
+
+    function updateReleases(data){
+        if(!isEmpty(data)){
+            $.each(data, function(index, value){
+                let item = `<div class="d-flex align-items-center mb-15" id="${value.id}">
+                                <div class="release-progress" id="${index}">
+                                <strong>${value.progress}%</strong>
+                                </div>
+                                <span class="ml-2">${value.release}</span>
+                            </div>`;
+                $('#releases-div').append(item);
+
+                updateReleasesProgress(index, value.progress);
+            });
+
+            $('#releases-col').show();
+        }else{
+            $('#releases-col').hide();
+        }
+    }
+
+    function updateReleasesProgress(id, value) {
+
+        let circle = $('#' + id);
+
+        circle.circleProgress({
+            size: 55,
+            startAngle: -Math.PI / 2,
+            thickness: 6,
+            value: value / 100,
+            fill: {
+                color: "#f76b1c",
+            }
+        });
     }
 
     $("#closeWelcome").click(function () {

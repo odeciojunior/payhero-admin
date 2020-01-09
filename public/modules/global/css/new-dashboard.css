@@ -127,4 +127,18 @@ body {
     font-size: 32px;
 }
 
+.release-progress {
+    display: inline-block;
+    position: relative;
+    height: 55px;
+}
+
+.release-progress strong {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    width: 100%;
+    color: #000;
+    text-align: center;
+}
 /* END - Progressbar */
