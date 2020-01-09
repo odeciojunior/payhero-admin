@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Modules\Core\Events\ResetPasswordEvent;
 use Modules\Core\Events\UserRegistrationEvent;
 use Modules\Core\Presenters\UserPresenter;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use App\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
@@ -150,6 +151,23 @@ class User extends Authenticable
      * @var array
      */
     protected static $logAttributesToIgnore = ['last_login', 'updated_at'];
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Usuário ' . $this->name . ' foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Usuário ' . $this->name . ' foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return HasMany

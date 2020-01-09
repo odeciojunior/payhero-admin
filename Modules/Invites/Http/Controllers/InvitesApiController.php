@@ -16,6 +16,7 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Invites\Transformers\InviteResource;
+use Spatie\Activitylog\Models\Activity;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -35,6 +36,10 @@ class InvitesApiController extends Controller
             $invitationModel = new Invitation();
 
             $invites = $invitationModel->where('invite', auth()->user()->account_owner_id)->with('company');
+
+            activity()->on($invitationModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela convites');
 
             return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(10));
         } catch (Exception $e) {
@@ -279,6 +284,11 @@ class InvitesApiController extends Controller
             if ($invitationId) {
                 $sendgridService = new EmailService();
                 $invitation      = $invitationModel->find($invitationId);
+
+                activity()->on($invitationModel)->tap(function(Activity $activity) {
+                    $activity->log_name = 'visualization';
+                })->log('Reenviou convite');
+
                 if (FoxUtils::validateEmail($invitation->email_invited) && !empty($invitation->company_id)) {
                     $user = $userModel->where('email', $invitation->email_invited)->first();
                     if ($user) {
@@ -338,7 +348,9 @@ class InvitesApiController extends Controller
             $companyModel    = new Company();
             $invitationModel = new Invitation();
 
-            $company = $companyModel->find(current(Hashids::decode($inviteId)));
+            activity()->on($invitationModel)->tap(function(Activity $activity){
+                $activity->log_name   = 'visualization';
+            })->log('Verificou convite');
 
             if (strlen($inviteId) > 15) {
                 $inviteId = substr($inviteId, 0, 15);

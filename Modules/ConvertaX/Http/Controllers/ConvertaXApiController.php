@@ -8,26 +8,32 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\ConvertaX\Transformers\ConvertaxResource;
 
-class ConvertaXApiController extends Controller {
-
+class ConvertaXApiController extends Controller
+{
     /**
      * Return resource of integrations.
      * @return AnonymousResourceCollection
      */
-    public function index(){
+    public function index()
+    {
 
-        try{
+        try {
             $convertaxIntegration = new ConvertaxIntegration();
 
-            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->account_owner_id)->with('project')->get();
+            activity()->on($convertaxIntegration)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos as integrações do ConvertaX');
+
+            $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->account_owner_id)
+                                                          ->with('project')->get();
 
             return ConvertaxResource::collection($convertaxIntegrations);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
@@ -116,7 +122,12 @@ class ConvertaXApiController extends Controller {
     public function show($id)
     {
         $convertaxIntegrationModel = new ConvertaxIntegration();
-        $convertaxIntegration = $convertaxIntegrationModel->with(['project'])->find(current(Hashids::decode($id)));
+        $convertaxIntegration      = $convertaxIntegrationModel->with(['project'])->find(current(Hashids::decode($id)));
+
+        activity()->on($convertaxIntegration)->tap(function(Activity $activity) use ($convertaxIntegration) {
+            $activity->log_name   = 'visualization';
+            $activity->subject_id = $convertaxIntegration->id;
+        })->log('Visualizou tela integração do ConvertaX');
 
         return new ConvertaxResource($convertaxIntegration);
     }
@@ -206,7 +217,7 @@ class ConvertaXApiController extends Controller {
     public function destroy($id)
     {
         try {
-            $integrationId                 = current(Hashids::decode($id));
+            $integrationId             = current(Hashids::decode($id));
             $convertaxIntegrationModel = new ConvertaxIntegration();
 
             $integration        = $convertaxIntegrationModel->find($integrationId);
@@ -224,5 +235,4 @@ class ConvertaXApiController extends Controller {
 
         }
     }
-
 }
