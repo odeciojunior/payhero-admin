@@ -25,6 +25,7 @@ use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
+use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -41,6 +42,11 @@ class SalesApiController extends Controller
     public function index(SaleIndexRequest $request)
     {
         try {
+
+            activity()->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todas as vendas');
+
 
             $saleService = new SaleService();
 
@@ -64,10 +70,19 @@ class SalesApiController extends Controller
     public function show($id)
     {
         try {
+            $saleModel = new Sale();
+
+            activity()->on($saleModel)->tap(function(Activity $activity) use ($id) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::decode($id));
+            })->log('Visualizou detalhes da venda #' . $id);
+
             $saleService = new SaleService();
 
             if (isset($id)) {
                 $sale = $saleService->getSaleWithDetails($id);
+
+
 
                 return new SalesResource($sale);
             }
@@ -90,6 +105,10 @@ class SalesApiController extends Controller
         try {
             $dataRequest = $request->all();
 
+            activity()->tap(function(Activity $activity){
+                $activity->log_name   = 'visualization';
+            })->log('Exportou tabela ' . $dataRequest['format'] .' de vendas');
+
             $user = auth()->user();
 
             $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
@@ -107,6 +126,12 @@ class SalesApiController extends Controller
     public function resume(SaleIndexRequest $request)
     {
         try {
+
+            activity()->tap(function(Activity $activity){
+                $activity->log_name   = 'visualization';
+            })->log('Visualizou tela exibir resumo das venda ');
+
+
             $saleService = new SaleService();
 
             $data = $request->all();
@@ -166,6 +191,15 @@ class SalesApiController extends Controller
             $checkoutService = new CheckoutService();
             $saleService     = new SaleService();
             $saleModel       = new Sale();
+
+
+            activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId){
+                $activity->log_name     = 'visualization';
+                $activity->subject_id   = current(Hashids::connection('sale_id')->decode($saleId));
+            })->log('Estorno transação: #' . $saleId);
+
+
+
             $sale            = $saleModel->with('gateway')->where('id', Hashids::connection('sale_id')->decode($saleId))
                                          ->first();
             $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
@@ -195,11 +229,18 @@ class SalesApiController extends Controller
     public function newOrderShopify(Request $request, $saleId)
     {
         try {
-            if (FoxUtils::isProduction()) {
+            if (!FoxUtils::isProduction()) {
                 $result             = false;
                 $saleModel          = new Sale();
                 $sale               = $saleModel->find(Hashids::connection('sale_id')->decode($saleId))->first();
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+
+                activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId){
+                    $activity->log_name     = 'visualization';
+                    $activity->subject_id   = current(Hashids::connection('sale_id')->decode($saleId));
+                })->log('Gerou nova ordem no shopify para transação: #' . $saleId);
+
+
                 if (!FoxUtils::isEmpty($shopifyIntegration)) {
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
@@ -233,6 +274,12 @@ class SalesApiController extends Controller
 
             $plan = $planModel->find($requestData['plan_id']);
             $sale = $saleModel->with(['client'])->find($requestData['sale_id']);
+
+            activity()->on($saleModel)->tap(function(Activity $activity) use ($requestData){
+                $activity->log_name     = 'visualization';
+                $activity->subject_id   = current(Hashids::connection('sale_id')->decode($requestData['sale_id']));
+            })->log('Processou boletos venda para transação: #' . $requestData['sale_id']);
+
 
             event(new BilletPaidEvent($plan, $sale, $sale->client));
 

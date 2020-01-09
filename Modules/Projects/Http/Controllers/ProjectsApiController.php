@@ -46,9 +46,12 @@ class ProjectsApiController extends Controller
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
 
-            activity()->on($projectModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todos os projetos');
+            if(!$pagination){
+                activity()->on($projectModel)->tap(function(Activity $activity) {
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os projetos');
+
+            }
 
             if (!empty($request->input('status')) && $request->input('status') == 'active') {
                 $projectStatus = [$projectModel->present()->getStatus('active')];

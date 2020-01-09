@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Products\Transformers\ProductsSelectResource;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -58,9 +59,16 @@ class ProductsApiController extends Controller
     public function index(IndexProductRequest $request)
     {
         try {
+
             $productsModel = new Product();
 
             $filters = $request->validated();
+
+
+            activity()->on($productsModel)->tap(function(Activity $activity){
+                $activity->log_name   = 'visualization';
+            })->log('Visualizou tela todos os produtos');
+
 
             $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id);
 
@@ -93,6 +101,12 @@ class ProductsApiController extends Controller
     {
         try {
             $categoryModel = new Category();
+
+
+            activity()->tap(function(Activity $activity){
+                $activity->log_name   = 'visualization';
+            })->log('Visualizou tela cadastro de produto');
+
 
             $categories = $categoryModel->all();
             if (!empty($categories)) {
@@ -223,6 +237,13 @@ class ProductsApiController extends Controller
             if ($productId) {
                 $product    = $productModel->find($productId);
                 $categories = $categoryModel->all();
+
+
+                activity()->on($productModel)->tap(function(Activity $activity) use ($id) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })->log('Visualizou tela editar produto ' . $product->name);
+
 
                 if (Gate::allows('edit', [$product])) {
                     return EditProductResource::make([
