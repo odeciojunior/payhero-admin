@@ -54,7 +54,6 @@ class JulioController extends Controller
 
         event(new SendSmsEvent($dataSms));
 
-
         // $connection = null;
         // $default = 'default';
 
