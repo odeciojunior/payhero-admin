@@ -119,32 +119,37 @@ class TrackingsApiController extends Controller
 
             $tracking = $trackingModel->where('tracking_code', $trackingCode)->first();
 
-            $apiTracking = $trackingService->findTrackingApi($tracking);
+            if(!empty($tracking)) {
+                $apiTracking = $trackingService->findTrackingApi($tracking);
 
-            $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
-            $checkpoints  = collect();
+                $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
+                $checkpoints = collect();
 
-            //objeto postado
-            $checkpoints->add([
-                                  'tracking_status_enum' => $postedStatus,
-                                  'tracking_status'      => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
-                                                                                                                            ->getTrackingStatusEnum($postedStatus)),
-                                  'created_at'           => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                                  'event'                => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
-                              ]);
+                //objeto postado
+                $checkpoints->add([
+                    'tracking_status_enum' => $postedStatus,
+                    'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                            ->getTrackingStatusEnum($postedStatus)),
+                    'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                    'event' => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
+                ]);
 
-            $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
+                $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
 
-            $checkpoints = $checkpoints->merge($checkpointsApi)->unique()->sortKeysDesc()->values()->toArray();
+                $checkpoints = $checkpoints->merge($checkpointsApi)->unique()->sortKeysDesc()->values()->toArray();
 
-            $trackingArray = [
-                'id'                   => Hashids::encode($tracking->id),
-                'tracking_code'        => $tracking->tracking_code,
-                'tracking_status_enum' => $tracking->tracking_status_enum,
-                'checkpoints'          => $checkpoints,
-            ];
+                $trackingArray = [
+                    'id' => Hashids::encode($tracking->id),
+                    'tracking_code' => $tracking->tracking_code,
+                    'tracking_status_enum' => $tracking->tracking_status_enum,
+                    'checkpoints' => $checkpoints,
+                ];
 
-            return response()->json(['data' => $trackingArray]);
+                return response()->json(['data' => $trackingArray]);
+            } else {
+                return response()->json(['message' => 'Erro ao exibir detalhes do código de rastreio'], 400);
+            }
+
         } catch (Exception $e) {
             Log::warning('Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)');
             report($e);
