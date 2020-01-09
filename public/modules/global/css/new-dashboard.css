@@ -116,6 +116,8 @@ body {
 .circle {
     display: inline-block;
     position: relative;
+    width: 176px;
+    height: 176px;
 }
 
 .circle strong {

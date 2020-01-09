@@ -5,7 +5,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=1') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=1') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=2') }}">
     @endpush
 
     <div class="page">
