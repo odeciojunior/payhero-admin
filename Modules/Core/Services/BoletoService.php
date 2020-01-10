@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Modules\Core\Events\BilletExpiredEvent;
 use function foo\func;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -404,7 +405,8 @@ class BoletoService
         try {
 
             $saleModel = new Sale();
-            $boletos   = $saleModel->where([
+            $boletos   = $saleModel->with(['client'])
+                                    ->where([
                                                ['payment_method', '=', '2'],
                                                ['status', '=', '2'],
                                                [
@@ -415,6 +417,8 @@ class BoletoService
                                            ]);
             foreach ($boletos->cursor() as $boleto) {
                 $boleto->update(['status' => 5]);
+
+                event(new BilletExpiredEvent($boleto));
             }
         } catch (Exception $e) {
             Log::warning('Erro ao atualizar boleto para status 5 - changeBoletoPendingToCanceled');

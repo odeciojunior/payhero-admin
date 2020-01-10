@@ -96,7 +96,32 @@ class Whatsapp2Service
                 ];
             }
 
-            $status = ($eventSale == 2 || $eventSale == 3) ? 'paid' : 'pending';
+            //$status = ($eventSale == 2 || $eventSale == 3) ? 'paid' : 'pending';
+
+            //1. BoletoPendingEvent
+            //2. BilletPaidEvent
+            //3. CreditCardApprovedEvent
+            //4. BilletExpiredEvent
+            //5. CreditCardRefusedEvent
+            //6. SaleRefundedEvent
+
+            $status = '';
+            switch ($eventSale){
+                case 2:
+                case 3:
+                    $status = 'paid';
+                    break;
+                case 4:
+                case 6:
+                    $status = 'order_cancelled';
+                    break;
+                case 5:
+                    $status = 'voided';
+                    break;
+                default:
+                    $status = 'pending';
+                    break;
+            }
 
             $totalValue = preg_replace("/[^0-9]/", "", $sale->sub_total) + preg_replace("/[^0-9]/", "", $sale->shipment_value);
             $totalValue = substr_replace($totalValue, '.', strlen($totalValue) - 2, 0);
