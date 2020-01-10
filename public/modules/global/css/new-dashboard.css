@@ -119,12 +119,15 @@ body {
 }
 
 .circle strong {
-    position: absolute;
-    top: 62px;
-    left: 0;
     width: 100%;
     color: #000;
     font-size: 32px;
+}
+
+.circle strong.loaded{
+    position: absolute;
+    top: 62px;
+    left: 0;
 }
 
 .release-progress {

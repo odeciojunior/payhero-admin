@@ -120,7 +120,7 @@
             </div>
 
             <div class="row">
-                <div class="col" id="news-col" style="display:none">
+                <div class="col-lg-8" id="news-col" style="display:none">
                     <div id="carouselNews" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                         </ol>
@@ -145,7 +145,7 @@
                         </div>
                         <div class="card-body pt-0 d-flex flex-column justify-content-between" id="releases-div" style="overflow-y: auto; height: 290px;">
                         </div>
-                        <div class="card-bottom orangered"></div>
+                        <div class="card-bottom orange"></div>
                     </div>
                 </div>
             </div>
@@ -155,7 +155,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=14') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=15') }}"></script>
     @endpush
 
 @endsection
