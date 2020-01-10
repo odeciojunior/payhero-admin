@@ -229,7 +229,7 @@ class SalesApiController extends Controller
     public function newOrderShopify(Request $request, $saleId)
     {
         try {
-            if (!FoxUtils::isProduction()) {
+            if (FoxUtils::isProduction()) {
                 $result             = false;
                 $saleModel          = new Sale();
                 $sale               = $saleModel->find(Hashids::connection('sale_id')->decode($saleId))->first();

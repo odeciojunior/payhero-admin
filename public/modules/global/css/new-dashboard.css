@@ -116,15 +116,50 @@ body {
 .circle {
     display: inline-block;
     position: relative;
+    width: 176px;
+    height: 176px;
 }
 
 .circle strong {
-    position: absolute;
-    top: 62px;
-    left: 0;
     width: 100%;
     color: #000;
     font-size: 32px;
 }
 
+.circle strong.loaded{
+    position: absolute;
+    top: 62px;
+    left: 0;
+}
+
+.release-progress {
+    display: inline-block;
+    position: relative;
+    height: 55px;
+}
+
+.release-progress strong {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    width: 100%;
+    color: #000;
+    text-align: center;
+}
 /* END - Progressbar */
+
+#releases-div::-webkit-scrollbar-track
+{
+    background-color: transparent;
+}
+
+#releases-div::-webkit-scrollbar
+{
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+#releases-div::-webkit-scrollbar-thumb
+{
+    background-color: #ffa040;
+}

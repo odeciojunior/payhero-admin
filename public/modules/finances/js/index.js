@@ -460,7 +460,7 @@ $(document).ready(function () {
                         if (value.is_owner && value.transaction_id) {
                             data += '<td style="vertical-align: middle;">' + value.reason + ' <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '"><span style="color:black;">#' + value.transaction_id + '</span></a></td>';
                         } else {
-                            data += '<td style="vertical-align: middle;">' + value.reason + ' <span>#' + value.transaction_id + '</span></td>';
+                            data += '<td style="vertical-align: middle;">' + value.reason + ' <span>' + value.transaction_id + '</span></td>';
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
