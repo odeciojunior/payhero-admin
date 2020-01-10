@@ -308,7 +308,7 @@
                                 </a>
 
                                 <p class="mt-5" id="link-tracking"><i class="material-icons">link</i>
-                                    <a target="_blank" class="pointer text-body">Acessar link do cliente</a>
+                                    <a target="_blank" class="pointer text-body">Acessar link de rastreio</a>
                                 </p>
 
                                 <table class="table">

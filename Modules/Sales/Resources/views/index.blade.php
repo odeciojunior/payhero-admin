@@ -227,7 +227,7 @@
                 </div>
                 <div class='my-20 mx-20 text-center'>
                     <h3 class="black"> Você tem certeza? </h3>
-                    <p class="gray"> Apó confirmada, essa operação não poderá ser desfeita!</p>
+                    <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
                     <small>OBS: Taxa de R$ 1,00 por estorno</small>
                 </div>
                 <div class="modal-footer">
