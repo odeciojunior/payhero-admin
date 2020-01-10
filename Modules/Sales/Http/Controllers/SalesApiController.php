@@ -17,6 +17,7 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Events\BilletPaidEvent;
+use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
@@ -200,7 +201,7 @@ class SalesApiController extends Controller
 
 
 
-            $sale            = $saleModel->with('gateway')->where('id', Hashids::connection('sale_id')->decode($saleId))
+            $sale            = $saleModel->with('gateway', 'client')->where('id', Hashids::connection('sale_id')->decode($saleId))
                                          ->first();
             $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
@@ -213,6 +214,8 @@ class SalesApiController extends Controller
                 $sale->update([
                                   'date_refunded' => Carbon::now(),
                               ]);
+
+                event(new SaleRefundedEvent($sale));
 
                 return response()->json(['message' => $result['message']], Response::HTTP_OK);
             } else {
