@@ -35,6 +35,11 @@
             color: #999999;
         }
 
+        .tracking-icon i.small {
+            font-size: 38px;
+            margin: 6px;
+        }
+
         .line {
             height: 5px;
             width: 100%;
@@ -53,6 +58,11 @@
 
             .tracking-icon i {
                 font-size: 24px;
+            }
+
+            .tracking-icon i.small {
+                font-size: 22px;
+                margin: 1px;
             }
 
             .line {
@@ -116,7 +126,7 @@
                 <h3 class="mb-5 text-center" id="tracking-code">Objeto #PM441390955BR</h3>
                 <div class="justify-content-between mb-5" style="display: flex;">
                     <div class="tracking-icon active">
-                        <i class="material-icons" style="font-size: 38px; margin: 6px;">markunread_mailbox</i>
+                        <i class="material-icons small">markunread_mailbox</i>
                     </div>
                     <div class="line"></div>
                     <div class="tracking-icon">
