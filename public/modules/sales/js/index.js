@@ -155,8 +155,7 @@ $(document).ready(function () {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
-            url: '/api/projects',
-
+            url: '/api/projects?select=true',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
