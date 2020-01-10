@@ -147,3 +147,19 @@ body {
     text-align: center;
 }
 /* END - Progressbar */
+
+#releases-div::-webkit-scrollbar-track
+{
+    background-color: transparent;
+}
+
+#releases-div::-webkit-scrollbar
+{
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+#releases-div::-webkit-scrollbar-thumb
+{
+    background-color: #ffa040;
+}
