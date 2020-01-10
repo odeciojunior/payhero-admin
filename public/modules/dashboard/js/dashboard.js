@@ -31,6 +31,7 @@ $(document).ready(function () {
                     $(".content-error").hide();
                     $('#company-select').show();
                 } else {
+                    loadOnAny('.page-content', true);
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                 }
@@ -66,6 +67,7 @@ $(document).ready(function () {
 
                 updateProgressBar(data.chargeback_tax);
                 updateNews(data.news);
+                updateReleases(data.releases);
                 loadOnAny('.page-content', true);
             }
         });
@@ -81,7 +83,8 @@ $(document).ready(function () {
             }
         });
 
-        $('.circle strong').text(parseFloat(value).toFixed(2) + '%');
+        $('.circle strong').addClass('loaded')
+            .text(parseFloat(value).toFixed(2) + '%');
     }
 
     function updateNews(data) {
@@ -118,10 +121,61 @@ $(document).ready(function () {
                 $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').show();
             }
 
-            $('#news-row').show();
+            $('#news-col').show();
         } else {
-            $('#news-row').hide();
+            $('#news-col').hide();
         }
+    }
+
+    function updateReleases(data){
+
+        $('#releases-div').html('');
+
+        if(!isEmpty(data)){
+            $.each(data, function(index, value){
+                let item = `<div class="d-flex align-items-center my-15">
+                                <div class="release-progress" id="${index}">
+                                    <strong>${value.progress}%</strong>
+                                </div>
+                                <span class="ml-2">${value.release}</span>
+                            </div>`;
+                $('#releases-div').append(item);
+
+                updateReleasesProgress(index, value.progress);
+            });
+
+            $('#releases-col').show();
+        }else{
+            $('#releases-col').hide();
+        }
+    }
+
+    function updateReleasesProgress(id, value) {
+
+        let circle = $('#' + id);
+
+        let color = '';
+        switch (true) {
+            case value <= 33:
+                color = '#ffa040';
+                break;
+            case value > 33 && value <= 66:
+                color = '#ff6f00';
+                break;
+            default:
+                color = '#c43e00';
+                break;
+        }
+
+        circle.circleProgress({
+            size: 55,
+            startAngle: -Math.PI / 2,
+            thickness: 6,
+            value: value / 100,
+            fill: {
+                color: color,
+            }
+        });
     }
 
     $("#closeWelcome").click(function () {
