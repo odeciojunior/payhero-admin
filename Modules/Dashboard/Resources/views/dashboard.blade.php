@@ -5,7 +5,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=1') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
     <div class="page">
@@ -143,7 +143,7 @@
                                 <span class="card-desc">Atualizações da Plataforma</span>
                             </div>
                         </div>
-                        <div class="card-body pt-0 d-flex flex-column justify-content-between" id="releases-div" style="overflow-y: auto; height: 290px;">
+                        <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div" style="overflow-y: auto; height: 275px;">
                         </div>
                         <div class="card-bottom orange"></div>
                     </div>
