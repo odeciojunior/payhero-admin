@@ -12,6 +12,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\ActiveCampaignService;
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller;
+use Modules\Core\Services\PusherNotificationService;
 use Modules\Core\Services\ShopifyService;
 use Slince\Shopify\PublicAppCredential;
 use Slince\Shopify\Client;
@@ -37,6 +39,7 @@ class PostBackPagarmeController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function postBackListener(Request $request)
     {
@@ -194,6 +197,9 @@ class PostBackPagarmeController extends Controller
                                              'status' => 'chargedback',
                                          ]);
                 }
+
+                EmailService::userSaleChargeback($sale);
+                PusherNotificationService::userSaleChargeback($sale);
             } else if ($requestData['transaction']['status'] == 'refunded') {
                 $sale->update([
                                   'gateway_status' => 'refunded',
