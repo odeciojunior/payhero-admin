@@ -22,6 +22,16 @@
                         <select id="country" name='country' class="form-control select-pad">
                             <option value="brazil">Brasil</option>
                             <option value="usa" disabled>United States</option>
+                            <option value="spain" disabled>Alemanha</option>
+                            <option value="spain" disabled>Áustria</option>
+                            <option value="spain" disabled>Bélgica</option>
+                            <option value="spain" disabled>Espanha</option>
+                            <option value="spain" disabled>Eslováquia</option>
+                            <option value="spain" disabled>Eslovénia</option>
+                            <option value="spain" disabled>França</option>
+                            <option value="spain" disabled>Finlândia</option>
+                            <option value="spain" disabled>Itália</option>
+                            <option value="spain" disabled>Portugal</option>
                         </select>
                     </div>
                     <div class="form-group col-xl-6">
