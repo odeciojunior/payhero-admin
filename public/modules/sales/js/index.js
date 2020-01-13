@@ -281,7 +281,8 @@ $(document).ready(function () {
             },
             success: response => {
                 $('#export-email').text(response.email);
-                $('#alert-export').show();
+                $('#alert-export').show()
+                    .shake();
             }
         });
     }

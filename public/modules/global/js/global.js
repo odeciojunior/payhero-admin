@@ -516,3 +516,17 @@ function verifyDocumentPending(){
 
 /* End - Document Pending Alert */
 
+$.fn.shake = function () {
+    let distance = 5;
+    let speed = 50;
+    let repeat = 3;
+    let animation1 = {left: "+=" + distance};
+    let animation2 = {left: "-=" + (distance * 2)};
+
+    for (let i = 0 ; i < repeat; i++ ) {
+        $(this).animate(animation1, speed)
+            .animate(animation2, speed)
+            .animate(animation1, speed);
+    }
+};
+
