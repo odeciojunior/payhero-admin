@@ -1,5 +1,22 @@
 $(document).ready(function () {
 
+    $.ajax({
+        method: "GET",
+        url: "https://www.remessaonline.com.br/api/current-quotation/USD/COM/",
+        dataType: "json",
+        headers: {
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(data) {
+            alert(data.toSource());
+        }
+    });
+
+
+
     getDataDashboard();
 
     $("#company").on("change", function () {

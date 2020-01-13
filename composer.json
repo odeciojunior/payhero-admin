@@ -12,6 +12,7 @@
         "ext-json": "^1.6",
         "barryvdh/laravel-cors": "0.11.3",
         "cloudflare/sdk": "^1.0",
+        "doctrine/dbal": "^2.10",
         "ebanx/ebanx": "dev-master",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "6.3",
