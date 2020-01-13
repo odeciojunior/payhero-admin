@@ -367,7 +367,7 @@ class TrackingsApiController extends Controller
 
             (new TrackingsReportExport($data, $user, $filename))->queue($filename);
 
-            return response()->json(['message' => 'A exportação começou']);
+            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
         } catch (Exception $e) {
             Log::warning('Erro ao exportar códigos de rastreio (TrackingApiController - export)');
             report($e);

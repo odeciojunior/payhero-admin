@@ -271,23 +271,18 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
-            //xhrFields: {
-            //    responseType: 'blob'
-            //},
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: (response) => {
+            error: response => {
                 errorAjaxResponse(response);
             },
-            success: () => {
-                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
+            success: response => {
+                $('#export-email').text(response.email);
+                $('#alert-export').show();
             }
-            // success: function success(response, textStatus, request) {
-            //     downloadFile(response, request);
-            // }
         });
     }
 

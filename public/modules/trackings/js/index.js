@@ -439,8 +439,9 @@ $(() => {
             error: response => {
                 errorAjaxResponse(response);
             },
-            success: () => {
-                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
+            success: response => {
+                $('#export-email').text(response.email);
+                $('#alert-export').show();
             },
         });
     }

@@ -100,6 +100,19 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Aviso de Exportação -->
+            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                <div class="d-flex">
+                    <i class="material-icons mr-10">info</i>
+                    <div class="w-full">
+                        <strong class="font-size-16">Exportando seu relatório</strong>
+                        <p class="font-size-14 pr-md-100 mb-0" >Sua exportação será entregue por e-mail para: <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.</p>
+                    </div>
+                    <i class="material-icons pointer" data-dimiss="alert">close</i>
+                </div>
+            </div>
+
             <!-- Resumo -->
             <div class="fixhalf"></div>
             @if(!auth()->user()->hasRole('attendance'))
@@ -125,7 +138,7 @@
                         </div>
                     </div>
                 </div>
-        @endif
+            @endif
         <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
@@ -264,7 +277,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=2') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
