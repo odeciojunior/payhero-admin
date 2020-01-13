@@ -135,6 +135,14 @@ $(document).ready(function () {
                 $("#company_id").attr('value', company.id_code);
                 htmlModifyAlerts(company);
 
+                //seleciona a opcao do select de acordo com o país da empresa
+                $("#country").find('option').each(function () {
+                    if (company.country == $(this).val()) {
+                        $(this).attr('selected', true);
+                    }
+                    $(this).attr('disabled', true);
+                });
+
                 $("#td-bank-status").html('').append(`
                     <span class='badge ${companyStatus[company.bank_document_status]}'>
                         ${companyStatusTranslated[company.bank_document_status]} 
@@ -166,7 +174,10 @@ $(document).ready(function () {
 
                 $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
 
-                $("#support_telephone").mask("(00) 0000-00009");
+                //só coloca mascara de telefone se a empresa for brasileira
+                if (company.country == 'brazil') {
+                    $("#support_telephone").mask("(00) 0000-00009");
+                }
 
                 $(".details-document-person-juridic").on('click', function () {
                     $("#document-type").val('');

@@ -100,8 +100,19 @@
                                             <input name="city" value="" type="text" class="form-control info-complemented" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-6">
-                                            <label for="country">Country</label>
-                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">
+                                            <label for="country">País</label>
+                                            {{--                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">--}}
+                                            <select id="country" name='country' class="form-control select-pad">
+                                                <option value="brazil">Brasil</option>
+                                                <option value="usa">Estados Unidos</option>
+                                                <option value="germany">Alemanha</option>
+                                                <option value="belgium">Bélgica</option>
+                                                <option value="spain">Espanha</option>
+                                                <option value="france">França</option>
+                                                <option value="holland">Holanda</option>
+                                                <option value="italy">Itália</option>
+                                                <option value="portugal">Portugal</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
@@ -259,7 +270,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=2')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=3')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
