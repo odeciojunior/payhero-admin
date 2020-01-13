@@ -386,51 +386,51 @@ class TesteController extends Controller
         //event(new BilletPaidEvent($plan, $sale, $sale->client));
 
         //---------------------------------------------- chargeback
-        //                $transferModel = new Transfer();
-        //                $saleModel     = new Sale();
-        //
-        //                $saleId = current(Hashids::connection('sale_id')->decode('OGYEL4GK'));
-        //
-        //                $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
-        //
-        //                $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
-        //
-        //                try {
-        //                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-        //                    $shopifyService->refundOrder($shopifyIntegration, $sale);
-        //                } catch (Exception $ex) {
-        //
-        //                }
-        //
-        //                $sale->update([
-        //                                  'gateway_status' => 'chargedback',
-        //                                  'status'         => '4',
-        //                              ]);
-        //
-        //                foreach ($sale->transactions as $transaction) {
-        //
-        //                    if ($transaction->status == 'transfered') {
-        //
-        //                        $transferModel->create([
-        //                                                   'transaction_id' => $transaction->id,
-        //                                                   'user_id'        => $transaction->company->user_id,
-        //                                                   'value'          => $transaction->value,
-        //                                                   'type'           => 'out',
-        //                                                   'reason'         => 'chargedback',
-        //                                                   'company_id'     => $transaction->company->id,
-        //                                               ]);
-        //
-        //                        $transaction->company->update([
-        //                                                          'balance' => $transaction->company->balance -= $transaction->value,
-        //                                                      ]);
-        //                    }
-        //
-        //                    $transaction->update([
-        //                                             'status' => 'chargedback',
-        //                                         ]);
-        //                }
-        //
-        //                dd('chargeback feito');
+//                        $transferModel = new Transfer();
+//                        $saleModel     = new Sale();
+//
+//                        $saleId = current(Hashids::connection('sale_id')->decode('OGYoBa3K'));
+//
+//                        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
+//
+//                        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+//
+//                        try {
+//                            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+//                            $shopifyService->refundOrder($shopifyIntegration, $sale);
+//                        } catch (Exception $ex) {
+//
+//                        }
+//
+//                        $sale->update([
+//                                          'gateway_status' => 'chargedback',
+//                                          'status'         => '4',
+//                                      ]);
+//
+//                        foreach ($sale->transactions as $transaction) {
+//
+//                            if ($transaction->status == 'transfered') {
+//
+//                                $transferModel->create([
+//                                                           'transaction_id' => $transaction->id,
+//                                                           'user_id'        => $transaction->company->user_id,
+//                                                           'value'          => $transaction->value,
+//                                                           'type'           => 'out',
+//                                                           'reason'         => 'chargedback',
+//                                                           'company_id'     => $transaction->company->id,
+//                                                       ]);
+//
+//                                $transaction->company->update([
+//                                                                  'balance' => $transaction->company->balance -= $transaction->value,
+//                                                              ]);
+//                            }
+//
+//                            $transaction->update([
+//                                                     'status' => 'chargedback',
+//                                                 ]);
+//                        }
+//
+//                        dd('chargeback feito');
 
         //---------------------------------------------- chargeback
 
