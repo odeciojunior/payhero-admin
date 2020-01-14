@@ -106,10 +106,8 @@
                                                 <option value="brazil">Brasil</option>
                                                 <option value="usa">Estados Unidos</option>
                                                 <option value="germany">Alemanha</option>
-                                                <option value="belgium">Bélgica</option>
                                                 <option value="spain">Espanha</option>
                                                 <option value="france">França</option>
-                                                <option value="holland">Holanda</option>
                                                 <option value="italy">Itália</option>
                                                 <option value="portugal">Portugal</option>
                                             </select>

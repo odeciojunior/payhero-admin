@@ -22,7 +22,7 @@ class RemessaOnlineService
     /**
      * @return float|null
      */
-    public function getCurrentDolarQuotation($currency){
+    public function getCurrentQuotation($currency){
 
         try{
 
