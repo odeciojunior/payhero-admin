@@ -89,7 +89,7 @@
                                                             <span class="input-group-text" id="input_group_cellphone" id="addon-cellphone">
                                                             </span>
                                                         </div>
-                                                        <input name="cellphone" value="" type="text" data-mask="(00) 00000-0000" class="input-pad form-control" id="cellphone" placeholder="Celular" aria-describedby="addon-cellphone">
+                                                        <input name="cellphone" value="" type="text" class="input-pad form-control" id="cellphone" placeholder="Celular" aria-describedby="addon-cellphone">
                                                     </div>
                                                     <small id="message_not_verified_cellphone" style='color:red; display:none;'>Celular não verificado, clique
                                                         <a href='#' id='btn_verify_cellphone' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_cellphone'>aqui</a>
@@ -128,7 +128,7 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="input-pad dados-residenciais" id="zip_code" placeholder="digite seu CEP">
+                                            <input name="zip_code" value="" type="text" class="input-pad dados-residenciais" id="zip_code" placeholder="digite seu CEP">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -535,7 +535,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=3')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=4')}}"></script>
     @endpush
 
 @endsection
