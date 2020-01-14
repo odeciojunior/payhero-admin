@@ -1,6 +1,5 @@
 let tracking_id = 'undefined';
 
-
 $(() => {
 
     $('#tracking-product-image').on('error', function () {
@@ -121,7 +120,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects',
+            url: '/api/projects?select=true',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -245,7 +244,7 @@ $(() => {
                             lastSale !== tracking.sale
                                 ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
                                 : `<td></td>`
-                        }
+                            }
                                          <td>${tracking.approved_date}</td>
                                          <td>
                                              <span style="max-width: 330px; display:block; margin:0 auto;">
@@ -265,7 +264,7 @@ $(() => {
                             ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
                                                <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
                             : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                        }
+                            }
                                            <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
@@ -280,7 +279,6 @@ $(() => {
             }
         });
     }
-
 
     //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {

@@ -81,6 +81,10 @@ class ShopifyService
      * @var string
      */
     private $project = "admin";
+    /**
+     * @var bool
+     */
+    private $skipToCart = false;
 
     /**
      * ShopifyService constructor.
@@ -297,6 +301,7 @@ class ShopifyService
      * @param string $value
      * @param null $domain
      * @param bool $ajax
+     * @param bool $skipToCart
      * @return bool
      * @throws ChildNotFoundException
      * @throws CircularException
@@ -587,6 +592,7 @@ class ShopifyService
     /**
      * @param $htmlCart
      * @param null $domain
+     * @param bool $skipToCart
      * @return mixed|string|string[]|null
      * @throws ChildNotFoundException
      * @throws CircularException
@@ -717,6 +723,18 @@ class ShopifyService
             $script->setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
             $divFoxScript->addChild($script);
             $script = new HtmlNode('script');
+
+            if ($this->skipToCart) {
+                $skipScript = new HtmlNode('script');
+                $skipScript->addChild(new TextNode("if(document.cookie.match(new RegExp('cart=([^;]+)'))){
+                                                             document.getElementsByTagName('body').item(0).style.display = 'none';
+                                                             let htmlData = `<div><style>@keyframes loader-circle{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loader-container{height:100vh;text-align:center;padding-top:40vh}.loader{width:75px;height:75px;display:inline-block;border-top:solid #d3d3d3;border-right:solid #d3d3d3;border-bottom:solid #d3d3d3;border-left:solid #557b96;border-width:5px;border-radius:50%;animation:loader-circle 1.1s infinite linear}</style><div class='loader-container'><div class='loader'></div></div></div>`;
+                                                             document.getElementsByTagName('html').item(0).insertAdjacentHTML( 'beforeend', htmlData);
+                                                             document.getElementsByClassName('cart__submit').item(0).click();
+                                                             document.cookie = 'cart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                                          }"));
+                $divFoxScript->addChild($skipScript);
+            }
 
             $script->addChild(new TextNode("$(document).ready(function (){
 
@@ -1834,6 +1852,16 @@ class ShopifyService
             ];
         }
     }
+
+    /**
+     * @param bool $skipToCart
+     */
+    public function setSkipToCart(bool $skipToCart): void
+    {
+        $this->skipToCart = $skipToCart;
+    }
+
+
 }
 
 

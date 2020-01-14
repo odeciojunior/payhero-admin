@@ -13,7 +13,7 @@ label.switch {
     opacity: 0;
     width: 0;
     height: 0;
-} 
+}
 .slider {
     position: absolute;
     cursor: pointer;
@@ -54,4 +54,11 @@ input:checked + .slider:before {
 }
 .slider.round:before {
     border-radius: 50%;
+}
+
+input:checked + .slider.gray {
+    background-color: #6c757d;
+}
+input:focus + .slider.gray {
+    box-shadow: 0 0 1px #6c757d;
 }
