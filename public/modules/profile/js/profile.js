@@ -20,19 +20,6 @@ $(document).ready(function () {
 
     let user = '';
 
-    let maskOptions = {
-        // onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-        //     var masks = ['000.000.000-000', '00.000.000/0000-00'];
-        //     var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-        //     $('#document').mask(mask, maskOptions);
-        // }
-        onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-            $('#document').mask('000.000.000-00');
-        }
-    };
-
-    $('#document').mask('000.000.000-000', maskOptions);
-
     // Verificar número de celular
     $("#btn_verify_cellphone").on("click", function () {
         event.preventDefault();
@@ -258,6 +245,7 @@ $(document).ready(function () {
 
                 verifyDocuments(response.data);
                 verifyUserAddress(response.data);
+                verifyUserCountry(response.data);
             }
         });
     }
@@ -526,38 +514,6 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
-    $("#zip_code").on("input", function () {
-
-        var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
-
-        if (cep.length != 8) return false;
-
-        $.ajax({
-            url: "https://viacep.com.br/ws/" + cep + "/json/",
-            type: "GET",
-            cache: false,
-            async: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-
-                if (response.localidade) {
-                    $("#city").val(unescape(response.localidade));
-                }
-                if (response.bairro) {
-                    $("#neighborhood").val(unescape(response.bairro));
-                }
-                if (response.uf) {
-                    $("#state").val(unescape(response.uf));
-                }
-                if (response.logradouro) {
-                    $("#street").val(unescape(response.logradouro));
-                }
-            }
-        });
-    });
-
     $("#nav_taxs").on('click', function () {
         getTax();
     });
@@ -658,14 +614,16 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
-    function getRefusedDocuments(refusedDocuments) {
-        $.each(refusedDocuments, function (index, value) {
-            $('#div_documents_refused').append('<div class="alert alert-danger text-center my-20">' +
-                '<p>O ' + value.type_translated + ' que foi enviado na data: ' + value.date + ' foi reprovado pelo motivo abaixo: <br><a href="' + value.document_url + '" class="document-url">Visualizar documento</a> <br><b>' + value.refused_reason + '</b> <br></p>' +
-                '</div>');
-        });
+    function verifyUserCountry(user) {
+        if (user.country == 'brazil') {
+            $('#zip_code').mask('00000-000');
+            $('#cellphone').mask('+55 (00) 00000-0000');
+            $('#document').mask('000.000.000-00');
+            zipCode();
+        } else {
+            $('#cellphone').mask('+0#');
+        }
     }
-
     function htmlTableDocuments(data) {
         let dados = '';
         let verifyReason = false;
@@ -725,6 +683,40 @@ $(document).ready(function () {
                 $("#loaderLine").remove();
 
             }
+        });
+    }
+
+    function zipCode() {
+        $("#zip_code").on("input", function () {
+
+            var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
+
+            if (cep.length != 8) return false;
+
+            $.ajax({
+                url: "https://viacep.com.br/ws/" + cep + "/json/",
+                type: "GET",
+                cache: false,
+                async: false,
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+
+                    if (response.localidade) {
+                        $("#city").val(unescape(response.localidade));
+                    }
+                    if (response.bairro) {
+                        $("#neighborhood").val(unescape(response.bairro));
+                    }
+                    if (response.uf) {
+                        $("#state").val(unescape(response.uf));
+                    }
+                    if (response.logradouro) {
+                        $("#street").val(unescape(response.logradouro));
+                    }
+                }
+            });
         });
     }
 
