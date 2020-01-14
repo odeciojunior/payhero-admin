@@ -17,21 +17,18 @@
                 @csrf
                 @method('POST')
                 <div class="card shadow p-30" data-plugin="matchHeight">
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-3 col-12">
                         <label for="country">País da empresa</label>
                         <select id="country" name='country' class="form-control select-pad">
                             <option value="brazil">Brasil</option>
-                            <option value="usa" disabled>United States</option>
-                            <option value="spain" disabled>Alemanha</option>
-                            <option value="spain" disabled>Áustria</option>
-                            <option value="spain" disabled>Bélgica</option>
-                            <option value="spain" disabled>Espanha</option>
-                            <option value="spain" disabled>Eslováquia</option>
-                            <option value="spain" disabled>Eslovénia</option>
-                            <option value="spain" disabled>França</option>
-                            <option value="spain" disabled>Finlândia</option>
-                            <option value="spain" disabled>Itália</option>
-                            <option value="spain" disabled>Portugal</option>
+                            <option value="usa">Estados Unidos</option>
+                            <option value="germany">Alemanha</option>
+                            <option value="belgium">Bélgica</option>
+                            <option value="spain">Espanha</option>
+                            <option value="france">França</option>
+                            <option value="holland">Holanda</option>
+                            <option value="italy">Itália</option>
+                            <option value="portugal">Portugal</option>
                         </select>
                     </div>
                     <div class="form-group col-xl-6">
@@ -83,7 +80,14 @@
                                     <label for="country">País da empresa</label>
                                     <select id="country" name='country' class="form-control select-pad">
                                         <option value="brazil">Brasil</option>
-                                        <option value="usa" disabled>United States</option>
+                                        <option value="usa">Estados Unidos</option>
+                                        <option value="germany">Alemanha</option>
+                                        <option value="belgium">Bélgica</option>
+                                        <option value="spain">Espanha</option>
+                                        <option value="france">França</option>
+                                        <option value="holland">Holanda</option>
+                                        <option value="italy">Itália</option>
+                                        <option value="portugal">Portugal</option>
                                     </select>
                                 </div>
                             </div>
