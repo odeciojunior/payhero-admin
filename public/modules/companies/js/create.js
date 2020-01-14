@@ -1,16 +1,5 @@
 $(document).ready(function () {
     verify();
-    updateForm();
-
-    function updateForm() {
-        var options = {
-            onKeyPress: function (cpf, ev, el, op) {
-                var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                $('#brazil_company_document').mask((cpf.length > 14) ? masks[1] : masks[0], op);
-            }
-        }
-        $('#brazil_company_document').length > 11 ? $('#brazil_company_document').mask('00.000.000/0000-00', options) : $('#brazil_company_document').mask('000.000.000-00#', options);
-    }
 
     function verify() {
         $.ajax({
@@ -188,6 +177,13 @@ $(document).ready(function () {
 
         $("#company_document_label").text(companyDocumentName[$(this).val()]);
         $('#company_document').attr('placeholder', companyDocumentName[$(this).val()]);
+
+        if($(this).val() == 'brazil'){
+            $('#company_document').mask('00.000.000/0000-00');
+        }
+        else{
+            $('#company_document').unmask();
+        }
     });
 
     $("#country").change();
