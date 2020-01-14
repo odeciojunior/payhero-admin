@@ -79,8 +79,9 @@
                                                     </small>
                                                 </div>
                                                 <div class="form-group col-xl-6">
-                                                    <label for="cpf">CPF</label>
-                                                    <input name="document" value="" type="text" class="input-pad" id="document" placeholder="CPF">
+                                                    {{--carrega label no js--}}
+                                                    <label for="cpf" class='label-document'></label>
+                                                    <input name="document" value="" type="text" class="input-pad" id="document">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="celular">Celular (WhatsApp)</label>
@@ -144,17 +145,29 @@
                                             <label for="neighborhood">Bairro</label>
                                             <input name="neighborhood" value="" type="text" class="input-pad dados-residenciais" id="neighborhood" placeholder="Bairro">
                                         </div>
-                                        <div class="form-group col-xl-4">
+                                        <div class="form-group col">
                                             <label for="complement">Complemento</label>
                                             <input name="complement" value="" type="text" class="input-pad dados-residenciais" id="complement" placeholder="Complemento">
                                         </div>
-                                        <div class="form-group col-xl-4">
+                                        <div class="form-group col">
                                             <label for="city">Cidade</label>
                                             <input name="city" value="" type="text" class="input-pad dados-residenciais" id="city" placeholder="Cidade">
                                         </div>
-                                        <div class="form-group col-xl-4">
+                                        <div class="form-group col div-state" style='display:none;'>
                                             <label for="state">Estado</label>
                                             <input name="state" value="" type="text" class="input-pad dados-residenciais" id="state" placeholder="Estado">
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="country">País</label>
+                                            <select id="country" name='country' class="form-control select-pad">
+                                                <option value="brazil">Brasil</option>
+                                                <option value="usa">Estados Unidos</option>
+                                                <option value="germany">Alemanha</option>
+                                                <option value="spain">Espanha</option>
+                                                <option value="france">França</option>
+                                                <option value="italy">Itália</option>
+                                                <option value="portugal">Portugal</option>
+                                            </select>
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10">
@@ -535,7 +548,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=4')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=5')}}"></script>
     @endpush
 
 @endsection
