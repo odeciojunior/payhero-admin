@@ -296,7 +296,7 @@
             {{-- COMEÇO CONFIGURAÇÕES SHOPIFY --}}
             <div id='collapseOneShopify' class='collapse mb-15'>
                 <div class='row justify-content-center'>
-                    <div class="col-md-4 pt-sm-20">
+                    <div class="col-md-4 pt-20">
                         <a id="bt-change-shopify-integration" role="button" integration-status=""
                            class="pointer align-items-center" data-toggle="modal"
                            data-target="#modal-change-shopify-integration">
@@ -308,7 +308,7 @@
                             <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
                         </div>
                     </div>
-                    <div class='col-md-4 pt-sm-20'>
+                    <div class='col-md-4 pt-20'>
                         <a id="bt-shopify-sincronization-product" role="button" integration-status=""
                            class="pointer align-items-center" data-toggle="modal"
                            data-target="#modal-change-shopify-integration">
@@ -316,7 +316,7 @@
                             <span class="gray"> Sincronizar produtos com shopify </span>
                         </a>
                     </div>
-                    <div class='col-md-4 pt-sm-20'>
+                    <div class='col-md-4 pt-20'>
                         <a id="bt-shopify-sincronization-template" role="button"
                            integration-status=""
                            class="pointer align-items-center" data-toggle="modal"
@@ -337,13 +337,22 @@
                         </div>
                         <input id='shopify-token' class='form-control' style='display:none;'>
                     </div>
-                    <div id='div-shopify-permissions' class='col-md-4 pt-md-35 pt-sm-20' style='display:none;'>
+                    <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
                         <a id="bt-shopify-verify-permissions" role="button"
                            integration-status=""
                            class="pointer align-items-center">
                             <i class="material-icons gray"> sync </i>
                             <span class="gray"> Verificar permissões do Token</span>
                         </a>
+                    </div>
+                    <div class='col-md-4 pt-20'>
+                        <div class="switch-holder">
+                            <div class="gray mb-5">Skip to cart</div>
+                            <label class="switch">
+                                <input id="skiptocart-input" type="checkbox" value="0" class="check">
+                                <span class="slider gray round"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

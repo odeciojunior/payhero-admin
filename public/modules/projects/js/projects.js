@@ -253,6 +253,9 @@ $(() => {
                 }
             }
 
+            console.log(project)
+
+            $('#skiptocart-input').prop('checked', project.skip_to_cart).val(project.skip_to_cart);
         }
 
         $("#checkout_type").val(project.checkout_type);
@@ -744,6 +747,40 @@ $(() => {
             success: function (response) {
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
+            }
+        });
+    });
+
+    $('#skiptocart-input').on('change', function () {
+
+        let input = $(this);
+        input.attr('disabled', true).parent()
+            .parent()
+            .css('opacity', '.5');
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/skiptocart',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+                skip_to_cart: parseInt(input.val()),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                input.attr('disabled', false).parent()
+                    .parent()
+                    .css('opacity', '1');
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
+                input.attr('disabled', false).parent()
+                    .parent()
+                    .css('opacity', '1');
             }
         });
     });
