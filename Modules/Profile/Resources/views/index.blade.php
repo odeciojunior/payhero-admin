@@ -162,6 +162,7 @@
                                             <select id="country" name='country' class="form-control select-pad">
                                                 <option value="brazil">Brasil</option>
                                                 <option value="usa">Estados Unidos</option>
+                                                <option value="chile">Chile</option>
                                                 <option value="germany">Alemanha</option>
                                                 <option value="spain">Espanha</option>
                                                 <option value="france">França</option>
@@ -548,7 +549,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=5')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=6')}}"></script>
     @endpush
 
 @endsection
