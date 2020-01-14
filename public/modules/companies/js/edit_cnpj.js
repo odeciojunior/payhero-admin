@@ -163,7 +163,10 @@ $(document).ready(function () {
                 verifyDocuments(company);
                 // getRefusedDocuments(response.company.refusedDocuments);
                 verifyCompanyAddress(company);
+
+                //verifica país da empresa e coloca mascara
                 verifyCompanyCountry(company);
+
                 openDocument();
                 //mascara cnpj
                 var optionsCompanyDocument = {
