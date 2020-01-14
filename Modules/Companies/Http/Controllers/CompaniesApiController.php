@@ -91,7 +91,7 @@ class CompaniesApiController extends Controller
 
             return response()->json(
                 [
-                    'message'   => 'Dados atualizados com sucesso',
+                    'message'   => 'Empresa cadastrada com sucesso',
                     'idEncoded' => Hashids::encode($company->id),
                 ],
                 Response::HTTP_OK

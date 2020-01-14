@@ -1,6 +1,9 @@
 $(document).ready(function () {
+
     atualizar();
+
     let transfersCompanySelect = $("#transfers_company_select");
+
     let extractCompanySelect = $("#extract_company_select");
 
     function atualizar() {
@@ -148,7 +151,7 @@ $(document).ready(function () {
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
-                $(".currency").html(isEmpty(response.currency));
+                $(".currency").html('R$ ');
                 $(".available-balance").html(isEmpty(response.available_balance));
                 $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
@@ -159,8 +162,17 @@ $(document).ready(function () {
                 $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
-                // $.getScript('modules/withdrawals/js/index.js');
-                // $("#withdrawals-table-data").html('');
+
+                if(response.currency != 'real'){
+                    $("#quotation_information").show();
+                }
+                else{
+                    $("#quotation_information").hide();
+                }
+
+                $("#current_quotation").text("R$ " + response.currencyQuotation);
+                $("#label_quotation").text("Cotação do " + response.currency);
+
                 updateWithdrawalsTable();
                 loadOnAny('.price', true);
             }
@@ -420,9 +432,6 @@ $(document).ready(function () {
         }
     }
 
-    /**
-     * Module Finances - tab extract
-     */
     function updateTransfersTable(link = null) {
         $("#table-transfers-body").html('');
 
@@ -529,4 +538,6 @@ $(document).ready(function () {
             $('table').addClass('table-striped');
         }
     }
+
+
 });

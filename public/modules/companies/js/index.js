@@ -64,9 +64,10 @@ $(document).ready(function () {
                 } else {
                     $.each(response.data, function (index, value) {
                         dados = `
-                    
+
                         <tr>
                             <td>${value.fantasy_name}</td>
+                            <td>${value.country}</td>
                             <td>${value.company_document}</td>
                             <td>
                             `;
