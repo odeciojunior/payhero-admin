@@ -251,11 +251,9 @@ $(() => {
                         .attr('integration-status', shopifyIntegrations[0].status)
                         .show();
                 }
+
+                $('#skiptocart-input').prop('checked', shopifyIntegrations[0].skip_to_cart).val(shopifyIntegrations[0].skip_to_cart);
             }
-
-            console.log(project)
-
-            $('#skiptocart-input').prop('checked', project.skip_to_cart).val(project.skip_to_cart);
         }
 
         $("#checkout_type").val(project.checkout_type);

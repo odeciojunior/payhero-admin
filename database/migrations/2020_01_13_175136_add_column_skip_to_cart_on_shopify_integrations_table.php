@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnSkipToCartOnProjectsTable extends Migration
+class AddColumnSkipToCartOnShopifyIntegrationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddColumnSkipToCartOnProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        Schema::table('shopify_integrations', function (Blueprint $table) {
             $table->boolean('skip_to_cart')->default(false);
         });
     }
@@ -25,7 +25,7 @@ class AddColumnSkipToCartOnProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        Schema::table('shopify_integrations', function (Blueprint $table) {
             $table->dropColumn(['skip_to_cart']);
         });
     }

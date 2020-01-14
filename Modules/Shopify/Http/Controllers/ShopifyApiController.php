@@ -696,8 +696,8 @@ class ShopifyApiController extends Controller
 
                     $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
 
-                    $project->skip_to_cart = boolval($data['skip_to_cart']);
-                    $project->save();
+                    $integration->skip_to_cart = boolval($data['skip_to_cart']);
+                    $integration->save();
 
                     activity()->on($projectModel)->tap(function(Activity $activity) use($projectId) {
                         $activity->log_name = 'updated';
