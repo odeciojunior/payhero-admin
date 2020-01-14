@@ -61,8 +61,15 @@ class NotificationApiService
     public function getPushNotifications()
     {
         try {
-            $notifications = PushNotification::where('user_id', auth()->user()->id)->get();
-            $return        = [];
+            $notifications = PushNotification::where('user_id', auth()->user()->id)->paginate(10);
+
+            $return_object = [
+                "last_page"    => $notifications->lastPage(),
+                "current_page" => $notifications->currentPage(),
+                "per_page"     => $notifications->perPage(),
+                "total"        => $notifications->total(),
+                "data"         => [],
+            ];
 
             foreach ($notifications as $notification) {
 
@@ -74,7 +81,7 @@ class NotificationApiService
                     3 -> VENDA POR CARTÃO
                 */
 
-                $retrun_object = [
+                $return_object['data'][] = [
                     'user_id'              => $notification['user_id'] ?? '',
                     'sale_id'              => $notification['sale_id'] ?? '',
                     'transaction_id'       => $notification['transaction_id'] ?? '',
@@ -85,10 +92,9 @@ class NotificationApiService
                     'notification_date'    => $notification['created_at']->format('d/m/Y'),
                     'notification_hour'    => $notification['created_at']->format('H:i:s'),
                 ];
-                array_push($return, $retrun_object);
             }
 
-            return response()->json($return, 200);
+            return response()->json($return_object, 200);
         } catch (Exception $e) {
             Log::warning('Erro ao obter push notificações');
             report($e);
@@ -123,23 +129,23 @@ class NotificationApiService
                 if ($sale->status == '1') {
                     $notificationReturn = [
                         'notification_company' => $companie->fantasy_name,
-                        'notification_header'  => 'Você acaba de realizar uma venda',
-                        'notification_body'    => 'Um boleto acabou de ser pago',
+                        'notification_header'  => 'Boleto pago',
+                        'notification_body'    => 'Boleto pago',
                         'notification_type'    => '1',
                     ];
                 } else {
                     $notificationReturn = [
                         'notification_company' => $companie->fantasy_name,
-                        'notification_header'  => 'Você acaba de realizar uma venda',
-                        'notification_body'    => 'Foi realizada uma venda por boleto',
+                        'notification_header'  => 'Boleto gerado',
+                        'notification_body'    => 'Boleto gerado',
                         'notification_type'    => '2',
                     ];
                 }
             } else {
                 $notificationReturn = [
                     'notification_company' => $companie->fantasy_name,
-                    'notification_header'  => 'Você acaba de realizar uma venda',
-                    'notification_body'    => 'Foi realizada uma venda por cartão',
+                    'notification_header'  => 'Venda realizada',
+                    'notification_body'    => 'Venda realizada',
                     'notification_type'    => '3',
                 ];
             }
