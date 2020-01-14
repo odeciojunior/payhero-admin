@@ -668,4 +668,54 @@ class ShopifyApiController extends Controller
                                     ], 400);
         }
     }
+
+    public function setSkipToCart(Request $request)
+    {
+        $data                    = $request->all();
+        $shopifyIntegrationModel = new ShopifyIntegration();
+        $projectModel = new Project();
+
+        if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
+            $projectId = current(Hashids::decode($data['project_id']));
+            $project = $projectModel->with(['domains'])->find($projectId);
+
+            if ($projectId) {
+                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+
+                try {
+                    $shopify = new ShopifyService($integration->url_store, $integration->token);
+
+                    $shopify->setSkipToCart(boolval($data['skip_to_cart']));
+
+                    $shopify->setThemeByRole('main');
+
+                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                    $domain = $project->domains->first();
+                    $domainName = $domain ? $domain->name : null;
+
+                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
+
+                    $integration->skip_to_cart = boolval($data['skip_to_cart']);
+                    $integration->save();
+
+                    activity()->on($projectModel)->tap(function(Activity $activity) use($projectId) {
+                        $activity->log_name = 'updated';
+                        $activity->subject_id = current(Hashids::decode($projectId));
+                    })->log('Skip to cart atualizado no projeto ' . $project->name);
+
+                    return response()->json(['message' => 'Skip to cart atualizado no projeto']);
+
+                } catch (Exception $e) {
+                    report($e);
+
+                    return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
+            }
+        } else {
+            return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
+        }
+    }
 }
