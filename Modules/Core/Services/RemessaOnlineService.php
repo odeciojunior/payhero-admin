@@ -20,7 +20,7 @@ class RemessaOnlineService
 
 
     /**
-     * @return float
+     * @return float|null
      */
     public function getCurrentDolarQuotation($currency){
 
@@ -29,6 +29,10 @@ class RemessaOnlineService
             $client = new Client();
 
             $urlSource = $this->getUrlSource($currency);
+
+            if(empty($urlSource)){
+                return null;
+            }
 
             $response = json_decode($client->get($urlSource)->getBody()->getContents());
 
@@ -44,7 +48,7 @@ class RemessaOnlineService
     /**
      * @return string
      */
-    private function getUrlSource($currency){
+    private function getUrlSource($currency = null){
 
         switch($currency){
             case 'dolar':

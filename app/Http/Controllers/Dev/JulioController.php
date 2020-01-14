@@ -50,10 +50,12 @@ class JulioController extends Controller
 
         // $dataSms = [
         //     'message'   => 'teste',
-        //     'telephone' => '+5555996931098',
+        //     'telephone' => '5555996931098',
         // ];
 
         // event(new SendSmsEvent($dataSms));
+
+        // dd("foi");
 
         // $connection = null;
         // $default = 'default';
@@ -66,11 +68,18 @@ class JulioController extends Controller
         //For the reserved jobs
         // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':reserved' ,0, -1) );    }
 
-        $remessaOnlineService = new RemessaOnlineService();
+        // $remessaOnlineService = new RemessaOnlineService();
 
-        $quotation = $remessaOnlineService->getCurrentDolarQuotation('euro');
+        // $quotation = $remessaOnlineService->getCurrentDolarQuotation('eurofd');
 
-        dd($quotation);
+        // dd($quotation);
+
+        User::orderBy('id')->chunk(100, function($users){
+            foreach($users as $user){
+                dd($user);
+            }
+        });
+
     }
 }
 
