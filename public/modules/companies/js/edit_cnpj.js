@@ -163,6 +163,7 @@ $(document).ready(function () {
                 verifyDocuments(company);
                 // getRefusedDocuments(response.company.refusedDocuments);
                 verifyCompanyAddress(company);
+                verifyCompanyCountry(company);
                 openDocument();
                 //mascara cnpj
                 var optionsCompanyDocument = {
@@ -173,11 +174,6 @@ $(document).ready(function () {
                 };
 
                 $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
-
-                //só coloca mascara de telefone se a empresa for brasileira
-                if (company.country == 'brazil') {
-                    $("#support_telephone").mask("(00) 0000-00009");
-                }
 
                 $(".details-document-person-juridic").on('click', function () {
                     $("#document-type").val('');
@@ -311,7 +307,30 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
-
+    function verifyCompanyAddress(company) {
+        if (company.zip_code == '' || company.street == '' || company.number == '' || company.neighborhood == '' || company.state == '' || company.city == '' || company.country == '') {
+            $('#row_dropzone_documents').hide();
+            $('#div_address_pending').show();
+        } else {
+            $('#row_dropzone_documents').show();
+            $('#div_address_pending').hide();
+        }
+    }
+    function verifyCompanyCountry(company) {
+        if (company.country == 'brazil') {
+            $("#support_telephone").mask("+55 (00) 0000-00009");
+            //mascara cnpj
+            var optionsCompanyDocument = {
+                onKeyPress: function (cpf, ev, el, op) {
+                    var masks = ['000.000.000-000', '00.000.000/0000-00'];
+                    $('#company_document').mask((cpf.length > 14) ? masks[1] : masks[0], op);
+                }
+            };
+            $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
+        } else {
+            $('#support_telephone').mask('+0#');
+        }
+    }
     function getDocuments(encodedId) {
         loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
         $.ajax({
