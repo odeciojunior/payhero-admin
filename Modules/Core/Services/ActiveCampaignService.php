@@ -7,6 +7,11 @@ use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Core\Entities\ActivecampaignEvent;
 use Modules\Core\Entities\ActivecampaignSent;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\ActivecampaignCustom;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\Domain;
 
 class ActiveCampaignService
 {
@@ -174,7 +179,7 @@ class ActiveCampaignService
      * @param  $projectId
      * @param  $instance
      */
-    public function execute($instanceId, $eventSale, $name, $phone, $email, $projectId, $instance)
+    public function execute($instanceId, $eventSale, $name, $phone, $email, $projectId, $instance, $dataCustom = [])
     {
         try {
             $activecampaignIntegration = new ActivecampaignIntegration;
@@ -193,7 +198,30 @@ class ActiveCampaignService
                         'email'     => $email,
                         'lastName'  => '',
                     ];
-                    return $this->sendContact($data, $event, $instanceId, $instance);
+
+                    $planSales = PlanSale::with('plan')->where('sale_id', $instanceId)->get();
+                    $trackings = Tracking::where('sale_id', $instanceId)->get();
+                    $domain    = Domain::where('project_id', $projectId)->first();
+
+                    $trackingCode = '';
+                    $trackingUrl = '';
+                    foreach ($trackings as $tracking) {
+                        $trackingCode .= $tracking->tracking_code . ', ';
+                        $trackingUrl .= 'https://tracking.' . $domain->name . '/'.$tracking->tracking_code . ', ';
+                    }
+                    $dataCustom['projeto_nome']  = Project::find($projectId)->name;
+                    $dataCustom['codigo_pedido'] = Hashids::encode($instanceId);
+
+                    foreach ($planSales as $plan) {
+                        $dataCustom['produtos'][] = $plan->plan->name;
+                    }
+
+                    if(!empty($trackingCode)) {
+                        $dataCustom['codigo_rastreio']   = $trackingCode;
+                        $dataCustom['link_rastreamento'] = $trackingUrl;
+                    }
+
+                    return $this->sendContact($data, $event, $instanceId, $instance, $dataCustom);
                 }
                 return response()->json(['message' => 'Ocorreu algum erro'], 400);
 
@@ -211,13 +239,52 @@ class ActiveCampaignService
      * @param  int $instanceId
      * @param  string $instance
      */
-    public function sendContact($data, $event, $instanceId, $instance)
+    public function sendContact($data, $event, $instanceId, $instance, $dataCustom)
     {
         try {
 
             $contact = $this->createOrUpdateContact($data);
             $contact = json_decode($contact, true);
             if (isset($contact['contact']['id'])) {
+
+                $customFields = ActivecampaignCustom::where('activecampaign_integration_id', $this->integrationId)->get();
+
+                $sentCustom = [];
+                $returnCustom = [];
+                foreach ($dataCustom as $key => $value) {
+                    $field = $customFields->firstWhere('custom_field', $key);
+                    if($key == 'produtos') {
+                        
+                        $fieldOptions = json_decode($this->getCustomField($field->custom_field_id), true);
+                        
+                        $valueOptionProducts = '';
+                        
+                        if(isset($fieldOptions['fieldOptions'])) {
+                            foreach ($fieldOptions['fieldOptions'] as $fieldOption) {
+                                if(in_array($fieldOption['value'], $value)) {
+                                    $valueOptionProducts .= '||'. $fieldOption['value'];
+                                    $value = array_diff($value, [$fieldOption['value']]);
+                                }
+                            }
+                        }
+                        if(count($value) > 0) {
+                            $this->createCustomOption($field->custom_field_id, $value);
+                        }
+                        foreach ($value as $valueOption) {
+                            $valueOptionProducts .= '||'. $valueOption;
+                        }
+
+                        if(!empty($valueOptionProducts)) {
+                            $valueOptionProducts .= '||';
+                            $sentCustom[]   = [$contact['contact']['id'], $field->custom_field_id, $valueOptionProducts];
+                            $returnCustom[] = $this->setCustomFieldValue($contact['contact']['id'], $field->custom_field_id, $valueOptionProducts);
+                        }
+                    } else {
+                        $sentCustom[]   = [$contact['contact']['id'], $field->custom_field_id, $value];
+                        $returnCustom[] = $this->setCustomFieldValue($contact['contact']['id'], $field->custom_field_id, $value);
+                    }
+                }
+
                 // adicionar tags no contato
                 $arrayApply = json_decode($event->add_tags, true);
                 if(is_array($arrayApply)) {
@@ -264,8 +331,8 @@ class ActiveCampaignService
             $activecampaignSentModel = new ActivecampaignSent;
             $activecampaignSentModel->create(
                 [
-                    'data'                          => json_encode(['contact' => $data, 'tags_add' => $arrayApply ?? null, 'tags_remove' => $arrayRemove ?? null]),
-                    'response'                      => json_encode(['contact' => $contact, 'tags' => $return ?? null]),
+                    'data'                          => json_encode(['contact' => $data, 'tags_add' => $arrayApply ?? null, 'tags_remove' => $arrayRemove ?? null, 'customs' => $sentCustom ?? null]),
+                    'response'                      => json_encode(['contact' => $contact, 'tags' => $return ?? null, 'customs' => $returnCustom ?? null]),
                     'sent_status'                   => $sentStatus,
                     'instance_id'                   => $instanceId,
                     'instance'                      => $instance,
@@ -282,10 +349,10 @@ class ActiveCampaignService
      * @param  string $name
      * @return json
      */
-    public function createCustomField($name)
+    public function createCustomField($name, $type = 'text')
     {
         $data = [
-            "type"  => "text",
+            "type"  => $type,
             "title" => $name,
         ];
         // return['field']['id']...
@@ -312,7 +379,37 @@ class ActiveCampaignService
      */
     public function getCustomFields()
     {
-        return $this->sendDataActiveCampaign(null, 'fields', 'GET');
+        $fields = $this->sendDataActiveCampaign(null, 'fields?limit=100', 'GET');
+        $fields = json_decode($fields, true);
+        $total  = (int)$fields['meta']['total'] ?? 0;
+        $pages  = ($total > 0) ? ceil($total/100) : 0;
+        $return = $fields;
+
+        for ($i=1; $i < $pages; $i++) { 
+            $fields = $this->sendDataActiveCampaign(null, 'fields?limit=100&offset=' . ($i*100), 'GET');
+            $fields = json_decode($fields, true);
+            $return = array_merge_recursive($return, $fields);
+        }
+        return $return;
+    }
+
+    public function getCustomField($id)
+    {
+        return $this->sendDataActiveCampaign(null, 'fields/'.$id, 'GET');
+    }
+
+    public function createCustomOption($fieldId, $dataFields)
+    {
+        $data = [];
+        foreach ($dataFields as $value) {
+            $data[] = [
+                "field" => $fieldId,
+                "label" => $value,
+                "value" => $value,
+            ];
+        }
+
+        return $this->sendDataActiveCampaign(['fieldOptions' => $data], 'fieldOption/bulk', 'POST');
     }
 
     /**
@@ -379,5 +476,54 @@ class ActiveCampaignService
     public function getContactById($contactId)
     {
         return $this->sendDataActiveCampaign(null, 'contacts/' . $contactId , 'GET');
+    }
+
+    /**
+     * @param int $integrationId
+     */
+    public function createCustomFieldsDefault($integrationId)
+    {
+        $fieldsDefault = [
+            'url_boleto',
+            'projeto_nome',
+            'link_carrinho_abandonado',
+            'codigo_pedido',
+            'produtos',
+            'sub_total',
+            'frete',
+            'codigo_rastreio',
+            'link_rastreamento',
+        ];
+
+        $fieldsCreate = $fieldsDefault;
+
+        $customnFieldsActive = $this->getCustomFields();
+        if(isset($customnFieldsActive['fields'])) {
+
+            foreach ($customnFieldsActive['fields'] as $value) {
+                if(in_array($value['title'], $fieldsCreate)) {
+                    $fieldsCreate = array_diff($fieldsCreate, [$value['title']]);
+                    ActivecampaignCustom::create([
+                        'custom_field'                  => $value['title'],
+                        'custom_field_id'               => $value['id'],
+                        'activecampaign_integration_id' => $integrationId
+                    ]);
+                }
+            }
+        }
+
+        foreach ($fieldsCreate as $value) {
+            $newField = json_decode($this->createCustomField($value), true);
+            if(isset($newField['field']['id'])) {
+
+                ActivecampaignCustom::create([
+                    'custom_field'                  => $value,
+                    'custom_field_id'               => $newField['field']['id'],
+                    'activecampaign_integration_id' => $integrationId
+                ]);
+
+                $this->createCustomFieldRelation($newField['field']['id'], 0);
+            }
+        }
     }
 }

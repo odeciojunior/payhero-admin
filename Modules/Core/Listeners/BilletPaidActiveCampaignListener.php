@@ -33,8 +33,14 @@ class BilletPaidActiveCampaignListener implements ShouldQueue
             $sale                  = $event->sale;
             $client                = $event->client;
 
+            $dataCustom = [
+                'url_boleto' => $sale->boleto_link,
+                'sub_total'  => $sale->sub_total,
+                'frete'      => $sale->shipment_value
+            ];
+
             // execute($saleId, $eventSale, $name, $phone, $email, $projectId)
-            return $activeCampaignService->execute($sale->id, 2, $client->name, $client->telephone, $client->email, $sale->project_id, 'sale'); // 2 - boleto pago
+            return $activeCampaignService->execute($sale->id, 2, $client->name, $client->telephone, $client->email, $sale->project_id, 'sale', $dataCustom); // 2 - boleto pago
         } catch (Exception $e) {
             report($e);
 
