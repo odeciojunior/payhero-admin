@@ -607,13 +607,14 @@ $(document).ready(function () {
 
     $('#country').on('change', function () {
         let documentName = {
-            brazil: 'CNPJ',
-            portugal: 'NIPC',
-            usa: 'ENI',
-            germany: 'NIF',
-            spain: 'CIF',
-            france: 'SIRET',
-            italy: 'Partita IVA'
+            brazil: 'CPF',
+            portugal: 'NIF (Número de Identificação Fiscal)',
+            usa: 'SSN (Social Security Number)',
+            germany: 'STEUERNUMMER',
+            spain: 'DNI (Documento Nacional de Identidade)',
+            france: 'CI',
+            italy: 'Codice Fiscale',
+            chile: 'RUT (Rol Único Tributario)'
         };
         if ($(this).val() == 'brazil' || $(this).val() == 'usa') {
             $(".div-state").show();
@@ -668,13 +669,14 @@ $(document).ready(function () {
 
     function loadLabelsByCountry(user) {
         let documentName = {
-            brazil: 'CNPJ',
-            portugal: 'NIPC',
-            usa: 'ENI',
-            germany: 'NIF',
-            spain: 'CIF',
-            france: 'SIRET',
-            italy: 'Partita IVA'
+            brazil: 'CPF',
+            portugal: 'NIF (Número de Identificação Fiscal)',
+            usa: 'SSN (Social Security Number)',
+            germany: 'STEUERNUMMER',
+            spain: 'DNI (Documento Nacional de Identidade)',
+            france: 'CI',
+            italy: 'Codice Fiscale',
+            chile: 'RUT (Rol Único Tributario)'
         };
         $('.label-document').text(documentName[user.country]);
         $('#document').attr('placeholder', documentName[user.country]);

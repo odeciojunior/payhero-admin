@@ -69,9 +69,10 @@ class ProfileApiController
 
             if (Gate::allows('update', [$user])) {
                 $requestData = $request->validated();
-                if ($requestData['country'] == 'brazil') {
+                if ($requestData['country'] == 'brazil' && !empty($requestData['cellphone'])) {
                     $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
                 }
+                $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
 
                 $user->fill(
                     [

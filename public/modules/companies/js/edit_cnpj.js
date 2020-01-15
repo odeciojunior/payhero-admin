@@ -43,31 +43,6 @@ $(document).ready(function () {
         });
     });
 
-    $("#zip_code").on("input", function () {
-        var zip_code = $('#zip_code').val().replace(/[^0-9]/g, '');
-        if (zip_code.length !== 8) return false;
-        $.ajax({
-            url: "https://viacep.com.br/ws/" + zip_code + "/json/",
-            type: "GET",
-            cache: false,
-            async: false,
-            success: function success(response) {
-                if (response.localidade) {
-                    $("#city").val(unescape(response.localidade));
-                }
-                if (response.bairro) {
-                    $("#neighborhood").val(unescape(response.bairro));
-                }
-                if (response.uf) {
-                    $("#state").val(unescape(response.uf));
-                }
-                if (response.logradouro) {
-                    $("#street").val(unescape(response.logradouro));
-                }
-            }
-        });
-    });
-
     //Functions
     function initLinks() {
         let encodedId = extractIdFromPathName();
@@ -140,7 +115,6 @@ $(document).ready(function () {
                     if (company.country == $(this).val()) {
                         $(this).attr('selected', true);
                     }
-                    $(this).attr('disabled', true);
                 });
 
                 $("#td-bank-status").html('').append(`
@@ -164,19 +138,14 @@ $(document).ready(function () {
                 // getRefusedDocuments(response.company.refusedDocuments);
                 verifyCompanyAddress(company);
 
+                //só mostra o campo estado se o país for Brasil e Estados Unidos
+                if (company.country == 'brazil' || company.country == 'usa') {
+                    $(".div-state").show();
+                }
                 //verifica país da empresa e coloca mascara
-                verifyCompanyCountry(company);
-
+                changeMaskByCompanyCountry(company);
+                loadLabelsByCountry(company);
                 openDocument();
-                //mascara cnpj
-                var optionsCompanyDocument = {
-                    onKeyPress: function (cpf, ev, el, op) {
-                        var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                        $('#company_document').mask((cpf.length > 14) ? masks[1] : masks[0], op);
-                    }
-                };
-
-                $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
 
                 $(".details-document-person-juridic").on('click', function () {
                     $("#document-type").val('');
@@ -205,7 +174,10 @@ $(document).ready(function () {
             $("#company_document").remove('disabled');
             $(".info-complemented").removeAttr('disabled');
 
+            $("#country").removeAttr('disabled');
             let form_data = new FormData(document.getElementById('company_update_form'));
+            $('#country').attr('disabled', true);
+
             loadingOnScreen();
             $.ajax({
                 method: "POST",
@@ -220,13 +192,12 @@ $(document).ready(function () {
                 data: form_data,
                 error: function (response) {
                     errorAjaxResponse(response);
-                    $("#company_document").attr('disabled', 'disabled');
+                    // $("#company_document").attr('disabled', 'disabled');
                 },
                 success: function success(response) {
                     alertCustom('success', response.message);
                     loadingOnScreenRemove();
-                    $("#company_document").attr('disabled', 'disabled');
-
+                    // $("#company_document").attr('disabled', 'disabled');
                 }
             });
         });
@@ -310,29 +281,28 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
-    function verifyCompanyAddress(company) {
-        if (company.zip_code == '' || company.street == '' || company.number == '' || company.neighborhood == '' || company.state == '' || company.city == '' || company.country == '') {
-            $('#row_dropzone_documents').hide();
-            $('#div_address_pending').show();
-        } else {
-            $('#row_dropzone_documents').show();
-            $('#div_address_pending').hide();
-        }
-    }
-    function verifyCompanyCountry(company) {
+    function changeMaskByCompanyCountry(company) {
         if (company.country == 'brazil') {
+            $('#zip_code').mask('00000-000');
             $("#support_telephone").mask("+55 (00) 0000-00009");
-            //mascara cnpj
-            var optionsCompanyDocument = {
-                onKeyPress: function (cpf, ev, el, op) {
-                    var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                    $('#company_document').mask((cpf.length > 14) ? masks[1] : masks[0], op);
-                }
-            };
-            $('#company_document').length > 11 ? $('#company_document').mask('00.000.000/0000-00', optionsCompanyDocument) : $('#company_document').mask('000.000.000-00#', optionsCompanyDocument);
+            $('#company_document').mask('00.000.000/0000-00');
+            zipCode();
         } else {
             $('#support_telephone').mask('+0#');
         }
+    }
+    function loadLabelsByCountry(company) {
+        let companyDocumentName = {
+            brazil: 'CNPJ',
+            portugal: 'NIPC',
+            usa: 'ENI',
+            germany: 'NIF',
+            spain: 'CIF',
+            france: 'SIRET',
+            italy: 'Partita IVA'
+        };
+        $('.label-document').text(companyDocumentName[company.country]);
+        $('#company_document').attr('placeholder', companyDocumentName[company.country]);
     }
     function getDocuments(encodedId) {
         loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
@@ -358,6 +328,33 @@ $(document).ready(function () {
                 $("#company-id").val(encodedId);
                 $("#modal-document-person-fisic").modal('show');
             },
+        });
+    }
+
+    function zipCode() {
+        $("#zip_code").on("input", function () {
+            var zip_code = $('#zip_code').val().replace(/[^0-9]/g, '');
+            if (zip_code.length !== 8) return false;
+            $.ajax({
+                url: "https://viacep.com.br/ws/" + zip_code + "/json/",
+                type: "GET",
+                cache: false,
+                async: false,
+                success: function success(response) {
+                    if (response.localidade) {
+                        $("#city").val(unescape(response.localidade));
+                    }
+                    if (response.bairro) {
+                        $("#neighborhood").val(unescape(response.bairro));
+                    }
+                    if (response.uf) {
+                        $("#state").val(unescape(response.uf));
+                    }
+                    if (response.logradouro) {
+                        $("#street").val(unescape(response.logradouro));
+                    }
+                }
+            });
         });
     }
 

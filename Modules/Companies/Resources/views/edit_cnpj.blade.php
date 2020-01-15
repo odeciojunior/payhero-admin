@@ -45,12 +45,13 @@
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
-                                            <label for="fantasy_name">Razão Social</label>
-                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão Social" maxlength='250'>
+                                            <label for="fantasy_name">Nome da empresa</label>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Nome da empresa" maxlength='250'>
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="company_document">CNPJ</label>
-                                            <input name="company_document" value="" type="text" class="form-control" id="company_document" placeholder='CNPJ'>
+                                            {{--carrega no js--}}
+                                            <label for="company_document" class='label-document'></label>
+                                            <input name="company_document" value="" type="text" class="form-control" id="company_document">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="business_website">Site</label>
@@ -71,7 +72,7 @@
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
+                                            <input name="zip_code" value="" type="text" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -91,7 +92,7 @@
                                             <label for="complement">Complemento</label>
                                             <input name="complement" value="" type="text" class="form-control info-complemented" id="complement" placeholder='Complemento' maxlength='30'>
                                         </div>
-                                        <div class="form-group col-xl-4">
+                                        <div class="form-group col-xl-4 div-state" style='display:none;'>
                                             <label for="state">Estado</label>
                                             <input name="state" value="" type="text" class="form-control info-complemented" id="state" placeholder='Estado' maxlength='30'>
                                         </div>
@@ -99,10 +100,10 @@
                                             <label for="city">Cidade</label>
                                             <input name="city" value="" type="text" class="form-control info-complemented" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
-                                        <div class="form-group col-xl-6">
+                                        <div class="form-group col-xl-4">
                                             <label for="country">País</label>
                                             {{--                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">--}}
-                                            <select id="country" name='country' class="form-control select-pad">
+                                            <select id="country" name='country' class="form-control select-pad" disabled>
                                                 <option value="brazil">Brasil</option>
                                                 <option value="usa">Estados Unidos</option>
                                                 <option value="germany">Alemanha</option>
@@ -268,7 +269,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=4')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=5')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
