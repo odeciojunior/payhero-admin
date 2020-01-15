@@ -48,7 +48,7 @@ class LoginController extends Controller
         if (!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')) {
 
             activity()->tap(function(Activity $activity) {
-                $activity->log_name = 'login';
+                $activity->log_name = 'account_blocked';
             })->withProperties([
                                    'url'      => $request->input('uri'),
                                    'email'    => $request->input('email'),
@@ -94,7 +94,7 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         activity()->on($userModel)->tap(function(Activity $activity) use ($user) {
-            $activity->log_name = 'login';
+            $activity->log_name = 'login_failed';
             if (!empty($user)) {
                 $activity->causer_id = $user->id;
             }
@@ -117,7 +117,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        activity()->tap(function(Activity $activity){
+        activity()->tap(function(Activity $activity) {
             $activity->log_name = 'logout';
         })->log('Logout');
 
