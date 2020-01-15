@@ -163,9 +163,13 @@ class CompaniesApiController extends Controller
             $companyModel   = new Company();
             $companyService = new CompanyService();
             $requestData    = $request->validated();
-
-            $company = $companyModel->find(current(Hashids::decode($encodedId)));
+            $company        = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
+
+                if ($requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
+                    $requestData['support_telephone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['support_telephone']);
+                }
+                $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
 
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);
@@ -193,9 +197,9 @@ class CompaniesApiController extends Controller
             $projectModel = new Project();
 
             $company = $companyModel->with('usersProjects')->withCount([
-                                                                            'transactions',
-                                                                            'usersProjects',
-                                                                        ])
+                                                                           'transactions',
+                                                                           'usersProjects',
+                                                                       ])
                                     ->find(current(Hashids::decode($encodedId)));
             if ($company) {
                 if (Gate::allows('destroy', [$company])) {
