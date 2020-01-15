@@ -45,7 +45,7 @@ class CustomFieldsActiveCampaign extends Command
      */
     public function handle()
     {
-        $integrations = ActivecampaignIntegration::with('customFields')->where('id', 6)->get();
+        $integrations = ActivecampaignIntegration::with('customFields')->get();
 
         $fieldsDefault = [
             'url_boleto',
