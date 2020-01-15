@@ -381,7 +381,10 @@ class ActiveCampaignService
     {
         $fields = $this->sendDataActiveCampaign(null, 'fields?limit=100', 'GET');
         $fields = json_decode($fields, true);
-        $total  = (int)$fields['meta']['total'] ?? 0;
+        $total = 0;
+        if(isset($fields['meta']['total']) && !empty($fields['meta']['total'])) {
+            $total = $fields['meta']['total'];
+        }
         $pages  = ($total > 0) ? ceil($total/100) : 0;
         $return = $fields;
 
