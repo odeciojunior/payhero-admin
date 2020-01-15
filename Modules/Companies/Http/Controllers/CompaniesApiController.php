@@ -120,7 +120,7 @@ class CompaniesApiController extends Controller
                 ->find(current(Hashids::decode($encodedId)));
 
             if (Gate::allows('edit', [$company])) {
-                $banks = $bankService->getBanks('brazil');
+                $banks = $bankService->getBanks($company->country ?? 'brazil');
 
                 $companyResource = null;
                 if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
