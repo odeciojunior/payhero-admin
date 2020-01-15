@@ -2,24 +2,25 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Modules\Core\Entities\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\User;
+use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\BankService;
+use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Events\WithdrawalRequestEvent;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Modules\Core\Services\RemessaOnlineService;
 use Laracasts\Presenter\Exceptions\PresenterException;
-use Spatie\Activitylog\Models\Activity;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class WithdrawalsApiController
@@ -148,9 +149,16 @@ class WithdrawalsApiController extends Controller
 
                 $company->update(['balance' => $company->balance -= $withdrawalValue]);
 
+                /** Se a empresa for do exterior, é cobrada uma taxa adicional pela transferencia */
+                $abroadTax = 0;
+                //
+                //
+
                 /** Saque abaixo de R$500,00 a taxa cobrada é R$10,00, acima disso a taxa é gratuita */
+                $tax = 0;
                 if ($withdrawalValue < 50000) {
                     $withdrawalValue -= 1000;
+                    $tax = 1000;
                 }
 
                 /** Verifica se o usuário possui algum saque pendente */
@@ -163,14 +171,16 @@ class WithdrawalsApiController extends Controller
                 if (empty($withdrawal)) {
                     $withdrawal = $withdrawalModel->create(
                         [
-                            'value'         => $withdrawalValue,
-                            'company_id'    => $company->id,
-                            'bank'          => $company->bank,
-                            'agency'        => $company->agency,
-                            'agency_digit'  => $company->agency_digit,
-                            'account'       => $company->account,
-                            'account_digit' => $company->account_digit,
-                            'status'        => $companyModel->present()->getStatus('pending'),
+                            'value'               => $withdrawalValue,
+                            'company_id'          => $company->id,
+                            'bank'                => $company->bank,
+                            'agency'              => $company->agency,
+                            'agency_digit'        => $company->agency_digit,
+                            'account'             => $company->account,
+                            'account_digit'       => $company->account_digit,
+                            'status'              => $companyModel->present()->getStatus('pending'),
+                            'tax'                 => $tax,
+                            'abroad_transfer_tax' => $abroadTax,
                         ]
                     );
                 } else {
@@ -196,8 +206,10 @@ class WithdrawalsApiController extends Controller
      * @return JsonResponse
      * @throws PresenterException
      */
-    public function getAccountInformation($companyId)
+    public function getAccountInformation(Request $request)
     {
+        $data = $request->all();
+
         $companyModel = new Company();
 
         $bankService    = new BankService();
@@ -205,7 +217,7 @@ class WithdrawalsApiController extends Controller
 
         $userModel = new User();
 
-        $company = $companyModel->find(current(Hashids::decode($companyId)));
+        $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
         if (Gate::allows('edit', [$company])) {
 
             $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
@@ -245,7 +257,34 @@ class WithdrawalsApiController extends Controller
 
             if ($companyService->isDocumentValidated($company->id)) {
 
-                // Verificar se telefone e e-mail estão verificados
+                $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+
+                $convertedMoney = $withdrawalValue;
+
+                $iofValue         = 0;
+                $iofTax              = 0.38;
+                $costValue           = 0;
+                $costTax             = 1.30;
+                $abroadTransferValue = 0;
+                $abroadTax           = 1.68;
+
+                $companyService = new CompanyService();
+
+                $currency = $companyService->getCurrency($company);
+                $currentQuotation = 0;
+
+                if(!in_array($company->country, ['brazil', 'brasil'])){
+
+                    $remessaOnlineService = new RemessaOnlineService();
+
+                    $currentQuotation = $remessaOnlineService->getCurrentQuotation($currency);
+
+                    $iofValue            = intval($withdrawalValue / 100 * $iofTax);
+                    $costValue           = intval($withdrawalValue / 100 * $costTax);
+                    $abroadTransferValue = $iofValue + $costValue;
+                    $convertedMoney      = number_format(intval($withdrawalValue / $currentQuotation) / 100, 2, ',', '.');
+                }
+
                 return response()->json(
                     [
                         'message' => 'success',
@@ -257,6 +296,21 @@ class WithdrawalsApiController extends Controller
                             'agency'           => $company->agency,
                             'agency_digit'     => $company->agency_digit,
                             'document'         => $company->company_document,
+                            'currency'         => $currency,
+                            'quotation'        => $currentQuotation,
+                            'abroad_transfer'  => [
+                                'tax'             => $abroadTax,
+                                'value'           => number_format(intval($abroadTransferValue) / 100, 2, ',', '.'),
+                                'converted_money' => $convertedMoney,
+                            ],
+                            'iof'              => [
+                                'tax'   => $iofTax,
+                                'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
+                            ],
+                            'cost'             => [
+                                'tax'   => $costTax,
+                                'value' => number_format(intval($costValue) / 100, 2, ',', '.'),
+                            ],
                         ],
                     ], 200
                 );

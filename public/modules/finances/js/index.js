@@ -81,14 +81,6 @@ $(document).ready(function () {
         }
     });
 
-    $("#pop-antecipacao").click(function () {
-        // if ($("#antecipa-popover").css('display') == 'none') {
-        //     $("#antecipa-popover").delay(200).fadeIn(200);
-        // } else {
-        //     $("#antecipa-popover").fadeOut(100);
-        // }
-    });
-
     function checkAllowed() {
         $.ajax({
             url: "/api/withdrawals/checkallowed",
@@ -186,6 +178,7 @@ $(document).ready(function () {
             }
         }
 
+        $('#bt-withdrawal').unbind("click");
         $('#bt-withdrawal').on('click', function () {
             var availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
             var toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
@@ -202,9 +195,13 @@ $(document).ready(function () {
                 alertCustom('error', 'Valor do saque inválido!');
             } else {
                 $.ajax({
-                        url: "/api/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
-                        type: "GET",
+                        url: "/api/withdrawals/getaccountinformation",
+                        type: "POST",
                         dataType: "json",
+                        data: {
+                            company_id: transfersCompanySelect.val(),
+                            withdrawal_value: $('#custom-input-addon').val()
+                        },
                         headers: {
                             'Authorization': $('meta[name="access-token"]').attr('content'),
                             'Accept': 'application/json',
@@ -213,6 +210,7 @@ $(document).ready(function () {
                             errorAjaxResponse(response);
                         },
                         success: (response) => {
+
                             if (response.data.user_documents_status == 'pending') {
                                 var route = '/profile';
                                 $('#modal-withdrawal').modal('show');
@@ -247,17 +245,43 @@ $(document).ready(function () {
 
                                 $('#modal-withdrawal').modal('show');
                                 $('#modal-withdrawal-title').text("Confirmar Saque");
-                                $('#modal_body').html('<div>' + '<h5>Verifique os dados da conta:</h5>' + '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' + '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' + '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' + '<h4>Documento:<span id="modal-withdrawal-document"></span></h4>' + '<hr>' + '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span>' + '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$' + tax + ' (taxa)</span>' + '</h3>' + '<div class="alert alert-danger text-center">\n' +
+
+                                var confirmationData = '<div> <h5>Verifique os dados da conta:</h5>' +
+                                    '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' +
+                                    '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' +
+                                    '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' +
+                                    '<h4>Documento:<span id="modal-withdrawal-document"></span></h4> <hr>';
+
+                                if(response.data.currency != 'real'){
+                                    confirmationData += '<div> <h5>Detalhes da transferencia para o exterior:</h5>' +
+                                                       '<h4>Moeda: <span>' + response.data.currency + '</span></h4>' +
+                                                       '<h4>Cotação: <span>R$' + response.data.quotation + '</span></h4>' +
+                                                       '<h4>Taxa de IOF: <span>R$' + response.data.iof.value + ' (' + response.data.iof.tax + '%)</span></h4>' +
+                                                       '<h4>Custo: <span>R$' + response.data.cost.value + ' (' + response.data.cost.tax + '%)</span></h4>' +
+                                                       '<h4>Total: <span>R$' + response.data.abroad_transfer.value + ' (' + response.data.abroad_transfer.tax + '%)</span></h4> <hr>';
+                                }
+
+                                confirmationData += '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span>' +
+                                    '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$' + tax + ' (taxa)</span>';
+
+                                if(response.data.currency != 'real'){
+                                    confirmationData += '<h3>Valor convertido: <span class=\'greenGradientText\'>' + response.data.abroad_transfer.converted_money + '</span>' +
+                                        '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ' + response.data.currency + ' )</span>';
+                                }
+
+                                confirmationData += '</h3> <div class="alert alert-danger text-center">\n' +
                                     '<p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada é R$10,00</b></p>' +
                                     '<p><b>Os saques solicitados poderam ser liquidados em até um dia útil!</b></p>\n' +
-                                    '</div></div>');
+                                    '</div></div>';
+
+                                $('#modal_body').html(confirmationData);
+
                                 $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' + '<strong>Confirmar</strong></button>' + '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' + '<strong>Cancelar</strong></button>');
 
                                 $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
                                 $("#modal-withdrawal-bank").html('  ' + response.data.bank);
                                 $("#modal-withdrawal-agency").html('  ' + response.data.agency);
                                 if (response.data.agency_digit != '' && response.data.agency_digit != null) {
-
                                     $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
                                 }
                                 $("#modal-withdrawal-account").html('  ' + response.data.account);
@@ -311,37 +335,6 @@ $(document).ready(function () {
             }
         });
 
-        /**
-         * Modulo Anticipations
-         */
-// $("#btn-disponible-antecipation").unbind('click');
-// $("#btn-disponible-antecipation").on('click', function () {
-//     // loading("#balance-after-anticipation",'');
-//     $('#balance-after-anticipation').html("<span class='loaderSpan' >" + "</span>")
-//     let company = transfersCompanySelect.val();
-//     $("#tax-value").html('');
-
-//     $.ajax({
-//         method: 'GET',
-//         url: '/api/anticipations/' + company,
-//         dataType: "json",
-//         headers: {
-//             'Authorization': $('meta[name="access-token"]').attr('content'),
-//             'Accept': 'application/json',
-//         },
-//         error: (response) => {
-//             console.log(response);
-//             $("#balance-after-anticipation").html(response.responseJSON.data.valueAntecipable);
-//             $(".loaderSpan").remove();
-//             errorAjaxResponse(response);
-//         },
-//         success: (response) => {
-//             $("#balance-after-anticipation").html(response.data['valueAntecipable']);
-//             $("#tax-value").html(response.data['taxValue']);
-//         }
-//     });
-// });
-
         $("#btn-anticipation").unbind('click');
         $("#btn-anticipation").on('click', function () {
             loadingOnScreen();
@@ -367,9 +360,6 @@ $(document).ready(function () {
 
         });
 
-        /**
-         * Withdrawl
-         */
         var statusWithdrawals = {
             1: 'warning',
             2: 'primary',
