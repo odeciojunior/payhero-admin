@@ -132,6 +132,21 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-xl-8" id="swift-code-info" style="display:none">
+                                            <div class="alert alert-secondary">
+                                                <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
+                                                <span class="badge badge-secondary">AAA</span>
+                                                <span class="badge badge-secondary">BB</span>
+                                                <span class="badge badge-secondary">CC</span>
+                                                <span class="badge badge-secondary">DDD</span>
+                                                <ul class="pl-20 mt-10">
+                                                    <li>Os quatro primeiros dígitos representam o <strong>código do banco</strong></li>
+                                                    <li>O segundo grupo tem 2 dígitos e representa o <strong>código do país</strong></li>
+                                                    <li>Os terceiro grupo tem 2 dígitos podem ser letras ou números e representa o <strong>código de localização</strong> da sede do banco</li>
+                                                    <li>Os três últimos dígitos representam o <strong>código do agência</strong>. XXX representa a sede</li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-3">
@@ -267,9 +282,37 @@
         </div>
     </div>
 
+    <style>
+        .select2-selection--single{
+            border: 1px solid #dddddd !important;
+            border-radius: .215rem !important;
+            height: 43px !important;
+        }
+
+        .select2-selection__rendered {
+            color: #707070 !important;
+            font-size: 16px !important;
+            font-family: 'Muli', sans-serif;
+            line-height: 43px !important;
+            padding-left: 14px !important;
+            padding-right: 38px !important;
+        }
+
+        .select2-selection__arrow{
+            height: 43px !important;
+            right: 10px !important;
+        }
+        .select2-selection__arrow b {
+            border-color: #8f9ca2 transparent transparent transparent !important;
+        }
+        .select2-container--open .select2-selection__arrow b{
+            border-color: transparent transparent #8f9ca2 transparent !important;
+        }
+    </style>
+
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=5')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=6')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

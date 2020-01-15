@@ -44,6 +44,21 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-xl-8" id="swift-code-info" style="display:none">
+                                    <div class="alert alert-secondary">
+                                        <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
+                                        <span class="badge badge-secondary">AAA</span>
+                                        <span class="badge badge-secondary">BB</span>
+                                        <span class="badge badge-secondary">CC</span>
+                                        <span class="badge badge-secondary">DDD</span>
+                                        <ul class="pl-20 mt-10">
+                                            <li>Os quatro primeiros dígitos representam o <strong>código do banco</strong></li>
+                                            <li>O segundo grupo tem 2 dígitos e representa o <strong>código do país</strong></li>
+                                            <li>Os terceiro grupo tem 2 dígitos podem ser letras ou números e representa o <strong>código de localização</strong> da sede do banco</li>
+                                            <li>Os três últimos dígitos representam o <strong>código do agência</strong>. XXX representa a sede</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-xl-3">

@@ -37,6 +37,10 @@ $(document).ready(function () {
                     $("#bank").append(`<option value="${value.code}">${value.code} - ${value.name}</option>`)
                 });
 
+                if(response.company.country === 'usa'){
+                    $('#swift-code-info').show();
+                }
+
                 $("#bank").val(response.company.bank);
                 $("#agency").val(response.company.agency);
                 $("#agency_digit").val(response.company.agency_digit);

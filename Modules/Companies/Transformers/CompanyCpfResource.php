@@ -34,6 +34,7 @@ class CompanyCpfResource extends Resource
             'account'              => $this->resource->account ?? '',
             'account_digit'        => $this->resource->account_digit ?? '',
             'document_status'      => $presenter->getBankDocumentStatus(),
+            'country'              => $this->country ?? '',
 //            'bank_document_status' => $this->resource->bank_document_status,
             //            'refusedDocuments'     => $refusedDocuments,
             'type'                 => $this->company_type,

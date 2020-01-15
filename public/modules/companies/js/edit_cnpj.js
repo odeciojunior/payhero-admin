@@ -117,20 +117,26 @@ $(document).ready(function () {
                     }
                 });
 
+                alert(company.country)
+
+                if(company.country === 'usa'){
+                    $('#swift-code-info').show();
+                }
+
                 $("#td-bank-status").html('').append(`
                     <span class='badge ${companyStatus[company.bank_document_status]}'>
-                        ${companyStatusTranslated[company.bank_document_status]} 
+                        ${companyStatusTranslated[company.bank_document_status]}
                     </span>
                 `);
 
                 $("#td-address-status").html('').append(`
                     <span class='badge ${companyStatus[company.address_document_status]}'>
-                        ${companyStatusTranslated[company.address_document_status]} 
+                        ${companyStatusTranslated[company.address_document_status]}
                     </span>
                     `);
                 $("#td-contract-status").html('').append(`
                     <span class='badge ${companyStatus[company.contract_document_status]}'>
-                        ${companyStatusTranslated[company.contract_document_status]} 
+                        ${companyStatusTranslated[company.contract_document_status]}
                     </span>
                     `);
                 configSubmits();
