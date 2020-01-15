@@ -388,7 +388,7 @@ class ActiveCampaignEventApiController extends Controller
             $activeCampaignService = new ActiveCampaignService();
 
             $eventsIntegration = $integration->events->pluck('event_sale')->toArray();
-            $eventsDiff        = array_diff([1, 2, 3, 4, 5], $eventsIntegration);
+            $eventsDiff        = array_diff([1, 2, 3, 4, 5, 6], $eventsIntegration);
 
             $events = $this->getEventsName($eventsDiff);
             $events = collect($events);
@@ -426,6 +426,9 @@ class ActiveCampaignEventApiController extends Controller
                     break;
                 case 5:
                     $events[] = ['name' => 'Cartão de crédito recusado', 'id' => 5];
+                    break;
+                case 6:
+                    $events[] = ['name' => 'Rastreio adicionado', 'id' => 6];
                     break;
             }
         }
