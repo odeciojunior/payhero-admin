@@ -15,11 +15,11 @@ class BankService
     public function getBanks($countryCode)
     {
         switch ($countryCode) {
-            case 'BR':
+            case 'brazil':
                 return $this->brazilianBanks();
-            case 'US':
+            case 'usa':
                 return $this->usaBanks();
-            case 'PT':
+            case 'portugal':
                 return $this->portugueseBanks();
             default:
                 return [];
