@@ -117,8 +117,6 @@ $(document).ready(function () {
                     }
                 });
 
-                alert(company.country)
-
                 if(company.country === 'usa'){
                     $('#swift-code-info').show();
                 }
