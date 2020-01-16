@@ -228,6 +228,12 @@ $(() => {
         } else {
             $('#div_refund_transaction').html('');
         }
+
+        if(sale.status == 2 || sale.status == 1) {
+            $('#saleReSendEmail').show();
+        } else {
+            $('#saleReSendEmail').hide();
+        }
     }
 
     function getNotazz(invoices) {
@@ -588,6 +594,34 @@ $(() => {
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 atualizar(currentPage);
+            }
+        });
+    }
+
+    $(document).on('click', '#btnSaleReSendEmail', function () {
+        saleReSendEmail($('#sale-code').text());
+    });
+
+    // reenvia email da venda para o cliente
+    function saleReSendEmail(sale) {
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/sales/saleresendemail',
+            dataType: "json",
+            data: { sale: sale },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                console.log(response);
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
             }
         });
     }

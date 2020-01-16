@@ -233,7 +233,7 @@ $(function () {
                         $('#table-events').addClass('table-striped');
                     });
 
-                    if(response.data.length < 5) {
+                    if(response.data.length < 6) {
                         $('#add-event').removeClass('d-none');
                         $('#add-event').addClass('d-flex');
                     } else {

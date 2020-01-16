@@ -24,6 +24,7 @@ Route::group(
         ]);
         Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
         Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify');
+        Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail');
     }
 );
 

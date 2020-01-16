@@ -64,6 +64,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Modules\Core\Events\TrackingCodeUpdatedEvent'        => [
             'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',
+            'Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener',
         ],
         'Modules\Core\Events\ResetPasswordEvent'              => [
             'Modules\Core\Listeners\ResetPasswordSendEmailListener',

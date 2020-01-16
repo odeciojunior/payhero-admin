@@ -21,6 +21,7 @@ use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
+use Modules\Core\Services\EmailService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
@@ -292,6 +293,34 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao processar boleto.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function saleReSendEmail(Request $request)
+    {
+        try {
+
+            $saleModel = new Sale();
+            $saleId = current(Hashids::connection('sale_id')->decode($request->input('sale')));
+            $sale = $saleModel->with(['client', 'project'])->find($saleId);
+
+            activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId, $request){
+                $activity->log_name     = 'created';
+                $activity->subject_id   = $saleId;
+            })->log('Reenviou email para a venda: #' . $request->input('sale'));
+
+            EmailService::clientSale(
+                $sale->client,
+                $sale,
+                $sale->project
+            );
+
+            return response()->json(['message' => 'Email enviado'], Response::HTTP_OK);
+        } catch (Exception $e) {
+            Log::warning('Erro ao reenviar email da venda - saleReSendEmail');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
         }
     }
 }

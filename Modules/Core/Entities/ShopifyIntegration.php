@@ -52,6 +52,7 @@ class ShopifyIntegration extends Model
         'theme_html',
         'layout_theme_html',
         'status',
+        'skip_to_cart',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -12,6 +12,7 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Checkout;
 
 class ActiveCampaignService
 {
@@ -179,7 +180,7 @@ class ActiveCampaignService
      * @param  $projectId
      * @param  $instance
      */
-    public function execute($instanceId, $eventSale, $name, $phone, $email, $projectId, $instance, $dataCustom = [])
+    public function execute($instanceId, $eventSale, $name, $phone, $email, $projectId, $instance, $dataCustom = [], $checkoutId = 0)
     {
         try {
             $activecampaignIntegration = new ActivecampaignIntegration;
@@ -202,12 +203,14 @@ class ActiveCampaignService
                     $planSales = PlanSale::with('plan')->where('sale_id', $instanceId)->get();
                     $trackings = Tracking::where('sale_id', $instanceId)->get();
                     $domain    = Domain::where('project_id', $projectId)->first();
+                    $checkout  = Checkout::find($checkoutId);
 
                     $trackingCode = '';
-                    $trackingUrl = '';
+                    $trackingUrl  = '';
+                    $domainName   = (!empty($domain->name)) ? $domain->name : 'cloudfox.net';
                     foreach ($trackings as $tracking) {
                         $trackingCode .= $tracking->tracking_code . ', ';
-                        $trackingUrl .= 'https://tracking.' . $domain->name . '/'.$tracking->tracking_code . ', ';
+                        $trackingUrl .= 'https://tracking.' . $domainName . '/'.$tracking->tracking_code . ', ';
                     }
                     $dataCustom['projeto_nome']  = Project::find($projectId)->name;
                     $dataCustom['codigo_pedido'] = Hashids::encode($instanceId);
@@ -220,6 +223,7 @@ class ActiveCampaignService
                         $dataCustom['codigo_rastreio']   = $trackingCode;
                         $dataCustom['link_rastreamento'] = $trackingUrl;
                     }
+                    $dataCustom['link_carrinho_abandonado'] = 'https://checkout.' . $domainName . '/recovery/' . $checkout->id_log_session;
 
                     return $this->sendContact($data, $event, $instanceId, $instance, $dataCustom);
                 }
