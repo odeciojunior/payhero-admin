@@ -99,9 +99,9 @@
                 </div>
                 {{--resend shopfy order--}}
                 <div id='resendShopfyOrder' class='alert alert-warning text-center d-none'>
-                    <span>Ordem do <b>SHOPFY</b> não foi gerada</span>
+                    <span>Ordem do <b>SHOPIFY</b> não foi gerada</span>
                     <br>
-                    <span style='font-size:12px'>cliqeu no botão a seguir para gerar</span>
+                    <span style='font-size:12px'>clique no botão a seguir para gerar</span>
                     <br>
                     <button id='resendeShopifyOrderButton' class="btn btn-warning btn-sm btn_new_order_shopify mt-10" sale=''>
                         <b>Gerar ordem Shopify</b>
