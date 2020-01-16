@@ -137,14 +137,14 @@
                                                 <th scope="col">Solicitação</th>
                                                 <th scope="col">Liberação</th>
                                                 <th scope="col">Valor</th>
+                                                <th style="display: none" id="col_transferred_value" scope="col">Valor Convertido</th>
                                                 <th scope="col">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm"
-                                        style="margin-top:10px;position:relative;float:right">
+                                    <ul id="pagination-withdrawals" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>

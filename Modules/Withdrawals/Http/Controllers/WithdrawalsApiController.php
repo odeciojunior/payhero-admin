@@ -149,11 +149,6 @@ class WithdrawalsApiController extends Controller
 
                 $company->update(['balance' => $company->balance -= $withdrawalValue]);
 
-                /** Se a empresa for do exterior, é cobrada uma taxa adicional pela transferencia */
-                $abroadTax = 0;
-                //
-                //
-
                 /** Saque abaixo de R$500,00 a taxa cobrada é R$10,00, acima disso a taxa é gratuita */
                 $tax = 0;
                 if ($withdrawalValue < 50000) {
@@ -180,7 +175,6 @@ class WithdrawalsApiController extends Controller
                             'account_digit'       => $company->account_digit,
                             'status'              => $companyModel->present()->getStatus('pending'),
                             'tax'                 => $tax,
-                            'abroad_transfer_tax' => $abroadTax,
                         ]
                     );
                 } else {
@@ -261,7 +255,7 @@ class WithdrawalsApiController extends Controller
 
                 $convertedMoney = $withdrawalValue;
 
-                $iofValue         = 0;
+                $iofValue            = 0;
                 $iofTax              = 0.38;
                 $costValue           = 0;
                 $costTax             = 1.30;
@@ -282,8 +276,10 @@ class WithdrawalsApiController extends Controller
                     $iofValue            = intval($withdrawalValue / 100 * $iofTax);
                     $costValue           = intval($withdrawalValue / 100 * $costTax);
                     $abroadTransferValue = $iofValue + $costValue;
+                    $withdrawalValue     -= $abroadTransferValue;
                     $convertedMoney      = number_format(intval($withdrawalValue / $currentQuotation) / 100, 2, ',', '.');
                 }
+
 
                 return response()->json(
                     [

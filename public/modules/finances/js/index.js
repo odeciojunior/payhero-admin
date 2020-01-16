@@ -9,7 +9,7 @@ $(document).ready(function () {
     function atualizar() {
         $.ajax({
             method: "GET",
-            url: "/api/companies",
+            url: "/api/companies?select=true",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -25,36 +25,32 @@ $(document).ready(function () {
                     $('.page-content').show();
                     $('.content-error').hide();
 
-                    //transfers_company_select
-                    fillSelectAndCheckWithModelFields(
-                        transfersCompanySelect,
-                        {company: response.data},
-                        null,
-                        {company: selectItemsFunction}
-                    );
-                    transfersCompanySelect.on("change", function () {
-                        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]")
-                            .prop("selected", true);
-                        $('#custom-input-addon').val('');
-                        updateBalances();
-                        //updateWithdrawalsTable(null, "transfersCompanySelect:change");
-                        // updateTransfersTable();
+                    $(response.data).each(function(index, value){
+                        transfersCompanySelect.append("<option country='" + value.country + "' value='" + value.id + "'>" + value.name + "</option>")
+                        extractCompanySelect.append("<option country='" + value.country + "' value='" + value.id + "'>" + value.name + "</option>")
                     });
 
-                    //extract_company_select
-                    fillSelectAndCheckWithModelFields(
-                        extractCompanySelect,
-                        {company: response.data},
-                        null,
-                        {company: selectItemsFunction}
-                    );
+                    transfersCompanySelect.on("change", function () {
+                        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
+                        $('#custom-input-addon').val('');
+                        updateBalances();
+                        if($(this).children("option:selected").attr('country') != 'brazil'){
+                            $("#col_transferred_value").show();
+                        }
+                        else{
+                            $("#col_transferred_value").hide();
+                        }
+                    });
+
                     extractCompanySelect.on("change", function () {
-                        $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
-                            .prop("selected", true);
-                        // $('#custom-input-addon').val('');
+                        $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
                         updateTransfersTable();
-                        // updateBalances();
-                        // updateWithdrawalsTable();
+                        if($(this).children("option:selected").attr('country') != 'brazil'){
+                            $("#transferred_value").show();
+                        }
+                        else{
+                            $("#transferred_value").hide();
+                        }
                     });
 
                     checkAllowed();
@@ -69,9 +65,6 @@ $(document).ready(function () {
         });
     }
 
-    function selectItemsFunction(item) {
-        return {value: item.id_code, text: item.fantasy_name};
-    }
 
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
@@ -265,7 +258,7 @@ $(document).ready(function () {
                                     '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$' + tax + ' (taxa)</span>';
 
                                 if(response.data.currency != 'real'){
-                                    confirmationData += '<h3>Valor convertido: <span class=\'greenGradientText\'>' + response.data.abroad_transfer.converted_money + '</span>' +
+                                    confirmationData += '<h3>Valor convertido: <span class=\'greenGradientText\'> ' + response.data.abroad_transfer.converted_money + '</span>' +
                                         '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ' + response.data.currency + ' )</span>';
                                 }
 
@@ -406,6 +399,9 @@ $(document).ready(function () {
                                 data += "<td>" + value.value + '<br><small>(+ taxa R$10,00)</small>' + "</td>";
                             } else {
                                 data += "<td>" + value.value + "</td>";
+                            }
+                            if(transfersCompanySelect.children("option:selected").attr('country') != 'brazil'){
+                                data += "<td></td>";
                             }
                             data += '<td class="shipping-status">';
                             data += '<span class="badge badge-' + statusWithdrawals[value.status] + '">' + value.status_translated + '</span>';
