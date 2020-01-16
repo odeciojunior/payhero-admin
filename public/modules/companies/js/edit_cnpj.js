@@ -26,22 +26,8 @@ $(document).ready(function () {
     let redirectBackLink = $("#redirect_back_link");
     let companyUpdateForm = $("#company_update_form");
     let companyBankUpdateForm = $("#company_bank_update_form");
+    let companyBankUpdateRoutingForm = $("#company_bank_routing_number_form");
     initLinks();
-
-    $(document).on("blur", '#routing_number', function () {
-        $.ajax({
-            method: "GET",
-            url: "https://www.routingnumbers.info/api/data.json?rn=" + $("#routing_number").val(),
-            success: function success(data) {
-                if (data.message === 'OK') {
-                    $("#bank").val(data.customer_name);
-                } else {
-                    alertCustom('error', data.message);
-                    $('#routing_number').focus();
-                }
-            }
-        });
-    });
 
     //Functions
     function initLinks() {
@@ -52,6 +38,7 @@ $(document).ready(function () {
         redirectBackLink.attr('href', path);
         companyUpdateForm.attr('action', (apiPath + "/" + encodedId));
         companyBankUpdateForm.attr('action', (apiPath + "/" + encodedId));
+        companyBankUpdateRoutingForm.attr('action', (apiPath + "/" + encodedId));
     }
 
     function htmlModifyAlerts(company) {
@@ -118,20 +105,26 @@ $(document).ready(function () {
                 $('#state').val(company.state);
                 $('#city').val(company.city);
                 $('#country').val(company.country);
-                for(let bank of banks){
-                    $('#bank').append(`<option value="${bank.code}" ${bank.code === company.bank ? 'selected' : ''}>${bank.code} - ${bank.name}</option>`)
-                }
-                $('#agency').val(company.agency);
-                $('#agency_digit').val(company.agency_digit);
-                $('#account').val(company.account);
-                $('#account_digit').val(company.account_digit);
 
-                $("#company_id").val(company.id_code);
+                if (company.country === 'usa') {
+                    $('#rounting_number').val(company.bank).trigger('input');
+                    $('#account_routing_number').val(company.account);
+                    //$('#swift-code-info').show();
+                    $('#company_bank_update_form').hide();
+                    $('#company_bank_routing_number_form').show();
+                } else {
 
-                htmlModifyAlerts(company);
+                    for (let bank of banks) {
+                        $('#bank').append(`<option value="${bank.code}" ${bank.code === company.bank ? 'selected' : ''}>${bank.code} - ${bank.name}</option>`)
+                    }
+                    $('#agency').val(company.agency);
+                    $('#agency_digit').val(company.agency_digit);
+                    $('#account').val(company.account);
+                    $('#account_digit').val(company.account_digit);
 
-                if(company.country === 'usa'){
-                    $('#swift-code-info').show();
+                    $("#company_id").val(company.id_code);
+
+                    htmlModifyAlerts(company);
                 }
 
                 $("#td-bank-status").html('').append(`
@@ -184,6 +177,31 @@ $(document).ready(function () {
 
     initForm();
 
+    //Couting number
+    $('#rounting_number').on('input', function () {
+
+        let value = $(this).val();
+
+        if(value.length === 9 && !isNaN(parseInt(value))){
+            $.ajax({
+                url: 'https://www.routingnumbers.info/api/data.json?rn=' + $(this).val(),
+                success: response => {
+                    if(!isEmpty(response.customer_name)){
+                        $('#bank_routing_number').val(response.customer_name);
+                    }else{
+                        $('#bank_routing_number').val('Digite um routing number válido...');
+                    }
+                },
+                error: response => {
+                    $('#bank_routing_number').val('Digite um routing number válido...');
+                    alertCustom('error', 'Erro ao buscar routing number');
+                }
+            });
+        }else{
+            $('#bank_routing_number').val('Digite um routing number válido...');
+        }
+    });
+
     //Config Submit
     function configSubmits() {
         companyUpdateForm.on("submit", function (event) {
@@ -225,6 +243,31 @@ $(document).ready(function () {
             $.ajax({
                 method: "POST",
                 url: companyBankUpdateForm.attr('action'),
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: form_data,
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    loadingOnScreenRemove();
+                    alertCustom('success', response.message);
+                    initForm();
+                }
+            });
+        });
+        companyBankUpdateRoutingForm.on("submit", function (event) {
+            event.preventDefault();
+            let form_data = new FormData(document.getElementById('company_bank_routing_number_form'));
+            loadingOnScreen();
+            $.ajax({
+                method: "POST",
+                url: companyBankUpdateRoutingForm.attr('action'),
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',

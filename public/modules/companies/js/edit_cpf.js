@@ -20,6 +20,8 @@ $(document).ready(function () {
 
         let encodedId = extractIdFromPathName();
 
+        loadOnAny('#tab_user');
+
         $.ajax({
             method: "GET",
             url: "/api/companies/" + encodedId,
@@ -30,22 +32,25 @@ $(document).ready(function () {
             },
             error: function (response) {
                 errorAjaxResponse(response);
+                loadOnAny('#tab_user', true);
             },
             success: function success(response) {
-
-                $.each(response.banks, function (index, value) {
-                    $("#bank").append(`<option value="${value.code}">${value.code} - ${value.name}</option>`)
-                });
-
-                if(response.company.country === 'usa'){
-                    $('#swift-code-info').show();
+                if (response.company.country === 'usa') {
+                    $('#rounting_number').val(response.company.bank).trigger('input');
+                    $('#account_routing_number').val(response.company.account);
+                    //$('#swift-code-info').show();
+                    $('#company_update_bank_form').hide();
+                    $('#company_bank_routing_number_form').show();
+                } else {
+                    $.each(response.banks, function (index, value) {
+                        $("#bank").append(`<option value="${value.code}">${value.code} - ${value.name}</option>`)
+                    });
+                    $("#bank").val(response.company.bank);
+                    $("#agency").val(response.company.agency);
+                    $("#agency_digit").val(response.company.agency_digit);
+                    $("#account").val(response.company.account);
+                    $("#account_digit").val(response.company.account_digit);
                 }
-
-                $("#bank").val(response.company.bank);
-                $("#agency").val(response.company.agency);
-                $("#agency_digit").val(response.company.agency_digit);
-                $("#account").val(response.company.account);
-                $("#account_digit").val(response.company.account_digit);
 
                 $("#td-status-document-person-fisic").html('');
                 $("#td-status-document-person-fisic").append(`<span class='badge ${companyStatus[response.company.document_status]}'>${companyStatusTranslated[response.company.document_status]}</span>`);
@@ -59,13 +64,11 @@ $(document).ready(function () {
                 }
 
                 $(".details-document-person-fisic").on('click', function () {
-
                     Dropzone.forElement('#dropzoneDocumentsFisicPerson').removeAllFiles(true);
-
                     getDocuments(encodedId);
-
                 });
 
+                loadOnAny('#tab_user', true);
             }
         });
     };

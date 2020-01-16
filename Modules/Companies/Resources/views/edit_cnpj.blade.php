@@ -120,9 +120,9 @@
                                 </form>
                             </div>
                             <div class="tab-pane" id="tab_bank_data" role="tabpanel">
+                                <h3 class="mb-15 mt-10">Informações bancárias da empresa</h3>
                                 <form method="POST" enctype="multipart/form-data" id='company_bank_update_form'>
                                     @method('PUT')
-                                    <h3 class="mb-15 mt-10">Informações bancárias da empresa</h3>
                                     <div class="row">
                                         <div class="col-xl-4">
                                             <div class='form-group'>
@@ -164,6 +164,28 @@
                                         <div class="form-group col-xl-2">
                                             <label for="account_digit">Digito</label>
                                             <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-right">
+                                        <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
+                                    </div>
+                                </form>
+                                <form method="POST" enctype="multipart/form-data" id='company_bank_routing_number_form' style="display:none;">
+                                    @method('PUT')
+                                    <div class="row">
+                                        <div class="form-group col-xl-4">
+                                            <label for="rounting_number">Rounting Number</label>
+                                            <input name="bank" value="" type="text" class="input-pad" id="rounting_number" placeholder='Routing number' maxlength='9'>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-xl-4">
+                                            <label for="bank_routing_number">Banco</label>
+                                            <input type="text" class="input-pad disabled" id="bank_routing_number" placeholder='Digite um routing number válido...' maxlength="20" disabled>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="account_routing_number">Conta</label>
+                                            <input name="account" value="" type="text" class="input-pad" id="account_routing_number" placeholder='Conta' maxlength='20'>
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
