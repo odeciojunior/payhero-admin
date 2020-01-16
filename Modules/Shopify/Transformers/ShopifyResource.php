@@ -19,6 +19,7 @@ class ShopifyResource extends Resource
             'project_name'        => substr($this->name, 0, 20),
             'project_photo'       => $this->photo,
             'created_at'          => $this->created_at->format('d/m/Y'),
+            'skip_to_cart'        => $this->skip_to_cart,
         ];
     }
 }
