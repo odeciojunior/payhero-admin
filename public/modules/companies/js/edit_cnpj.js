@@ -103,19 +103,32 @@ $(document).ready(function () {
             },
             success: function success(response) {
                 let company = response.company;
-                let lists = {bank: response.banks};
-                let functions = {bank: selectItemsFunction};
-                fillAllFormInputsWithModel('company_update_form', company);
-                fillAllFormInputsWithModel('company_bank_update_form', company, lists, functions);
-                $("#company_id").attr('value', company.id_code);
-                htmlModifyAlerts(company);
+                let banks = response.banks;
 
-                //seleciona a opcao do select de acordo com o país da empresa
-                $("#country").find('option').each(function () {
-                    if (company.country == $(this).val()) {
-                        $(this).attr('selected', true);
-                    }
-                });
+                $('#fantasy_name').val(company.fantasy_name);
+                $('#company_document').val(company.company_document);
+                $('#business_website').val(company.business_website);
+                $('#support_email').val(company.support_email);
+                $('#support_telephone').val(company.support_telephone);
+                $('#zip_code').val(company.zip_code);
+                $('#street').val(company.street);
+                $('#number').val(company.number);
+                $('#neighborhood').val(company.neighborhood);
+                $('#complement').val(company.complement);
+                $('#state').val(company.state);
+                $('#city').val(company.city);
+                $('#country').val(company.country);
+                for(let bank of banks){
+                    $('#bank').append(`<option value="${bank.code}" ${bank.code === company.bank ? 'selected' : ''}>${bank.code} - ${bank.name}</option>`)
+                }
+                $('#agency').val(company.agency);
+                $('#agency_digit').val(company.agency_digit);
+                $('#account').val(company.account);
+                $('#account_digit').val(company.account_digit);
+
+                $("#company_id").val(company.id_code);
+
+                htmlModifyAlerts(company);
 
                 if(company.country === 'usa'){
                     $('#swift-code-info').show();
@@ -230,10 +243,6 @@ $(document).ready(function () {
                 }
             });
         });
-    }
-
-    function selectItemsFunction(item) {
-        return {value: item.code, text: (item.code + ' - ' + item.name)};
     }
 
     function openDocument() {
