@@ -103,8 +103,7 @@
                                                      style='padding:0px'>
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="basic-addon1 custom-addon"
-                                                              style="height: auto; border: 1px solid #ddd;"><span
-                                                                    class="currency">$</span></span>
+                                                              style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
                                                     </div>
                                                     <input id="custom-input-addon" type="text"
                                                            class="form-control input-pad withdrawal-value"
@@ -117,8 +116,7 @@
                                                     <svg class="mr-2" style="fill: white; vertical-align: middle;"
                                                          xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                          viewBox="0 0 24 24">
-                                                        <path
-                                                                d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                        <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                     </svg>
                                                     Sacar dinheiro
                                                 </button>
