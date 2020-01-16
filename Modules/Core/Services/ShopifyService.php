@@ -730,7 +730,7 @@ class ShopifyService
                                                              document.getElementsByTagName('body').item(0).style.display = 'none';
                                                              let htmlData = `<div><style>@keyframes loader-circle{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loader-container{height:100vh;text-align:center;padding-top:40vh}.loader{width:75px;height:75px;display:inline-block;border-top:solid #d3d3d3;border-right:solid #d3d3d3;border-bottom:solid #d3d3d3;border-left:solid #557b96;border-width:5px;border-radius:50%;animation:loader-circle 1.1s infinite linear}</style><div class='loader-container'><div class='loader'></div></div></div>`;
                                                              document.getElementsByTagName('html').item(0).insertAdjacentHTML( 'beforeend', htmlData);
-                                                             document.getElementsByClassName('cart__submit').item(0).click();
+                                                             document.querySelector('.cart__submit, .product-form__cart-submit').click();
                                                              document.cookie = 'cart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
                                                           }"));
                 $divFoxScript->addChild($skipScript);
