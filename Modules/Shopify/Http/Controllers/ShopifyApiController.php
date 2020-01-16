@@ -304,7 +304,6 @@ class ShopifyApiController extends Controller
                 //puxa todos os produtos
                 foreach ($project->shopifyIntegrations as $shopifyIntegration) {
                     $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                    $shopify->setSkipToCart($shopifyIntegration->skip_to_cart);
                     $shopify->importShopifyStore($projectId, auth()->user()->account_owner_id);
                 }
 
@@ -319,6 +318,8 @@ class ShopifyApiController extends Controller
 
                             foreach ($project->shopifyIntegrations as $shopifyIntegration) {
                                 $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setSkipToCart($shopifyIntegration->skip_to_cart);
 
                                 $shopify->setThemeByRole('main');
                                 $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
