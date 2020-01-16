@@ -239,33 +239,46 @@ $(document).ready(function () {
                                 $('#modal-withdrawal').modal('show');
                                 $('#modal-withdrawal-title').text("Confirmar Saque");
 
-                                var confirmationData = '<div> <h5>Verifique os dados da conta:</h5>' +
-                                    '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' +
-                                    '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' +
-                                    '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' +
-                                    '<h4>Documento:<span id="modal-withdrawal-document"></span></h4> <hr>';
+                                var confirmationData = `<div class="row">
+                                                            <div class="col">
+                                                                <h4>Verifique os dados da conta:</h4>
+                                                                <div><b>Banco:</b><span id="modal-withdrawal-bank"></span></div>
+                                                                <div><b>Agência:</b><span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></div>
+                                                                <div><b>Conta:</b><span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></div>
+                                                                <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
+                                                             </div>`;
 
-                                if(response.data.currency != 'real'){
-                                    confirmationData += '<div> <h5>Detalhes da transferencia para o exterior:</h5>' +
-                                                       '<h4>Moeda: <span>' + response.data.currency + '</span></h4>' +
-                                                       '<h4>Cotação: <span>R$' + response.data.quotation + '</span></h4>' +
-                                                       '<h4>Taxa de IOF: <span>R$' + response.data.iof.value + ' (' + response.data.iof.tax + '%)</span></h4>' +
-                                                       '<h4>Custo: <span>R$' + response.data.cost.value + ' (' + response.data.cost.tax + '%)</span></h4>' +
-                                                       '<h4>Total: <span>R$' + response.data.abroad_transfer.value + ' (' + response.data.abroad_transfer.tax + '%)</span></h4> <hr>';
+                                if (response.data.currency !== 'real') {
+                                    confirmationData += `<div class="col">
+                                                            <h4>Transferência para o exterior:</h4>
+                                                            <div><b>Moeda:</b> ${response.data.currency}</div>
+                                                            <div><b>Cotação:</b> R$ ${response.data.quotation}</div>
+                                                            <div><b>Taxa de IOF:</b> $ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
+                                                            <div><b>Custo:</b> R$ ${response.data.cost.value} (${response.data.cost.tax}%)</div>
+                                                            <div><b>Total:</b> R$ ${response.data.abroad_transfer.value} (${response.data.abroad_transfer.tax}%)</div>
+                                                         </div>`;
                                 }
 
-                                confirmationData += '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span>' +
-                                    '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$' + tax + ' (taxa)</span>';
+                                confirmationData += `</div>
+                                                     <hr>
+                                                     <h4>Valor do saque:
+                                                        <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                                                        <span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$ ${tax} (taxa)</span>`;
 
-                                if(response.data.currency != 'real'){
-                                    confirmationData += '<h3>Valor convertido: <span class=\'greenGradientText\'> ' + response.data.abroad_transfer.converted_money + '</span>' +
-                                        '<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ' + response.data.currency + ' )</span>';
+                                if(response.data.currency !== 'real'){
+                                    confirmationData += `</h4>
+                                                         <h4>Valor convertido:
+                                                            <span class='greenGradientText'>${response.data.abroad_transfer.converted_money}</span>
+                                                            <span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ${response.data.currency} )</span>`;
                                 }
 
-                                confirmationData += '</h3> <div class="alert alert-danger text-center">\n' +
-                                    '<p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada é R$10,00</b></p>' +
-                                    '<p><b>Os saques solicitados poderam ser liquidados em até um dia útil!</b></p>\n' +
-                                    '</div></div>';
+                                confirmationData += `</h4>
+                                                    <hr>
+                                                    <div class="alert alert-warning text-center">
+                                                        <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada é R$10,00</b></p>
+                                                        <p><b>Os saques solicitados poderam ser liquidados em até um dia útil!</b></p>
+                                                    </div>
+                                              </div>`;
 
                                 $('#modal_body').html(confirmationData);
 

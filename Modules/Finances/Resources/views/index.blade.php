@@ -35,7 +35,7 @@
                         <!-- TRANSFERENCIAS -->
                         <div class="tab-pane fade show active" id="nav-transfers" role="tabpanel"
                              aria-labelledby="nav-home-tab">
-                            <div class="row justify-content-start align-items-baseline">
+                            <div class="row justify-content-start align-items-center">
                                 <div class="col-8 mb-3">
                                     <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal' role="alert" style='display:none;'>
                                         <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais informações.
@@ -46,16 +46,6 @@
                                     <h5 class="title-pad"> Nova transferência </h5>
                                     <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                     </p>
-                                </div>
-                                <div id="quotation_information" class="col-4" style="display: none">
-                                    <div class="col-sm-12 col-md-12 col-lg-6">
-                                        <div id="div-available-money" class="price-holder pointer">
-                                            <h6 class="label-price" id="label_quotation"> </h6>
-                                            <h4 class="price" id="current_quotation">
-                                            </h4>
-                                            <div class="grad-border blue"></div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="col-sm-12 col-md-6 col-lg-6">
@@ -77,12 +67,20 @@
                                                 <div class="grad-border green"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
+                                        <div class="col-sm-12 col-md-12 col-lg-6">
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo Total </h6>
                                                 <h4 class="price saltoTotal">
                                                 </h4>
                                                 <div class="grad-border blue"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-12 col-lg-6" id="quotation_information" style="display: none">
+                                            <div class="price-holder">
+                                                <h6 class="label-price" id="label_quotation"> </h6>
+                                                <h4 class="price" id="current_quotation">
+                                                </h4>
+                                                <div class="grad-border purple"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -231,10 +229,10 @@
                             <span id="modal-withdrawal-document"></span>
                         </h4>
                         <hr>
-                        <h3>Valor do saque:
+                        <h4>Valor do saque:
                             <span id="modal-withdrawal-value" class='greenGradientText'></span>
                             <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
-                        </h3>
+                        </h4>
                     </div>
                 </div>
                 <div id='modal-withdraw-footer' class="modal-footer">
@@ -255,7 +253,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/finances/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=5') }}"></script>
     @endpush
 
 @endsection
