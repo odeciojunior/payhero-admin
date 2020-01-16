@@ -3,8 +3,7 @@
 namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
-use function foo\func;
-use Laravel\Socialite\Facades\Socialite;
+use Modules\Core\Services\FoxUtils;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +20,6 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Shopify\Transformers\ShopifyResource;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -683,29 +681,34 @@ class ShopifyApiController extends Controller
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
 
                 try {
-                    $shopify = new ShopifyService($integration->url_store, $integration->token);
 
-                    $shopify->setSkipToCart(boolval($data['skip_to_cart']));
+                    if (FoxUtils::isProduction()) {
 
-                    $shopify->setThemeByRole('main');
+                        $shopify = new ShopifyService($integration->url_store, $integration->token);
 
-                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                        $shopify->setSkipToCart(boolval($data['skip_to_cart']));
 
-                    $domain = $project->domains->first();
-                    $domainName = $domain ? $domain->name : null;
+                        $shopify->setThemeByRole('main');
 
-                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
+                        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
-                    $integration->skip_to_cart = boolval($data['skip_to_cart']);
-                    $integration->save();
+                        $domain = $project->domains->first();
+                        $domainName = $domain ? $domain->name : null;
 
-                    activity()->on($projectModel)->tap(function(Activity $activity) use($projectId) {
-                        $activity->log_name = 'updated';
-                        $activity->subject_id = current(Hashids::decode($projectId));
-                    })->log('Skip to cart atualizado no projeto ' . $project->name);
+                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
 
-                    return response()->json(['message' => 'Skip to cart atualizado no projeto']);
+                        $integration->skip_to_cart = boolval($data['skip_to_cart']);
+                        $integration->save();
 
+                        activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                            $activity->log_name = 'updated';
+                            $activity->subject_id = current(Hashids::decode($projectId));
+                        })->log('Skip to cart atualizado no projeto ' . $project->name);
+
+                        return response()->json(['message' => 'Skip to cart atualizado no projeto']);
+                    } else {
+                        return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
+                    }
                 } catch (Exception $e) {
                     report($e);
 
