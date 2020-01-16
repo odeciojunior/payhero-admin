@@ -267,9 +267,37 @@
         </div>
     </div>
 
+    <style>
+        .select2-selection--single{
+            border: 1px solid #dddddd !important;
+            border-radius: .215rem !important;
+            height: 43px !important;
+        }
+
+        .select2-selection__rendered {
+            color: #707070 !important;
+            font-size: 16px !important;
+            font-family: 'Muli', sans-serif;
+            line-height: 43px !important;
+            padding-left: 14px !important;
+            padding-right: 38px !important;
+        }
+
+        .select2-selection__arrow{
+            height: 43px !important;
+            right: 10px !important;
+        }
+        .select2-selection__arrow b {
+            border-color: #8f9ca2 transparent transparent transparent !important;
+        }
+        .select2-container--open .select2-selection__arrow b{
+            border-color: transparent transparent #8f9ca2 transparent !important;
+        }
+    </style>
+
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=5')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=6')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

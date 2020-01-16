@@ -120,7 +120,7 @@ class CompaniesApiController extends Controller
                 ->find(current(Hashids::decode($encodedId)));
 
             if (Gate::allows('edit', [$company])) {
-                $banks = $bankService->getBanks('BR');
+                $banks = $bankService->getBanks($company->country ?? 'brazil');
 
                 $companyResource = null;
                 if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
@@ -166,10 +166,12 @@ class CompaniesApiController extends Controller
             $company        = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
 
-                if ($requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
+                if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
                     $requestData['support_telephone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['support_telephone']);
                 }
-                $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
+                if(!empty($requestData['company_document'])) {
+                    $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
+                }
 
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);

@@ -34,8 +34,12 @@ $(document).ready(function () {
             success: function success(response) {
 
                 $.each(response.banks, function (index, value) {
-                    $("#bank").append("<option value='" + value.code + "'>" + value.name + "</option>")
+                    $("#bank").append(`<option value="${value.code}">${value.code} - ${value.name}</option>`)
                 });
+
+                if(response.company.country === 'usa'){
+                    $('#swift-code-info').show();
+                }
 
                 $("#bank").val(response.company.bank);
                 $("#agency").val(response.company.agency);
@@ -156,7 +160,7 @@ $(document).ready(function () {
                 dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
-                        
+
                     </tr>`;
                 $("#table-body-documents-person-fisic").append(dados);
 
@@ -255,7 +259,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'>
                             <i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
-                        
+
                     </tr>`;
 
                 }

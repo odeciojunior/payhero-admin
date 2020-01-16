@@ -340,61 +340,6 @@ function isEmpty(obj) {
     return Object.keys(obj ? obj : {}).length === 0;
 }
 
-function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
-    let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");
-    if (formData === undefined || formData === null) {
-        return false;
-    }
-    formData.each(
-        function (key, item) {
-            let element = $(this);
-            if (element.is('input')) {
-                fillInputWithModelField(element, model);
-            } else if (element.is('select')) {
-                if (lists === undefined || lists === null) {
-                } else {
-                    fillSelectAndCheckWithModelFields(
-                        element,
-                        lists,
-                        model,
-                        functions);
-                }
-
-            } else if (element.is('textarea')) {
-            } else {
-            }
-        }
-    )
-    return true;
-}
-
-function fillInputWithModelField(input, model) {
-    let field = input.attr('name');
-    if (field === undefined || model[field] === undefined || model[field] === "") {
-        return false;
-    }
-    let value = model[field];
-    switch (input.attr('type')) {
-        case "text":
-            if (input.data('mask') !== undefined) {
-                let mask = input.data('mask').mask;
-                input.unmask().val(value).mask(mask, {reverse: true});
-            } else {
-                input.attr('value', value);
-            }
-            break;
-        case "hidden":
-            input.attr('value', value);
-            break;
-        default:
-            //Do Nothing
-            console.log('Input type not implemented: ' + input.attr('type'));
-            break;
-    }
-    return true;
-}
-
-
 function defaultSelectItemsFunction(item) {
     return {value: item.id_code, text: item.name};
 }
