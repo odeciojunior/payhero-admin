@@ -134,6 +134,10 @@
                         <span id="client-email" class="table-title gray"></span>
                         <br>
                         <span id="client-document" class="table-title gray"></span>
+                        <div id="saleReSendEmail" class="mt-10 mb-20 text-right">
+                            <a class="pointer" id="btnSaleReSendEmail">
+                                <i class="material-icons">email</i><b> Reenviar e-mail</b></a>
+                        </div>
                         <h4> Entrega </h4>
                         <span id="delivery-address" class="table-title gray"></span>
                         <br>
@@ -210,10 +214,6 @@
                         <br>
                         <span id="checkout-content" class="table-title gray"></span>
                         <br>
-
-                        <div id="saleReSendEmail">
-                            <button class="btn btn-success" id="btnSaleReSendEmail">Reenviar email</button>
-                        </div>
                         <div id='div_notazz_invoice' style='display:none;'>
                             <br>
                             <h4> Integração Notazz </h4>
