@@ -227,7 +227,7 @@ class ProfileApiController
 
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
-            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($cellphone), $message);
+            $smsService->sendSms($cellphone, $message);
 
             return response()->json(
                 [

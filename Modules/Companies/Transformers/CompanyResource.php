@@ -46,6 +46,7 @@ class CompanyResource extends Resource
             'company_document'              => strlen($this->resource->company_document) == 14 ? FoxUtils::mask($this->resource->company_document, '##.###.###/####-##') : (strlen($this->resource->company_document) == 11 ? FoxUtils::mask($this->resource->company_document, '###.###.###-##') : $this->resource->company_document),
             'zip_code'                      => $this->resource->zip_code ?? '',
             'country'                       => $this->resource->country ?? '',
+            'country_translated'            => $this->resource->country ? __('definitions.enum.country.' . $this->resource->country) : '',
             'state'                         => $this->resource->state ?? '',
             'city'                          => $this->resource->city ?? '',
             'street'                        => $this->resource->street ?? '',
