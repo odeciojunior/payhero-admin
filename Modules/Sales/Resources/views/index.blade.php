@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-1 col-12" style='text-align:center'>
                             <label for="token" class='mb-10'>Shopify Erros</label>
-                            <label class="switch">
+                            <label class="switch m-0">
                                 <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
                                 <span class="slider round"></span>
                             </label>
