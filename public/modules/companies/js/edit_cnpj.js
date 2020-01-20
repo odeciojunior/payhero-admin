@@ -128,8 +128,8 @@ $(document).ready(function () {
 
                     $("#company_id").val(company.id_code);
 
-                    htmlModifyAlerts(company);
                 }
+                htmlModifyAlerts(company);
 
                 $("#td-bank-status").html('').append(`
                     <span class='badge ${companyStatus[company.bank_document_status]}'>
