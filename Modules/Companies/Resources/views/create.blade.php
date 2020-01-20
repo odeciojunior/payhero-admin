@@ -75,30 +75,28 @@
                         <div class='row'>
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label for="country">País da empresa</label>
-                                    <select id="country" name='country' class="form-control select-pad">
+                                    <label for="country_2">País da empresa</label>
+                                    <select id="country_2" name='country' class="form-control select-pad">
                                         <option value="brazil">Brasil</option>
+                                        <option value="portugal">Portugal</option>
                                         <option value="usa">Estados Unidos</option>
                                         <option value="germany">Alemanha</option>
-                                        <option value="belgium">Bélgica</option>
                                         <option value="spain">Espanha</option>
                                         <option value="france">França</option>
-                                        <option value="holland">Holanda</option>
                                         <option value="italy">Itália</option>
-                                        <option value="portugal">Portugal</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="company_document">CPNJ</label>
-                                    <input type="text" name="company_document" class="input-pad company_document_2" id="company_document" placeholder="Digite seu CNPJ">
+                                    <label for="fantasy_name">Nome da empresa</label>
+                                    <input type="text" name="company_document" class="input-pad fantasy_name_2" id="fantasy_name_2" placeholder="Digite a Razão social">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="fantasy_name">Razão social</label>
-                                    <input type="text" name="company_document" class="input-pad fantasy_name_2" id="fantasy_name" placeholder="Digite a Razão social">
+                                    <label id='company_document_2_label' for="company_document">CPNJ</label>
+                                    <input type="text" name="company_document" class="input-pad company_document_2" id="company_document_2" placeholder="Digite seu CNPJ">
                                 </div>
                             </div>
                             <div class="col-lg-4 mt-30">
