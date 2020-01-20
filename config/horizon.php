@@ -126,7 +126,7 @@ return [
     |
     */
 
-    'memory_limit' => 128,
+    'memory_limit' => 256,
 
     /*
     |--------------------------------------------------------------------------
@@ -143,11 +143,11 @@ return [
         'production' => [
             'supervisor-production' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
-                'balance' => 'simple',
-                'processes' => 7,
-                'tries' => 3,
-                'timeout' => 0,
+                'queue' => ['high','default','low'],
+                'balance' => 'false',
+                'processes' => 15,
+                'tries' => 12,
+                'timeout' => 3600,
                 'delay' => 1,
             ],
         ],
@@ -155,11 +155,11 @@ return [
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['default'],
-                'balance' => 'simple',
+                'queue' => ['high','default'],
+                'balance' => 'false',
                 'processes' => 3,
-                'tries' => 1,
-                'timeout' => 0,
+                'tries' => 12,
+                'timeout' => 3600,
                 'delay' => 1,
             ],
         ],

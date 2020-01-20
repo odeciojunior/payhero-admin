@@ -57,16 +57,16 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response.data);
                 $('#companies_table_data').html('');
                 if (response.data == '') {
                     $('#companies_table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma empresa encontrada</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
                         dados = `
-                    
+
                         <tr>
                             <td>${value.fantasy_name}</td>
+                            <td>${value.country_translated}</td>
                             <td>${value.company_document}</td>
                             <td>
                             `;

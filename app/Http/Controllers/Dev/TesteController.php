@@ -15,7 +15,9 @@ use Modules\Core\Entities\SentEmail;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserNotification;
+use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
@@ -37,6 +39,8 @@ use Modules\Core\Entities\Product;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Transfer;
+use Slince\Shopify\Manager\Shop\Shop;
+use Spatie\Permission\Models\Role;
 use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
@@ -74,10 +78,10 @@ class TesteController extends Controller
         dd('connection("main") = ' . $id, 'connection("sale_id") = ' . $idSale, 'connection("pusher_connection") = ' . $idPusher);
     }
 
-    public function index()
+    public function index(Request $request)
     {
 
-        $this->tgFunction();
+        $this->tgFunction($request);
         dd('tg');
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
@@ -327,18 +331,115 @@ class TesteController extends Controller
     /**
      * Funcao utilizada pelo tg
      */
-    public function tgFunction()
+    public function tgFunction($request)
     {
 
-        dd(\Carbon\Carbon::now()
-                         ->addDays(0)
-                         ->toDateTimeString());
-/*
-        $notazzInvoiceModel       = new NotazzInvoice();
-        $notazzSentHistoryModel   = new NotazzSentHistory();
-        $saleModel                = new Sale();
-        $productPlanModel         = new ProductPlan();
-        $currencyQuotationService = new CurrencyQuotationService();
+//        $checkser = new CheckoutService();
+//
+//
+//        $sale = Sale::find(191753);
+//
+//        $checkser->cancelPayment($sale, 000);
+//
+//        $shopifyIntegration = ShopifyIntegration::find(154);
+//
+//        //$this->saleId = $sale->id;
+//        $credential   = new PublicAppCredential($shopifyIntegration->token);
+//
+//        $client = new Client($credential, $shopifyIntegration->url_store, [
+//            'metaCacheDir' => '/var/tmp',
+//        ]);
+//        $order  = $client->getOrderManager()->find(1946397605933);
+
+        dd('xXx');
+
+        //        $saleModel     = new Sale();
+        //        $planSaleModel = new PlanSale();
+        //        $planModel     = new Plan();
+        //
+        //        $requestData = $request->all();
+        //
+        //        if(isset($requestData['boleto']))
+        //        {
+        //
+        //            $sales = $saleModel->where('status', 1)
+        //                               ->where('payment_method', 2)
+        //                               ->where('end_date', '>', '2019-12-21')
+        //                               ->paginate(500, ['*'], 'page', $requestData['page']);
+        //
+        //            dd($sales->count());
+        //
+        //            foreach ($sales as $sale) {
+        //
+        //                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
+        //                $plan      = $planModel->find($plansSale->plan_id);
+        //
+        //                event(new BilletPaidEvent($plan, $sale, $sale->client));
+        //            }
+        //
+        //            dd('Fim');
+        //
+        //        }
+        //
+        //        dd('what');
+
+        //event(new BilletPaidEvent($plan, $sale, $sale->client));
+
+        //---------------------------------------------- chargeback
+//                        $transferModel = new Transfer();
+//                        $saleModel     = new Sale();
+//
+//                        $saleId = current(Hashids::connection('sale_id')->decode('OGYoBa3K'));
+//
+//                        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
+//
+//                        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+//
+//                        try {
+//                            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+//                            $shopifyService->refundOrder($shopifyIntegration, $sale);
+//                        } catch (Exception $ex) {
+//
+//                        }
+//
+//                        $sale->update([
+//                                          'gateway_status' => 'chargedback',
+//                                          'status'         => '4',
+//                                      ]);
+//
+//                        foreach ($sale->transactions as $transaction) {
+//
+//                            if ($transaction->status == 'transfered') {
+//
+//                                $transferModel->create([
+//                                                           'transaction_id' => $transaction->id,
+//                                                           'user_id'        => $transaction->company->user_id,
+//                                                           'value'          => $transaction->value,
+//                                                           'type'           => 'out',
+//                                                           'reason'         => 'chargedback',
+//                                                           'company_id'     => $transaction->company->id,
+//                                                       ]);
+//
+//                                $transaction->company->update([
+//                                                                  'balance' => $transaction->company->balance -= $transaction->value,
+//                                                              ]);
+//                            }
+//
+//                            $transaction->update([
+//                                                     'status' => 'chargedback',
+//                                                 ]);
+//                        }
+//
+//                        dd('chargeback feito');
+
+        //---------------------------------------------- chargeback
+
+        /*
+                $notazzInvoiceModel       = new NotazzInvoice();
+                $notazzSentHistoryModel   = new NotazzSentHistory();
+                $saleModel                = new Sale();
+                $productPlanModel         = new ProductPlan();
+                $currencyQuotationService = new CurrencyQuotationService();
 
         $saleModel = new Sale();
 
@@ -423,44 +524,44 @@ class TesteController extends Controller
 */
         //dd('aa');
 
-//                //nada
-//                $notazInvoiceModel = new NotazzInvoice();
-//                $nservice          = new NotazzService();
-//
-//                $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
-//                                              ->where('status', '=', 2)
-//                                              ->limit(50)
-//                                              ->get();
-//
-//                try {
-//                    $count = 0;
-//                    foreach ($invoices as $invoice) {
-//                        if ($count > 90) {
-//                            break;
-//                        }
-//                        $ret = $nservice->deleteNfse($invoice->id);
-//                        if ($ret == false) {
-//                            $invoice->update([
-//                                                 'status' => 5,
-//                                             ]);
-//                            continue;
-//                        }
-//
-//                        $invoice->update([
-//                                             'status'           => 5,
-//                                             'return_message'   => $ret->statusProcessamento,
-//                                             'return_http_code' => $ret->codigoProcessamento,
-//                                         ]);
-//
-//                        $count = $count + 1;
-//                    }
-//
-//                    dd('ok');
-//                } catch (Exception $ex) {
-//                    dd($ex);
-//                }
-//
-//                dd($invoices);
+        //                //nada
+        //                $notazInvoiceModel = new NotazzInvoice();
+        //                $nservice          = new NotazzService();
+        //
+        //                $invoices = $notazInvoiceModel->whereIn('notazz_integration_id', [4, 5, 6])
+        //                                              ->where('status', '=', 2)
+        //                                              ->limit(50)
+        //                                              ->get();
+        //
+        //                try {
+        //                    $count = 0;
+        //                    foreach ($invoices as $invoice) {
+        //                        if ($count > 90) {
+        //                            break;
+        //                        }
+        //                        $ret = $nservice->deleteNfse($invoice->id);
+        //                        if ($ret == false) {
+        //                            $invoice->update([
+        //                                                 'status' => 5,
+        //                                             ]);
+        //                            continue;
+        //                        }
+        //
+        //                        $invoice->update([
+        //                                             'status'           => 5,
+        //                                             'return_message'   => $ret->statusProcessamento,
+        //                                             'return_http_code' => $ret->codigoProcessamento,
+        //                                         ]);
+        //
+        //                        $count = $count + 1;
+        //                    }
+        //
+        //                    dd('ok');
+        //                } catch (Exception $ex) {
+        //                    dd($ex);
+        //                }
+        //
+        //                dd($invoices);
 
         dd('aa');
     }
@@ -488,13 +589,18 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-        $companies = Company::where('country', 'like', '%brasil%')->get();
-        foreach ($companies as $company) {
-            $company->update([
-                                 'country' => 'brazil',
-                             ]);
+        /*$users  = User::get();
+        $userss = [];
+        foreach ($users as $user) {
+            if ($user->id != $user->account_owner_id) {
+                $user->update([
+                                  'address_document_status'  => 3,
+                                  'personal_document_status' => 3,
+                              ]);
+                $userss [] = $user->name;
+            }
         }
-        dd($companies);
+        dd($userss);*/
     }
 
     /**

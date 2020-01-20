@@ -27,12 +27,12 @@ class ProfileUpdateRequest extends FormRequest
             'country'       => 'nullable|sometimes|string|max:255',
             'state'         => 'nullable|sometimes|string|max:255',
             'city'          => 'nullable|sometimes|string|max:255',
+            'country'       => 'nullable|string|max:255',
             'neighborhood'  => 'nullable|sometimes|string|max:255',
             'street'        => 'nullable|sometimes|string|max:255',
             'number'        => 'nullable|sometimes|string|max:255',
             'complement'    => 'nullable|sometimes|string|max:255',
             'profile_photo' => 'nullable|image|mimes:jpeg,jpg,png',
-
         ];
     }
 

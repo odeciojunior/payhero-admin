@@ -26,6 +26,7 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
 use Modules\Domains\Http\Requests\DomainStoreRequest;
 use Modules\Domains\Transformers\DomainResource;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 
@@ -49,6 +50,11 @@ class DomainsApiController extends Controller
 
                 $projectId = current(Hashids::decode($projectId));
                 $project   = $projectModel->find($projectId);
+
+                activity()->on($domainModel)->tap(function(Activity $activity) use ($projectId) {
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os domínios para o projeto: ' . $project->name);
+
                 if (Gate::allows('index', [$project])) {
                     $domains = $domainModel->with('project')
                                            ->where('project_id', $projectId);
@@ -203,8 +209,7 @@ class DomainsApiController extends Controller
             $companyModel      = new Company();
             $cloudFlareService = new CloudFlareService();
             $haveEnterA        = false;
-
-            $domainId = current(Hashids::decode($id));
+            $domainId          = current(Hashids::decode($id));
 
             if ($domainId) {
                 //hash ok
@@ -240,6 +245,7 @@ class DomainsApiController extends Controller
                                 //$content = "Servidores Shopify";
                                 break;
                             CASE $cloudFlareService::checkoutIp:
+                            CASE $cloudFlareService::adminIp:
                                 $content = "Servidores CloudFox";
                                 break;
                             default:
@@ -385,11 +391,18 @@ class DomainsApiController extends Controller
             $domainModel       = new Domain();
             $cloudFlareService = new CloudFlareService();
 
+
+
             $domainId = current(Hashids::decode($domain));
             if (!empty($domainId)) {
                 // hashid ok
                 $domain = $domainModel->with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
                                       ->find($domainId);
+
+                activity()->on($domainModel)->tap(function(Activity $activity) use ($domainId) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = $domainId;
+                })->log('Verificação domínio: ' . $domain->name);
                 if (!empty($domain)) {
 
                     if (Gate::allows('edit', [$domain->project])) {
@@ -549,9 +562,14 @@ class DomainsApiController extends Controller
     public function show($project, $domain)
     {
         try {
+            $domainModel = new Domain();
+
+            activity()->on($domainModel)->tap(function(Activity $activity) use ($domain) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::decode($domain));
+            })->log('Visualizou tela verificação domínio: ' . $domain);
 
             if (!empty($domain)) {
-                $domainModel       = new Domain();
                 $cloudFlareService = new CloudFlareService();
 
                 $domain = $domainModel->with(['project'])->where('id', current(Hashids::decode($domain)))->first();

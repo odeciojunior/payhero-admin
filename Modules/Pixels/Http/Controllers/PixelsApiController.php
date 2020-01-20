@@ -12,6 +12,7 @@ use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Project;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Pixels\Transformers\PixelsResource;
 
@@ -33,6 +34,12 @@ class PixelsApiController extends Controller
                 $projectModel = new Project();
 
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($pixelModel)->tap(function(Activity $activity){
+                    $activity->log_name = 'visualization';
+                })->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
+
+
                 if (Gate::allows('edit', [$project])) {
                     $pixels = $pixelModel->where('project_id', $project->id);
 
@@ -199,6 +206,13 @@ class PixelsApiController extends Controller
                 $pixel   = $pixelModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
+                activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
+
+
+
                 if (Gate::allows('edit', [$project])) {
 
                     if ($pixel) {
@@ -236,6 +250,12 @@ class PixelsApiController extends Controller
 
                 $pixel   = $pixelModel->find(current(Hashids::decode($id)));
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                })->log('Visualizou tela editar pixel: ' . $pixel->name);
+
 
                 if (Gate::allows('edit', [$project])) {
 

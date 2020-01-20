@@ -36,7 +36,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
     public function query()
     {
-        return $this->saleService->getSalesQueryBuilder($this->filters, true);
+        return $this->saleService->getSalesQueryBuilder($this->filters, true, $this->user->account_owner_id);
     }
 
     public function map($row): array
@@ -76,6 +76,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                     ->format('d/m/Y H:i:s') : '',
                 'status' => $sale->present()->getStatus(),
                 'total_paid' => $sale->total_paid_value ?? '',
+                'subtotal' => $sale->sub_total,
                 'shipping' => $sale->shipping->name ?? '',
                 'shipping_value' => $sale->shipping->value ?? '',
                 'fee' => $sale->details->taxaReal,
@@ -109,13 +110,9 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'utm_medium' => $sale->checkout->utm_medium ?? '',
                 'utm_campaign' => $sale->checkout->utm_campaign ?? '',
                 'utm_term' => $sale->checkout->utm_term ?? '',
-                'utm_content' =>  preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', $sale->checkout->utm_content) ?? '',
+                'utm_content' => preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', $sale->checkout->utm_content) ?? '',
             ];
         }
-
-        //foreach ($saleData as &$value){
-        //    $value = preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '!Te peguei!', $value);
-        //}
 
         return $saleData;
     }
@@ -136,6 +133,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
             'Data Final do Pagamento',
             'Status',
             'Valor Total Venda',
+            'Subtotal',
             'Frete',
             'Valor do Frete',
             'Taxas',
@@ -178,7 +176,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:AR1'; // All headers
+                $cellRange = 'A1:AS1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)
                     ->getFill()
                     ->setFillType('solid')
@@ -199,7 +197,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                     }
                     if($setGray){
                         $event->sheet->getDelegate()
-                            ->getStyle('A' . $row . ':AR' . $row)
+                            ->getStyle('A' . $row . ':AS' . $row)
                             ->getFill()
                             ->setFillType('solid')
                             ->getStartColor()

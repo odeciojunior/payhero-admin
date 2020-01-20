@@ -19,6 +19,7 @@ use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
+use Spatie\Activitylog\Models\Activity;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
@@ -34,8 +35,14 @@ class PlansApiController extends Controller
     public function index($projectId, Request $request)
     {
         try {
+
             $planModel    = new Plan();
             $projectModel = new Project();
+
+            activity()->on($planModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela todos os planos');
+
             if (!empty($projectId)) {
                 $projectId = current(Hashids::decode($projectId));
 
@@ -170,6 +177,11 @@ class PlansApiController extends Controller
         try {
             $planModel    = new Plan();
             $projectModel = new Project();
+
+            activity()->on($planModel)->tap(function(Activity $activity) use ($id) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::decode($id));
+            })->log('Visualizou tela detalhes do plano');
 
             $projectId = current(Hashids::decode($projectID));
 

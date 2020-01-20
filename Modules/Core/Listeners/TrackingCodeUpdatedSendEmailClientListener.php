@@ -40,22 +40,28 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $projectContact = $event->sale->project->contact;
             $domain         = $domainModel->where('project_id', $event->sale->project->id)->first();
 
-            if (isset($domain)) {
-                $data = [
-                    'name'            => $clientName,
-                    'project_logo'    => $event->sale->project->logo,
-                    'tracking_code'   => $event->tracking->tracking_code,
-                    'project_contact' => $projectContact,
-                    "products"        => $event->products,
-                ];
+            if (!empty($domain)) {
 
-                $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+                $linkBase = 'https://tracking.' . $domain->name . '/';
 
-                $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
-                $link            = $linkShortenerService->shorten('https://www.linkcorreios.com.br/?id=' . $data['tracking_code']);
+                if (isset($domain)) {
+                    $data = [
+                        'name' => $clientName,
+                        'project_logo' => $event->sale->project->logo,
+                        'tracking_code' => $event->tracking->tracking_code,
+                        'project_contact' => $projectContact,
+                        "products" => $event->products,
+                        "link" => $linkBase,
+                    ];
 
-                if (!empty($clientTelephone) && !empty($link)) {
-                    $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                    $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-0df5ee26812d461f83c536fe88def4b6', $data);
+
+                    $clientTelephone = FoxUtils::prepareCellPhoneNumber($event->sale->client->telephone);
+                    $link = $linkShortenerService->shorten($linkBase . $data['tracking_code']);
+
+                    if (!empty($clientTelephone) && !empty($link)) {
+                        $smsService->sendSms($clientTelephone, 'Olá ' . $clientName . ', seu código de rastreio chegou: ' . $data['tracking_code'] . '. Acesse: ' . $link);
+                    }
                 }
             }
         } catch (Exception $e) {

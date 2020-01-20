@@ -1,7 +1,9 @@
+let tracking_id = 'undefined';
+
 $(() => {
 
-    $('#tracking-product-image').on('error', function(){
-       $(this).attr('src', 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png')
+    $('#tracking-product-image').on('error', function () {
+        $(this).attr('src', 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png')
     });
 
     $(document).on('click', '.copy', function () {
@@ -118,7 +120,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects',
+            url: '/api/projects?select=true',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -173,12 +175,12 @@ $(() => {
                     let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = response.data;
 
                     $('#total-trackings').text(total);
-                    $('#percentual-delivered').text(delivered ? delivered + ' (' +((delivered*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-dispatched').text(dispatched ? dispatched + ' (' +((dispatched*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-posted').text(posted ? posted + ' (' +((posted*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-out').text(out_for_delivery ? out_for_delivery + ' (' +((out_for_delivery*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-exception').text(exception ? exception + ' (' +((exception*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
-                    $('#percentual-unknown').text(unknown ? unknown + ' (' +((unknown*100)/total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-delivered').text(delivered ? delivered + ' (' + ((delivered * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-dispatched').text(dispatched ? dispatched + ' (' + ((dispatched * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-posted').text(posted ? posted + ' (' + ((posted * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-out').text(out_for_delivery ? out_for_delivery + ' (' + ((out_for_delivery * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-exception').text(exception ? exception + ' (' + ((exception * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
+                    $('#percentual-unknown').text(unknown ? unknown + ' (' + ((unknown * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
                 }
                 loadOnAny('.number', true);
             }
@@ -239,10 +241,10 @@ $(() => {
 
                         let dados = `<tr ${grayRow ? 'class="td-odd"' : ''}>
                                          ${
-                                            lastSale !== tracking.sale
-                                                ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
-                                                : `<td></td>`
-                                         }
+                            lastSale !== tracking.sale
+                                ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
+                                : `<td></td>`
+                            }
                                          <td>${tracking.approved_date}</td>
                                          <td>
                                              <span style="max-width: 330px; display:block; margin:0 auto;">
@@ -262,7 +264,7 @@ $(() => {
                             ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
                                                <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
                             : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                        }
+                            }
                                            <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
@@ -280,7 +282,7 @@ $(() => {
 
     //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
-
+        tracking_id = $(this).attr('tracking');
         loadOnAny('#modal-tracking-details');
         $('#modal-tracking').modal('show');
 
@@ -304,72 +306,31 @@ $(() => {
                 $('#tracking-code').text(tracking.tracking_code);
                 $('#tracking-product-image').attr('src', tracking.product.photo);
                 $('#tracking-product-name').text(tracking.product.name + (tracking.product.description ? '(' + tracking.product.description + ')' : ''));
-                $('#tracking-product-amount').text(tracking.amount);
+                $('#tracking-product-amount').text(tracking.amount + 'x');
                 $('#tracking-delivery-address').text('Endereço: ' + tracking.delivery.street + ', ' + tracking.delivery.number);
                 $('#tracking-delivery-neighborhood').text('Bairro: ' + tracking.delivery.neighborhood);
                 $('#tracking-delivery-zipcode').text('CEP: ' + tracking.delivery.zip_code);
                 $('#tracking-delivery-city').text('Cidade: ' + tracking.delivery.city + '/' + tracking.delivery.state);
                 $('#modal-tracking-details .btn-notify-trackingcode').attr('tracking', tracking.id);
 
-                //GRAFICO DO STATUS DA ENTREGA
+                if (tracking.link) {
+                    $('#link-tracking a').attr('href', tracking.link);
+                    $('#link-tracking').show();
+                } else {
+                    $('#link-tracking').hide();
+                }
 
-                //clean modal
                 $('#table-checkpoint').html('');
-                $('.tracking-timeline .tracking-timeline-row').html('');
-
                 if (!isEmpty(tracking.checkpoints)) {
-                    let resume = [];
                     for (let checkpoint of tracking.checkpoints) {
 
                         $('#table-checkpoint').append(`<tr>
-                                                      <td>${checkpoint.created_at}</td>
-                                                      <td>
-                                                          <span class="badge badge-${getStatusBadge(checkpoint.tracking_status_enum)}">${checkpoint.tracking_status}</span>
-                                                      </td>
-                                                      <td>${checkpoint.event}</td>
-                                                </tr>`);
-
-                        switch (checkpoint.tracking_status_enum) {
-                            case 1: //postado
-                                resume[0] = checkpoint;
-                                break;
-                            case 2: //dispatched
-                                resume[1] = checkpoint;
-                                break;
-                            case 4: // out_for_delivery
-                                resume[2] = checkpoint;
-                                break;
-                            case 3: //delivered
-                                resume[3] = checkpoint;
-                                break;
-                            case 5: //exception
-                                resume[4] = checkpoint;
-                                break;
-                        }
-                    }
-
-                    resume[1] = resume[1] || {tracking_status: 'Em trânsito'};
-
-                    if (resume[3] && !resume[2]) {
-                        resume[2] = {tracking_status: 'Saiu para a entrega', created_at: resume[3].created_at};
-                    } else {
-                        resume[2] = resume[2] || {tracking_status: 'Saiu para a entrega'};
-                    }
-
-                    resume[3] = resume[3] || {tracking_status: 'Entregue'};
-
-                    for (let key in resume) {
-                        let value = resume[key];
-                        $('.tracking-timeline .tracking-timeline-row').eq(0)
-                            .append(`<div class="date-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">${value.created_at || ''}</div>`);
-                        $('.tracking-timeline .tracking-timeline-row').eq(1)
-                            .append(`<div class="step-item ${value.created_at ? key === 4 ? 'exception' : 'active' : ''}">
-                                        <span class="step-line"></span>
-                                        <span class="step-dot"></span>
-                                        <span class="step-line"></span>
-                                    </div>`);
-                        $('.tracking-timeline .tracking-timeline-row').eq(2)
-                            .append(`<div class="status-item ${value.created_at ? key === 'exception' ? 'exception' : 'active' : ''}">${value.tracking_status}</div>`);
+                                                          <td>${checkpoint.created_at}</td>
+                                                          <td>
+                                                              <span class="badge badge-${getStatusBadge(checkpoint.tracking_status_enum)}">${checkpoint.tracking_status}</span>
+                                                          </td>
+                                                          <td>${checkpoint.event}</td>
+                                                      </tr>`);
                     }
                 }
 
@@ -382,8 +343,6 @@ $(() => {
                         .addClass('badge-' + getStatusBadge(tracking.tracking_status_enum))
                         .html(tracking.tracking_status);
                 }
-
-                //FIM - GRAFICO DO STATUS DA ENTREGA
 
                 loadOnAny('#modal-tracking-details', true);
             }
@@ -438,7 +397,6 @@ $(() => {
 
     //enviar e-mail com o codigo de rastreio
     $(document).on('click', '#modal-tracking-details .btn-notify-trackingcode', function () {
-        let tracking_id = $(this).attr('tracking');
         $.ajax({
             method: "POST",
             url: '/api/tracking/notify/' + tracking_id,
@@ -479,8 +437,10 @@ $(() => {
             error: response => {
                 errorAjaxResponse(response);
             },
-            success: () => {
-                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
+            success: response => {
+                $('#export-email').text(response.email);
+                $('#alert-export').show()
+                    .shake();
             },
         });
     }

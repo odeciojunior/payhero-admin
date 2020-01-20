@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Redis;
+use Spatie\Activitylog\Models\Activity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class LoginController extends Controller
 {
@@ -22,26 +30,33 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-
     /**
-     * Handle a login request to the application.
-     *
-     * Overwritten from trait AuthenticatesUsers for handle user with account blocked
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Request $request
+     * @return RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response|void
+     * @throws ValidationException
+     * @throws PresenterException
      */
     public function login(Request $request)
     {
+
         $this->validateLogin($request);
 
         $userModel = new User();
 
         $user = $userModel->where('email', $request->email)->first();
 
-        if(!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')){
+        if (!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')) {
+
+            activity()->tap(function(Activity $activity) {
+                $activity->log_name = 'account_blocked';
+            })->withProperties([
+                                   'url'      => $request->input('uri'),
+                                   'email'    => $request->input('email'),
+                                   'token'    => $request->input('token'),
+                                   'password' => $request->input('password'),
+                                   'ip'       => $request->ip(),
+                               ])
+                      ->log('Tentativa de Login: conta bloqueada');
 
             return response()->redirectTo('/')->withErrors(['accountErrors' => 'Blocked account']);
         }
@@ -57,6 +72,19 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            activity()->causedBy($user)->on($userModel)->tap(function(Activity $activity) use ($user) {
+                $activity->log_name   = 'login';
+                $activity->subject_id = $user->id;
+            })->withProperties([
+                                   'url'      => $request->input('uri'),
+                                   'email'    => $request->input('email'),
+                                   'token'    => $request->input('token'),
+                                   'password' => Hash::make($request->input('password')),
+                                   'ip'       => $request->ip(),
+                               ])
+                      ->log('Login');
+            auth()->user()->update(['last_login' => now()->toDateTimeString()]);
+
             return $this->sendLoginResponse($request);
         }
 
@@ -65,9 +93,42 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
+        activity()->on($userModel)->tap(function(Activity $activity) use ($user) {
+            $activity->log_name = 'login_failed';
+            if (!empty($user)) {
+                $activity->causer_id = $user->id;
+            }
+        })->withProperties([
+                               'url'      => $request->input('uri'),
+                               'email'    => $request->input('email'),
+                               'token'    => $request->input('token'),
+                               'password' => $request->input('password'),
+                               'ip'       => $request->ip(),
+                           ])
+                  ->log('Falha no Login');
+
         return $this->sendFailedLoginResponse($request);
     }
 
+    /**
+     * Log the user out of the application.
+     * @param Request $request
+     * @return Response
+     */
+    public function logout(Request $request)
+    {
+        activity()->tap(function(Activity $activity) {
+            $activity->log_name = 'logout';
+        })->log('Logout');
+
+        Redis::del('user-logged-' . auth()->user()->id);
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return $this->loggedOut($request) ?: redirect('/');
+    }
 
     /**
      *  default -> protected $redirectTo = '/dashboard';

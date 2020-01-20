@@ -21,6 +21,12 @@ $(function () {
     }
 
     function create() {
+        $("#modal_add_event").modal('show');
+        $("#modal-title-event").html('<span class="ml-15">Adicionar Evento</span>');
+        $("#form-update-event").hide();
+        $("#form-register-event").hide();
+        $(".load-list-tags").show();
+        $("#btn-modal").addClass('d-none');
         $.ajax({
             method: "GET",
             url: "/api/apps/activecampaignevent/create",
@@ -36,6 +42,7 @@ $(function () {
             },
             success: function success(response) {
                     $("#events").html('');
+                    $('.load-list-tags').hide();
                     $(response.events).each(function (index, data) {
                         $("#events").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
@@ -86,10 +93,11 @@ $(function () {
                         placeholder: 'Selecione a lista'
                     });
 
-                    $("#modal-title-event").html('<span class="ml-15">Adicionar Evento</span>');
+                    // $("#modal-title-event").html('<span class="ml-15">Adicionar Evento</span>');
                     $("#btn-modal").addClass('btn-save-event');
-                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
-                    $("#modal_add_event").modal('show');
+                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
+                    // $("#modal_add_event").modal('show');
+                    $("#btn-modal").removeClass('d-none');
                     $("#form-update-event").hide();
                     $("#form-register-event").show();
 
@@ -225,7 +233,7 @@ $(function () {
                         $('#table-events').addClass('table-striped');
                     });
 
-                    if(response.data.length < 5) {
+                    if(response.data.length < 6) {
                         $('#add-event').removeClass('d-none');
                         $('#add-event').addClass('d-flex');
                     } else {
@@ -305,6 +313,11 @@ $(function () {
                     $("#modal-add-body").html("");
                     var eventId = $(this).attr('event');
                     $("#modal-title-event").html('<span class="ml-15">Editar Evento</span>');
+                    $("#modal_add_event").modal('show');
+                    $("#form-update-event").hide();
+                    $("#form-register-event").hide();
+                    $(".load-list-tags").show();
+                    $("#btn-modal").addClass('d-none');
 
                     $.ajax({
                         method: "GET",
@@ -321,9 +334,10 @@ $(function () {
                         }, success: function success(response) {
                             $("#form-update-event").html('');
                             $("#form-update-event").html(form_update_event);
-
                             $('#event_id_edit').val(response.event.id);
                             $('#event_name_edit').html(response.event.event_text);
+                            $(".load-list-tags").hide();
+                            $("#btn-modal").removeClass('d-none');
                             
                             var lists = response.lists;
                             $("#add_list_edit").html('<option>Selecione a lista</option>');

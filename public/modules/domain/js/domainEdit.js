@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
-    let btnAddDomain = $("#btn-add-domain");
+    let btnAddDomain = $("#add-domain");
     let btnDeleteDomain = $("#btn-delete-domain");
     let btnAddDomainModal = $("#btn-modal-add-domain");
 
@@ -90,8 +90,6 @@ $(document).ready(function () {
      */
     function deleteDomain(domain) {
         $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
-        $("#loaderModal").remove();
-        loadingOnScreenRemove();
 
         $("#modal-delete-domain").modal("show");
 
@@ -99,7 +97,14 @@ $(document).ready(function () {
         btnDeleteDomain.on('click', function () {
             $(".btn-delete-modal-domain").hide();
 
-            loadOnModal('#modal-delete-domain-body');
+            loadOnAny('#modal-delete-domain-body', false, {
+                styles: {
+                    container: {
+                        minHeight: '240px'
+                    }
+                },
+                insertBefore: '.modal-delete-footer'
+            });
 
             $.ajax({
                 method: 'DELETE',
@@ -114,17 +119,20 @@ $(document).ready(function () {
                     'Accept': 'application/json',
                 },
                 error: function (response) {
-                    loadingOnScreenRemove();
+                    $('#close-modal-delete-domain').click();
+                    loadOnAny('#modal-delete-domain-body', true);
+
                     errorAjaxResponse(response);
+
+                    updateDomains();
+
                 },
                 success: function (response) {
-                    loadingOnScreenRemove();
-                    $("#loaderModal").remove();
 
                     $('#close-modal-delete-domain').click();
+                    loadOnAny('#modal-delete-domain-body', true);
 
                     alertCustom('success', response.message);
-                    loadingOnScreenRemove();
                     updateDomains();
                 }
             });
@@ -188,10 +196,10 @@ $(document).ready(function () {
      * Salva dados novo dominio da modal
      */
     function addNewDomain() {
-        loadOnModal('#modal-body-add-domain');
         $("#especialModalTitle").remove();
         $("#modal-title-add-domain").html('');
-        loadOnModalDomainEspecial('#modal-content-add-domain');
+        //loadOnModalDomainEspecial('#modal-content-add-domain');
+        loadOnModalDomainEspecial('#modal-body-add-domain');
         $("#btn-modal-add-domain").hide();
 
         btnAddDomainModal.hide();
@@ -214,18 +222,15 @@ $(document).ready(function () {
             error: function (response) {
                 $("#especialModalTitle").remove();
 
-                $("#loaderModal").remove();
-                loadingOnScreenRemove();
+                loadOnAny('#modal-body-add-domain', true);
+
                 $("#modal-title-add-domain").html('Novo domínio').show();
                 $("#form-add-domain, #btn-modal-add-domain").show();
-
-                // $(`#modal-body-add-domain, ${btnAddDomainModal}`).show();
 
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $("#loaderModal").remove();
-                loadingOnScreenRemove();
+                loadOnAny('#modal-body-add-domain', true);
 
                 $("#modal-button-close").click();
                 alertCustom('success', response.message);
@@ -649,11 +654,15 @@ $(document).ready(function () {
      */
     function loadOnModalDomainEspecial(whereToLoad) {
 
-        $(whereToLoad).children().hide('fast');
         $('#modal-title-add-domain').after('<h3 id="especialModalTitle" style="font-weight:bold; color:black"></h3>');
         $('#modal-title-add-domain').hide();
-        $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" + "<div class='loaderModal'>" + "</div>" + "</div>");
-        $('#loadingOnScreen').append("<div class='blockScreen'></div>");
+        loadOnAny(whereToLoad, false, {
+            styles: {
+                container: {
+                    minHeight: '180px'
+                }
+            }
+        });
 
         $('#especialModalTitle').html('Iniciando ... ');
 

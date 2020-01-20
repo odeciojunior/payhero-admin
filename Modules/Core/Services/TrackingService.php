@@ -95,7 +95,7 @@ class TrackingService
                     'tracking_status_enum' => $status_enum,
                     'tracking_status' => $status,
                     'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
-                    'event' => $nonLatinChars ? 'Encomenda no exterior' : $event,
+                    'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' : $event,
                 ]);
             }
         }
@@ -130,7 +130,7 @@ class TrackingService
                     'tracking_status_enum' => $status_enum,
                     'tracking_status' => $status,
                     'created_at' => Carbon::parse($data)->format('d/m/Y'),
-                    'event' => $nonLatinChars ? 'Encomenda no exterior' :  $event,
+                    'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' :  $event,
                 ]);
             }
         }*/
@@ -172,11 +172,15 @@ class TrackingService
         return $tracking;
     }
 
-    public function getTrackingsQueryBuilder($filters)
+    public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
         $salePresenter = (new Sale())->present();
+
+        if(!$userId){
+            $userId = auth()->user()->account_owner_id;
+        }
 
         $saleStatus = [
             $salePresenter->getStatus('approved'),
@@ -191,12 +195,12 @@ class TrackingService
                 'sale.client',
                 'product',
             ])
-            ->whereHas('sale', function ($query) use ($filters, $saleStatus) {
+            ->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId) {
                 //tipo da data e periodo obrigatorio
                 $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
                 $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                     ->whereIn('status', $saleStatus)
-                    ->where('owner_id', auth()->user()->account_owner_id);
+                    ->where('owner_id', $userId);
 
                 if (isset($filters['sale'])) {
                     $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));

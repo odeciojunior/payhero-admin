@@ -1,10 +1,23 @@
 $(document).ready(function () {
 
+    $.ajax({
+        method: "GET",
+        url: "https://www.remessaonline.com.br/api/current-quotation/USD/COM/",
+        dataType: "json",
+        headers: {
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(data) {
+            alert(data.toSource());
+        }
+    });
+
+
+
     getDataDashboard();
-    loading('#cardPendente', '#loaderCard');
-    loading('#cardAntecipavel', '#loaderCard');
-    loading('#cardDisponivel', '#loaderCard');
-    loading('#cardTotal', '#loaderCard');
 
     $("#company").on("change", function () {
         updateValues();
@@ -25,21 +38,17 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                loadOnAny('.page-content', true);
                 if (!isEmpty(data.companies)) {
                     for (let i = 0; i < data.companies.length; i++) {
                         $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
                     }
-                    $(".moeda").html(data.values.currency);
-                    $("#pending_money").html(data.values.pending_balance);
-                    $("#antecipation_money").html(data.values.antecipable_balance);
-                    $("#available_money").html(data.values.available_balance);
-                    $("#total_money").html(data.values.total_balance);
-                    $("#today_money").html(data.values.today_balance);
+
+                    updateValues();
 
                     $(".content-error").hide();
                     $('#company-select').show();
                 } else {
+                    loadOnAny('.page-content', true);
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                 }
@@ -59,14 +68,129 @@ $(document).ready(function () {
             },
             data: {company: $('#company').val()},
             error: function error(response) {
+                loadOnAny('.page-content', true);
                 errorAjaxResponse(response);
             },
             success: function success(data) {
+
                 $(".moeda").html(data.currency);
                 $("#pending_money").html(data.pending_balance);
                 $("#available_money").html(data.available_balance);
                 $("#total_money").html(data.total_balance);
                 $("#today_money").html(data.today_balance);
+
+                $('#total_sales_approved').text(data.total_sales_approved);
+                $('#total_sales_chargeback').text(data.total_sales_chargeback);
+
+                updateProgressBar(data.chargeback_tax);
+                updateNews(data.news);
+                updateReleases(data.releases);
+                loadOnAny('.page-content', true);
+            }
+        });
+    }
+
+    function updateProgressBar(value) {
+        $('.circle').circleProgress({
+            size: 176,
+            startAngle: -Math.PI / 2,
+            value: value / 100,
+            fill: {
+                gradient: ["#f76b1c", "#fa6161"]
+            }
+        });
+
+        $('.circle strong').addClass('loaded')
+            .text(parseFloat(value).toFixed(2) + '%');
+    }
+
+    function updateNews(data) {
+
+        $('#carouselNews .carousel-inner').html('');
+        $('#carouselNews .carousel-indicators').html('');
+
+        if (!isEmpty(data)) {
+
+            for (let i = 0; i < data.length; i++) {
+
+                let active = i === 0 ? 'active' : '';
+
+                let slide = `<div class="carousel-item ${active}">
+                                 <div class="card shadow news-background">
+                                     <div class="card-body p-md-60 d-flex flex-column justify-content-center" style="height: 370px">
+                                         <h1 class="news-title">${data[i].title}</h1>
+                                         <div class="news-content">${data[i].content}</div>
+                                     </div>
+                                 </div>
+                             </div>`;
+
+                let indicator = `<li data-target="#carouselNews" data-slide-to="${i}" class="${active}"></li>`;
+
+                $('#carouselNews .carousel-inner').append(slide);
+                $('#carouselNews .carousel-indicators').append(indicator);
+            }
+
+            if (data.length === 1) {
+                $('#carouselNews .carousel-indicators').hide();
+                $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').hide();
+            } else {
+                $('#carouselNews .carousel-indicators').show();
+                $('#carouselNews .carousel-control-prev, #carouselNews .carousel-control-next').show();
+            }
+
+            $('#news-col').show();
+        } else {
+            $('#news-col').hide();
+        }
+    }
+
+    function updateReleases(data){
+
+        $('#releases-div').html('');
+
+        if(!isEmpty(data)){
+            $.each(data, function(index, value){
+                let item = `<div class="d-flex align-items-center my-15">
+                                <div class="release-progress" id="${index}">
+                                    <strong>${value.progress}%</strong>
+                                </div>
+                                <span class="ml-2">${value.release}</span>
+                            </div>`;
+                $('#releases-div').append(item);
+
+                updateReleasesProgress(index, value.progress);
+            });
+
+            $('#releases-col').show();
+        }else{
+            $('#releases-col').hide();
+        }
+    }
+
+    function updateReleasesProgress(id, value) {
+
+        let circle = $('#' + id);
+
+        let color = '';
+        switch (true) {
+            case value <= 33:
+                color = '#ffa040';
+                break;
+            case value > 33 && value <= 66:
+                color = '#ff6f00';
+                break;
+            default:
+                color = '#c43e00';
+                break;
+        }
+
+        circle.circleProgress({
+            size: 55,
+            startAngle: -Math.PI / 2,
+            thickness: 6,
+            value: value / 100,
+            fill: {
+                color: color,
             }
         });
     }

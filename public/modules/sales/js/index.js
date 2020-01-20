@@ -1,7 +1,16 @@
 var currentPage = null;
 var atualizar = null;
+
 $(document).ready(function () {
 
+    //checkbox
+    $('.check').on('click', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
@@ -83,6 +92,7 @@ $(document).ready(function () {
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'transaction': $("#transaction").val().replace('#', ''),
+            'shopify_error': $("#shopify_error").val(),
         };
 
         if (urlParams) {
@@ -145,8 +155,7 @@ $(document).ready(function () {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
-            url: '/api/projects',
-
+            url: '/api/projects?select=true',
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -262,23 +271,19 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/sales/export',
-            //xhrFields: {
-            //    responseType: 'blob'
-            //},
             data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: (response) => {
+            error: response => {
                 errorAjaxResponse(response);
             },
-            success: () => {
-                alertCustom('success', 'A exportação começou! Você será notificado quando o download estiver pronto.')
+            success: response => {
+                $('#export-email').text(response.email);
+                $('#alert-export').show()
+                    .shake();
             }
-            // success: function success(response, textStatus, request) {
-            //     downloadFile(response, request);
-            // }
         });
     }
 

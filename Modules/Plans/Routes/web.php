@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
     Route::Resource('/plans', 'PlansController')
          ->only('index');
 });

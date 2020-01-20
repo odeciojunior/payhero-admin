@@ -12,6 +12,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\ActiveCampaignService;
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller;
+use Modules\Core\Services\PusherNotificationService;
 use Modules\Core\Services\ShopifyService;
 use Slince\Shopify\PublicAppCredential;
 use Slince\Shopify\Client;
@@ -37,10 +39,11 @@ class PostBackPagarmeController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function postBackListener(Request $request)
     {
-        $requestData    = $request->all();
+        $requestData = $request->all();
 
         $postBackLogModel = new PostbackLog();
 
@@ -61,7 +64,7 @@ class PostBackPagarmeController extends Controller
 
             $sale               = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
             $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-            if(!empty($shopifyIntegration)){
+            if (!empty($shopifyIntegration)) {
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
             }
 
@@ -143,7 +146,6 @@ class PostBackPagarmeController extends Controller
 
                 $sale->load('client');
                 event(new BilletPaidEvent($plan, $sale, $sale->client));
-
             } else if ($requestData['transaction']['status'] == 'chargedback') {
                 $sale->update([
                                   'gateway_status' => 'chargedback',
@@ -151,7 +153,7 @@ class PostBackPagarmeController extends Controller
                               ]);
                 if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+                    $shopifyService->refundOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
                 $transferModel = new Transfer();
@@ -195,6 +197,9 @@ class PostBackPagarmeController extends Controller
                                              'status' => 'chargedback',
                                          ]);
                 }
+
+                EmailService::userSaleChargeback($sale);
+                PusherNotificationService::userSaleChargeback($sale);
             } else if ($requestData['transaction']['status'] == 'refunded') {
                 $sale->update([
                                   'gateway_status' => 'refunded',
@@ -202,7 +207,7 @@ class PostBackPagarmeController extends Controller
                               ]);
                 if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                    $shopifyService->refundOrder($shopifyIntegration, $sale);
+                    $shopifyService->refundOrder($sale);
                     $shopifyService->saveSaleShopifyRequest();
                 }
                 $transferModel = new Transfer();

@@ -99,9 +99,9 @@
                 </div>
                 {{--resend shopfy order--}}
                 <div id='resendShopfyOrder' class='alert alert-warning text-center d-none'>
-                    <span>Ordem do <b>SHOPFY</b> não foi gerada</span>
+                    <span>Ordem do <b>SHOPIFY</b> não foi gerada</span>
                     <br>
-                    <span style='font-size:12px'>cliqeu no botão a seguir para gerar</span>
+                    <span style='font-size:12px'>clique no botão a seguir para gerar</span>
                     <br>
                     <button id='resendeShopifyOrderButton' class="btn btn-warning btn-sm btn_new_order_shopify mt-10" sale=''>
                         <b>Gerar ordem Shopify</b>
@@ -134,6 +134,10 @@
                         <span id="client-email" class="table-title gray"></span>
                         <br>
                         <span id="client-document" class="table-title gray"></span>
+                        <div id="saleReSendEmail" class="mt-10 mb-20 text-right">
+                            <a class="pointer" id="btnSaleReSendEmail">
+                                <i class="material-icons">email</i><b> Reenviar e-mail</b></a>
+                        </div>
                         <h4> Entrega </h4>
                         <span id="delivery-address" class="table-title gray"></span>
                         <br>
@@ -178,13 +182,13 @@
                         <div id="details-boleto" style="display:none">
             <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
                                                                                    style='cursor:pointer;' link='' title='Copiar link'><i
-                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
                                                                                                           class='copy_link'
                                                                                                           style='cursor:pointer;'
                                                                                                           digitable-line='' title='Copiar link'><i
-                                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                                            class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
@@ -209,6 +213,7 @@
                         <span id="checkout-term" class="table-title gray"></span>
                         <br>
                         <span id="checkout-content" class="table-title gray"></span>
+                        <br>
                         <div id='div_notazz_invoice' style='display:none;'>
                             <br>
                             <h4> Integração Notazz </h4>
@@ -238,6 +243,6 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
     @endpush
     </div>

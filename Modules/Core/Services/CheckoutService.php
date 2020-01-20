@@ -118,9 +118,9 @@ class CheckoutService
             }
             $domain = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $domainName = $domain->name ?? 'cloudfox.net';
+                $domainName       = $domain->name ?? 'cloudfox.net';
                 $urlCancelPayment = 'https://checkout.' . $domainName . '/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                          ->encode($sale->id);
+                                                                                                        ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                 ->encode($sale->id);
@@ -167,6 +167,8 @@ class CheckoutService
 
             return $result;
         } catch (Exception $ex) {
+            report($ex);
+
             return [
                 'status'  => 'error',
                 'message' => 'Error ao tentar cancelar venda.',
@@ -184,7 +186,7 @@ class CheckoutService
                                                                                  ->decode($saleId))->first();
             $domain    = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $domainName = $domain->name ?? 'cloudfox.net';
+                $domainName          = $domain->name ?? 'cloudfox.net';
                 $regenerateBilletUrl = 'https://checkout.' . $domainName . '/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
@@ -292,8 +294,8 @@ class CheckoutService
         }
     }
 
-
-    public function verifyCheckoutStatus(){
+    public function verifyCheckoutStatus()
+    {
 
         $cloudFlareService = new CloudFlareService();
 
@@ -304,48 +306,42 @@ class CheckoutService
             // email addresses for notify
             $emails = [
                 'julioleichtweis@gmail.com',
-                'felixlorram@gmail.com'
+                'felixlorram@gmail.com',
             ];
 
             // phone numbers for notify
             $phoneNumbers = [
                 '5555996931098',
-                '5522981071202'
+                '5522981071202',
             ];
 
-            $sendgrid =  new SendGrid(getenv('SENDGRID_API_KEY'));
+            $sendgrid   = new SendGrid(getenv('SENDGRID_API_KEY'));
             $smsService = new SmsService();
 
-            foreach($emails as $email){
+            foreach ($emails as $email) {
 
-                try{
+                try {
                     $sendgridMail = new \SendGrid\Mail\Mail();
                     $sendgridMail->setFrom('noreply@cloudfox.net', 'cloudfox');
                     $sendgridMail->addTo($email, 'cloudfox');
                     $sendgridMail->setTemplateId('d-f44033c3eaec46d2a6226f796313d9fc');
 
-                    $response   = $sendgrid->send($sendgridMail);
-                }
-                catch(Exception $e){
+                    $response = $sendgrid->send($sendgridMail);
+                } catch (Exception $e) {
                     //
                 }
-
             }
 
-            foreach($phoneNumbers as $phoneNumber){
+            foreach ($phoneNumbers as $phoneNumber) {
 
-                try{
+                try {
                     $smsService->sendSms($phoneNumber, 'Checkout caiu');
-                }
-                catch(Exception $e){
+                } catch (Exception $e) {
                     //
                 }
             }
 
             return true;
         }
-
     }
-
-
 }

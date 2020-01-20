@@ -8,7 +8,10 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
+use Slince\Shopify\Client;
+use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -19,126 +22,13 @@ class WilsonController extends Controller
 {
     public function wilsonFunction(Request $request)
     {
-        $saleIds         = [
-            //            103304, - ok
-            //            103302, - ok
-            //            103300, - ok
-            //            103299, - ok
-            //            103293, - ok
-            //            103289, - ok
-            //            103285, - ok
-            //            103283, - ok
-            //            103282, - ok
-            //            103281, - ok
-            //            103279, - ok
-            //            103278, - ok
-            //            103277, - ok
-            //            103276, - ok
-            //            103273, - ok
-            //            103272, - ok
-            //            103271, - ok
-            //            103270, - ok
-            //            103269, - ok
-            //            103268, - ok
-            //            103265, - ok
-            //            103264, - ok
-            //            103262, - ok
-            //            103261, - ok
-            //            103258, - ok
-            //            103255, - ok
-            //            103254, - ok
-            //            103253, - ok
-            //            103250, - ok
-//            103249, - ok
-//            103248, - ok
-//            103247,
-//            103246,
-//            103245,
-//            103243,
-//            103242,
-//            103241,
-//            103240,
-//            103239,
-            //            103238,
-            //            103237,
-            //            103236,
-            //            103234,
-            //            103230,
-            //            103229,
-            //            103228,
-            //            103224,
-            //            103223,
-            //            103221,
-            //            103220,
-            //            103219,
-            //            103218,
-            //            103215,
-            //            103214,
-            //            103213,
-            //            103211,
-            //            103209,
-            //            103208,
-            //            103205,
-            //            103202,
-            //            103200,
-            //            103199,
-            //            103197,
-            //            103195,
-            //            103194,
-            //            103193,
-            //            103192,
-            //            103189,
-            //            103183,
-            //            103181,
-            //            103178,
-            //            103174,
-            //            103171,
-            //            103169,
-            //            103168,
-            //            103167,
-            //            103166,
-            //            103165,
-            //            103163,
-            //            103162,
-            //            103160,
-            //            103157,
-            //            103156,
-            //            103155,
-            //            103154,
-            //            103153,
-            //            103152,
-            //            103151,
-            //            103149,
-            //            103148,
-            //            103143,
-            //            103142,
-            //            103140,
-            //            103136,
-            //            103131,
-            //            103130,
-            //            103129,
-            //            103127,
-            //            103126,
-            //            103125,
-            //            103121,
-            //            103120,
-            //            103119,
-            //            103117,
-            //            103115,
-            //            103114,
-        ];
-//        $checkoutService = new CheckoutService();
-//
-//        foreach ($saleIds as $saleId) {
-//            $sale       = Sale::find($saleId);
-//            $saleIdHash = Hashids::connection('sale_id')->encode($sale->id);
-//
-//            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->sub_total);
-//            $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-//            dump($saleIdHash, ($totalPaidValue + $shippingPrice));
-//            $checkoutService->regenerateBillet($saleIdHash, ($totalPaidValue + $shippingPrice), $sale->boleto_due_date);
-//            dump($saleIdHash . '- OK');
-//        }
+        $shopifyService = new ShopifyService('joao-loja-teste.myshopify.com', '41a30c203c994b866787ced07c05f29f');
+
+        //        $sale = Sale::find(11354);
+        $sale = Sale::find(11322);
+        //        dd($sale);
+        $shopifyService->refundOrder($sale);
+//                $shopifyService->newOrder($sale);
         dd('oooook');
         //        //        $salesArray = [
         //        //            '8gmDNvGB',

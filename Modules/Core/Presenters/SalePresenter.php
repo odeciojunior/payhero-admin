@@ -142,4 +142,21 @@ class SalePresenter extends Presenter
 
         return $subTotal;
     }
+
+    /**
+     * @return array
+     */
+    public function getProducts()
+    {
+        $productsSale = [];
+        foreach ($this->plansSales as $planSale) {
+            foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
+                $product           = $productPlan->product()->first()->toArray();
+                $product['amount'] = $productPlan->amount * $planSale->amount;
+                $productsSale[]    = $product;
+            }
+        }
+
+        return $productsSale;
+    }
 }

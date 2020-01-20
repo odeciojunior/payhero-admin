@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => 'api',
+        'middleware' => ['api', 'setUserAsLogged'],
     ],
     function() {
         Route::post('/login', 'AuthenticationApiController@login');

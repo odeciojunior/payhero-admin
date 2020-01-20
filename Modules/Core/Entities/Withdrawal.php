@@ -3,8 +3,11 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
+use Spatie\Activitylog\Models\Activity;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -23,36 +26,76 @@ use Modules\Core\Presenters\WithdrawalPresenter;
  */
 class Withdrawal extends Model
 {
-    use PresentableTrait;
-
+    use PresentableTrait, LogsActivity;
+    /**
+     * @var string
+     */
     protected $presenter = WithdrawalPresenter::class;
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'company_id', 
-        'value', 
-        'release_date', 
-        'status', 
-        'created_at', 
-        'updated_at', 
-        'bank', 
-        'agency', 
-        'agency_digit', 
-        'account', 
-        'account_digit'
+        'company_id',
+        'value',
+        'release_date',
+        'status',
+        'currency',
+        'currency_quotation',
+        'value_transferred',
+        'abroad_transfer_tax',
+        'tax',
+        'bank',
+        'agency',
+        'agency_digit',
+        'account',
+        'account_digit',
+        'created_at',
+        'updated_at'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @var bool
+     */
+    protected static $logFillable = true;
+    /**
+     * @var bool
+     */
+    protected static $logUnguarded = true;
+    /**
+     * Registra apenas os atributos alterados
+     * @var bool
+     */
+    protected static $logOnlyDirty = true;
+    /**
+     * Impede que o pacote armazene logs vazios
+     * @var bool
+     */
+    protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Pedido saque foi deletedo.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Pedido saque foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Pedido saque foi criado.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
+
+    /**
+     * @return BelongsTo
      */
     public function company()
     {

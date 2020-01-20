@@ -33,15 +33,20 @@ class SaleService
     /**
      * @param $filters
      * @param bool $withProducts
+     * @param int $userId
      * @return Builder|Transaction
      */
-    public function getSalesQueryBuilder($filters, $withProducts = false)
+    public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
     {
         $companyModel     = new Company();
         $clientModel      = new Client();
         $transactionModel = new Transaction();
 
-        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
+        if(!$userId){
+            $userId = auth()->user()->account_owner_id;
+        }
+
+        $userCompanies = $companyModel->where('user_id', $userId)
                                       ->pluck('id')
                                       ->toArray();
 
@@ -79,7 +84,14 @@ class SaleService
                 $querySale->whereIn('client_id', $customers);
             });
         }
-
+        if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
+            $transactions->whereHas('sale.project.shopifyIntegrations', function($queryShopifyIntegration) {
+                $queryShopifyIntegration->where('status', 2);
+            });
+            $transactions->whereHas('sale', function($querySaleShopify) {
+                $querySaleShopify->whereNull('shopify_order');
+            });
+        }
         if (!empty($filters["payment_method"])) {
             $forma = $filters["payment_method"];
             $transactions->whereHas('sale', function($querySale) use ($forma) {
@@ -202,8 +214,12 @@ class SaleService
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
         $taxa = 0;
-        //            $taxaReal = ($total / 100) * (float) $userTransaction->percentage_rate + 100;
-        $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+        if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
+            $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
+        } else {
+            $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+        }
+
         $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
@@ -225,6 +241,13 @@ class SaleService
         } else {
             $userTransaction->release_date = null;
         }
+
+        // if(preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0){
+
+        //     $comission = preg_replace("/[^0-9]/", "", $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
+
+        //     $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($comission, ',', strlen($comission) - 2, 0);
+        // }
 
         //add details to sale
         $sale->details = (object) [
@@ -356,12 +379,16 @@ class SaleService
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
                     DB::commit();
-                    $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                    if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
-                        $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    try {
+                        $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+                        if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
+                            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                        $shopifyService->refundOrder($shopifyIntegration, $sale);
-                        $shopifyService->saveSaleShopifyRequest();
+                            $shopifyService->refundOrder($sale);
+                            $shopifyService->saveSaleShopifyRequest();
+                        }
+                    } catch (Exception $ex) {
+                        report($ex);
                     }
                 }
 

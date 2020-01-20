@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api'],
+        'middleware' => ['auth:api', 'setUserAsLogged'],
     ],
     function() {
         Route::apiResource('/apps/shopify/', 'ShopifyApiController')
@@ -41,6 +41,11 @@ Route::group(
         Route::post('/apps/shopify/verifypermissions', [
             'uses' => 'ShopifyApiController@verifyPermission',
             'as'   => 'shopify.verifypermissions',
+        ]);
+
+        Route::post('/apps/shopify/skiptocart', [
+            'uses' => 'ShopifyApiController@setSkipToCart',
+            'as'   => 'shopify.skiptocart',
         ]);
     }
 );

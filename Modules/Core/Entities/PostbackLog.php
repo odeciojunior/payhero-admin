@@ -6,6 +6,7 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PostbackLogPresenter;
+use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -18,24 +19,23 @@ use Modules\Core\Presenters\PostbackLogPresenter;
 class PostbackLog extends Model
 {
     use PresentableTrait, FoxModelTrait;
-
+    /**
+     * @var string
+     */
     protected $presenter = PostbackLogPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'origin', 
-        'description', 
-        'data', 
-        'created_at', 
-        'updated_at'
+        'origin',
+        'description',
+        'data',
+        'created_at',
+        'updated_at',
     ];
-
 }

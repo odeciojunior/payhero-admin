@@ -45,12 +45,13 @@
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
-                                            <label for="fantasy_name">Razão Social</label>
-                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Razão Social" maxlength='250'>
+                                            <label for="fantasy_name">Nome da empresa</label>
+                                            <input name="fantasy_name" value="" type="text" class="form-control" id="fantasy_name" placeholder="Nome da empresa" maxlength='250'>
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="company_document">CNPJ</label>
-                                            <input name="company_document" value="" type="text" class="form-control" id="company_document" placeholder='CNPJ'>
+                                            {{--carrega no js--}}
+                                            <label for="company_document" class='label-document'></label>
+                                            <input name="company_document" value="" type="text" class="form-control" id="company_document">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="business_website">Site</label>
@@ -71,7 +72,7 @@
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
+                                            <input name="zip_code" value="" type="text" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -91,7 +92,7 @@
                                             <label for="complement">Complemento</label>
                                             <input name="complement" value="" type="text" class="form-control info-complemented" id="complement" placeholder='Complemento' maxlength='30'>
                                         </div>
-                                        <div class="form-group col-xl-4">
+                                        <div class="form-group col-xl-4 div-state" style='display:none;'>
                                             <label for="state">Estado</label>
                                             <input name="state" value="" type="text" class="form-control info-complemented" id="state" placeholder='Estado' maxlength='30'>
                                         </div>
@@ -99,9 +100,18 @@
                                             <label for="city">Cidade</label>
                                             <input name="city" value="" type="text" class="form-control info-complemented" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
-                                        <div class="form-group col-xl-6">
-                                            <label for="country">Country</label>
-                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">
+                                        <div class="form-group col-xl-4">
+                                            <label for="country">País</label>
+                                            {{--                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">--}}
+                                            <select id="country" name='country' class="form-control select-pad" disabled>
+                                                <option value="brazil">Brasil</option>
+                                                <option value="usa">Estados Unidos</option>
+                                                <option value="germany">Alemanha</option>
+                                                <option value="spain">Espanha</option>
+                                                <option value="france">França</option>
+                                                <option value="italy">Itália</option>
+                                                <option value="portugal">Portugal</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
@@ -110,16 +120,31 @@
                                 </form>
                             </div>
                             <div class="tab-pane" id="tab_bank_data" role="tabpanel">
+                                <h3 class="mb-15 mt-10">Informações bancárias da empresa</h3>
                                 <form method="POST" enctype="multipart/form-data" id='company_bank_update_form'>
                                     @method('PUT')
-                                    <h3 class="mb-15 mt-10">Informações bancárias da empresa</h3>
                                     <div class="row">
                                         <div class="col-xl-4">
-                                            <div class='form-group'>
+                                            <div class='form-group div-bank'>
                                                 <label for='bank'>Banco</label>
                                                 <select id="bank" name="bank" class="form-control" style='width:100%' data-plugin="select2">
                                                     <option value="">Selecione</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-8" id="swift-code-info" style="display:none">
+                                            <div class="alert alert-secondary">
+                                                <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
+                                                <span class="badge badge-secondary">AAA</span>
+                                                <span class="badge badge-secondary">BB</span>
+                                                <span class="badge badge-secondary">CC</span>
+                                                <span class="badge badge-secondary">DDD</span>
+                                                <ul class="pl-20 mt-10">
+                                                    <li>Os quatro primeiros dígitos representam o <strong>código do banco</strong></li>
+                                                    <li>O segundo grupo tem 2 dígitos e representa o <strong>código do país</strong></li>
+                                                    <li>Os terceiro grupo tem 2 dígitos podem ser letras ou números e representa o <strong>código de localização</strong> da sede do banco</li>
+                                                    <li>Os três últimos dígitos representam o <strong>código do agência</strong>. XXX representa a sede</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -139,6 +164,28 @@
                                         <div class="form-group col-xl-2">
                                             <label for="account_digit">Digito</label>
                                             <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-right">
+                                        <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
+                                    </div>
+                                </form>
+                                <form method="POST" enctype="multipart/form-data" id='company_bank_routing_number_form' style="display:none;">
+                                    @method('PUT')
+                                    <div class="row">
+                                        <div class="form-group col-xl-4">
+                                            <label for="rounting_number">Rounting Number</label>
+                                            <input name="bank" value="" type="text" class="input-pad" id="rounting_number" placeholder='Routing number' maxlength='9'>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-xl-4">
+                                            <label for="bank_routing_number">Banco</label>
+                                            <input type="text" class="input-pad disabled" id="bank_routing_number" placeholder='Digite um routing number válido...' maxlength="20" disabled>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="account_routing_number">Conta</label>
+                                            <input name="account" value="" type="text" class="input-pad" id="account_routing_number" placeholder='Conta' maxlength='20'>
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
@@ -257,9 +304,37 @@
         </div>
     </div>
 
+    <style>
+        .select2-selection--single{
+            border: 1px solid #dddddd !important;
+            border-radius: .215rem !important;
+            height: 43px !important;
+        }
+
+        .select2-selection__rendered {
+            color: #707070 !important;
+            font-size: 16px !important;
+            font-family: 'Muli', sans-serif;
+            line-height: 43px !important;
+            padding-left: 14px !important;
+            padding-right: 38px !important;
+        }
+
+        .select2-selection__arrow{
+            height: 43px !important;
+            right: 10px !important;
+        }
+        .select2-selection__arrow b {
+            border-color: #8f9ca2 transparent transparent transparent !important;
+        }
+        .select2-container--open .select2-selection__arrow b{
+            border-color: transparent transparent #8f9ca2 transparent !important;
+        }
+    </style>
+
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=1')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=8')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

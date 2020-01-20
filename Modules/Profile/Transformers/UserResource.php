@@ -19,7 +19,7 @@ class UserResource extends Resource
      */
     public function toArray($request)
     {
-        $userNotification = $this->userNotification ?? collect();
+        $userNotification = $this->userNotification;
         $userService      = new UserService();
         $refusedDocuments = $userService->getRefusedDocuments();
 
@@ -48,18 +48,18 @@ class UserResource extends Resource
             'address_document_translate'  => $this->present()
                                                   ->getPersonalDocumentStatus($this->address_document_status),
             // Notificações
-            'new_affiliation'             => $userNotification->new_affiliation ?? false,
-            'new_affiliation_request'     => $userNotification->new_affiliation_request ?? false,
-            'approved_affiliation'        => $userNotification->approved_affiliation ?? false,
-            'boleto_compensated'          => $userNotification->boleto_compensated ?? false,
-            'sale_approved'               => $userNotification->sale_approved ?? false,
-            'notazz'                      => $userNotification->notazz ?? false,
-            'withdrawal_approved'         => $userNotification->withdrawal_approved ?? false,
-            'released_balance'            => $userNotification->released_balance ?? false,
-            'domain_approved'             => $userNotification->domain_approved ?? false,
-            'shopify'                     => $userNotification->shopify ?? false,
-            'billet_generated'            => $userNotification->billet_generated ?? false,
-            'credit_card_in_proccess'     => $userNotification->credit_card_in_proccess ?? false,
+            'new_affiliation'             => empty($userNotification->new_affiliation) ? false : $userNotification->new_affiliation,
+            'new_affiliation_request'     => empty($userNotification->new_affiliation_request) ? false : $userNotification->new_affiliation_request,
+            'approved_affiliation'        => empty($userNotification->approved_affiliation) ? false : $userNotification->approved_affiliation,
+            'boleto_compensated'          => empty($userNotification->boleto_compensated) ? false : $userNotification->boleto_compensated,
+            'sale_approved'               => empty($userNotification->sale_approved) ? false : $userNotification->sale_approved,
+            'notazz'                      => empty($userNotification->notazz) ? false : $userNotification->notazz,
+            'withdrawal_approved'         => empty($userNotification->withdrawal_approved) ? false : $userNotification->withdrawal_approved,
+            'released_balance'            => empty($userNotification->released_balance) ? false : $userNotification->released_balance,
+            'domain_approved'             => empty($userNotification->domain_approved) ? false : $userNotification->domain_approved,
+            'shopify'                     => empty($userNotification->shopify) ? false : $userNotification->shopify,
+            'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generated,
+            'credit_card_in_proccess'     => empty($userNotification->credit_card_in_proccess) ? false : $userNotification->credit_card_in_proccess,
 
             'refusedDocuments' => $refusedDocuments,
         ];

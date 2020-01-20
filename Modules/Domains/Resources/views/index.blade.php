@@ -6,9 +6,9 @@
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div id="add-domain" class="d-flex align-items-center justify-content-end">
-            <span class="link-button-dependent red pointer"> Adicionar domínio </span>
-            <a class="ml-10 rounded-add pointer" id='btn-add-domain'>
+        <div id="add-domain" class="d-flex align-items-center justify-content-end pointer">
+            <span class="link-button-dependent red"> Adicionar domínio </span>
+            <a class="ml-10 rounded-add" id='btn-add-domain'>
                 <i class="icon wb-plus" aria-hidden="true"></i></a>
         </div>
     </div>
@@ -157,7 +157,7 @@
 <!-- Modal Excluir Modal -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-domain" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1" style='padding-right: 15px;'>
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
-        <div class="modal-content" id='modal-content-domain-delete'>
+        <div class="modal-content" id='modal-content-domain-delete' style="height: 294px;">
             <div class="modal-header text-center">
                 <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete-domain">
                     <i class="material-icons md-16">close</i>

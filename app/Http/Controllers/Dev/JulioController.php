@@ -23,7 +23,10 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Invitation;
+use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\DomainRecord;
@@ -36,6 +39,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 
 class JulioController extends Controller
@@ -44,34 +48,39 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        dd("heyyy");
+        // $dataSms = [
+        //     'message'   => 'teste',
+        //     'telephone' => '5555996931098',
+        // ];
 
-        $users = User::all();
+        // event(new SendSmsEvent($dataSms));
 
-        foreach($users as $user){
+        // dd("foi");
 
-            $sales = Sale::where('owner_id', $user->id)->get();
+        // $connection = null;
+        // $default = 'default';
 
-            if(count($sales) > 0){
-                //
+        // Queue::size();
+
+        //For the delayed jobs
+        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':delayed' ,0, -1) );
+
+        //For the reserved jobs
+        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':reserved' ,0, -1) );    }
+
+        // $remessaOnlineService = new RemessaOnlineService();
+
+        // $quotation = $remessaOnlineService->getCurrentDolarQuotation('eurofd');
+
+        // dd($quotation);
+
+        User::orderBy('id')->chunk(100, function($users){
+            foreach($users as $user){
+                dd($user);
             }
-            else{
-                $user->update([
-                    'debit_card_tax'                 => '5.9',
-                    'debit_card_release_money_days'  => '30',
-                    'credit_card_tax'                => '5.9',
-                    'credit_card_release_money_days' => '30',
-                    'boleto_tax'                     => '5.9',
-                    'boleto_release_money_days'      => '30'
-                ]);
-            }
-        }
-
-        dd("howwww");
+        });
 
     }
-
-
 }
 
 

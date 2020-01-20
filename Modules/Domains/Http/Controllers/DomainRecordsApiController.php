@@ -16,6 +16,7 @@ use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Domains\Http\Requests\DomainRecordsRequest;
 use Modules\Domains\Transformers\DomainRecordsIndexResource;
+use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -33,6 +34,11 @@ class DomainRecordsApiController extends Controller
     {
         try {
             $domainModel = new Domain();
+
+            activity()->on($domainModel)->tap(function(Activity $activity) use ($domainId) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::decode($domainId));
+            })->log('Visualizou tela de registros entradas DNS para dominio: ' . $domainId);
 
             $domainId = current(Hashids::decode($domainId));
 
@@ -110,7 +116,7 @@ class DomainRecordsApiController extends Controller
                 $subdomain = "http://" . $subdomain;
                 $subdomain = parse_url($subdomain, PHP_URL_HOST);
 
-                if ((strpos($subdomain, '.') === false) || ($subdomain == $domain->name)) {
+                if ((strpos($subdomain, '.') === false) || ($subdomain == $domain->name) || (strpos($domain->name, $subdomain)  === false)) {
                     //dominio não tem "ponto" ou é igual ao dominio
                     if ($domain->domainsRecords->where('type', $requestData['type-register'])->where('name', $subdomain)
                                                ->where('content', $requestData['type-register'])->count() == 0) {
@@ -286,12 +292,13 @@ class DomainRecordsApiController extends Controller
 
                 $record = $domainRecordModel->with(['domain', 'domain.project'])->find($recordId);
 
-                if (Gate::allows('edit', [$record->domain->project])) {
+                if (!empty($record->domain->project) && Gate::allows('edit', [$record->domain->project])) {
                     $cloudFlareService->setZone($record->domain->name);
 
                     if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
                         // zona deletada
-                        $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
+                        $recordsFind    = $domainRecordModel->where('id', $record->id)->first();
+                        $recordsDeleted = $recordsFind->delete();
                         if ($recordsDeleted) {
                             return response()->json([
                                                         'message' => 'DNS removido com sucesso!',

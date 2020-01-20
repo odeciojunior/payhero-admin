@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/tools', function (Request $request) {
+Route::middleware(['auth:api', 'setUserAsLogged'])->get('/tools', function (Request $request) {
     return $request->user();
 });

@@ -83,7 +83,14 @@
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-1 col-12" style='text-align:center'>
+                            <label for="token" class='mb-10'>Shopify Erros</label>
+                            <label class="switch m-0">
+                                <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
@@ -93,6 +100,19 @@
                     </div>
                 </div>
             </form>
+
+            <!-- Aviso de Exportação -->
+            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                <div class="d-flex">
+                    <i class="material-icons mr-10">info</i>
+                    <div class="w-full">
+                        <strong class="font-size-16">Exportando seu relatório</strong>
+                        <p class="font-size-14 pr-md-100 mb-0" >Sua exportação será entregue por e-mail para: <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.</p>
+                    </div>
+                    <i class="material-icons pointer" data-dismiss="alert">close</i>
+                </div>
+            </div>
+
             <!-- Resumo -->
             <div class="fixhalf"></div>
             @if(!auth()->user()->hasRole('attendance'))
@@ -118,7 +138,7 @@
                         </div>
                     </div>
                 </div>
-        @endif
+            @endif
         <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
@@ -220,7 +240,7 @@
                 </div>
                 <div class='my-20 mx-20 text-center'>
                     <h3 class="black"> Você tem certeza? </h3>
-                    <p class="gray"> Apó confirmada, essa operação não poderá ser desfeita!</p>
+                    <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
                     <small>OBS: Taxa de R$ 1,00 por estorno</small>
                 </div>
                 <div class="modal-footer">
@@ -257,7 +277,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=5') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=2') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

@@ -21,6 +21,7 @@
                         <thead>
                             <tr>
                                 <td class="table-title"><b>Razão Social</b></td>
+                                <td class="table-title"><b>País</b></td>
                                 <td class="table-title"><b>Documento</b></td>
                                 <td class="table-title"><b>Status</b></td>
                                 <td class="table-title" style="width: 130px"><b>Opções</b></td>
@@ -82,7 +83,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/companies/js/index.js?v=2') }}"></script>
     @endpush
 
 @endsection

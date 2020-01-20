@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
-        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v=4') }}">
     @endpush
 
     <!-- Page -->
@@ -197,6 +197,18 @@
                 </div>
             </div>
 
+            <!-- Aviso de Exportação -->
+            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+                <div class="d-flex">
+                    <i class="material-icons mr-10">info</i>
+                    <div class="w-full">
+                        <strong class="font-size-16">Exportando seu relatório</strong>
+                        <p class="font-size-14 pr-md-100 mb-0" >Sua exportação será entregue por e-mail para: <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.</p>
+                    </div>
+                    <i class="material-icons pointer" data-dismiss="alert">close</i>
+                </div>
+            </div>
+
             <!-- Resumo -->
             <div class="fixhalf"></div>
             <div class="card shadow p-20" style='display:block;'>
@@ -291,27 +303,25 @@
                                     </div>
                                 </div>
 
-                                <!-- js carrega... -->
-                                <div class="tracking-timeline">
-                                    <div class="tracking-timeline-row">
-                                    </div>
-                                    <div class="tracking-timeline-row">
-                                    </div>
-                                    <div class="tracking-timeline-row">
-                                    </div>
+                                <div>
+                                    <h4> Destino </h4>
+                                    <span id="tracking-delivery-address" class="table-title gray"></span>
+                                    <br>
+                                    <span id="tracking-delivery-neighborhood" class="table-title gray"></span>
+                                    <br>
+                                    <span id="tracking-delivery-zipcode" class="table-title gray"></span>
+                                    <br>
+                                    <span id="tracking-delivery-city" class="table-title gray"></span>
                                 </div>
 
-                                <h4 style="margin-top: 40px"> Destino </h4>
-                                <span id="tracking-delivery-address" class="table-title gray"></span>
-                                <br>
-                                <span id="tracking-delivery-zipcode" class="table-title gray"></span>
-                                <br>
-                                <span id="tracking-delivery-city" class="table-title gray"></span>
-                                <a class='btn p-0 mt-sm-0 mt-10 pointer float-right btn-notify-trackingcode'
-                                   title='Enviar e-mail com codigo de rastreio para o cliente'>
-                                    <i class='icon wb-envelope' aria-hidden='true'></i>
-                                    Enviar e-mail para o cliente
+                                <a class='btn mt-10 pl-0 pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                    <i class='icon wb-envelope'></i>
+                                    Enviar e-mail/sms para o cliente
                                 </a>
+
+                                <p class="mt-5" id="link-tracking"><i class="material-icons">link</i>
+                                    <a target="_blank" class="pointer text-body">Acessar link de rastreio</a>
+                                </p>
 
                                 <table class="table">
                                     <thead>

@@ -102,7 +102,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=6') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=7') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -124,7 +124,7 @@
 
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-    <script src="{{ asset('modules/global/js/notifications.js?v=8') }}"></script>
+    <script src="{{ asset('modules/global/js/notifications.js?v=9') }}"></script>
 
     <!-- Init code pzw.io -->
     <script>

@@ -155,4 +155,39 @@ class CompanyService
             $company->contract_document_status = $company->presenter()->getStatus('pending');
         }
     }
+
+    public function getCurrency(Company $company){
+
+        $dolar = [
+            'usa'
+        ];
+
+        $euro = [
+            'portugal',
+            'germany',
+            'spain',
+            'france',
+            'italy',
+        ];
+
+        $real = [
+            'brazil',
+            'brasil'
+        ];
+
+        if(in_array($company->country, $dolar)){
+            return 'dolar';
+        }
+        elseif(in_array($company->country, $euro)){
+            return 'euro';
+        }
+        elseif(in_array($company->country, $real)){
+            return 'real';
+        }
+        else{
+            return null;
+        }
+
+    }
+
 }

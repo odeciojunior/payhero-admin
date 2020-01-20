@@ -11,7 +11,7 @@
 |
 */
 
-Route::middleware(['web', 'auth'])->prefix('withdrawals')->group(function() {
+Route::middleware(['web', 'auth', 'setUserAsLogged'])->prefix('withdrawals')->group(function() {
     //
 });
 

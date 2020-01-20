@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
     Route::Resource('collaborators', 'CollaboratorsController')
          ->only('index')->middleware('role:account_owner|admin');
 });

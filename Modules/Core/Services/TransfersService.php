@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Carbon\Carbon;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Sms\SmsService;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
@@ -27,11 +28,11 @@ class TransfersService
         $transactions = $transactionModel->where([
                                                      ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                      ['status', 'paid'],
-                                                 ])->get();
+                                                 ]);
 
-        $transfers    = [];
+        $transfers = [];
 
-        foreach ($transactions as $transaction) {
+        foreach ($transactions->cursor() as $transaction) {
             try {
                 $company = $companyModel->find($transaction->company_id);
 
@@ -53,7 +54,7 @@ class TransfersService
                                  ]);
 
                 $transfers[] = $transfer->toArray();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 report($e);
                 continue;
             }
@@ -62,10 +63,10 @@ class TransfersService
         $transactionsAnticipateds = $transactionModel->where([
                                                                  ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                                  ['status', 'anticipated'],
-                                                             ])->get();
+                                                             ]);
         $transfersAnticipateds    = [];
 
-        foreach ($transactionsAnticipateds as $transactionsAnticipated) {
+        foreach ($transactionsAnticipateds->cursor() as $transactionsAnticipated) {
             try {
                 $company = $companyModel->find($transactionsAnticipated->company_id);
 

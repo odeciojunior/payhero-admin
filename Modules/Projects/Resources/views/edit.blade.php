@@ -139,16 +139,18 @@
                 </div>
             </div>
         </div>
-        <div class='col-12 row' style='margin:auto; padding-top:50px'>
-            <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+
+        <div class='row'>
+            <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
                  aria-controls="collapseOne">
-                <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas
-                    <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
+                <h3>Configurações Avançadas
+                    <i class="material-icons showMore">add</i>
                 </h3>
             </div>
         </div>
+
         {{--COMEÇO CONFIGURAÇÕES AVANÇADAS--}}
-        <div class='mt-30 mb-15'>
+        <div class='mt-10 mb-15'>
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class='row'>
                     <div class='form-group col-6 col-xs-12'>
@@ -281,68 +283,75 @@
             </div>
         </div>
         {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
+
         <div id="shopify-configs" style="display:none">
-            <div class='col-12 row' style='margin:auto; padding-top:50px;'>
-                <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOneShopify"
+            <div class='row'>
+                <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOneShopify"
                      aria-expanded="true" aria-controls="collapseOne">
-                    <h3 style='position:absolute; bottom: 0px;'>Configurações Shopify
-                        <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
+                    <h3>Configurações Shopify
+                        <i class="material-icons showMore">add</i>
                     </h3>
                 </div>
             </div>
             {{-- COMEÇO CONFIGURAÇÕES SHOPIFY --}}
-            <div class='mt-30 mb-15'>
-                <div id='collapseOneShopify' class='collapse'>
-                    <div class='row justify-content-center mx-30'>
-                        <label for='undo-integration'></label>
-                        <div class="col-md-4 mb-10 mt-10">
-                            <a id="bt-change-shopify-integration" role="button" integration-status=""
-                               class="pointer align-items-center" data-toggle="modal"
-                               data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"></span>
-                            </a>
-                            <div id="shopify-integration-pending" style="display:none">
-                                <i class="icon wb-alert-circle  gray"> </i>
-                                <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
-                            </div>
-                        </div>
-                        <div class='col-md-4 mt-10'>
-                            <a id="bt-shopify-sincronization-product" role="button" integration-status=""
-                               class="pointer align-items-center" data-toggle="modal"
-                               data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> Sincronizar produtos com shopify </span>
-                            </a>
-                        </div>
-                        <div class='col-md-4 mt-10'>
-                            <a id="bt-shopify-sincronization-template" role="button"
-                               integration-status=""
-                               class="pointer align-items-center" data-toggle="modal"
-                               data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> Sincronizar template com shopify </span>
-                            </a>
+            <div id='collapseOneShopify' class='collapse mb-15'>
+                <div class='row justify-content-center'>
+                    <div class="col-md-4 pt-20">
+                        <a id="bt-change-shopify-integration" role="button" integration-status=""
+                           class="pointer align-items-center" data-toggle="modal"
+                           data-target="#modal-change-shopify-integration">
+                            <i class="material-icons gray"> sync </i>
+                            <span class="gray"></span>
+                        </a>
+                        <div id="shopify-integration-pending" style="display:none">
+                            <i class="icon wb-alert-circle  gray"> </i>
+                            <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
                         </div>
                     </div>
-                    <div class='row mx-30'>
-                        <div id='div-shopify-token' class='col-md-5 mt-10' style='display:none;'>
-                            <label for="shopify-token">Token(password) da integração</label>
-                            <div class="input-group">
-                                <input id='shopify-token' class="form-control" name="token" type="text" disabled/>
-                                <div class="input-group-append">
-                                    <button class="btn btn-secondary btn-edit-token" type="button">Alterar token</button>
-                                </div>
+                    <div class='col-md-4 pt-20'>
+                        <a id="bt-shopify-sincronization-product" role="button" integration-status=""
+                           class="pointer align-items-center" data-toggle="modal"
+                           data-target="#modal-change-shopify-integration">
+                            <i class="material-icons gray"> sync </i>
+                            <span class="gray"> Sincronizar produtos com shopify </span>
+                        </a>
+                    </div>
+                    <div class='col-md-4 pt-20'>
+                        <a id="bt-shopify-sincronization-template" role="button"
+                           integration-status=""
+                           class="pointer align-items-center" data-toggle="modal"
+                           data-target="#modal-change-shopify-integration">
+                            <i class="material-icons gray"> sync </i>
+                            <span class="gray"> Sincronizar template com shopify </span>
+                        </a>
+                    </div>
+                </div>
+                <div class='row mt-20'>
+                    <div id='div-shopify-token' class='col-md-4' style='display:none;'>
+                        <label for="shopify-token" class="text-muted">Token (password) da integração</label>
+                        <div class="input-group">
+                            <input id='shopify-token' class="form-control px-2" name="token" type="text" disabled/>
+                            <div class="input-group-append">
+                                <button class="btn bg-grey-500 text-white btn-edit-token px-1" type="button">Alterar</button>
                             </div>
-                            <input id='shopify-token' class='form-control' style='display:none;'>
                         </div>
-                        <div id='div-shopify-permissions' class='col-md-5 mt-45' style='display:none;'>
-                            <a id="bt-shopify-verify-permissions" role="button"
-                               integration-status=""
-                               class="pointer align-items-center">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> Verificar permissões do Token</span>
-                            </a>
+                        <input id='shopify-token' class='form-control' style='display:none;'>
+                    </div>
+                    <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
+                        <a id="bt-shopify-verify-permissions" role="button"
+                           integration-status=""
+                           class="pointer align-items-center">
+                            <i class="material-icons gray"> sync </i>
+                            <span class="gray"> Verificar permissões do Token</span>
+                        </a>
+                    </div>
+                    <div class='col-md-4 pt-20'>
+                        <div class="switch-holder">
+                            <div class="gray mb-5">Skip to cart</div>
+                            <label class="switch">
+                                <input id="skiptocart-input" type="checkbox" value="0" class="check">
+                                <span class="slider gray round"></span>
+                            </label>
                         </div>
                     </div>
                 </div>

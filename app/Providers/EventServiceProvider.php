@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Core\Events\BilletExpiredEvent;
+use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\UserRegistrationEvent;
 use Modules\Core\Events\BilletPaidEvent;
+use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
 use Modules\Core\Listeners\BilletPaidSendEmailListener;
+use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
 use Modules\Core\Listeners\UserRegistrationListener;
 use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
@@ -25,6 +29,12 @@ class EventServiceProvider extends ServiceProvider
             BilletPaidHotZappListener::class,
             BilletPaidSendEmailListener::class,
             BilletPaidWhatsapp2Listener::class,
+        ],
+        BilletExpiredEvent::class => [
+            BilletExpiredWhatsapp2Listener::class,
+        ],
+        SaleRefundedEvent::class => [
+            SaleRefundedWhatsapp2Listener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',
@@ -54,6 +64,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Modules\Core\Events\TrackingCodeUpdatedEvent'        => [
             'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',
+            'Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener',
         ],
         'Modules\Core\Events\ResetPasswordEvent'              => [
             'Modules\Core\Listeners\ResetPasswordSendEmailListener',

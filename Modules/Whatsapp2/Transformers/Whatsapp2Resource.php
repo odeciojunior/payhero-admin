@@ -18,7 +18,7 @@ class Whatsapp2Resource extends Resource
         return [
             'id'                  => Hashids::encode($this->id),
             'project_id'          => Hashids::encode($this->project->id),
-            'project_name'        => substr($this->project->name, 0, 20),
+            'project_name'        => mb_substr($this->project->name, 0, 20),
             'project_photo'       => $this->project->photo,
             'api_token'           => $this->api_token,
             'url_checkout'        => $this->url_checkout,

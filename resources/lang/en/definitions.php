@@ -73,6 +73,9 @@ return [
                 "approved"   => "Aprovado",
                 "transfered" => "Transferido",
                 "refused"    => "Recusado",
+                'in_review'  => "Em Revisão",
+                'processing' => "Processando",
+                'returned'   => "Retornado",
             ],
         ],
         "invitation"               => [
@@ -147,6 +150,16 @@ return [
             "bank_document_status"     => "Documento Bancário",
             "address_document_status"  => "Comprovante de endereço empresarial",
             "contract_document_status" => "Contrato social",
+        ],
+        "country"                  => [
+            "brazil"   => "Brasil",
+            "portugal" => "Portugal",
+            "usa"      => "Estados Unidos",
+            "germany"  => "Alemanha",
+            "spain"    => "Espanha",
+            "france"   => "França",
+            "italy"    => "Itália",
+            "chile"    => "Chile",
         ],
     ],
 

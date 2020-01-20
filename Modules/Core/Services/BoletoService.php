@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Modules\Core\Events\BilletExpiredEvent;
 use function foo\func;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -158,6 +159,7 @@ class BoletoService
                           [
                               ['payment_method', '=', '2'],
                               ['status', '=', '2'],
+                              [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '!=', now()->toDateString()],
                           ]
                       )->chunk(100, function($boletos) use ($checkoutModel, $saleService, $projectModel, $domainModel) {
                     foreach ($boletos as $boleto) {
@@ -258,6 +260,7 @@ class BoletoService
                           [
                               ['payment_method', '=', '2'],
                               ['status', '=', '2'],
+                              [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '!=', now()->toDateString()],
                           ]
                       )
                       ->chunk(100, function($boletos) use ($checkoutModel, $saleService, $projectModel, $domainModel) {
@@ -363,6 +366,7 @@ class BoletoService
                             AND s.payment_method = 2
                             AND s.status = 1
                             AND date(s.end_date) = CURRENT_DATE
+                            AND t.deleted_at IS NULL
                             GROUP BY u.id
                             , u.email';
             $boletosPaid = DB::select($sql);
@@ -401,17 +405,20 @@ class BoletoService
         try {
 
             $saleModel = new Sale();
-            $boletos   = $saleModel->where([
+            $boletos   = $saleModel->with(['client'])
+                                    ->where([
                                                ['payment_method', '=', '2'],
                                                ['status', '=', '2'],
                                                [
                                                    DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
-                                                                                                                           ->subDay('1')
-                                                                                                                           ->toDateString(),
+                                                                                                                     ->subDay('1')
+                                                                                                                     ->toDateString(),
                                                ],
                                            ]);
             foreach ($boletos->cursor() as $boleto) {
                 $boleto->update(['status' => 5]);
+
+                event(new BilletExpiredEvent($boleto));
             }
         } catch (Exception $e) {
             Log::warning('Erro ao atualizar boleto para status 5 - changeBoletoPendingToCanceled');
