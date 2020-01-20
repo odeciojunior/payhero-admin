@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
-    atualizar();
+    getCompanies();
 
     let transfersCompanySelect = $("#transfers_company_select");
 
     let extractCompanySelect = $("#extract_company_select");
 
-    function atualizar() {
+    function getCompanies() {
         $.ajax({
             method: "GET",
             url: "/api/companies?select=true",
@@ -65,14 +65,7 @@ $(document).ready(function () {
         });
     }
 
-
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
-
-    $(document).on('click', function (e) {
-        if ($("#antecipa-popover").is(':visible') && (!$(e.target).hasClass('anticipation'))) {
-            $("#antecipa-popover").fadeOut(100);
-        }
-    });
 
     function checkAllowed() {
         $.ajax({
@@ -231,10 +224,6 @@ $(document).ready(function () {
                                 $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
 
                             } else {
-                                let tax = "0,00";
-                                if (toTransfer < 50000) {
-                                    tax = "10,00";
-                                }
 
                                 $('#modal-withdrawal').modal('show');
                                 $('#modal-withdrawal-title').text("Confirmar Saque");
@@ -261,9 +250,7 @@ $(document).ready(function () {
 
                                 confirmationData += `</div>
                                                      <hr>
-                                                     <h4>Valor do saque:
-                                                        <span id="modal-withdrawal-value" class='greenGradientText'></span>
-                                                        <span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$ ${tax} (taxa)</span>`;
+                                                     <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
 
                                 if(response.data.currency !== 'real'){
                                     confirmationData += `</h4>
@@ -275,8 +262,8 @@ $(document).ready(function () {
                                 confirmationData += `</h4>
                                                     <hr>
                                                     <div class="alert alert-warning text-center">
-                                                        <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada é R$10,00</b></p>
-                                                        <p><b>Os saques solicitados poderam ser liquidados em até um dia útil!</b></p>
+                                                        <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
+                                                        <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
                                                     </div>
                                               </div>`;
 
@@ -300,6 +287,8 @@ $(document).ready(function () {
                                 $("#bt-confirm-withdrawal").unbind("click");
                                 $("#bt-confirm-withdrawal").on("click", function () {
                                     loadOnModal('#modal-body');
+
+                                    $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
                                     $.ajax({
                                         url: "/api/withdrawals",
                                         type: "POST",
@@ -320,17 +309,20 @@ $(document).ready(function () {
                                             loadingOnScreenRemove();
                                             $('#modal-withdrawal').modal('show');
                                             $('#modal-withdrawal-title').text("Sucesso!");
-                                            $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>' + '<h4 align="center">Em alguns instantes seu dinheiro estará em sua conta</h4>');
+                                            $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>');
                                             $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                                             $('.btn-return').on('click', function () {
                                                 $('#custom-input-addon').val('');
                                             });
 
+                                            updateBalances();
+
                                             $('.btn-return').click(function () {
                                                 $('#modal_body').modal('hide');
-                                                updateWithdrawalsTable();
-                                                updateBalances();
                                             });
+                                        },
+                                        complete: (response) => {
+                                            $("#bt-confirm-withdrawal").removeAttr('disabled');
                                         }
                                     });
                                 });
@@ -339,31 +331,6 @@ $(document).ready(function () {
                     }
                 );
             }
-        });
-
-        $("#btn-anticipation").unbind('click');
-        $("#btn-anticipation").on('click', function () {
-            loadingOnScreen();
-            $.ajax({
-                method: 'POST',
-                url: '/api/anticipations',
-                data: {company: $("#transfers_company_select option:selected").val()},
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: (response) => {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: (response) => {
-                    loadingOnScreenRemove();
-                    alertCustom('success', response.message);
-                    updateBalances()
-                }
-            })
-
         });
 
         var statusWithdrawals = {
@@ -410,7 +377,7 @@ $(document).ready(function () {
                             tableData += "<td>" + data.date_request + "</td>";
                             tableData += "<td>" + data.date_release + "</td>";
                             if (data.tax_value < 50000) {
-                                tableData += "<td>" + data.value + '<br><small>(+ taxa R$10,00)</small>' + "</td>";
+                                tableData += "<td>" + data.value + '<br><small>(taxa de R$10,00)</small>' + "</td>";
                             } else {
                                 tableData += "<td>" + data.value + "</td>";
                             }
