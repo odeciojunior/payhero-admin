@@ -30,6 +30,7 @@ class WithdrawalResource extends Resource
             'status_translated'   => Lang::get('definitions.enum.withdrawals.status.' . $this->present()
                                                                                              ->getStatus($this->status)),
             'tax_value'           => $this->value,
+            'value_transferred'   => number_format(intval($this->value_transferred) / 100, 2, ',', '.'),
         ];
     }
 }

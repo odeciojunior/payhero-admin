@@ -320,7 +320,7 @@ $(document).ready(function () {
                                             loadingOnScreenRemove();
                                             $('#modal-withdrawal').modal('show');
                                             $('#modal-withdrawal-title').text("Sucesso!");
-                                            $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Saque realizado com sucesso!</strong></h3>' + '<h4 align="center">Sua solicitação foi para avaliação</h4>' + '<h4 align="center">Em alguns instantes seu dinheiro estara em sua conta</h4>');
+                                            $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>' + '<h4 align="center">Em alguns instantes seu dinheiro estará em sua conta</h4>');
                                             $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                                             $('.btn-return').on('click', function () {
                                                 $('#custom-input-addon').val('');
@@ -402,25 +402,26 @@ $(document).ready(function () {
                         $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                         $("#withdrawals-pagination").html("");
                     } else {
-                        $.each(response.data, function (index, value) {
-                            let data = '';
-                            data += '<tr>';
-                            data += "<td>" + value.account_information + "</td>";
-                            data += "<td>" + value.date_request + "</td>";
-                            data += "<td>" + value.date_release + "</td>";
-                            if (value.tax_value < 50000) {
-                                data += "<td>" + value.value + '<br><small>(+ taxa R$10,00)</small>' + "</td>";
+                        $.each(response.data, function (index, data) {
+
+                            let tableData = '';
+                            tableData += '<tr>';
+                            tableData += "<td>" + data.account_information + "</td>";
+                            tableData += "<td>" + data.date_request + "</td>";
+                            tableData += "<td>" + data.date_release + "</td>";
+                            if (data.tax_value < 50000) {
+                                tableData += "<td>" + data.value + '<br><small>(+ taxa R$10,00)</small>' + "</td>";
                             } else {
-                                data += "<td>" + value.value + "</td>";
+                                tableData += "<td>" + data.value + "</td>";
                             }
                             if(transfersCompanySelect.children("option:selected").attr('country') != 'brazil'){
-                                data += "<td></td>";
+                                tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
                             }
-                            data += '<td class="shipping-status">';
-                            data += '<span class="badge badge-' + statusWithdrawals[value.status] + '">' + value.status_translated + '</span>';
-                            data += '</td>';
-                            data += '</tr>';
-                            $("#withdrawals-table-data").append(data);
+                            tableData += '<td class="shipping-status">';
+                            tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
+                            tableData += '</td>';
+                            tableData += '</tr>';
+                            $("#withdrawals-table-data").append(tableData);
                             $('#withdrawalsTable').addClass('table-striped')
                         });
                         pagination(response, 'withdrawals', updateWithdrawalsTable);
