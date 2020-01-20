@@ -308,7 +308,7 @@
         </div>
     </div>
 </div>
-<div class="pagination-sm text-right">
+<div id="pagination-project-notification" class="pagination-sm text-right">
     {{-- <button class='page-notification btn nav-btn active' disabled>1</button>
     <button class='page-notification btn nav-btn'>2</button>
     <button class='page-notification btn nav-btn'>3</button> --}}
@@ -337,4 +337,4 @@
             </div>
         </div>
     </div>
-</div
+</div>

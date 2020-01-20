@@ -13,20 +13,20 @@ $(function () {
     //     }
     // }
     
-    CKEDITOR.plugins.addExternal( 'imagetest', '/myplugins/abbr/', 'imagetest.js' );
+    // CKEDITOR.plugins.addExternal( 'imagetest', '/myplugins/abbr/', 'imagetest.js' );
 
-    ClassicEditor
-        .create(document.querySelector('.project-notification-message')
-            , {
-            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-        }
-        )
-        .then(editor => {
-            ckEditor = editor;
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    // ClassicEditor
+    //     .create(document.querySelector('.project-notification-message')
+    //         , {
+    //         toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+    //     }
+    //     )
+    //     .then(editor => {
+    //         ckEditor = editor;
+    //     })
+    //     .catch(error => {
+    //         console.error(error);
+    //     });
 
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
@@ -84,7 +84,7 @@ $(function () {
 
                 $('#modal-edit-project-notification').modal('show');
 
-                ckEditor.setData(response.notification.message);
+                // ckEditor.setData(response.notification.message);
             }
         });
     });
