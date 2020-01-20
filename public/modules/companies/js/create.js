@@ -93,7 +93,7 @@ $(document).ready(function () {
             data: {
                 company_document: companyDocumentVal,
                 fantasy_name: fantasyNameVal,
-                country: $('#country').val(),
+                country: $('#country_2').val(),
                 company_type: 2
             },
             headers: {
@@ -173,19 +173,29 @@ $(document).ready(function () {
         italy: 'Partita IVA'
     };
 
-    $("#country").on('change', function(){
+    $("#country").on('change', function () {
 
         $("#company_document_label").text(companyDocumentName[$(this).val()]);
         $('#company_document').attr('placeholder', companyDocumentName[$(this).val()]);
 
-        if($(this).val() == 'brazil'){
+        if ($(this).val() == 'brazil') {
             $('#company_document').mask('00.000.000/0000-00');
-        }
-        else{
+        } else {
             $('#company_document').unmask();
         }
     });
 
+    $("#country_2").on('change', function () {
+
+        $("#company_document_2_label").text(companyDocumentName[$(this).val()]);
+        $('#company_document_2').attr('placeholder', companyDocumentName[$(this).val()]);
+
+        if ($(this).val() == 'brazil') {
+            $('#company_document_2').mask('00.000.000/0000-00');
+        } else {
+            $('#company_document_2').unmask();
+        }
+    });
     $("#country").change();
 
 });
