@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property string $id
@@ -58,4 +59,21 @@ class Notification extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Notificação foi deleteda.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Notificação foi atualizada.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Notificação foi criada.';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 }

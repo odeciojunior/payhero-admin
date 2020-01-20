@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyDocumentPresenter;
 use App\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @property integer $id
@@ -62,6 +63,23 @@ class CompanyDocument extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    /**
+     * @param Activity $activity
+     * @param string $eventName
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        if ($eventName == 'deleted') {
+            $activity->description = 'Documento da empresa foi deletado.';
+        } else if ($eventName == 'updated') {
+            $activity->description = 'Documento da empresa foi atualizado.';
+        } else if ($eventName == 'created') {
+            $activity->description = 'Documento da empresa foi criado';
+        } else {
+            $activity->description = $eventName;
+        }
+    }
 
     /**
      * @return BelongsTo
