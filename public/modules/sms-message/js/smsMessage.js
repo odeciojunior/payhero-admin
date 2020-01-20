@@ -1,14 +1,187 @@
+let statusNotification = {
+    1: "success",
+    0: "danger",
+};
+
 $(function () {
 
-    $(".page-notification").on('click', function () {
+    // import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 
-        $(".page-notification").removeClass('active').prop('disabled', false);
-        $(this).addClass('active').prop('disabled', true);
-        let page = $(this).html();
-        $('#data-table-sms tr').hide();
-        $('.page-' + page).show();
+    // class insertImage extends Plugin {
+    //     init() {
+    //         console.log( 'InsertImage was initialized' );
+    //     }
+    // }
+    
+    CKEDITOR.plugins.addExternal( 'imagetest', '/myplugins/abbr/', 'imagetest.js' );
+
+    ClassicEditor
+        .create(document.querySelector('.project-notification-message')
+            , {
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+        }
+        )
+        .then(editor => {
+            ckEditor = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+
+    let projectId = $(window.location.pathname.split('/')).get(-1);
+
+    $('#tab_sms').on('click', function () {
+        atualizarProjectNotification();
     });
+
+    //carrega os itens na tabela
+    atualizarProjectNotification();
+
+    // carregar modal de edicao
+    $(document).on('click', '.edit-project-notification', function () {
+        let projectNotification = $(this).attr('project-notification');
+        $.ajax({
+            method: "GET",
+            url: "/api/project/" + projectId + "/projectnotification/" + projectNotification + "/edit",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                $('#modal-edit-project-notification .project-notification-id').val(projectNotification);
+                if (response.notification.type_enum == 1) {
+                    $('#modal-edit-project-notification .project-notification-type').prop("selectedIndex", 0).change();
+                } else {
+                    $('#modal-edit-project-notification .project-notification-type').prop("selectedIndex", 1).change();
+                }
+                if (response.notification.status == 1) {
+                    $('#modal-edit-project-notification .project-notification-status').prop("selectedIndex", 0).change();
+                } else {
+                    $('#modal-edit-project-notification .project-notification-status').prop("selectedIndex", 1).change();
+                }
+                $('#modal-edit-project-notification .project-notification-time').val(response.notification.time);
+                $('#modal-edit-project-notification .project-notification-message').val(response.notification.message);
+
+                if (response.notification.event_enum == 1) {
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 0).change();
+                } else if (response.notification.event_enum == 2){
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 1).change();
+                } else if (response.notification.event_enum == 3){
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 2).change();
+                } else if (response.notification.event_enum == 4){
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 3).change();
+                } else if (response.notification.event_enum == 5){
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 4).change();
+                } else if (response.notification.event_enum == 6){
+                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 5).change();
+                }
+                
+                // $('#modal-edit-project-notification .rule-value').trigger('input');
+
+                $('#modal-edit-project-notification').modal('show');
+
+                ckEditor.setData(response.notification.message);
+            }
+        });
+    });
+
+    //atualizar cupom
+    $("#modal-edit-project-notification .btn-update").on('click', function () {
+        let formData = new FormData(document.getElementById('form-update-coupon'));
+        let coupon = $('#modal-edit-project-notification .coupon-id').val();
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/project/" + projectId + "/projectnotification/" + coupon,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+                loadingOnScreenRemove();
+                alertCustom("success", "Cupom atualizado com sucesso");
+                atualizarProjectNotification();
+            }
+        });
+    });
+
+    function atualizarProjectNotification() {
+
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (link == null) {
+            link = '/api/project/' + projectId + '/projectnotification';
+        } else {
+            link = '/api/project/' + projectId + '/projectnotification' + link;
+        }
+
+        loadOnTable('#data-table-sms', '#tabela-sms');
+        $.ajax({
+            method: "GET",
+            url: link,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                $("#data-table-sms").html('');
+                console.log(response.data);
+                if (response.data == '') {
+                    $("#data-table-sms").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                } else {
+                    $.each(response.data, function (index, value) {
+                        let data = `<tr>
+                            <td class="project-notification-id">${value.type}</td>
+                            <td class="project-notification-type">${value.event}</td>
+                            <td class="project-notification-value">${value.time}</td>
+                            <td class="project-notification-zip-code-origin">${value.message}</td>
+                            <td class="project-notification-status" style="vertical-align: middle">
+                                <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
+                            </td>
+                            <td style="text-align:center">
+                                <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" project-notification="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
+                            </td>
+                        </tr>`;
+
+                        $("#data-table-sms").append(data);
+                    });
+                    pagination(response, 'project-notification', atualizarProjectNotification);
+                }
+            }
+        });
+    }
+
 });
+
+// $(function () {
+
+//     $(".page-notification").on('click', function () {
+
+//         $(".page-notification").removeClass('active').prop('disabled', false);
+//         $(this).addClass('active').prop('disabled', true);
+//         let page = $(this).html();
+//         $('#data-table-sms tr').hide();
+//         $('.page-' + page).show();
+//     });
+// });
 
 /*
 $(function () {

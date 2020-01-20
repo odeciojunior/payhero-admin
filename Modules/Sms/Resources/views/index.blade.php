@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody id='data-table-sms' class='min-row-height'>
-                    <tr class='page-1'>
+                    {{-- <tr class='page-1'>
                         <td class="" style="vertical-align: middle;">SMS</td>
                         <td class="display-m-none display-sm-none" style="vertical-align: middle;">Boleto gerado</td>
                         <td class="" style="vertical-align: middle;">Imediato</td>
@@ -302,15 +302,39 @@
                             <a role='button' class='pointer disabled delete-sms mg-responsive' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <div class="pagination-sm text-right">
-    <button class='page-notification btn nav-btn active' disabled>1</button>
+    {{-- <button class='page-notification btn nav-btn active' disabled>1</button>
     <button class='page-notification btn nav-btn'>2</button>
-    <button class='page-notification btn nav-btn'>3</button>
+    <button class='page-notification btn nav-btn'>3</button> --}}
 </div>
 
+<!-- Edit -->
+<div id="modal-edit-project-notification" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-simple">
+        <div class="modal-content p-10">
+            <div class="modal-header simple-border-bottom mb-10">
+                <h4 class="modal-title" id="modal-title">Editar Notificação</h4>
+                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons md-16">close</i>
+                </a>
+            </div>
+            <div class="modal-body" style='min-height: 100px'>
+                @include('projectnotification::edit')
+            </div>
+            <div class="modal-footer">
+                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                    Fechar
+                </a>
+                <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-update" data-dismiss="modal">
+                    <i class="material-icons btn-fix"> save </i> Atualizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div
