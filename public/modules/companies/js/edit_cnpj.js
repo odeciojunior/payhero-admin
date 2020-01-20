@@ -113,9 +113,13 @@ $(document).ready(function () {
                     $('#company_bank_update_form').hide();
                     $('#company_bank_routing_number_form').show();
                 } else {
-
-                    for (let bank of banks) {
-                        $('#bank').append(`<option value="${bank.code}" ${bank.code === company.bank ? 'selected' : ''}>${bank.code} - ${bank.name}</option>`)
+                    if (company.country === 'brazil' || company.country === 'portugal') {
+                        for (let bank of banks) {
+                            $('#bank').append(`<option value="${bank.code}" ${bank.code === company.bank ? 'selected' : ''}>${bank.code} - ${bank.name}</option>`)
+                        }
+                    } else {
+                        $('.div-bank').html('');
+                        $('.div-bank').append(`<label for="bank">Banco</label><input id="bank" name="bank"  value="${company.bank}" class="input-pad" placeholder="Nome do banco">`);
                     }
                     $('#agency').val(company.agency);
                     $('#agency_digit').val(company.agency_digit);
@@ -182,13 +186,13 @@ $(document).ready(function () {
 
         let value = $(this).val();
 
-        if(value.length === 9 && !isNaN(parseInt(value))){
+        if (value.length === 9 && !isNaN(parseInt(value))) {
             $.ajax({
                 url: 'https://www.routingnumbers.info/api/data.json?rn=' + $(this).val(),
                 success: response => {
-                    if(!isEmpty(response.customer_name)){
+                    if (!isEmpty(response.customer_name)) {
                         $('#bank_routing_number').val(response.customer_name);
-                    }else{
+                    } else {
                         $('#bank_routing_number').val('Digite um routing number válido...');
                     }
                 },
@@ -197,7 +201,7 @@ $(document).ready(function () {
                     alertCustom('error', 'Erro ao buscar routing number');
                 }
             });
-        }else{
+        } else {
             $('#bank_routing_number').val('Digite um routing number válido...');
         }
     });

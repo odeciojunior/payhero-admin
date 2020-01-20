@@ -125,7 +125,7 @@
                                     @method('PUT')
                                     <div class="row">
                                         <div class="col-xl-4">
-                                            <div class='form-group'>
+                                            <div class='form-group div-bank'>
                                                 <label for='bank'>Banco</label>
                                                 <select id="bank" name="bank" class="form-control" style='width:100%' data-plugin="select2">
                                                     <option value="">Selecione</option>
@@ -334,7 +334,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=6')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=7')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
