@@ -149,13 +149,6 @@ class WithdrawalsApiController extends Controller
 
                 $company->update(['balance' => $company->balance -= $withdrawalValue]);
 
-                /** Saque abaixo de R$500,00 a taxa cobrada é R$10,00, acima disso a taxa é gratuita */
-                $tax = 0;
-                if ($withdrawalValue < 50000) {
-                    $withdrawalValue -= 1000;
-                    $tax = 1000;
-                }
-
                 /** Verifica se o usuário possui algum saque pendente */
                 $withdrawal = $withdrawalModel->where([
                                                           ['company_id', $company->id],
@@ -164,6 +157,16 @@ class WithdrawalsApiController extends Controller
                                               ->first();
 
                 if (empty($withdrawal)) {
+                    $tax = 0;
+
+                    /**
+                     *  Taxa cobrada de R$10,00 quando o saque abaixo de R$500,00.
+                     */
+                    if ($withdrawalValue < 50000) {
+                        $withdrawalValue -= 1000;
+                        $tax = 1000;
+                    }
+
                     $withdrawal = $withdrawalModel->create(
                         [
                             'value'               => $withdrawalValue,
@@ -179,8 +182,21 @@ class WithdrawalsApiController extends Controller
                     );
                 } else {
 
+                    $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
+                    $withdrawalTax      = $withdrawal->tax;
+
+                    /**
+                     *  Se a soma dos saques pendentes for maior de R$500,00
+                     *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
+                     */
+                    if(!empty($withdrawal->tax) && $withdrawalValueSum > 50000){
+                        $withdrawalValueSum += 1000;
+                        $withdrawalTax = 0;
+                    }
+
                     $withdrawal->update([
-                                            'value' => $withdrawal->value + $withdrawalValue,
+                                            'value' => $withdrawalValueSum,
+                                            'tax'   => $withdrawalTax,
                                         ]);
                 }
 
