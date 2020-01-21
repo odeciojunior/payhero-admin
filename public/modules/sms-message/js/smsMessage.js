@@ -5,29 +5,22 @@ let statusNotification = {
 
 $(function () {
 
-    // import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+    var globalPosition = 0;
+    $(document).on('keyup', '#modal-edit-project-notification .project-notification-message', function (event) {
+        globalPosition = this.selectionStart;
+    })
+    $(document).on('click', '#modal-edit-project-notification .project-notification-message', function (event) {
+        globalPosition = this.selectionStart;
+    })
 
-    // class insertImage extends Plugin {
-    //     init() {
-    //         console.log( 'InsertImage was initialized' );
-    //     }
-    // }
-    
-    // CKEDITOR.plugins.addExternal( 'imagetest', '/myplugins/abbr/', 'imagetest.js' );
-
-    // ClassicEditor
-    //     .create(document.querySelector('.project-notification-message')
-    //         , {
-    //         toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-    //     }
-    //     )
-    //     .then(editor => {
-    //         ckEditor = editor;
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
-
+    $(document).on('click', '#modal-edit-project-notification  .inc-param', function (event) {
+        var param = $(this).data('value');
+        var input = document.getElementById('txt-project-notification');
+        var inputVal = input.value;
+        input.value = inputVal.slice(0, globalPosition) + param + inputVal.slice(globalPosition);
+        input.focus();
+        $(input).prop('selectionEnd', (globalPosition + param.length));
+    })
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
@@ -83,20 +76,18 @@ $(function () {
                 // $('#modal-edit-project-notification .rule-value').trigger('input');
 
                 $('#modal-edit-project-notification').modal('show');
-
-                // ckEditor.setData(response.notification.message);
             }
         });
     });
 
     //atualizar cupom
     $("#modal-edit-project-notification .btn-update").on('click', function () {
-        let formData = new FormData(document.getElementById('form-update-coupon'));
-        let coupon = $('#modal-edit-project-notification .coupon-id').val();
+        let formData = new FormData(document.getElementById('form-update-project-notification'));
+        let projectNotification = $('#modal-edit-project-notification .project-notification-id').val();
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/project/" + projectId + "/projectnotification/" + coupon,
+            url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -112,7 +103,7 @@ $(function () {
             },
             success: function success(data) {
                 loadingOnScreenRemove();
-                alertCustom("success", "Cupom atualizado com sucesso");
+                alertCustom("success", "Notificação atualizada com sucesso");
                 atualizarProjectNotification();
             }
         });
@@ -156,6 +147,7 @@ $(function () {
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
+                                <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">remove_red_eye</i> </a>
                                 <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
                                 <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" project-notification="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
                             </td>

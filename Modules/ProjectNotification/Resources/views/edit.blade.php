@@ -41,7 +41,21 @@
     <div class="row">
         <div class="form-group col-xl-12">
             <label for="name">Mensagem</label>
-            <textarea name="message" type="text" class="form-control project-notification-message"></textarea>
+            <textarea id="txt-project-notification" name="message" type="text" class="form-control project-notification-message" rows="8"></textarea>
+            <div id="customs" class="">
+                <label for="name">Parâmetros</label><br>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{primeiro_nome}'>{primeiro_nome}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{url_boleto}'>{url_boleto}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{projeto_nome}'>{projeto_nome}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{link_carrinho_abandonado}'>{link_carrinho_abandonado}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{codigo_pedido}'>{codigo_pedido}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{nome_produto}'>{nome_produto}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{qtde_produto}'>{qtde_produto}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{valor_compra}'>{valor_compra}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{codigo_venda}'>{codigo_venda}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{codigo_rastreio}'>{codigo_rastreio}</a>
+                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{link_rastreamento}'>{link_rastreamento}</a>
+            </div>
         </div>
     </div>
 
