@@ -2,15 +2,18 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Modules\Core\Services\ActiveCampaignService;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\ActivecampaignIntegration;
-use Modules\Core\Entities\ActivecampaignCustom;
-use Modules\Core\Entities\Log;
-use Vinkla\Hashids\Facades\Hashids;
-use Carbon\Carbon;
 use DB;
+use Carbon\Carbon;
+use Modules\Core\Entities\Log;
+use Illuminate\Console\Command;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\ShopifyService;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\ActivecampaignCustom;
+use Modules\Core\Services\ActiveCampaignService;
+use Modules\Core\Entities\ActivecampaignIntegration;
 
 class CustomFieldsActiveCampaign extends Command
 {
