@@ -166,7 +166,7 @@ $(document).ready(function () {
     let companyDocumentName = {
         brazil: 'CNPJ',
         portugal: 'NIPC',
-        usa: 'ENI',
+        usa: 'EIN',
         germany: 'NIF',
         spain: 'CIF',
         france: 'SIRET',
