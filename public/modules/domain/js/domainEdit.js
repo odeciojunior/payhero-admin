@@ -37,7 +37,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             }, success: function (response) {
                 $("#domain-table-body").html('');
-                if (response.data == '') {
+                if (isEmpty(response.data) || response.data == '') {
                     $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum domínio encontrado</td></tr>")
                     $('#tabela-dominios').addClass('table-striped');
 
