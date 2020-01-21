@@ -45,62 +45,82 @@ class CustomFieldsActiveCampaign extends Command
      */
     public function handle()
     {
-        $integrations = ActivecampaignIntegration::with('customFields')->get();
 
-        $fieldsDefault = [
-            'url_boleto',
-            'projeto_nome',
-            'link_carrinho_abandonado',
-            'codigo_pedido',
-            'produtos',
-            'sub_total',
-            'frete',
-            'codigo_rastreio',
-            'link_rastreamento',
-        ];
+        $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
+                     ->whereDate('created_at', '<=', '2020-01-21 13:00:00.0')->get();
 
-        $service = new ActiveCampaignService();
-        foreach ($integrations as $integration) {
-            
-            $service->setAccess($integration->api_url, $integration->api_key, $integration->id);
+        foreach ($sales as $sale) {
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
 
-            $fieldsCreate = $fieldsDefault;
+            if(!empty($shopifyIntegration)){
 
-            $customFieldsIntegration = $integration->customFields->pluck('custom_field')->toArray();
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                $sh = $shopifyService->updateOrder($sale);
 
-            if(isset($customFieldsIntegration[0])) {
-                $fieldsCreate = array_diff($fieldsDefault, $customFieldsIntegration);
             }
 
-            $customnFieldsActive = $service->getCustomFields();
-            if(isset($customnFieldsActive['fields'])) {
-
-                foreach ($customnFieldsActive['fields'] as $value) {
-                    if(in_array($value['title'], $fieldsCreate)) {
-                        $fieldsCreate = array_diff($fieldsCreate, [$value['title']]);
-                        ActivecampaignCustom::create([
-                            'custom_field'                  => $value['title'],
-                            'custom_field_id'               => $value['id'],
-                            'activecampaign_integration_id' =>$integration->id
-                        ]);
-                    }
-                }
-            }
-
-            foreach ($fieldsCreate as $value) {
-                $type = ($value == 'produtos') ? 'listbox' : 'text';
-                $newField = json_decode($service->createCustomField($value, $type), true);
-                if(isset($newField['field']['id'])) {
-
-                    ActivecampaignCustom::create([
-                        'custom_field'                  => $value,
-                        'custom_field_id'               => $newField['field']['id'],
-                        'activecampaign_integration_id' =>$integration->id
-                    ]);
-
-                    $service->createCustomFieldRelation($newField['field']['id'], 0);
-                }
-            }
         }
+
+        dd('Terminou!');
+
+
+
+        // $integrations = ActivecampaignIntegration::with('customFields')->get();
+
+        // $fieldsDefault = [
+        //     'url_boleto',
+        //     'projeto_nome',
+        //     'link_carrinho_abandonado',
+        //     'codigo_pedido',
+        //     'produtos',
+        //     'sub_total',
+        //     'frete',
+        //     'codigo_rastreio',
+        //     'link_rastreamento',
+        // ];
+
+        // $service = new ActiveCampaignService();
+        // foreach ($integrations as $integration) {
+
+        //     $service->setAccess($integration->api_url, $integration->api_key, $integration->id);
+
+        //     $fieldsCreate = $fieldsDefault;
+
+        //     $customFieldsIntegration = $integration->customFields->pluck('custom_field')->toArray();
+
+        //     if(isset($customFieldsIntegration[0])) {
+        //         $fieldsCreate = array_diff($fieldsDefault, $customFieldsIntegration);
+        //     }
+
+        //     $customnFieldsActive = $service->getCustomFields();
+        //     if(isset($customnFieldsActive['fields'])) {
+
+        //         foreach ($customnFieldsActive['fields'] as $value) {
+        //             if(in_array($value['title'], $fieldsCreate)) {
+        //                 $fieldsCreate = array_diff($fieldsCreate, [$value['title']]);
+        //                 ActivecampaignCustom::create([
+        //                     'custom_field'                  => $value['title'],
+        //                     'custom_field_id'               => $value['id'],
+        //                     'activecampaign_integration_id' =>$integration->id
+        //                 ]);
+        //             }
+        //         }
+        //     }
+
+        //     foreach ($fieldsCreate as $value) {
+        //         $type = ($value == 'produtos') ? 'listbox' : 'text';
+        //         $newField = json_decode($service->createCustomField($value, $type), true);
+        //         if(isset($newField['field']['id'])) {
+
+        //             ActivecampaignCustom::create([
+        //                 'custom_field'                  => $value,
+        //                 'custom_field_id'               => $newField['field']['id'],
+        //                 'activecampaign_integration_id' =>$integration->id
+        //             ]);
+
+        //             $service->createCustomFieldRelation($newField['field']['id'], 0);
+        //         }
+        //     }
+        // }
     }
 }
