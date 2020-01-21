@@ -593,7 +593,7 @@ class TesteController extends Controller
             if(!empty($shopifyIntegration)){
 
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                $sh = $shopifyService->updateOrder($sales);
+                $sh = $shopifyService->updateOrder($sale);
 
             }
 
