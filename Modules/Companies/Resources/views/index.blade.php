@@ -83,7 +83,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/index.js?v=2') }}"></script>
+        <script src="{{ asset('/modules/companies/js/index.js?v=3') }}"></script>
     @endpush
 
 @endsection
