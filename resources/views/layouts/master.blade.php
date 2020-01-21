@@ -145,7 +145,7 @@
     </script>
     <style>
         .powerzap_open_button_iframe {
-            bottom: 40px !important;
+            bottom: 75px !important;
         }
     </style>
     <!-- End code pzw.io  -->
