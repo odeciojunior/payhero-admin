@@ -11,11 +11,11 @@ use Vinkla\Hashids\Facades\Hashids;
 class TrackingService
 {
 
-    public function sendTrackingToApi($trackingCode)
+    public function sendTrackingToApi($tracking)
     {
         $trackingmoreService = new TrackingmoreService();
 
-        return $trackingmoreService->createTracking($trackingCode);
+        return $trackingmoreService->createTracking($tracking->tracking_code);
     }
 
     public function findTrackingApi(Tracking $tracking)
