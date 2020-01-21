@@ -109,6 +109,33 @@ $(function () {
         });
     });
 
+    // carregar modal de detalhes
+    $(document).on('click', '.details-project-notification', function () {
+        let projectNotification = $(this).attr('project-notification');
+        $("#btn-modal").hide();
+        $.ajax({
+            method: "GET",
+            url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            }, success: function success(response) {
+                $('#modal-detail-project-notification .projectn-type').html(response.data.type);
+                $('#modal-detail-project-notification .projectn-time').html(response.data.time);
+                $('#modal-detail-project-notification .projectn-event').html(response.data.event);
+                $('#modal-detail-project-notification .projectn-message').html(response.data.message);
+                $('#modal-detail-project-notification .projectn-status').html(response.data.status == '1'
+                    ? '<span class="badge badge-success text-left">Ativo</span>'
+                    : '<span class="badge badge-danger">Inativo</span>');
+                $('#modal-detail-project-notification').modal('show');
+            }
+        });
+    });
+
     function atualizarProjectNotification() {
 
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -149,7 +176,6 @@ $(function () {
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">remove_red_eye</i> </a>
                                 <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" project-notification="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
                             </td>
                         </tr>`;
 

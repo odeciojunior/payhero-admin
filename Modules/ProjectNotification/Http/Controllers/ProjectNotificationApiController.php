@@ -51,10 +51,40 @@ class ProjectNotificationApiController extends Controller
 
     /**
      * @param $id
+     * @param $projectId
      */
-    public function show($id)
+    public function show($projectId, $id)
     {
-        
+        try {
+            if (isset($projectId) && isset($id)) {
+                $projectNotificationModel = new ProjectNotification();
+                $projectModel             = new Project();
+                $projectNotification      = $projectNotificationModel->find(current(Hashids::decode($id)));
+                $project                  = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($projectModel)->tap(function(Activity $activity) use ($projectNotification) {
+                    $activity->log_name   = 'visualization';
+                    $activity->subject_id = $projectNotification->id;
+                })->log('Visualizou tela detalhes da notificação do projeto');
+
+                if (Gate::allows('edit', [$project])) {
+                    if ($projectNotification) {
+                        return new ProjectNotificationResource($projectNotification);
+                    } else {
+                        return response()->json(['message' => 'Erro ao buscar notificação'], 400);
+                    }
+                } else {
+                    return response()->json(['message' => 'Sem permissão para visualizar notificação'], 400);
+                }
+            }
+
+            return response()->json(['message' => 'Erro ao buscar Notificação'], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados da notificação (ProjectNotificationApiController - show)');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao buscar Notificação'], 400);
+        }
     }
 
     /**
@@ -75,6 +105,9 @@ class ProjectNotificationApiController extends Controller
         try {
             if (!empty($projectId)) {
                 $projectNotificationModel = new ProjectNotification();
+                // $projectModel             = new Project();
+
+                // $project = $projectModel->find(current(Hashids::decode($notificationId)));
 
                 activity()->on($projectNotificationModel)->tap(function(Activity $activity) use ($notificationId) {
                     $activity->log_name   = 'visualization';
@@ -84,7 +117,7 @@ class ProjectNotificationApiController extends Controller
                 $notificationId   = current(Hashids::decode($notificationId));
                 $notification = $projectNotificationModel->where('id', $notificationId)->first();
 
-                // if (Gate::denies('edit', [$notification])) {
+                // if (Gate::denies('edit', [$project])) {
                 //     return response()->json([
                 //             'message' => 'Sem permissão',
                 //         ],Response::HTTP_FORBIDDEN
@@ -128,6 +161,11 @@ class ProjectNotificationApiController extends Controller
                 $projectNotificationId = current(Hashids::decode($id));
 
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
+
+                activity()->on($projectNotificationModel)->tap(function(Activity $activity) use ($projectNotificationId) {
+                    $activity->log_name   = 'updated';
+                    $activity->subject_id = $projectNotificationId;
+                })->log('Atualizou notificação do projeto');
 
                 if (Gate::allows('edit', [$project])) {
                     $data = [];

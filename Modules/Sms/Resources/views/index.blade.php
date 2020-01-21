@@ -338,3 +338,21 @@
         </div>
     </div>
 </div>
+
+
+<!-- Details -->
+<div id="modal-detail-project-notification" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-simple">
+        <div class="modal-content p-10">
+            <div class="modal-header simple-border-bottom mb-10">
+                <h4 class="modal-title" id="modal-title">Detalhes da Notificação</h4>
+                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons md-16">close</i>
+                </a>
+            </div>
+            <div class="modal-body" style='min-height: 100px'>
+                @include('projectnotification::show')
+            </div>
+        </div>
+    </div>
+</div>
