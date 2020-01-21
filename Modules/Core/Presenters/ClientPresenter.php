@@ -29,7 +29,7 @@ class ClientPresenter extends Presenter
     {
         $this->telephone = preg_replace("/\D/", '', $this->telephone);
 
-        if(!$ddd && !$number){
+        if (!$ddd && !$number) {
 
             $length = strlen(preg_replace("/[^0-9]/", "", $this->telephone));
             if ($length == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
@@ -47,11 +47,9 @@ class ClientPresenter extends Presenter
             if ($length <= 9) { // SEM CÓDIGO DE ÁREA
                 return substr($this->telephone, 0, $length - 4) . "-" . substr($this->telephone, -4);
             }
-        }
-        elseif($ddd){
+        } else if ($ddd) {
             return substr($this->telephone, 0, 2);
-        }
-        else{
+        } else {
             $length = strlen(preg_replace("/[^0-9]/", "", $this->telephone));
 
             if ($length == 11) {
@@ -60,16 +58,19 @@ class ClientPresenter extends Presenter
             if ($length == 10) {
                 return substr($this->telephone, 2, 4) . "-" . substr($this->telephone, 6, 10);
             }
+
             return '';
         }
     }
+
     /**
      * @return string
      */
     public function getTelephoneShopify()
     {
-        return "+55" . preg_replace("/[^0-9]/", "", $this->telephone);
+        return preg_replace("/[^0-9]/", "", $this->telephone);
     }
+
     /**
      * @return string|string[]|null
      */
@@ -87,9 +88,9 @@ class ClientPresenter extends Presenter
     /**
      * @return string
      */
-    public function getWhatsappLink(){
-       return  "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $this->telephone) . '&text=Olá ' . $this->getFirstName();
+    public function getWhatsappLink()
+    {
+        return "https://api.whatsapp.com/send?phone=" . preg_replace('/[^0-9]/', '', $this->telephone) . '&text=Olá ' . $this->getFirstName();
     }
-
 }
 

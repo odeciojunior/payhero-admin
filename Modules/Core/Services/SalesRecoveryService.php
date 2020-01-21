@@ -236,7 +236,9 @@ class SalesRecoveryService
                             ->orderBy('id', 'DESC')
                             ->first();
 
-            if ($log->error == 'CARTÃO RECUSADO !') {
+            if (empty($log->error)) {
+                $client->error = 'Saldo insuficiente!';
+            } else if ($log->error == 'CARTÃO RECUSADO !') {
                 $client->error = $log->error . ' (saldo insuficiente)';
             } else {
                 $client->error = $log->error;
