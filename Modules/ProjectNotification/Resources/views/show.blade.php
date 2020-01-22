@@ -21,6 +21,16 @@
             <td class='text-left projectn-status'></td>
         </tr>
         <tr>
+            <td class='table-title'>Assunto</td>
+            <td style='width: 20px'></td>
+            <td class='text-left projectn-subject'></td>
+        </tr>
+        <tr>
+            <td class='table-title'>Título</td>
+            <td style='width: 20px'></td>
+            <td class='text-left projectn-title'></td>
+        </tr>
+        <tr>
             <td class='table-title'>Mensagem</td>
             <td style='width: 20px'></td>
             <td class='text-left projectn-message'></td>

@@ -6,16 +6,20 @@ let statusNotification = {
 $(function () {
 
     var globalPosition = 0;
-    $(document).on('keyup', '#modal-edit-project-notification .project-notification-message', function (event) {
+    var globalInput = '';
+    $(document).on('keyup', '#modal-edit-project-notification .project-notification-field', function (event) {
         globalPosition = this.selectionStart;
+        globalInput = this.id;
     })
-    $(document).on('click', '#modal-edit-project-notification .project-notification-message', function (event) {
+    $(document).on('click', '#modal-edit-project-notification .project-notification-field', function (event) {
         globalPosition = this.selectionStart;
+        globalInput = this.id;
     })
 
     $(document).on('click', '#modal-edit-project-notification  .inc-param', function (event) {
         var param = $(this).data('value');
-        var input = document.getElementById('txt-project-notification');
+        var input = document.getElementById(globalInput);
+        // var input = document.getElementById('txt-project-notification');
         var inputVal = input.value;
         input.value = inputVal.slice(0, globalPosition) + param + inputVal.slice(globalPosition);
         input.focus();
@@ -137,10 +141,47 @@ $(function () {
                 $('#modal-detail-project-notification .projectn-time').html(response.data.time);
                 $('#modal-detail-project-notification .projectn-event').html(response.data.event);
                 $('#modal-detail-project-notification .projectn-message').html(response.data.message);
+                $('#modal-detail-project-notification .projectn-subject').html(response.data.subject);
+                $('#modal-detail-project-notification .projectn-title').html(response.data.title);
                 $('#modal-detail-project-notification .projectn-status').html(response.data.status == '1'
                     ? '<span class="badge badge-success text-left">Ativo</span>'
                     : '<span class="badge badge-danger">Inativo</span>');
                 $('#modal-detail-project-notification').modal('show');
+            }
+        });
+    });
+
+    
+    $(document).on('change', '.project_notification_status', function () {
+
+        if(this.checked) {
+            let status = 1;
+        } else {
+            let status = 0;
+        }
+        let projectNotification = this.getAttribute('data-id');
+        // let projectNotification = $('#modal-edit-project-notification .project-notification-id').val(); // TODO - PEGAR ID NOTIFICATION
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {status: status, _method: 'PUT'},
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+                loadingOnScreenRemove();
+                alertCustom("success", "Notificação atualizada com sucesso");
+                atualizarProjectNotification();
             }
         });
     });
@@ -184,6 +225,12 @@ $(function () {
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">remove_red_eye</i> </a>
                                 <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
+                                <div class="switch-holder d-inline">
+                                   <label class="switch">
+                                       <input type="checkbox" class="project_notification_status" value="1" data-id="${value.id}">
+                                       <span class="slider round"></span>
+                                   </label>
+                               </div>
                             </td>
                         </tr>`;
 

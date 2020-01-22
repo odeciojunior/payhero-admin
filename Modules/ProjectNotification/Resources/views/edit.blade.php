@@ -41,21 +41,21 @@
     <div class="row project-notification-field-email">
         <div class="form-group col-xl-12">
             <label for="code">Assunto</label>
-            <input value="" name="subject" type="text" class="form-control project-notification-subject" placeholder="Assunto">
+            <input value="" id="subject-project-notification" name="subject" type="text" class="form-control project-notification-subject project-notification-field" placeholder="Assunto">
         </div>
     </div>
 
     <div class="row  project-notification-field-email">
         <div class="form-group col-xl-12">
             <label for="code">Título</label>
-            <input value="" name="title" type="text" class="form-control project-notification-title" placeholder="Título">
+            <input value="" id="title-project-notification" name="title" type="text" class="form-control project-notification-title project-notification-field" placeholder="Título">
         </div>
     </div>
 
     <div class="row">
         <div class="form-group col-xl-12">
             <label for="name">Mensagem</label>
-            <textarea id="txt-project-notification" name="message" type="text" class="form-control project-notification-message" rows="8"></textarea>
+            <textarea id="txt-project-notification" name="message" type="text" class="form-control project-notification-message project-notification-field" rows="8"></textarea>
             <div id="customs" class="">
                 <label for="name">Parâmetros</label><br>
                 <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{primeiro_nome}'>{primeiro_nome}</a>
