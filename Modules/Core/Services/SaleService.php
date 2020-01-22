@@ -146,7 +146,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('id', 'DESC')->get();
+        return $transactions->orderBy('start_date', 'DESC')->get();
     }
 
     /**
