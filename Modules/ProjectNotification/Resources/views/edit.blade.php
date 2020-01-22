@@ -26,8 +26,8 @@
 
     <div class="row">
         <div class="form-group col-xl-6">
-            <label for="code">tempo</label>
-            <input value="" name="time" type="text" class="form-control project-notification-time" placeholder="Time" disabled>
+            <label for="code">Tempo</label>
+            <input value="" name="time" type="text" class="form-control project-notification-time" placeholder="Tempo" disabled>
         </div>
         <div class="form-group col-xl-6">
             <label for="status">Status</label>
@@ -35,6 +35,20 @@
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
             </select>
+        </div>
+    </div>
+
+    <div class="row project-notification-field-email">
+        <div class="form-group col-xl-12">
+            <label for="code">Assunto</label>
+            <input value="" name="subject" type="text" class="form-control project-notification-subject" placeholder="Assunto">
+        </div>
+    </div>
+
+    <div class="row  project-notification-field-email">
+        <div class="form-group col-xl-12">
+            <label for="code">Título</label>
+            <input value="" name="title" type="text" class="form-control project-notification-title" placeholder="Título">
         </div>
     </div>
 

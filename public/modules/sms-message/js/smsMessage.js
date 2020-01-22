@@ -46,31 +46,40 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#modal-edit-project-notification .project-notification-id').val(projectNotification);
-                if (response.notification.type_enum == 1) {
+                if (response.data.type_enum == 1) {
                     $('#modal-edit-project-notification .project-notification-type').prop("selectedIndex", 0).change();
                 } else {
                     $('#modal-edit-project-notification .project-notification-type').prop("selectedIndex", 1).change();
                 }
-                if (response.notification.status == 1) {
+                if (response.data.status == 1) {
                     $('#modal-edit-project-notification .project-notification-status').prop("selectedIndex", 0).change();
                 } else {
                     $('#modal-edit-project-notification .project-notification-status').prop("selectedIndex", 1).change();
                 }
-                $('#modal-edit-project-notification .project-notification-time').val(response.notification.time);
-                $('#modal-edit-project-notification .project-notification-message').val(response.notification.message);
+                $('#modal-edit-project-notification .project-notification-time').val(response.data.time);
+                $('#modal-edit-project-notification .project-notification-message').val(response.data.message);
 
-                if (response.notification.event_enum == 1) {
+                $('#modal-edit-project-notification .project-notification-title').val(response.data.title);
+                $('#modal-edit-project-notification .project-notification-subject').val(response.data.subject);
+
+                if (response.data.event_enum == 1) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 0).change();
-                } else if (response.notification.event_enum == 2){
+                } else if (response.data.event_enum == 2){
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 1).change();
-                } else if (response.notification.event_enum == 3){
+                } else if (response.data.event_enum == 3){
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 2).change();
-                } else if (response.notification.event_enum == 4){
+                } else if (response.data.event_enum == 4){
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 3).change();
-                } else if (response.notification.event_enum == 5){
+                } else if (response.data.event_enum == 5){
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 4).change();
-                } else if (response.notification.event_enum == 6){
+                } else if (response.data.event_enum == 6){
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 5).change();
+                }
+
+                if(response.data.type_enum == 1) {
+                    $('#modal-edit-project-notification .project-notification-field-email').show();
+                } else {
+                    $('#modal-edit-project-notification .project-notification-field-email').hide();
                 }
                 
                 // $('#modal-edit-project-notification .rule-value').trigger('input');
@@ -160,7 +169,6 @@ $(function () {
             },
             success: function success(response) {
                 $("#data-table-sms").html('');
-                console.log(response.data);
                 if (response.data == '') {
                     $("#data-table-sms").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
