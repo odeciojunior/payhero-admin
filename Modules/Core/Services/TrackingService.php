@@ -2,7 +2,11 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
@@ -10,66 +14,154 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
 {
+    /**
+     * @var string
+     *
+     * Data em que migrou da aftership/perfectlog para a trackingmore
+     */
+    private $migrationDate = '2020-01-25 00:00:00';
 
-    public function sendTrackingToApi($tracking)
+    /**
+     * @param Tracking $tracking
+     * @return mixed
+     */
+    public function sendTrackingToApi(Tracking $tracking)
     {
         $trackingmoreService = new TrackingmoreService();
 
         return $trackingmoreService->createTracking($tracking->tracking_code);
     }
 
+    /**
+     * @param Tracking $tracking
+     * @return mixed|null
+     * @throws PresenterException
+     */
     public function findTrackingApi(Tracking $tracking)
     {
-        $trackingmoreService = new TrackingmoreService();
+        //if de 10k. Busca o código de rastreio na trackingmore caso a data de criação
+        //seja posterior a data da migração. Caso contrário busca as informações na
+        //perfectlog/aftership
+        if ($tracking->created_at->gte($this->migrationDate)) {
 
-        $response =  $trackingmoreService->getAllTrackings(['numbers' => $tracking->tracking_code]);
+            $trackingmoreService = new TrackingmoreService();
 
-        $apiTracking = $response->data->items[0] ?? null;
+            $response = $trackingmoreService->getAllTrackings(['numbers' => $tracking->tracking_code]);
 
-        if(isset($apiTracking->status)){
-            $status = $this->parseStatusApi($apiTracking->status);
-            if($tracking->tracking_status_enum != $status){
-                $tracking->tracking_status_enum = $status;
-                $tracking->save();
+            $apiTracking = $response->data->items[0] ?? null;
+
+            if (isset($apiTracking->status)) {
+                $status = $this->parseStatusApi($apiTracking->status);
+                if ($tracking->tracking_status_enum != $status) {
+                    $tracking->tracking_status_enum = $status;
+                    $tracking->save();
+                }
             }
+
+            return $apiTracking;
+        } else {
+            $perfectLogService = new PerfectLogService();
+
+            $apiTracking = $perfectLogService->find($tracking->tracking_code);
+
+            if (isset($apiTracking->tracking_status)) {
+                $status = $this->parseStatusApi($apiTracking->tracking_status, true);
+                if ($tracking->tracking_status_enum != $status) {
+                    $tracking->tracking_status_enum = $status;
+                    $tracking->save();
+                }
+            }
+
+            return $apiTracking;
         }
-
-        return $apiTracking;
     }
 
-    public function parseStatusApi($status)
+    /**
+     * @param $status
+     * @param bool $beforeMigration
+     * @return int|mixed
+     * @throws PresenterException
+     */
+    public function parseStatusApi($status, $beforeMigration = false)
     {
-        $trackingmoreService = new TrackingmoreService();
+        //if de 10k. Converte o status da trackingmore caso a data de criação
+        //seja posterior a data da migração. Caso contrário converte o status
+        //da perfectlog/aftership
+        if (!$beforeMigration) {
+            $trackingmoreService = new TrackingmoreService();
 
-        return $trackingmoreService->parseStatus($status);
+            return $trackingmoreService->parseStatus($status);
+        } else {
+            $perfectLogService = new PerfectLogService();
+
+            return $perfectLogService->parseStatus($status);
+        }
     }
 
-    public function getCheckpointsApi($apiTracking)
+    /**
+     * @param Tracking $tracking
+     * @param $apiTracking
+     * @return Collection
+     * @throws PresenterException
+     */
+    public function getCheckpointsApi(Tracking $tracking, $apiTracking)
     {
-        $trackingModel = new Tracking();
-
-        $apiCheckpoints = array_reverse($apiTracking->destination_info->trackinfo ?? []);
-
         $checkpoints = collect();
 
-        if(!empty($apiCheckpoints)) {
-            foreach ($apiCheckpoints as $log){
+        //if de 10k. Trata os checkpoints da trackingmore caso a data de criação
+        //seja posterior a data da migração. Caso contrário trata os checkpoints
+        //da perfectlog/aftership
+        if($tracking->created_at->gte($this->migrationDate)) {
 
-                $event = $log->Details ? $log->StatusDescription . ' - ' . $log->Details : $log->StatusDescription;
+            $apiCheckpoints = array_reverse($apiTracking->destination_info->trackinfo ?? []);
 
-                if(!empty($event)) {
+            if (!empty($apiCheckpoints)) {
+                foreach ($apiCheckpoints as $log) {
 
-                    $status_enum = $this->parseStatusApi($log->checkpoint_status);
-                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+                    $event = $log->Details ? $log->StatusDescription . ' - ' . $log->Details : $log->StatusDescription;
+
+                    if (!empty($event)) {
+
+                        $status_enum = $this->parseStatusApi($log->checkpoint_status);
+                        $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                        //remove caracteres chineses e informações indesejadas
+                        preg_match('/[^\p{Common}\p{Latin}]+/u', $event, $nonLatinChars);
+
+                        $checkpoints->add([
+                            'tracking_status_enum' => $status_enum,
+                            'tracking_status' => $status,
+                            'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
+                            'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' : $event,
+                        ]);
+                    }
+                }
+            }
+        } else {
+            if (!empty($apiTracking->trail)) {
+                foreach ($apiTracking->trail as $log) {
+                    $status_enum = $this->parseStatusApi($log->tracking_status, true);
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+
+                    $event = $log->event;
 
                     //remove caracteres chineses e informações indesejadas
-                    preg_match('/[^\p{Latin}[:punct:]\s+]/u', $event, $nonLatinChars);
+                    preg_match('/[^\p{Common}\p{Latin}]+/u', $event, $nonLatinChars);
+                    $event = str_replace([
+                        'Clique aquiMinhas Importações - ',
+                        'CHINA/',
+                        'CHINA /',
+                        'Paísem'
+                    ], '', $event);
+                    $event = str_replace([
+                        'de País em',
+                    ], 'do exterior', $event);
 
                     $checkpoints->add([
                         'tracking_status_enum' => $status_enum,
                         'tracking_status' => $status,
-                        'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
-                        'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' :  $event,
+                        'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
+                        'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' : $event,
                     ]);
                 }
             }
@@ -78,6 +170,12 @@ class TrackingService
         return $checkpoints;
     }
 
+    /**
+     * @param string $trackingCode
+     * @param ProductPlanSale $productPlanSale
+     * @return mixed
+     * @throws PresenterException
+     */
     public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale)
     {
         $trackingModel = new Tracking();
@@ -112,6 +210,12 @@ class TrackingService
         return $tracking;
     }
 
+    /**
+     * @param $filters
+     * @param int $userId
+     * @return Builder
+     * @throws PresenterException
+     */
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
         $trackingModel = new Tracking();
@@ -173,6 +277,11 @@ class TrackingService
         return $productPlanSales;
     }
 
+    /**
+     * @param $filters
+     * @return LengthAwarePaginator
+     * @throws PresenterException
+     */
     public function getPaginatedTrackings($filters)
     {
         $productPlanSales = $this->getTrackingsQueryBuilder($filters);
@@ -180,6 +289,11 @@ class TrackingService
         return $productPlanSales->orderBy('id', 'desc')->paginate(10);
     }
 
+    /**
+     * @param $filters
+     * @return Collection
+     * @throws PresenterException
+     */
     public function getAllTrackings($filters)
     {
         $productPlanSales = $this->getTrackingsQueryBuilder($filters);

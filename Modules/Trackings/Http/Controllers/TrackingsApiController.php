@@ -91,7 +91,7 @@ class TrackingsApiController extends Controller
                                   'event'                => 'Código de rastreio informado',
                               ]);
 
-            $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
+            $checkpointsApi = $trackingService->getCheckpointsApi($tracking, $apiTracking);
 
             $checkpoints = $checkpoints->merge($checkpointsApi);
 
@@ -134,7 +134,7 @@ class TrackingsApiController extends Controller
                     'event' => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
                 ]);
 
-                $checkpointsApi = $trackingService->getCheckpointsApi($apiTracking);
+                $checkpointsApi = $trackingService->getCheckpointsApi($tracking, $apiTracking);
 
                 $checkpoints = $checkpoints->merge($checkpointsApi)->unique()->sortKeysDesc()->values()->toArray();
 
