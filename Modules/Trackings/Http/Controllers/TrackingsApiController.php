@@ -271,11 +271,12 @@ class TrackingsApiController extends Controller
                                     ], 200);
                                 }
                             } else {
+                                DB::rollBack();
                                 return response()->json([
                                     'message' => 'Erro ao salvar código de rastreio',
                                 ], 400);
                             }
-                            //update
+                        //update
                         } else {
                             DB::beginTransaction();
                             $trackingCodeupdated = $tracking->update([
@@ -299,6 +300,11 @@ class TrackingsApiController extends Controller
                                         ],
                                     ], 200);
                                 }
+                            } else {
+                                DB::rollBack();
+                                return response()->json([
+                                    'message' => 'Erro ao atualizar código de rastreio',
+                                ], 400);
                             }
                         }
                     }
