@@ -334,22 +334,22 @@ class TesteController extends Controller
     public function tgFunction($request)
     {
 
-//        $checkser = new CheckoutService();
-//
-//
-//        $sale = Sale::find(191753);
-//
-//        $checkser->cancelPayment($sale, 000);
-//
-//        $shopifyIntegration = ShopifyIntegration::find(154);
-//
-//        //$this->saleId = $sale->id;
-//        $credential   = new PublicAppCredential($shopifyIntegration->token);
-//
-//        $client = new Client($credential, $shopifyIntegration->url_store, [
-//            'metaCacheDir' => '/var/tmp',
-//        ]);
-//        $order  = $client->getOrderManager()->find(1946397605933);
+        //        $checkser = new CheckoutService();
+        //
+        //
+        //        $sale = Sale::find(191753);
+        //
+        //        $checkser->cancelPayment($sale, 000);
+        //
+        //        $shopifyIntegration = ShopifyIntegration::find(154);
+        //
+        //        //$this->saleId = $sale->id;
+        //        $credential   = new PublicAppCredential($shopifyIntegration->token);
+        //
+        //        $client = new Client($credential, $shopifyIntegration->url_store, [
+        //            'metaCacheDir' => '/var/tmp',
+        //        ]);
+        //        $order  = $client->getOrderManager()->find(1946397605933);
 
         dd('xXx');
 
@@ -386,51 +386,51 @@ class TesteController extends Controller
         //event(new BilletPaidEvent($plan, $sale, $sale->client));
 
         //---------------------------------------------- chargeback
-//                        $transferModel = new Transfer();
-//                        $saleModel     = new Sale();
-//
-//                        $saleId = current(Hashids::connection('sale_id')->decode('OGYoBa3K'));
-//
-//                        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
-//
-//                        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
-//
-//                        try {
-//                            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-//                            $shopifyService->refundOrder($shopifyIntegration, $sale);
-//                        } catch (Exception $ex) {
-//
-//                        }
-//
-//                        $sale->update([
-//                                          'gateway_status' => 'chargedback',
-//                                          'status'         => '4',
-//                                      ]);
-//
-//                        foreach ($sale->transactions as $transaction) {
-//
-//                            if ($transaction->status == 'transfered') {
-//
-//                                $transferModel->create([
-//                                                           'transaction_id' => $transaction->id,
-//                                                           'user_id'        => $transaction->company->user_id,
-//                                                           'value'          => $transaction->value,
-//                                                           'type'           => 'out',
-//                                                           'reason'         => 'chargedback',
-//                                                           'company_id'     => $transaction->company->id,
-//                                                       ]);
-//
-//                                $transaction->company->update([
-//                                                                  'balance' => $transaction->company->balance -= $transaction->value,
-//                                                              ]);
-//                            }
-//
-//                            $transaction->update([
-//                                                     'status' => 'chargedback',
-//                                                 ]);
-//                        }
-//
-//                        dd('chargeback feito');
+        //                        $transferModel = new Transfer();
+        //                        $saleModel     = new Sale();
+        //
+        //                        $saleId = current(Hashids::connection('sale_id')->decode('OGYoBa3K'));
+        //
+        //                        $sale = $saleModel->with(['transactions.company', 'project.shopifyIntegrations'])->find($saleId);
+        //
+        //                        $shopifyIntegration = $sale->project->shopifyIntegrations->where('status', 2)->first();
+        //
+        //                        try {
+        //                            $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+        //                            $shopifyService->refundOrder($shopifyIntegration, $sale);
+        //                        } catch (Exception $ex) {
+        //
+        //                        }
+        //
+        //                        $sale->update([
+        //                                          'gateway_status' => 'chargedback',
+        //                                          'status'         => '4',
+        //                                      ]);
+        //
+        //                        foreach ($sale->transactions as $transaction) {
+        //
+        //                            if ($transaction->status == 'transfered') {
+        //
+        //                                $transferModel->create([
+        //                                                           'transaction_id' => $transaction->id,
+        //                                                           'user_id'        => $transaction->company->user_id,
+        //                                                           'value'          => $transaction->value,
+        //                                                           'type'           => 'out',
+        //                                                           'reason'         => 'chargedback',
+        //                                                           'company_id'     => $transaction->company->id,
+        //                                                       ]);
+        //
+        //                                $transaction->company->update([
+        //                                                                  'balance' => $transaction->company->balance -= $transaction->value,
+        //                                                              ]);
+        //                            }
+        //
+        //                            $transaction->update([
+        //                                                     'status' => 'chargedback',
+        //                                                 ]);
+        //                        }
+        //
+        //                        dd('chargeback feito');
 
         //---------------------------------------------- chargeback
 
@@ -566,11 +566,6 @@ class TesteController extends Controller
         dd('aa');
     }
 
-    public function joaoLucasFunctionDomain()
-    {
-
-    }
-
     /**
      * Funcao para remover caracteres especiais de produtos shopify
      */
@@ -589,18 +584,25 @@ class TesteController extends Controller
 
     public function joaoLucasFunction()
     {
-        /*$users  = User::get();
-        $userss = [];
-        foreach ($users as $user) {
-            if ($user->id != $user->account_owner_id) {
-                $user->update([
-                                  'address_document_status'  => 3,
-                                  'personal_document_status' => 3,
-                              ]);
-                $userss [] = $user->name;
+        $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
+                     ->whereDate('created_at', '<=', '2020-01-21 13:00:00.0')->get();
+
+        foreach ($sales as $sale) {
+            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+
+            if(!empty($shopifyIntegration)){
+
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                $sh = $shopifyService->updateOrder($sale);
+
             }
+
         }
-        dd($userss);*/
+
+        dd('Terminou!');
+
+
+
     }
 
     /**

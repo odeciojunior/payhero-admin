@@ -203,9 +203,9 @@ class SalesRecoveryService
         $client   = $sale->client()->first();
 
         if (!empty($client->telephone)) {
-            $client->telephone       = FoxUtils::getTelephone($client->telephone);
+            $client->telephone       = preg_replace('/[^0-9]/', '', $client->telephone);
             $whatsAppMsg             = 'Olá ' . $client->present()->getFirstName();
-            $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg;
+            $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=" . $client->telephone . '&text=' . $whatsAppMsg;
         } else {
             $client['whatsapp_link'] = '';
             $client->telephone       = 'Numero Inválido';
@@ -236,7 +236,9 @@ class SalesRecoveryService
                             ->orderBy('id', 'DESC')
                             ->first();
 
-            if ($log->error == 'CARTÃO RECUSADO !') {
+            if (empty($log->error)) {
+                $client->error = 'Saldo insuficiente!';
+            } else if ($log->error == 'CARTÃO RECUSADO !') {
                 $client->error = $log->error . ' (saldo insuficiente)';
             } else {
                 $client->error = $log->error;

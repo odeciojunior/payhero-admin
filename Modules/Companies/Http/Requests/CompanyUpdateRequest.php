@@ -25,7 +25,7 @@ class CompanyUpdateRequest extends FormRequest
             'street'            => 'nullable|string|max:255',
             'number'            => 'nullable|string|max:255',
             'complement'        => 'nullable|string|max:255',
-//            'country'           => 'nullable|string|max:255',
+            'country'           => 'nullable|string|max:255',
             'bank'              => 'nullable|string|max:255',
             'agency'            => 'nullable|string|max:255',
             'agency_digit'      => 'nullable|string|max:255',

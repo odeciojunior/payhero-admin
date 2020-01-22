@@ -68,8 +68,11 @@ class ProfileApiController
             $user = auth()->user();
 
             if (Gate::allows('update', [$user])) {
-
                 $requestData = $request->validated();
+                if ($requestData['country'] == 'brazil' && !empty($requestData['cellphone'])) {
+                    $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
+                }
+                $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
 
                 $user->fill(
                     [
@@ -79,8 +82,8 @@ class ProfileApiController
                         'cellphone'    => $requestData['cellphone'],
                         'date_birth'   => $requestData['date_birth'],
                         'zip_code'     => $requestData['zip_code'],
-                        'country'      => 'br',
-                        'state'        => $requestData['state'],
+                        'country'      => $requestData['country'],
+                        'state'        => $requestData['country'] == 'brazil' || $requestData['country'] == 'usa' ? $requestData['state'] : null,
                         'city'         => $requestData['city'],
                         'neighborhood' => $requestData['neighborhood'],
                         'street'       => $requestData['street'],
@@ -224,7 +227,7 @@ class ProfileApiController
 
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
-            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($cellphone), $message);
+            $smsService->sendSms($cellphone, $message);
 
             return response()->json(
                 [

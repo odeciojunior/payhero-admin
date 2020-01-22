@@ -1,23 +1,6 @@
 $(document).ready(function () {
     verify();
-    updateForm();
 
-    function updateForm() {
-        // var options = {
-        //     onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-        //         var masks = ['000.000.000-00', '00.000.000/0000-00'];
-        //         var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-        //         $('#brazil_company_document').mask(mask, options);
-        //     }
-        // };
-        var options = {
-            onKeyPress: function (cpf, ev, el, op) {
-                var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                $('#brazil_company_document').mask((cpf.length > 14) ? masks[1] : masks[0], op);
-            }
-        }
-        $('#brazil_company_document').length > 11 ? $('#brazil_company_document').mask('00.000.000/0000-00', options) : $('#brazil_company_document').mask('000.000.000-00#', options);
-    }
     function verify() {
         $.ajax({
             method: "GET",
@@ -34,7 +17,6 @@ $(document).ready(function () {
                 if (response.has_physical_company == 'true') {
                     $('#company_document_label').text('CNPJ');
                     $('.company_document_1').mask('00.000.000/0000-00');
-                    $('#company_document').attr('placeholder', 'CNPJ');
                     $('#div1').show();
                     $('#div-company-document').show();
                 } else {
@@ -44,6 +26,7 @@ $(document).ready(function () {
             }
         });
     }
+
     $('.btn-next-div1').on('click', function (e) {
         e.preventDefault();
         let companyDocumentVal = $('.company_document_1').val().replace(/[^0-9]/g, '');
@@ -90,6 +73,7 @@ $(document).ready(function () {
         $('#btn-physical-person').hide();
         $(this).hide();
     });
+
     $('.btn-next-div2').on('click', function (e) {
         e.preventDefault();
         let companyDocumentVal = $('.company_document_2').val().replace(/[^0-9]/g, '');
@@ -109,7 +93,7 @@ $(document).ready(function () {
             data: {
                 company_document: companyDocumentVal,
                 fantasy_name: fantasyNameVal,
-                country: $('#country').val(),
+                country: $('#country_2').val(),
                 company_type: 2
             },
             headers: {
@@ -151,6 +135,7 @@ $(document).ready(function () {
             }
         });
     });
+
     function verifyEqualCNPJ(cnpj) {
         var result = '';
 
@@ -177,25 +162,40 @@ $(document).ready(function () {
         });
         return result;
     }
-    // $("#create_form").on("submit", function (event) {
-    //     event.preventDefault();
-    //
-    //     $.ajax({
-    //         method: "POST",
-    //         url: "/api/companies",
-    //         dataType: "json",
-    //         data: $("#create_form").serialize(),
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         error: function (response) {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: function success(response) {
-    //             alertCustom('success', response.message);
-    //             window.location.replace('/companies/' + response.idEncoded + '/edit ');
-    //         }
-    //     });
-    // });
+
+    let companyDocumentName = {
+        brazil: 'CNPJ',
+        portugal: 'NIPC',
+        usa: 'EIN',
+        germany: 'NIF',
+        spain: 'CIF',
+        france: 'SIRET',
+        italy: 'Partita IVA'
+    };
+
+    $("#country").on('change', function () {
+
+        $("#company_document_label").text(companyDocumentName[$(this).val()]);
+        $('#company_document').attr('placeholder', companyDocumentName[$(this).val()]);
+
+        if ($(this).val() == 'brazil') {
+            $('#company_document').mask('00.000.000/0000-00');
+        } else {
+            $('#company_document').unmask();
+        }
+    });
+
+    $("#country_2").on('change', function () {
+
+        $("#company_document_2_label").text(companyDocumentName[$(this).val()]);
+        $('#company_document_2').attr('placeholder', companyDocumentName[$(this).val()]);
+
+        if ($(this).val() == 'brazil') {
+            $('#company_document_2').mask('00.000.000/0000-00');
+        } else {
+            $('#company_document_2').unmask();
+        }
+    });
+    $("#country").change();
+
 });

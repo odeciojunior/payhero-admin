@@ -20,15 +20,15 @@
             <div class="card shadow" data-plugin="matchHeight">
                 <div class="tab-content pt-10 pr-30 pl-30">
                     <div class="tab-pane active" id="tab_user" role="tabpanel">
+                        <h3 class="mb-15 mt-10">Conta bancária</h3>
+                        <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+                            <strong>Atenção! </strong> O limite de saque mensal é de R$ R$ 1.900,00 para empresas cadastradas como pessoa física!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                         <form method="POST" enctype="multipart/form-data" id='company_update_bank_form' class='form-basic-informations'>
                             @method('PUT')
-                            <h3 class="mb-15 mt-10">Conta bancária</h3>
-                            <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
-                                <strong>Atenção! </strong> O limite de saque mensal é de R$ R$ 1.900,00 para empresas cadastradas como pessoa física!
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
                             <div class="alert alert-info alert-dismissible fade show text-center" id='text-alert-documents-cpf' role="alert" style='display:none;'>
                                 <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -42,6 +42,21 @@
                                         <select id="bank" name="bank" class="form-control" style='width:100%' data-plugin="select2">
                                             <option value="">Selecione</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-8" id="swift-code-info" style="display:none">
+                                    <div class="alert alert-secondary">
+                                        <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
+                                        <span class="badge badge-secondary">AAA</span>
+                                        <span class="badge badge-secondary">BB</span>
+                                        <span class="badge badge-secondary">CC</span>
+                                        <span class="badge badge-secondary">DDD</span>
+                                        <ul class="pl-20 mt-10">
+                                            <li>Os quatro primeiros dígitos representam o <strong>código do banco</strong></li>
+                                            <li>O segundo grupo tem 2 dígitos e representa o <strong>código do país</strong></li>
+                                            <li>Os terceiro grupo tem 2 dígitos podem ser letras ou números e representa o <strong>código de localização</strong> da sede do banco</li>
+                                            <li>Os três últimos dígitos representam o <strong>código do agência</strong>. XXX representa a sede</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -66,6 +81,28 @@
                                     <label for="update_bank_data"></label>
                                     <input id="update_bank_data" type="button" class="btn btn-success mt-30" value="Atualizar" style="width: auto;">
                                 </div>
+                            </div>
+                        </form>
+                        <form method="POST" enctype="multipart/form-data" id='company_bank_routing_number_form' style="display:none;">
+                            @method('PUT')
+                            <div class="row">
+                                <div class="form-group col-xl-4">
+                                    <label for="rounting_number">Rounting Number</label>
+                                    <input name="bank" value="" type="text" class="input-pad" id="rounting_number" placeholder='Routing number' maxlength='9'>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-xl-4">
+                                    <label for="bank_routing_number">Banco</label>
+                                    <input type="text" class="input-pad disabled" id="bank_routing_number" placeholder='Digite um routing number válido...' maxlength="20" disabled>
+                                </div>
+                                <div class="form-group col-xl-4">
+                                    <label for="account_routing_number">Conta</label>
+                                    <input name="account" value="" type="text" class="input-pad" id="account_routing_number" placeholder='Conta' maxlength='20'>
+                                </div>
+                            </div>
+                            <div class="form-group text-right">
+                                <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                             </div>
                         </form>
                         <div class="col-lg-12 mb-40 mt-15">
@@ -180,7 +217,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=5')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=6')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

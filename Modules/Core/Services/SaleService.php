@@ -38,86 +38,93 @@ class SaleService
      */
     public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
     {
-        $companyModel     = new Company();
-        $clientModel      = new Client();
-        $transactionModel = new Transaction();
+        try {
 
-        if(!$userId){
-            $userId = auth()->user()->account_owner_id;
-        }
+            $companyModel     = new Company();
+            $clientModel      = new Client();
+            $transactionModel = new Transaction();
 
-        $userCompanies = $companyModel->where('user_id', $userId)
-                                      ->pluck('id')
-                                      ->toArray();
+            if (!$userId) {
+                $userId = auth()->user()->account_owner_id;
+            }
 
-        $transactions = $transactionModel->with([
-                                                    'sale',
-                                                    'sale.project',
-                                                    'sale.client',
-                                                    'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
-                                                    'sale.shipping',
-                                                    'sale.checkout',
-                                                    'sale.delivery',
-                                                    'sale.transactions',
-                                                ])->whereIn('company_id', $userCompanies)
-                                         ->whereNull('invitation_id');
+            $userCompanies = $companyModel->where('user_id', $userId)
+                                          ->pluck('id')
+                                          ->toArray();
 
-        if (!empty($filters["project"])) {
-            $projectId = current(Hashids::decode($filters["project"]));
-            $transactions->whereHas('sale', function($querySale) use ($projectId) {
-                $querySale->where('project_id', $projectId);
+            $transactions = $transactionModel->with([
+                                                        'sale',
+                                                        'sale.project',
+                                                        'sale.client',
+                                                        'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
+                                                        'sale.shipping',
+                                                        'sale.checkout',
+                                                        'sale.delivery',
+                                                        'sale.transactions',
+                                                    ])->whereIn('company_id', $userCompanies)
+                                             ->whereNull('invitation_id');
+
+            if (!empty($filters["project"])) {
+                $projectId = current(Hashids::decode($filters["project"]));
+                $transactions->whereHas('sale', function($querySale) use ($projectId) {
+                    $querySale->where('project_id', $projectId);
+                });
+            }
+
+            if (!empty($filters["transaction"])) {
+                $saleId = current(Hashids::connection('sale_id')
+                                         ->decode(str_replace('#', '', $filters["transaction"])));
+
+                $transactions->whereHas('sale', function($querySale) use ($saleId) {
+                    $querySale->where('id', $saleId);
+                });
+            }
+
+            if (!empty($filters["client"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $transactions->whereHas('sale', function($querySale) use ($customers) {
+                    $querySale->whereIn('client_id', $customers);
+                });
+            }
+            if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
+                $transactions->whereHas('sale.project.shopifyIntegrations', function($queryShopifyIntegration) {
+                    $queryShopifyIntegration->where('status', 2);
+                });
+                $transactions->whereHas('sale', function($querySaleShopify) {
+                    $querySaleShopify->whereNull('shopify_order');
+                });
+            }
+            if (!empty($filters["payment_method"])) {
+                $forma = $filters["payment_method"];
+                $transactions->whereHas('sale', function($querySale) use ($forma) {
+                    $querySale->where('payment_method', $forma);
+                });
+            }
+
+            if (empty($filters['status'])) {
+                $status = [1, 2, 4, 6, 7, 20];
+            } else {
+                $status = [$filters["status"]];
+            }
+
+            $transactions->whereHas('sale', function($querySale) use ($status) {
+                $querySale->whereIn('status', $status);
             });
-        }
 
-        if (!empty($filters["transaction"])) {
-            $saleId = current(Hashids::connection('sale_id')
-                                     ->decode(str_replace('#', '', $filters["transaction"])));
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateType  = $filters["date_type"];
 
-            $transactions->whereHas('sale', function($querySale) use ($saleId) {
-                $querySale->where('id', $saleId);
+            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
+                $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             });
+
+            return $transactions;
+        } catch (Exception $e) {
+            report($e);
+
+            return '';
         }
-
-        if (!empty($filters["client"])) {
-            $customers = $clientModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
-            $transactions->whereHas('sale', function($querySale) use ($customers) {
-                $querySale->whereIn('client_id', $customers);
-            });
-        }
-        if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
-            $transactions->whereHas('sale.project.shopifyIntegrations', function($queryShopifyIntegration) {
-                $queryShopifyIntegration->where('status', 2);
-            });
-            $transactions->whereHas('sale', function($querySaleShopify) {
-                $querySaleShopify->whereNull('shopify_order');
-            });
-        }
-        if (!empty($filters["payment_method"])) {
-            $forma = $filters["payment_method"];
-            $transactions->whereHas('sale', function($querySale) use ($forma) {
-                $querySale->where('payment_method', $forma);
-            });
-        }
-
-        if (empty($filters['status'])) {
-            $status = [1, 2, 4, 6, 7, 20];
-        } else {
-            $status = [$filters["status"]];
-        }
-
-        $transactions->whereHas('sale', function($querySale) use ($status) {
-            $querySale->whereIn('status', $status);
-        });
-
-        //tipo da data e periodo obrigatorio
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-        $dateType  = $filters["date_type"];
-
-        $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
-            $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-        });
-
-        return $transactions;
     }
 
     /**

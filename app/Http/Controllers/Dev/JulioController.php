@@ -39,6 +39,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 
 class JulioController extends Controller
@@ -47,12 +48,14 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        $dataSms = [
-            'message'   => 'teste',
-            'telephone' => '+5555996931098',
-        ];
+        // $dataSms = [
+        //     'message'   => 'teste',
+        //     'telephone' => '5555996931098',
+        // ];
 
-        event(new SendSmsEvent($dataSms));
+        // event(new SendSmsEvent($dataSms));
+
+        // dd("foi");
 
         // $connection = null;
         // $default = 'default';
@@ -64,6 +67,18 @@ class JulioController extends Controller
 
         //For the reserved jobs
         // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':reserved' ,0, -1) );    }
+
+        // $remessaOnlineService = new RemessaOnlineService();
+
+        // $quotation = $remessaOnlineService->getCurrentDolarQuotation('eurofd');
+
+        // dd($quotation);
+
+        User::orderBy('id')->chunk(100, function($users){
+            foreach($users as $user){
+                dd($user);
+            }
+        });
 
     }
 }

@@ -91,7 +91,7 @@ class CompaniesApiController extends Controller
 
             return response()->json(
                 [
-                    'message'   => 'Dados atualizados com sucesso',
+                    'message'   => 'Empresa cadastrada com sucesso',
                     'idEncoded' => Hashids::encode($company->id),
                 ],
                 Response::HTTP_OK
@@ -120,7 +120,7 @@ class CompaniesApiController extends Controller
                 ->find(current(Hashids::decode($encodedId)));
 
             if (Gate::allows('edit', [$company])) {
-                $banks = $bankService->getBanks('BR');
+                $banks = $bankService->getBanks($company->country ?? 'brazil');
 
                 $companyResource = null;
                 if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
@@ -163,9 +163,15 @@ class CompaniesApiController extends Controller
             $companyModel   = new Company();
             $companyService = new CompanyService();
             $requestData    = $request->validated();
-
-            $company = $companyModel->find(current(Hashids::decode($encodedId)));
+            $company        = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
+
+                if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
+                    $requestData['support_telephone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['support_telephone']);
+                }
+                if(!empty($requestData['company_document'])) {
+                    $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
+                }
 
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);
@@ -193,9 +199,9 @@ class CompaniesApiController extends Controller
             $projectModel = new Project();
 
             $company = $companyModel->with('usersProjects')->withCount([
-                                                                            'transactions',
-                                                                            'usersProjects',
-                                                                        ])
+                                                                           'transactions',
+                                                                           'usersProjects',
+                                                                       ])
                                     ->find(current(Hashids::decode($encodedId)));
             if ($company) {
                 if (Gate::allows('destroy', [$company])) {
