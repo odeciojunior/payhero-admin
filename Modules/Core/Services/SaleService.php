@@ -62,6 +62,7 @@ class SaleService
                                                         'sale.delivery',
                                                         'sale.transactions',
                                                     ])->whereIn('company_id', $userCompanies)
+                                                    ->join('sales','sales.id', 'transactions.sale_id')
                                              ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
@@ -135,7 +136,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('id', 'DESC')->paginate(10);
+        return $transactions->orderBy('sales.start_date', 'DESC')->paginate(10);
     }
 
     /**
@@ -146,7 +147,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('id', 'DESC')->get();
+        return $transactions->orderBy('sales.start_date', 'DESC')->get();
     }
 
     /**
