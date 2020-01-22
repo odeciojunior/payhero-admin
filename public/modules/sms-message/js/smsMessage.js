@@ -82,7 +82,9 @@ $(function () {
 
                 if(response.data.type_enum == 1) {
                     $('#modal-edit-project-notification .project-notification-field-email').show();
+                    $('#modal-edit-project-notification .project-notification-message').attr('maxlength', 10000);
                 } else {
+                    $('#modal-edit-project-notification .project-notification-message').attr('maxlength', 160);
                     $('#modal-edit-project-notification .project-notification-field-email').hide();
                 }
                 
@@ -178,7 +180,6 @@ $(function () {
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", "Notificação atualizada com sucesso");
-                console.log(data);
                 if(data.status == 1) {
                     $('.notification-status-' + projectNotification + ' span').removeClass('badge-danger');
                     $('.notification-status-' + projectNotification + ' span').addClass('badge-success');
