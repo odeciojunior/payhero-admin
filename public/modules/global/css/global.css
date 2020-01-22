@@ -298,3 +298,7 @@ body {
         width: 100% !important;
     }
 }
+
+a.label{
+    color: #76838f !important;
+}

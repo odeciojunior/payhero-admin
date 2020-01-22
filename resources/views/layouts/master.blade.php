@@ -44,7 +44,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=6') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=7') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')
