@@ -31,14 +31,14 @@ class BoletoService
     public function verifyBoletosExpiring()
     {
         try {
-            $saleModel                    = new Sale();
-            $saleService                  = new SaleService();
-            $projectModel                 = new Project();
-            $domainModel                  = new Domain();
-            $checkoutModel                = new Checkout();
-            $projectNotificationPresenter = (new ProjectNotification())->present();
-            $linkShortenerService         = new LinkShortenerService();
-            $projectNotificationService   = new ProjectNotificationService();
+            $saleModel                  = new Sale();
+            $saleService                = new SaleService();
+            $projectModel               = new Project();
+            $domainModel                = new Domain();
+            $checkoutModel              = new Checkout();
+            $projectNotificationModel   = new ProjectNotification();
+            $linkShortenerService       = new LinkShortenerService();
+            $projectNotificationService = new ProjectNotificationService();
 
             $saleModel->where([
                                   ['payment_method', '=', '2'], ['status', '=', '2'],
@@ -47,7 +47,7 @@ class BoletoService
                                   ],
                               ])
                       ->with('client', 'plansSales.plan.products')
-                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $linkShortenerService, $projectNotificationService, $projectNotificationPresenter) {
+                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $linkShortenerService, $projectNotificationService, $projectNotificationModel) {
 
                           foreach ($boletoDueToday as $boleto) {
                               $checkout    = $checkoutModel->where('id', $boleto->checkout_id)
@@ -108,7 +108,14 @@ class BoletoService
                               }
 
                               //Traz o assunto, titulo e texto do email formatados
-                              $notificationMessage = $projectNotificationService->formatNotificationData($project->id, $projectNotificationPresenter->getEventEnum('billet_winning'));
+                              $projectNotificationPresenter = $projectNotificationModel->present();
+                              $projectNotification          = $projectNotificationModel->where('project_id', $project->id)
+                                                                                       ->where('event_enum', $projectNotificationPresenter->getEventEnum('billet_winning'))
+                                                                                       ->where('type_enum', $projectNotificationPresenter->getTypeEnum('email'))
+                                                                                       ->where('status', $projectNotificationPresenter->getStatus('active'))
+                                                                                       ->first();
+                              $notificationMessage          = $projectNotificationService->formatNotificationData($projectNotification, $boleto, $project);
+
                               if (!empty($notificationMessage)) {
                                   $data = [
                                       "name"                  => $clientNameExploded[0],
