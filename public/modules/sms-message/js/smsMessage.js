@@ -87,8 +87,28 @@ $(function () {
                     $('#modal-edit-project-notification .project-notification-message').attr('maxlength', 160);
                     $('#modal-edit-project-notification .project-notification-field-email').hide();
                 }
-                
-                // $('#modal-edit-project-notification .rule-value').trigger('input');
+
+                if((response.data.event_enum == 1 || response.data.event_enum == 2 || response.data.event_enum == 5) && response.data.type_enum == 2) {
+                    $('.param-billet-url').show();
+                } else {
+                    $('.param-billet-url').hide();
+                }
+
+                if(response.data.event_enum == 6) {
+                    $('.param-tracking-code').show();
+                    $('.param-tracking-url').show();
+                } else {
+                    $('.param-tracking-code').hide();
+                    $('.param-tracking-url').hide();
+                }
+
+                if(response.data.event_enum == 4) {
+                    $('.param-abandoned-cart').show();
+                    $('.param-sale-code').hide();
+                } else {
+                    $('.param-abandoned-cart').hide();
+                    $('.param-sale-code').show();
+                }
 
                 $('#modal-edit-project-notification').modal('show');
             }
