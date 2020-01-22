@@ -54,9 +54,9 @@ class ProjectNotificationService
                                                 'event_enum' => 1,
                                                 'time'       => 'Imediato',
                                                 'message'    => json_encode([
-                                                                                'subject' => 'Parabéns - Pegue aqui o seu boleto - Pedido #{{sale_code}}',
+                                                                                'subject' => 'Parabéns - Pegue aqui o seu boleto - Pedido #{codigo_venda}',
                                                                                 'title'   => 'Aqui está seu boleto',
-                                                                                'content' => 'Olá {{ first_name }}, Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s).',
+                                                                                'content' => 'Olá {primeiro_nome}, Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s).',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -68,7 +68,7 @@ class ProjectNotificationService
                                                 'message'    => json_encode([
                                                                                 'subject' => 'Já separamos seu pedido',
                                                                                 'title'   => 'Já separamos seu pedido. Agora só falta você fazer o pagamento do boleto! :)',
-                                                                                'content' => 'Olá {{ name }}, estamos enviando esse e-mail só pra avisar que já empacotamos a sua encomenda e estamos prontos para enviar para você. Assim que o boleto for pago e recebermos a confirmação, sua encomenda será enviada!',
+                                                                                'content' => 'Olá {primeiro_nome}, estamos enviando esse e-mail só pra avisar que já empacotamos a sua encomenda e estamos prontos para enviar para você. Assim que o boleto for pago e recebermos a confirmação, sua encomenda será enviada!',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -79,7 +79,7 @@ class ProjectNotificationService
                                                 'message'    => json_encode([
                                                                                 'subject' => 'Vamos ter que liberar sua mercadoria',
                                                                                 'title'   => 'Vamos ter que devolver sua mercadoria para o estoque!',
-                                                                                'content' => 'Olá {{ name }}, por falta de pagamento, vamos ter que liberar sua mercadoria para o estoque novamente. Isso significa que se você não efetuar o pagamento, cancelaremos seu pedido.',
+                                                                                'content' => 'Olá {primeiro_nome}, por falta de pagamento, vamos ter que liberar sua mercadoria para o estoque novamente. Isso significa que se você não efetuar o pagamento, cancelaremos seu pedido.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -90,7 +90,7 @@ class ProjectNotificationService
                                                 'message'    => json_encode([
                                                                                 'subject' => 'Hoje vence o seu boleto',
                                                                                 'title'   => 'Seu boleto vence hoje! Não esqueça de pagar seu boleto para finalizar seu pedido.',
-                                                                                'content' => 'Olá {{ name }}, seu boleto vencerá hoje, ainda dá tempo de pagar! Não se esqueça, só enviaremos o seu pedido (que já está separado) se você efetuar o pagamento.',
+                                                                                'content' => 'Olá {primeiro_nome}, seu boleto vencerá hoje, ainda dá tempo de pagar! Não se esqueça, só enviaremos o seu pedido (que já está separado) se você efetuar o pagamento.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -101,7 +101,7 @@ class ProjectNotificationService
                                                 'message'    => json_encode([
                                                                                 'subject' => 'Você pode perder dinheiro se ignorar esse email',
                                                                                 'title'   => 'A promoção termina hoje',
-                                                                                'content' => 'Olá {{ name }}, Nossos produtos estão com preços especiais e o estoque é bem limitado. Recomendamos que você finalize a compra ainda hoje para garantir a promoção e economizar dinheiro.',
+                                                                                'content' => 'Olá {primeiro_nome}, Nossos produtos estão com preços especiais e o estoque é bem limitado. Recomendamos que você finalize a compra ainda hoje para garantir a promoção e economizar dinheiro.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -112,7 +112,7 @@ class ProjectNotificationService
                                                 'message'    => json_encode([
                                                                                 'subject' => 'Posso liberar o seu pedido para outra pessoa?',
                                                                                 'title'   => 'O seu pedido está te esperando',
-                                                                                'content' => 'Olá {{ name }}, vimos que você não aproveitou a promoção de ontem. O seu pedido ainda está separado aguardando a finalização da compra, mas não podemos segurar por muito tempo.',
+                                                                                'content' => 'Olá {primeiro_nome}, vimos que você não aproveitou a promoção de ontem. O seu pedido ainda está separado aguardando a finalização da compra, mas não podemos segurar por muito tempo.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -129,9 +129,9 @@ class ProjectNotificationService
                                                 'event_enum' => 3,
                                                 'time'       => 'Imediato',
                                                 'message'    => json_encode([
-                                                                                'subject' => 'Sua compra foi aprovada - Pedido #{{sale_code}}',
+                                                                                'subject' => 'Sua compra foi aprovada - Pedido #{codigo_venda}',
                                                                                 'title'   => 'Sua compra foi aprovada!',
-                                                                                'content' => 'Olá {{ first_name }}, seu pedido #{{sale_code}} foi confirmado. Aqui estão as informações e os detalhes da sua compra.',
+                                                                                'content' => 'Olá {primeiro_nome}, seu pedido #{codigo_venda} foi confirmado. Aqui estão as informações e os detalhes da sua compra.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -140,9 +140,9 @@ class ProjectNotificationService
                                                 'event_enum' => 2,
                                                 'time'       => 'Imediato',
                                                 'message'    => json_encode([
-                                                                                'subject' => 'Boleto pago - Pedido #{{sale_code}}',
+                                                                                'subject' => 'Boleto pago - Pedido #{codigo_venda}',
                                                                                 'title'   => 'Boleto pago',
-                                                                                'content' => 'Olá {{ first_name }}, seu pedido #{{sale_code}} foi aprovado. Obrigado pela sua compra, nos próximos dias enviaremos o código de rastreio para você acompanhar seu pedido.',
+                                                                                'content' => 'Olá {primeiro_nome}, seu pedido #{codigo_venda} foi aprovado. Obrigado pela sua compra, nos próximos dias enviaremos o código de rastreio para você acompanhar seu pedido.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -153,7 +153,7 @@ class ProjectNotificationService
                                                 'message'    => json_encode([
                                                                                 'subject' => 'Seu código de rastreio chegou',
                                                                                 'title'   => 'Código de Rastreio!',
-                                                                                'content' => 'Olá {{ name }}, boas notícias seu pedido ja está a caminho do endereço de entrega. Você pode rastrear a entrega do seu pedido diretamente do site dos Correios.',
+                                                                                'content' => 'Olá {primeiro_nome}, boas notícias seu pedido ja está a caminho do endereço de entrega. Você pode rastrear a entrega do seu pedido diretamente do site dos Correios.',
                                                                             ]),
                                                 'project_id' => $projectId,
                                             ],
@@ -170,19 +170,41 @@ class ProjectNotificationService
         }
     }
 
-    public function formatNotificationData(int $projectId, int $eventEnum)
+    public function formatNotificationData($projectNotification, $sale = null, $project = null, $checkout = null)
     {
         try {
-            $projectNotificationModel     = new ProjectNotification();
-            $projectNotificationPresenter = $projectNotificationModel->present();
-            $projectNotification          = $projectNotificationModel->where('project_id', $projectId)
-                                                                     ->where('event_enum', $eventEnum)
-                                                                     ->where('type_enum', $projectNotificationPresenter->getTypeEnum('email'))
-                                                                     ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                     ->first();
+
             if (!empty($projectNotification)) {
+
                 $message = json_decode($projectNotification->message);
 
+                if (strpos($message->content, '{primeiro_nome}')) {
+                    $clientName         = $sale->client->name;
+                    $clientNameExploded = explode(' ', $clientName);
+                    $message->content   = str_replace('{primeiro_nome}', $clientNameExploded[0], $message->content);
+                }
+                if (strpos($message->content, '{url_boleto}')) {
+                    $message->content = str_replace('{url_boleto}', $sale->boleto_link, $message->content);
+                }
+                if (strpos($message->content, '{projeto_nome}')) {
+                    $message->content = str_replace('{projeto_nome}', $project->name, $message->content);
+                }
+                if (strpos($message->content, '{link_carrinho_abandonado}')) {
+                    $message->content = str_replace('{link_carrinho_abandonado}', $project->name, $message->content);
+                }
+                //                $searchArray = [
+                //                    '{primeiro_nome}',
+                //                    '{url_boleto}',
+                //                    '{projeto_nome}',
+                //                    '{link_carrinho_abandonado}',
+                //                    '{codigo_pedido}',
+                //                    '{nome_produto}',
+                //                    '{qtde_produto}',
+                //                    '{valor_compra}',
+                //                    '{codigo_venda}',
+                //                    '{codigo_rastreio}',
+                //                    '{link_rastreamento}',
+                //                ];
                 return $message;
             } else {
                 return '';
@@ -190,6 +212,7 @@ class ProjectNotificationService
         } catch (Exception $ex) {
             Log::warning('Erro ao formatar dados da notificação de email - ProjectNotificationService - formatNotificationData');
             report($ex);
+            dd($ex);
         }
     }
 }
