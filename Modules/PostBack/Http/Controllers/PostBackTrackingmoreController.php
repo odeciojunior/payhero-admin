@@ -10,10 +10,6 @@ use Illuminate\Http\Request;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingmoreService;
 
-/**
- * Class PostBackAftershipController
- * @package App\Http\Controllers\WebService\Aftership
- */
 class PostBackTrackingmoreController extends Controller
 {
     /**
