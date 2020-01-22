@@ -63,9 +63,9 @@
                 <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{projeto_nome}'>{projeto_nome}</a>
                 <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{link_carrinho_abandonado}'>{link_carrinho_abandonado}</a>
                 {{-- <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{codigo_pedido}'>{codigo_pedido}</a> --}}
-                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{nome_produto}'>{nome_produto}</a>
-                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{qtde_produto}'>{qtde_produto}</a>
-                <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{valor_compra}'>{valor_compra}</a>
+                {{-- <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{nome_produto}'>{nome_produto}</a> --}}
+                {{-- <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{qtde_produto}'>{qtde_produto}</a> --}}
+                {{-- <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{valor_compra}'>{valor_compra}</a> --}}
                 <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{codigo_venda}'>{codigo_venda}</a>
                 <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{codigo_rastreio}'>{codigo_rastreio}</a>
                 <a class='inc-param btn btn-sm m-1 btn-link btn-outline btn-default' data-value='{link_rastreamento}'>{link_rastreamento}</a>
