@@ -82,7 +82,9 @@ class PostBackShopifyController extends Controller
                                             //caso seja diferente, atualiza o registro e dispara o e-mail
                                             if ($tracking->tracking_code != $fulfillment["tracking_number"] && $fulfillment["tracking_number"] != "") {
                                                 DB::beginTransaction();
+                                                activity()->disableLogging();
                                                 $trackingUpdated = $tracking->update(['tracking_code' => $fulfillment["tracking_number"]]);
+                                                activity()->enableLogging();
                                                 if (!empty($trackingUpdated)) {
                                                     $apiTracking = $trackingService->sendTrackingToApi($tracking);
                                                     if (!empty($apiTracking)) {
@@ -99,7 +101,9 @@ class PostBackShopifyController extends Controller
                                             }
                                         } else { //senao cria o tracking
                                             DB::beginTransaction();
+                                            activity()->disableLogging();
                                             $tracking = $trackingService->createTracking($fulfillment["tracking_number"], $productPlanSale);
+                                            activity()->enableLogging();
                                             if (!empty($tracking)) {
                                                 $apiTracking = $trackingService->sendTrackingToApi($tracking);
                                                 if (!empty($apiTracking)) {
