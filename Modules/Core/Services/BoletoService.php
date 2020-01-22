@@ -31,14 +31,14 @@ class BoletoService
     public function verifyBoletosExpiring()
     {
         try {
-            $saleModel                  = new Sale();
-            $saleService                = new SaleService();
-            $projectModel               = new Project();
-            $domainModel                = new Domain();
-            $checkoutModel              = new Checkout();
-            $projectNotificationPresenter   = (new ProjectNotification())->present();
-            $linkShortenerService       = new LinkShortenerService();
-            $projectNotificationService = new ProjectNotificationService();
+            $saleModel                    = new Sale();
+            $saleService                  = new SaleService();
+            $projectModel                 = new Project();
+            $domainModel                  = new Domain();
+            $checkoutModel                = new Checkout();
+            $projectNotificationPresenter = (new ProjectNotification())->present();
+            $linkShortenerService         = new LinkShortenerService();
+            $projectNotificationService   = new ProjectNotificationService();
 
             $saleModel->where([
                                   ['payment_method', '=', '2'], ['status', '=', '2'],
@@ -94,10 +94,7 @@ class BoletoService
                               $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
                                                                ->format('d/m/y');
 
-                              //Traz o assunto, titulo e texto do email formatados
-                              $notificationMessage = $projectNotificationService->formatNotificationData($project->id, $projectNotificationPresenter->getEventEnum('billet_winning'));
-                              dd($notificationMessage);
-                              $telephoneValidated  = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
+                              $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
 
                               $link = $linkShortenerService->shorten($boleto->boleto_link);
                               if (!empty($link) && !empty($telephoneValidated)) {
@@ -110,38 +107,45 @@ class BoletoService
                                   event(new SendSmsEvent($data));
                               }
 
-                              $data = [
-                                  "name"                  => $clientNameExploded[0],
-                                  "boleto_link"           => $boleto->boleto_link,
-                                  "boleto_digitable_line" => $boletoDigitableLine,
-                                  "boleto_due_date"       => $boleto->boleto_due_date,
-                                  "total_paid_value"      => $boleto->total_paid_value,
-                                  "shipment_value"        => $boleto->shipment_value,
-                                  "subtotal"              => strval($subTotal),
-                                  "iof"                   => $iof,
-                                  'discount'              => $discount,
-                                  "project_logo"          => $project->logo,
-                                  "project_contact"       => $project->contact,
-                                  "products"              => $products,
-                              ];
-
-                              if (!empty($domain) && !empty($clientEmail)) {
-                                  $dataEmail = [
-                                      'domainName'  => $domain['name'],
-                                      'projectName' => $project['name'] ?? '',
-                                      'clientEmail' => $clientEmail,
-                                      'clientName'  => $clientNameExploded[0] ?? '',
-                                      'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
-                                      'bodyEmail'   => $data,
-                                      'checkout'    => $checkout,
+                              //Traz o assunto, titulo e texto do email formatados
+                              $notificationMessage = $projectNotificationService->formatNotificationData($project->id, $projectNotificationPresenter->getEventEnum('billet_winning'));
+                              if (!empty($notificationMessage)) {
+                                  $data = [
+                                      "name"                  => $clientNameExploded[0],
+                                      "boleto_link"           => $boleto->boleto_link,
+                                      "boleto_digitable_line" => $boletoDigitableLine,
+                                      "boleto_due_date"       => $boleto->boleto_due_date,
+                                      "total_paid_value"      => $boleto->total_paid_value,
+                                      "shipment_value"        => $boleto->shipment_value,
+                                      "subtotal"              => strval($subTotal),
+                                      "iof"                   => $iof,
+                                      'discount'              => $discount,
+                                      "project_logo"          => $project->logo,
+                                      "project_contact"       => $project->contact,
+                                      "subject"               => $notificationMessage->subject,
+                                      "title"                 => $notificationMessage->title,
+                                      "content"               => $notificationMessage->content,
+                                      "products"              => $products,
                                   ];
-                                  event(new SendEmailEvent($dataEmail));
+                                  if (!empty($domain) && !empty($clientEmail)) {
+                                      $dataEmail = [
+                                          'domainName'  => $domain['name'],
+                                          'projectName' => $project['name'] ?? '',
+                                          'clientEmail' => $clientEmail,
+                                          'clientName'  => $clientNameExploded[0] ?? '',
+                                          'templateId'  => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
+                                          'bodyEmail'   => $data,
+                                          'checkout'    => $checkout,
+                                      ];
+                                      event(new SendEmailEvent($dataEmail));
+                                  }
                               }
                           }
                       });
         } catch (Exception $e) {
             Log::warning('Erro ao enviar boletos para e-mails - Boleto vencendo');
             report($e);
+            dd($e);
         }
     }
 
