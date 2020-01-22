@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Entities\TrackingHistory;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
@@ -253,8 +252,8 @@ class TrackingsApiController extends Controller
 
                             DB::beginTransaction();
                             $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
-                            $apiResult = $trackingService->sendTrackingToApi($tracking);
                             if ($tracking) {
+                                $apiResult = $trackingService->sendTrackingToApi($tracking);
                                 if (empty($apiResult)) {
                                     DB::rollBack();
                                     return response()->json([
@@ -278,10 +277,12 @@ class TrackingsApiController extends Controller
                             }
                             //update
                         } else {
+                            DB::beginTransaction();
                             $trackingCodeupdated = $tracking->update([
                                 'tracking_code' => $data['tracking_code'],
                             ]);
                             if ($trackingCodeupdated) {
+                                $apiResult = $trackingService->sendTrackingToApi($tracking);
                                 if (empty($apiResult)) {
                                     DB::rollBack();
                                     return response()->json([

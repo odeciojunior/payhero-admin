@@ -54,6 +54,8 @@ class TrackingmoreService
     {
         $carrierCode = $this->detectCarrier($trackingNumber);
 
+        if($carrierCode == "china-ems") $carrierCode = "china-post";
+
         $data = [
             'tracking_number' => $trackingNumber,
             'carrier_code' => $carrierCode,
@@ -71,7 +73,7 @@ class TrackingmoreService
 
         if (!empty($result->data)) {
             return $result->data;
-        } elseif($metaCode == 4016){
+        } elseif($metaCode == 4016){ //já existe
             return true;
         } else {
             if ($metaCode == 4032 || $metaCode == 4015) {
@@ -148,6 +150,7 @@ class TrackingmoreService
 
         switch ($status) {
             case 'pending':
+            case 'notfound':
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
                 break;
             case 'transit':
@@ -159,7 +162,6 @@ class TrackingmoreService
             case 'delivered':
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('delivered');
                 break;
-            case 'notfound':
             case 'undelivered':
             case 'exception':
             case 'expired':
