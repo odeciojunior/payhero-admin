@@ -29,7 +29,11 @@ class TrackingService
         $apiTracking = $perfectLogService->find($tracking->tracking_code);
 
         if (isset($apiTracking->tracking_status)) {
+            if(!empty($apiTracking->trail)){
+                $apiTracking->tracking_status = end($apiTracking->trail)->tracking_status;
+            }
             $status = $this->parseStatusApi($apiTracking->tracking_status);
+
             if ($tracking->tracking_status_enum != $status) {
                 $tracking->tracking_status_enum = $status;
                 $tracking->save();

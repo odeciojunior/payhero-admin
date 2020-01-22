@@ -53,8 +53,8 @@ class SalesRecoveryCardRefusedResource extends Resource
             'recovery_status' => $status,
             'total_paid'      => number_format($this->value, 2, ',', '.'),
             'link'            => $link,
-            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber($client->telephone) . '&text=Olá ' . $client->present()
-                                                                                                                                                       ->getFirstName(),
+            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . preg_replace("/[^0-9]/", "", $client->telephone) . '&text=Olá ' . $client->present()
+                                                                                                                                                   ->getFirstName(),
         ];
     }
 }

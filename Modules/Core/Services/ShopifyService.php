@@ -2,9 +2,9 @@
 
 namespace Modules\Core\Services;
 
-use App\Services\FoxUtilsService;
 use Exception;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\FoxUtils;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -15,7 +15,6 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Modules\Core\Entities\ProductPlan;
@@ -1361,7 +1360,7 @@ class ShopifyService
                 "country"       => "Brasil",
                 "first_name"    => $delivery->present()->getReceiverFirstName(),
                 "last_name"     => $delivery->present()->getReceiverLastName(),
-                "phone"         => $client->present()->getTelephoneShopify(),
+                "phone"         => $client->telephone,
                 "province"      => $delivery->state,
                 "zip"           => FoxUtils::formatCEP($delivery->zip_code),
                 "name"          => $client->name,
@@ -1384,7 +1383,7 @@ class ShopifyService
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
                 "email"                   => $client->email,
-                "phone"                   => $client->present()->getTelephoneShopify(),
+                "phone"                   => $client->telephone,
                 "first_name"              => $delivery->present()->getReceiverFirstName(),
                 "last_name"               => $delivery->present()->getReceiverLastName(),
                 "buyer_accepts_marketing" => false,
@@ -1866,6 +1865,41 @@ class ShopifyService
     public function setSkipToCart(bool $skipToCart): void
     {
         $this->skipToCart = $skipToCart;
+    }
+
+    public function updateOrder(Sale $sale)
+    {
+        try {
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            if (!empty($sale) && !empty($sale->shopify_order)) {
+                $client   = $sale->client;
+
+                $shippingAddress = [
+                    "phone" => $client->telephone,
+
+                ];
+
+                $orderData = [
+                    "email"            => $client->email,
+                    "phone"            => $client->telephone,
+                    "shipping_address" => $shippingAddress,
+
+                ];
+
+                $this->sendData = $orderData;
+                $order          = $this->client->put('orders/' . $sale->shopify_order, [
+                    'order'    => $orderData,
+                ]);
+
+                $this->receivedData = $order;
+            } else {
+                Log::emergency('Erro ao atualizar uma ordem no shopify com a venda ' . $sale->id);
+            }
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
+            Log::emergency('Erro ao atualizar uma ordem no shopify com a venda ' . $sale->id);
+        }
     }
 }
 
