@@ -302,3 +302,17 @@ body {
 a.label{
     color: #76838f !important;
 }
+
+.powerzap_open_button_iframe {
+    bottom: 30px !important;
+}
+
+@media (max-width: 968px) {
+    .site-menubar-fold .page {
+        margin-bottom: 100px;
+    }
+    .powerzap_open_button_iframe {
+        bottom: 5px !important;
+    }
+}
+
