@@ -153,26 +153,23 @@ $(function () {
 
     
     $(document).on('change', '.project_notification_status', function () {
-
+        let status = 0;
         if(this.checked) {
-            let status = 1;
+            status = 1;
         } else {
-            let status = 0;
+            status = 0;
         }
         let projectNotification = this.getAttribute('data-id');
-        // let projectNotification = $('#modal-edit-project-notification .project-notification-id').val(); // TODO - PEGAR ID NOTIFICATION
         loadingOnScreen();
         $.ajax({
-            method: "POST",
+            method: "PUT",
             url: "/api/project/" + projectId + "/projectnotification/" + projectNotification,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {status: status, _method: 'PUT'},
-            processData: false,
-            contentType: false,
+            data: {status: status},
             cache: false,
             error: function (response) {
                 loadingOnScreenRemove();
@@ -181,7 +178,17 @@ $(function () {
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", "Notificação atualizada com sucesso");
-                atualizarProjectNotification();
+                console.log(data);
+                if(data.status == 1) {
+                    $('.notification-status-' + projectNotification + ' span').removeClass('badge-danger');
+                    $('.notification-status-' + projectNotification + ' span').addClass('badge-success');
+                    $('.notification-status-' + projectNotification + ' span').html('Ativo');
+                } else {
+                    $('.notification-status-' + projectNotification + ' span').removeClass('badge-success');
+                    $('.notification-status-' + projectNotification + ' span').addClass('badge-danger');
+                    $('.notification-status-' + projectNotification + ' span').html('Inativo');
+                }
+                // atualizarProjectNotification();
             }
         });
     });
@@ -214,12 +221,13 @@ $(function () {
                     $("#data-table-sms").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
+                        let check = (value.status == 1) ? 'checked' : '';
                         let data = `<tr>
                             <td class="project-notification-id">${value.type}</td>
                             <td class="project-notification-type">${value.event}</td>
                             <td class="project-notification-value">${value.time}</td>
                             <td class="project-notification-zip-code-origin">${value.message}</td>
-                            <td class="project-notification-status" style="vertical-align: middle">
+                            <td class="project-notification-status notification-status-${value.id}" style="vertical-align: middle">
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
@@ -227,7 +235,7 @@ $(function () {
                                 <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
                                 <div class="switch-holder d-inline">
                                    <label class="switch">
-                                       <input type="checkbox" class="project_notification_status" value="1" data-id="${value.id}">
+                                       <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}>
                                        <span class="slider round"></span>
                                    </label>
                                </div>

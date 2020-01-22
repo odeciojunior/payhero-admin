@@ -186,7 +186,7 @@ class ProjectNotificationApiController extends Controller
                         $notificationUpdated = $projectNotification->update($data);
 
                         if ($notificationUpdated) {
-                            return response()->json('Sucesso', 200);
+                            return response()->json(['message' => 'Atualizado com sucesso', 'status' => $data['status']], 200);
                         } else {
                             return response()->json(['message' => 'Erro ao atualizar notificação'], 400);
                         }
