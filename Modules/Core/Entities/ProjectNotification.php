@@ -53,6 +53,7 @@ class ProjectNotification extends Model
         'status',
         'type_enum',
         'event_enum',
+        'notification_enum',
         'time',
         'message',
         'created_at',

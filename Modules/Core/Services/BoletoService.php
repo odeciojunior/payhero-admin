@@ -114,10 +114,12 @@ class BoletoService
                                                                                        ->where('type_enum', $projectNotificationPresenter->getTypeEnum('email'))
                                                                                        ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                        ->first();
-                              $notificationMessage          = $projectNotificationService->formatNotificationData($projectNotification, $boleto, $project);
-
-                              if (!empty($notificationMessage)) {
-                                  $data = [
+                              if (!empty($projectNotification)) {
+                                  $message        = json_decode($projectNotification->message);
+                                  $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto);
+                                  $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto);
+                                  $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto);
+                                  $data           = [
                                       "name"                  => $clientNameExploded[0],
                                       "boleto_link"           => $boleto->boleto_link,
                                       "boleto_digitable_line" => $boletoDigitableLine,
@@ -129,9 +131,9 @@ class BoletoService
                                       'discount'              => $discount,
                                       "project_logo"          => $project->logo,
                                       "project_contact"       => $project->contact,
-                                      "subject"               => $notificationMessage->subject,
-                                      "title"                 => $notificationMessage->title,
-                                      "content"               => $notificationMessage->content,
+                                      "subject"               => $subjectMessage,
+                                      "title"                 => $titleMessage,
+                                      "content"               => $contentMessage,
                                       "products"              => $products,
                                   ];
                                   if (!empty($domain) && !empty($clientEmail)) {
@@ -152,7 +154,6 @@ class BoletoService
         } catch (Exception $e) {
             Log::warning('Erro ao enviar boletos para e-mails - Boleto vencendo');
             report($e);
-            dd($e);
         }
     }
 
