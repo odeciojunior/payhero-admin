@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProjectNotification;
+use Modules\Products\Transformers\ProductsSaleResource;
 
 /**
  * Class ProjectNotificationService
@@ -192,14 +193,23 @@ class ProjectNotificationService
         }
     }
 
-    public function formatNotificationData(int $projectId)
+    public function formatNotificationData(int $projectId, int $eventEnum)
     {
-        $projectNotificationModel     = new ProjectNotification();
-        $projectNotificationPresenter = $projectNotificationModel->present();
-        $projectNotification          = $projectNotificationModel->where('project_id', $projectId)
-                                                                 ->where('type_enum', $projectNotificationPresenter->getTypeEnum('email'))
-                                                                 ->where('type_enum', $projectNotificationPresenter->getStatus('active'))
-                                                                 ->first();
+        try {
+            $projectNotificationModel     = new ProjectNotification();
+            $projectNotificationPresenter = $projectNotificationModel->present();
+            $projectNotification          = $projectNotificationModel->where('project_id', $projectId)
+                                                                     ->where('event_enum', $eventEnum)
+                                                                     ->where('type_enum', $projectNotificationPresenter->getTypeEnum('email'))
+                                                                     ->where('status', $projectNotificationPresenter->getStatus('active'))
+                                                                     ->first();
+            $message                      = json_decode($projectNotification->message);
+
+            return $message;
+        } catch (Exception $ex) {
+            Log::warning('Erro ao formatar dados da notificação de email - ProjectNotificationService - formatNotificationData');
+            report($ex);
+        }
     }
 }
 
