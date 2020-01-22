@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Events\BilletExpiredEvent;
 use function foo\func;
 use Illuminate\Support\Carbon;
@@ -30,12 +31,14 @@ class BoletoService
     public function verifyBoletosExpiring()
     {
         try {
-            $saleModel            = new Sale();
-            $saleService          = new SaleService();
-            $projectModel         = new Project();
-            $domainModel          = new Domain();
-            $checkoutModel        = new Checkout();
-            $linkShortenerService = new LinkShortenerService();
+            $saleModel                  = new Sale();
+            $saleService                = new SaleService();
+            $projectModel               = new Project();
+            $domainModel                = new Domain();
+            $checkoutModel              = new Checkout();
+            $projectNotificationPresenter   = (new ProjectNotification())->present();
+            $linkShortenerService       = new LinkShortenerService();
+            $projectNotificationService = new ProjectNotificationService();
 
             $saleModel->where([
                                   ['payment_method', '=', '2'], ['status', '=', '2'],
@@ -44,7 +47,7 @@ class BoletoService
                                   ],
                               ])
                       ->with('client', 'plansSales.plan.products')
-                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $linkShortenerService) {
+                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $linkShortenerService, $projectNotificationService, $projectNotificationPresenter) {
 
                           foreach ($boletoDueToday as $boleto) {
                               $checkout    = $checkoutModel->where('id', $boleto->checkout_id)
@@ -91,7 +94,10 @@ class BoletoService
                               $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
                                                                ->format('d/m/y');
 
-                              $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
+                              //Traz o assunto, titulo e texto do email formatados
+                              $notificationMessage = $projectNotificationService->formatNotificationData($project->id, $projectNotificationPresenter->getEventEnum('billet_winning'));
+                              dd($notificationMessage);
+                              $telephoneValidated  = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
 
                               $link = $linkShortenerService->shorten($boleto->boleto_link);
                               if (!empty($link) && !empty($telephoneValidated)) {
@@ -406,7 +412,7 @@ class BoletoService
 
             $saleModel = new Sale();
             $boletos   = $saleModel->with(['client'])
-                                    ->where([
+                                   ->where([
                                                ['payment_method', '=', '2'],
                                                ['status', '=', '2'],
                                                [

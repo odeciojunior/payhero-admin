@@ -40,7 +40,7 @@ class ProjectNotification extends Model
     /**
      * @var string
      */
-    protected $presenter = ProductPresenter::class;
+    protected $presenter = ProjectNotificationPresenter::class;
     /**
      * @var string
      */
