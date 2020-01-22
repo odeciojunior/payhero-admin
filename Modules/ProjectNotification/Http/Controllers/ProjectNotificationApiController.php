@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Entities\Project;
-use Modules\Core\Services\ProjectNotificationService;
 use Modules\ProjectNotification\Transformers\ProjectNotificationResource;
 
 class ProjectNotificationApiController extends Controller
@@ -25,10 +24,8 @@ class ProjectNotificationApiController extends Controller
     {
         try {
             $projectNotificationModel   = new ProjectNotification();
-            $projectNotificationService = new ProjectNotificationService();
 
             $projectId = current(Hashids::decode($projectId));
-            // $projectNotificationService->createProjectNotificationDefault($projectId);
 
             activity()->on($projectNotificationModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
@@ -125,7 +122,7 @@ class ProjectNotificationApiController extends Controller
                 // }
 
                 if ($notification) {
-                    return response()->json(['notification' => $notification]);
+                    return new ProjectNotificationResource($notification);
                 } else {
                     return response()->json([
                                                 'message' => 'Ocorreu um erro, tente novamente mais tarde!',
@@ -158,7 +155,8 @@ class ProjectNotificationApiController extends Controller
             if (isset($projectId) && isset($id)) {
                 $projectNotificationModel = new ProjectNotification();
                 $projectModel             = new Project();
-                $projectNotificationId = current(Hashids::decode($id));
+                $projectNotificationId    = current(Hashids::decode($id));
+                $projectNotification      = $projectNotificationModel->find($projectNotificationId);
 
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
@@ -170,15 +168,22 @@ class ProjectNotificationApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     $data = [];
                     if(!empty($request->input('message'))) {
-                        $data['message'] = $request->input('message');
+                        if($projectNotification->type_enum == 1) {
+                            $data['message'] = json_encode([
+                                'subject' => $request->input('subject'),
+                                'title'   => $request->input('title'),
+                                'content' => $request->input('message'),
+                            ]);
+                        } else {
+                            $data['message'] = $request->input('message');
+                        }
                     }
                     if(!is_null($request->input('status'))) {
                         $data['status'] = $request->input('status');
                     }
 
                     if(count($data) > 0) {
-                        $notificationUpdated = $projectNotificationModel->where('id', $projectNotificationId)
-                                                                        ->update($data);
+                        $notificationUpdated = $projectNotification->update($data);
 
                         if ($notificationUpdated) {
                             return response()->json('Sucesso', 200);
