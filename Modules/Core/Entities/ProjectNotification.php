@@ -10,6 +10,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectNotificationPresenter;
 use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -21,17 +22,19 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $message
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  * @property Project project
  */
 class ProjectNotification extends Model
 {
-    use PresentableTrait, FoxModelTrait, LogsActivity;
+    use PresentableTrait, FoxModelTrait, LogsActivity, SoftDeletes;
     /**
      * @var array
      */
     protected $dates = [
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
     /**
      * @var array
