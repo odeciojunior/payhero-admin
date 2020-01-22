@@ -12,6 +12,7 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\PushNotification;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Notifications\Transformers\NotificationResource;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Jobs\PushNotificationJob;
@@ -230,12 +231,16 @@ class NotificationApiService
 
             $fields = [
                 'app_id'             => env('ONESIGNAL_APP_ID'),
-                'android_channel_id' => $notificationChannel[$params['notification_sound']],
                 'include_player_ids' => $params['include_player_ids'],
                 'contents'           => $content,
                 'headings'           => $headings,
-                'ios_sound'          => $params['notification_sound'] . '.wav',
             ];
+
+            if ($params['device_type'] == "1" && $params['notification_sound'] != "nil") {
+                $fields += ['android_channel_id' => $notificationChannel[$params['notification_sound']]];
+            } else if ($params['device_type'] == "0" && $params['notification_sound'] != "nil") {
+                $fields += ['ios_sound' => $params['notification_sound'] . '.wav'];
+            }
 
             $fields = json_encode($fields);
 
@@ -280,25 +285,48 @@ class NotificationApiService
     public function processPostback(Request $request)
     {
         try {
-            $saleModel = new Sale();
+            $saleModel       = new Sale();
+            $withDrawalModel = new Withdrawal();
 
-            $saleId = current(Hashids::connection('sale_id')->decode($request->external_reference));
+            if ($request->notification_type == 'withdrawals') {
 
-            if ($saleId) {
-                //hash ok
-                $sale             = $saleModel->find($saleId);
-                $pushNotification = PushNotification::create([
-                                                                 'sale_id'       => $saleId,
-                                                                 'user_id'       => $sale->owner_id,
-                                                                 'postback_data' => $request->getContent(),
-                                                             ]);
+                $withdrawalId = current(Hashids::decode($request->external_reference));
 
-                PushNotificationJob::dispatch($pushNotification);
+                if ($withdrawalId) {
 
-                return response()->json('success', 200);
+                    $withdrawal       = $withDrawalModel->with('company.user')->find($withdrawalId);
+                    $pushNotification = PushNotification::create([
+                                                                     'withdrawal_id' => $withdrawalId,
+                                                                     'user_id'       => $withdrawal->company->user->id,
+                                                                     'postback_data' => $request->getContent(),
+                                                                 ]);
+
+                    PushNotificationJob::dispatch($pushNotification);
+
+                    return response()->json('success', 200);
+                } else {
+                    //hash wrong
+                    return response()->json('error', 400);
+                }
             } else {
-                //hash wrong
-                return response()->json('error', 400);
+                $saleId = current(Hashids::connection('sale_id')->decode($request->external_reference));
+
+                if ($saleId) {
+                    //hash ok
+                    $sale             = $saleModel->find($saleId);
+                    $pushNotification = PushNotification::create([
+                                                                     'sale_id'       => $saleId,
+                                                                     'user_id'       => $sale->owner_id,
+                                                                     'postback_data' => $request->getContent(),
+                                                                 ]);
+
+                    PushNotificationJob::dispatch($pushNotification);
+
+                    return response()->json('success', 200);
+                } else {
+                    //hash wrong
+                    return response()->json('error', 400);
+                }
             }
         } catch (Exception $ex) {
             throw $ex;

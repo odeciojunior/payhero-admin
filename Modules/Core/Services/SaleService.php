@@ -249,19 +249,10 @@ class SaleService
             $userTransaction->release_date = null;
         }
 
-        // if(preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0){
-
-        //     $comission = preg_replace("/[^0-9]/", "", $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
-
-        //     $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($comission, ',', strlen($comission) - 2, 0);
-        // }
-
         //add details to sale
         $sale->details = (object) [
-            //transaction
             'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
             'percentage_rate'  => $userTransaction->percentage_rate ?? 0,
-            //extra info
             'total'            => number_format(intval($total) / 100, 2, ',', '.'),
             'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),
             'discount'         => number_format(intval($discount) / 100, 2, ',', '.'),
