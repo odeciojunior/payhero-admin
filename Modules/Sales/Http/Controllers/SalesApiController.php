@@ -133,7 +133,6 @@ class SalesApiController extends Controller
                 $activity->log_name   = 'visualization';
             })->log('Visualizou tela exibir resumo das venda ');
 
-
             $saleService = new SaleService();
 
             $data = $request->all();
