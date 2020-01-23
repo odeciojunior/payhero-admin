@@ -149,11 +149,19 @@ class NotificationMachine
                                                     ->decode($this->requestJson->external_reference));
                     $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])
                                                ->find($saleId);
+
+                    if (!$this->foxSale) {
+                        return $this->ignorePostback();
+                    }
                 } else {
                     $withDrawalsModel = new Withdrawal();
                     $withDrawalsId    = current(Hashids::decode($this->requestJson->external_reference));
                     $this->withdrawal = $withDrawalsModel->with(['company.user.userDevices'])
                                                          ->find($withDrawalsId);
+
+                    if (!$this->withdrawal) {
+                        return $this->ignorePostback();
+                    }
                 }
 
                 return $this->getUserDevices();
@@ -317,7 +325,7 @@ class NotificationMachine
 
             if (isset($this->withdrawal->company->user->userDevices)) {
                 foreach ($this->withdrawal->company->user->userDevices as $device) {
-                    if ($device->online) {
+                    if ($device->online && $device->withdraw_notification) {
                         $this->userDevices[] = [
                             'player_id'   => $device->player_id,
                             'value'       => $this->withdrawal->value,
