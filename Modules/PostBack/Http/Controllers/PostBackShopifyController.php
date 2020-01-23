@@ -5,6 +5,7 @@ namespace Modules\PostBack\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
@@ -77,26 +78,44 @@ class PostBackShopifyController extends Controller
                                         //do que esta na tabela
                                         $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
                                         $tracking = $productPlanSale->tracking;
-                                        if (isset($tracking)) {
+                                        if (!empty($tracking)) {
                                             //caso seja diferente, atualiza o registro e dispara o e-mail
-                                            if ($tracking->tracking_code != $fulfillment["tracking_number"] && $fulfillment["tracking_number"] != "" ) {
-
-                                                $tracking->update(['tracking_code' => $fulfillment["tracking_number"]]);
-
-                                                //atualiza no array de produtos para enviar no email
-                                                $product->tracking_code = $fulfillment["tracking_number"];
-                                                event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                $trackingService->sendTrackingToApi($tracking);
+                                            if ($tracking->tracking_code != $fulfillment["tracking_number"] && $fulfillment["tracking_number"] != "") {
+                                                DB::beginTransaction();
+                                                activity()->disableLogging();
+                                                $trackingUpdated = $tracking->update(['tracking_code' => $fulfillment["tracking_number"]]);
+                                                activity()->enableLogging();
+                                                if (!empty($trackingUpdated)) {
+                                                    $apiTracking = $trackingService->sendTrackingToApi($tracking);
+                                                    if (!empty($apiTracking)) {
+                                                        DB::commit();
+                                                        //atualiza no array de produtos para enviar no email
+                                                        $product->tracking_code = $fulfillment["tracking_number"];
+                                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                                                    } else {
+                                                        DB::rollBack();
+                                                    }
+                                                } else {
+                                                    DB::rollBack();
+                                                }
                                             }
                                         } else { //senao cria o tracking
-
+                                            DB::beginTransaction();
+                                            activity()->disableLogging();
                                             $tracking = $trackingService->createTracking($fulfillment["tracking_number"], $productPlanSale);
-
-                                            if(isset($tracking)){
-                                                //atualiza no array de produtos para enviar no email
-                                                $product->tracking_code = $fulfillment["tracking_number"];
-                                                event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                $trackingService->sendTrackingToApi($tracking);
+                                            activity()->enableLogging();
+                                            if (!empty($tracking)) {
+                                                $apiTracking = $trackingService->sendTrackingToApi($tracking);
+                                                if (!empty($apiTracking)) {
+                                                    DB::commit();
+                                                    //atualiza no array de produtos para enviar no email
+                                                    $product->tracking_code = $fulfillment["tracking_number"];
+                                                    event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                                                } else {
+                                                    DB::rollBack();
+                                                }
+                                            } else {
+                                                DB::rollBack();
                                             }
                                         }
                                     }

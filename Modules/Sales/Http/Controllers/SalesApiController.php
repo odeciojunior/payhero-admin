@@ -49,7 +49,6 @@ class SalesApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as vendas');
 
-
             $saleService = new SaleService();
 
             $data = $request->all();
@@ -132,7 +131,6 @@ class SalesApiController extends Controller
             activity()->tap(function(Activity $activity){
                 $activity->log_name   = 'visualization';
             })->log('Visualizou tela exibir resumo das venda ');
-
 
             $saleService = new SaleService();
 
