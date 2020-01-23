@@ -191,7 +191,7 @@ class ProjectNotificationService
         }
     }
 
-    public function formatNotificationData(string $message, $sale = null, $project = null, $linkCheckout = null, $log = null)
+    public function formatNotificationData(string $message, $sale = null, $project = null, $notificationType = null, $linkCheckout = null, $log = null, $trackingCode = null)
     {
         try {
             if (!empty($message)) {
@@ -207,7 +207,13 @@ class ProjectNotificationService
                 }
 
                 if (strpos($message, '{url_boleto}') !== false) {
-                    $message = str_replace('{url_boleto}', $sale->boleto_link, $message);
+                    if ($notificationType == 'sms') {
+                        $linkShortenerService = new LinkShortenerService();
+                        $link                 = $linkShortenerService->shorten($sale->boleto_link);
+                        $message              = str_replace('{url_boleto}', $link, $message);
+                    } else {
+                        $message = str_replace('{url_boleto}', $sale->boleto_link, $message);
+                    }
                 }
 
                 if (strpos($message, '{codigo_venda}') !== false) {
@@ -216,9 +222,10 @@ class ProjectNotificationService
                 }
 
                 if (strpos($message, '{codigo_rastreio}') !== false) {
-                    $trackingModel = new Tracking();
-                    $tracking      = $trackingModel->where('sale_id', $sale->id)->first();
-                    $message       = str_replace('{codigo_rastreio}', $tracking->tracking_code, $message);
+                    //                    $trackingModel = new Tracking();
+                    //                    $tracking      = $trackingModel->where('sale_id', $sale->id)->first();
+                    //                    $message       = str_replace('{codigo_rastreio}', $tracking->tracking_code, $message);
+                    $message = str_replace('{codigo_rastreio}', $trackingCode, $message);
                 }
 
                 if (strpos($message, '{projeto_nome}') !== false) {
@@ -226,20 +233,39 @@ class ProjectNotificationService
                 }
 
                 if (strpos($message, '{link_rastreamento}') !== false) {
-                    $trackingModel        = new Tracking();
-                    $domainModel          = new Domain();
-                    $linkShortenerService = new LinkShortenerService();
-                    $tracking             = $trackingModel->where('sale_id', $sale->id)->first();
-                    $domain               = $domainModel->where('project_id', $sale->project_id)
-                                                        ->where('status', 3)
-                                                        ->first();
-                    $linkBase             = 'https://tracking.' . $domain->name . '/';
-                    $link                 = $linkShortenerService->shorten($linkBase . $tracking->tracking_code);
-                    $message              = str_replace('{link_rastreamento}', $link, $message);
+                    $domainModel = new Domain();
+                    $domain      = $domainModel->where('project_id', $sale->project_id)
+                                               ->where('status', 3)
+                                               ->first();
+                    //                    $trackingModel        = new Tracking();
+                    //                    $domainModel          = new Domain();
+                    //                    $linkShortenerService = new LinkShortenerService();
+                    //                    $tracking             = $trackingModel->where('sale_id', $sale->id)->first();
+                    //                    $domain               = $domainModel->where('project_id', $sale->project_id)
+                    //                                                        ->where('status', 3)
+                    //                                                        ->first();
+                    //                    $linkBase             = 'https://tracking.' . $domain->name . '/';
+                    //                    $link                 = $linkShortenerService->shorten($linkBase . $tracking->tracking_code);
+                    //                    $message              = str_replace('{link_rastreamento}', $link, $message);
+                    if ($notificationType == 'sms') {
+                        $linkShortenerService = new LinkShortenerService();
+                        $linkBase             = 'https://tracking.' . $domain->name . '/';
+                        $link                 = $linkShortenerService->shorten($linkBase . $trackingCode);
+                        $message              = str_replace('{link_rastreamento}', $link, $message);
+                    } else {
+                        $link    = 'https://tracking.' . $domain->name . '/' . $trackingCode;
+                        $message = str_replace('{link_rastreamento}', $link, $message);
+                    }
                 }
 
                 if (strpos($message, '{link_carrinho_abandonado}') !== false) {
-                    $message->content = str_replace('{link_carrinho_abandonado}', $linkCheckout, $message);
+                    if ($notificationType == 'sms') {
+                        $linkShortenerService = new LinkShortenerService();
+                        $link                 = $linkShortenerService->shorten($linkCheckout);
+                        $message              = str_replace('{link_carrinho_abandonado}', $link, $message);
+                    } else {
+                        $message = str_replace('{link_carrinho_abandonado}', $linkCheckout, $message);
+                    }
                 }
 
                 return $message;
@@ -250,6 +276,7 @@ class ProjectNotificationService
         (Exception $ex) {
             Log::warning('Erro ao formatar dados da notificação de email - ProjectNotificationService - formatNotificationData');
             report($ex);
+            dd($ex);
         }
     }
 }

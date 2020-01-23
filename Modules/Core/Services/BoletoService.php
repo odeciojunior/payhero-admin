@@ -37,7 +37,6 @@ class BoletoService
             $domainModel                = new Domain();
             $checkoutModel              = new Checkout();
             $projectNotificationModel   = new ProjectNotification();
-            $linkShortenerService       = new LinkShortenerService();
             $projectNotificationService = new ProjectNotificationService();
 
             $saleModel->where([
@@ -47,7 +46,7 @@ class BoletoService
                                   ],
                               ])
                       ->with('client', 'plansSales.plan.products')
-                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $linkShortenerService, $projectNotificationService, $projectNotificationModel) {
+                      ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $projectNotificationService, $projectNotificationModel) {
 
                           foreach ($boletoDueToday as $boleto) {
                               $checkout    = $checkoutModel->where('id', $boleto->checkout_id)
@@ -94,30 +93,41 @@ class BoletoService
                               $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
                                                                ->format('d/m/y');
 
-                              $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
+                              //$telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
+                              $clientTelephone = $boleto->client->telephone;
 
-                              $link = $linkShortenerService->shorten($boleto->boleto_link);
-                              if (!empty($link) && !empty($telephoneValidated)) {
-                                  $data = [
-                                      'message'   => 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link,
-                                      'telephone' => $telephoneValidated,
-                                      'checkout'  => $checkout,
-
-                                  ];
-                                  event(new SendSmsEvent($data));
-                              }
-
-                              //Traz o assunto, titulo e texto do email formatados
+                              //Traz a mensagem do sms formatado
                               $projectNotificationPresenter = $projectNotificationModel->present();
-                              $projectNotification          = $projectNotificationModel->where('project_id', $project->id)
-                                                                                       ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_due_today'))
+                              $projectNotificationSms       = $projectNotificationModel->where('project_id', $project->id)
+                                                                                       ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_billet_due_today'))
                                                                                        ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                        ->first();
-                              if (!empty($projectNotification)) {
-                                  $message        = json_decode($projectNotification->message);
-                                  $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto);
-                                  $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto);
-                                  $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto);
+                              if (!empty($projectNotificationSms)) {
+                                  $message    = $projectNotificationSms->message;
+                                  $smsMessage = $projectNotificationService->formatNotificationData($message, $boleto, $project, 'sms');
+                                  //$link = $linkShortenerService->shorten($boleto->boleto_link);
+                                  if (!empty($smsMessage) && !empty($clientTelephone)) {
+                                      $data = [
+                                          //'message'   => 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link,
+                                          'message'   => $smsMessage,
+                                          'telephone' => $clientTelephone,
+                                          'checkout'  => $checkout,
+
+                                      ];
+                                      event(new SendSmsEvent($data));
+                                  }
+                              }
+                              //Traz o assunto, titulo e texto do email formatados
+                              $projectNotificationPresenter = $projectNotificationModel->present();
+                              $projectNotificationEmail     = $projectNotificationModel->where('project_id', $project->id)
+                                                                                       ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_abandoned_cart_an_hour_later'))
+                                                                                       ->where('status', $projectNotificationPresenter->getStatus('active'))
+                                                                                       ->first();
+                              if (!empty($projectNotificationEmail)) {
+                                  $message        = json_decode($projectNotificationEmail->message);
+                                  $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                  $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                  $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
                                   $data           = [
                                       "name"                  => $clientNameExploded[0],
                                       "boleto_link"           => $boleto->boleto_link,
@@ -141,6 +151,7 @@ class BoletoService
                                           'projectName' => $project['name'] ?? '',
                                           'clientEmail' => $clientEmail,
                                           'clientName'  => $clientNameExploded[0] ?? '',
+                                          //'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
                                           'templateId'  => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
                                           'bodyEmail'   => $data,
                                           'checkout'    => $checkout,
@@ -259,7 +270,8 @@ class BoletoService
                                               'projectName' => $project['name'] ?? '',
                                               'clientEmail' => $clientEmail,
                                               'clientName'  => $clientNameExploded[0] ?? '',
-                                              'templateId'  => 'd-59dab7e71d4045e294cb6a14577da236',
+                                              //'templateId'  => 'd-59dab7e71d4045e294cb6a14577da236',
+                                              'templateId'  => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
                                               'bodyEmail'   => $data,
                                               'checkout'    => $checkout,
                                           ];
@@ -379,7 +391,8 @@ class BoletoService
                                               'projectName' => $project['name'] ?? '',
                                               'clientEmail' => $clientEmail,
                                               'clientName'  => $clientNameExploded[0] ?? '',
-                                              'templateId'  => 'd-690a6140f72643c1af280b079d5e84c5',
+                                              //'templateId'  => 'd-690a6140f72643c1af280b079d5e84c5',
+                                              'templateId'  => 'd-792f7ecb932e40e09403149653e013e1',
                                               'bodyEmail'   => $data,
                                               'checkout'    => $checkout,
                                           ];
