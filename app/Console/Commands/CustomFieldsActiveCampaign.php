@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use DB;
 use Carbon\Carbon;
+use Exception;
 use Modules\Core\Entities\Log;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
@@ -19,21 +20,17 @@ class CustomFieldsActiveCampaign extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'CustomFieldsActiveCampaign'; // passa id para chamar quando cria nova integração
-
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Cria campos customizados nas integrações Active Campaign';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -43,30 +40,30 @@ class CustomFieldsActiveCampaign extends Command
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
     {
 
         $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
-                     ->whereDate('created_at', '<=', '2020-01-21 13:00:00.0')->get();
+                     ->whereDate('created_at', '<=', '2020-01-22 17:00:00.0');
 
-        foreach ($sales as $sale) {
-            $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+        foreach ($sales->cursor() as $sale) {
+            try {
 
-            if(!empty($shopifyIntegration)){
+                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
 
-                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                $sh = $shopifyService->updateOrder($sale);
+                if (!empty($shopifyIntegration)) {
 
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $sh             = $shopifyService->updateOrder($sale);
+                }
+            } catch (Exception $e) {
+                print_r('Erro na venda: ' . $sale->id);
             }
-
         }
 
         dd('Terminou!');
-
-
 
         // $integrations = ActivecampaignIntegration::with('customFields')->get();
 
