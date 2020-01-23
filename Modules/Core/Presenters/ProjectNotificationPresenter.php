@@ -16,11 +16,11 @@ class ProjectNotificationPresenter extends Presenter
                 case 2:
                     return 'billet_paid';
                 case 3:
-                    return 'credit_paid';
+                    return 'credit_card_paid';
                 case 4:
                     return 'abandoned_cart';
                 case 5:
-                    return 'billet_winning';
+                    return 'billet_due_today';
                 case 6:
                     return 'tracking';
             }
@@ -32,7 +32,7 @@ class ProjectNotificationPresenter extends Presenter
                     return 1;
                 case 'billet_paid':
                     return 2;
-                case 'credit_paid':
+                case 'credit_card_paid':
                     return 3;
                 case 'abandoned_cart':
                     return 4;
@@ -75,69 +75,69 @@ class ProjectNotificationPresenter extends Presenter
         if (is_numeric($enum)) {
             switch ($enum) {
                 case 1:
-                    return 'sms_billet_generated_';
+                    return 'sms_billet_generated_immediate';
                 case 2:
-                    return 'billet_paid';
+                    return 'sms_billet_due_today';
                 case 3:
-                    return 'credit_paid';
+                    return 'sms_abandoned_cart_an_hour_later';
                 case 4:
-                    return 'abandoned_cart';
+                    return 'sms_abandoned_cart_next_day';
                 case 5:
-                    return 'billet_due_today';
+                    return 'email_billet_generated_immediate';
                 case 6:
-                    return 'tracking';
+                    return 'email_billet_generated_next_day';
                 case 7:
-                    return 'tracking';
+                    return 'email_billet_generated_two_days_later';
                 case 8:
-                    return 'tracking';
+                    return 'email_billet_due_today';
                 case 9:
-                    return 'tracking';
+                    return 'email_abandoned_cart_an_hour_later';
                 case 10:
-                    return 'tracking';
+                    return 'email_abandoned_cart_next_day';
                 case 11:
-                    return 'tracking';
+                    return 'sms_credit_card_paid_immediate';
                 case 12:
-                    return 'tracking';
+                    return 'email_credit_card_paid_immediate';
                 case 13:
-                    return 'tracking';
+                    return 'email_billet_paid_immediate';
                 case 14:
-                    return 'tracking';
+                    return 'email_tracking_immediate';
                 case 15:
-                    return 'tracking';
+                    return 'sms_tracking_immediate';
             }
 
             return '';
         } else {
             switch ($enum) {
-                case 'billet_generated':
+                case 'sms_billet_generated_immediate':
                     return 1;
-                case 'billet_paid':
+                case 'sms_billet_due_today':
                     return 2;
-                case 'credit_paid':
+                case 'sms_abandoned_cart_an_hour_later':
                     return 3;
-                case 'abandoned_cart':
+                case 'sms_abandoned_cart_next_day':
                     return 4;
-                case 'billet_winning':
+                case 'email_billet_generated_immediate':
                     return 5;
-                case 'tracking':
+                case 'email_billet_generated_next_day':
                     return 6;
-                case 'tracking':
+                case 'email_billet_generated_two_days_later':
                     return 7;
-                case 'tracking':
+                case 'email_billet_due_today':
                     return 8;
-                case 'tracking':
+                case 'email_abandoned_cart_an_hour_later':
                     return 9;
-                case 'tracking':
+                case 'email_abandoned_cart_next_day':
                     return 10;
-                case 'tracking':
+                case 'sms_credit_card_paid_immediate':
                     return 11;
-                case 'tracking':
+                case 'email_credit_card_paid_immediate':
                     return 12;
-                case 'tracking':
+                case 'email_billet_paid_immediate':
                     return 13;
-                case 'tracking':
+                case 'email_tracking_immediate':
                     return 14;
-                case 'tracking':
+                case 'sms_tracking_immediate':
                     return 15;
             }
 
