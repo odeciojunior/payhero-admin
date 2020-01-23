@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Entities\Log as CheckoutLog;
@@ -23,11 +24,13 @@ class CartRecoveryService
     {
         try {
 
-            $checkoutModel        = new Checkout();
-            $checkoutLogModel     = new CheckoutLog();
-            $projectModel         = new Project();
-            $domainModel          = new Domain();
-            $linkShortenerService = new LinkShortenerService();
+            $checkoutModel              = new Checkout();
+            $checkoutLogModel           = new CheckoutLog();
+            $projectModel               = new Project();
+            $domainModel                = new Domain();
+            $projectNotificationModel   = new ProjectNotification();
+            $projectNotificationService = new ProjectNotificationService();
+            $linkShortenerService       = new LinkShortenerService();
 
             $dateStart = new \DateTime();
             $dateEnd   = new \DateTime();
@@ -40,7 +43,7 @@ class CartRecoveryService
 
             $checkoutModel->where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $linkShortenerService) {
+                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $linkShortenerService, $projectNotificationService, $projectNotificationModel) {
                               try {
                                   foreach ($abandonedCarts as $abandonedCart) {
                                       $products = [];
@@ -120,17 +123,19 @@ class CartRecoveryService
     public function verifyAbandonedCarts2()
     {
         try {
-            $checkoutModel        = new Checkout();
-            $checkoutLogModel     = new CheckoutLog();
-            $projectModel         = new Project();
-            $domainModel          = new Domain();
-            $linkShortenerService = new LinkShortenerService();
+            $checkoutModel              = new Checkout();
+            $checkoutLogModel           = new CheckoutLog();
+            $projectModel               = new Project();
+            $domainModel                = new Domain();
+            $projectNotificationModel   = new ProjectNotification();
+            $projectNotificationService = new ProjectNotificationService();
+            $linkShortenerService       = new LinkShortenerService();
 
             $date = Carbon::now()->subDay('1')->toDateString();
             $data = [];
             $checkoutModel->where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $linkShortenerService) {
+                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $linkShortenerService, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
                                   try {
 
