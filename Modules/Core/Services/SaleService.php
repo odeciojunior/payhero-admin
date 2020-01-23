@@ -34,7 +34,7 @@ class SaleService
      * @param $filters
      * @param bool $withProducts
      * @param int $userId
-     * @return Builder|Transaction
+     * @return Builder
      */
     public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
     {
@@ -116,15 +116,16 @@ class SaleService
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $dateType  = $filters["date_type"];
 
-            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
+            $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
                 $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            });
+            })->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
             report($e);
 
-            return '';
+            return null;
         }
     }
 
@@ -136,7 +137,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('sales.start_date', 'DESC')->paginate(10);
+        return $transactions->paginate(10);
     }
 
     /**
@@ -147,7 +148,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('sales.start_date', 'DESC')->get();
+        return $transactions->get();
     }
 
     /**
