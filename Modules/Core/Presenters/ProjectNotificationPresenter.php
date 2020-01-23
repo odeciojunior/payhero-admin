@@ -36,7 +36,7 @@ class ProjectNotificationPresenter extends Presenter
                     return 3;
                 case 'abandoned_cart':
                     return 4;
-                case 'billet_winning':
+                case 'billet_due_today':
                     return 5;
                 case 'tracking':
                     return 6;
