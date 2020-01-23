@@ -351,10 +351,8 @@ $(() => {
 
     $(document).on('click', '.input-tracking-code', function () {
         let row = $(this).parent().parent();
+        $('.tracking-close').click();
         row.find('.tracking-edit, .tracking-add').click();
-        $(this).one('focusout', function () {
-            row.find('.tracking-close').click();
-        });
     });
 
     //salvar tracking
