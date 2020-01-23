@@ -260,6 +260,7 @@ class TrackingsApiController extends Controller
                                                         'message' => 'Código de rastreio salvo',
                                                         'data'    => [
                                                             'tracking_code'   => $tracking->tracking_code,
+                                                            'tracking_status_enum' => $tracking->tracking_status_enum,
                                                             'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
                                                                                                                                                              ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                                                         ],
@@ -277,12 +278,6 @@ class TrackingsApiController extends Controller
                                                                      'tracking_code' => $data['tracking_code'],
                                                                  ]);
                         if ($trackingCodeupdated) {
-                            $trackingHistoryModel = new TrackingHistory();
-
-                            $trackingHistoryModel->firstOrNew([
-                                                                  'tracking_id'          => $tracking->id,
-                                                                  'tracking_status_enum' => $trackingStatus,
-                                                              ]);
 
                             $trackingService->sendTrackingToApi($tracking);
 
@@ -290,6 +285,7 @@ class TrackingsApiController extends Controller
                                                         'message' => 'Código de rastreio alterado',
                                                         'data'    => [
                                                             'tracking_code'   => $tracking->tracking_code,
+                                                            'tracking_status_enum' => $tracking->tracking_status_enum,
                                                             'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
                                                                                                                                                              ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                                                         ],
@@ -362,6 +358,7 @@ class TrackingsApiController extends Controller
             $data = $request->all();
 
             $user = auth()->user();
+            $user->isManager = session('isManager', false);
 
             $filename = 'trackings_report_' . Hashids::encode($user->id) . '.' . $data['format'];
 

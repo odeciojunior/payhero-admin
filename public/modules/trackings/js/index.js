@@ -283,6 +283,9 @@ $(() => {
     //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
         tracking_id = $(this).attr('tracking');
+
+        let btnDetail = $(this);
+
         loadOnAny('#modal-tracking-details');
         $('#modal-tracking').modal('show');
 
@@ -334,7 +337,7 @@ $(() => {
                     }
                 }
 
-                let statusBadge = $(this).parent()
+                let statusBadge = btnDetail.parent()
                     .parent()
                     .find('td .badge');
 
@@ -385,6 +388,18 @@ $(() => {
 
                     row.find('.tracking-close')
                         .click();
+
+                    let tracking = response.data;
+
+                    let statusBadge = btnSave.parent()
+                        .parent()
+                        .find('td .badge');
+
+                    if (statusBadge.html() !== tracking.tracking_status) {
+                        statusBadge.removeClass('badge-success badge-warning badge-danger badge-primary')
+                            .addClass('badge-' + getStatusBadge(tracking.tracking_status_enum))
+                            .html(tracking.tracking_status);
+                    }
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
