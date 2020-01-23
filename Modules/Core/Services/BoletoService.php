@@ -91,7 +91,7 @@ class BoletoService
                               $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
                                                                ->format('d/m/y');
 
-                              $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
+                              $telephoneValidated = $boleto->client->telephone;
 
                               $link = $linkShortenerService->shorten($boleto->boleto_link);
                               if (!empty($link) && !empty($telephoneValidated)) {
