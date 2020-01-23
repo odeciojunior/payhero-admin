@@ -284,6 +284,7 @@ class NotificationMachine
 
             $this->userDevices = [];
 
+            // userDevices de sales
             if (isset($this->foxSale->transactions)) {
                 foreach ($this->foxSale->transactions as $transaction) {
                     if (isset($transaction->company->user->userDevices)) {
@@ -323,9 +324,10 @@ class NotificationMachine
                 }
             }
 
+            // userDevices de saques
             if (isset($this->withdrawal->company->user->userDevices)) {
                 foreach ($this->withdrawal->company->user->userDevices as $device) {
-                    if ($device->online && $device->withdraw_notification) {
+                    if ($device->online && $device->withdraw_notification) { // verifica se o usuário quer ser notificado no saque
                         $this->userDevices[] = [
                             'player_id'   => $device->player_id,
                             'value'       => $this->withdrawal->value,
