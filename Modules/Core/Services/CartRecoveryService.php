@@ -59,7 +59,7 @@ class CartRecoveryService
                                                                   ->orderBy('created_at', 'desc')
                                                                   ->first();
 
-                                          $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
+                                          $telephoneValidated = $log['telephone'];
                                           $project            = $projectModel->find($abandonedCart['project_id']);
                                           $domain             = $domainModel->where('project_id', $project->id)
                                                                             ->first();
@@ -150,7 +150,7 @@ class CartRecoveryService
                                                               ->orderBy('created_at', 'desc')
                                                               ->first();
 
-                                      $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
+                                      $telephoneValidated = $log['telephone'];
                                       $project            = $projectModel->find($abandonedCart['project_id']);
                                       $domain             = $domainModel->where('project_id', $project->id)
                                                                         ->where('status', 3)
