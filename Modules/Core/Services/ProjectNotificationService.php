@@ -64,7 +64,7 @@ class ProjectNotificationService
                                                 'event_enum'        => 1,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
-                                                                                       'subject' => 'Parabéns - Pegue aqui o seu boleto - Pedido #{codigo_venda}',
+                                                                                       'subject' => 'Parabéns - Pegue aqui o seu boleto - Pedido {codigo_venda}',
                                                                                        'title'   => 'Aqui está seu boleto',
                                                                                        'content' => 'Olá {primeiro_nome}, Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s).',
                                                                                    ]),
@@ -146,9 +146,9 @@ class ProjectNotificationService
                                                 'event_enum'        => 3,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
-                                                                                       'subject' => 'Sua compra foi aprovada - Pedido #{codigo_venda}',
+                                                                                       'subject' => 'Sua compra foi aprovada - Pedido {codigo_venda}',
                                                                                        'title'   => 'Sua compra foi aprovada!',
-                                                                                       'content' => 'Olá {primeiro_nome}, seu pedido #{codigo_venda} foi confirmado. Aqui estão as informações e os detalhes da sua compra.',
+                                                                                       'content' => 'Olá {primeiro_nome}, seu pedido {codigo_venda} foi confirmado. Aqui estão as informações e os detalhes da sua compra.',
                                                                                    ]),
                                                 'notification_enum' => 12,
                                                 'project_id'        => $projectId,
@@ -158,9 +158,9 @@ class ProjectNotificationService
                                                 'event_enum'        => 2,
                                                 'time'              => 'Imediato',
                                                 'message'           => json_encode([
-                                                                                       'subject' => 'Boleto pago - Pedido #{codigo_venda}',
+                                                                                       'subject' => 'Boleto pago - Pedido {codigo_venda}',
                                                                                        'title'   => 'Boleto pago',
-                                                                                       'content' => 'Olá {primeiro_nome}, seu pedido #{codigo_venda} foi aprovado. Obrigado pela sua compra, nos próximos dias enviaremos o código de rastreio para você acompanhar seu pedido.',
+                                                                                       'content' => 'Olá {primeiro_nome}, seu pedido {codigo_venda} foi aprovado. Obrigado pela sua compra, nos próximos dias enviaremos o código de rastreio para você acompanhar seu pedido.',
                                                                                    ]),
                                                 'notification_enum' => 13,
                                                 'project_id'        => $projectId,
@@ -231,9 +231,6 @@ class ProjectNotificationService
                 }
 
                 if (strpos($message, '{codigo_rastreio}') !== false) {
-                    //                    $trackingModel = new Tracking();
-                    //                    $tracking      = $trackingModel->where('sale_id', $sale->id)->first();
-                    //                    $message       = str_replace('{codigo_rastreio}', $tracking->tracking_code, $message);
                     $message = str_replace('{codigo_rastreio}', $trackingCode, $message);
                 }
 
@@ -246,16 +243,6 @@ class ProjectNotificationService
                     $domain      = $domainModel->where('project_id', $sale->project_id)
                                                ->where('status', 3)
                                                ->first();
-                    //                    $trackingModel        = new Tracking();
-                    //                    $domainModel          = new Domain();
-                    //                    $linkShortenerService = new LinkShortenerService();
-                    //                    $tracking             = $trackingModel->where('sale_id', $sale->id)->first();
-                    //                    $domain               = $domainModel->where('project_id', $sale->project_id)
-                    //                                                        ->where('status', 3)
-                    //                                                        ->first();
-                    //                    $linkBase             = 'https://tracking.' . $domain->name . '/';
-                    //                    $link                 = $linkShortenerService->shorten($linkBase . $tracking->tracking_code);
-                    //                    $message              = str_replace('{link_rastreamento}', $link, $message);
                     if ($notificationType == 'sms') {
                         $linkShortenerService = new LinkShortenerService();
                         $linkBase             = 'https://tracking.' . $domain->name . '/';
@@ -285,7 +272,6 @@ class ProjectNotificationService
         (Exception $ex) {
             Log::warning('Erro ao formatar dados da notificação de email - ProjectNotificationService - formatNotificationData');
             report($ex);
-            dd($ex);
         }
     }
 }
