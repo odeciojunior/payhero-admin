@@ -1,11 +1,57 @@
 $(document).ready(function () {
 
-    getCompanies();
+    //Comportamentos da tela
+    $('#date_range').daterangepicker({
+        startDate: moment().startOf('week'),
+        endDate: moment(),
+        opens: 'center',
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
+        locale: {
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    });
 
-    let transfersCompanySelect = $("#transfers_company_select");
+    $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
-    let extractCompanySelect = $("#extract_company_select");
+    let balanceLoader = {
+        styles: {
+            container: {
+                minHeight: '31px',
+                justifyContent: 'flex-start',
+            },
+            loader: {
+                width: '20px',
+                height: '20px',
+                borderWidth: '4px'
+            },
+        },
+        insertBefore: '.grad-border',
+    };
 
+    //END - Comportamentos da tela
+
+    //Obtém as empresas
     function getCompanies() {
         $.ajax({
             method: "GET",
@@ -26,31 +72,9 @@ $(document).ready(function () {
                     $('.content-error').hide();
 
                     $(response.data).each(function(index, value){
-                        transfersCompanySelect.append("<option country='" + value.country + "' value='" + value.id + "'>" + value.name + "</option>")
-                        extractCompanySelect.append("<option country='" + value.country + "' value='" + value.id + "'>" + value.name + "</option>")
-                    });
-
-                    transfersCompanySelect.on("change", function () {
-                        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
-                        $('#custom-input-addon').val('');
-                        updateBalances();
-                        if($(this).children("option:selected").attr('country') != 'brazil'){
-                            $("#col_transferred_value").show();
-                        }
-                        else{
-                            $("#col_transferred_value").hide();
-                        }
-                    });
-
-                    extractCompanySelect.on("change", function () {
-                        $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
-                        updateTransfersTable();
-                        if($(this).children("option:selected").attr('country') != 'brazil'){
-                            $("#transferred_value").show();
-                        }
-                        else{
-                            $("#transferred_value").hide();
-                        }
+                        let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
+                        $("#transfers_company_select").append(data);
+                        $("#extract_company_select").append(data);
                     });
 
                     checkAllowed();
@@ -65,8 +89,9 @@ $(document).ready(function () {
         });
     }
 
-    $('.withdrawal-value').mask('#.###,#0', {reverse: true});
+    getCompanies();
 
+    //Verifica se o saque está liberado
     function checkAllowed() {
         $.ajax({
             url: "/api/withdrawals/checkallowed",
@@ -91,21 +116,21 @@ $(document).ready(function () {
         });
     }
 
+    //atualiza o saldo
+    $(document).on("change", "#transfers_company_select", function () {
+        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
+        $('#custom-input-addon').val('');
+        updateBalances();
+        if($(this).children("option:selected").attr('country') != 'brazil'){
+            $("#col_transferred_value").show();
+        }
+        else{
+            $("#col_transferred_value").hide();
+        }
+    });
+
     function updateBalances() {
-        loadOnAny('.price', false, {
-            styles: {
-                container: {
-                    minHeight: '31px',
-                    justifyContent: 'flex-start',
-                },
-                loader: {
-                    width: '20px',
-                    height: '20px',
-                    borderWidth: '4px'
-                },
-            },
-            insertBefore: '.grad-border',
-        });
+        loadOnAny('.price', false, balanceLoader);
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
         $.ajax({
             url: "api/finances/getbalances/",
@@ -185,7 +210,7 @@ $(document).ready(function () {
                         type: "POST",
                         dataType: "json",
                         data: {
-                            company_id: transfersCompanySelect.val(),
+                            company_id: $("#transfers_company_select").val(),
                             withdrawal_value: $('#custom-input-addon').val()
                         },
                         headers: {
@@ -381,7 +406,7 @@ $(document).ready(function () {
                             } else {
                                 tableData += "<td>" + data.value + "</td>";
                             }
-                            if(transfersCompanySelect.children("option:selected").attr('country') != 'brazil'){
+                            if($("#transfers_company_select").children("option:selected").attr('country') != 'brazil'){
                                 tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
                             }
                             tableData += '<td class="shipping-status">';
@@ -399,8 +424,21 @@ $(document).ready(function () {
         }
     }
 
+    //atualiza a table de extrato
+    $(document).on("click", "#bt_filtro", function () {
+        $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
+        updateTransfersTable();
+        if($(this).children("option:selected").attr('country') != 'brazil'){
+            $("#transferred_value").show();
+        }
+        else{
+            $("#transferred_value").hide();
+        }
+    });
+
     function updateTransfersTable(link = null) {
         $("#table-transfers-body").html('');
+        loadOnAny('#available-in-period', false, balanceLoader);
 
         loadOnTable('#table-transfers-body', '#transfersTable');
         if (link == null) {
@@ -408,10 +446,20 @@ $(document).ready(function () {
         } else {
             link = '/transfers' + link;
         }
+
+        let data = {
+            company: $("#extract_company_select option:selected").val(),
+            date_range: $("#date_range").val(),
+            reason: $('#reason').val(),
+            transaction: $("#transaction").val(),
+            type: $('#type').val(),
+            value: $('#transaction-value').val(),
+        };
+
         $.ajax({
             method: "GET",
             url: link,
-            data: {company: $("#extract_company_select option:selected").val()},
+            data: data,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -424,6 +472,26 @@ $(document).ready(function () {
 
                 $("#table-transfers-body").html('');
 
+                let balance_in_period = response.meta.balance_in_period;
+                let isNegative = parseFloat(balance_in_period.replace('.', '').replace(',', '.')) < 0;
+                let availableInPeriod = $('#available-in-period');
+                availableInPeriod.html(`<span${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
+                if (isNegative) {
+                    availableInPeriod.html(`<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`)
+                        .parent()
+                        .find('.grad-border')
+                        .removeClass('green')
+                        .addClass('red');
+                } else {
+                    availableInPeriod.html(`<span class="currency">R$ </span>${balance_in_period}`)
+                        .parent()
+                        .find('.grad-border')
+                        .removeClass('red')
+                        .addClass('green');
+                }
+
+                loadOnAny('#available-in-period', true);
+
                 if (response.data == '') {
 
                     $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
@@ -433,10 +501,15 @@ $(document).ready(function () {
 
                     $.each(response.data, function (index, value) {
                         data += '<tr >';
-                        if (value.is_owner && value.transaction_id) {
-                            data += '<td style="vertical-align: middle;">' + value.reason + ' <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="' + value.sale_id + '"><span style="color:black;">#' + value.transaction_id + '</span></a></td>';
+                        if (value.is_owner && value.sale_id) {
+                            data += `<td style="vertical-align: middle;">
+                                        ${value.reason}
+                                        <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
+                                            <span style="color:black;">#${value.sale_id}</span>
+                                        </a>
+                                     </td>`;
                         } else {
-                            data += '<td style="vertical-align: middle;">' + value.reason + ' <span>' + value.transaction_id + '</span></td>';
+                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id  + '</span>' : ''}</td>`;
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
@@ -505,6 +578,4 @@ $(document).ready(function () {
             $('table').addClass('table-striped');
         }
     }
-
-
 });
