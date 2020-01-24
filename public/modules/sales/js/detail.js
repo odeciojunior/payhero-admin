@@ -564,7 +564,11 @@ $(() => {
 
     function renderDelivery(delivery) {
         $('.btn-save-trackingcode').attr('delivery', delivery.id);
-        $('#delivery-address').text('Endereço: ' + delivery.street + ', ' + delivery.number);
+        let deliveryAddress = 'Endereço: ' + delivery.street + ', ' + delivery.number;
+        if(!isEmpty(delivery.complement)){
+            deliveryAddress += ', ' + delivery.complement;
+        }
+        $('#delivery-address').text(deliveryAddress);
         $('#delivery-neighborhood').text('Bairro: ' + delivery.neighborhood);
         $('#delivery-zipcode').text('CEP: ' + delivery.zip_code);
         $('#delivery-city').text('Cidade: ' + delivery.city + '/' + delivery.state);
