@@ -49,7 +49,7 @@ class Report implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, Wit
     {
         return [
             'sale_id'      => $row->sale_id,
-            'id'           => '#' . Hashids::connection('sale_id')->encode($row->id),
+            'id'           => '#' . Hashids::connection('sale_id')->encode($row->sale_id),
             'fantasy_name' => $row->fantasy_name,
             'value'        => number_format(intval($row->value) / 100, 2, ',', '.'),
             'created_at'   => $row->created_at
