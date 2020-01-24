@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=1') }}">
 @endpush
 
 @section('content')
@@ -22,10 +22,10 @@
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
                                href="#nav-transfers"
-                               role="tab" aria-controls="nav-home" aria-selected="true">Transferências
+                               role="tab" aria-controls="nav-home" aria-selected="false">Transferências
                             </a>
                             <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-extract"
-                               role="tab" aria-controls="nav-profile" aria-selected="false">Extrato
+                               role="tab" aria-controls="nav-profile" aria-selected="true">Extrato
                             </a>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                                                 <h6 class="label-price"> Saldo pendente </h6>
                                                 <h4 class="price saldoPendente">
                                                 </h4>
-                                                <div class="grad-border"></div>
+                                                <div class="grad-border red"></div>
                                             </div>
                                         </div>
 
@@ -89,7 +89,7 @@
                                     <div class="row flex-column">
                                         <div class="col-12 mb-3">
                                             <div class="input-holder">
-                                                <label for="company"> Empresa</label>
+                                                <label for="transfers_company_select"> Empresa</label>
                                                 <select class="form-control select-pad" name="company"
                                                         id="transfers_company_select"> </select>
                                             </div>
@@ -150,32 +150,63 @@
                         <div class="tab-pane fade" id="nav-extract" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="row justify-content-between">
                                 <div class="col-12 fix-5">
-                                    <div class="d-flex no-gutters justify-content-between">
-                                        <div class="p-2 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2" style="flex:1">
                                             <h5 class="title-pad"> Extrato </h5>
                                             <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
                                             </p>
                                         </div>
                                         <div class="p-2">
                                             <div class="price-holder">
-                                                <h6 class="label-price"> Total disponível na conta </h6>
-                                                <h4 class="price totalAvailableAccount total_available">
+                                                <h6 class="label-price"> Saldo no período</h6>
+                                                <h4 id="available-in-period" style="font-weight: 700;font-size: 25px;display: inline;">
                                                 </h4>
-                                                <div class="grad-border blue"></div>
+                                                <div class="grad-border green"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <div class="row justify-content-between align-items-baseline">
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <div class="col-lg-12 mb-15">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
-                                                <label for="company"> Empresa</label>
+                                                <label for="extract_company_select">Empresa</label>
                                                 <select class="form-control select-pad" name="company"
                                                         id="extract_company_select"> </select>
                                             </div>
                                         </div>
-                                        <div class="col-12">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <div class="input-holder">
+                                                <label for="type">Tipo</label>
+                                                <select class="form-control select-pad" id="type">
+                                                    <option value="">Todos</option>
+                                                    <option value="in">Entrada</option>
+                                                    <option value="out">Saída</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="transaction-value">Valor</label>
+                                            <input type="text" id="transaction-value" class="form-control select-pad withdrawal-value" placeholder="Digite o valor">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="date_range">Período</label>
+                                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-20">
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="reason">Razão</label>
+                                            <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="transaction">Transação</label>
+                                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código da transação">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3 offset-3 mt-30">
+                                            <button id="bt_filtro" class="btn btn-primary w-full">
+                                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -253,7 +284,9 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/finances/js/index.js?v=5') }}"></script>
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=6') }}"></script>
     @endpush
 
 @endsection
