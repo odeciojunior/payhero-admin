@@ -256,21 +256,20 @@ class TrackingService
         ];
 
         $productPlanSales = $this->getTrackingsQueryBuilder($filters)
-        ->without([
-            'tracking',
-            'sale',
-            'product',
-        ])
-        ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
-        ->selectRaw("
-            COUNT(*) as total,
-            SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as posted,
-            SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as dispatched,
-            SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
-            SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
-            SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
-            SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown
-        ", $status)->first();
+            ->without([
+                'tracking',
+                'sale',
+                'product',
+            ])
+            ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
+            ->selectRaw("COUNT(*) as total,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as posted,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as dispatched,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
+                                   SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown", $status)
+            ->first();
 
         return $productPlanSales->toArray();
     }
