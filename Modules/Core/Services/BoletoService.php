@@ -105,10 +105,8 @@ class BoletoService
                               if (!empty($projectNotificationSms)) {
                                   $message    = $projectNotificationSms->message;
                                   $smsMessage = $projectNotificationService->formatNotificationData($message, $boleto, $project, 'sms');
-                                  //$link = $linkShortenerService->shorten($boleto->boleto_link);
                                   if (!empty($smsMessage) && !empty($clientTelephone)) {
                                       $data = [
-                                          //'message'   => 'Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link,
                                           'message'   => $smsMessage,
                                           'telephone' => $clientTelephone,
                                           'checkout'  => $checkout,

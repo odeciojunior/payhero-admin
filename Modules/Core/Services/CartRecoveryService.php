@@ -60,7 +60,6 @@ class CartRecoveryService
                                                                   ->orderBy('created_at', 'desc')
                                                                   ->first();
 
-                                          //                                          $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
                                           $project         = $projectModel->find($abandonedCart['project_id']);
                                           $domain          = $domainModel->where('project_id', $project->id)
                                                                          ->first();
@@ -68,8 +67,6 @@ class CartRecoveryService
 
                                           $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                                           $clientNameExploded = explode(' ', $log['name']);
-
-                                          //                                          $link = $linkShortenerService->shorten($linkCheckout);
 
                                           //Traz a mensagem do sms formatado
                                           $projectNotificationPresenter = $projectNotificationModel->present();
@@ -106,7 +103,7 @@ class CartRecoveryService
                                                   $bodyEmail = [
                                                       'name'            => $clientNameExploded[0],
                                                       'project_logo'    => $project['logo'],
-                                                      //'checkout_link'   => $link,
+                                                      'checkout_link'   => $linkCheckout,
                                                       "project_contact" => $project['contact'],
                                                       "subject"         => $subjectMessage,
                                                       "title"           => $titleMessage,
@@ -189,7 +186,6 @@ class CartRecoveryService
                                       $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                                       $clientTelephone    = $log['telephone'];
                                       $clientNameExploded = explode(' ', $log['name']);
-                                      //$link               = $linkShortenerService->shorten($linkCheckout);
 
                                       //Traz a mensagem do sms formatado
                                       $projectNotificationPresenter = $projectNotificationModel->present();
@@ -202,7 +198,6 @@ class CartRecoveryService
                                           $smsMessage = $projectNotificationService->formatNotificationData($message, null, $project, 'sms', $linkCheckout, $log);
                                           if (!empty($smsMessage) && !empty($clientTelephone)) {
                                               $dataSms = [
-                                                  //'message'   => 'Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link,
                                                   'message'   => $smsMessage,
                                                   'telephone' => $clientTelephone,
                                                   'checkout'  => $abandonedCart,
@@ -225,7 +220,7 @@ class CartRecoveryService
                                               $bodyEmail = [
                                                   'name'            => $clientNameExploded[0],
                                                   'project_logo'    => $project['logo'],
-                                                  //'checkout_link'   => $link,
+                                                  'checkout_link'   => $linkCheckout,
                                                   "project_contact" => $project['contact'],
                                                   "subject"         => $subjectMessage,
                                                   "title"           => $titleMessage,
