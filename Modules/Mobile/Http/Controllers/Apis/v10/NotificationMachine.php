@@ -394,17 +394,17 @@ class NotificationMachine
             case 1:
                 return ' está pendente';
             case 2:
-                return ' foi aprovado';
+                return ' foi aprovada';
             case 3:
                 return ' foi transferido';
             case 4:
-                return ' foi recusado';
+                return ' foi recusada';
             case 5:
                 return ' está em revisão';
             case 6:
-                return ' está sendo processado';
+                return ' está sendo processada';
             case 7:
-                return ' foi devolvido';
+                return ' foi devolvida';
         }
 
         return '';
