@@ -16,6 +16,8 @@ Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
 
     Route::post('/companies/verifycnpj', 'CompaniesApiController@verifyCnpj');
 
+    Route::post('/companies/consultcnpj', 'CompaniesApiController@consultCnpj');
+
     Route::post('/companies/{companiId}/getdocuments', 'CompaniesApiController@getDocuments');
 
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')

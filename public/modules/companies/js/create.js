@@ -180,9 +180,12 @@ $(document).ready(function () {
 
         if ($(this).val() == 'brazil') {
             $('#company_document').mask('00.000.000/0000-00');
+            $('#fantasy_name').attr('disabled', true);
         } else {
             $('#company_document').unmask();
+            $('#fantasy_name').attr('disabled', false);
         }
+
     });
 
     $("#country_2").on('change', function () {
@@ -192,12 +195,75 @@ $(document).ready(function () {
 
         if ($(this).val() == 'brazil') {
             $('#company_document_2').mask('00.000.000/0000-00');
+            $('#fantasy_name_2').attr('disabled', true);
         } else {
             $('#company_document_2').unmask();
+            $('#fantasy_name_2').attr('disabled', false);
         }
     });
     $("#country").change();
+    $("#country_2").change();
+
+    $('#company_document_2').on('keyup', function (e) {
+        let cnpj = this.value.replace(/[^0-9]/g,'');
+        if(cnpj.length == 14 && $('#country_2').val() == 'brazil') {
+            $.ajax({
+                method: "POST",
+                url: "/api/companies/consultcnpj",
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: {cnpj: cnpj},
+                async: false,
+                error: function error(response) {
+                    console.log(response);
+                    $('#fantasy_name_2').attr('disabled', false);
+                },
+                success: function success(response) {
+                    console.log(response);
+                    if (response.name != '') {
+                        $('#fantasy_name_2').val(response.name);
+                        $('#fantasy_name_2').attr('disabled', true);
+                    } else {
+                        $('#fantasy_name_2').attr('disabled', false);
+                    }
+                }
+            });
+        }
+
+    });
+
+    $('#company_document').on('keyup', function (e) {
+        let cnpj = this.value.replace(/[^0-9]/g,'');
+        if(cnpj.length == 14 && $('#country').val() == 'brazil') {
+            $.ajax({
+                method: "POST",
+                url: "/api/companies/consultcnpj",
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: {cnpj: cnpj},
+                async: false,
+                error: function error(response) {
+                    console.log(response);
+                    $('#fantasy_name').attr('disabled', false);
+                },
+                success: function success(response) {
+                    console.log(response);
+                    if (response.name != '') {
+                        $('#fantasy_name').val(response.name);
+                        $('#fantasy_name').attr('disabled', true);
+                    } else {
+                        $('#fantasy_name').attr('disabled', false);
+                    }
+                }
+            });
+        }
+
+    });
 
 });
-
-

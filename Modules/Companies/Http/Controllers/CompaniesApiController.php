@@ -446,4 +446,20 @@ class CompaniesApiController extends Controller
                                     ], 400);
         }
     }
+
+    public function consultCnpj(Request $request)
+    {
+        try {
+            if(!empty($request->input('cnpj'))) {
+                $companyService = new CompanyService();
+                $companyGet     = $companyService->getNameCompanyByApiCNPJ($request->input('cnpj'));
+                if(!empty($companyGet['nome'])) {
+                    return response()->json(['name' => $companyGet['nome']], 200);
+                }
+            }
+            return response()->json(['message' => 'Erro ao buscar CNPJ'], 400);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Erro ao buscar CNPJ'], 400);
+        }
+    }
 }

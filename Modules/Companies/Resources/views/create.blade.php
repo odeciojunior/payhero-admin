@@ -29,13 +29,13 @@
                             <option value="italy">Itália</option>
                         </select>
                     </div>
-                    <div class="form-group col-xl-6">
-                        <label id='fantay_name_label'>Nome da empresa</label>
-                        <input name="fantasy_name" type="text" class="input-pad fantasy_name_1" id="fantasy_name" placeholder="Nome da empresa" maxlength='60'>
-                    </div>
                     <div id='div-company-document' class="form-group col-xl-6" style=''>
                         <label id='company_document_label' for='company_document'>CNPJ</label>
                         <input name="company_document" type="text" class="input-pad company_document_1" id="company_document" placeholder="">
+                    </div>
+                    <div class="form-group col-xl-6">
+                        <label id='fantay_name_label'>Nome da empresa</label>
+                        <input name="fantasy_name" type="text" class="input-pad fantasy_name_1" id="fantasy_name" placeholder="Nome da empresa" maxlength='60'>
                     </div>
                     <div id="store_form" style="width:100%">
                     </div>
@@ -89,14 +89,14 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="fantasy_name">Nome da empresa</label>
-                                    <input type="text" name="company_document" class="input-pad fantasy_name_2" id="fantasy_name_2" placeholder="Digite a Razão social">
+                                    <label id='company_document_2_label' for="company_document">CPNJ</label>
+                                    <input type="text" name="company_document" class="input-pad company_document_2" id="company_document_2" placeholder="Digite seu CNPJ">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label id='company_document_2_label' for="company_document">CPNJ</label>
-                                    <input type="text" name="company_document" class="input-pad company_document_2" id="company_document_2" placeholder="Digite seu CNPJ">
+                                    <label for="fantasy_name">Nome da empresa</label>
+                                    <input type="text" name="company_document" class="input-pad fantasy_name_2" id="fantasy_name_2" placeholder="Digite a Razão social">
                                 </div>
                             </div>
                             <div class="col-lg-4 mt-30">
