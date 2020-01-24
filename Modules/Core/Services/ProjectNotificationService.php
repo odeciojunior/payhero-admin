@@ -191,11 +191,20 @@ class ProjectNotificationService
         }
     }
 
+    /**
+     * @param string $message
+     * @param null $sale
+     * @param null $project
+     * @param null $notificationType
+     * @param null $linkCheckout
+     * @param null $log
+     * @param null $trackingCode
+     * @return mixed|string
+     */
     public function formatNotificationData(string $message, $sale = null, $project = null, $notificationType = null, $linkCheckout = null, $log = null, $trackingCode = null)
     {
         try {
             if (!empty($message)) {
-
                 if (strpos($message, '{primeiro_nome}') !== false) {
                     if (!empty($sale)) {
                         $clientNameExploded = explode(' ', $sale->client->name);
