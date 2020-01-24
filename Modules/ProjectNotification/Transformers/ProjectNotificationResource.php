@@ -34,17 +34,21 @@ class ProjectNotificationResource extends Resource
         $message = (is_array($arrayMessage)) ? ($arrayMessage['content'] ?? '') : $this->message;
 
         return [
-            'id'         => $this->id_code,
-            'status' 	 => $this->status,
+            'id'                => $this->id_code,
+            'status' 	        => $this->status,
             'status_translated' => ($this->status == 1) ? 'Ativo' : 'Inativo',
-            'type_enum'  => $this->type_enum,
-            'event_enum' => $this->event_enum,
-            'time' 		 => $this->time,
-            'message'    => $message,
-            'subject'    => $subject,
-            'title'      => $title,
-            'type'   	 => $arrayType[$this->type_enum],
-            'event' 	 => $arrayEvent[$this->event_enum],
+            'notification_enum' => $this->notification_enum,
+            'type_enum'         => $this->type_enum,
+            'event_enum'        => $this->event_enum,
+            'time' 		        => $this->time,
+            'message'           => $message,
+            'subject'           => $subject,
+            'title'             => $title,
+            'type'   	        => $arrayType[$this->type_enum],
+            'event' 	        => $arrayEvent[$this->event_enum],
+            'project_name'      => $this->project_name ?? '',
+            'project_contact'   => $this->project_contact ?? '',
+            'project_image'     => $this->project_image ?? '',
         ];
     }
 }

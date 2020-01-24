@@ -25,7 +25,7 @@
             <td style='width: 20px'></td>
             <td class='text-left projectn-subject'></td>
         </tr>
-        <tr>
+        <tr class="tr-project-message">
             <td class='table-title'>Mensagem</td>
             <td style='width: 20px'></td>
             <td class='text-left projectn-message'></td>
@@ -37,9 +37,19 @@
     .item-text-padrao { font-size: 12px; line-height: 30px; margin: 0; color: #999999; }
     .lineh-18 { line-height: 18px; }
     .font-15 { font-size: 15px; }
+    .font-12 { font-size: 12px; }
+    .font-11 { font-size: 11px; }
+    .font-14 { font-size: 14px; }
     .color-999 { color: #999999 }
     .color-333 { color: #333333 }
+    .color-555 { color: #555555 }
 </style>
-<div class="row include-templates-email">
+<div class="row include-templates-email mt-2">
     @include('projectnotification::billetpaid')
+    @include('projectnotification::cardpaid')
+    @include('projectnotification::abandonedcart')
+    @include('projectnotification::billetgenerated')
+    @include('projectnotification::abandonedcartnextday')
+    @include('projectnotification::tracking')
+    @include('projectnotification::billetnextday')
 </div>

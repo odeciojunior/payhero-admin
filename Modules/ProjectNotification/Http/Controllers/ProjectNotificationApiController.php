@@ -64,6 +64,10 @@ class ProjectNotificationApiController extends Controller
                     $activity->subject_id = $projectNotification->id;
                 })->log('Visualizou tela detalhes da notificação do projeto');
 
+                $projectNotification->project_image   = $project->photo;
+                $projectNotification->project_name    = $project->name;
+                $projectNotification->project_contact = $project->contact;
+
                 if (Gate::allows('edit', [$project])) {
                     if ($projectNotification) {
                         return new ProjectNotificationResource($projectNotification);

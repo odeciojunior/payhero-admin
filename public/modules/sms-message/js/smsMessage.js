@@ -171,8 +171,39 @@ $(function () {
 
                 if(response.data.type_enum == 2) {
                     $('.include-templates-email').hide();
+                    $('.tr-project-message').show();
                 } else {
+                    $('.tr-project-message').hide();
                     $('.include-templates-email').show();
+                    $('.templates-email').hide();
+
+                    $('#modal-detail-project-notification .p_text_message').html(response.data.message);
+                    $('#modal-detail-project-notification .p_project_name').html(response.data.project_name);
+                    $('#modal-detail-project-notification .p_project_contact').html(response.data.project_contact);
+                    $('#modal-detail-project-notification .p_text_notification').html(response.data.title);
+                    if(response.data.project_image != '') {
+                        $('#modal-detail-project-notification .p_image_project').attr('src',response.data.project_image);
+                    }
+
+                    if(response.data.notification_enum == 5) {
+                        $('.template-billet-generated').show();
+                    } else if (response.data.notification_enum == 6) {
+                        $('.template-billet-next-day').show();
+                    } else if (response.data.notification_enum == 7) {
+                        $('.template-billet-next-day').show();
+                    } else if (response.data.notification_enum == 8) {
+                        $('.template-billet-next-day').show();
+                    } else if (response.data.notification_enum == 9) {
+                        $('.template-abandoned-cart').show();
+                    } else if (response.data.notification_enum == 10) {
+                        $('.template-abandoned-cart-nextday').show();
+                    } else if (response.data.notification_enum == 12) {
+                        $('.template-card-paid').show();
+                    } else if (response.data.notification_enum == 13) {
+                        $('.template-billet-paid').show();
+                    } else if (response.data.notification_enum == 14) {
+                        $('.template-tracking').show();
+                    }
                 }
                 $('#modal-detail-project-notification').modal('show');
             }
