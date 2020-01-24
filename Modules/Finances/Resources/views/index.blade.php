@@ -190,7 +190,7 @@
                                             <input type="text" id="transaction-value" class="form-control select-pad withdrawal-value" placeholder="Digite o valor">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="date_range">Período</label>
+                                            <label for="date_range">Data da Liberação</label>
                                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
                                         </div>
                                     </div>
