@@ -188,7 +188,6 @@ class TrackingService
 
         $saleStatus = [
             $salePresenter->getStatus('approved'),
-            $salePresenter->getStatus('charge_back'),
         ];
 
         $productPlanSales = $productPlanSaleModel

@@ -80,7 +80,7 @@
     font-weight: 700;
     font-size: 25px;
     display: inline;
-    
+
 }
 
 .link-antecipar {
@@ -109,7 +109,10 @@
     margin-top: 5px;
     height: 2px;
     border-radius: 10px;
-    background-image: linear-gradient(to right, rgb(250, 217, 97), rgb(247, 107, 28));
+}
+
+.grad-border.red {
+    background-image: linear-gradient(to right, rgb(255, 92, 92), rgb(255, 128, 80));
 }
 
 .grad-border.purple {
