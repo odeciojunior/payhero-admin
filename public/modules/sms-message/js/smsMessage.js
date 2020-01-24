@@ -168,6 +168,12 @@ $(function () {
                 $('#modal-detail-project-notification .projectn-status').html(response.data.status == '1'
                     ? '<span class="badge badge-success text-left">Ativo</span>'
                     : '<span class="badge badge-danger">Inativo</span>');
+
+                if(response.data.type_enum == 2) {
+                    $('.include-templates-email').hide();
+                } else {
+                    $('.include-templates-email').show();
+                }
                 $('#modal-detail-project-notification').modal('show');
             }
         });
