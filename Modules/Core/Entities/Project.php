@@ -308,15 +308,6 @@ class Project extends Model
         return $this->belongsToMany('Modules\Core\Entities\User', 'users_projects', 'project_id', 'user_id');
     }
 
-
-    /**
-     * @return HasMany
-     */
-    /*public function zenviaSms()
-    {
-        return $this->hasMany('Modules\Core\Entities\ZenviaSms');
-    }*/
-
     /**
      * @return HasOne
      */
@@ -324,4 +315,14 @@ class Project extends Model
     {
         return $this->hasOne('Modules\Core\Entities\NotazzIntegration');
     }
+
+
+    /**
+     * @return HasMany
+     */
+    public function notifications()
+    {
+        return $this->hasMany('Modules\Core\Entities\ProjectNotification');
+    }
+
 }
