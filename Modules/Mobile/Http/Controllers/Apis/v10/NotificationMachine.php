@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PushNotification;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -27,6 +28,8 @@ class NotificationMachine
         7  => 'getUserDevices',
         8  => 'makeNotification',
         9  => 'sendNotification',
+        10 => 'findWithdrawals',
+        11 => 'makeWithdrawalNotification',
     ];
     /**
      * @var array
@@ -67,6 +70,14 @@ class NotificationMachine
      * @var
      */
     private $foxSale;
+    /**
+     * @var
+     */
+    private $withdrawal;
+    /**
+     * @var
+     */
+    private $userDevices = [];
     /**
      * @var array
      */
@@ -132,7 +143,28 @@ class NotificationMachine
             $this->setState(__FUNCTION__);
 
             if (!empty($this->requestJson->notification_type) && !empty($this->requestJson->external_reference)) {
-                return $this->checkSaleNotification();
+                if ($this->requestJson->notification_type == 'sale') {
+                    $saleModel = new Sale();
+                    $saleId        = current(Hashids::connection('sale_id')
+                                                    ->decode($this->requestJson->external_reference));
+                    $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])
+                                               ->find($saleId);
+
+                    if (!$this->foxSale) {
+                        return $this->ignorePostback();
+                    }
+                } else {
+                    $withDrawalsModel = new Withdrawal();
+                    $withDrawalsId    = current(Hashids::decode($this->requestJson->external_reference));
+                    $this->withdrawal = $withDrawalsModel->with(['company.user.userDevices'])
+                                                         ->find($withDrawalsId);
+
+                    if (!$this->withdrawal) {
+                        return $this->ignorePostback();
+                    }
+                }
+
+                return $this->getUserDevices();
             } else {
                 return $this->ignorePostback();
             }
@@ -153,7 +185,7 @@ class NotificationMachine
             $this->setState(__FUNCTION__);
 
             if ($this->requestJson->notification_type == 'sale') {
-                return $this->findSale();
+                return $this->makeSaleNotification();
             } else {
                 return $this->checkWithdrawalsNotification();
             }
@@ -174,7 +206,7 @@ class NotificationMachine
             $this->setState(__FUNCTION__);
 
             if ($this->requestJson->notification_type == 'withdrawals') {
-                //return $this->checkEventConfirmed();
+                return $this->makeWithdrawalNotification();
             } else {
                 return $this->ignorePostback();
             }
@@ -201,7 +233,35 @@ class NotificationMachine
                 $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])
                                            ->find($saleId);
                 if ($this->foxSale) {
-                    return $this->getUserDevices();
+                    return $this->makeSaleNotification();
+                }
+            }
+
+            return $this->failState(__FUNCTION__, 'NotificaionMachine [findSale] - Venda não encontrada no banco de dados!');
+        } catch (Exception $ex) {
+            Log::warning('NotificaionMachine - ' . __FUNCTION__);
+            report($ex);
+
+            return $this->failState(__FUNCTION__, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function findWithdrawals()
+    {
+        try {
+            $this->setState(__FUNCTION__);
+            $withDrawalsModel = new Withdrawal();
+
+            if (isset($this->requestJson->external_reference)) {
+                $withDrawalsId = current(Hashids::decode($this->requestJson->external_reference));
+
+                $this->withdrawal = $withDrawalsModel->with(['company.user'])
+                                                     ->find($withDrawalsId);
+                if ($this->withdrawal) {
+                    return $this->makeWithdrawalNotification();
                 }
             }
 
@@ -222,36 +282,40 @@ class NotificationMachine
         try {
             $this->setState(__FUNCTION__);
 
-            $userDevices = [];
-            foreach ($this->foxSale->transactions as $transaction) {
-                if (isset($transaction->company->user->userDevices)) {
-                    if ($transaction->type == 2 || $transaction->type == 3) { // 2 - venda normal / 3 - indicação
-                        foreach ($transaction->company->user->userDevices as $device) {
-                            if ($device->online) { // verifica se o device está ativo
-                                if ($transaction->type == 3 && $device->invitation_sale_notification) { // notificação de indicação
-                                    $userDevices[] = [
-                                        'player_id'   => $device->player_id,
-                                        'value'       => $transaction->value,
-                                        'type'        => 3,
-                                        'device_type' => $device->device_type,
-                                    ];
-                                } else if ($transaction->type == 2 && $this->foxSale->payment_method == 1) { // venda
-                                    if ($device->sale_notification) { // verifica se o usuário quer ser notificado na venda
-                                        $userDevices[] = [
+            $this->userDevices = [];
+
+            // userDevices de sales
+            if (isset($this->foxSale->transactions)) {
+                foreach ($this->foxSale->transactions as $transaction) {
+                    if (isset($transaction->company->user->userDevices)) {
+                        if ($transaction->type == 2 || $transaction->type == 3) { // 2 - venda normal / 3 - indicação
+                            foreach ($transaction->company->user->userDevices as $device) {
+                                if ($device->online) { // verifica se o device está ativo
+                                    if ($transaction->type == 3 && $device->invitation_sale_notification) { // notificação de indicação
+                                        $this->userDevices[] = [
                                             'player_id'   => $device->player_id,
                                             'value'       => $transaction->value,
-                                            'type'        => 2,
+                                            'type'        => 3,
                                             'device_type' => $device->device_type,
                                         ];
-                                    }
-                                } else if ($transaction->type == 2 && $this->foxSale->payment_method == 2) { // boleto
-                                    if ($device->billet_notification) { // verifica se o usuário quer ser notificado no boleto
-                                        $userDevices[] = [
-                                            'player_id'   => $device->player_id,
-                                            'value'       => $transaction->value,
-                                            'type'        => 2,
-                                            'device_type' => $device->device_type,
-                                        ];
+                                    } else if ($transaction->type == 2 && $this->foxSale->payment_method == 1) { // venda
+                                        if ($device->sale_notification) { // verifica se o usuário quer ser notificado na venda
+                                            $this->userDevices[] = [
+                                                'player_id'   => $device->player_id,
+                                                'value'       => $transaction->value,
+                                                'type'        => 2,
+                                                'device_type' => $device->device_type,
+                                            ];
+                                        }
+                                    } else if ($transaction->type == 2 && $this->foxSale->payment_method == 2) { // boleto
+                                        if ($device->billet_notification) { // verifica se o usuário quer ser notificado no boleto
+                                            $this->userDevices[] = [
+                                                'player_id'   => $device->player_id,
+                                                'value'       => $transaction->value,
+                                                'type'        => 2,
+                                                'device_type' => $device->device_type,
+                                            ];
+                                        }
                                     }
                                 }
                             }
@@ -260,10 +324,24 @@ class NotificationMachine
                 }
             }
 
-            if (sizeof($userDevices) == 0) {
+            // userDevices de saques
+            if (isset($this->withdrawal->company->user->userDevices)) {
+                foreach ($this->withdrawal->company->user->userDevices as $device) {
+                    if ($device->online && $device->withdraw_notification) { // verifica se o usuário quer ser notificado no saque
+                        $this->userDevices[] = [
+                            'player_id'   => $device->player_id,
+                            'value'       => $this->withdrawal->value,
+                            'type'        => $this->withdrawal->status,
+                            'device_type' => $device->device_type,
+                        ];
+                    }
+                }
+            }
+
+            if (sizeof($this->userDevices) == 0) {
                 return $this->ignorePostback();
             } else {
-                return $this->makeNotification($userDevices);
+                return $this->checkSaleNotification();
             }
         } catch (Exception $ex) {
             Log::warning('NotificaionMachine - ' . __FUNCTION__);
@@ -276,7 +354,66 @@ class NotificationMachine
     /**
      * @return array
      */
-    public function makeNotification($userDevices)
+    public function makeWithdrawalNotification()
+    {
+        try {
+            $this->setState(__FUNCTION__);
+
+            $heading       = '';
+            $sound         = '';
+            $notifications = [];
+
+            foreach ($this->userDevices as $device) {
+
+                $heading = 'CloudFox';
+                $content = "Sua solicitação de saque no valor R$ " .
+                    number_format(intval($device['value']) / 100, 2, ',', '.') .
+                    $this->getStatus($device['type']);
+
+                $sound   = 'nil';
+                $notifications[] = [
+                    "headings"           => $heading,
+                    "content"            => $content,
+                    "notification_sound" => $sound,
+                    "include_player_ids" => [$device['player_id']],
+                    "device_type"        => $device['device_type'],
+                ];
+            }
+
+            return $this->sendNotification($notifications);
+        } catch (Exception $ex) {
+            Log::warning('NotificaionMachine - ' . __FUNCTION__);
+            report($ex);
+
+            return $this->failState(__FUNCTION__, $ex->getMessage());
+        }
+    }
+
+    public function  getStatus($status) {
+        switch ($status) {
+            case 1:
+                return ' está pendente';
+            case 2:
+                return ' foi aprovada';
+            case 3:
+                return ' foi transferido';
+            case 4:
+                return ' foi recusada';
+            case 5:
+                return ' está em revisão';
+            case 6:
+                return ' está sendo processada';
+            case 7:
+                return ' foi devolvida';
+        }
+
+        return '';
+    }
+
+    /**
+     * @return array
+     */
+    public function makeSaleNotification()
     {
         try {
             $this->setState(__FUNCTION__);
@@ -287,20 +424,20 @@ class NotificationMachine
             $products      = $saleService->getProducts($this->foxSale->id);
             $notifications = [];
 
-            foreach ($userDevices as $device) {
+            foreach ($this->userDevices as $device) {
 
-                $content = $products[0]->name . " - R$ " . number_format(intval($device['value']) / 100, 2, ',', '.');
+                $content = "R$ " . number_format(intval($device['value']) / 100, 2, ',', '.');
 
                 // venda cartão
                 if ($this->foxSale->payment_method == 1) {
-                    $heading = 'CloudFox - Venda realizada';
+                    $heading = 'Venda realizada';
                     $sound   = 'venda';
                 } else { // boleto
                     if ($this->foxSale->status == 1) { // boleto pago
-                        $heading = 'CloudFox - Boleto pago';
-                        $sound   = 'boleto';
+                        $heading = 'Boleto pago';
+                        $sound   = 'venda';
                     } else { // boleto gerado
-                        $heading = 'CloudFox - Boleto gerado';
+                        $heading = 'Boleto gerado';
                         $sound   = 'boleto';
                     }
                 }

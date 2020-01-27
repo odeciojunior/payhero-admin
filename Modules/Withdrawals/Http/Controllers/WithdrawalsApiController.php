@@ -125,25 +125,25 @@ class WithdrawalsApiController extends Controller
                 }
 
                 /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
-                if (strlen($companyDocument) == 11) {
+                if ($company->company_type == 1) {
                     $startDate = Carbon::now()->startOfMonth();
 
                     $endDate = Carbon::now()->endOfMonth();
 
                     $withdrawal = $withdrawalModel->where('company_id', $company->id)
-                                                  ->where('status', $withdrawalModel->present()
-                                                                                    ->getStatus('transfered'))
+                                                  ->whereNotIn('status', collect([
+                                                                                    $withdrawalModel->present()->getStatus('returned'),
+                                                                                    $withdrawalModel->present()->getStatus('refused')]))
                                                   ->whereBetween('created_at', [$startDate, $endDate])->get();
-
+                    $withdrawalSum = 0;
                     if (count($withdrawal) > 0) {
-
                         $withdrawalSum = $withdrawal->sum('value');
+                    }
 
-                        if ($withdrawalSum + $withdrawalValue > 190000) {
-                            return response()->json([
-                                                        'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
-                                                    ], 400);
-                        }
+                    if ($withdrawalSum + $withdrawalValue > 190000) {
+                        return response()->json([
+                                                    'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
+                                                ], 400);
                     }
                 }
 

@@ -34,7 +34,7 @@ class SaleService
      * @param $filters
      * @param bool $withProducts
      * @param int $userId
-     * @return Builder|Transaction
+     * @return Builder
      */
     public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
     {
@@ -62,6 +62,7 @@ class SaleService
                                                         'sale.delivery',
                                                         'sale.transactions',
                                                     ])->whereIn('company_id', $userCompanies)
+                                                    ->join('sales','sales.id', 'transactions.sale_id')
                                              ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
@@ -115,15 +116,16 @@ class SaleService
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $dateType  = $filters["date_type"];
 
-            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
+            $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
                 $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            });
+            })->selectRaw('transactions.*, sales.start_date')
+                ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
             report($e);
 
-            return '';
+            return null;
         }
     }
 
@@ -135,7 +137,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('id', 'DESC')->paginate(10);
+        return $transactions->paginate(10);
     }
 
     /**
@@ -146,7 +148,7 @@ class SaleService
     {
         $transactions = $this->getSalesQueryBuilder($filters);
 
-        return $transactions->orderBy('id', 'DESC')->get();
+        return $transactions->get();
     }
 
     /**
@@ -249,19 +251,10 @@ class SaleService
             $userTransaction->release_date = null;
         }
 
-        // if(preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0){
-
-        //     $comission = preg_replace("/[^0-9]/", "", $comission) - preg_replace("/[^0-9]/", "", $sale->installment_tax_value);
-
-        //     $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($comission, ',', strlen($comission) - 2, 0);
-        // }
-
         //add details to sale
         $sale->details = (object) [
-            //transaction
             'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
             'percentage_rate'  => $userTransaction->percentage_rate ?? 0,
-            //extra info
             'total'            => number_format(intval($total) / 100, 2, ',', '.'),
             'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),
             'discount'         => number_format(intval($discount) / 100, 2, ',', '.'),

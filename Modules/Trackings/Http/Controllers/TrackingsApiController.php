@@ -169,53 +169,10 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $productPlanSales = $trackingService->getAllTrackings($data);
-
-            $total            = $productPlanSales->count();
-            $posted           = 0;
-            $dispatched       = 0;
-            $delivered        = 0;
-            $out_for_delivery = 0;
-            $exception        = 0;
-            $unknown          = 0;
-
-            foreach ($productPlanSales as $productPlanSale) {
-
-                $tracking = $productPlanSale->tracking;
-
-                if (isset($tracking)) {
-                    switch ($tracking->tracking_status_enum) {
-                        case $tracking->present()->getTrackingStatusEnum('posted'):
-                            $posted++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('dispatched'):
-                            $dispatched++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('delivered'):
-                            $delivered++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('out_for_delivery'):
-                            $out_for_delivery++;
-                            break;
-                        case $tracking->present()->getTrackingStatusEnum('exception'):
-                            $exception++;
-                            break;
-                    }
-                } else {
-                    $unknown++;
-                }
-            }
+            $resume = $trackingService->getResume($data);
 
             return response()->json([
-                                        'data' => [
-                                            'total'            => $total,
-                                            'posted'           => $posted,
-                                            'dispatched'       => $dispatched,
-                                            'delivered'        => $delivered,
-                                            'out_for_delivery' => $out_for_delivery,
-                                            'exception'        => $exception,
-                                            'unknown'          => $unknown,
-                                        ],
+                                        'data' => $resume,
                                     ]);
         } catch (Exception $e) {
             Log::warning('Erro ao exibir resumo dos rastreamentos (TrackingApiController - resume)');
@@ -265,6 +222,7 @@ class TrackingsApiController extends Controller
                                         'message' => 'Código de rastreio salvo',
                                         'data' => [
                                             'tracking_code' => $tracking->tracking_code,
+                                            'tracking_status_enum' => $tracking->tracking_status_enum,
                                             'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
                                                     ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                                         ],
@@ -295,6 +253,7 @@ class TrackingsApiController extends Controller
                                         'message' => 'Código de rastreio alterado',
                                         'data' => [
                                             'tracking_code' => $tracking->tracking_code,
+                                            'tracking_status_enum' => $tracking->tracking_status_enum,
                                             'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
                                                     ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                                         ],

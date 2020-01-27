@@ -40,6 +40,62 @@ $(() => {
         alertCustom('success', 'Linha Digitável copiado!');
     });
 
+    $('.btn-edit-client').on('click', function(){
+        let container = $(this).parent();
+        container.find('input')
+            .removeClass('fake-label')
+            .prop('readonly', false);
+        $(this).hide();
+        container.find('.btn-save-client').show();
+        container.find('.btn-close-client').show();
+    });
+
+    $('.btn-close-client').on('click', function(){
+        let container = $(this).parent();
+        container.find('input')
+            .addClass('fake-label')
+            .prop('readonly', true);
+        $(this).hide();
+        container.find('.btn-save-client').hide();
+        container.find('.btn-edit-client').show();
+    });
+
+    //atualiza códigos de rastreio
+    $('.btn-save-client').on('click', function(){
+
+        let container = $(this).parent();
+        let input = container.find('input');
+
+        let data = {
+            id: input.attr('client'),
+            name: input.attr('name'),
+            value: input.val(),
+            _method: 'PUT',
+        };
+
+        $.ajax({
+            method: "POST",
+            url: '/api/client/update',
+            dataType: "json",
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                input.addClass('fake-label')
+                    .prop('readonly', true);
+                $(this).hide();
+                container.find('.btn-close-client').hide();
+                container.find('.btn-edit-client').show();
+                alertCustom('success', 'Dados do cliente alterados com successo!')
+            }
+        });
+    });
+
     // FIM - COMPORTAMENTOS DA JANELA
 
     // MODAL DETALHES DA VENDA
@@ -283,7 +339,7 @@ $(() => {
                                     Sucesso
                                 </td>
                                 <td>
-                                    
+
                                 </td>
                             </tr>`;
                 $('#data-notazz-invoices').append(data);
@@ -332,7 +388,7 @@ $(() => {
                                     ${invoice.return_message}
                                 </td>
                                 <td>
-                                    
+
                                 </td>
                             </tr>`;
                 $('#data-notazz-invoices').append(data);
@@ -356,7 +412,7 @@ $(() => {
                                     ${postback_message}
                                 </td>
                                 <td>
-                                    
+
                                 </td>
                             </tr>`;
                 $('#data-notazz-invoices').append(data);
@@ -417,10 +473,13 @@ $(() => {
     function renderClient(client) {
         //Cliente
         $('#client-name').text('Nome: ' + client.name);
-        $('#client-telephone').text('Telefone: ' + client.telephone);
-        $('#client-whatsapp').attr('href', client.whatsapp_link);
-        $('#client-email').text('Email: ' + client.email);
+        $('#client-telephone').val(client.telephone)
+            .attr('client', client.code)
+            .mask('+0#');
+        $('#client-email').val(client.email)
+            .attr('client', client.code);
         $('#client-document').text('CPF: ' + client.document);
+        $('#client-whatsapp').attr('href', client.whatsapp_link);
     }
 
     function getProducts(sale) {
@@ -505,7 +564,11 @@ $(() => {
 
     function renderDelivery(delivery) {
         $('.btn-save-trackingcode').attr('delivery', delivery.id);
-        $('#delivery-address').text('Endereço: ' + delivery.street + ', ' + delivery.number);
+        let deliveryAddress = 'Endereço: ' + delivery.street + ', ' + delivery.number;
+        if(!isEmpty(delivery.complement)){
+            deliveryAddress += ', ' + delivery.complement;
+        }
+        $('#delivery-address').text(deliveryAddress);
         $('#delivery-neighborhood').text('Bairro: ' + delivery.neighborhood);
         $('#delivery-zipcode').text('CEP: ' + delivery.zip_code);
         $('#delivery-city').text('Cidade: ' + delivery.city + '/' + delivery.state);
@@ -604,26 +667,31 @@ $(() => {
 
     // reenvia email da venda para o cliente
     function saleReSendEmail(sale) {
-        loadingOnScreen();
-        $.ajax({
-            method: "POST",
-            url: '/api/sales/saleresendemail',
-            dataType: "json",
-            data: { sale: sale },
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                console.log(response);
-                loadingOnScreenRemove();
-                alertCustom('success', response.message);
-            }
-        });
+        let btnSaleReSendEmail = $('#btnSaleReSendEmail');
+        if(!btnSaleReSendEmail.hasClass('sending')) {
+            btnSaleReSendEmail.css('opacity', '.5')
+                .addClass('sending');
+            $.ajax({
+                method: "POST",
+                url: '/api/sales/saleresendemail',
+                dataType: "json",
+                data: {sale: sale},
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: response => {
+                    btnSaleReSendEmail.css('opacity', '1')
+                        .removeClass('sending');
+                    errorAjaxResponse(response);
+                },
+                success: response => {
+                    btnSaleReSendEmail.css('opacity', '1')
+                        .removeClass('sending');
+                    alertCustom('success', response.message);
+                }
+            });
+        }
     }
 
 });

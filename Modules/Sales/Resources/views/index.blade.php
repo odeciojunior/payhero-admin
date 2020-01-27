@@ -139,7 +139,7 @@
                     </div>
                 </div>
             @endif
-        <!-- Tabela -->
+            <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
@@ -164,12 +164,12 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
-            <!-- End Modal -->
-                <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                    {{-- js carrega... --}}
-                </ul>
+                @include('sales::details')
+                <!-- End Modal -->
             </div>
+            <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                {{-- js carrega... --}}
+            </ul>
         </div>
         {{--        <div class="content-error text-center" style="display:none">--}}
         {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}

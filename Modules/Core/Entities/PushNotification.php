@@ -36,6 +36,7 @@ class PushNotification extends Model
     protected $fillable = [
         'sale_id',
         'user_id',
+        'withdrawal_id',
         'postback_data',
         'onesignal_response',
         'processed_flag',
