@@ -42,7 +42,7 @@ class CompanyResource extends Resource
             'business_website'              => $this->resource->business_website ?? '',
             'support_email'                 => $this->resource->support_email ?? '',
             'support_telephone'             => $this->resource->support_telephone ?? '',
-            'fantasy_name'                  => $this->resource->fantasy_name ?? '',
+            'fantasy_name'                  => $this->resource->company_type == 1 ? 'Pessoa fisíca' : $this->resource->fantasy_name ?? '',
             'company_document'              => strlen($this->resource->company_document) == 14 ? FoxUtils::mask($this->resource->company_document, '##.###.###/####-##') : (strlen($this->resource->company_document) == 11 ? FoxUtils::mask($this->resource->company_document, '###.###.###-##') : $this->resource->company_document),
             'zip_code'                      => $this->resource->zip_code ?? '',
             'country'                       => $this->resource->country ?? '',
