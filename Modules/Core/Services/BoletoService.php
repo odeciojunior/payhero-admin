@@ -117,9 +117,10 @@ class BoletoService
                               //Traz o assunto, titulo e texto do email formatados
                               $projectNotificationPresenter = $projectNotificationModel->present();
                               $projectNotificationEmail     = $projectNotificationModel->where('project_id', $project->id)
-                                                                                       ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_abandoned_cart_an_hour_later'))
+                                                                                       ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_due_today'))
                                                                                        ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                        ->first();
+
                               if (!empty($projectNotificationEmail)) {
                                   $message        = json_decode($projectNotificationEmail->message);
                                   $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
