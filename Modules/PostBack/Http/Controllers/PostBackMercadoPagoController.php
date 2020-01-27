@@ -5,7 +5,7 @@ namespace Modules\PostBack\Http\Controllers;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Delivery;
 use Modules\Core\Entities\Plan;

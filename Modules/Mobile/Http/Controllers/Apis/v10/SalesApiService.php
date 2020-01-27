@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Checkouts\Transformers\CheckoutResource;
 use Modules\Clients\Transformers\ClientResource;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Delivery;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SaleService;
@@ -60,7 +60,7 @@ class SalesApiService
              * TODO: Colocar tudo em uma consulta com relacionamento
              */
             $sale         = $this->saleById($request["saleCode"]);
-            $client       = $this->clientById($sale->client_id);
+            $client       = $this->customerById($sale->customer_id);
             $productsSale = $this->productBySale($request["saleCode"]);
             $delivery     = $this->deliveryById($sale->delivery_id);
             $checkout     = $this->checkoutById($sale->checkout_id);
@@ -106,18 +106,18 @@ class SalesApiService
      * @param $id
      * @return JsonResponse|ClientResource
      */
-    public function clientById($id)
+    public function customerById($id)
     {
         try {
 
             if (!empty($id)) {
 
-                $clientModel = new Client();
+                $customerModel = new Customer();
 
-                $client = $clientModel->find($id);
+                $customer = $customerModel->find($id);
 
-                if (!empty($client)) {
-                    return new ClientResource($client);
+                if (!empty($customer)) {
+                    return new ClientResource($customer);
                 } else {
                     return response()->json([
                                                 'message' => 'Ocorreu um erro, cliente não encontrado',
@@ -130,7 +130,7 @@ class SalesApiService
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar cliente, (SalesApiService - clientById)');
+            Log::warning('Erro ao buscar cliente, (SalesApiService - customerById)');
             report($e);
 
             return response()->json([

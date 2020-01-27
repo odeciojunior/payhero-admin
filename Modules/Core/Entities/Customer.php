@@ -23,7 +23,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $deleted_at
  * @property Sale[] $sales
  */
-class Client extends Model
+class Customer extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
     /**

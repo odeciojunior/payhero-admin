@@ -30,7 +30,7 @@ class TransactionResource extends Resource
             'id_default'       => Hashids::encode($this->sale->id),
             'project'          => $sale->project->name,
             'product'          => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $sale->plansSales->first()->plan->name,
-            'client'           => $sale->client->name,
+            'client'           => $sale->customer->name,
             'method'           => $sale->payment_method,
             'status'           => $sale->status,
             'status_translate' => Lang::get('definitions.enum.sale.status.' . $sale->present()
@@ -42,7 +42,7 @@ class TransactionResource extends Resource
             'email_status'     => $sale->checkout ? $sale->checkout->present()->getEmailSentAmount() : 'Não enviado',
             'sms_status'       => $sale->checkout ? $sale->checkout->present()->getSmsSentAmount() : 'Não enviado',
             'recovery_status'  => $sale->checkout ? ($sale->checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado') : '',
-            'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . preg_replace('/\D/', '', $sale->client->telephone) . '&text=Olá ' . explode(' ', preg_replace('/\D/', '', $sale->client->name))[0],
+            'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . preg_replace('/\D/', '', $sale->customer->telephone) . '&text=Olá ' . explode(' ', preg_replace('/\D/', '', $sale->customer->name))[0],
             'total',
             'shopify_order'    => $sale->shopify_order ?? null,
         ];

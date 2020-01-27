@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Clients\Transformers\ClientResource;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -28,7 +28,7 @@ class ClientApiController extends Controller
 
             if (!empty($id)) {
 
-                $clientModel = new Client();
+                $clientModel = new Customer();
 
                 $client = $clientModel->find(current(Hashids::decode($id)));
 
@@ -59,7 +59,7 @@ class ClientApiController extends Controller
     {
         try {
 
-            $clientModel = new Client();
+            $clientModel = new Customer();
 
             $data = $request->all();
 
