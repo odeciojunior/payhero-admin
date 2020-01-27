@@ -44,9 +44,8 @@ class ProfileApiController
 
             if (Gate::allows('view', [$user])) {
                 $user->load(["userNotification", "userDocuments"]);
-                $userResource = new UserResource($user);
 
-                return new UserResource($userResource);
+                return new UserResource($user);
             } else {
                 //sem permissao
 
