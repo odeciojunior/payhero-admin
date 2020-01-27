@@ -148,7 +148,8 @@ class EmailService
             }
             $domain = Domain::where([
                                         ['project_id', $project->id],
-                                        ['status', 3],                                    ])->first();
+                                        ['status', 3],
+                                    ])->first();
 
             if (getenv('APP_ENV') != 'production') {
                 $client->email = getenv('EMAIL_TEST');
@@ -204,6 +205,27 @@ class EmailService
             return true;
         } catch (Exception $e) {
             Log::warning('erro ao enviar email de venda para o cliente na venda ' . $sale->id);
+            report($e);
+
+            return false;
+        }
+    }
+
+    public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
+    {
+        try {
+            $sendGridService = new SendgridService();
+
+            if (getenv('APP_ENV') != 'production') {
+                $fromEmail = getenv('EMAIL_TEST');
+            }
+
+            if (stristr($fromEmail, 'invalido') === false) {
+                return $sendGridService->sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data);
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
             report($e);
 
             return false;
