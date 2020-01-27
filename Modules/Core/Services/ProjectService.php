@@ -167,6 +167,7 @@ class ProjectService
                                        'discountCoupons',
                                        'shippings',
                                        'usersProjects',
+                                       'notifications',
                                    ])
                             ->where('id', $projectId)->first();
 
@@ -245,6 +246,12 @@ class ProjectService
                                     'shopify_variant_id' => '',
                                     'shopify_id'         => '',
                                 ]); 
+                }
+
+                if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
+                    foreach ($project->notifications as $notification) {
+                        $notification->delete();
+                    }
                 }
 
                 $projectUpdated = $project->update([
