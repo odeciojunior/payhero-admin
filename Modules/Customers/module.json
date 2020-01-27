@@ -1,12 +1,12 @@
 {
-    "name": "Clients",
-    "alias": "clients",
+    "name": "Customers",
+    "alias": "customers",
     "description": "",
     "keywords": [],
     "active": 1,
     "order": 0,
     "providers": [
-        "Modules\\Clients\\Providers\\ClientsServiceProvider"
+        "Modules\\Clients\\Providers\\CustomersServiceProvider"
     ],
     "aliases": {},
     "files": [],

@@ -5,7 +5,7 @@ namespace Modules\Clients\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class ClientsServiceProvider extends ServiceProvider
+class CustomersServiceProvider extends ServiceProvider
 {
     /**
      * Boot the application events.

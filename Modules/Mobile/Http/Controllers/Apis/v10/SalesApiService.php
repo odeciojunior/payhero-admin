@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkouts\Transformers\CheckoutResource;
-use Modules\Clients\Transformers\ClientResource;
+use Modules\Customers\Transformers\CustomerResource;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Delivery;
@@ -104,7 +104,7 @@ class SalesApiService
 
     /**
      * @param $id
-     * @return JsonResponse|ClientResource
+     * @return JsonResponse|CustomerResource
      */
     public function customerById($id)
     {
@@ -117,7 +117,7 @@ class SalesApiService
                 $customer = $customerModel->find($id);
 
                 if (!empty($customer)) {
-                    return new ClientResource($customer);
+                    return new CustomerResource($customer);
                 } else {
                     return response()->json([
                                                 'message' => 'Ocorreu um erro, cliente não encontrado',

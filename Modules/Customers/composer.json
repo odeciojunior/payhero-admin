@@ -1,0 +1,24 @@
+{
+    "name"       : "nwidart/customers",
+    "description": "",
+    "authors"    : [
+        {
+            "name" : "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra"      : {
+        "laravel": {
+            "providers": [
+                "Modules\\Customer\\Providers\\CustomersServiceProvider"
+            ],
+            "aliases"  : {
+            }
+        }
+    },
+    "autoload"   : {
+        "psr-4": {
+            "Modules\\Customers\\": ""
+        }
+    }
+}

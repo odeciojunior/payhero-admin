@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
-class ClientsController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -53,7 +53,7 @@ class ClientsController extends Controller
      */
     public function edit($id)
     {
-        return view('clients::edit');
+        return view('customers::edit');
     }
 
     /**

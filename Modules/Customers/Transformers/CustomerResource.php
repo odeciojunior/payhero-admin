@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Clients\Transformers;
+namespace Modules\Customers\Transformers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,9 +12,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed email
  * @property mixed telephone
  * @property mixed id_code
- * @package Modules\Clients\Transformers
+ * @package Modules\Customers\Transformers
  */
-class ClientResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -29,7 +29,7 @@ class ClientResource extends JsonResource
             'document'      => $this->document,
             'email'         => $this->email,
             'telephone'     => $this->telephone,
-            'whatsapp_link' => $this->present()->getWhatsappLink()
+            'whatsapp_link' => $this->present()->getWhatsappLink(),
         ];
     }
 }

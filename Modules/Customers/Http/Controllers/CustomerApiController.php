@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Clients\Transformers\ClientResource;
+use Modules\Customers\Transformers\CustomerResource;
 use Modules\Core\Entities\Customer;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -15,12 +15,12 @@ use Vinkla\Hashids\Facades\Hashids;
  * Class ClientApiController
  * @package Modules\Clients\Http\Controllers
  */
-class ClientApiController extends Controller
+class CustomerApiController extends Controller
 {
     /**
      * Show the specified resource.
      * @param int $id
-     * @return JsonResponse|ClientResource
+     * @return JsonResponse|CustomerResource
      */
     public function show($id)
     {
@@ -33,7 +33,7 @@ class ClientApiController extends Controller
                 $client = $clientModel->find(current(Hashids::decode($id)));
 
                 if (!empty($client)) {
-                    return new ClientResource($client);
+                    return new CustomerResource($client);
                 } else {
                     return response()->json([
                                                 'message' => 'Ocorreu um erro, cliente não encontrado',
@@ -69,12 +69,12 @@ class ClientApiController extends Controller
 
                 if ($data['name'] == 'client-telephone') {
                     $column = 'telephone';
-                } elseif ($data['name'] == 'client-email') {
+                } else if ($data['name'] == 'client-email') {
                     $column = 'email';
                 } else {
                     return response()->json([
-                        'message' => 'Os dados informados são inválidos',
-                    ], 400);
+                                                'message' => 'Os dados informados são inválidos',
+                                            ], 400);
                 }
 
                 $client = $clientModel->find($id);
@@ -82,11 +82,11 @@ class ClientApiController extends Controller
                 if (!empty($client)) {
                     $client->$column = $data['value'];
                     $client->save();
+
                     return response()->json(['message' => 'Dados do cliente alterados com sucesso!']);
                 } else {
                     return response()->json(['message' => 'Cliente não encontrado!'], 400);
                 }
-
             } else {
                 return response()->json(['message' => 'Os dados informados são inválidos!'], 400);
             }
