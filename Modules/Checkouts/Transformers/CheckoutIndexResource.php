@@ -40,7 +40,7 @@ class CheckoutIndexResource extends Resource
             'status_translate' => $this->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado',
             'value'            => number_format(intval(preg_replace("/[^0-9]/", "", $checkoutService->getSubTotal($this->checkoutPlans))) / 100, 2, ',', '.'),
             'link'             => $this->present()->getCheckoutLink($this->project->domains->first()),
-            'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber($this->client_telephone) . '&text=Olá ' . explode(' ', $this->name)[0],
+            'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . $this->client_telephone . '&text=Olá ' . explode(' ', $this->name)[0],
         ];
     }
 }

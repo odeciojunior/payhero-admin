@@ -149,11 +149,19 @@ class NotificationMachine
                                                     ->decode($this->requestJson->external_reference));
                     $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])
                                                ->find($saleId);
+
+                    if (!$this->foxSale) {
+                        return $this->ignorePostback();
+                    }
                 } else {
                     $withDrawalsModel = new Withdrawal();
                     $withDrawalsId    = current(Hashids::decode($this->requestJson->external_reference));
                     $this->withdrawal = $withDrawalsModel->with(['company.user.userDevices'])
                                                          ->find($withDrawalsId);
+
+                    if (!$this->withdrawal) {
+                        return $this->ignorePostback();
+                    }
                 }
 
                 return $this->getUserDevices();
@@ -276,6 +284,7 @@ class NotificationMachine
 
             $this->userDevices = [];
 
+            // userDevices de sales
             if (isset($this->foxSale->transactions)) {
                 foreach ($this->foxSale->transactions as $transaction) {
                     if (isset($transaction->company->user->userDevices)) {
@@ -315,9 +324,10 @@ class NotificationMachine
                 }
             }
 
+            // userDevices de saques
             if (isset($this->withdrawal->company->user->userDevices)) {
                 foreach ($this->withdrawal->company->user->userDevices as $device) {
-                    if ($device->online) {
+                    if ($device->online && $device->withdraw_notification) { // verifica se o usuário quer ser notificado no saque
                         $this->userDevices[] = [
                             'player_id'   => $device->player_id,
                             'value'       => $this->withdrawal->value,
@@ -384,17 +394,17 @@ class NotificationMachine
             case 1:
                 return ' está pendente';
             case 2:
-                return ' foi aprovado';
+                return ' foi aprovada';
             case 3:
                 return ' foi transferido';
             case 4:
-                return ' foi recusado';
+                return ' foi recusada';
             case 5:
                 return ' está em revisão';
             case 6:
-                return ' está sendo processado';
+                return ' está sendo processada';
             case 7:
-                return ' foi devolvido';
+                return ' foi devolvida';
         }
 
         return '';

@@ -35,6 +35,7 @@ use Modules\Core\Services\NotazzService;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
+use Modules\Sales\Exports\Reports\Report;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\HotZappIntegration;
@@ -74,11 +75,9 @@ class JulioController extends Controller
 
         // dd($quotation);
 
-        User::orderBy('id')->chunk(100, function($users){
-            foreach($users as $user){
-                dd($user);
-            }
-        });
+        // SELECT sale_id, fantasy_name, value, transactions.created_at FROM `transactions` JOIN companies WHERE sale_id IN ('184340','168175','173651','182919','235479','50397','127525','89524','165410','96095','209409','155379','211457','166421', '38161','168686','172741','132421','179943','110939','154692','159452','106670','86760','197990','67294','239153','180017', '176561','181595','105822','160265','114464','60007','76954','154251','159343','129864','180227','156828','27861','117638') and company_id = companies.id and invitation_id is null and company_id is not null ORDER BY sale_id
+
+        (new Report(User::find(24)))->queue('arquivo.xls');
 
     }
 }
