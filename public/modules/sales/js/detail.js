@@ -75,7 +75,7 @@ $(() => {
 
         $.ajax({
             method: "POST",
-            url: '/api/client/update',
+            url: '/api/customer/update',
             dataType: "json",
             data: data,
             headers: {
@@ -455,7 +455,7 @@ $(() => {
     function getClient(client) {
         $.ajax({
             method: "GET",
-            url: '/api/client/' + client,
+            url: '/api/customer/' + client,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

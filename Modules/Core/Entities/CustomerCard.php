@@ -5,6 +5,7 @@ namespace ModulesCoreEntities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Modules\Core\Entities\Customer;
 
 /**
  * @property integer $id
@@ -15,9 +16,9 @@ use App\Traits\LogsActivity;
  * @property string $association_code
  * @property string $created_at
  * @property string $updated_at
- * @property Client $client
+ * @property Customer $customer
  */
-class ClientCard extends Model
+class CustomerCard extends Model
 {
     use LogsActivity;
     /**
@@ -30,7 +31,7 @@ class ClientCard extends Model
      */
     protected $fillable = [
         'browser_fingerprint',
-        'client_id',
+        'customer_id',
         'first_four_digits',
         'last_four_digits',
         'card_token',
@@ -60,8 +61,8 @@ class ClientCard extends Model
     /**
      * @return BelongsTo
      */
-    public function client()
+    public function customer()
     {
-        return $this->belongsTo('ModulesCoreEntities\Client');
+        return $this->belongsTo('Modules\Core\Entities\Customer');
     }
 }
