@@ -176,6 +176,14 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="reason">Razão</label>
+                                            <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
+                                            <label for="transaction">Transação</label>
+                                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código da transação">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
                                                 <label for="type">Tipo</label>
                                                 <select class="form-control select-pad" id="type">
@@ -185,25 +193,26 @@
                                                 </select>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row mt-20">
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <label for="transaction-value">Valor</label>
                                             <input type="text" id="transaction-value" class="form-control select-pad withdrawal-value" placeholder="Digite o valor">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="date_range">Data da Liberação</label>
-                                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
+                                            <div class="input-holder">
+                                                <label for="date_type">Data</label>
+                                                <select class="form-control select-pad" id="date_type">
+                                                    <option value="transaction_date">Data da transação</option>
+                                                    <option value="transfer_date">Data da liberação</option>
+                                                    <option value="sale_start_date">Data da venda</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row mt-20">
                                         <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="reason">Razão</label>
-                                            <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque">
+                                            <input name="date_range" id="date_range" class="select-pad mt-30" placeholder="Clique para editar..." readonly>
                                         </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="transaction">Transação</label>
-                                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código da transação">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 offset-3 mt-30">
+                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
                                             <button id="bt_filtro" class="btn btn-primary w-full">
                                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                             </button>
@@ -286,7 +295,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=6') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
     @endpush
 
 @endsection
