@@ -82,7 +82,7 @@ class CompaniesApiController extends Controller
                     'user_id'          => auth()->user()->account_owner_id,
                     'country'          => $requestData["country"],
                     'fantasy_name'     => ($requestData['company_type'] == $companyModel->present()
-                                                                                        ->getCompanyType('physical person')) ? 'Pessoa fisíca' : $requestData['fantasy_name'],
+                                                                                        ->getCompanyType('physical person')) ? auth()->user()->name : $requestData['fantasy_name'],
                     'company_document' => ($requestData['company_type'] == $companyModel->present()
                                                                                         ->getCompanyType('physical person')) ? auth()->user()->document : $requestData["company_document"],
                     'company_type'     => $requestData['company_type'],
