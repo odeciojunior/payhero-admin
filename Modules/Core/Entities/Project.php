@@ -325,11 +325,4 @@ class Project extends Model
         return $this->hasOne('Modules\Core\Entities\NotazzIntegration');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function notifications()
-    {
-        return $this->hasMany('Modules\Core\Entities\ProjectNotification');
-    }
 }
