@@ -241,11 +241,10 @@ class BoletoService
                                                                                            ->first();
                                   if (!empty($projectNotification)) {
                                       $message        = json_decode($projectNotification->message);
-                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto);
-                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto);
-                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto);
-
-                                      $data = [
+                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                      $data           = [
                                           "name"                  => $clientNameExploded[0],
                                           "boleto_link"           => $boleto->boleto_link,
                                           "boleto_digitable_line" => $boletoDigitableLine,
@@ -361,11 +360,12 @@ class BoletoService
                                                                                            ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_generated_two_days_later'))
                                                                                            ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                            ->first();
+
                                   if (!empty($projectNotification)) {
                                       $message        = json_decode($projectNotification->message);
-                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto);
-                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto);
-                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto);
+                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
                                       $data           = [
                                           "name"                  => $clientNameExploded[0],
                                           "boleto_link"           => $boleto->boleto_link,
