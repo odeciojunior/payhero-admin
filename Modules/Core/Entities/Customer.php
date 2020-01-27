@@ -91,4 +91,12 @@ class Customer extends Model
     {
         return $this->hasMany('Modules\Core\Entities\Sale');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function clientCards()
+    {
+        return $this->hasMany('App\Entities\ClientCard');
+    }
 }
