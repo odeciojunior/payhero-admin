@@ -73,6 +73,7 @@ class ProfileApiController
                     $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
                 }
                 $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
+                $requestData['name']     = preg_replace('/( )+/', ' ', $requestData['name']);
 
                 $user->fill(
                     [

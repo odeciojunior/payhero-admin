@@ -36,16 +36,25 @@ class TransfersController extends Controller
 
             $data = $request->all();
 
+            //parâmetros obrigatórios
             $companyId = current(Hashids::decode($data['company']));
             $dateRange = FoxUtils::validateDateRange($data["date_range"]);
+            if ($data['date_type'] == 'transaction_date') {
+                $dateType = 'transaction.created_at';
+            } else if ($data['date_type'] == 'transfer_date') {
+                $dateType = 'transfers.created_at';
+            } else {
+                $dateType = 'sales.start_date';
+            }
 
             $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
+                ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
                 ->leftJoin('anticipated_transactions as anticipatedtransaction', 'anticipatedtransaction.transaction_id', 'transfers.transaction_id')
                 ->where(function ($query) use ($companyId) {
                     $query->where('transfers.company_id', $companyId)
                         ->orWhere('transaction.company_id', $companyId);
                 })
-                ->whereBetween('transfers.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
 
             $saleId = str_replace('#', '', $data['transaction']);
             $saleId = current(Hashids::connection('sale_id')->decode($saleId));

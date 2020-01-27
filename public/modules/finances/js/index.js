@@ -449,6 +449,7 @@ $(document).ready(function () {
 
         let data = {
             company: $("#extract_company_select option:selected").val(),
+            date_type: $("#date_type").val(),
             date_range: $("#date_range").val(),
             reason: $('#reason').val(),
             transaction: $("#transaction").val(),
