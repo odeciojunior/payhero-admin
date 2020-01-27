@@ -80,6 +80,10 @@ class User extends Authenticable
     /**
      * @var array
      */
+    protected $appends = ['id_code'];
+    /**
+     * @var array
+     */
     protected $fillable = [
         'name',
         'email',
