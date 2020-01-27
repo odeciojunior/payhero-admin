@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\ProjectNotificationService;
 
 class CreateProjectNotifications extends Command
 {
