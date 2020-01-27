@@ -315,7 +315,6 @@ class TrackingsApiController extends Controller
             $data = $request->all();
 
             $user = auth()->user();
-            $user->isManager = session('isManager', false);
 
             $filename = 'trackings_report_' . Hashids::encode($user->id) . '.' . $data['format'];
 
