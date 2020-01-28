@@ -283,7 +283,7 @@ class SalesApiController extends Controller
             })->log('Processou boletos venda para transação: #' . $requestData['sale_id']);
 
 
-            event(new BilletPaidEvent($plan, $sale, $sale->client));
+            event(new BilletPaidEvent($plan, $sale, $sale->customer));
 
             return response()->json(['message' => 'success'], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -308,7 +308,7 @@ class SalesApiController extends Controller
             })->log('Reenviou email para a venda: #' . $request->input('sale'));
 
             EmailService::clientSale(
-                $sale->client,
+                $sale->customer,
                 $sale,
                 $sale->project
             );

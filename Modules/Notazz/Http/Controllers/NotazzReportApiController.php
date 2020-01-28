@@ -218,7 +218,7 @@ class NotazzReportApiController extends Controller
                                                                           ->encode($invoice->sale->id)),
                             'project'          => $invoice->sale->project->name ?? '',
                             'product'          => ($invoice->sale) ? ((count($invoice->sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $invoice->sale->plansSales->first()->plan->name) : null,
-                            'client'           => $invoice->sale->client->name,
+                            'client'           => $invoice->sale->customer->name,
                             'status_translate' => Lang::get('definitions.enum.invoices.status.' . $invoice->present()
                                                                                                           ->getStatus($invoice->status)),
                             'updated_date'     => ($invoice->updated_at) ? Carbon::parse($invoice->updated_at)
