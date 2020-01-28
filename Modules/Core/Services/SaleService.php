@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
@@ -41,7 +41,7 @@ class SaleService
         try {
 
             $companyModel     = new Company();
-            $clientModel      = new Client();
+            $customerModel    = new Customer();
             $transactionModel = new Transaction();
 
             if (!$userId) {
@@ -55,14 +55,14 @@ class SaleService
             $transactions = $transactionModel->with([
                                                         'sale',
                                                         'sale.project',
-                                                        'sale.client',
+                                                        'sale.customer',
                                                         'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
                                                         'sale.shipping',
                                                         'sale.checkout',
                                                         'sale.delivery',
                                                         'sale.transactions',
                                                     ])->whereIn('company_id', $userCompanies)
-                                                    ->join('sales','sales.id', 'transactions.sale_id')
+                                             ->join('sales', 'sales.id', 'transactions.sale_id')
                                              ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
@@ -82,9 +82,9 @@ class SaleService
             }
 
             if (!empty($filters["client"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas('sale', function($querySale) use ($customers) {
-                    $querySale->whereIn('client_id', $customers);
+                    $querySale->whereIn('customer_id', $customers);
                 });
             }
             if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
@@ -116,10 +116,10 @@ class SaleService
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $dateType  = $filters["date_type"];
 
-            $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
+            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
                 $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             })->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
+                         ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {

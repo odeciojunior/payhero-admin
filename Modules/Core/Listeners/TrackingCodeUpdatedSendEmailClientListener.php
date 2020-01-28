@@ -25,64 +25,63 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
 
     /**
      * @param TrackingCodeUpdatedEvent $event
-     * @throws PresenterException
      */
     public function handle(TrackingCodeUpdatedEvent $event)
     {
         try {
-            $sendGridService            = new SendgridService();
-            $smsService                 = new SmsService();
-            $linkShortenerService       = new LinkShortenerService();
-            $domainModel                = new Domain();
-            $projectNotificationModel   = new ProjectNotification();
+            $sendGridService = new SendgridService();
+            $smsService = new SmsService();
+            $linkShortenerService = new LinkShortenerService();
+            $domainModel = new Domain();
+            $projectNotificationModel = new ProjectNotification();
             $projectNotificationService = new ProjectNotificationService();
 
-            $clientName      = $event->sale->client->present()->getFirstName();
-            $clientEmail     = $event->sale->client->email;
-            $clientTelephone = $event->sale->client->telephone;
+            $clientName = $event->sale->customer->present()->getFirstName();
+            $clientEmail = $event->sale->customer->email;
+            $clientTelephone = $event->sale->customer->telephone;
 
-            $projectName    = $event->sale->project->name;
+            $projectName = $event->sale->project->name;
             $projectContact = $event->sale->project->contact;
-            $domain         = $domainModel->where('project_id', $event->sale->project->id)->first();
+            $domain = $domainModel->where('project_id', $event->sale->project->id)->first();
 
             //Traz a mensagem do sms formatado
             $projectNotificationPresenter = $projectNotificationModel->present();
-            $projectNotificationSms       = $projectNotificationModel->where('project_id', $event->sale->project->id)
-                                                                     ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_billet_due_today'))
-                                                                     ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                     ->first();
+            $projectNotificationSms = $projectNotificationModel->where('project_id', $event->sale->project->id)
+                ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_billet_due_today'))
+                ->where('status', $projectNotificationPresenter->getStatus('active'))
+                ->first();
             //Traz o assunto, titulo e texto do email formatados
             $projectNotificationPresenter = $projectNotificationModel->present();
-            $projectNotificationEmail     = $projectNotificationModel->where('project_id', $event->sale->project->id)
-                                                                     ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_tracking_immediate'))
-                                                                     ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                     ->first();
+            $projectNotificationEmail = $projectNotificationModel->where('project_id', $event->sale->project->id)
+                ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_tracking_immediate'))
+                ->where('status', $projectNotificationPresenter->getStatus('active'))
+                ->first();
 
             if (!empty($domain)) {
                 $linkBase = 'https://tracking.' . $domain->name . '/';
                 if (!empty($projectNotificationSms)) {
                     //                $link            = $linkShortenerService->shorten($linkBase . $data['tracking_code']);
-                    $message    = $projectNotificationSms->message;
+                    $message = $projectNotificationSms->message;
                     $smsMessage = $projectNotificationService->formatNotificationData($message, $event->sale, $event->sale->project, 'sms', null, null, $event->tracking->tracking_code);
                     if (!empty($smsMessage) && !empty($clientTelephone)) {
                         $smsService->sendSms($clientTelephone, $smsMessage);
                     }
                 }
                 if (!empty($projectNotificationEmail)) {
-                    $message        = json_decode($projectNotificationEmail->message);
+                    $message = json_decode($projectNotificationEmail->message);
                     $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
-                    $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
+                    $titleMessage = $projectNotificationService->formatNotificationData($message->title, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
                     $contentMessage = $projectNotificationService->formatNotificationData($message->content, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
-                    $data           = [
-                        'name'            => $clientName,
-                        'project_logo'    => $event->sale->project->logo,
-                        'tracking_code'   => $event->tracking->tracking_code,
+                    $data = [
+                        'name' => $clientName,
+                        'project_logo' => $event->sale->project->logo,
+                        'tracking_code' => $event->tracking->tracking_code,
                         'project_contact' => $projectContact,
-                        "subject"         => $subjectMessage,
-                        "title"           => $titleMessage,
-                        "content"         => $contentMessage,
-                        "products"        => $event->products,
-                        "link"            => $linkBase,
+                        "subject" => $subjectMessage,
+                        "title" => $titleMessage,
+                        "content" => $contentMessage,
+                        "products" => $event->products,
+                        "link" => $linkBase,
                     ];
 
                     $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-347cde26384449548df47e290ad50906', $data);

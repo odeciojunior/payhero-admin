@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
@@ -45,14 +45,14 @@ class BoletoService
                                       DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString(),
                                   ],
                               ])
-                      ->with('client', 'plansSales.plan.products')
+                      ->with('customer', 'plansSales.plan.products')
                       ->chunk(100, function($boletoDueToday) use ($projectModel, $domainModel, $checkoutModel, $saleService, $projectNotificationService, $projectNotificationModel) {
 
                           foreach ($boletoDueToday as $boleto) {
                               $checkout    = $checkoutModel->where('id', $boleto->checkout_id)
                                                            ->first();
-                              $clientName  = $boleto->client->name;
-                              $clientEmail = $boleto->client->email;
+                              $clientName  = $boleto->customer->name;
+                              $clientEmail = $boleto->customer->email;
 
                               $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                               $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
@@ -93,7 +93,7 @@ class BoletoService
                               $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
                                                                ->format('d/m/y');
 
-                              $clientTelephone = $boleto->client->telephone;
+                              $clientTelephone = $boleto->customer->telephone;
 
                               //Traz a mensagem do sms formatado
                               $projectNotificationPresenter = $projectNotificationModel->present();
@@ -182,7 +182,7 @@ class BoletoService
             $startDate = now()->startOfDay()->subDay();
             $endDate   = now()->endOfDay()->subDay();
 
-            $saleModel->with('client', 'plansSales.plan.products')
+            $saleModel->with('customer', 'plansSales.plan.products')
                       ->whereBetween('start_date', [$startDate, $endDate])
                       ->where(
                           [
@@ -195,8 +195,8 @@ class BoletoService
                           foreach ($boletos as $boleto) {
                               try {
                                   $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                                  $clientName  = $boleto->client->name;
-                                  $clientEmail = $boleto->client->email;
+                                  $clientName  = $boleto->customer->name;
+                                  $clientEmail = $boleto->customer->email;
                                   $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                                   $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
                                   $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
@@ -304,7 +304,7 @@ class BoletoService
             $startDate = now()->startOfDay()->subDays(2);
             $endDate   = now()->endOfDay()->subDays(2);
 
-            $saleModel->with('client', 'plansSales.plan.products')
+            $saleModel->with('customer', 'plansSales.plan.products')
                       ->whereBetween('start_date', [$startDate, $endDate])
                       ->where(
                           [
@@ -317,8 +317,8 @@ class BoletoService
                           foreach ($boletos as $boleto) {
                               try {
                                   $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
-                                  $clientName  = $boleto->client->name;
-                                  $clientEmail = $boleto->client->email;
+                                  $clientName  = $boleto->customer->name;
+                                  $clientEmail = $boleto->customer->email;
                                   $subTotal    = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                                   $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
                                   $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
@@ -473,7 +473,7 @@ class BoletoService
         try {
 
             $saleModel = new Sale();
-            $boletos   = $saleModel->with(['client'])
+            $boletos   = $saleModel->with(['customer'])
                                    ->where([
                                                ['payment_method', '=', '2'],
                                                ['status', '=', '2'],

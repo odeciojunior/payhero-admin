@@ -3,7 +3,9 @@
 namespace Modules\Notazz\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +25,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class NotazzApiController extends Controller
 {
     /**
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index()
     {
@@ -54,7 +56,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(NotazzStoreRequest $request)
     {
@@ -123,7 +125,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param $integrationCode
-     * @return \Illuminate\Http\JsonResponse|NotazzResource
+     * @return JsonResponse|NotazzResource
      */
     public function show($integrationCode)
     {
@@ -163,7 +165,7 @@ class NotazzApiController extends Controller
     /**
      * @param NotazzUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(NotazzUpdateRequest $request, $id)
     {
@@ -211,7 +213,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
@@ -268,7 +270,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param $code
-     * @return \Illuminate\Http\JsonResponse|NotazzInvoiceResource
+     * @return JsonResponse|NotazzInvoiceResource
      */
     public function getInvoice($code)
     {
