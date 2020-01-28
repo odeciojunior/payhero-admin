@@ -3,6 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css') }}">
 @endpush
 
 @section('content')

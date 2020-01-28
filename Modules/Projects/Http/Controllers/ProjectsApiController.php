@@ -46,11 +46,10 @@ class ProjectsApiController extends Controller
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
 
-            if(!$pagination){
+            if (!$pagination) {
                 activity()->on($projectModel)->tap(function(Activity $activity) {
                     $activity->log_name = 'visualization';
                 })->log('Visualizou tela todos os projetos');
-
             }
 
             if (!empty($request->input('status')) && $request->input('status') == 'active') {
@@ -377,6 +376,18 @@ class ProjectsApiController extends Controller
                             }
                         }
 
+                        //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
+                        if (isset($projectChanges["discount_recovery_status"])) {
+                            $project->update([
+                                                 'discount_recovery_status' => $requestValidated['discount_recovery_status'],
+                                                 'discount_recovery_value'  => $requestValidated['discount_recovery_value'],
+                                             ]);
+                        } else {
+                            $project->update([
+                                                 'discount_recovery_status' => 0,
+                                             ]);
+                        }
+
                         return response()->json(['message' => 'Projeto atualizado!'], 200);
                     }
 
@@ -478,7 +489,8 @@ class ProjectsApiController extends Controller
             activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
+            })
+                      ->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
 
             if ($supportPhone != $project->support_phone) {
                 $project->support_phone = $supportPhone;
@@ -623,13 +635,12 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
-            $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
+            $project      = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use($projectId) {
-                $activity->log_name = 'updated';
+            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
+                $activity->log_name   = 'updated';
                 $activity->subject_id = current(Hashids::decode($projectId));
             })->log('Validação código email de contato do projeto: ' . $project->name);
-
 
             $data       = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
