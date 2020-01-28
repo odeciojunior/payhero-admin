@@ -18,6 +18,10 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ReportService;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Reports\Transformers\CheckoutsByOriginResource;
+use Modules\Core\Entities\Transaction;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Reports\Exports\Reports\ReportExport;
 
 class ReportsApiController extends Controller
 {
@@ -439,5 +443,133 @@ class ReportsApiController extends Controller
 
             return response()->json('Ocorreu algum erro');
         }
+    }
+
+    public function projections(Request $request)
+    {
+        try {
+
+            $companyId  = current(Hashids::decode($request->input('company')));
+
+            $company = Company::where('user_id', auth()->user()->account_owner_id)
+                              ->where('id', $companyId)
+                              ->first();
+
+            if(!empty($company->id)) {
+
+                $itens = Transaction::select([
+                                            DB::raw('SUM(transactions.value) as value'),
+                                            DB::raw('DATE(transactions.release_date) as date'),
+                                    ])
+                                    ->where('company_id', $companyId)
+                                    ->whereIn('transactions.type', collect([2,3,4,5]))
+                                    ->where('transactions.status', 'pending')
+                                    ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
+                                    ->groupBy('date')
+                                    ->get();
+
+                $transactions = [];
+                foreach ($itens as $value) {
+                    $transactions[] = [
+                        'date'  => Carbon::createFromFormat('Y-m-d', $value->date)->format('d/m/Y'),
+                        'value' => number_format(intval(preg_replace("/[^0-9]/", "", $value->value)) / 100, 2, ',', '.'),
+                    ];
+                }
+                $transactionTotal = Transaction::join('sales', 'transactions.sale_id', 'sales.id')
+                                                ->select([
+                                                            DB::raw('SUM(transactions.value) as value'),
+                                                            DB::raw('SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) AS valueBillet'),
+                                                            DB::raw('SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) AS valueCard')
+                                                        ])
+                                                ->where('company_id', $companyId)
+                                                ->whereIn('transactions.type', collect([2,3,4,5]))
+                                                ->where('transactions.status', 'pending')
+                                                ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
+                                                ->groupBy('transactions.company_id')
+                                                ->first();
+
+                $reportService = new ReportService();
+
+                if ($company->country == 'usa') {
+                    $currency = '$';
+                } else {
+                    $currency = 'R$';
+                }
+
+                $chartData = $reportService->getFinacialProjectionByDays($companyId, $currency);
+            }
+
+            if (empty($chartData)) {
+                $chartData = [
+                    'label_list'       => ['',''],
+                    'transaction_data' => [0, 0],
+                    'currency'         => '',
+                ];
+            }
+
+            return response()->json([
+                                        'chartData'    => $chartData,
+                                        'transactions' => $transactions ?? 0,
+                                        'totalValue'   => isset($transactionTotal->value) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->value)) / 100, 2, ',', '.') : 00,
+                                        'valueBillet'  => isset($transactionTotal->valueBillet) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueBillet)) / 100, 2, ',', '.') : 00,
+                                        'valueCard'    => isset($transactionTotal->valueCard) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueCard)) / 100, 2, ',', '.') : 00,
+                                    ]);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados - ReportsController - projections');
+            report($e);
+
+            return response()->json(null);
+        }
+    }
+
+    public function projectionsExport(Request $request)
+    {
+        $data      = $request->all();
+        $checkData = collect();
+        $header    = ['Data', 'Valor'];
+        $companyId  = current(Hashids::decode($request->input('company')));
+
+        $itens = Transaction::select([
+                                        DB::raw('SUM(transactions.value) as value'),
+                                        DB::raw('DATE(transactions.release_date) as date')
+                                    ])
+                                    ->join('companies', 'transactions.company_id', 'companies.id')
+                                    ->where('companies.user_id', auth()->user()->id)
+                                    ->where('companies.id',  $companyId)
+                                    ->whereIn('transactions.type', collect([2,3,4,5]))
+                                    ->where('transactions.status', 'pending')
+                                    ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
+                                    ->groupBy('date')
+                                    ->get();
+
+        $labelList    = [];
+        $dataFormated = Carbon::today()->addDay();
+        $endDate      = Carbon::today()->addDays(30);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m/Y'));
+            $dataFormated = $dataFormated->addDays(1);
+        }
+
+        $dataArray = [];
+        $total = 0;
+
+        foreach ($labelList as $label) {
+            $dateSearch = Carbon::createFromFormat('d/m/Y', $label)->format('Y-m-d');
+            $item = $itens->firstWhere('date', $dateSearch);
+            $dataArray = [
+                'date'  => $label,
+                'value' => (isset($item->value)) ? number_format(intval(preg_replace("/[^0-9]/", "", $item->value)) / 100, 2, ',', '.') : '0,00',
+            ];
+            $checkData->push(collect($dataArray));
+            $total += $item->value ?? 0;
+        }
+
+        if($total > 0) {
+            $checkData->push(collect(['date' => 'Total', 'value' => number_format(intval(preg_replace("/[^0-9]/", "", $total)) / 100, 2, ',', '.')]));
+        }
+
+        return Excel::download(new ReportExport($checkData, $header, 11), 'cloudfox-transacoes.' . $data['format']);
     }
 }
