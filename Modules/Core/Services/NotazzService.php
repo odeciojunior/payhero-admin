@@ -98,7 +98,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -292,7 +292,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -455,7 +455,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -514,7 +514,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -568,7 +568,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -612,7 +612,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
