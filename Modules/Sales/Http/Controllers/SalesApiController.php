@@ -300,7 +300,7 @@ class SalesApiController extends Controller
 
             $saleModel = new Sale();
             $saleId = current(Hashids::connection('sale_id')->decode($request->input('sale')));
-            $sale = $saleModel->with(['client', 'project'])->find($saleId);
+            $sale = $saleModel->with(['customer', 'project'])->find($saleId);
 
             activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId, $request){
                 $activity->log_name     = 'created';
