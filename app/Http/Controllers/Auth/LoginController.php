@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Modules\Core\Services\IpService;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\User;
 use App\Http\Controllers\Controller;
@@ -47,16 +48,16 @@ class LoginController extends Controller
 
         if (!empty($user) && $user->status == $userModel->present()->getStatus('account blocked')) {
 
-            activity()->tap(function(Activity $activity) {
+            activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'account_blocked';
             })->withProperties([
-                                   'url'      => $request->input('uri'),
-                                   'email'    => $request->input('email'),
-                                   'token'    => $request->input('token'),
-                                   'password' => $request->input('password'),
-                                   'ip'       => $request->ip(),
-                               ])
-                      ->log('Tentativa de Login: conta bloqueada');
+                'url' => $request->input('uri'),
+                'email' => $request->input('email'),
+                'token' => $request->input('token'),
+                'password' => $request->input('password'),
+                'ip' => IpService::getRealIpAddr(),
+            ])
+                ->log('Tentativa de Login: conta bloqueada');
 
             return response()->redirectTo('/')->withErrors(['accountErrors' => 'Blocked account']);
         }
@@ -72,17 +73,17 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-            activity()->causedBy($user)->on($userModel)->tap(function(Activity $activity) use ($user) {
-                $activity->log_name   = 'login';
+            activity()->causedBy($user)->on($userModel)->tap(function (Activity $activity) use ($user) {
+                $activity->log_name = 'login';
                 $activity->subject_id = $user->id;
             })->withProperties([
-                                   'url'      => $request->input('uri'),
-                                   'email'    => $request->input('email'),
-                                   'token'    => $request->input('token'),
-                                   'password' => Hash::make($request->input('password')),
-                                   'ip'       => $request->ip(),
-                               ])
-                      ->log('Login');
+                'url' => $request->input('uri'),
+                'email' => $request->input('email'),
+                'token' => $request->input('token'),
+                'password' => Hash::make($request->input('password')),
+                'ip' => IpService::getRealIpAddr(),
+            ])
+                ->log('Login');
             auth()->user()->update(['last_login' => now()->toDateTimeString()]);
 
             return $this->sendLoginResponse($request);
@@ -93,19 +94,18 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        activity()->on($userModel)->tap(function(Activity $activity) use ($user) {
+        activity()->on($userModel)->tap(function (Activity $activity) use ($user) {
             $activity->log_name = 'login_failed';
             if (!empty($user)) {
                 $activity->causer_id = $user->id;
             }
         })->withProperties([
-                               'url'      => $request->input('uri'),
-                               'email'    => $request->input('email'),
-                               'token'    => $request->input('token'),
-                               'password' => $request->input('password'),
-                               'ip'       => $request->ip(),
-                           ])
-                  ->log('Falha no Login');
+            'url' => $request->input('uri'),
+            'email' => $request->input('email'),
+            'token' => $request->input('token'),
+            'password' => $request->input('password'),
+            'ip' => IpService::getRealIpAddr(),
+        ])->log('Falha no Login');
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -117,7 +117,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        activity()->tap(function(Activity $activity) {
+        activity()->tap(function (Activity $activity) {
             $activity->log_name = 'logout';
         })->log('Logout');
 
