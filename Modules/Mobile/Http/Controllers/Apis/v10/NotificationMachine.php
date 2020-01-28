@@ -18,16 +18,16 @@ class NotificationMachine
      * @var array
      */
     private $state = [
-        1  => 'init',
+        1 => 'init',
         20 => 'finish',
-        2  => 'validateRequest',
-        3  => 'checkSaleNotification',
-        4  => 'ignorePostback',
-        5  => 'checkWithdrawalsNotification',
-        6  => 'findSale',
-        7  => 'getUserDevices',
-        8  => 'makeNotification',
-        9  => 'sendNotification',
+        2 => 'validateRequest',
+        3 => 'checkSaleNotification',
+        4 => 'ignorePostback',
+        5 => 'checkWithdrawalsNotification',
+        6 => 'findSale',
+        7 => 'getUserDevices',
+        8 => 'makeNotification',
+        9 => 'sendNotification',
         10 => 'findWithdrawals',
         11 => 'makeWithdrawalNotification',
     ];
@@ -43,12 +43,12 @@ class NotificationMachine
      * @var array
      */
     private $result = [
-        'history'     => [],
-        'data'        => null,
+        'history' => [],
+        'data' => null,
         'state_error' => null,
-        'exception'   => null,
-        'status'      => 1, // 1 success, 2 - error
-        'state'       => 1,
+        'exception' => null,
+        'status' => 1, // 1 success, 2 - error
+        'state' => 1,
     ];
     /**
      * @var PushNotification
@@ -88,7 +88,7 @@ class NotificationMachine
      */
     private function setState($state)
     {
-        $this->actualState     = array_search($state, $this->state);
+        $this->actualState = array_search($state, $this->state);
         $this->result['state'] = array_search($state, $this->state);
         array_push($this->result['history'], $this->actualState);
     }
@@ -101,8 +101,8 @@ class NotificationMachine
     private function failState($state, $message = null)
     {
         $this->result['state_error'] = array_search($state, $this->state);
-        $this->result['exception']   = $message;
-        $this->result['status']      = 2;
+        $this->result['exception'] = $message;
+        $this->result['status'] = 2;
 
         return $this->finish();
     }
@@ -120,8 +120,8 @@ class NotificationMachine
 
             $this->result['status'] = 1;
             $this->pushNotification = $pushNotification;
-            $this->foxSale          = null;
-            $this->requestJson      = json_decode($pushNotification->postback_data);
+            $this->foxSale = null;
+            $this->requestJson = json_decode($pushNotification->postback_data);
 
             //$code = Hashids::connection('sale_id')->encode($this->requestJson->sale_id);
 
@@ -145,19 +145,19 @@ class NotificationMachine
             if (!empty($this->requestJson->notification_type) && !empty($this->requestJson->external_reference)) {
                 if ($this->requestJson->notification_type == 'sale') {
                     $saleModel = new Sale();
-                    $saleId        = current(Hashids::connection('sale_id')
-                                                    ->decode($this->requestJson->external_reference));
-                    $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])
-                                               ->find($saleId);
+                    $saleId = current(Hashids::connection('sale_id')
+                        ->decode($this->requestJson->external_reference));
+                    $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'customer', 'plansSales.plan'])
+                        ->find($saleId);
 
                     if (!$this->foxSale) {
                         return $this->ignorePostback();
                     }
                 } else {
                     $withDrawalsModel = new Withdrawal();
-                    $withDrawalsId    = current(Hashids::decode($this->requestJson->external_reference));
+                    $withDrawalsId = current(Hashids::decode($this->requestJson->external_reference));
                     $this->withdrawal = $withDrawalsModel->with(['company.user.userDevices'])
-                                                         ->find($withDrawalsId);
+                        ->find($withDrawalsId);
 
                     if (!$this->withdrawal) {
                         return $this->ignorePostback();
@@ -228,10 +228,10 @@ class NotificationMachine
             $saleModel = new Sale();
 
             if (isset($this->requestJson->external_reference)) {
-                $saleId        = current(Hashids::connection('sale_id')
-                                                ->decode($this->requestJson->external_reference));
-                $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'client', 'plansSales.plan'])
-                                           ->find($saleId);
+                $saleId = current(Hashids::connection('sale_id')
+                    ->decode($this->requestJson->external_reference));
+                $this->foxSale = $saleModel->with(['transactions.company.user.userDevices', 'customer', 'plansSales.plan'])
+                    ->find($saleId);
                 if ($this->foxSale) {
                     return $this->makeSaleNotification();
                 }
@@ -259,7 +259,7 @@ class NotificationMachine
                 $withDrawalsId = current(Hashids::decode($this->requestJson->external_reference));
 
                 $this->withdrawal = $withDrawalsModel->with(['company.user'])
-                                                     ->find($withDrawalsId);
+                    ->find($withDrawalsId);
                 if ($this->withdrawal) {
                     return $this->makeWithdrawalNotification();
                 }
@@ -293,26 +293,26 @@ class NotificationMachine
                                 if ($device->online) { // verifica se o device está ativo
                                     if ($transaction->type == 3 && $device->invitation_sale_notification) { // notificação de indicação
                                         $this->userDevices[] = [
-                                            'player_id'   => $device->player_id,
-                                            'value'       => $transaction->value,
-                                            'type'        => 3,
+                                            'player_id' => $device->player_id,
+                                            'value' => $transaction->value,
+                                            'type' => 3,
                                             'device_type' => $device->device_type,
                                         ];
                                     } else if ($transaction->type == 2 && $this->foxSale->payment_method == 1) { // venda
                                         if ($device->sale_notification) { // verifica se o usuário quer ser notificado na venda
                                             $this->userDevices[] = [
-                                                'player_id'   => $device->player_id,
-                                                'value'       => $transaction->value,
-                                                'type'        => 2,
+                                                'player_id' => $device->player_id,
+                                                'value' => $transaction->value,
+                                                'type' => 2,
                                                 'device_type' => $device->device_type,
                                             ];
                                         }
                                     } else if ($transaction->type == 2 && $this->foxSale->payment_method == 2) { // boleto
                                         if ($device->billet_notification) { // verifica se o usuário quer ser notificado no boleto
                                             $this->userDevices[] = [
-                                                'player_id'   => $device->player_id,
-                                                'value'       => $transaction->value,
-                                                'type'        => 2,
+                                                'player_id' => $device->player_id,
+                                                'value' => $transaction->value,
+                                                'type' => 2,
                                                 'device_type' => $device->device_type,
                                             ];
                                         }
@@ -329,9 +329,9 @@ class NotificationMachine
                 foreach ($this->withdrawal->company->user->userDevices as $device) {
                     if ($device->online && $device->withdraw_notification) { // verifica se o usuário quer ser notificado no saque
                         $this->userDevices[] = [
-                            'player_id'   => $device->player_id,
-                            'value'       => $this->withdrawal->value,
-                            'type'        => $this->withdrawal->status,
+                            'player_id' => $device->player_id,
+                            'value' => $this->withdrawal->value,
+                            'type' => $this->withdrawal->status,
                             'device_type' => $device->device_type,
                         ];
                     }
@@ -359,8 +359,8 @@ class NotificationMachine
         try {
             $this->setState(__FUNCTION__);
 
-            $heading       = '';
-            $sound         = '';
+            $heading = '';
+            $sound = '';
             $notifications = [];
 
             foreach ($this->userDevices as $device) {
@@ -370,13 +370,13 @@ class NotificationMachine
                     number_format(intval($device['value']) / 100, 2, ',', '.') .
                     $this->getStatus($device['type']);
 
-                $sound   = 'nil';
+                $sound = 'nil';
                 $notifications[] = [
-                    "headings"           => $heading,
-                    "content"            => $content,
+                    "headings" => $heading,
+                    "content" => $content,
                     "notification_sound" => $sound,
                     "include_player_ids" => [$device['player_id']],
-                    "device_type"        => $device['device_type'],
+                    "device_type" => $device['device_type'],
                 ];
             }
 
@@ -389,7 +389,8 @@ class NotificationMachine
         }
     }
 
-    public function  getStatus($status) {
+    public function getStatus($status)
+    {
         switch ($status) {
             case 1:
                 return ' está pendente';
@@ -418,10 +419,10 @@ class NotificationMachine
         try {
             $this->setState(__FUNCTION__);
 
-            $heading       = '';
-            $sound         = '';
-            $saleService   = new SaleService();
-            $products      = $saleService->getProducts($this->foxSale->id);
+            $heading = '';
+            $sound = '';
+            $saleService = new SaleService();
+            $products = $saleService->getProducts($this->foxSale->id);
             $notifications = [];
 
             foreach ($this->userDevices as $device) {
@@ -431,23 +432,23 @@ class NotificationMachine
                 // venda cartão
                 if ($this->foxSale->payment_method == 1) {
                     $heading = 'Venda realizada';
-                    $sound   = 'venda';
+                    $sound = 'venda';
                 } else { // boleto
                     if ($this->foxSale->status == 1) { // boleto pago
                         $heading = 'Boleto pago';
-                        $sound   = 'venda';
+                        $sound = 'venda';
                     } else { // boleto gerado
                         $heading = 'Boleto gerado';
-                        $sound   = 'boleto';
+                        $sound = 'boleto';
                     }
                 }
 
                 $notifications[] = [
-                    "headings"           => $device['type'] == 3 ? $heading . ' (indicação)' : $heading,
-                    "content"            => $content,
+                    "headings" => $device['type'] == 3 ? $heading . ' (indicação)' : $heading,
+                    "content" => $content,
                     "notification_sound" => $sound,
                     "include_player_ids" => [$device['player_id']],
-                    "device_type"        => $device['device_type'],
+                    "device_type" => $device['device_type'],
                 ];
             }
 
@@ -494,9 +495,9 @@ class NotificationMachine
             $this->setState(__FUNCTION__);
 
             $this->pushNotification->update([
-                                                'processed_flag'      => true,
-                                                'postback_valid_flag' => true,
-                                            ]);
+                'processed_flag' => true,
+                'postback_valid_flag' => true,
+            ]);
 
             return $this->finish();
         } catch (Exception $ex) {
@@ -517,13 +518,13 @@ class NotificationMachine
 
             $returnData = [
                 'result' => $this->result,
-                'state'  => $this->actualState,
+                'state' => $this->actualState,
             ];
 
             $this->pushNotification->update([
-                                                'machine_result'     => json_encode($returnData),
-                                                'onesignal_response' => $this->oneSignalResponse["response"] ?? null,
-                                            ]);
+                'machine_result' => json_encode($returnData),
+                'onesignal_response' => $this->oneSignalResponse["response"] ?? null,
+            ]);
 
             return $returnData;
         } catch (Exception $ex) {
