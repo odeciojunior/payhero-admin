@@ -204,7 +204,7 @@
                                                 <label for="date_type">Data</label>
                                                 <select class="form-control select-pad" id="date_type">
                                                     <option value="transfer_date">Data da transferência</option>
-                                                    <option value="transaction_date">Data da transação</option>
+{{--                                                    <option value="transaction_date">Data da transação</option>--}}
                                                     <option value="sale_start_date">Data da venda</option>
                                                 </select>
                                             </div>
@@ -295,7 +295,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=8') }}"></script>
     @endpush
 
 @endsection

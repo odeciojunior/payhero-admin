@@ -39,12 +39,15 @@ class TransfersResource extends Resource
             $reason = $this->reason;
         }
 
-        $type = $this->type == 'out' ? '-' : '';
-        $value = number_format(intval($type . $this->value) / 100, 2, ',', '.');
+        $type     = $this->type == 'out' ? '-' : '';
+        $value    = number_format(intval($type . $this->value) / 100, 2, ',', '.');
         $currency = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
-        $value = $currency . $value;
+        $value    = $currency . $value;
 
         $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null($this->transaction_type);
+
+        $saleDate = !empty($this->transaction) ? Carbon::parse($this->transaction->sale->start_date)
+                                                       ->format('d/m/Y') : '';
 
         return [
             'id'                => Hashids::encode($this->id),
@@ -56,6 +59,7 @@ class TransfersResource extends Resource
             'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
             'date'              => $this->created_at->format('d/m/Y'),
             'is_owner'          => $isOwner,
+            'sale_date'         => $saleDate,
         ];
     }
 }
