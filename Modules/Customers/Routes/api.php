@@ -7,6 +7,6 @@ Route::group(
         'middleware' => ['auth:api'],
     ],
     function() {
-        Route::apiResource('/customer', 'ClientApiController')->only('show', 'update')->names('api.client');
+        Route::apiResource('/customer', 'CustomersApiController')->only('show', 'update')->names('api.customer');
     }
 );

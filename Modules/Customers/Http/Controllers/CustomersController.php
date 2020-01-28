@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Clients\Http\Controllers;
+namespace Modules\Customers\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
-class CustomerController extends Controller
+class CustomersController extends Controller
 {
     /**
      * Display a listing of the resource.

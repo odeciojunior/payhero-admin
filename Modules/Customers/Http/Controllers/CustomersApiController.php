@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Clients\Http\Controllers;
+namespace Modules\Customer\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +15,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * Class ClientApiController
  * @package Modules\Clients\Http\Controllers
  */
-class CustomerApiController extends Controller
+class CustomersApiController extends Controller
 {
     /**
      * Show the specified resource.
