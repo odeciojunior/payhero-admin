@@ -13,7 +13,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class ClientApiController
- * @package Modules\Clients\Http\Controllers
+ * @package Modules\Customers\Http\Controllers
  */
 class CustomersApiController extends Controller
 {
@@ -28,30 +28,30 @@ class CustomersApiController extends Controller
 
             if (!empty($id)) {
 
-                $clientModel = new Customer();
+                $customerModel = new Customer();
 
-                $client = $clientModel->find(current(Hashids::decode($id)));
+                $customer = $customerModel->find(current(Hashids::decode($id)));
 
-                if (!empty($client)) {
-                    return new CustomerResource($client);
+                if (!empty($customer)) {
+                    return new CustomerResource($customer);
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro, cliente não encontrado',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro, cliente não encontrado',
+                    ], 400);
                 }
             } else {
                 // Hash invalido
                 return response()->json([
-                                            'message' => 'Ocorreu um erro, cliente não encontrado',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro, cliente não encontrado',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar cliente, (ClientApiController - show)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, cliente não encontrado',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, cliente não encontrado',
+            ], 400);
         }
     }
 
@@ -73,8 +73,8 @@ class CustomersApiController extends Controller
                     $column = 'email';
                 } else {
                     return response()->json([
-                                                'message' => 'Os dados informados são inválidos',
-                                            ], 400);
+                        'message' => 'Os dados informados são inválidos',
+                    ], 400);
                 }
 
                 $client = $clientModel->find($id);

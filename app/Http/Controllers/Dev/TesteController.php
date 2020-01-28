@@ -374,7 +374,7 @@ class TesteController extends Controller
         //                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
         //                $plan      = $planModel->find($plansSale->plan_id);
         //
-        //                event(new BilletPaidEvent($plan, $sale, $sale->client));
+        //                event(new BilletPaidEvent($plan, $sale, $sale->customer));
         //            }
         //
         //            dd('Fim');
@@ -383,7 +383,7 @@ class TesteController extends Controller
         //
         //        dd('what');
 
-        //event(new BilletPaidEvent($plan, $sale, $sale->client));
+        //event(new BilletPaidEvent($plan, $sale, $sale->customer));
 
         //---------------------------------------------- chargeback
         //                        $transferModel = new Transfer();

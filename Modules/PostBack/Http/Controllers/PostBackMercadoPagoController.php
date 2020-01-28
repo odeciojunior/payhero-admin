@@ -145,7 +145,7 @@ class PostBackMercadoPagoController extends Controller
                 $plan     = $planModel->find($plansSale->plan_id);
                 $project  = $projectModel->find($sale->project_id);
                 $delivery = $deliveryModel->find($sale->delivery_id);
-                $client   = $clientModel->find($sale->client_id);
+                $client   = $clientModel->find($sale->customer_id);
 
                 event(new SaleApprovedEvent($plan, $sale, $project, $delivery, $client));
             } else {

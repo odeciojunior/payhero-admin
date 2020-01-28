@@ -18,7 +18,7 @@ use App\Traits\LogsActivity;
  * @property integer $id
  * @property int $owner_id
  * @property integer $affiliate_id
- * @property integer $client_id
+ * @property integer $customer_id
  * @property integer $delivery_id
  * @property integer $shipping_id
  * @property int $project_id

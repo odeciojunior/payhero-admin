@@ -207,7 +207,7 @@ class ProjectNotificationService
             if (!empty($message)) {
                 if (strpos($message, '{primeiro_nome}') !== false) {
                     if (!empty($sale)) {
-                        $clientNameExploded = explode(' ', $sale->client->name);
+                        $clientNameExploded = explode(' ', $sale->customer->name);
                         $message            = str_replace('{primeiro_nome}', $clientNameExploded[0], $message);
                     } else if (!empty($log)) {
                         $clientNameExploded = explode(' ', $log->name);

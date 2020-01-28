@@ -24,36 +24,35 @@ class HotZappService
 
     /**
      * @param Sale $sale
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     function boletoPaid(Sale $sale)
     {
         $data = [
-            'transaction_id'        => Hashids::connection('sale_id')->encode($sale->id),
-            'name'                  => $sale->client->name,
-            'phone'                 => str_replace('+55', '', $sale->client->telephone),
-            'email'                 => $sale->client->email,
-            'address'               => $sale->delivery->street,
-            'address_number'        => $sale->delivery->number,
-            'address_district'      => $sale->delivery->neighborhood,
-            'address_zip_code'      => $sale->delivery->zip_code,
-            'address_city'          => $sale->delivery->city,
-            'address_state'         => $sale->delivery->state,
-            'address_country'       => 'BR',
-            'doc'                   => $sale->client->document,
-            'cms_vendor'            => '',
-            'total_price'           => $sale->total_paid_value,
-            'receiver_type'         => '',
-            'cms_aff'               => '',
-            'aff'                   => '',
-            'aff_name'              => '',
-            'billet_url'            => $sale->boleto_link,
+            'transaction_id' => Hashids::connection('sale_id')->encode($sale->id),
+            'name' => $sale->customer->name,
+            'phone' => str_replace('+55', '', $sale->customer->telephone),
+            'email' => $sale->customer->email,
+            'address' => $sale->delivery->street,
+            'address_number' => $sale->delivery->number,
+            'address_district' => $sale->delivery->neighborhood,
+            'address_zip_code' => $sale->delivery->zip_code,
+            'address_city' => $sale->delivery->city,
+            'address_state' => $sale->delivery->state,
+            'address_country' => 'BR',
+            'doc' => $sale->customer->document,
+            'cms_vendor' => '',
+            'total_price' => $sale->total_paid_value,
+            'receiver_type' => '',
+            'cms_aff' => '',
+            'aff' => '',
+            'aff_name' => '',
+            'billet_url' => $sale->boleto_link,
             'transaction_error_msg' => '',
-            'paid_at'               => '',
-            'payment_method'        => 'billet',
-            'financial_status'      => 'paid',
-            'risk_level'            => '',
-            'line_items'            => $this->getHotzappPlansList($sale),
+            'paid_at' => '',
+            'payment_method' => 'billet',
+            'financial_status' => 'paid',
+            'risk_level' => '',
+            'line_items' => $this->getHotzappPlansList($sale),
         ];
 
         self::sendPost($data);
@@ -68,16 +67,16 @@ class HotZappService
         $curl = curl_init();
 
         curl_setopt_array($curl,
-                          [
-                              CURLOPT_URL            => $this->link,
-                              CURLOPT_RETURNTRANSFER => true,
-                              CURLOPT_CUSTOMREQUEST  => "POST",
-                              CURLOPT_POSTFIELDS     => json_encode($data),
-                              CURLOPT_HTTPHEADER     =>
-                                  [
-                                      'Content-Type: application/json',
-                                  ],
-                          ]
+            [
+                CURLOPT_URL => $this->link,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_HTTPHEADER =>
+                    [
+                        'Content-Type: application/json',
+                    ],
+            ]
         );
 
         $response = curl_exec($curl);
@@ -95,8 +94,8 @@ class HotZappService
         /** @var PlanSale $planSale */
         foreach ($sale->plansSales as $planSale) {
             $plans[] = [
-                "price"        => $planSale->plan()->first()->price,
-                "quantity"     => $planSale->amount,
+                "price" => $planSale->plan()->first()->price,
+                "quantity" => $planSale->amount,
                 "product_name" => $planSale->plan()->first()->name,
             ];
         }
