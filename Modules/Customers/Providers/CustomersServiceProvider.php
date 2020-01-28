@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Clients\Providers;
+namespace Modules\Customers\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
@@ -39,10 +39,10 @@ class CustomersServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('clients.php'),
+            __DIR__.'/../Config/config.php' => config_path('customers.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'clients'
+            __DIR__.'/../Config/config.php', 'customers'
         );
     }
 
@@ -53,7 +53,7 @@ class CustomersServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/clients');
+        $viewPath = resource_path('views/modules/customers');
 
         $sourcePath = __DIR__.'/../Resources/views';
 
@@ -62,8 +62,8 @@ class CustomersServiceProvider extends ServiceProvider
         ],'views');
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/clients';
-        }, \Config::get('view.paths')), [$sourcePath]), 'clients');
+            return $path . '/modules/customers';
+        }, \Config::get('view.paths')), [$sourcePath]), 'customers');
     }
 
     /**
@@ -73,12 +73,12 @@ class CustomersServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/clients');
+        $langPath = resource_path('lang/modules/customers');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'clients');
+            $this->loadTranslationsFrom($langPath, 'customers');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'clients');
+            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'customers');
         }
     }
 
