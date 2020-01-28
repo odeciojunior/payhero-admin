@@ -4,7 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
-class ClientPresenter extends Presenter
+class CustomerPresenter extends Presenter
 {
     /**
      * @return mixed

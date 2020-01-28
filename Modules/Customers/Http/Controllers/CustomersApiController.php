@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Customer\Http\Controllers;
+namespace Modules\Customers\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;

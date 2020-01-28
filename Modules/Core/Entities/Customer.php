@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
-use Modules\Core\Presenters\ClientPresenter;
+use Modules\Core\Presenters\CustomerPresenter;
 use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
@@ -29,7 +29,7 @@ class Customer extends Model
     /**
      * @var string
      */
-    protected $presenter = ClientPresenter::class;
+    protected $presenter = CustomerPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
