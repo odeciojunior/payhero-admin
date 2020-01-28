@@ -71,7 +71,7 @@ $(document).ready(function () {
                     $('.page-content').show();
                     $('.content-error').hide();
 
-                    $(response.data).each(function(index, value){
+                    $(response.data).each(function (index, value) {
                         let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                         $("#transfers_company_select").append(data);
                         $("#extract_company_select").append(data);
@@ -121,10 +121,9 @@ $(document).ready(function () {
         $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
         $('#custom-input-addon').val('');
         updateBalances();
-        if($(this).children("option:selected").attr('country') != 'brazil'){
+        if ($(this).children("option:selected").attr('country') != 'brazil') {
             $("#col_transferred_value").show();
-        }
-        else{
+        } else {
             $("#col_transferred_value").hide();
         }
     });
@@ -166,10 +165,9 @@ $(document).ready(function () {
                     $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
 
-                if(response.currency != 'real'){
+                if (response.currency != 'real') {
                     $("#quotation_information").show();
-                }
-                else{
+                } else {
                     $("#quotation_information").hide();
                 }
 
@@ -277,7 +275,7 @@ $(document).ready(function () {
                                                      <hr>
                                                      <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
 
-                                if(response.data.currency !== 'real'){
+                                if (response.data.currency !== 'real') {
                                     confirmationData += `</h4>
                                                          <h4>Valor convertido:
                                                             <span class='greenGradientText'>${response.data.abroad_transfer.converted_money}</span>
@@ -406,7 +404,7 @@ $(document).ready(function () {
                             } else {
                                 tableData += "<td>" + data.value + "</td>";
                             }
-                            if($("#transfers_company_select").children("option:selected").attr('country') != 'brazil'){
+                            if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
                                 tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
                             }
                             tableData += '<td class="shipping-status">';
@@ -428,10 +426,9 @@ $(document).ready(function () {
     $(document).on("click", "#bt_filtro", function () {
         $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
         updateTransfersTable();
-        if($(this).children("option:selected").attr('country') != 'brazil'){
+        if ($(this).children("option:selected").attr('country') != 'brazil') {
             $("#transferred_value").show();
-        }
-        else{
+        } else {
             $("#transferred_value").hide();
         }
     });
@@ -507,10 +504,11 @@ $(document).ready(function () {
                                         ${value.reason}
                                         <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
                                             <span style="color:black;">#${value.sale_id}</span>
-                                        </a>
+                                        </a><br>
+                                        <small>(Data da venda: ${value.sale_date})</small>
                                      </td>`;
                         } else {
-                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id  + '</span>' : ''}</td>`;
+                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
