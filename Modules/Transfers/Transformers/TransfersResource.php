@@ -22,11 +22,6 @@ class TransfersResource extends Resource
     {
         $transactionPresenter = (new Transaction())->present();
 
-        $anticipableValue = '';
-        if (!empty($this->anticipation_id)) {
-            $anticipableValue = ' ( R$ ' . number_format(intval($this->antecipable_value) / 100, 2, ',', '.') . ' antecipado em ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->anticipationCreatedAt)
-                                                                                                                                          ->format('d/m/Y') . ')';
-        }
         if (!empty($this->transaction) && empty($this->reason)) {
             $reason = 'Transação';
         } else if (!empty($this->transaction) && $this->reason == 'chargedback') {
@@ -53,7 +48,6 @@ class TransfersResource extends Resource
             'id'                => Hashids::encode($this->id),
             'type'              => $this->type,
             'type_enum'         => $this->type_enum,
-            'anticipable_value' => $anticipableValue,
             'value'             => $value,
             'reason'            => $reason,
             'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
