@@ -212,6 +212,11 @@
                                 <span class="site-menu-title">Acessos</span>
                             </a>
                         </li>
+                        {{-- <li class="site-menu-item">
+                            <a href="{{ route('reports.projections') }}">
+                                <span class="site-menu-title">Projeções</span>
+                            </a>
+                        </li> --}}
                     </ul>
                 </li>
         @endif

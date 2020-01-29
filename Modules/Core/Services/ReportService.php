@@ -12,6 +12,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Illuminate\Support\Facades\Auth;
 use Modules\Reports\Transformers\SalesByOriginResource;
+use Modules\Core\Entities\Transaction;
 
 class ReportService
 {
@@ -856,6 +857,56 @@ class ReportService
             'label_list'    => $labelList,
             'checkout_data' => $checkoutData,
         ];
+    }
+
+    /**
+     * @param $companyId
+     * @param $currency
+     * @return array
+     */
+    public function getFinacialProjectionByDays($companyId, $currency)
+    {
+        try {
+            $transactionModel = new Transaction();
+            $labelList    = [];
+            $dataFormated = Carbon::today()->addDay();
+            $endDate      = Carbon::today()->addDays(20);
+
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                array_push($labelList, $dataFormated->format('d-m'));
+                $dataFormated = $dataFormated->addDays(1);
+            }
+
+            $transactions = $transactionModel
+                ->select(\DB::raw('SUM(value) as value, DATE(release_date) as date'))
+                ->where('company_id', $companyId)
+                ->whereIn('type', collect([2,3,4,5]))
+                ->where('status', 'pending')
+                ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(20)->format('Y-m-d')])
+                ->groupBy('date')
+                ->get()->toArray();
+
+            $transactionData = [];
+
+            foreach ($labelList as $label) {
+                $transactionValue = 0;
+                foreach ($transactions as $transaction) {
+                    if (Carbon::parse($transaction['date'])->format('d-m') == $label) {
+                        $transactionValue = $transaction['value'];
+                    }
+                }
+                array_push($transactionData, $transactionValue);
+            }
+
+            return [
+                'label_list'       => $labelList,
+                'transaction_data' => $transactionData,
+                'currency'         => $currency
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+        }
     }
 
 }

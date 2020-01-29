@@ -14,5 +14,9 @@ Route::group(
         Route::get('reports/getsalesbyorigin', 'ReportsApiController@getSalesByOrigin')->middleware('role:account_owner|admin');
 
         Route::get('reports/getcheckoutsbyorigin', 'ReportsApiController@getCheckoutsByOrigin')->middleware('role:account_owner|admin');
+
+        Route::get('/reports/projections', 'ReportsApiController@projections')->middleware('role:account_owner|admin');
+
+        Route::post('/reports/projectionsexport', 'ReportsApiController@projectionsExport')->middleware('role:account_owner|admin');
     }
 );
