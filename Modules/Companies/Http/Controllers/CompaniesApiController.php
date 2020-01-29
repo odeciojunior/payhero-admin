@@ -75,9 +75,10 @@ class CompaniesApiController extends Controller
     public function store(CompanyCreateRequest $request)
     {
         try {
-            $companyModel = new Company();
-            $requestData  = $request->validated();
-            $company      = $companyModel->create(
+            $companyModel                    = new Company();
+            $requestData                     = $request->validated();
+            $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
+            $company                         = $companyModel->create(
                 [
                     'user_id'          => auth()->user()->account_owner_id,
                     'country'          => $requestData["country"],
@@ -169,7 +170,7 @@ class CompaniesApiController extends Controller
                 if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
                     $requestData['support_telephone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['support_telephone']);
                 }
-                if(!empty($requestData['company_document'])) {
+                if (!empty($requestData['company_document'])) {
                     $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
                 }
 
@@ -450,13 +451,14 @@ class CompaniesApiController extends Controller
     public function consultCnpj(Request $request)
     {
         try {
-            if(!empty($request->input('cnpj'))) {
+            if (!empty($request->input('cnpj'))) {
                 $companyService = new CompanyService();
                 $companyGet     = $companyService->getNameCompanyByApiCNPJ($request->input('cnpj'));
-                if(!empty($companyGet['nome'])) {
+                if (!empty($companyGet['nome'])) {
                     return response()->json(['name' => $companyGet['nome']], 200);
                 }
             }
+
             return response()->json(['message' => 'Erro ao buscar CNPJ'], 400);
         } catch (Exception $e) {
             return response()->json(['message' => 'Erro ao buscar CNPJ'], 400);
