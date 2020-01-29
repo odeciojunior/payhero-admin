@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Services\IpService;
@@ -55,7 +56,7 @@ class LoginController extends Controller
                 'email' => $request->input('email'),
                 'token' => $request->input('token'),
                 'password' => $request->input('password'),
-                'ip' => '',
+                'ip' => IpService::getRealIpAddr(),
             ])
                 ->log('Tentativa de Login: conta bloqueada');
 
@@ -73,6 +74,17 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            activity()->causedBy($user)->on($userModel)->tap(function (Activity $activity) use ($user) {
+                $activity->log_name = 'login';
+                $activity->subject_id = $user->id;
+            })->withProperties([
+                'url' => $request->input('uri'),
+                'email' => $request->input('email'),
+                'token' => $request->input('token'),
+                'password' => Hash::make($request->input('password')),
+                'ip' => IpService::getRealIpAddr(),
+            ])
+                ->log('Login');
             auth()->user()->update(['last_login' => now()->toDateTimeString()]);
 
             return $this->sendLoginResponse($request);
@@ -93,16 +105,16 @@ class LoginController extends Controller
             'email' => $request->input('email'),
             'token' => $request->input('token'),
             'password' => $request->input('password'),
-            'ip' => '',
+            'ip' => IpService::getRealIpAddr(),
         ])->log('Falha no Login');
 
         return $this->sendFailedLoginResponse($request);
     }
 
     /**
-     * Log the user out of the application.
      * @param Request $request
-     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
+     *
      */
     public function logout(Request $request)
     {
@@ -140,6 +152,4 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    
 }
