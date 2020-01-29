@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Services\IpService;
@@ -111,9 +112,9 @@ class LoginController extends Controller
     }
 
     /**
-     * Log the user out of the application.
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse|Redirector
+     *
      */
     public function logout(Request $request)
     {

@@ -463,18 +463,38 @@ class ReportsApiController extends Controller
                                     ])
                                     ->where('company_id', $companyId)
                                     ->whereIn('transactions.type', collect([2,3,4,5]))
-                                    ->where('transactions.status', 'pending')
+                                    ->where('transactions.status', 'paid')
                                     ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
                                     ->groupBy('date')
                                     ->get();
 
                 $transactions = [];
-                foreach ($itens as $value) {
-                    $transactions[] = [
-                        'date'  => Carbon::createFromFormat('Y-m-d', $value->date)->format('d/m/Y'),
-                        'value' => number_format(intval(preg_replace("/[^0-9]/", "", $value->value)) / 100, 2, ',', '.'),
-                    ];
+
+                $labelList    = [];
+                $dataFormated = Carbon::today()->addDay();
+                $endDate      = Carbon::today()->addDays(30);
+
+                while ($dataFormated->lessThanOrEqualTo($endDate)) {
+                    array_push($labelList, $dataFormated->format('d/m/Y'));
+                    $dataFormated = $dataFormated->addDays(1);
                 }
+
+                $total = 0;
+
+                foreach ($labelList as $label) {
+                    $dateSearch = Carbon::createFromFormat('d/m/Y', $label)->format('Y-m-d');
+                    $item = $itens->firstWhere('date', $dateSearch);
+                    $transactions[] = [
+                        'date'  => $label,
+                        'value' => (isset($item->value)) ? number_format(intval(preg_replace("/[^0-9]/", "", $item->value)) / 100, 2, ',', '.') : '0,00',
+                    ];
+                    $total += $item->value ?? 0;
+                }
+
+                if($total > 0) {
+                    $transactions[] = ['date' => 'Total', 'value' => number_format(intval(preg_replace("/[^0-9]/", "", $total)) / 100, 2, ',', '.')];
+                }
+
                 $transactionTotal = Transaction::join('sales', 'transactions.sale_id', 'sales.id')
                                                 ->select([
                                                             DB::raw('SUM(transactions.value) as value'),
@@ -483,7 +503,7 @@ class ReportsApiController extends Controller
                                                         ])
                                                 ->where('company_id', $companyId)
                                                 ->whereIn('transactions.type', collect([2,3,4,5]))
-                                                ->where('transactions.status', 'pending')
+                                                ->where('transactions.status', 'paid')
                                                 ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
                                                 ->groupBy('transactions.company_id')
                                                 ->first();
@@ -510,9 +530,9 @@ class ReportsApiController extends Controller
             return response()->json([
                                         'chartData'    => $chartData,
                                         'transactions' => $transactions ?? 0,
-                                        'totalValue'   => isset($transactionTotal->value) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->value)) / 100, 2, ',', '.') : 00,
-                                        'valueBillet'  => isset($transactionTotal->valueBillet) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueBillet)) / 100, 2, ',', '.') : 00,
-                                        'valueCard'    => isset($transactionTotal->valueCard) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueCard)) / 100, 2, ',', '.') : 00,
+                                        'totalValue'   => isset($transactionTotal->value) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->value)) / 100, 2, ',', '.') : '0,00',
+                                        'valueBillet'  => isset($transactionTotal->valueBillet) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueBillet)) / 100, 2, ',', '.') : '0,00',
+                                        'valueCard'    => isset($transactionTotal->valueCard) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueCard)) / 100, 2, ',', '.') : '0,00',
                                     ]);
 
         } catch (Exception $e) {
@@ -538,7 +558,7 @@ class ReportsApiController extends Controller
                                     ->where('companies.user_id', auth()->user()->id)
                                     ->where('companies.id',  $companyId)
                                     ->whereIn('transactions.type', collect([2,3,4,5]))
-                                    ->where('transactions.status', 'pending')
+                                    ->where('transactions.status', 'paid')
                                     ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
                                     ->groupBy('date')
                                     ->get();

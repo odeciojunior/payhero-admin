@@ -49,7 +49,6 @@ class TransfersController extends Controller
 
             $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
                 ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
-                ->leftJoin('anticipated_transactions as anticipatedtransaction', 'anticipatedtransaction.transaction_id', 'transfers.transaction_id')
                 ->where(function ($query) use ($companyId) {
                     $query->where('transfers.company_id', $companyId)
                         ->orWhere('transaction.company_id', $companyId);
@@ -90,9 +89,7 @@ class TransfersController extends Controller
                 'transaction.currency',
                 'transaction.status',
                 'transaction.type as transaction_type',
-                'transaction.antecipable_value',
-                'anticipatedtransaction.anticipation_id',
-                'anticipatedtransaction.created_at as anticipationCreatedAt'
+                'transaction.antecipable_value'
             )->orderBy('id', 'DESC')
             ->paginate(10);
 

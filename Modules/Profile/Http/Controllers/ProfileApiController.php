@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
@@ -98,6 +99,13 @@ class ProfileApiController
                 }
                 if (isset($userUpdateChanges["cellphone"])) {
                     $user->fill(["cellphone_verified" => false])->save();
+                }
+                if (isset($userUpdateChanges['document'])) {
+                    $companyModel = new Company();
+                    $company      = $companyModel->where('user_id', $user->id)->where('company_type',$companyModel->present()->getCompanyType('physical person'))->first();
+                    if (!empty($company)) {
+                        $company->update(['company_document' => $user->document]);
+                    }
                 }
 
                 $userPhoto = $request->file('profile_photo');
