@@ -106,6 +106,16 @@ return [
             "address_document_status"  => "Comprovante de endereço empresarial",
             "contract_document_status" => "Contrato social",
         ],
+        "country"                  => [
+            "brazil"   => "Brasil",
+            "portugal" => "Portugal",
+            "usa"      => "Estados Unidos",
+            "germany"  => "Alemanha",
+            "spain"    => "Espanha",
+            "france"   => "França",
+            "italy"    => "Itália",
+            "chile"    => "Chile",
+        ],
     ],
 
 ];

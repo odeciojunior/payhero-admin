@@ -35,4 +35,9 @@ class ReportsController extends Controller
         return view('reports::checkouts');
     }
 
+    public function projections()
+    {
+        return view('reports::projections');
+    }
+
 }

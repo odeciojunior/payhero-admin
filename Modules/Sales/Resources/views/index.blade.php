@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-1 col-12" style='text-align:center'>
                             <label for="token" class='mb-10'>Shopify Erros</label>
-                            <label class="switch">
+                            <label class="switch m-0">
                                 <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
                                 <span class="slider round"></span>
                             </label>
@@ -139,7 +139,7 @@
                     </div>
                 </div>
             @endif
-        <!-- Tabela -->
+            <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
@@ -164,12 +164,12 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
-            <!-- End Modal -->
-                <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                    {{-- js carrega... --}}
-                </ul>
+                @include('sales::details')
+                <!-- End Modal -->
             </div>
+            <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                {{-- js carrega... --}}
+            </ul>
         </div>
         {{--        <div class="content-error text-center" style="display:none">--}}
         {{--            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">--}}
@@ -277,7 +277,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=2') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=3') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

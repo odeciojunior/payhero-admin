@@ -17,6 +17,7 @@ class TransfersResource extends Resource
      * @return array
      * @throws PresenterException
      */
+
     public function toArray($request)
     {
         $transactionPresenter = (new Transaction())->present();
@@ -37,21 +38,28 @@ class TransfersResource extends Resource
         } else {
             $reason = $this->reason;
         }
-        $value = number_format(intval($this->value) / 100, 2, ',', '.');
+
+        $type     = $this->type == 'out' ? '-' : '';
+        $value    = number_format(intval($type . $this->value) / 100, 2, ',', '.');
+        $currency = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
+        $value    = $currency . $value;
 
         $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null($this->transaction_type);
+
+        $saleDate = !empty($this->transaction) ? Carbon::parse($this->transaction->sale->start_date)
+                                                       ->format('d/m/Y') : '';
 
         return [
             'id'                => Hashids::encode($this->id),
             'type'              => $this->type,
             'type_enum'         => $this->type_enum,
             'anticipable_value' => $anticipableValue,
-            'value'             => $this->currency == 'dolar' ? '$ ' . $value : 'R$ ' . $value,
+            'value'             => $value,
             'reason'            => $reason,
-            'transaction_id'    => Hashids::connection('sale_id')->encode($this->sale_id),
             'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
             'date'              => $this->created_at->format('d/m/Y'),
             'is_owner'          => $isOwner,
+            'sale_date'         => $saleDate,
         ];
     }
 }

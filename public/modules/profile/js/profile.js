@@ -13,25 +13,155 @@ let statusArray = {
     'approved': 'Aprovado',
     'refused': 'Recusado',
 };
-
+let getDataProfile = '';
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
-
     let user = '';
 
-    let maskOptions = {
-        // onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-        //     var masks = ['000.000.000-000', '00.000.000/0000-00'];
-        //     var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-        //     $('#document').mask(mask, maskOptions);
-        // }
-        onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
-            $('#document').mask('000.000.000-00');
-        }
-    };
+    getDataProfile = function () {
+        $.ajax({
+            url: "/api/profile",
+            type: "GET",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            cache: false,
+            async: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                /**
+                 * Dados Pessoais
+                 */
 
-    $('#document').mask('000.000.000-000', maskOptions);
+                $('#name').val(response.data.name);
+                $('#email').val(response.data.email);
+                $('#document').val(response.data.document);
+                $('#cellphone').val(response.data.cellphone);
+                $('#date_birth').val(response.data.date_birth);
+
+                /**
+                 * Imagem Perfil
+                 */
+                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
+                });
+
+                /**
+                 * Dados Residenciais
+                 */
+                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
+                    $('.dados-residenciais').attr('disabled', 'disabled');
+
+                } else {
+                    $("#text-alert-documents").show();
+                    $('.dados-residenciais').removeAttr('disabled');
+                }
+                $('#zip_code').val(response.data.zip_code);
+                $('#street').val(response.data.street);
+                $('#number').val(response.data.number);
+                $('#neighborhood').val(response.data.neighborhood);
+                $('#complement').val(response.data.complement);
+                $('#city').val(response.data.city);
+                $('#state').val(response.data.state);
+
+                //seleciona a opcao do select de acordo com o país do usuário
+                $("#country").find('option').each(function () {
+                    if (response.data.country == $(this).val()) {
+                        $(this).attr('selected', true);
+                    }
+                });
+                //só mostra o campo estado se o país for Brasil e Estados Unidos
+                if (response.data.country == 'brazil' || response.data.country == 'usa') {
+                    $(".div-state").show();
+                }
+                /**
+                 * Notificações
+                 */
+                if (response.data.boleto_compensated) {
+                    $("#boleto_compensated_switch").attr("checked", "checked");
+                }
+                if (response.data.sale_approved) {
+                    $("#sale_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.notazz) {
+                    $("#notazz_switch").attr("checked", "checked");
+                }
+
+                if (response.data.released_balance) {
+                    $("#released_balance_switch").attr("checked", "checked");
+                }
+                if (response.data.domain_approved) {
+                    $("#domain_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.shopify) {
+                    $("#shopify_switch").attr("checked", "checked");
+                }
+
+                if (response.data.billet_generated) {
+                    $("#billet_generated_switch").attr("checked", "checked");
+                }
+                if (response.data.credit_card_in_proccess) {
+                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
+                }
+
+                // Verificação de telefone
+
+                if (response.data.cellphone_verified) {
+                    cellphoneVerified();
+                } else {
+                    cellphoneNotVerified();
+                }
+
+                // Verificação de email
+
+                if (response.data.email_verified) {
+                    emailVerified();
+                } else {
+                    emailNotVerified();
+                }
+
+                /**
+                 * Documentos
+                 */
+
+                if (response.data.personal_document_translate === 'pending' || response.data.personal_document_translate === 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                } else {
+                    $("#text-alert-documents-cpf").hide();
+                }
+
+                if (response.data.personal_document_translate === 'approved' || response.data.personal_document_translate === 'analyzing') {
+                    $('#document').attr('disabled', 'disabled');
+                    $("#personal-document-id").hide();
+                }
+
+                if (response.data.address_document_translate == 'pending' || response.data.address_document_translate == 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                    $("#address-document-id").show();
+                }
+
+                if (response.data.address_document_translate == 'approved' || response.data.address_document_translate == 'analyzing') {
+                    $("#address-document-id").hide();
+                }
+
+                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
+
+                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
+                user = response.data.id_code;
+
+                verifyDocuments(response.data);
+                verifyUserAddress(response.data);
+                changeMaskByUserCountry(response.data);
+                loadLabelsByCountry(response.data);
+            }
+        });
+    }
+    getDataProfile();
 
     // Verificar número de celular
     $("#btn_verify_cellphone").on("click", function () {
@@ -132,135 +262,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    getDataProfile();
-    function getDataProfile() {
-        $.ajax({
-            url: "/api/profile",
-            type: "GET",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            cache: false,
-            async: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                /**
-                 * Dados Pessoais
-                 */
-                if (response.data.personal_document_translate == 'pending' || response.data.personal_document_translate == 'refused') {
-                    $("#text-alert-documents-cpf").show();
-                }
-
-                if (response.data.personal_document_translate == 'approved' || response.data.personal_document_translate == 'analyzing') {
-                    $('#document').attr('disabled', 'disabled');
-                    $("#personal-document-id").hide();
-                }
-
-                $('#name').val(response.data.name);
-                $('#email').val(response.data.email);
-                $('#document').val(response.data.document);
-                $('#cellphone').val(response.data.cellphone);
-                $('#date_birth').val(response.data.date_birth);
-
-                /**
-                 * Imagem Perfil
-                 */
-                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function () {
-                    $(this).attr('src', '/modules/global/img/user-default.png');
-                });
-
-                /**
-                 * Dados Residenciais
-                 */
-                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
-                    $('.dados-residenciais').attr('disabled', 'disabled');
-
-                } else {
-                    $("#text-alert-documents").show();
-                    $('.dados-residenciais').removeAttr('disabled');
-                }
-                $('#zip_code').val(response.data.zip_code);
-                $('#street').val(response.data.street);
-                $('#number').val(response.data.number);
-                $('#neighborhood').val(response.data.neighborhood);
-                $('#complement').val(response.data.complement);
-                $('#city').val(response.data.city);
-                $('#state').val(response.data.state);
-
-                /**
-                 * Notificações
-                 */
-                if (response.data.boleto_compensated) {
-                    $("#boleto_compensated_switch").attr("checked", "checked");
-                }
-                if (response.data.sale_approved) {
-                    $("#sale_approved_switch").attr("checked", "checked");
-                }
-                if (response.data.notazz) {
-                    $("#notazz_switch").attr("checked", "checked");
-                }
-
-                if (response.data.released_balance) {
-                    $("#released_balance_switch").attr("checked", "checked");
-                }
-                if (response.data.domain_approved) {
-                    $("#domain_approved_switch").attr("checked", "checked");
-                }
-                if (response.data.shopify) {
-                    $("#shopify_switch").attr("checked", "checked");
-                }
-
-                if (response.data.billet_generated) {
-                    $("#billet_generated_switch").attr("checked", "checked");
-                }
-                if (response.data.credit_card_in_proccess) {
-                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
-                }
-
-                // Verificação de telefone
-
-                if (response.data.cellphone_verified) {
-                    cellphoneVerified();
-                } else {
-                    cellphoneNotVerified();
-                }
-
-                // Verificação de email
-
-                if (response.data.email_verified) {
-                    emailVerified();
-                } else {
-                    emailNotVerified();
-                }
-
-                /**
-                 * Documentos
-                 */
-                if (response.data.address_document_translate == 'pending' || response.data.address_document_translate == 'refused') {
-                    $("#text-alert-documents-cpf").show();
-                    $("#address-document-id").show();
-                }
-
-                if (response.data.address_document_translate == 'approved' || response.data.address_document_translate == 'analyzing') {
-                    $('#document').attr('disabled', 'disabled');
-                    $("#address-document-id").hide();
-                }
-
-                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
-
-                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
-                user = response.data.id_code;
-
-                verifyDocuments(response.data);
-                verifyUserAddress(response.data);
-            }
-        });
-    }
 
     function cellphoneVerified() {
         $("#message_not_verified_cellphone").css("display", "none");
@@ -526,38 +527,6 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
-    $("#zip_code").on("input", function () {
-
-        var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
-
-        if (cep.length != 8) return false;
-
-        $.ajax({
-            url: "https://viacep.com.br/ws/" + cep + "/json/",
-            type: "GET",
-            cache: false,
-            async: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-
-                if (response.localidade) {
-                    $("#city").val(unescape(response.localidade));
-                }
-                if (response.bairro) {
-                    $("#neighborhood").val(unescape(response.bairro));
-                }
-                if (response.uf) {
-                    $("#state").val(unescape(response.uf));
-                }
-                if (response.logradouro) {
-                    $("#street").val(unescape(response.logradouro));
-                }
-            }
-        });
-    });
-
     $("#nav_taxs").on('click', function () {
         getTax();
     });
@@ -637,6 +606,37 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#country').on('change', function () {
+        let documentName = {
+            brazil: 'CPF',
+            portugal: 'NIF (Número de Identificação Fiscal)',
+            usa: 'SSN (Social Security Number)',
+            germany: 'STEUERNUMMER',
+            spain: 'DNI (Documento Nacional de Identidade)',
+            france: 'CI',
+            italy: 'Codice Fiscale',
+            chile: 'RUT (Rol Único Tributario)'
+        };
+        if ($(this).val() == 'brazil' || $(this).val() == 'usa') {
+            $(".div-state").show();
+        } else {
+            $(".div-state").hide();
+        }
+        if ($(this).val() == 'brazil') {
+            $('#zip_code').mask('00000-000');
+            $('#cellphone').mask('+55 (00) 00000-0000');
+            $('#document').mask('000.000.000-00');
+            zipCode();
+        } else {
+            $('#cellphone').mask('+0#');
+            $('#document').unmask();
+            $('#zip_code').unmask();
+        }
+        $('.label-document').text(documentName[$(this).val()]);
+        $('#document').attr('placeholder', documentName[$(this).val()]);
+    });
+
     //vefica se os documentos do usuário estão aprovados e desabilita todos os inputs
     function verifyDocuments(user) {
         if (user.address_document_status == 3 && user.personal_document_status == 3) {
@@ -658,12 +658,30 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
-    function getRefusedDocuments(refusedDocuments) {
-        $.each(refusedDocuments, function (index, value) {
-            $('#div_documents_refused').append('<div class="alert alert-danger text-center my-20">' +
-                '<p>O ' + value.type_translated + ' que foi enviado na data: ' + value.date + ' foi reprovado pelo motivo abaixo: <br><a href="' + value.document_url + '" class="document-url">Visualizar documento</a> <br><b>' + value.refused_reason + '</b> <br></p>' +
-                '</div>');
-        });
+    function changeMaskByUserCountry(user) {
+        if (user.country == 'brazil') {
+            $('#zip_code').mask('00000-000');
+            $('#cellphone').mask('+55 (00) 00000-0000');
+            $('#document').mask('000.000.000-00');
+            zipCode();
+        } else {
+            $('#cellphone').mask('+0#');
+        }
+    }
+
+    function loadLabelsByCountry(user) {
+        let documentName = {
+            brazil: 'CPF',
+            portugal: 'NIF (Número de Identificação Fiscal)',
+            usa: 'SSN (Social Security Number)',
+            germany: 'STEUERNUMMER',
+            spain: 'DNI (Documento Nacional de Identidade)',
+            france: 'CI',
+            italy: 'Codice Fiscale',
+            chile: 'RUT (Rol Único Tributario)'
+        };
+        $('.label-document').text(documentName[user.country]);
+        $('#document').attr('placeholder', documentName[user.country]);
     }
 
     function htmlTableDocuments(data) {
@@ -725,6 +743,40 @@ $(document).ready(function () {
                 $("#loaderLine").remove();
 
             }
+        });
+    }
+
+    function zipCode() {
+        $("#zip_code").on("input", function () {
+
+            var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
+
+            if (cep.length != 8) return false;
+
+            $.ajax({
+                url: "https://viacep.com.br/ws/" + cep + "/json/",
+                type: "GET",
+                cache: false,
+                async: false,
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+
+                    if (response.localidade) {
+                        $("#city").val(unescape(response.localidade));
+                    }
+                    if (response.bairro) {
+                        $("#neighborhood").val(unescape(response.bairro));
+                    }
+                    if (response.uf) {
+                        $("#state").val(unescape(response.uf));
+                    }
+                    if (response.logradouro) {
+                        $("#street").val(unescape(response.logradouro));
+                    }
+                }
+            });
         });
     }
 
@@ -857,6 +909,8 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
 
                     });
                 }
+
+                getDataProfile();
 
             }
         });

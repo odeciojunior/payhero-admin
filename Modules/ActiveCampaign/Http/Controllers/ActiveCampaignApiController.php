@@ -116,6 +116,7 @@ class ActiveCampaignApiController extends Controller
                                                                                       'project_id' => $projectId,
                                                                                       'user_id'    => auth()->user()->id,
                                                                                   ]);
+                    $activecampaignService->createCustomFieldsDefault($integrationCreated->id);
                 } else {
                     return response()->json([
                                                 'message' => 'Erro ao realizar a integração. API URL e/ou API Key inválido(s)',

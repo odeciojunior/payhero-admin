@@ -363,7 +363,7 @@ $(() => {
     function getClient(client) {
         $.ajax({
             method: "GET",
-            url: '/api/client/' + client,
+            url: '/api/customer/' + client,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

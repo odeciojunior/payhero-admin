@@ -1,6 +1,5 @@
 let tracking_id = 'undefined';
 
-
 $(() => {
 
     $('#tracking-product-image').on('error', function () {
@@ -121,7 +120,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects',
+            url: '/api/projects?select=true',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -245,7 +244,7 @@ $(() => {
                             lastSale !== tracking.sale
                                 ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
                                 : `<td></td>`
-                        }
+                            }
                                          <td>${tracking.approved_date}</td>
                                          <td>
                                              <span style="max-width: 330px; display:block; margin:0 auto;">
@@ -265,7 +264,7 @@ $(() => {
                             ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
                                                <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
                             : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                        }
+                            }
                                            <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
@@ -281,10 +280,12 @@ $(() => {
         });
     }
 
-
     //modal de detalhes
     $(document).on('click', '.tracking-detail', function () {
         tracking_id = $(this).attr('tracking');
+
+        let btnDetail = $(this);
+
         loadOnAny('#modal-tracking-details');
         $('#modal-tracking').modal('show');
 
@@ -336,7 +337,7 @@ $(() => {
                     }
                 }
 
-                let statusBadge = $(this).parent()
+                let statusBadge = btnDetail.parent()
                     .parent()
                     .find('td .badge');
 
@@ -353,10 +354,8 @@ $(() => {
 
     $(document).on('click', '.input-tracking-code', function () {
         let row = $(this).parent().parent();
+        $('.tracking-close').click();
         row.find('.tracking-edit, .tracking-add').click();
-        $(this).one('focusout', function () {
-            row.find('.tracking-close').click();
-        });
     });
 
     //salvar tracking
@@ -389,6 +388,18 @@ $(() => {
 
                     row.find('.tracking-close')
                         .click();
+
+                    let tracking = response.data;
+
+                    let statusBadge = btnSave.parent()
+                        .parent()
+                        .find('td .badge');
+
+                    if (statusBadge.html() !== tracking.tracking_status) {
+                        statusBadge.removeClass('badge-success badge-warning badge-danger badge-primary')
+                            .addClass('badge-' + getStatusBadge(tracking.tracking_status_enum))
+                            .html(tracking.tracking_status);
+                    }
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }

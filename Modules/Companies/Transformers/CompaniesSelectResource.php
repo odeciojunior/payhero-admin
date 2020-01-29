@@ -20,7 +20,8 @@ class CompaniesSelectResource extends Resource
 
         return [
             'id'                      => Hashids::encode($this->id),
-            'name'                    => $this->fantasy_name,
+            'country'                 => $this->country,
+            'name'                    => $this->company_type == 1 ? 'Pessoa fisíca' : $this->fantasy_name,
             'company_document_status' => ($companyDocumentValidated) ? 'approved' : 'pending',
         ];
     }

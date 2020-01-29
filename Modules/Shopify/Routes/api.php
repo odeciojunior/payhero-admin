@@ -42,5 +42,10 @@ Route::group(
             'uses' => 'ShopifyApiController@verifyPermission',
             'as'   => 'shopify.verifypermissions',
         ]);
+
+        Route::post('/apps/shopify/skiptocart', [
+            'uses' => 'ShopifyApiController@setSkipToCart',
+            'as'   => 'shopify.skiptocart',
+        ]);
     }
 );

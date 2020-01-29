@@ -44,14 +44,20 @@ class Withdrawal extends Model
         'value',
         'release_date',
         'status',
-        'created_at',
-        'updated_at',
+        'currency',
+        'currency_quotation',
+        'value_transferred',
+        'abroad_transfer_tax',
+        'tax',
         'bank',
         'agency',
         'agency_digit',
         'account',
         'account_digit',
+        'created_at',
+        'updated_at'
     ];
+
     /**
      * @var bool
      */
