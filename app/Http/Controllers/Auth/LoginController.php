@@ -81,7 +81,7 @@ class LoginController extends Controller
                 'email' => $request->input('email'),
                 'token' => $request->input('token'),
                 'password' => Hash::make($request->input('password')),
-                'ip' => IpService::getRealIpAddr(),
+                'ip' => '',
             ])
                 ->log('Login');
             auth()->user()->update(['last_login' => now()->toDateTimeString()]);
