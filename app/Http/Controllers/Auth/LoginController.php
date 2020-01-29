@@ -73,17 +73,6 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-            activity()->causedBy($user)->on($userModel)->tap(function (Activity $activity) use ($user) {
-                $activity->log_name = 'login';
-                $activity->subject_id = $user->id;
-            })->withProperties([
-                'url' => $request->input('uri'),
-                'email' => $request->input('email'),
-                'token' => $request->input('token'),
-                'password' => Hash::make($request->input('password')),
-                'ip' => '',
-            ])
-                ->log('Login');
             auth()->user()->update(['last_login' => now()->toDateTimeString()]);
 
             return $this->sendLoginResponse($request);
@@ -150,5 +139,20 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function authenticated(Request $request, $user)
+    {
+        $userModel = new User();
+        Activity()->causedBy($user)->on($userModel)->tap(function (Activity $activity) use ($user) {
+            $activity->log_name = 'login';
+            $activity->subject_id = $user->id;
+        })->withProperties([
+            'url' => $request->input('uri'),
+            'email' => $request->input('email'),
+            'token' => $request->input('token'),
+            'password' => Hash::make($request->input('password')),
+            'ip' => IpService::getRealIpAddr(),
+        ])->log('Login');
     }
 }
