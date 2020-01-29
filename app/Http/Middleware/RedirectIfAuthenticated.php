@@ -19,9 +19,9 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
-                return '/dashboard';
+                return redirect('/dashboard');
             } else {
-                return '/sales';
+                return redirect('/sales');
             }
         }
 
