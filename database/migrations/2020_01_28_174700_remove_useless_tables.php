@@ -13,6 +13,8 @@ class RemoveUselessTables extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::dropIfExists('anticipated_transactions');
         Schema::dropIfExists('anticipations');
         Schema::dropIfExists('campaigns');
@@ -24,6 +26,8 @@ class RemoveUselessTables extends Migration
         Schema::dropIfExists('layouts');
         Schema::dropIfExists('plan_gifts');
         Schema::dropIfExists('zenvia_sms');
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
