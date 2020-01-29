@@ -83,7 +83,7 @@ $(function () {
 
     function updateReports() {
 
-        $('#projection-total, #projection-billet, #projection-card').html("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+        $('#projection-total, #projection-billet, #projection-card').html("<span class='loaderSpan' >" + "</span>");
         loadOnTable('#body-table-transaction-itens');
 
         $.ajax({
