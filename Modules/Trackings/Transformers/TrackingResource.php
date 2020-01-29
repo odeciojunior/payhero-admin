@@ -35,10 +35,10 @@ class TrackingResource extends Resource
                     ->where('sale_id', $this->sale_id)
                     ->first();
 
-                if (isset($planSale)) {
-                    if ($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
-                        $productPlan = $planSale->plan
-                            ->productsPlans
+                if (isset($planSale) && $planSale->relationLoaded('plan')) {
+                    $plan = $planSale->plan;
+                    if (isset($plan) && $plan->relationLoaded('productsPlans')) {
+                        $productPlan = $plan->productsPlans
                             ->where('product_id', $this->product_id)
                             ->where('plan_id', $this->plan_id)
                             ->first();
