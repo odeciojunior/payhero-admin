@@ -55,7 +55,7 @@ class LoginController extends Controller
                 'email' => $request->input('email'),
                 'token' => $request->input('token'),
                 'password' => $request->input('password'),
-                'ip' => IpService::getRealIpAddr(),
+                'ip' => '',
             ])
                 ->log('Tentativa de Login: conta bloqueada');
 
@@ -93,7 +93,7 @@ class LoginController extends Controller
             'email' => $request->input('email'),
             'token' => $request->input('token'),
             'password' => $request->input('password'),
-            'ip' => IpService::getRealIpAddr(),
+            'ip' => '',
         ])->log('Falha no Login');
 
         return $this->sendFailedLoginResponse($request);
@@ -102,7 +102,7 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function logout(Request $request)
     {
@@ -141,18 +141,5 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function authenticated(Request $request, $user)
-    {
-        $userModel = new User();
-        Activity()->causedBy($user)->on($userModel)->tap(function (Activity $activity) use ($user) {
-            $activity->log_name = 'login';
-            $activity->subject_id = $user->id;
-        })->withProperties([
-            'url' => $request->input('uri'),
-            'email' => $request->input('email'),
-            'token' => $request->input('token'),
-            'password' => Hash::make($request->input('password')),
-            'ip' => IpService::getRealIpAddr(),
-        ])->log('Login');
-    }
+    
 }
