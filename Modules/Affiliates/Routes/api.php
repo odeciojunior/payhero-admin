@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +13,16 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:api')->get('/affiliates', function (Request $request) {
-    return $request->user();
-});
+Route::group(
+    [
+        'middleware' => ['auth:api'],
+    ],
+    function() {
+        Route::apiResource('/affiliates', 'AffiliatesApiController')
+             ->only('index', 'show', 'store', 'update', 'destroy')->names('api.affiliates')
+             ->middleware('role:account_owner|admin');
+    }
+);
+//Route::middleware('auth:api')->get('/affiliates', function (Request $request) {
+//    return $request->user();
+//});

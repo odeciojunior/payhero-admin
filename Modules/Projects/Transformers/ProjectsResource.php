@@ -68,6 +68,7 @@ class ProjectsResource extends Resource
             "automatic_affiliation"      => $this->automatic_affiliation,
             "url_affiliates"             => $this->url_affiliates,
             "percentage_affiliates"      => $this->percentage_affiliates,
+            'user_name'                  => $this->users[0]->name,
         ];
     }
 }

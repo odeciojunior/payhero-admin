@@ -6,24 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Project;
+use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class AffiliatesController extends Controller
+class AffiliatesApiController extends Controller
 {
     /**
-     * @param $projectId
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * Display a listing of the resource.
+     * @return Response
      */
-    public function index($projectId)
+    public function index()
     {
-        $projectModel = new Project();
-        $projectId    = current(Hashids::decode($projectId));
-        $project      = $projectModel->find($projectId);
-        if ($project) {
-            return view('affiliates::index');
-        } else {
-            return view('errors.404');
-        }
+        return view('affiliates::index');
     }
 
     /**
@@ -36,11 +30,13 @@ class AffiliatesController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
      * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
-        //
+        dd('store');
     }
 
     /**
@@ -50,7 +46,18 @@ class AffiliatesController extends Controller
      */
     public function show($id)
     {
-        return view('affiliates::show');
+        $projectModel = new Project();
+        $projectId    = current(Hashids::decode($id));
+        if ($projectId) {
+            $project = $projectModel->find($projectId);
+
+            return new ProjectsResource($project);
+        }
+
+        return response()->json([
+                                    'message' => 'Projeto não encontrado',
+                                ], 400);
+        //        return view('affiliates::show');
     }
 
     /**
