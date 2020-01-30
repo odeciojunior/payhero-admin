@@ -261,7 +261,7 @@ class PlansApiController extends Controller
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
 
-                    $plan = $planModel->where('id', $planId)->first();
+                    $plan = $planModel->with('plansSales')->where('id', $planId)->first();
 
                     $plan->update([
                                       'name'        => FoxUtils::removeSpecialChars($requestData['name']),
@@ -271,12 +271,22 @@ class PlansApiController extends Controller
                                       'status'      => $planModel->present()->getStatus('active'),
                                   ]);
 
-                    $productPlans = $productPlan->where('plan_id', $plan->id)->get();
+                    $productPlans      = $productPlan->where('plan_id', $plan->id)->get();
+                    $productPlanId     = $productPlans->pluck('product_id')->toArray();
+                    $productPlanAmount = $productPlans->pluck('amount')->toArray();
+                    $resultId          = array_diff($productPlanId, $requestData['products']);
+                    $resultAmount      = array_diff($productPlanAmount, $requestData['product_amounts']);
+
+                    if (count($plan->plansSales) > 0 && (!empty($resultId) || !empty($resultAmount)) || (count($requestData['products']) > count($productPlanId))) {
+                        return response()->json(['message' => 'Impossível editar os produtos do plano pois possui vendas associadas.'], 400);
+                    }
+
                     if (count($productPlans) > 0) {
                         foreach ($productPlans as $productPlan) {
                             $productPlan->forceDelete();
                         }
                     }
+
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
 

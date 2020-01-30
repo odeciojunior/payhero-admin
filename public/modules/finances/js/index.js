@@ -265,7 +265,7 @@ $(document).ready(function () {
                                                             <h4>Transferência para o exterior:</h4>
                                                             <div><b>Moeda:</b> ${response.data.currency}</div>
                                                             <div><b>Cotação:</b> R$ ${response.data.quotation}</div>
-                                                            <div><b>Taxa de IOF:</b> $ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
+                                                            <div><b>Taxa de IOF:</b> R$ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
                                                             <div><b>Custo:</b> R$ ${response.data.cost.value} (${response.data.cost.tax}%)</div>
                                                             <div><b>Total:</b> R$ ${response.data.abroad_transfer.value} (${response.data.abroad_transfer.tax}%)</div>
                                                          </div>`;

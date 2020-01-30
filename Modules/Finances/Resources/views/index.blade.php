@@ -133,7 +133,7 @@
                                                 <th scope="col">Solicitação</th>
                                                 <th scope="col">Liberação</th>
                                                 <th scope="col">Valor</th>
-                                                <th style="display: none" id="col_transferred_value" scope="col">Valor Convertido</th>
+                                                <th style="display: none" id="col_transferred_value" scope="col">Valor transferido</th>
                                                 <th scope="col">Status</th>
                                             </tr>
                                         </thead>
