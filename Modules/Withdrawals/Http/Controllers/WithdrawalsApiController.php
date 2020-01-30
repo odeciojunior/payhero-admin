@@ -274,7 +274,7 @@ class WithdrawalsApiController extends Controller
                 $costValue           = 0;
                 $costTax             = auth()->user()->abroad_transfer_tax;
                 $abroadTransferValue = 0;
-                $abroadTax           = 1.68;
+                $abroadTax           = $costTax + $iofTax;
 
                 $companyService = new CompanyService();
 
@@ -293,7 +293,6 @@ class WithdrawalsApiController extends Controller
                     $withdrawalValue     -= $abroadTransferValue;
                     $convertedMoney      = number_format(intval($withdrawalValue / $currentQuotation) / 100, 2, ',', '.');
                 }
-
 
                 return response()->json(
                     [
