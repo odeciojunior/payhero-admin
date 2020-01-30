@@ -73,7 +73,8 @@ class TrackingsApiController extends Controller
             })->log('Visualizou tela detalhes do rastreamento');
 
             $tracking = $trackingModel->with([
-                                                 'product.project.domains',
+                                                 'productPlanSale.plan.project.domains',
+                                                 'product',
                                                  'delivery',
                                              ])->find($trackingId);
 
