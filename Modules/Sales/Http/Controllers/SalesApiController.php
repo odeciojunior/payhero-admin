@@ -273,7 +273,7 @@ class SalesApiController extends Controller
             $planModel = new Plan();
 
             $plan = $planModel->find($requestData['plan_id']);
-            $sale = $saleModel->with(['client'])->find($requestData['sale_id']);
+            $sale = $saleModel->with(['customer'])->find($requestData['sale_id']);
 
             activity()->on($saleModel)->tap(function (Activity $activity) use ($requestData) {
                 $activity->log_name = 'visualization';
