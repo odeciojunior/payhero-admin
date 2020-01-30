@@ -18,13 +18,18 @@ $(document).ready(function () {
 
                     /**
                      * Se for produto shopify o botao delete nao aparece
-                     */
+                     *//*
                     if (!response.data.product.shopify_id) {
                         $(".delete-product").show();
                         $('.delete-product').attr('product', response.data.product.id);
                         $('.delete-product').attr('productname', response.data.product.name);
 
-                    }
+                    }*/
+
+
+                    $(".delete-product").show();
+                    $('.delete-product').attr('product', response.data.product.id);
+                    $('.delete-product').attr('productname', response.data.product.name);
 
                     /**
                      * Select com as categorias

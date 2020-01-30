@@ -17,23 +17,27 @@
                 @csrf
                 @method('POST')
                 <div class="card shadow p-30" data-plugin="matchHeight">
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-3 col-12">
                         <label for="country">País da empresa</label>
                         <select id="country" name='country' class="form-control select-pad">
                             <option value="brazil">Brasil</option>
-                            <option value="usa" disabled>United States</option>
+                            <option value="portugal">Portugal</option>
+                            <option value="usa">Estados Unidos</option>
+                            <option value="germany">Alemanha</option>
+                            <option value="spain">Espanha</option>
+                            <option value="france">França</option>
+                            <option value="italy">Itália</option>
                         </select>
                     </div>
-                    <div class="form-group col-xl-6">
-                        <label id='fantay_name_label'>Razão Social</label>
-                        <input name="fantasy_name" type="text" class="input-pad fantasy_name_1" id="fantasy_name" placeholder="Razão Social" maxlength='40'>
-                    </div>
-                    <div id='div-company-document' class="form-group col-xl-6" style='display:none;'>
-                        <label id='company_document_label' for='company_document'>CPF/CNPJ</label>
+                    <div id='div-company-document' class="form-group col-xl-6" style=''>
+                        <label id='company_document_label' for='company_document'>CNPJ</label>
                         <input name="company_document" type="text" class="input-pad company_document_1" id="company_document" placeholder="">
                     </div>
+                    <div class="form-group col-xl-6">
+                        <label id='fantay_name_label'>Nome da empresa</label>
+                        <input name="fantasy_name" type="text" class="input-pad fantasy_name_1" id="fantasy_name" placeholder="Nome da empresa" maxlength='60'>
+                    </div>
                     <div id="store_form" style="width:100%">
-                        {{--                        @include('companies::create_brazilian_company')--}}
                     </div>
                     <div class="form-group col-xl-4">
                         <button class="form-control btn btn-success btn-next-div1" type='submit'>
@@ -43,6 +47,7 @@
                 </div>
             </form>
         </div>
+
         <div id='div2' class="page-content container" style='display:none;'>
             <form id='create_form' method="post" action="{{route('api.companies.store')}}">
                 @csrf
@@ -70,23 +75,28 @@
                         <div class='row'>
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label for="country">País da empresa</label>
-                                    <select id="country" name='country' class="form-control select-pad">
+                                    <label for="country_2">País da empresa</label>
+                                    <select id="country_2" name='country' class="form-control select-pad">
                                         <option value="brazil">Brasil</option>
-                                        <option value="usa" disabled>United States</option>
+                                        <option value="portugal">Portugal</option>
+                                        <option value="usa">Estados Unidos</option>
+                                        <option value="germany">Alemanha</option>
+                                        <option value="spain">Espanha</option>
+                                        <option value="france">França</option>
+                                        <option value="italy">Itália</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="company_document">CPNJ</label>
-                                    <input type="text" name="company_document" class="input-pad company_document_2" id="company_document" placeholder="Digite seu CNPJ">
+                                    <label id='company_document_2_label' for="company_document">CPNJ</label>
+                                    <input type="text" name="company_document" class="input-pad company_document_2" id="company_document_2" placeholder="Digite seu CNPJ">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="fantasy_name">Razão social</label>
-                                    <input type="text" name="company_document" class="input-pad fantasy_name_2" id="fantasy_name" placeholder="Digite a Razão social">
+                                    <label for="fantasy_name">Nome da empresa</label>
+                                    <input type="text" name="company_document" class="input-pad fantasy_name_2" id="fantasy_name_2" placeholder="Digite a Razão social">
                                 </div>
                             </div>
                             <div class="col-lg-4 mt-30">
@@ -102,7 +112,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/create.js?v=3') }}"></script>
+        <script src="{{ asset('/modules/companies/js/create.js?v=5') }}"></script>
     @endpush
 
 @endsection

@@ -2,9 +2,9 @@
 
 namespace Modules\Core\Services;
 
-use App\Services\FoxUtilsService;
 use Exception;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\FoxUtils;
 use PHPHtmlParser\Dom;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
@@ -15,7 +15,6 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Modules\Core\Entities\ProductPlan;
@@ -81,6 +80,10 @@ class ShopifyService
      * @var string
      */
     private $project = "admin";
+    /**
+     * @var bool
+     */
+    private $skipToCart = false;
 
     /**
      * ShopifyService constructor.
@@ -297,6 +300,7 @@ class ShopifyService
      * @param string $value
      * @param null $domain
      * @param bool $ajax
+     * @param bool $skipToCart
      * @return bool
      * @throws ChildNotFoundException
      * @throws CircularException
@@ -587,6 +591,7 @@ class ShopifyService
     /**
      * @param $htmlCart
      * @param null $domain
+     * @param bool $skipToCart
      * @return mixed|string|string[]|null
      * @throws ChildNotFoundException
      * @throws CircularException
@@ -718,6 +723,18 @@ class ShopifyService
             $divFoxScript->addChild($script);
             $script = new HtmlNode('script');
 
+            if ($this->skipToCart) {
+                $skipScript = new HtmlNode('script');
+                $skipScript->addChild(new TextNode("if(document.cookie.match(new RegExp('cart=([^;]+)'))){
+                                                             document.getElementsByTagName('body').item(0).style.display = 'none';
+                                                             let htmlData = `<div><style>@keyframes loader-circle{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loader-container{height:100vh;text-align:center;padding-top:40vh}.loader{width:75px;height:75px;display:inline-block;border-top:solid #d3d3d3;border-right:solid #d3d3d3;border-bottom:solid #d3d3d3;border-left:solid #557b96;border-width:5px;border-radius:50%;animation:loader-circle 1.1s infinite linear}</style><div class='loader-container'><div class='loader'></div></div></div>`;
+                                                             document.getElementsByTagName('html').item(0).insertAdjacentHTML( 'beforeend', htmlData);
+                                                             document.querySelector('.cart__submit, .checkout_btn').click();
+                                                             document.cookie = 'cart=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                                          }"));
+                $divFoxScript->addChild($skipScript);
+            }
+
             $script->addChild(new TextNode("$(document).ready(function (){
 
                     $(document).on('change', \"input.booster-quantity, input[name^='updates['], input[id^='updates_'], input[id^='Updates_']\", function(e) {
@@ -795,7 +812,9 @@ class ShopifyService
         }
 
         foreach ($storeProduct->getVariants() as $variant) {
+            $title       = '';
             $description = '';
+
             try {
                 $description = $variant->getOption1();
                 if ($description == 'Default Title') {
@@ -806,6 +825,11 @@ class ShopifyService
                 }
                 if ($variant->getOption3() != '') {
                     $description .= ' - ' . $variant->getOption3();
+                }
+                if (empty($storeProduct->getTitle())) {
+                    $title = 'Produto sem nome';
+                } else {
+                    $title = mb_substr($storeProduct->getTitle(), 0, 100);
                 }
             } catch (Exception $e) {
                 //
@@ -819,8 +843,8 @@ class ShopifyService
 
                 $product->update(
                     [
-                        'name'               => $storeProduct->getTitle() != '' ? FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)) : ' Nome ',
-                        'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
+                        'name'               => $title,
+                        'description'        => mb_substr($description, 0, 100),
                         'weight'             => $variant->getWeight(),
                         //'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                         'shopify_id'         => $storeProduct->getId(),
@@ -839,8 +863,8 @@ class ShopifyService
                     $plan = $planModel->find($productPlan->plan_id);
                     $plan->update(
                         [
-                            'name'        => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
-                            'description' => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
+                            'name'        => $title,
+                            'description' => mb_substr($description, 0, 100),
                             'price'       => $variant->getPrice(),
                             'status'      => '1',
                             'project_id'  => $projectId,
@@ -880,8 +904,8 @@ class ShopifyService
                             'shopify_id'         => $storeProduct->getId(),
                             'shopify_variant_id' => $variant->getId(),
                             'project_id'         => $projectId,
-                            'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
-                            'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
+                            'name'               => $title,
+                            'description'        => mb_substr($description, 0, 100),
                             'code'               => '',
                             'price'              => $variant->getPrice(),
                             'status'             => '1',
@@ -902,8 +926,8 @@ class ShopifyService
                 $product = $productModel->create(
                     [
                         'user_id'            => $userId,
-                        'name'               => $storeProduct->getTitle() != '' ? FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)) : 'Nome',
-                        'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
+                        'name'               => $title,
+                        'description'        => mb_substr($description, 0, 100),
                         'guarantee'          => '0',
                         'format'             => 1,
                         'category_id'        => '11',
@@ -922,8 +946,8 @@ class ShopifyService
                         'shopify_id'         => $storeProduct->getId(),
                         'shopify_variant_id' => $variant->getId(),
                         'project_id'         => $projectId,
-                        'name'               => FoxUtils::removeSpecialChars(substr($storeProduct->getTitle(), 0, 100)),
-                        'description'        => FoxUtils::removeSpecialChars(substr($description, 0, 100)),
+                        'name'               => $title,
+                        'description'        => mb_substr($description, 0, 100),
                         'code'               => '',
                         'price'              => $variant->getPrice(),
                         'status'             => '1',
@@ -1278,7 +1302,7 @@ class ShopifyService
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
             $delivery     = $sale->delivery;
-            $client       = $sale->client;
+            $client       = $sale->customer;
             $checkout     = $sale->checkout;
 
             $totalValue = $sale->present()->getSubTotal();
@@ -1336,7 +1360,7 @@ class ShopifyService
                 "country"       => "Brasil",
                 "first_name"    => $delivery->present()->getReceiverFirstName(),
                 "last_name"     => $delivery->present()->getReceiverLastName(),
-                "phone"         => $client->present()->getTelephoneShopify(),
+                "phone"         => $client->telephone,
                 "province"      => $delivery->state,
                 "zip"           => FoxUtils::formatCEP($delivery->zip_code),
                 "name"          => $client->name,
@@ -1359,7 +1383,7 @@ class ShopifyService
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
                 "email"                   => $client->email,
-                "phone"                   => $client->present()->getTelephoneShopify(),
+                "phone"                   => $client->telephone,
                 "first_name"              => $delivery->present()->getReceiverFirstName(),
                 "last_name"               => $delivery->present()->getReceiverLastName(),
                 "buyer_accepts_marketing" => false,
@@ -1494,9 +1518,9 @@ class ShopifyService
             $order = $this->client->get('orders/' . $sale->shopify_order);
             if (!FoxUtils::isEmpty($order)) {
                 if ($order['order']['financial_status'] == 'pending') {
-                    $data           = $sale->shopify_order;
-                    $this->sendData = $data;
-                    $result         = $this->client->getOrderManager()->cancel($data);
+                    $data               = $sale->shopify_order;
+                    $this->sendData     = $data;
+                    $result             = $this->client->getOrderManager()->cancel($data);
                     $this->receivedData = $this->convertToArray($result);
                     // caso getOrderManager->cancel da error, trocar por esse( porem esse deleta a ordem, não cancela)
                     //                    $result = $this->client->delete('orders/' . $order['order']['id']);
@@ -1832,6 +1856,49 @@ class ShopifyService
                 'status'  => 'error',
                 'message' => 'Erro na permissão de tema',
             ];
+        }
+    }
+
+    /**
+     * @param bool $skipToCart
+     */
+    public function setSkipToCart(bool $skipToCart): void
+    {
+        $this->skipToCart = $skipToCart;
+    }
+
+    public function updateOrder(Sale $sale)
+    {
+        try {
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            if (!empty($sale) && !empty($sale->shopify_order)) {
+                $client   = $sale->customer;
+
+                $shippingAddress = [
+                    "phone" => $client->telephone,
+
+                ];
+
+                $orderData = [
+                    "email"            => $client->email,
+                    "phone"            => $client->telephone,
+                    "shipping_address" => $shippingAddress,
+
+                ];
+
+                $this->sendData = $orderData;
+                $order          = $this->client->put('orders/' . $sale->shopify_order, [
+                    'order'    => $orderData,
+                ]);
+
+                $this->receivedData = $order;
+            } else {
+                Log::emergency('Erro ao atualizar uma ordem no shopify com a venda ' . $sale->id);
+            }
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
+            Log::emergency('Erro ao atualizar uma ordem no shopify com a venda ' . $sale->id);
         }
     }
 }

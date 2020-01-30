@@ -5,7 +5,7 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
@@ -50,15 +50,15 @@ class SalesRecoveryService
      * @param string $dateEnd
      * @param int $paymentMethod
      * @param array $status
-     * @param string|null $client
+     * @param string|null $customer
      * @return AnonymousResourceCollection
      *  Monta Tabela quando for boleto expirado ou cartão recusado
      */
-    public function getSaleExpiredOrRefused(int $paymentMethod, array $status, string $projectId, string $dateStart = null, string $dateEnd = null, string $client = null)
+    public function getSaleExpiredOrRefused(int $paymentMethod, array $status, string $projectId, string $dateStart = null, string $dateEnd = null, string $customer = null)
     {
         $salesModel        = new Sale();
         $userProjectsModel = new UserProject();
-        $clientModel       = new Client();
+        $customerModel     = new Customer();
 
         $salesExpired = $salesModel
             ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount',
@@ -67,22 +67,22 @@ class SalesRecoveryService
                 $join->on('plan_sale.sale_id', '=', 'sales.id');
             })->leftJoin('checkouts as checkout', function($join) {
                 $join->on('sales.checkout_id', '=', 'checkout.id');
-            })->leftJoin('clients as client', function($join) {
-                $join->on('sales.client_id', '=', 'client.id');
+            })->leftJoin('customers as customer', function($join) {
+                $join->on('sales.customer_id', '=', 'customer.id');
             })->whereIn('sales.status', $status)->where([
                                                             ['sales.payment_method', $paymentMethod],
                                                         ])->with([
                                                                      'project',
-                                                                     'client',
+                                                                     'customer',
                                                                      'project.domains' => function($query) {
                                                                          $query->where('status', 3)//dominio aprovado
                                                                                ->first();
                                                                      },
                                                                  ]);
 
-        if (!empty($client)) {
-            $clientSearch = $clientModel->where('name', 'like', '%' . $client . '%')->pluck('id')->toArray();
-            $salesExpired->whereIn('sales.client_id', $clientSearch);
+        if (!empty($customer)) {
+            $customerSearch = $customerModel->where('name', 'like', '%' . $customer . '%')->pluck('id')->toArray();
+            $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
         if (!empty($projectId)) {
@@ -200,15 +200,15 @@ class SalesRecoveryService
 
         $checkout = $checkoutModel->find($sale->checkout_id);
         $delivery = $sale->delivery()->first();
-        $client   = $sale->client()->first();
+        $customer = $sale->customer()->first();
 
-        if (!empty($client->telephone)) {
-            $client->telephone       = FoxUtils::getTelephone($client->telephone);
-            $whatsAppMsg             = 'Olá ' . $client->present()->getFirstName();
-            $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg;
+        if (!empty($customer->telephone)) {
+            $customer->telephone       = preg_replace('/[^0-9]/', '', $customer->telephone);
+            $whatsAppMsg               = 'Olá ' . $customer->present()->getFirstName();
+            $customer['whatsapp_link'] = "https://api.whatsapp.com/send?phone=" . $customer->telephone . '&text=' . $whatsAppMsg;
         } else {
-            $client['whatsapp_link'] = '';
-            $client->telephone       = 'Numero Inválido';
+            $customer['whatsapp_link'] = '';
+            $customer->telephone       = 'Numero Inválido';
         }
 
         $checkout['sale_id'] = Hashids::connection('sale_id')->encode($sale->id);
@@ -229,17 +229,19 @@ class SalesRecoveryService
         $checkout->is_mobile = $checkout->is_mobile == 1 ? 'Dispositivo: Celular' : 'Dispositivo: Computador';
 
         if ($sale->payment_method == 2) {
-            $client->error = 'Não pago até a data do vencimento';
+            $customer->error = 'Não pago até a data do vencimento';
         } else {
             $log = $logModel->where('id_log_session', $checkout->id_log_session)
                             ->where('event', '=', 'payment error')
                             ->orderBy('id', 'DESC')
                             ->first();
 
-            if ($log->error == 'CARTÃO RECUSADO !') {
-                $client->error = $log->error . ' (saldo insuficiente)';
+            if (empty($log->error)) {
+                $customer->error = 'Saldo insuficiente!';
+            } else if ($log->error == 'CARTÃO RECUSADO !') {
+                $customer->error = $log->error . ' (saldo insuficiente)';
             } else {
-                $client->error = $log->error;
+                $customer->error = $log->error;
             }
         }
 
@@ -266,13 +268,13 @@ class SalesRecoveryService
 
         $products = $saleService->getProducts($checkout['sale_id']);
 
-        $client->document = FoxUtils::getDocument($client->document);
+        $customer->document = FoxUtils::getDocument($customer->document);
 
         $delivery->zip_code = FoxUtils::getCep($delivery->zip_code);
 
         return [
             'checkout' => $checkout,
-            'client'   => $client,
+            'client'   => $customer,
             'products' => $products,
             'delivery' => $delivery,
             'status'   => $status,

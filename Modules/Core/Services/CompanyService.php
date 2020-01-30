@@ -155,4 +155,57 @@ class CompanyService
             $company->contract_document_status = $company->presenter()->getStatus('pending');
         }
     }
+
+    public function getCurrency(Company $company){
+
+        $dolar = [
+            'usa'
+        ];
+
+        $euro = [
+            'portugal',
+            'germany',
+            'spain',
+            'france',
+            'italy',
+        ];
+
+        $real = [
+            'brazil',
+            'brasil'
+        ];
+
+        if(in_array($company->country, $dolar)){
+            return 'dolar';
+        }
+        elseif(in_array($company->country, $euro)){
+            return 'euro';
+        }
+        elseif(in_array($company->country, $real)){
+            return 'real';
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    /**
+     * @param $cnpj
+     */
+    public function getNameCompanyByApiCNPJ($cnpj)
+    {
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/' . $cnpj);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            return json_decode($response, true);
+        } catch (Exception $e) {
+            return;
+        }
+    }
+
 }

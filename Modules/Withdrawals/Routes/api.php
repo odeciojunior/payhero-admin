@@ -22,7 +22,7 @@ Route::group(
         Route::apiResource('/withdrawals', 'WithdrawalsApiController')
              ->only('index', 'store')->names('api.withdrawals');
 
-        Route::get('/withdrawals/getaccountinformation/{company_id}', 'WithdrawalsApiController@getAccountInformation');
+        Route::post('/withdrawals/getaccountinformation', 'WithdrawalsApiController@getAccountInformation');
 
         Route::get('/withdrawals/checkallowed', 'WithdrawalsApiController@checkAllowed');
     }

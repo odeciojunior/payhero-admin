@@ -47,7 +47,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $updated_at
  * @property User $user
  * @property Affiliate[] $affiliates
- * @property Anticipation[] $anticipations
  * @property CompanyDocument[] $companyDocuments
  * @property HotzappIntegration[] $hotzappIntegrations
  * @property Invitation[] $invitations
@@ -102,8 +101,8 @@ class Company extends Model
         'address_document_status',
         'contract_document_status',
         'company_type',
-        'created_at',
         'deleted_at',
+        'created_at',
         'updated_at',
     ];
     /**
@@ -156,14 +155,6 @@ class Company extends Model
     public function affiliates()
     {
         return $this->hasMany('Modules\Core\Entities\Affiliate');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function anticipations()
-    {
-        return $this->hasMany('Modules\Core\Entities\Anticipation');
     }
 
     /**

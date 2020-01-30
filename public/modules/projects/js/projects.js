@@ -251,8 +251,9 @@ $(() => {
                         .attr('integration-status', shopifyIntegrations[0].status)
                         .show();
                 }
-            }
 
+                $('#skiptocart-input').prop('checked', shopifyIntegrations[0].skip_to_cart).val(shopifyIntegrations[0].skip_to_cart);
+            }
         }
 
         $("#checkout_type").val(project.checkout_type);
@@ -762,6 +763,39 @@ $(() => {
         });
     });
 
+    $('#skiptocart-input').on('change', function () {
+
+        let input = $(this);
+        input.attr('disabled', true).parent()
+            .parent()
+            .css('opacity', '.5');
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/skiptocart',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+                skip_to_cart: parseInt(input.val()),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                input.attr('disabled', false).parent()
+                    .parent()
+                    .css('opacity', '1');
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
+                input.attr('disabled', false).parent()
+                    .parent()
+                    .css('opacity', '1');
+            }
+        });
+    });
     $('.discount-recovery').on("click", function () {
         recoveryDiscountColor()
     })

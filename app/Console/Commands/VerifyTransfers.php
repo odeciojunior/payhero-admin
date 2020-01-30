@@ -20,7 +20,7 @@ class VerifyTransfers extends Command
      *
      * @var string
      */
-    protected $description = 'Verify if has money to be transefered to users accounts daily';
+    protected $description = 'routine responsible for transferring the available money from the transactions to the users company account';
 
     /**
      * Create a new command instance.

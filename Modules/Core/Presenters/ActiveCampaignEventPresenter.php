@@ -21,6 +21,8 @@ class ActiveCampaignEventPresenter extends Presenter
                     return 'abandoned_cart';
                 case 5: 
                     return 'credit_refused';
+                case 6:
+                    return 'tracking';
             }
             return '';
         }
@@ -36,6 +38,8 @@ class ActiveCampaignEventPresenter extends Presenter
                     return 4;
                 case 'credit_refused': 
                     return 5;
+                case 'tracking':
+                    return 6;
             }
             return '';
         }

@@ -29,7 +29,11 @@ class TrackingService
         $apiTracking = $perfectLogService->find($tracking->tracking_code);
 
         if (isset($apiTracking->tracking_status)) {
+            if(!empty($apiTracking->trail)){
+                $apiTracking->tracking_status = end($apiTracking->trail)->tracking_status;
+            }
             $status = $this->parseStatusApi($apiTracking->tracking_status);
+
             if ($tracking->tracking_status_enum != $status) {
                 $tracking->tracking_status_enum = $status;
                 $tracking->save();
@@ -184,7 +188,6 @@ class TrackingService
 
         $saleStatus = [
             $salePresenter->getStatus('approved'),
-            $salePresenter->getStatus('charge_back'),
         ];
 
         $productPlanSales = $productPlanSaleModel
@@ -192,7 +195,7 @@ class TrackingService
                 'tracking',
                 'sale.plansSales.plan.productsPlans',
                 'sale.delivery',
-                'sale.client',
+                'sale.customer',
                 'product',
             ])
             ->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId) {
@@ -240,10 +243,34 @@ class TrackingService
         return $productPlanSales->orderBy('id', 'desc')->paginate(10);
     }
 
-    public function getAllTrackings($filters)
+    public function getResume($filters)
     {
-        $productPlanSales = $this->getTrackingsQueryBuilder($filters);
+        $trackingPresenter = (new Tracking())->present();
 
-        return $productPlanSales->get();
+        $status = [
+            $trackingPresenter->getTrackingStatusEnum('posted'),
+            $trackingPresenter->getTrackingStatusEnum('dispatched'),
+            $trackingPresenter->getTrackingStatusEnum('delivered'),
+            $trackingPresenter->getTrackingStatusEnum('out_for_delivery'),
+            $trackingPresenter->getTrackingStatusEnum('exception'),
+        ];
+
+        $productPlanSales = $this->getTrackingsQueryBuilder($filters)
+            ->without([
+                'tracking',
+                'sale',
+                'product',
+            ])
+            ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
+            ->selectRaw("COUNT(*) as total,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as posted,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as dispatched,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
+                                   SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown", $status)
+            ->first();
+
+        return $productPlanSales->toArray();
     }
 }

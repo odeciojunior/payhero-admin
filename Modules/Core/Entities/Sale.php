@@ -18,7 +18,7 @@ use App\Traits\LogsActivity;
  * @property integer $id
  * @property int $owner_id
  * @property integer $affiliate_id
- * @property integer $client_id
+ * @property integer $customer_id
  * @property integer $delivery_id
  * @property integer $shipping_id
  * @property int $project_id
@@ -57,7 +57,7 @@ use App\Traits\LogsActivity;
  * @property Project $project
  * @property Shipping $shipping
  * @property Affiliate $affiliate
- * @property Client $client
+ * @property Customer $client
  * @property Delivery $delivery
  * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
@@ -83,7 +83,7 @@ class Sale extends Model
     protected $fillable = [
         'owner_id',
         'affiliate_id',
-        'client_id',
+        'customer_id',
         'delivery_id',
         'shipping_id',
         'project_id',
@@ -175,9 +175,9 @@ class Sale extends Model
     /**
      * @return BelongsTo
      */
-    public function client()
+    public function customer()
     {
-        return $this->belongsTo('Modules\Core\Entities\Client');
+        return $this->belongsTo('Modules\Core\Entities\Customer');
     }
 
     /**

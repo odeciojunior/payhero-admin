@@ -28,6 +28,7 @@ use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\ProjectNotificationService;
 
 /**
  * Class ProjectsApiController
@@ -155,7 +156,11 @@ class ProjectsApiController extends Controller
                                                                      'edit_permission'   => 1,
                                                                      'status'            => 'active',
                                                                  ]);
+
+                        $projectNotificationService = new ProjectNotificationService();
+                        
                         if (!empty($userProject)) {
+                            $projectNotificationService->createProjectNotificationDefault($project->id);
                             return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
                             $digitalOceanPath->deleteFile($project->photo);
@@ -501,7 +506,7 @@ class ProjectsApiController extends Controller
 
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
-            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($supportPhone), $message);
+            $smsService->sendSms($supportPhone, $message);
 
             return response()->json(
                 [

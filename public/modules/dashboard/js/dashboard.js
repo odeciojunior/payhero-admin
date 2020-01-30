@@ -23,7 +23,11 @@ $(document).ready(function () {
             success: function success(data) {
                 if (!isEmpty(data.companies)) {
                     for (let i = 0; i < data.companies.length; i++) {
-                        $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                        if (data.companies[i].company_type == '1') {
+                            $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa fisíca</option>')
+                        } else {
+                            $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                        }
                     }
 
                     updateValues();
@@ -79,7 +83,7 @@ $(document).ready(function () {
             startAngle: -Math.PI / 2,
             value: value / 100,
             fill: {
-                gradient: ["#f76b1c", "#fa6161"]
+                gradient: ["#F76B1C", "#FA6161"]
             }
         });
 
@@ -127,12 +131,12 @@ $(document).ready(function () {
         }
     }
 
-    function updateReleases(data){
+    function updateReleases(data) {
 
         $('#releases-div').html('');
 
-        if(!isEmpty(data)){
-            $.each(data, function(index, value){
+        if (!isEmpty(data)) {
+            $.each(data, function (index, value) {
                 let item = `<div class="d-flex align-items-center my-15">
                                 <div class="release-progress" id="${index}">
                                     <strong>${value.progress}%</strong>
@@ -145,7 +149,7 @@ $(document).ready(function () {
             });
 
             $('#releases-col').show();
-        }else{
+        } else {
             $('#releases-col').hide();
         }
     }
@@ -157,13 +161,13 @@ $(document).ready(function () {
         let color = '';
         switch (true) {
             case value <= 33:
-                color = '#ffa040';
+                color = '#FFA040';
                 break;
             case value > 33 && value <= 66:
-                color = '#ff6f00';
+                color = '#FF6F00';
                 break;
             default:
-                color = '#c43e00';
+                color = '#C43E00';
                 break;
         }
 
