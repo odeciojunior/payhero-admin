@@ -14,6 +14,10 @@ class UserPresenter extends Presenter
         return number_format($this->transaction_rate, 2, ',', '.');
     }
 
+    public function getTaxAbroad(){
+        return number_format($this->abroad_transfer_tax, 2, ',', '.');
+    }
+
     public function getStatus($status)
     {
 

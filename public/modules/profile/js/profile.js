@@ -117,6 +117,14 @@ $(document).ready(function () {
                     cellphoneNotVerified();
                 }
 
+                if (response.data.role.name !== 'account_owner') {
+                    $("#nav_notifications").hide();
+                    $("#nav_taxs").hide();
+                } else {
+                    $("#nav_notifications").show();
+                    $("#nav_taxs").show();
+                }
+
                 // Verificação de email
 
                 if (response.data.email_verified) {
@@ -558,6 +566,8 @@ $(document).ready(function () {
         $("#boleto-tax").val(data.boleto_tax + '%');
         $("#credit-card-release").val('plan-' + data.credit_card_release_money);
         $("#debit-card-release").val(data.debit_card_release_money);
+        $("#transaction-tax-abroad").html(data.abroad_transfer_tax +'.');
+
         $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
@@ -649,6 +659,7 @@ $(document).ready(function () {
             });
         }
     }
+
     function verifyUserAddress(user) {
         if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null || user.state == null) {
             $('#row_dropzone_documents').hide();
@@ -658,6 +669,7 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
+
     function changeMaskByUserCountry(user) {
         if (user.country == 'brazil') {
             $('#zip_code').mask('00000-000');
@@ -713,7 +725,7 @@ $(document).ready(function () {
                 dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
-                        
+
                     </tr>`;
                 $("#profile-documents-modal").append(dados);
 
@@ -803,8 +815,8 @@ $(document).ready(function () {
                                                                             <li class='text-left'><b>CPTS (Carteira de Trabalho e Previdência Social)</b></li>
                                                                             <li class='text-left'><b>Passaporte</b></li>
                                                                             </ul>
-                
-                 
+
+
                                                                         </small>`);
         } else {
             $("#modal-title-documents").html('Documento Compravante de Residência');
@@ -903,7 +915,7 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
                         dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
-                        
+
                     </tr>`;
                         $("#profile-documents-modal").append(dados);
 
