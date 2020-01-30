@@ -116,6 +116,11 @@ return [
             "italy"    => "Itália",
             "chile"    => "Chile",
         ],
+        "currency" => [
+            "real"  => "R$",
+            "dolar" => "$",
+            "euro"  => "€",
+        ],
     ],
 
 ];
