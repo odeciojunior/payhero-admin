@@ -199,6 +199,14 @@ $(() => {
         });
     }
 
+    $("#copy-link-affiliation").on("click", function () {
+        var copyText = document.getElementById("url-affiliates");
+        copyText.select();
+        document.execCommand("copy");
+
+        alertCustom('success', 'Link copiado!');
+    });
+
     function renderProjectConfig(data) {
         let {project, companies, userProject, shopifyIntegrations} = data;
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');

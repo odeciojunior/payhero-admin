@@ -14,7 +14,6 @@ class AlterProjectsAddAffiliatesFields extends Migration
     public function up()
     {
         Schema::table('projects', function(Blueprint $table) {
-            $table->string('url_affiliates')->nullable()->after('percentage_affiliates');
             $table->text('terms_affiliates')->nullable()->after('percentage_affiliates');
         });
     }
@@ -27,7 +26,6 @@ class AlterProjectsAddAffiliatesFields extends Migration
     public function down()
     {
         Schema::table('projects', function(Blueprint $table) {
-            $table->dropColumn('url_affiliates');
             $table->dropColumn('terms_affiliates');
         });
     }

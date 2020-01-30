@@ -338,14 +338,17 @@
 
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='percentage-affiliates'>Porcentagem</label>
-                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
+                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='number' min="0" max="100">
                         <span id='input-pad-error' class='text-danger'></span>
                     </div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='url-affiliates'>Link afiliação</label>
-                        <input id='url-affiliates' name='url_affiliates' value='' class='input-pad' type='text'
-                               placeholder='URL' maxlength='60'>
-                        <span id='url-affiliate-error' class='text-danger'></span>
+                        <div id="affiliate-link-select" class="input-group">
+                            <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
+                            <span class="input-group-btn">
+                                <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

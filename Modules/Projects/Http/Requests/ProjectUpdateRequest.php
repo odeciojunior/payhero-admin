@@ -45,7 +45,6 @@ class ProjectUpdateRequest extends FormRequest
             "terms_affiliates"           => 'nullable',
             "percentage_affiliates"      => 'nullable',
             "cookie_duration"            => 'nullable',
-            "url_affiliates"             => 'nullable',
             "automatic_affiliation"      => 'nullable',
 
         ];
