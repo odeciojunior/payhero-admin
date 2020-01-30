@@ -14,6 +14,7 @@ use App\Traits\LogsActivity;
  * @property int $project_id
  * @property int $company_id
  * @property string $percentage
+ * @property tinyinteger $status_enum
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -41,6 +42,7 @@ class Affiliate extends Model
         'project_id',
         'company_id',
         'percentage',
+        'status_enum',
         'created_at',
         'updated_at',
         'deleted_at',
