@@ -134,6 +134,7 @@ class User extends Authenticable
         'updated_at',
         'deleted_at',
     ];
+
     /**
      * @var array
      */

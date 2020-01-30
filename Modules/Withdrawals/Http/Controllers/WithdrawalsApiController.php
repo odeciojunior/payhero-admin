@@ -35,9 +35,7 @@ class WithdrawalsApiController extends Controller
     public function index(Request $request)
     {
         try {
-            /** @var Withdrawal $withdrawalModel */
             $withdrawalModel = new Withdrawal();
-            /** @var Company $companyModel */
             $companyModel = new Company();
             $companyId    = current(Hashids::decode($request->company));
 
@@ -48,10 +46,10 @@ class WithdrawalsApiController extends Controller
             }
 
             if ($companyId) {
-                //id existe
+
                 $company = $companyModel->find($companyId);
+
                 if (Gate::allows('edit', [$company])) {
-                    //se pode editar empresa pode visualizar os saques
                     $withdrawals = $withdrawalModel->where('company_id', $companyId)
                                                    ->orderBy('id', 'DESC');
 
@@ -274,7 +272,7 @@ class WithdrawalsApiController extends Controller
                 $iofValue            = 0;
                 $iofTax              = 0.38;
                 $costValue           = 0;
-                $costTax             = 1.30;
+                $costTax             = auth()->user()->abroad_transfer_tax;
                 $abroadTransferValue = 0;
                 $abroadTax           = 1.68;
 
