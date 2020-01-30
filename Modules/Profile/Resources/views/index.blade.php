@@ -351,7 +351,7 @@
                                         <div class="col-12">
                                             <p class='info' style='font-size: 10px; margin-top: -10px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                parcelamento no cartão de crédito de R$
+                                                parcelamento no cartão de crédito de
                                                 <label id="installment-tax" style="color: gray"></label>
                                                 % ao mês.
                                             </p>
@@ -362,7 +362,7 @@
                                             </p>
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                transferência para empresas do exterior de R$
+                                                transferência para empresas do exterior de
                                                 <label style="color: gray" id="transaction-tax-abroad"></label>
                                             </p>
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>

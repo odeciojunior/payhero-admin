@@ -566,7 +566,7 @@ $(document).ready(function () {
         $("#boleto-tax").val(data.boleto_tax + '%');
         $("#credit-card-release").val('plan-' + data.credit_card_release_money);
         $("#debit-card-release").val(data.debit_card_release_money);
-        $("#transaction-tax-abroad").html(data.abroad_transfer_tax +'.');
+        $("#transaction-tax-abroad").html(data.abroad_transfer_tax +'%.');
 
         $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
