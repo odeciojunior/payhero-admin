@@ -171,6 +171,8 @@
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v=7')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
+        <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
+
     @endpush
 @endsection
 
