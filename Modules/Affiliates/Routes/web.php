@@ -12,8 +12,8 @@
 */
 
 Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
-    Route::Resource('/affiliates', 'AffiliatesController')
-         ->only('index');
+    Route::get('/affiliates/{projectId}', 'AffiliatesController@index')
+         ->name('index');
 });
 
 //Route::prefix('affiliates')->group(function() {

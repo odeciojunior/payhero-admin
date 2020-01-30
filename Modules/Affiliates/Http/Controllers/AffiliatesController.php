@@ -5,16 +5,25 @@ namespace Modules\Affiliates\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Project;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AffiliatesController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Response
+     * @param $projectId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index($projectId)
     {
-        return view('affiliates::index');
+        $projectModel = new Project();
+        $projectId    = current(Hashids::decode($projectId));
+        $project      = $projectModel->find($projectId);
+        if ($project) {
+            return view('affiliates::index');
+        } else {
+            return view('errors.404');
+        }
     }
 
     /**
@@ -27,9 +36,7 @@ class AffiliatesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
      * @param Request $request
-     * @return Response
      */
     public function store(Request $request)
     {

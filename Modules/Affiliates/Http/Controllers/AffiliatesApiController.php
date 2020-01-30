@@ -5,6 +5,9 @@ namespace Modules\Affiliates\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Project;
+use Modules\Projects\Transformers\ProjectsResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AffiliatesApiController extends Controller
 {
@@ -12,7 +15,7 @@ class AffiliatesApiController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index($projectId)
+    public function index()
     {
         return view('affiliates::index');
     }
@@ -33,7 +36,7 @@ class AffiliatesApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd('store');
     }
 
     /**
@@ -43,8 +46,18 @@ class AffiliatesApiController extends Controller
      */
     public function show($id)
     {
-        dd($id);
-        return view('affiliates::show');
+        $projectModel = new Project();
+        $projectId    = current(Hashids::decode($id));
+        if ($projectId) {
+            $project = $projectModel->find($projectId);
+
+            return new ProjectsResource($project);
+        }
+
+        return response()->json([
+                                    'message' => 'Projeto não encontrado',
+                                ], 400);
+        //        return view('affiliates::show');
     }
 
     /**

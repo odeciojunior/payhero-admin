@@ -63,6 +63,7 @@ class ProjectsResource extends Resource
             'cost_currency_type'         => $this->present()->getCurrencyCost($this->cost_currency_type),
             'status'                     => isset($this->domains[0]->name) ? 1 : 0,
             'checkout_type'              => $this->checkout_type,
+            'user_name'                  => $this->users[0]->name,
         ];
     }
 }
