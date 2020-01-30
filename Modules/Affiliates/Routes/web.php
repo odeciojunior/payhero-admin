@@ -11,6 +11,11 @@
 |
 */
 
-Route::prefix('affiliates')->group(function() {
-    Route::get('/', 'AffiliatesController@index');
+Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
+    Route::Resource('/affiliates', 'AffiliatesController')
+         ->only('index');
 });
+
+//Route::prefix('affiliates')->group(function() {
+//    Route::get('/', 'AffiliatesController@index');
+//});
