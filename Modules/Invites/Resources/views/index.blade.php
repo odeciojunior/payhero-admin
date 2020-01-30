@@ -77,9 +77,9 @@
             <ul id="pagination-invites" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
-        {{--<div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div id='mainModalBody' class="modal-dialog modal-simple">
-                --}}{{--<!-- Tem company -->
+                <!-- Tem company -->
                 <div id='modal-then-companies' class='modal-content' style='display:none;'>
                     <div class='modal-header'>
                         <button type='button' id='btn-close-invite' class='close' data-dismiss='modal' aria-label='Close'>
@@ -166,9 +166,9 @@
                             Retornar
                         </span>
                     </div>
-                </div>--}}{{--
+                </div>
                 <!-- Não pode enviar mais convites-->
-                <div id='modal-not-invites-today' class='modal-content p-10' style=''>
+                <div id='modal-not-invites-today' class='modal-content p-10' style=' display:none;'>
                     <div class='header-modal simple-border-bottom'>
                         <h2 class='modal-title'></h2>
                     </div>
@@ -184,10 +184,10 @@
                     </div>
                 </div>
             </div>
-        </div>--}}
+        </div>
 
         <!-- End Modal -->
-            <div id='modal-invite' class='modal fade show' aria-labelledby='modal-invite' role='dialog' tabindex='-1' style=' padding-right: 12px;'>
+            <div id='modal-invite-not' class='modal fade show' aria-labelledby='modal-invite' role='dialog' tabindex='-1' style=' padding-right: 12px;'>
                 <div class='modal-dialog modal-simple modal-center'>
                     <div class='modal-content text-center'>
                         <div class='modal-header text-center'>

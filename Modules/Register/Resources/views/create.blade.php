@@ -52,7 +52,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 </head>
 <body id='register-body' style='padding-top:0px;background-color:white;'>
-{{--
 <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
 </div>
 <section class="topbar" style=''>
@@ -451,20 +450,19 @@
         </div>
     </div>
 </footer>
---}}
-<div class="page-holder">
+{{--<div class="page-holder">
     <div class="content-error d-flex text-center">
         <img class="svgorange" src="{!! asset('modules/global/img/error.png') !!}">
         <h1 class="big"> Aviso! </h1>
         <h3>O limite de usuários da versão beta foi atingido, aguarde a versão oficial para juntar-se a nós!</h3>
     </div>
-</div>
+</div>--}}
 <!-- Scripts -->
 {{--<script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
 <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
-<script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
+<script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>a
 <script src="{{asset('modules/register/js/register.js?v=9')}}"></script>--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
