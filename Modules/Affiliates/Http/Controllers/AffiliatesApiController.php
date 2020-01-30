@@ -12,7 +12,7 @@ class AffiliatesApiController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index($projectId)
     {
         return view('affiliates::index');
     }
@@ -43,7 +43,7 @@ class AffiliatesApiController extends Controller
      */
     public function show($id)
     {
-        dd('show');
+        dd($id);
         return view('affiliates::show');
     }
 
