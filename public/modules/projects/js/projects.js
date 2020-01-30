@@ -1,6 +1,12 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
+    CKEDITOR.replace('termsaffiliates', {
+        language: 'br',
+        uiColor: '#AAAAAA',
+        height: 500
+    });
+
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
         show();
@@ -229,6 +235,33 @@ $(() => {
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
+        
+        CKEDITOR.instances.termsaffiliates.setData(project.terms_affiliates);
+
+        if(project.automatic_affiliation == 1) {
+            $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
+        } else {
+            $('#update-project .automatic-affiliation').prop('selectedIndex', 0).change();
+        }
+
+        if(project.cookie_duration == 0) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
+        } else if (project.cookie_duration == 7) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 1).change();
+        } else if (project.cookie_duration == 15) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 2).change();
+        } else if (project.cookie_duration == 30) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 3).change();
+        } else if (project.cookie_duration == 60) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 4).change();
+        } else if (project.cookie_duration == 180) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 5).change();
+        } else if (project.cookie_duration == 365) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
+        }
+
+        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
+        $('#update-project #url-affiliates').val(project.url_affiliates);
 
         $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
 
@@ -504,7 +537,7 @@ $(() => {
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
         let verify = verificaParcelas(parcelas, parcelasJuros);
-
+        $('#terms_affiliates').val(CKEDITOR.instances.termsaffiliates.getData());
         let formData = new FormData(document.getElementById("update-project"));
 
         if (!verify) {

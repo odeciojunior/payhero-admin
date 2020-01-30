@@ -312,7 +312,6 @@ class ProjectsApiController extends Controller
                         $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                     }
 
-                    $requestValidated['cookie_duration'] = 60;
                     $requestValidated['status']          = 1;
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);

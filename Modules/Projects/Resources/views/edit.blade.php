@@ -298,7 +298,8 @@
                 <div class='row'>
                     <div class='form-group col-12 col-xs-12'>
                         <label for='terms-affiliates'>Termos de Afiliação</label>
-                        <textarea name='terms_affiliates' class='input-pad'id='terms-affiliates' placeholder='Termos'></textarea>
+                        <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+                        <textarea class='input-pad'id='termsaffiliates' placeholder='Termos'></textarea>
                         <span id='terms-affiliates-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Termos exibidos na Vitrine para afiliação
@@ -310,8 +311,8 @@
                     <div class='form-group col-md-6 col-sm-12'>
                         <label for='automatic-affiliation'>Afiliação automática</label>
                         <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
-                            <option value='1'>Sim</option>
                             <option value='0'>Não</option>
+                            <option value='1'>Sim</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova automaticamente as solicitações de afiliação
@@ -321,22 +322,28 @@
                     <div class='form-group col-md-6 col-sm-12'>
                         <label for="cookie-duration">Duração do cookie</label>
                         <select class='cookie-duration form-control select-pad' name='cookie_duration'>
-                            <option value="1">1</option>
+                            <option value="0"> Eterno</option>
+                            <option value="7"> 7 dias</option>
+                            <option value="15"> 15 dias</option>
+                            <option value="30"> 1 mês</option>
+                            <option value="60"> 2 meses</option>
+                            <option value="180"> 6 meses</option>
+                            <option value="365"> 1 ano</option>
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Duração do cookie
                         </p>
-                        <span id='error-juros' class='text-danger' style='display: none'></span>
+                        <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
                     </div>
 
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
-                        <label for='percentage-affiliate'>Porcentagem</label>
-                        <input id='percentage-affiliate' name='percentage-affiliate' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
+                        <label for='percentage-affiliates'>Porcentagem</label>
+                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
                         <span id='input-pad-error' class='text-danger'></span>
                     </div>
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
-                        <label for='url-affiliate'>Link afiliação</label>
-                        <input id='url-affiliate' name='url-affiliate' value='' class='input-pad' type='text'
+                        <label for='url-affiliates'>Link afiliação</label>
+                        <input id='url-affiliates' name='url_affiliates' value='' class='input-pad' type='text'
                                placeholder='URL' maxlength='60'>
                         <span id='url-affiliate-error' class='text-danger'></span>
                     </div>
