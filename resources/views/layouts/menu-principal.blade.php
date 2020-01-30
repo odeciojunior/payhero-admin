@@ -172,12 +172,14 @@
             <li class="site-menu-item has-sub  disabled">
                 <ul class="site-menu-sub">
                     <li class="site-menu-item">
-                        <a href="{!! route('afiliados.minhasafiliacoes') !!}">
+                        {{-- <a href="{!! route('afiliados.minhasafiliacoes') !!}"> --}}
+                        <a href="">
                             <span class="site-menu-title">Minhas afiliações</span>
                         </a>
                     </li>
                     <li class="site-menu-item">
-                        <a href="{!! route('afiliados.meusafiliados') !!}">
+                        <a href="">
+                        {{-- <a href="{!! route('afiliados.meusafiliados') !!}"> --}}
                             <span class="site-menu-title">Meus afiliados</span>
                         </a>
                     </li>
