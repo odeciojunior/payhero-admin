@@ -64,6 +64,8 @@ class ProjectsResource extends Resource
             'status'                     => isset($this->domains[0]->name) ? 1 : 0,
             'checkout_type'              => $this->checkout_type,
             'user_name'                  => $this->users[0]->name,
+            'terms_affiliates'           => $this->terms_affiliates ?? '',
+            'percentage_affiliates'      => $this->percentage_affiliates ?? '',
         ];
     }
 }

@@ -3,8 +3,7 @@ $(document).ready(function () {
     getProjectData();
 
     function getProjectData() {
-        loadOnAny('.container');
-
+        loadOnAny('.page');
         $.ajax({
             method: "GET",
             url: "/api/affiliates/" + projectId,
@@ -14,21 +13,22 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('.container', true);
-                // loadingOnScreenRemove();
+                loadOnAny('.page', true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadOnAny('.container', true);
+                loadOnAny('.page', true);
+                $('.page-content').show();
                 $('.project-header').html(response.data.name);
                 $('.project-image').prop('src', response.data.photo);
                 $('#created_by').html(`Criado por: ${response.data.user_name}`);
+                // $('.percentage-affiliate').html(` <strong >Comissão de até: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
+                $('.text-terms').html(response.data.terms_affiliates);
                 $('.text-about-project').html(response.data.description);
-                // loadingOnScreenRemove();
-                // alertCustom('success', response.message);
             }
         });
     }
+
     $('#btn-affiliation-request').on('click', function () {
         loadingOnScreen();
         $.ajax({
@@ -52,4 +52,5 @@ $(document).ready(function () {
             }
         });
     });
+
 });
