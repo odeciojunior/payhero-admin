@@ -12,10 +12,11 @@ var statusDocumentUser = {
 };
 
 let disabledCompany = true;
-
+let companyVerification = false;
 $(document).ready(function () {
     updateInvites();
     var currentPage = 1;
+
     function updateInvites() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -51,6 +52,9 @@ $(document).ready(function () {
                     $("#table-body-invites").html('');
 
                     $.each(response.data, function (index, value) {
+                        if (value.company_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI') {
+                            companyVerification = true;
+                        }
                         dados = '';
                         dados += '<tr>';
                         if (index != 9) {
@@ -160,96 +164,103 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                if (isEmpty(response.data)) {
-                    loadingOnScreenRemove();
-                    $("#modal-then-companies").hide();
-                    $("#modal-not-approved-document-companies").hide();
-                    $("#modal-not-companies").show();
-                } else {
-
-                    loadingOnScreenRemove();
-
-                    let contCompanies = 0;
-                    let contCompaniesNotApproved = 0;
-
-                    var selCompany = '';
-                    selCompany = '<select class="select-company-list">';
-
-                    disabledCompany = true;
-                    $.each(response.data, function (index, value) {
-                        contCompanies++;
-
-                        if (value.type_company === 'physical person') {
-                            if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
-                                disabledCompany = false;
-                                contCompaniesNotApproved++;
-                                selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
-                            } else {
-                                selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
-
-                            }
-
-                        } else if (value.type_company === 'juridical person') {
-                            if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
-                                disabledCompany = false;
-                                contCompaniesNotApproved++;
-                                selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
-                            } else {
-                                selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
-                            }
-                        }
-                    });
-                    selCompany += '</select>';
-
-                    if (contCompanies === contCompaniesNotApproved) {
+                if (companyVerification) {
+                    if (isEmpty(response.data)) {
+                        loadingOnScreenRemove();
                         $("#modal-then-companies").hide();
-                        $("#modal-not-companies").hide();
-                        $("#modal-not-approved-document-companies").show();
-                    } else {
-                        $("#modal-not-companies").hide();
                         $("#modal-not-approved-document-companies").hide();
-                        $("#modal-then-companies").show();
+                        $("#modal-not-companies").show();
+                    } else {
 
-                        $("#modal-reverse-title").html('Novo Convite');
+                        loadingOnScreenRemove();
 
-                        $("#company-list").html('').append(selCompany);
+                        let contCompanies = 0;
+                        let contCompaniesNotApproved = 0;
 
-                        var linkInvite = '';
-                        var companyId = $(".select-company-list option:selected").val();
-                        linkInvite = 'https://app.cloudfox.net/register/' + $(".select-company-list option:selected").val();
+                        var selCompany = '';
+                        selCompany = '<select class="select-company-list">';
 
-                        $("#invite-link").val(linkInvite);
+                        disabledCompany = true;
+                        $.each(response.data, function (index, value) {
+                            contCompanies++;
+                            if (value.fantasy_name === 'AMARAL MIDIA CLASS NEGÓCIOS DIGITAIS - EIRELI') {
+                                if (value.type_company === 'physical person') {
+                                    if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
+                                        disabledCompany = false;
+                                        contCompaniesNotApproved++;
+                                        selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                                    } else {
+                                        selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
 
-                        $(".select-company-list").on('change', function () {
-                            linkInvite = 'https://app.cloudfox.net/register/' + $(this).val();
-                            $("#invite-link").val(linkInvite);
-                            companyId = $(this).val();
-                        });
+                                    }
 
-                        $("#copy-link").on("click", function () {
-                            var copyText = document.getElementById("invite-link");
-                            copyText.select();
-                            document.execCommand("copy");
-
-                            alertCustom('success', 'Link copiado!');
-                        });
-
-                        $("#btn-send-invite").unbind();
-                        $("#btn-send-invite").on('click', function () {
-                            var email = $("#email").val();
-
-                            if (email == '') {
-                                alertCustom('error', 'O campo Email do convidado é obrigatório');
-                            } else if (companyId == '') {
-                                alertCustom('error', 'O campo Empresa para receber é obrigatório');
-                            } else {
-                                loadingOnScreen();
-                                sendInviteAjax(email, companyId);
+                                } else if (value.type_company === 'juridical person') {
+                                    if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
+                                        disabledCompany = false;
+                                        contCompaniesNotApproved++;
+                                        selCompany += `<option value=${value.id_code} disabled>  ${value.fantasy_name}  </option>`;
+                                    } else {
+                                        selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+                                    }
+                                }
                             }
-                        });
-                    }
 
+                        });
+                        selCompany += '</select>';
+
+                        if (contCompanies === contCompaniesNotApproved) {
+                            $("#modal-then-companies").hide();
+                            $("#modal-not-companies").hide();
+                            $("#modal-not-approved-document-companies").show();
+                        } else {
+                            $("#modal-not-companies").hide();
+                            $("#modal-not-approved-document-companies").hide();
+                            $("#modal-then-companies").show();
+
+                            $("#modal-reverse-title").html('Novo Convite');
+
+                            $("#company-list").html('').append(selCompany);
+
+                            var linkInvite = '';
+                            var companyId = $(".select-company-list option:selected").val();
+                            linkInvite = 'https://app.cloudfox.net/register/' + $(".select-company-list option:selected").val();
+
+                            $("#invite-link").val(linkInvite);
+
+                            $(".select-company-list").on('change', function () {
+                                linkInvite = 'https://app.cloudfox.net/register/' + $(this).val();
+                                $("#invite-link").val(linkInvite);
+                                companyId = $(this).val();
+                            });
+
+                            $("#copy-link").on("click", function () {
+                                var copyText = document.getElementById("invite-link");
+                                copyText.select();
+                                document.execCommand("copy");
+
+                                alertCustom('success', 'Link copiado!');
+                            });
+
+                            $("#btn-send-invite").unbind();
+                            $("#btn-send-invite").on('click', function () {
+                                var email = $("#email").val();
+
+                                if (email == '') {
+                                    alertCustom('error', 'O campo Email do convidado é obrigatório');
+                                } else if (companyId == '') {
+                                    alertCustom('error', 'O campo Empresa para receber é obrigatório');
+                                } else {
+                                    loadingOnScreen();
+                                    sendInviteAjax(email, companyId);
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    $("#modal-not-invites-today").show();
                 }
+
+
             }
         });
 

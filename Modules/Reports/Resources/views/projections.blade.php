@@ -52,7 +52,7 @@
                                         <i class="fas fa-dollar"></i>
                                         Projeção Total
                                     </h6>
-                                    <h4 id='projection-total' class="number red" style='color:red'>0
+                                    <h4 id='projection-total' class="number blue-800" style='color:blue'>0
                                     </h4>
                                 </div>
                                 <div class="col text-center">
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="col text-center">
                                     <h6 class="label-price relatorios"><i class="fas fa-credit-card"></i> Cartão </h6>
-                                    <h4 id='projection-card' class="number blue-800" style='color:blue'>0 
+                                    <h4 id='projection-card' class="number orange" style='color:orange'>0 
                                     </h4>
                                 </div>
                             </div>
@@ -117,5 +117,5 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/projections.js?v=1')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/projections.js?v=2')}}'></script>
 @endpush

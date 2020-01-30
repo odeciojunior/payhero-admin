@@ -97,6 +97,8 @@ class SalePresenter extends Presenter
                     return 'in_review';
                 case 21:
                     return 'canceled_antifraud';
+                case 99:
+                    return 'blacklist';
             }
 
             return '';
@@ -124,6 +126,8 @@ class SalePresenter extends Presenter
                     return 20;
                 case 'canceled_antifraud':
                     return 21;
+                case 'blacklist':
+                    return 99;
             }
 
             return '';
