@@ -15,7 +15,6 @@
                             </div>
                             <div class='col-md-7 mt-md-70 mt-sm-20 mt-20'>
                                 <p class='text-about-project text-center'></p>
-                                {{--                                <p class='percentage-affiliate'></p>--}}
                             </div>
                         </div>
                         <div class="nav-tabs-horizontal mt-20" data-plugin="tabs">
@@ -42,6 +41,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="tab_about" role="tabpanel">
                                         <p class='text-about-project'></p>
+                                        <p class='percentage-affiliate'></p>
                                     </div>
                                     {{--                                    <div class='tab-pane fade' id='tab_taxs' role='tabpanel'>--}}
                                     {{--                                    </div>--}}
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div class='col-md-12 my-10 text-right'>
-                            <button id='btn-affiliation-request' class='btn btn-primary'>Solicitar Filiação</button>
+                            <button id='btn-affiliation-request' class='btn btn-primary'>Solicitar Afiliação</button>
                         </div>
                     </div>
                 </div>

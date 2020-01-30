@@ -22,7 +22,7 @@ $(document).ready(function () {
                 $('.project-header').html(response.data.name);
                 $('.project-image').prop('src', response.data.photo);
                 $('#created_by').html(`Criado por: ${response.data.user_name}`);
-                // $('.percentage-affiliate').html(` <strong >Comissão de até: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
+                $('.percentage-affiliate').html(` <strong >Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
                 $('.text-terms').html(response.data.terms_affiliates);
                 $('.text-about-project').html(response.data.description);
             }
