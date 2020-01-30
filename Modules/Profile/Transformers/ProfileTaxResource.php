@@ -22,7 +22,7 @@ class ProfileTaxResource extends Resource
             'installment_tax' => $this->installment_tax,
             'boleto_tax' => $this->boleto_tax,
             'boleto_release_money' => $this->boleto_release_money_days,
-            'abroad_transfer_tax' => $this->present()->getTaxAbroad(),
+            'abroad_transfer_tax' => $this->abroad_transfer_tax,
         ];
     }
 }
