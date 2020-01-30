@@ -255,7 +255,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=4') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=1') }}"></script>
     @endpush
 
 @endsection
