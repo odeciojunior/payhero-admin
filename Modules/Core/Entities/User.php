@@ -56,7 +56,8 @@ use Laravel\Passport\HasApiTokens;
  * @property int $percentage_antecipable
  * @property int $antecipation_tax
  * @property int $invites_amount
- * @property string installment_tax
+ * @property float $abroad_transfer_tax
+ * @property string $installment_tax
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
@@ -126,11 +127,12 @@ class User extends Authenticable
         'boleto_tax',
         'credit_card_tax',
         'debit_card_tax',
+        'last_login',
+        'account_owner_id',
+        'abroad_transfer_tax',
         'created_at',
         'updated_at',
         'deleted_at',
-        'last_login',
-        'account_owner_id',
     ];
     /**
      * @var array
