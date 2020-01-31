@@ -135,47 +135,10 @@ class SalesApiController extends Controller
 
             $data = $request->all();
 
-            $transactions = $saleService->getAllSales($data);
+            $resume = $saleService->getResume($data);
 
-            if ($transactions->count()) {
-                $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
-                    //quantidade de vendas
-                    $carry['total_sales'] += 1;
-                    //cria um item no array pra cada moeda inclusa nas vendas
-                    $item->currency = $item->currency ?? 'real';
-                    $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
-                    //comissao
-                    $carry[$item->currency]['comission'] += in_array($item->status, ['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
-                    //calcula o total
-                    $total = $item->sale->sub_total;
-                    $total += $item->sale->shipment_value;
-                    $shopify_discount = floatval($item->sale->shopify_discount) / 100;
-                    if ($shopify_discount > 0) {
-                        $total -= $shopify_discount;
-                    }
-                    if ($item->sale->dolar_quotation != 0) {
-                        $iof = preg_replace('/[^0-9]/', '', $item->sale->iof);
-                        $iof = substr_replace($iof, '.', strlen($iof) - 2, 0);
-                        $total += floatval($iof);
-                    }
-                    $carry[$item->currency]['total'] += $total;
+            return response()->json($resume);
 
-                    return $carry;
-                }, ['total_sales' => 0]);
-
-                //formata os valores
-                foreach ($resume as &$item) {
-                    if (is_array($item)) {
-                        foreach ($item as &$value) {
-                            $value = number_format($value, 2, ',', '.');
-                        }
-                    }
-                }
-
-                return response()->json($resume);
-            } else {
-                return response()->json([]);
-            }
         } catch (Exception $e) {
             Log::warning('Erro ao exibir resumo das venda  SalesApiController - resume');
             report($e);
@@ -317,6 +280,90 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function salesCustomers(Request $request)
+    {
+
+        try {
+
+        $json = '[
+                  {
+                    "date_group": "17 de setembro de 2019",
+                    "orders_items": [
+                      {
+                        "id": "01",
+                        "status": "success",
+                        "status_text": "Confirmado",
+                        "code": "616510616016841085",
+                        "company": "Health Lab",
+                        "items": "2",
+                        "amount": "R$ 360,00",
+                        "payment": {
+                          "code": false,
+                          "link": false
+                        },
+                        "products": [
+                          {
+                            "id": "01",
+                            "name": "Penis Pump",
+                            "digital": false
+                          },
+                          {
+                            "id": "02",
+                            "name": "Base de Vagina",
+                            "digital": false
+                          }
+                        ],
+                        "history": [
+                          {
+                            "id": "01",
+                            "status": "success",
+                            "text": "Pedido entregue",
+                            "tracking": false,
+                            "date": "25 de setembro de 2019"
+                          },
+                          {
+                            "id": "02",
+                            "status": "neutral",
+                            "text": "Pedido postado",
+                            "tracking": "OH707377612BR",
+                            "date": "20 de setembro de 2019"
+                          },
+                          {
+                            "id": "03",
+                            "status": "neutral",
+                            "text": "Pedido embalado",
+                            "tracking": false,
+                            "date": "19 de setembro de 2019"
+                          },
+                          {
+                            "id": "04",
+                            "status": "success",
+                            "text": "Pagamento confirmado",
+                            "tracking": false,
+                            "date": "19 de setembro de 2019"
+                          },
+                          {
+                            "id": "05",
+                            "status": "neutral",
+                            "text": "Boleto gerado",
+                            "tracking": false,
+                            "date": "17 de setembro de 2019"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                 ]';
+
+            $data = json_decode($json);
+
+            return response()->json($data, 200);
+
+        } catch (Exception $e) {
+
         }
     }
 }
