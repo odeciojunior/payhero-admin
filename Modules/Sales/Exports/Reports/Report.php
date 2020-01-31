@@ -35,6 +35,9 @@ class Report implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, Wit
 
     public function query()
     {
+
+        // SELECT count(*) as t_count, sale_id FROM `transactions` WHERE status in ('paid', 'transfered') group BY sale_id ORDER BY t_count DESC limit 250
+
         $data = Transaction::selectRaw('sale_id, transactions.id, fantasy_name, value, transactions.created_at')
                             ->join('companies', 'company_id', 'companies.id')
                             ->whereRaw("sale_id IN ('184340','168175','173651','182919','235479','50397','127525','89524','165410','96095','209409','155379','211457','166421', '38161','168686','172741','132421','179943','110939','154692','159452','106670','86760','197990','67294','239153','180017', '176561','181595','105822','160265','114464','60007','76954','154251','159343','129864','180227','156828','27861','117638')")
