@@ -37,6 +37,7 @@ use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Sales\Exports\Reports\Report;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
@@ -82,6 +83,11 @@ class JulioController extends Controller
         // $shopifyService = new ShopifyService('depiluxchile.myshopify.com','5f171154efb5377328bb9e53da89b0f1');
 
         // dd($shopifyService->getShopWebhook());
+
+        event(new SaleRefundedEvent(Sale::find(48712)));
+
+        dd("foii");
+
     }
 }
 

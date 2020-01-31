@@ -74,38 +74,28 @@ class SaleRefundedSendEmailListener implements ShouldQueue
 
             //Traz o assunto, titulo e texto do email formatados
             $projectNotificationPresenter = $projectNotificationModel->present();
-            $projectNotificationEmail = $projectNotificationModel->where('project_id', $project->id)
-                ->where('notification_enum',
-                    $projectNotificationPresenter->getNotificationEnum('email_billet_paid_immediate'))
-                ->where('status', $projectNotificationPresenter->getStatus('active'))
-                ->first();
 
-            if (!empty($projectNotificationEmail)) {
-                $message = json_decode($projectNotificationEmail->message);
-                $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $sale,
-                    $project);
-                $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project);
-                $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale,
-                    $project);
-                $data = [
-                    'first_name' => $customer->present()->getFirstName(),
-                    "store_logo" => $project->logo,
-                    "project_contact" => $project->contact,
-                    'sale_code' => $saleCode,
-                    "products" => $products,
-                    "total_paid_value" => $sale->total_paid_value,
-                    "shipment_value" => $sale->shipment_value,
-                    "subtotal" => strval($subTotal),
-                    "iof" => $iof,
-                    "subject" => $subjectMessage,
-                    "title" => $titleMessage,
-                    "content" => $contentMessage,
-                    'discount' => $discount,
-                ];
-                if (!empty($domain['name'])) {
-                    $emailService->sendEmail('noreply@' . $domain['name'], $project['name'], $customer['email'],
-                        $customer['name'], 'd-97d5002e189546778c0bedf4f4e540f1', $data);
-                }
+            $subjectMessage = $projectNotificationService->formatNotificationData("Es", $sale,$project);
+            $titleMessage = $projectNotificationService->formatNotificationData($message->title, $sale, $project);
+            $contentMessage = $projectNotificationService->formatNotificationData($message->content, $sale,$project);
+            $data = [
+                'first_name'      => $customer->present()->getFirstName(),
+                "store_logo"      => $project->logo,
+                "project_contact" => $project->contact,
+                'sale_code'       => $saleCode,
+                "products" => $products,
+                "total_paid_value" => $sale->total_paid_value,
+                "shipment_value" => $sale->shipment_value,
+                "subtotal" => strval($subTotal),
+                "iof" => $iof,
+                "subject" => $subjectMessage,
+                "title" => $titleMessage,
+                "content" => $contentMessage,
+                'discount' => $discount,
+            ];
+            if (!empty($domain['name'])) {
+                $emailService->sendEmail('noreply@' . $domain['name'], $project['name'], $customer['email'],
+                    $customer['name'], 'd-97d5002e189546778c0bedf4f4e540f1', $data);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao enviar email de boleto pago');
