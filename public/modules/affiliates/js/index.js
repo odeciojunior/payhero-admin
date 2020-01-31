@@ -22,13 +22,23 @@ $(document).ready(function () {
                 $('.project-header').html(response.data.name);
                 $('.project-image').prop('src', response.data.photo);
                 $('#created_by').html(`Produtor: ${response.data.user_name}`);
-                $('.percentage-affiliate').html(` <strong >Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
-                $('.text-terms').html(response.data.terms_affiliates);
                 $('.text-about-project').html(response.data.description);
                 $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
-                $('.contact').html(`<strong>E-mail: ${response.data.contact}</strong>`);
-                $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
                 $('.created_at').html(` <strong >Criado em: ${response.data.created_at}</strong>`);
+                if (response.data.percentage_affiliates != '') {
+                    $('.percentage-affiliate').html(`<strong >Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
+                }
+                if (response.data.terms_affiliates != '') {
+                    $('.text-terms').html(response.data.terms_affiliates);
+                } else {
+                    $('.text-terms').html('<strong >Não possui termos de afiliação.</strong>');
+                }
+                if (response.data.contact != '') {
+                    $('.contact').html(`<strong>E-mail: ${response.data.contact}</strong>`);
+                }
+                if (response.data.support_phone != '') {
+                    $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
+                }
             }
         });
     }
