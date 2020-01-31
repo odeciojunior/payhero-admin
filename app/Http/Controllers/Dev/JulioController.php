@@ -79,6 +79,9 @@ class JulioController extends Controller
 
         (new Report(User::find(24)))->queue('arquivo.xls');
 
+        $shopifyService = new ShopifyService('depiluxchile.myshopify.com','5f171154efb5377328bb9e53da89b0f1');
+
+        dd($shopifyService->getShopWebhook());
     }
 }
 

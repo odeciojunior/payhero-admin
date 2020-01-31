@@ -154,38 +154,38 @@ class PostBackShopifyController extends Controller
     public function postBackListener(Request $request)
     {
 
-        $postBackLogModel = new PostbackLog();
-        $projectModel = new Project();
-        $userProjectModel = new UserProject();
-        $shopifyIntegrationModel = new ShopifyIntegration();
+        try {
+            $postBackLogModel = new PostbackLog();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
+            $shopifyIntegrationModel = new ShopifyIntegration();
 
-        $requestData = $request->all();
+            $requestData = $request->all();
 
-        $postBackLogModel->create([
-            'origin' => 3,
-            'data' => json_encode($requestData),
-            'description' => 'shopify',
-        ]);
+            $postBackLogModel->create([
+                'origin'      => 3,
+                'data'        => json_encode($requestData),
+                'description' => 'shopify',
+            ]);
 
-        $projectId = current(Hashids::decode($request->project_id));
+            $projectId = current(Hashids::decode($request->project_id));
 
-        if ($projectId) {
-            //hash ok
-            $project = $projectModel->find($projectId);
+            if ($projectId) {
+                //hash ok
+                $project = $projectModel->find($projectId);
 
-            if (!$project) {
+                if (!$project) {
 
-                return response()->json([
-                    'message' => 'error',
-                ], 200);
-            }
+                    return response()->json([
+                        'message' => 'error',
+                    ], 200);
+                }
 
-            $userProject = $userProjectModel->where([
-                ['project_id', $project->id],
-                ['type', 'producer'],
-            ])->first();
+                $userProject = $userProjectModel->where([
+                    ['project_id', $project->id],
+                    ['type', 'producer'],
+                ])->first();
 
-            try {
                 $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
 
                 if(empty($shopIntegration)){
@@ -195,25 +195,28 @@ class PostBackShopifyController extends Controller
                 }
 
                 $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
-            } catch (\Exception $e) {
+
+                $variant = current($requestData['variants']);
+
+                $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
+
                 return response()->json([
-                    'message' => 'Dados do shopify inválidos, revise os dados informados',
+                    'message' => 'success',
+                ], 200);
+            } else {
+                //hash invalido
+                return response()->json([
+                    'message' => 'Projeto não encontrado',
                 ], 200);
             }
 
-            $variant = current($requestData['variants']);
-
-            $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
-
+        } catch (\Exception $e) {
+            report($e);
             return response()->json([
-                'message' => 'success',
-            ], 200);
-        } else {
-            //hash invalido
-            return response()->json([
-                'message' => 'Projeto não encontrado',
+                'message' => 'Dados do shopify inválidos, revise os dados informados',
             ], 200);
         }
+
     }
 }
 
