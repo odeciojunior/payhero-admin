@@ -66,7 +66,7 @@ class ProjectsResource extends Resource
             "terms_affiliates"           => $this->terms_affiliates,
             "cookie_duration"            => $this->cookie_duration,
             "automatic_affiliation"      => $this->automatic_affiliation,
-            "url_affiliates"             => $this->url_affiliates,
+            "url_affiliates"             => route('index', Hashids::encode($this->id)),
             "percentage_affiliates"      => $this->percentage_affiliates,
             'user_name'                  => $this->users[0]->name,
             'terms_affiliates'           => $this->terms_affiliates ?? '',
