@@ -22,5 +22,5 @@ Route::group(['middleware' => ['web'], 'prefix' => 'postback', 'namespace' => 'M
     Route::post('/shopify/{project_id}/tracking', 'PostBackShopifyController@postBackTracking');
 
     Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
-
 });
+
