@@ -844,6 +844,7 @@ $(() => {
                 errorAjaxResponse(response);
 
             }, success: function (response) {
+                $(".body-table-affiliates").html('');
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
@@ -851,10 +852,81 @@ $(() => {
                     data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
                     data += '<td class="" style="vertical-align: middle;">' + value.percentage + ' %</td>';
                     data += '<td class="" ><span class="badge badge-' + statusAffiliate[value.status] + '">' + value.status + '</span></td>';
-                    data += "<td style='text-align:center'>"
+                    data += "<td style='text-align:center'>";
+                    data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><i class='material-icons gradient'>edit</i></a>"
+                    data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>delete_outline</i></a>";
                     data += "</td>";
                     data += '</tr>';
                     $(".body-table-affiliates").append(data);
+                });
+
+                $('.delete-affiliate').on('click', function (event) {
+                    event.preventDefault();
+                    let affiliate = $(this).attr('affiliate');
+                    $('#modal-delete-affiliate').modal('show');
+                    $("#modal-delete-affiliate .btn-delete").on('click', function () {
+                        $("#modal-delete").modal('hide');
+                        loadingOnScreen()
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/api/affiliates/" + affiliate,
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function (response) {
+                                errorAjaxResponse(response);
+
+                                // alertCustom('error', 'Ocorreu algum erro');
+                                loadingOnScreenRemove()
+                            },
+                            success: function (data) {
+                                loadingOnScreenRemove();
+
+                                if (data == 'success') {
+                                    updateConfiguracoes();
+                                } else {
+                                    alertCustom('error', "Erro ao deletar afiliado");
+                                }
+                            }
+                        });
+                    });
+
+                });
+
+            }
+        });
+
+        var badgeAffiliateRequest = {
+            1: "primary",
+            2: "warning",
+            3: "success",
+            4: "danger",
+        };
+
+        $.ajax({
+            method: "GET",
+            url: "/api/affiliates/getaffiliaterequests/" + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            }, error: function (response) {
+                errorAjaxResponse(response);
+
+            }, success: function (response) {
+                $(".body-table-affiliate-requests").html('');
+                $.each(response.data, function (index, value) {
+                    data = '';
+                    data += '<tr>';
+                    data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
+                    data += '<td class="" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
+                    data += "<td style='text-align:center'>"
+                    data += "</td>";
+                    data += '</tr>';
+                    $(".body-table-affiliate-requests").append(data);
                 });
             }
         });

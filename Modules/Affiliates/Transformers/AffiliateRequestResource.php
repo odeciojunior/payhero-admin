@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * @property mixed id
@@ -24,7 +25,8 @@ class AffiliateRequestResource extends Resource
             'id'     => Hashids::encode($this->id),
             'name'   => $this->user->name ?? null,
             'status' => $this->status,
-            'date'   => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i:s'),
+            'date'              => (!is_null($this->created_at)) ? Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i:s') : '',
+            'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status)),
         ];
     }
 }
