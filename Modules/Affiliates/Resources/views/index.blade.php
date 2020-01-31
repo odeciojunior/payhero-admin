@@ -28,11 +28,6 @@
                                     Sobre
                                 </a>
                             </li>
-                            {{--                                <li class="nav-item" role="presentation" id="nav_taxs">--}}
-                            {{--                                    <a class="nav-link" data-toggle="tab" href="#tab_taxs" aria-controls="tab_taxs" role="tab">--}}
-                            {{--                                        Tarifas e Prazos--}}
-                            {{--                                    </a>--}}
-                            {{--                                </li>--}}
                         </ul>
                         <div class="p-30 pt-20">
                             <div class="tab-content">
@@ -47,12 +42,10 @@
                                     <p class='support_phone'></p>
                                     <p class='created_at'></p>
                                 </div>
-                                {{--                                    <div class='tab-pane fade' id='tab_taxs' role='tabpanel'>--}}
-                                {{--                                    </div>--}}
                             </div>
                         </div>
                     </div>
-                    <div class='col-md-12 my-10 text-right'>
+                    <div class='col-md-12 my-10 text-right div-button'>
                         <button id='btn-affiliation-request' class='btn btn-primary'>Solicitar Afiliação</button>
                     </div>
                 </div>

@@ -25,6 +25,11 @@ $(document).ready(function () {
                 $('.text-about-project').html(response.data.description);
                 $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
                 $('.created_at').html(` <strong >Criado em: ${response.data.created_at}</strong>`);
+                if (response.data.automatic_affiliation) {
+                    $('.div-button').html('<button id="btn-store-affiliation" class="btn btn-primary" data-type="confirm">Confimar Afiliação</button>');
+                } else {
+                    $('.div-button').html('<button id="btn-store-affiliation" class="btn btn-primary" data-type="request">Solicitar Afiliação</button>');
+                }
                 if (response.data.percentage_affiliates != '') {
                     $('.percentage-affiliate').html(`<strong >Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
                 }
@@ -43,7 +48,7 @@ $(document).ready(function () {
         });
     }
 
-    $('#btn-affiliation-request').on('click', function () {
+    $(document).on('click', '#btn-store-affiliation', function () {
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -51,6 +56,7 @@ $(document).ready(function () {
             dataType: "json",
             data: {
                 project_id: projectId,
+                type: $(this).data('type'),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

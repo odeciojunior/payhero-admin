@@ -2,10 +2,14 @@
 
 namespace Modules\Affiliates\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
+use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\AffiliateService;
 use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -30,13 +34,26 @@ class AffiliatesApiController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
+     * @param AffiliateStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(AffiliateStoreRequest $request)
     {
-        dd('store');
+        try {
+            $data      = $request->validated();
+            $projectId = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+                $affiliateService = new AffiliateService();
+                $affiliateService->createAffiliate($projectId, $data['type']);
+            } else {
+                return response()->json([
+                                            'messsage' => 'Ocorreu um erro ao criar a afiliação',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao criar a afiliação (AffiliatesApiController - store)');
+            report($e);
+        }
     }
 
     /**
