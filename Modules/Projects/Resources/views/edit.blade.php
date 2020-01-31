@@ -427,6 +427,26 @@
             </div>
         </div>
         {{-- FIM CONFIGURAÇÕES SHOPIFY --}}
+
+        <div class="row">
+            <h4>Afiliados</h4>
+            <table id='545454' class='table text-left table-striped unify' style='width:100%'>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Data</th>
+                        <th>Porcentagem</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                        {{-- excluir, ativar/inativar --}}
+                    </tr>
+                </thead>
+                <tbody class="body-table-affiliates">
+                    {{-- js carrega --}}
+                </tbody>
+            </table>
+        </div>
+
         <div class="mt-30">
             <div class="row">
                 <div class="col-6">

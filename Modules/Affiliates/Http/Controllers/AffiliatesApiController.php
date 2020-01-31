@@ -12,6 +12,8 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Services\AffiliateService;
 use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Affiliate;
+use Modules\Affiliates\Transformers\AffiliateResource;
 
 class AffiliatesApiController extends Controller
 {
@@ -106,5 +108,21 @@ class AffiliatesApiController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getAffiliates($projectId)
+    {
+        try {
+            
+            $projectId    = current(Hashids::decode($projectId));
+
+            $affiliates = Affiliate::with('user')->where('project_id', $projectId)->get();
+
+            return response()->json(['data' => AffiliateResource::collection($affiliates) ], 200);
+
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Ocorreu um erro' ], 400);
+        }
+
     }
 }

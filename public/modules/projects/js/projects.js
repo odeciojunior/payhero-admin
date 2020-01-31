@@ -4,7 +4,7 @@ $(() => {
     CKEDITOR.replace('termsaffiliates', {
         language: 'br',
         uiColor: '#AAAAAA',
-        height: 500
+        height: 250
     });
 
     // COMPORTAMENTOS DA TELA
@@ -16,6 +16,7 @@ $(() => {
         $("#image-logo-email").imgAreaSelect({remove: true});
         $("#previewimage").imgAreaSelect({remove: true});
         updateConfiguracoes();
+        getAffiliates();
     });
 
     $('.toggler').on('click', function () {
@@ -131,6 +132,7 @@ $(() => {
         ratio = $('#ratioImage option:selected').val();
         $("#image-logo-email").imgAreaSelect({remove: true});
         updateConfiguracoes();
+        getAffiliates();
         imgNatural(ratio);
     });
 
@@ -571,6 +573,7 @@ $(() => {
                     $("#image-logo-email").imgAreaSelect({remove: true});
                     $("#previewimage").imgAreaSelect({remove: true});
                     updateConfiguracoes();
+                    getAffiliates();
                     loadingOnScreenRemove();
                 }
             });
@@ -823,5 +826,38 @@ $(() => {
             }
         });
     });
+
+    var statusAffiliate = {
+        0: "danger",
+        1: "success",
+    }
+
+    function getAffiliates() {
+        $.ajax({
+            method: "GET",
+            url: "/api/affiliates/getaffiliates/" + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            }, error: function (response) {
+                errorAjaxResponse(response);
+
+            }, success: function (response) {
+                $.each(response.data, function (index, value) {
+                    data = '';
+                    data += '<tr>';
+                    data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
+                    data += '<td class="" style="vertical-align: middle;">' + value.percentage + ' %</td>';
+                    data += '<td class="" ><span class="badge badge-' + statusAffiliate[value.status] + '">' + value.status + '</span></td>';
+                    data += "<td style='text-align:center'>"
+                    data += "</td>";
+                    data += '</tr>';
+                    $(".body-table-affiliates").append(data);
+                });
+            }
+        });
+    }
 });
 

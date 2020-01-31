@@ -21,6 +21,9 @@ Route::group(
         Route::apiResource('/affiliates', 'AffiliatesApiController')
              ->only('index', 'show', 'store', 'update', 'destroy')->names('api.affiliates')
              ->middleware('role:account_owner|admin');
+
+        Route::get('/affiliates/getaffiliates/{projectId}', 'AffiliatesApiController@getAffiliates')
+             ->middleware('role:account_owner|admin');
     }
 );
 //Route::middleware('auth:api')->get('/affiliates', function (Request $request) {
