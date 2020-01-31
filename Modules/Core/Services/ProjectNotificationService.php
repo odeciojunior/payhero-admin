@@ -54,7 +54,7 @@ class ProjectNotificationService
                                             [
                                                 'type_enum'         => self::SMS_TYPE,
                                                 'event_enum'        => 4,
-                                                'time'              => '10:00 horas próximo dia',
+                                                'time'              => '12:00 horas próximo dia',
                                                 'message'           => 'Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}',
                                                 'notification_enum' => 4,
                                                 'project_id'        => $projectId,
@@ -87,7 +87,7 @@ class ProjectNotificationService
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
                                                 'event_enum'        => 1,
-                                                'time'              => '10:00 horas 2 dias após',
+                                                'time'              => '11:00 horas 2 dias após',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Vamos ter que liberar sua mercadoria',
                                                                                        'title'   => 'Vamos ter que devolver sua mercadoria para o estoque!',
@@ -99,7 +99,7 @@ class ProjectNotificationService
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
                                                 'event_enum'        => 5,
-                                                'time'              => '10:00 horas',
+                                                'time'              => '11:30 horas',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Hoje vence o seu boleto',
                                                                                        'title'   => 'Seu boleto vence hoje! Não esqueça de pagar seu boleto para finalizar seu pedido.',
@@ -123,7 +123,7 @@ class ProjectNotificationService
                                             [
                                                 'type_enum'         => self::EMAIL_TYPE,
                                                 'event_enum'        => 4,
-                                                'time'              => '10:00 horas próximo dia',
+                                                'time'              => '12:00 horas próximo dia',
                                                 'message'           => json_encode([
                                                                                        'subject' => 'Posso liberar o seu pedido para outra pessoa?',
                                                                                        'title'   => 'O seu pedido está te esperando',
