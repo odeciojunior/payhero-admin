@@ -15,7 +15,9 @@ Route::group(['middleware' => ['web'], 'prefix' => 'postback', 'namespace' => 'M
     Route::post('/aftership', 'PostBackAftershipController@postBackListener');
 });
 
-Route::group(['middleware' => ['web','VerifyShopifyPostback'], 'prefix' => 'postback', 'namespace' => 'Modules\PostBack\Http\Controllers'], function() {
+// ['web','VerifyShopifyPostback']
+
+Route::group(['middleware' => ['web'], 'prefix' => 'postback', 'namespace' => 'Modules\PostBack\Http\Controllers'], function() {
 
     Route::post('/shopify/{project_id}/tracking', 'PostBackShopifyController@postBackTracking');
 
