@@ -52,18 +52,26 @@ class AffiliatesApiController extends Controller
                 $projectModel = new Project();
                 $project      = $projectModel->find($projectId);
                 if ($data['type'] == 'affiliate') {
-                    $affiliateModel     = new Affiliate();
-                    $affiliateService   = new AffiliateService();
-                    $affiliate          = $affiliateModel->create([
-                                                                      'user_id'     => auth()->user()->account_owner_id,
-                                                                      'project_id'  => $project->id,
-                                                                      'company_id'  => $companyId,
-                                                                      'percentage'  => $project->percentage_affiliates,
-                                                                      'status_enum' => $affiliateModel->present()
-                                                                                                      ->getStatus('approved'),
-                                                                  ]);
-                    $affiliateService->createAffiliateLink($affiliate->id, $project->id);
-
+                    $affiliateModel   = new Affiliate();
+                    $affiliateService = new AffiliateService();
+                    $affiliate        = $affiliateModel->create([
+                                                                    'user_id'     => auth()->user()->account_owner_id,
+                                                                    'project_id'  => $project->id,
+                                                                    'company_id'  => $companyId,
+                                                                    'percentage'  => $project->percentage_affiliates,
+                                                                    'status_enum' => $affiliateModel->present()
+                                                                                                    ->getStatus('approved'),
+                                                                ]);
+                    $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
+                    if ($affiliateLink) {
+                        return response()->json([
+                                                    'messsage' => 'Afiliação criada com sucesso!',
+                                                ], 200);
+                    } else {
+                        return response()->json([
+                                                    'messsage' => 'Ocorreu um erro ao criar afiliação!',
+                                                ], 400);
+                    }
                 } else {
                     $affiliateRequestModel = new AffiliateRequest();
                     $affiliateRequest      = $affiliateRequestModel->create([
@@ -149,32 +157,28 @@ class AffiliatesApiController extends Controller
     public function getAffiliates($projectId)
     {
         try {
-            
-            $projectId  = current(Hashids::decode($projectId));
+
+            $projectId = current(Hashids::decode($projectId));
 
             $affiliates = Affiliate::with('user')->where('project_id', $projectId)->get();
 
-            return response()->json(['data' => AffiliateResource::collection($affiliates) ], 200);
-
+            return response()->json(['data' => AffiliateResource::collection($affiliates)], 200);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Ocorreu um erro' ], 400);
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
-
     }
 
     public function getAffiliateRequests($projectId)
     {
         try {
-            
-            $projectId  = current(Hashids::decode($projectId));
+
+            $projectId = current(Hashids::decode($projectId));
 
             $affiliates = AffiliateRequest::with('user')->where('project_id', $projectId)->get();
 
-            return response()->json(['data' => AffiliateRequestResource::collection($affiliates) ], 200);
-
+            return response()->json(['data' => AffiliateRequestResource::collection($affiliates)], 200);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Ocorreu um erro' ], 400);
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
-
     }
 }
