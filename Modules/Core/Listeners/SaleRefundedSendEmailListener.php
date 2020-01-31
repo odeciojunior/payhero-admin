@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace Modules\Core\Listeners;
 
 use Exception;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,7 +15,7 @@ use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SaleRefundedSendEmail implements ShouldQueue
+class SaleRefundedSendEmailListener implements ShouldQueue
 {
     /**
      * Create the event listener.

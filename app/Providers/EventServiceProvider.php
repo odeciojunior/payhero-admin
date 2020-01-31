@@ -2,21 +2,17 @@
 
 namespace App\Providers;
 
-use App\Listeners\SaleRefundedSendEmail;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Core\Events\BilletExpiredEvent;
-use Modules\Core\Events\SaleRefundedEvent;
-//use Modules\Core\Events\UserRegistrationEvent;
 use Modules\Core\Events\BilletPaidEvent;
-use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
-use Modules\Core\Listeners\BilletPaidSendEmailListener;
-use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
-//use Modules\Core\Listeners\UserRegistrationListener;
-use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
+use Modules\Core\Events\SaleRefundedEvent;
+use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
+use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\BilletPaidWhatsapp2Listener;
-
-// use Modules\Core\Listeners\BilletPaidDigitalManagerListener;
+use Modules\Core\Listeners\SaleRefundedSendEmailListener;
+use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
+use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
+use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -36,7 +32,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
-//            SaleRefundedSendEmail::class,
+            SaleRefundedSendEmailListener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent' => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',
