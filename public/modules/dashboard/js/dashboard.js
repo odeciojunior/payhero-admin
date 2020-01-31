@@ -24,7 +24,7 @@ $(document).ready(function () {
                 if (!isEmpty(data.companies)) {
                     for (let i = 0; i < data.companies.length; i++) {
                         if (data.companies[i].company_type == '1') {
-                            $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa fisíca</option>')
+                            $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa física</option>')
                         } else {
                             $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
                         }
