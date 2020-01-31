@@ -878,17 +878,12 @@ $(() => {
                             error: function (response) {
                                 errorAjaxResponse(response);
 
-                                // alertCustom('error', 'Ocorreu algum erro');
+                                alertCustom('error', 'Ocorreu algum erro');
                                 loadingOnScreenRemove()
                             },
                             success: function (data) {
                                 loadingOnScreenRemove();
-
-                                if (data == 'success') {
-                                    updateConfiguracoes();
-                                } else {
-                                    alertCustom('error', "Erro ao deletar afiliado");
-                                }
+                                getAffiliates();
                             }
                         });
                     });

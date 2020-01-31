@@ -17,6 +17,7 @@ use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Affiliates\Transformers\AffiliateResource;
 use Modules\Affiliates\Transformers\AffiliateRequestResource;
+use Illuminate\Support\Facades\Gate;
 
 class AffiliatesApiController extends Controller
 {
@@ -151,7 +152,36 @@ class AffiliatesApiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $affiliateId = current(Hashids::decode($id));
+            $affiliate   = Affiliate::find($affiliateId);
+
+            // if (Gate::denies('destroy', [$affiliate])) {
+            //     return response()->json([
+            //             'message' => 'Sem permissão',
+            //         ],Response::HTTP_FORBIDDEN
+            //     );
+            // }
+
+            $affiliateDeleted = $affiliate->delete();
+
+            if ($affiliateDeleted) {
+                return response()->json([
+                                            'message' => 'Afiliado removido com sucesso!',
+                                        ], 200);
+            }
+
+            return response()->json([
+                                        'message' => 'Erro ao tentar remover Afiliado',
+                                    ], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar remover Afiliado (AffiliatesApiController - destroy)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
+                                    ], 400);
+        }
     }
 
     public function getAffiliates($projectId)
