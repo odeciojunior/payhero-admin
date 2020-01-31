@@ -15,7 +15,6 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Services\AffiliateService;
 use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\Affiliate;
 use Modules\Affiliates\Transformers\AffiliateResource;
 
 class AffiliatesApiController extends Controller
