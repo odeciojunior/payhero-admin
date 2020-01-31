@@ -71,7 +71,7 @@ class NotazzReportApiController extends Controller
                     $notazzInvoices = $notazzInvoiceModel->with([
                                                                     'sale.project',
                                                                     'sale.plansSales',
-                                                                    'sale.client',
+                                                                    'sale.customer',
                                                                 ])
                                                          ->where('notazz_integration_id', $notazzIntegration->id);
 
@@ -87,7 +87,7 @@ class NotazzReportApiController extends Controller
 
                     if (!empty($dataForm['client'])) {
                         $clientName = $dataForm['client'];
-                        $notazzInvoices->whereHas('sale.client', function($queryClient) use ($clientName) {
+                        $notazzInvoices->whereHas('sale.customer', function($queryClient) use ($clientName) {
                             $queryClient->where('name', 'LIKE', '%' . $clientName . '%');
                         });
                     }
@@ -167,7 +167,7 @@ class NotazzReportApiController extends Controller
                     $notazzInvoices = $notazzInvoiceModel->with([
                                                                     'sale.project',
                                                                     'sale.plansSales',
-                                                                    'sale.client',
+                                                                    'sale.customer',
                                                                 ])
                                                          ->where('notazz_integration_id', $notazzIntegration->id);
 
@@ -183,7 +183,7 @@ class NotazzReportApiController extends Controller
 
                     if (!empty($dataForm['client'])) {
                         $clientName = $dataForm['client'];
-                        $notazzInvoices->whereHas('sale.client', function($queryClient) use ($clientName) {
+                        $notazzInvoices->whereHas('sale.customer', function($queryClient) use ($clientName) {
                             $queryClient->where('name', 'LIKE', '%' . $clientName . '%');
                         });
                     }
