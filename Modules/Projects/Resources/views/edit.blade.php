@@ -429,22 +429,42 @@
         {{-- FIM CONFIGURAÇÕES SHOPIFY --}}
 
         <div class="row">
-            <h4>Afiliados</h4>
-            <table id='545454' class='table text-left table-striped unify' style='width:100%'>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Data</th>
-                        <th>Porcentagem</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                        {{-- excluir, ativar/inativar --}}
-                    </tr>
-                </thead>
-                <tbody class="body-table-affiliates">
-                    {{-- js carrega --}}
-                </tbody>
-            </table>
+            <div class="col-12">
+                <h4>Afiliados</h4>
+                <table class='table text-left table-striped unify' style='width:100%'>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Data</th>
+                            <th>Porcentagem</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                            {{-- excluir, ativar/inativar --}}
+                        </tr>
+                    </thead>
+                    <tbody class="body-table-affiliates">
+                        {{-- js carrega --}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-12">
+                <h4>Solicitações de Afiliação</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                            {{-- aceitar, recusar --}}
+                        </tr>
+                    </thead>
+                    <tbody class="body-table-affiliate-requests">
+                        
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="mt-30">
@@ -538,6 +558,29 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">
+        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir_affiliate">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div id="modal_excluir_body_affiliate" class="modal-body text-center p-20">
+                    <div class="d-flex justify-content-center">
+                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                    </div>
+                    <h3 class="black"> Você tem certeza? </h3>
+                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+                </div>
+                <div class="modal-footer d-flex align-items-center justify-content-center">
+                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                    <button type="button" class="col-4 btn btn-danger btn-delete" data-dismiss="modal" style="width: 20%;">Excluir</button>
                 </div>
             </div>
         </div>
