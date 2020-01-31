@@ -8,6 +8,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
+use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\AffiliateLink;
+use Modules\Core\Entities\AffiliateRequest;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\AffiliateService;
 use Modules\Projects\Transformers\ProjectsResource;
@@ -42,9 +45,42 @@ class AffiliatesApiController extends Controller
         try {
             $data      = $request->validated();
             $projectId = current(Hashids::decode($data['project_id']));
-            if ($projectId) {
-                $affiliateService = new AffiliateService();
-                $affiliateService->createAffiliate($projectId, $data['type']);
+            $companyId = current(Hashids::decode($data['company_id']));
+            if ($projectId && $companyId) {
+                $projectModel = new Project();
+                $project      = $projectModel->find($projectId);
+                if ($data['type'] == 'affiliate') {
+                    $affiliateModel     = new Affiliate();
+                    $affiliateService   = new AffiliateService();
+                    $affiliate          = $affiliateModel->create([
+                                                                      'user_id'     => auth()->user()->account_owner_id,
+                                                                      'project_id'  => $project->id,
+                                                                      'company_id'  => $companyId,
+                                                                      'percentage'  => $project->percentage_affiliates,
+                                                                      'status_enum' => $affiliateModel->present()
+                                                                                                      ->getStatus('approved'),
+                                                                  ]);
+                    $affiliateService->createAffiliateLink($affiliate->id, $project->id);
+
+                } else {
+                    $affiliateRequestModel = new AffiliateRequest();
+                    $affiliateRequest      = $affiliateRequestModel->create([
+                                                                                'user_id'    => auth()->user()->account_owner_id,
+                                                                                'project_id' => $project->id,
+                                                                                'company_id' => $companyId,
+                                                                                'status'     => $affiliateRequestModel->present()
+                                                                                                                      ->getStatus('pending'),
+                                                                            ]);
+                    if ($affiliateRequest) {
+                        return response()->json([
+                                                    'messsage' => 'Solicitação de afiliação criada com sucesso!',
+                                                ], 200);
+                    } else {
+                        return response()->json([
+                                                    'messsage' => 'Ocorreu um erro ao solicitar afiliação!',
+                                                ], 400);
+                    }
+                }
             } else {
                 return response()->json([
                                             'messsage' => 'Ocorreu um erro ao criar a afiliação',

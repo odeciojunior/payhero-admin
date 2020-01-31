@@ -15,7 +15,8 @@ class AffiliateStoreRequest extends FormRequest
     {
         return [
             'project_id' => 'required',
-            'type'       => 'required|string|in:"request","confirm"',
+            'company_id' => 'required',
+            'type'       => 'required|string|in:"affiliate","affiliate_request"',
         ];
     }
 

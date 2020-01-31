@@ -38,6 +38,7 @@ class AffiliateRequest extends Model
     protected $fillable = [
         'user_id',
         'project_id',
+        'company_id',
         'status',
         'created_at',
         'updated_at',
@@ -76,5 +77,13 @@ class AffiliateRequest extends Model
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 }

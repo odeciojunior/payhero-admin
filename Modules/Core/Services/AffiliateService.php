@@ -5,7 +5,10 @@ namespace Modules\Core\Services;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
 
 /**
  * Class AffiliateService
@@ -14,21 +17,22 @@ use Modules\Core\Entities\AffiliateRequest;
 class AffiliateService
 {
     /**
+     * @param int $affiliateId
      * @param int $projectId
-     * @param string $type
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function createAffiliate(int $projectId, string $type)
+    public function createAffiliateLink(int $affiliateId, int $projectId)
     {
-        if ($type == 'confirm') {
-            $affiliateModel = new Affiliate();
-        } else {
-            $affiliateRequestModel = new AffiliateRequest();
-            $affiliateRequestModel->create([
-                                               'user_id'    => auth()->account_owner_id,
-                                               'project_id' => $projectId,
-                                               'status'     => $affiliateRequestModel->present()->getStatus('pending'),
-                                           ]);
+        $affiliateLinkModel = new AffiliateLink();
+        $projectModel       = new Project();
+        //        $domainModel        = new Domain();
+
+        $project = $projectModel->with('plans')->find($projectId);
+        //        $domain  = $domainModel->where('project_id', $projectId)->first();
+        foreach ($project->plans as $plan) {
+            $affiliateLinkModel->create([
+                                            'affiliate_id' => $affiliateId,
+                                            'plan_id'      => $plan->id,
+                                        ]);
         }
     }
 }

@@ -5,7 +5,6 @@
         <div class="card shadow p-30">
             <div class='row'>
                 <div class='col-md-12'>
-                    {{--                        <h1 class='project-header'></h1>--}}
                     <div class='row mx-10'>
                         <div class='col-md-6'>
                             <h1 class='page-title project-header'></h1>
@@ -46,11 +45,38 @@
                         </div>
                     </div>
                     <div class='col-md-12 my-10 text-right div-button'>
-                        <button id='btn-affiliation-request' class='btn btn-primary'>Solicitar Afiliação</button>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Modal affiliates -->
+        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_store_affiliate"
+             aria-hidden="true"
+             aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-lg d-flex justify-content-center">
+                <div class="modal-content w-450" id="conteudo_modal_add">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" style="font-weight: 700;"></h4>
+                    </div>
+                    <div class="pt-10 pr-20 pl-20 modal-affiliate-body">
+                        <h3 class="black text-center">Selecione a empresa</h3>
+                        {{--                        <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>--}}
+                        <div class='form-group mt-20'>
+                            <label for='companies'>Empresa:</label>
+                            <select id='companies' name='companies' class='form-control'></select>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 15px">
+                        <button id="btn-store-affiliation" type="button" class="btn btn-success">Enviar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
     </div>
     @push('scripts')
         <script src="{{asset('modules/affiliates/js/index.js?v=2') }}"></script>
