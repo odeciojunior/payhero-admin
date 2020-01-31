@@ -152,6 +152,51 @@ class SaleService
     }
 
     /**
+     * @param $filters
+     * @return array
+     */
+    public function getResume($filters)
+    {
+        $transactions = $this->getSalesQueryBuilder($filters);
+
+        $resume = ['total_sales' => 0];
+
+        foreach ($transactions->cursor() as $item) {
+            //quantidade de vendas
+            $resume['total_sales'] += 1;
+            //cria um item no array pra cada moeda inclusa nas vendas
+            $item->currency = $item->currency ?? 'real';
+            $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
+            //comissao
+            $resume[$item->currency]['comission'] += in_array($item->status, ['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
+            //calcula o total
+            $total = $item->sale->sub_total;
+            $total += $item->sale->shipment_value;
+            $shopify_discount = floatval($item->sale->shopify_discount) / 100;
+            if ($shopify_discount > 0) {
+                $total -= $shopify_discount;
+            }
+            if ($item->sale->dolar_quotation != 0) {
+                $iof = preg_replace('/[^0-9]/', '', $item->sale->iof);
+                $iof = substr_replace($iof, '.', strlen($iof) - 2, 0);
+                $total += floatval($iof);
+            }
+            $resume[$item->currency]['total'] += $total;
+        }
+
+        //formata os valores
+        foreach ($resume as &$item) {
+            if (is_array($item)) {
+                foreach ($item as &$value) {
+                    $value = number_format($value, 2, ',', '.');
+                }
+            }
+        }
+
+        return $resume;
+    }
+
+    /**
      * @param $saleId
      * @return Sale
      * @throws Exception
