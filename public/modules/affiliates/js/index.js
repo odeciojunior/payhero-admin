@@ -21,7 +21,7 @@ $(document).ready(function () {
                 loadOnAny('.page-content', true);
                 $('.page-content').show();
                 $('.project-header').html(response.data.name);
-                $('.project-image').prop('src', response.data.photo);
+                $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.png'}`);
                 $('#created_by').html(`Produtor: ${response.data.user_name}`);
                 $('.text-about-project').html(response.data.description);
                 $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
