@@ -131,7 +131,19 @@ class AffiliatesApiController extends Controller
      */
     public function edit($id)
     {
-        return view('affiliates::edit');
+        // return view('affiliates::edit');
+        try {
+            $affiliateId    = current(Hashids::decode($id));
+            if ($affiliateId) {
+                $affiliate = Affiliate::find($affiliateId);
+                return new AffiliateResource($affiliate);
+            }
+
+            return response()->json(['message' => 'Afiliado não encontrado'], 400);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
+        }
     }
 
     /**
@@ -140,9 +152,30 @@ class AffiliatesApiController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(AffiliateUpdateRequest $request, $id)
     {
-        //
+        try {
+            $data      = $request->validated();
+            $affiliateId    = current(Hashids::decode($id));
+            // $data = [
+            //     "percentage"  => $request->input(),
+            //     "status_enum" => ,
+            // ];
+            $update = Affiliate::find($affiliateId)->update($data);
+            if($update) {
+                return response()->json([
+                                            'message' => 'Afiliado atualizado com sucesso!',
+                                        ], 400); 
+            }
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao atualizar afiliado!',
+                                    ], 400);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao atualizar afiliado!',
+                                    ], 400);
+        }
     }
 
     /**
@@ -211,4 +244,6 @@ class AffiliatesApiController extends Controller
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
+
+
 }

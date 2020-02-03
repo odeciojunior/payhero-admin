@@ -19,7 +19,7 @@ Route::group(
     ],
     function() {
         Route::apiResource('/affiliates', 'AffiliatesApiController')
-             ->only('index', 'show', 'store', 'update', 'destroy')->names('api.affiliates')
+             ->only('index', 'show', 'store', 'update', 'destroy', 'edit')->names('api.affiliates')
              ->middleware('role:account_owner|admin');
 
         Route::get('/affiliates/getaffiliates/{projectId}', 'AffiliatesApiController@getAffiliates')

@@ -890,6 +890,42 @@ $(() => {
 
                 });
 
+                //============================================
+                $(document).on('click', '.edit-affiliate', function () {
+                    let affiliate = $(this).attr('affiliate');
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/affiliates/" + affiliate + "/edit",
+                        dataType: "json",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                            errorAjaxResponse(response);
+                        }, success: function success(response) {
+                            // mostra nome, email, empresa
+                            // //editavel percentage e status
+
+                            $('#modal-edit-affiliate .affiliate-id').val(affiliate);
+                            $('#modal-edit-affiliate .affiliate-name').val(response.name);
+                            $('#modal-edit-affiliate .affiliate-email').val(response.email);
+                            $('#modal-edit-affiliate .affiliate-company').val(response.company);
+
+                            $('#modal-edit-affiliate .affiliate-percentage').val(response.percentage);
+
+                            if (response.status == 1) {
+                                $('#modal-edit-affiliate .affiliate-status').prop("selectedIndex", 1).change();
+                            } else {
+                                $('#modal-edit-affiliate .affiliate-status').prop("selectedIndex", 0).change();
+                            }
+
+                            $('#modal-edit-affiliate').modal('show');
+                        }
+                    });
+                });
+                //============================================
+
             }
         });
 
