@@ -454,9 +454,10 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
+                            <th>Email</th>
                             <th>Data</th>
-                            <th>Status</th>
-                            <th>Ações</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Ações</th>
                             {{-- aceitar, recusar --}}
                         </tr>
                     </thead>

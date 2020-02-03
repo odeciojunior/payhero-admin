@@ -22,9 +22,10 @@ class AffiliateRequestResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'     => Hashids::encode($this->id),
-            'name'   => $this->user->name ?? null,
-            'status' => $this->status,
+            'id'                => Hashids::encode($this->id),
+            'name'              => $this->user->name ?? null,
+            'email'             => $this->user->email ?? null,
+            'status'            => $this->status,
             'date'              => (!is_null($this->created_at)) ? Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i:s') : '',
             'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status)),
         ];

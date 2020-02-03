@@ -971,13 +971,19 @@ $(() => {
                     data = '';
                     data += '<tr>';
                     data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
                     data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
-                    data += '<td class="" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
-                    data += "<td style='text-align:center'>";
-
-                    data += "<a title='Aprovar' class='text-white ml-2 badge badge-success pointer evaluate-affiliate' affiliate='" + value.id + "' status='3'>Aprovar</a>";
-                    data += "<a title='Recusar' class='text-white ml-2 badge badge-danger pointer evaluate-affiliate' affiliate='" + value.id + "' status='4'>Recusar</a>";
-                    data += "<a title='Analizar' class='text-white ml-2 badge badge-warning pointer evaluate-affiliate' affiliate='" + value.id + "' status='2'>Analizar</a>";
+                    data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
+                    data += "<td class='text-center'>";
+                    if(value.status != 3) {
+                        data += "<a title='Aprovar' class='text-white ml-2 badge badge-success pointer evaluate-affiliate' affiliate='" + value.id + "' status='3'>Aprovar</a>";
+                        if(value.status != 4) {
+                            data += "<a title='Recusar' class='text-white ml-2 badge badge-danger pointer evaluate-affiliate' affiliate='" + value.id + "' status='4'>Recusar</a>";
+                        }
+                        if(value.status != 2) {
+                            data += "<a title='Analizar' class='text-white ml-2 badge badge-warning pointer evaluate-affiliate' affiliate='" + value.id + "' status='2'>Analizar</a>";
+                        }
+                    }
 
                     data += "</td>";
                     data += '</tr>';
@@ -986,7 +992,7 @@ $(() => {
 
                 $(".evaluate-affiliate").on('click', function () {
                     let affiliate = $(this).attr('affiliate');
-                    let status = $(this).attr('action');
+                    let status = $(this).attr('status');
 
                     loadingOnScreen();
                     $.ajax({

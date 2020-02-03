@@ -248,27 +248,64 @@ class AffiliatesApiController extends Controller
 
     public function evaluateAffiliateRequest(Request $request)
     {
-            $data      = $request->all();
-            dd($data);
-        // try {
+        try {
 
-        //     $affiliateId    = current(Hashids::decode($id));
+            $userId             = auth()->user()->account_owner_id;
+            $status             = $request->input('status');
+            $affiliateRequestId = $request->input('affiliate');
+            $affiliateRequestId = current(Hashids::decode($affiliateRequestId));
 
-        //     $update = Affiliate::find($affiliateId)->update($data);
-        //     if($update) {
-        //         return response()->json([
-        //                                     'message' => 'Afiliado atualizado com sucesso!',
-        //                                 ], 200); 
-        //     }
-        //     return response()->json([
-        //                                 'message' => 'Ocorreu um erro ao atualizar afiliado!',
-        //                             ], 400);
-        // } catch (Exception $e) {
-        //     report($e);
-        //     return response()->json([
-        //                                 'message' => 'Ocorreu um erro ao atualizar afiliado!',
-        //                             ], 400);
-        // }
+            $affiliateRequest = AffiliateRequest::where('id',$affiliateRequestId)
+                                         ->wherehas('project.users', function($q) use($userId) {
+                                            $q->where('users.id', $userId);
+                                         })
+                                         ->where('status', '<>', 3)
+                                         ->first();
+
+            if(!empty($affiliateRequest->id)) {
+
+                if($status == 3 && (int)$affiliateRequest->status != 3) {
+                    $project          = Project::find($affiliateRequest->project_id);
+                    $affiliateService = new AffiliateService();
+                    $affiliate        = Affiliate::create([
+                                                            'user_id'     => $affiliateRequest->user_id,
+                                                            'project_id'  => $project->id,
+                                                            'company_id'  => $affiliateRequest->company_id,
+                                                            'percentage'  => $project->percentage_affiliates,
+                                                            'status_enum' => $status,
+                                                        ]);
+                    $affiliateRequest->update(['status' => $status]);
+
+                    $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
+                    if ($affiliateLink) {
+                        return response()->json([
+                                                    'message' => 'Afiliação criada com sucesso!',
+                                                ], 200);
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Ocorreu um erro ao criar afiliação!',
+                                                ], 400);
+                    }
+
+                } elseif (in_array($status, [2,4])) {
+                    $update = $affiliateRequest->update(['status' => $status]);
+                    if($update) {
+                        return response()->json([
+                                                    'message' => 'Solicitação de afiliação avaliada com sucesso!',
+                                                ], 200);
+                    }
+                }
+            }
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao avaliar solicitação de afiliação!',
+                                    ], 400);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao avaliar solicitação de afiliação 2!',
+                                    ], 400);
+        }
     }
 
 
