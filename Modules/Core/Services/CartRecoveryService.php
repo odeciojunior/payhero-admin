@@ -63,7 +63,7 @@ class CartRecoveryService
                                           $project         = $projectModel->find($abandonedCart['project_id']);
                                           $domain          = $domainModel->where('project_id', $project->id)
                                                                          ->first();
-                                          $clientTelephone = $log['telephone'];
+                                          $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
 
                                           $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                                           $clientNameExploded = explode(' ', $log['name']);
@@ -182,8 +182,10 @@ class CartRecoveryService
                                                              ->where('status', 3)
                                                              ->first();
 
-                                      $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
-                                      $clientTelephone    = $log['telephone'];
+                                      $linkCheckout = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
+
+                                      $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
+
                                       $clientNameExploded = explode(' ', $log['name']);
 
                                       //Traz a mensagem do sms formatado
