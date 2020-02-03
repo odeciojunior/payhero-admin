@@ -45,25 +45,64 @@ class CustomFieldsActiveCampaign extends Command
     public function handle()
     {
 
-        $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
-                     ->whereDate('created_at', '<=', '2020-01-22 17:00:00.0');
+        $webHooksUpdated = 0;
 
-        foreach ($sales->cursor() as $sale) {
-            try {
+        foreach(ShopifyIntegration::all() as $shopifyIntegration){
 
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+            try{
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
 
-                if (!empty($shopifyIntegration)) {
+                if(count($shopifyService->getShopWebhook()) != 3){
 
-                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                    $sh             = $shopifyService->updateOrder($sale);
+                    $shopifyService->deleteShopWebhook();
+
+                    $this->createShopWebhook([
+                        "topic"   => "products/create",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "format"  => "json",
+                    ]);
+
+                    $this->createShopWebhook([
+                        "topic"   => "products/update",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "format"  => "json",
+                    ]);
+
+                    $this->createShopWebhook([
+                        "topic"   => "orders/updated",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
+                        "format"  => "json",
+                    ]);
+
+                    $webHooksUpdated++;
                 }
-            } catch (Exception $e) {
-                print_r('Erro na venda: ' . $sale->id);
             }
+            catch(\Exception $e){
+                // dump($e);
+            }
+
+            dump($webHooksUpdated);
         }
 
-        dd('Terminou!');
+        // $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
+        //              ->whereDate('created_at', '<=', '2020-01-22 17:00:00.0');
+
+        // foreach ($sales->cursor() as $sale) {
+        //     try {
+
+        //         $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+
+        //         if (!empty($shopifyIntegration)) {
+
+        //             $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+        //             $sh             = $shopifyService->updateOrder($sale);
+        //         }
+        //     } catch (Exception $e) {
+        //         print_r('Erro na venda: ' . $sale->id);
+        //     }
+        // }
+
+        // dd('Terminou!');
 
         // $integrations = ActivecampaignIntegration::with('customFields')->get();
 

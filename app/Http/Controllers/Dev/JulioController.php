@@ -50,45 +50,59 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        // $dataSms = [
-        //     'message'   => 'teste',
-        //     'telephone' => '5555996931098',
-        // ];
+        //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
-        // event(new SendSmsEvent($dataSms));
-
-        // dd("foi");
-
-        // $connection = null;
-        // $default = 'default';
-
-        // Queue::size();
-
-        //For the delayed jobs
-        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':delayed' ,0, -1) );
-
-        //For the reserved jobs
-        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':reserved' ,0, -1) );    }
-
-        // $remessaOnlineService = new RemessaOnlineService();
-
-        // $quotation = $remessaOnlineService->getCurrentDolarQuotation('eurofd');
-
-        // dd($quotation);
-
-        // SELECT sale_id, fantasy_name, value, transactions.created_at FROM `transactions` JOIN companies WHERE sale_id IN ('184340','168175','173651','182919','235479','50397','127525','89524','165410','96095','209409','155379','211457','166421', '38161','168686','172741','132421','179943','110939','154692','159452','106670','86760','197990','67294','239153','180017', '176561','181595','105822','160265','114464','60007','76954','154251','159343','129864','180227','156828','27861','117638') and company_id = companies.id and invitation_id is null and company_id is not null ORDER BY sale_id
-
-        // (new Report(User::find(24)))->queue('arquivo.xls');
-
-        // $shopifyService = new ShopifyService('depiluxchile.myshopify.com','5f171154efb5377328bb9e53da89b0f1');
-
-        // dd($shopifyService->getShopWebhook());
-
-        event(new SaleRefundedEvent(Sale::find(48712)));
-
-        dd("foii");
+        // $this->restartShopifyWebhooks();
 
     }
+
+    public function restartShopifyWebhooks(){
+
+        $webHooksUpdated = 0;
+
+        foreach(ShopifyIntegration::all() as $shopifyIntegration){
+
+            try{
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
+
+                if(count($shopifyService->getShopWebhook()) != 3){
+
+                    $shopifyService->deleteShopWebhook();
+
+                    $this->createShopWebhook([
+                        "topic"   => "products/create",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "format"  => "json",
+                    ]);
+
+                    $this->createShopWebhook([
+                        "topic"   => "products/update",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "format"  => "json",
+                    ]);
+
+                    $this->createShopWebhook([
+                        "topic"   => "orders/updated",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
+                        "format"  => "json",
+                    ]);
+
+                    $webHooksUpdated++;
+                }
+            }
+            catch(\Exception $e){
+                // dump($e);
+            }
+
+            dump($webHooksUpdated);
+        }
+    }
+
+    public function testSms($data){
+
+        event(new SendSmsEvent($dataSms));
+    }
+
 }
 
 
