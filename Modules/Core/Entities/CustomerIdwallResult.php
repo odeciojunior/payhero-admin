@@ -32,8 +32,8 @@ class CustomerIdwallResult extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function client()
+    public function customer()
     {
-        return $this->belongsTo('Modules\Core\Entities\Client');
+        return $this->belongsTo('Modules\Core\Entities\Customer');
     }
 }
