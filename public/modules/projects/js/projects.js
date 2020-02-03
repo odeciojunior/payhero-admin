@@ -813,5 +813,21 @@ $(() => {
             $('#discount-recovery-alert').hide('fast', 'linear')
         }
     }
+    $('.discount-recovery').on("click", function () {
+        recoveryDiscountColor()
+    })
+
+    recoveryDiscountColor()
+
+    function recoveryDiscountColor() {
+        let chk = $('.discount-recovery').prop('checked');
+        if (chk) {
+            $('#discount_recovery_value').show('fast', 'linear')
+            $('#discount-recovery-alert').show('fast', 'linear')
+        } else {
+            $('#discount_recovery_value').hide('fast', 'linear')
+            $('#discount-recovery-alert').hide('fast', 'linear')
+        }
+    }
 });
 

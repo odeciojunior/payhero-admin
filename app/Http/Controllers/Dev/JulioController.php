@@ -16,6 +16,7 @@ use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\PlanSale;
@@ -43,6 +44,7 @@ use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProjectNotificationService;
 
 class JulioController extends Controller
 {
@@ -54,6 +56,7 @@ class JulioController extends Controller
 
         // $this->restartShopifyWebhooks();
 
+        $this->createProjectNotifications();
     }
 
     public function restartShopifyWebhooks(){
@@ -101,6 +104,19 @@ class JulioController extends Controller
     public function testSms($data){
 
         event(new SendSmsEvent($dataSms));
+    }
+
+    public function createProjectNotifications(){
+
+        $projectNotificationService = new ProjectNotificationService();
+
+        foreach(Project::whereDoesntHave('notifications')->get() as $project){
+
+            if(count($project->notifications) == 0){
+                $projectNotificationService->createProjectNotificationDefault($project->id);
+            }
+
+        }
     }
 
 }
