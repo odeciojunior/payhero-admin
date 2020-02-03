@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
+use Modules\Affiliates\Transformers\ProjectAffiliateResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
@@ -66,11 +67,11 @@ class AffiliatesApiController extends Controller
                     $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         return response()->json([
-                                                    'messsage' => 'Afiliação criada com sucesso!',
+                                                    'message' => 'Afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
                         return response()->json([
-                                                    'messsage' => 'Ocorreu um erro ao criar afiliação!',
+                                                    'message' => 'Ocorreu um erro ao criar afiliação!',
                                                 ], 400);
                     }
                 } else {
@@ -84,17 +85,17 @@ class AffiliatesApiController extends Controller
                                                                             ]);
                     if ($affiliateRequest) {
                         return response()->json([
-                                                    'messsage' => 'Solicitação de afiliação criada com sucesso!',
+                                                    'message' => 'Solicitação de afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
                         return response()->json([
-                                                    'messsage' => 'Ocorreu um erro ao solicitar afiliação!',
+                                                    'message' => 'Ocorreu um erro ao solicitar afiliação!',
                                                 ], 400);
                     }
                 }
             } else {
                 return response()->json([
-                                            'messsage' => 'Ocorreu um erro ao criar a afiliação',
+                                            'message' => 'Ocorreu um erro ao criar a afiliação',
                                         ], 400);
             }
         } catch (Exception $e) {
@@ -115,13 +116,12 @@ class AffiliatesApiController extends Controller
         if ($projectId) {
             $project = $projectModel->find($projectId);
 
-            return new ProjectsResource($project);
+            return new ProjectAffiliateResource($project);
         }
 
         return response()->json([
                                     'message' => 'Projeto não encontrado',
                                 ], 400);
-        //        return view('affiliates::show');
     }
 
     /**
