@@ -98,7 +98,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -205,8 +205,8 @@ class NotazzService
                 $fields = json_encode([
                                           'METHOD'                 => 'create_nfse',//Método a ser utilizado
                                           'API_KEY'                => $tokenApi,
-                                          'DESTINATION_NAME'       => $sale->client->name,// Nome completo do cliente
-                                          'DESTINATION_TAXID'      => $sale->client->document,//CPF ou CNPJ, somente números
+                                          'DESTINATION_NAME'       => $sale->customer->name,// Nome completo do cliente
+                                          'DESTINATION_TAXID'      => $sale->customer->document,//CPF ou CNPJ, somente números
                                           //'DESTINATION_IE'         => '',//Inscrição Estadual (opcional), somente números
                                           //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
                                           'DESTINATION_TAXTYPE'    => 'F',//F = Física, J = Jurídica, E = Estrangeiro
@@ -217,12 +217,12 @@ class NotazzService
                                           'DESTINATION_CITY'       => $sale->delivery->city,//Cidade, informar corretamente o nome da cidade sem abreviações
                                           'DESTINATION_UF'         => $sale->delivery->state,//Sigla do estado
                                           'DESTINATION_ZIPCODE'    => $sale->delivery->zip_code,//CEP, somente números
-                                          'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
-                                          'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
+                                          'DESTINATION_PHONE'      => $sale->customer->telephone,//Telefone do cliente (opcional), somente números
+                                          'DESTINATION_EMAIL'      => $sale->customer->email,//E-mail do cliente (opcional)
 
                                           //                                          'DESTINATION_EMAIL_SEND' => [
                                           //                                              '1' => [
-                                          //                                                  'EMAIL' => $sale->client->email,
+                                          //                                                  'EMAIL' => $sale->customer->email,
                                           //                                              ],
                                           //                                          ],
 
@@ -292,7 +292,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -374,8 +374,8 @@ class NotazzService
 
                                               'METHOD'                 => 'update_nfse',//Método a ser utilizado
                                               'API_KEY'                => $tokenApi,
-                                              'DESTINATION_NAME'       => $sale->client->name,// Nome completo do cliente
-                                              'DESTINATION_TAXID'      => $sale->client->document,//CPF ou CNPJ, somente números
+                                              'DESTINATION_NAME'       => $sale->customer->name,// Nome completo do cliente
+                                              'DESTINATION_TAXID'      => $sale->customer->document,//CPF ou CNPJ, somente números
                                               //'DESTINATION_IE'         => '',//Inscrição Estadual (opcional), somente números
                                               //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
                                               'DESTINATION_TAXTYPE'    => 'F',//F = Física, J = Jurídica, E = Estrangeiro
@@ -386,12 +386,12 @@ class NotazzService
                                               'DESTINATION_CITY'       => $sale->delivery->city,//Cidade, informar corretamente o nome da cidade sem abreviações
                                               'DESTINATION_UF'         => $sale->delivery->state,//Sigla do estado
                                               'DESTINATION_ZIPCODE'    => $sale->delivery->zip_code,//CEP, somente números
-                                              'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
-                                              'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
+                                              'DESTINATION_PHONE'      => $sale->customer->telephone,//Telefone do cliente (opcional), somente números
+                                              'DESTINATION_EMAIL'      => $sale->customer->email,//E-mail do cliente (opcional)
 
                                               //                                              'DESTINATION_EMAIL_SEND' => [
                                               //                                                  '1' => [
-                                              //                                                      'EMAIL' => $sale->client->email,
+                                              //                                                      'EMAIL' => $sale->customer->email,
                                               //                                                  ],
                                               //                                              ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
 
@@ -455,7 +455,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -514,7 +514,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -568,7 +568,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',
@@ -612,7 +612,7 @@ class NotazzService
 
         $notazzInvoice = $notazzInvoiceModel->with([
                                                        'sale',
-                                                       'sale.client',
+                                                       'sale.customer',
                                                        'sale.delivery',
                                                        'sale.shipping',
                                                        'sale.plansSales.plan.products',

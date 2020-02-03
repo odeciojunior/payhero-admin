@@ -133,7 +133,7 @@
                                                 <th scope="col">Solicitação</th>
                                                 <th scope="col">Liberação</th>
                                                 <th scope="col">Valor</th>
-                                                <th style="display: none" id="col_transferred_value" scope="col">Valor Convertido</th>
+                                                <th style="display: none" id="col_transferred_value" scope="col">Valor transferido</th>
                                                 <th scope="col">Status</th>
                                             </tr>
                                         </thead>
@@ -203,8 +203,8 @@
                                             <div class="input-holder">
                                                 <label for="date_type">Data</label>
                                                 <select class="form-control select-pad" id="date_type">
-                                                    <option value="transaction_date">Data da transação</option>
-                                                    <option value="transfer_date">Data da liberação</option>
+                                                    <option value="transfer_date">Data da transferência</option>
+{{--                                                    <option value="transaction_date">Data da transação</option>--}}
                                                     <option value="sale_start_date">Data da venda</option>
                                                 </select>
                                             </div>
@@ -224,7 +224,7 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col" class='headCenter' style='width:33%'>Razão</th>
-                                                <th scope="col" class='headCenter' style='width:33%'>Data</th>
+                                                <th scope="col" class='headCenter' style='width:33%'>Data da transferência</th>
                                                 <th scope="col" class='headCenter' style='width:34%'>Valor</th>
                                             </tr>
                                         </thead>
@@ -295,7 +295,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=7') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=8') }}"></script>
     @endpush
 
 @endsection

@@ -145,7 +145,7 @@ class PostBackPagarmeController extends Controller
                 }
 
                 $sale->load('client');
-                event(new BilletPaidEvent($plan, $sale, $sale->client));
+                event(new BilletPaidEvent($plan, $sale, $sale->customer));
             } else if ($requestData['transaction']['status'] == 'chargedback') {
                 $sale->update([
                                   'gateway_status' => 'chargedback',

@@ -218,6 +218,7 @@ class CompanyPresenter extends Presenter
             return '';
         }
     }
+
     /**
      * @return bool
      */

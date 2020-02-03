@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
@@ -41,7 +41,7 @@ class SaleService
         try {
 
             $companyModel     = new Company();
-            $clientModel      = new Client();
+            $customerModel    = new Customer();
             $transactionModel = new Transaction();
 
             if (!$userId) {
@@ -55,14 +55,14 @@ class SaleService
             $transactions = $transactionModel->with([
                                                         'sale',
                                                         'sale.project',
-                                                        'sale.client',
+                                                        'sale.customer',
                                                         'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
                                                         'sale.shipping',
                                                         'sale.checkout',
                                                         'sale.delivery',
                                                         'sale.transactions',
                                                     ])->whereIn('company_id', $userCompanies)
-                                                    ->join('sales','sales.id', 'transactions.sale_id')
+                                             ->join('sales', 'sales.id', 'transactions.sale_id')
                                              ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
@@ -82,9 +82,9 @@ class SaleService
             }
 
             if (!empty($filters["client"])) {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
+                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
                 $transactions->whereHas('sale', function($querySale) use ($customers) {
-                    $querySale->whereIn('client_id', $customers);
+                    $querySale->whereIn('customer_id', $customers);
                 });
             }
             if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
@@ -116,10 +116,10 @@ class SaleService
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $dateType  = $filters["date_type"];
 
-            $transactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
+            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
                 $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             })->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
+                         ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
@@ -149,6 +149,51 @@ class SaleService
         $transactions = $this->getSalesQueryBuilder($filters);
 
         return $transactions->get();
+    }
+
+    /**
+     * @param $filters
+     * @return array
+     */
+    public function getResume($filters)
+    {
+        $transactions = $this->getSalesQueryBuilder($filters);
+
+        $resume = ['total_sales' => 0];
+
+        foreach ($transactions->cursor() as $item) {
+            //quantidade de vendas
+            $resume['total_sales'] += 1;
+            //cria um item no array pra cada moeda inclusa nas vendas
+            $item->currency = $item->currency ?? 'real';
+            $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
+            //comissao
+            $resume[$item->currency]['comission'] += in_array($item->status, ['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
+            //calcula o total
+            $total = $item->sale->sub_total;
+            $total += $item->sale->shipment_value;
+            $shopify_discount = floatval($item->sale->shopify_discount) / 100;
+            if ($shopify_discount > 0) {
+                $total -= $shopify_discount;
+            }
+            if ($item->sale->dolar_quotation != 0) {
+                $iof = preg_replace('/[^0-9]/', '', $item->sale->iof);
+                $iof = substr_replace($iof, '.', strlen($iof) - 2, 0);
+                $total += floatval($iof);
+            }
+            $resume[$item->currency]['total'] += $total;
+        }
+
+        //formata os valores
+        foreach ($resume as &$item) {
+            if (is_array($item)) {
+                foreach ($item as &$value) {
+                    $value = number_format($value, 2, ',', '.');
+                }
+            }
+        }
+
+        return $resume;
     }
 
     /**

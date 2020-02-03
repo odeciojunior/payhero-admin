@@ -39,7 +39,7 @@ class PagarmeService
         $this->sale             = $sale;
         $this->shippingValue    = $shippingValue;
         $this->totalValue       = $totalValue + $shippingValue;
-        $this->client           = $sale->client;
+        $this->client           = $sale->customer;
         $this->delivery         = $sale->delivery;
         $this->project          = $sale->project;
         $this->saleService      = new SaleService();

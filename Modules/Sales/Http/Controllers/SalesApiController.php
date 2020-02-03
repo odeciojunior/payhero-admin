@@ -45,7 +45,7 @@ class SalesApiController extends Controller
     {
         try {
 
-            activity()->tap(function(Activity $activity) {
+            activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as vendas');
 
@@ -73,8 +73,8 @@ class SalesApiController extends Controller
         try {
             $saleModel = new Sale();
 
-            activity()->on($saleModel)->tap(function(Activity $activity) use ($id) {
-                $activity->log_name   = 'visualization';
+            activity()->on($saleModel)->tap(function (Activity $activity) use ($id) {
+                $activity->log_name = 'visualization';
                 $activity->subject_id = current(Hashids::decode($id));
             })->log('Visualizou detalhes da venda #' . $id);
 
@@ -82,7 +82,6 @@ class SalesApiController extends Controller
 
             if (isset($id)) {
                 $sale = $saleService->getSaleWithDetails($id);
-
 
 
                 return new SalesResource($sale);
@@ -106,9 +105,9 @@ class SalesApiController extends Controller
         try {
             $dataRequest = $request->all();
 
-            activity()->tap(function(Activity $activity){
-                $activity->log_name   = 'visualization';
-            })->log('Exportou tabela ' . $dataRequest['format'] .' de vendas');
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Exportou tabela ' . $dataRequest['format'] . ' de vendas');
 
             $user = auth()->user();
 
@@ -128,55 +127,18 @@ class SalesApiController extends Controller
     {
         try {
 
-            activity()->tap(function(Activity $activity){
-                $activity->log_name   = 'visualization';
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
             })->log('Visualizou tela exibir resumo das venda ');
 
             $saleService = new SaleService();
 
             $data = $request->all();
 
-            $transactions = $saleService->getAllSales($data);
+            $resume = $saleService->getResume($data);
 
-            if ($transactions->count()) {
-                $resume = $transactions->reduce(function($carry, $item) use ($saleService) {
-                    //quantidade de vendas
-                    $carry['total_sales'] += 1;
-                    //cria um item no array pra cada moeda inclusa nas vendas
-                    $item->currency         = $item->currency ?? 'real';
-                    $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
-                    //comissao
-                    $carry[$item->currency]['comission'] += in_array($item->status, ['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
-                    //calcula o total
-                    $total            = $item->sale->sub_total;
-                    $total            += $item->sale->shipment_value;
-                    $shopify_discount = floatval($item->sale->shopify_discount) / 100;
-                    if ($shopify_discount > 0) {
-                        $total -= $shopify_discount;
-                    }
-                    if ($item->sale->dolar_quotation != 0) {
-                        $iof   = preg_replace('/[^0-9]/', '', $item->sale->iof);
-                        $iof   = substr_replace($iof, '.', strlen($iof) - 2, 0);
-                        $total += floatval($iof);
-                    }
-                    $carry[$item->currency]['total'] += $total;
+            return response()->json($resume);
 
-                    return $carry;
-                }, ['total_sales' => 0]);
-
-                //formata os valores
-                foreach ($resume as &$item) {
-                    if (is_array($item)) {
-                        foreach ($item as &$value) {
-                            $value = number_format($value, 2, ',', '.');
-                        }
-                    }
-                }
-
-                return response()->json($resume);
-            } else {
-                return response()->json([]);
-            }
         } catch (Exception $e) {
             Log::warning('Erro ao exibir resumo das venda  SalesApiController - resume');
             report($e);
@@ -189,20 +151,19 @@ class SalesApiController extends Controller
     {
         try {
             $checkoutService = new CheckoutService();
-            $saleService     = new SaleService();
-            $saleModel       = new Sale();
+            $saleService = new SaleService();
+            $saleModel = new Sale();
 
 
-            activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId){
-                $activity->log_name     = 'visualization';
-                $activity->subject_id   = current(Hashids::connection('sale_id')->decode($saleId));
+            activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId) {
+                $activity->log_name = 'visualization';
+                $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
             })->log('Estorno transação: #' . $saleId);
 
 
-
-            $sale            = $saleModel->with('gateway', 'client')->where('id', Hashids::connection('sale_id')->decode($saleId))
-                                         ->first();
-            $refundAmount    = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            $sale = $saleModel->with('gateway', 'customer')->where('id', Hashids::connection('sale_id')->decode($saleId))
+                ->first();
+            $refundAmount = Str::replaceFirst(',', '', Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
@@ -211,8 +172,8 @@ class SalesApiController extends Controller
             }
             if ($result['status'] == 'success') {
                 $sale->update([
-                                  'date_refunded' => Carbon::now(),
-                              ]);
+                    'date_refunded' => Carbon::now(),
+                ]);
 
                 event(new SaleRefundedEvent($sale));
 
@@ -232,14 +193,14 @@ class SalesApiController extends Controller
     {
         try {
             if (FoxUtils::isProduction()) {
-                $result             = false;
-                $saleModel          = new Sale();
-                $sale               = $saleModel->find(Hashids::connection('sale_id')->decode($saleId))->first();
+                $result = false;
+                $saleModel = new Sale();
+                $sale = $saleModel->find(Hashids::connection('sale_id')->decode($saleId))->first();
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
 
-                activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId){
-                    $activity->log_name     = 'visualization';
-                    $activity->subject_id   = current(Hashids::connection('sale_id')->decode($saleId));
+                activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
                 })->log('Gerou nova ordem no shopify para transação: #' . $saleId);
 
 
@@ -275,15 +236,15 @@ class SalesApiController extends Controller
             $planModel = new Plan();
 
             $plan = $planModel->find($requestData['plan_id']);
-            $sale = $saleModel->with(['client'])->find($requestData['sale_id']);
+            $sale = $saleModel->with(['customer'])->find($requestData['sale_id']);
 
-            activity()->on($saleModel)->tap(function(Activity $activity) use ($requestData){
-                $activity->log_name     = 'visualization';
-                $activity->subject_id   = current(Hashids::connection('sale_id')->decode($requestData['sale_id']));
+            activity()->on($saleModel)->tap(function (Activity $activity) use ($requestData) {
+                $activity->log_name = 'visualization';
+                $activity->subject_id = current(Hashids::connection('sale_id')->decode($requestData['sale_id']));
             })->log('Processou boletos venda para transação: #' . $requestData['sale_id']);
 
 
-            event(new BilletPaidEvent($plan, $sale, $sale->client));
+            event(new BilletPaidEvent($plan, $sale, $sale->customer));
 
             return response()->json(['message' => 'success'], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -300,15 +261,15 @@ class SalesApiController extends Controller
 
             $saleModel = new Sale();
             $saleId = current(Hashids::connection('sale_id')->decode($request->input('sale')));
-            $sale = $saleModel->with(['client', 'project'])->find($saleId);
+            $sale = $saleModel->with(['customer', 'project'])->find($saleId);
 
-            activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId, $request){
-                $activity->log_name     = 'created';
-                $activity->subject_id   = $saleId;
+            activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId, $request) {
+                $activity->log_name = 'created';
+                $activity->subject_id = $saleId;
             })->log('Reenviou email para a venda: #' . $request->input('sale'));
 
             EmailService::clientSale(
-                $sale->client,
+                $sale->customer,
                 $sale,
                 $sale->project
             );

@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         //command executa duas horas antes por causa do fuso horário
 
         // snapshot for horizon metrics
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
         // transfer money from transactions for user companies
         $schedule->command('verify:transfers')->dailyAt('05:00');
@@ -74,6 +74,7 @@ class Kernel extends ConsoleKernel
 
         //verify last domains on sendgrid
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
+
     }
 
     /**

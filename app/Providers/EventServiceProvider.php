@@ -2,20 +2,17 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Core\Events\BilletExpiredEvent;
-use Modules\Core\Events\SaleRefundedEvent;
-use Modules\Core\Events\UserRegistrationEvent;
 use Modules\Core\Events\BilletPaidEvent;
-use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
-use Modules\Core\Listeners\BilletPaidSendEmailListener;
-use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
-use Modules\Core\Listeners\UserRegistrationListener;
-use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
+use Modules\Core\Events\SaleRefundedEvent;
+use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
+use Modules\Core\Listeners\BilletPaidSendEmailListener;
 use Modules\Core\Listeners\BilletPaidWhatsapp2Listener;
-
-// use Modules\Core\Listeners\BilletPaidDigitalManagerListener;
+use Modules\Core\Listeners\SaleRefundedSendEmailListener;
+use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
+use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
+use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -24,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        BilletPaidEvent::class                                => [
+        BilletPaidEvent::class => [
             BilletPaidActiveCampaignListener::class,
             BilletPaidHotZappListener::class,
             BilletPaidSendEmailListener::class,
@@ -35,56 +32,57 @@ class EventServiceProvider extends ServiceProvider
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
+            SaleRefundedSendEmailListener::class,
         ],
-        'Modules\Core\Events\ShopifyIntegrationEvent'         => [
+        'Modules\Core\Events\ShopifyIntegrationEvent' => [
             'Modules\Core\Listeners\ImportShopifyStoreListener',
         ],
-        'Modules\Core\Events\ShopifyIntegrationReadyEvent'    => [
+        'Modules\Core\Events\ShopifyIntegrationReadyEvent' => [
             'Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener',
             'Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener',
         ],
-        'Modules\Core\Events\DomainApprovedEvent'             => [
+        'Modules\Core\Events\DomainApprovedEvent' => [
             'Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener',
             'Modules\Core\Listeners\DomainApprovedNotifyUserListener',
             'Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener',
         ],
-        'Modules\Core\Events\BoletoPaidEvent'                 => [
+        'Modules\Core\Events\BoletoPaidEvent' => [
             'Modules\Core\Listeners\BoletoPaidPusherNotifyUser',
             'Modules\Core\Listeners\BoletoPaidNotifyUser',
             'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
         ],
-        'Modules\Core\Events\TrackingsImportedEvent'          => [
+        'Modules\Core\Events\TrackingsImportedEvent' => [
             'Modules\Core\Listeners\NotifyTrackingsImportedListener',
         ],
-        'Modules\Core\Events\SalesExportedEvent'              => [
+        'Modules\Core\Events\SalesExportedEvent' => [
             'Modules\Core\Listeners\NotifySalesExportedListener',
         ],
-        'Modules\Core\Events\TrackingsExportedEvent'          => [
+        'Modules\Core\Events\TrackingsExportedEvent' => [
             'Modules\Core\Listeners\NotifyTrackingsExportedListener',
         ],
-        'Modules\Core\Events\TrackingCodeUpdatedEvent'        => [
+        'Modules\Core\Events\TrackingCodeUpdatedEvent' => [
             'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',
             'Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener',
         ],
-        'Modules\Core\Events\ResetPasswordEvent'              => [
+        'Modules\Core\Events\ResetPasswordEvent' => [
             'Modules\Core\Listeners\ResetPasswordSendEmailListener',
         ],
-        'Modules\Core\Events\ReleasedBalanceEvent'            => [
+        'Modules\Core\Events\ReleasedBalanceEvent' => [
             'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
         ],
-        'Modules\Core\Events\SaleApprovedEvent'               => [
+        'Modules\Core\Events\SaleApprovedEvent' => [
             'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             'SocialiteProviders\\Shopify\\ShopifyExtendSocialite@handle',
         ],
-        'Modules\Core\Events\WithdrawalRequestEvent'          => [
+        'Modules\Core\Events\WithdrawalRequestEvent' => [
             'Modules\Core\Listeners\WithdrawalRequestSendEmailListener',
         ],
-        'Modules\Core\Events\SendEmailEvent'                  => [
+        'Modules\Core\Events\SendEmailEvent' => [
             'Modules\Core\Listeners\SendEmailListener',
         ],
-        'Modules\Core\Events\SendSmsEvent'                    => [
+        'Modules\Core\Events\SendSmsEvent' => [
             'Modules\Core\Listeners\SendSmsListener',
         ],
 

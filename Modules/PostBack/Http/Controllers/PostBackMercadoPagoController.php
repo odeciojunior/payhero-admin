@@ -5,7 +5,7 @@ namespace Modules\PostBack\Http\Controllers;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Delivery;
 use Modules\Core\Entities\Plan;
@@ -145,7 +145,7 @@ class PostBackMercadoPagoController extends Controller
                 $plan     = $planModel->find($plansSale->plan_id);
                 $project  = $projectModel->find($sale->project_id);
                 $delivery = $deliveryModel->find($sale->delivery_id);
-                $client   = $clientModel->find($sale->client_id);
+                $client   = $clientModel->find($sale->customer_id);
 
                 event(new SaleApprovedEvent($plan, $sale, $project, $delivery, $client));
             } else {

@@ -13,12 +13,163 @@ let statusArray = {
     'approved': 'Aprovado',
     'refused': 'Recusado',
 };
-
+let getDataProfile = '';
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
-
     let user = '';
+
+    getDataProfile = function () {
+        $.ajax({
+            url: "/api/profile",
+            type: "GET",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            cache: false,
+            async: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                /**
+                 * Dados Pessoais
+                 */
+
+                $('#name').val(response.data.name);
+                $('#email').val(response.data.email);
+                $('#document').val(response.data.document);
+                $('#cellphone').val(response.data.cellphone);
+                $('#date_birth').val(response.data.date_birth);
+
+                /**
+                 * Imagem Perfil
+                 */
+                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $("#previewimage").on("error", function () {
+                    $(this).attr('src', '/modules/global/img/user-default.png');
+                });
+
+                /**
+                 * Dados Residenciais
+                 */
+                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
+                    $('.dados-residenciais').attr('disabled', 'disabled');
+
+                } else {
+                    $("#text-alert-documents").show();
+                    $('.dados-residenciais').removeAttr('disabled');
+                }
+                $('#zip_code').val(response.data.zip_code);
+                $('#street').val(response.data.street);
+                $('#number').val(response.data.number);
+                $('#neighborhood').val(response.data.neighborhood);
+                $('#complement').val(response.data.complement);
+                $('#city').val(response.data.city);
+                $('#state').val(response.data.state);
+
+                //seleciona a opcao do select de acordo com o país do usuário
+                $("#country").find('option').each(function () {
+                    if (response.data.country == $(this).val()) {
+                        $(this).attr('selected', true);
+                    }
+                });
+                //só mostra o campo estado se o país for Brasil e Estados Unidos
+                if (response.data.country == 'brazil' || response.data.country == 'usa') {
+                    $(".div-state").show();
+                }
+                /**
+                 * Notificações
+                 */
+                if (response.data.boleto_compensated) {
+                    $("#boleto_compensated_switch").attr("checked", "checked");
+                }
+                if (response.data.sale_approved) {
+                    $("#sale_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.notazz) {
+                    $("#notazz_switch").attr("checked", "checked");
+                }
+
+                if (response.data.released_balance) {
+                    $("#released_balance_switch").attr("checked", "checked");
+                }
+                if (response.data.domain_approved) {
+                    $("#domain_approved_switch").attr("checked", "checked");
+                }
+                if (response.data.shopify) {
+                    $("#shopify_switch").attr("checked", "checked");
+                }
+
+                if (response.data.billet_generated) {
+                    $("#billet_generated_switch").attr("checked", "checked");
+                }
+                if (response.data.credit_card_in_proccess) {
+                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
+                }
+
+                // Verificação de telefone
+
+                if (response.data.cellphone_verified) {
+                    cellphoneVerified();
+                } else {
+                    cellphoneNotVerified();
+                }
+
+                if (response.data.role.name !== 'account_owner') {
+                    $("#nav_notifications").hide();
+                    $("#nav_taxs").hide();
+                } else {
+                    $("#nav_notifications").show();
+                    $("#nav_taxs").show();
+                }
+
+                // Verificação de email
+
+                if (response.data.email_verified) {
+                    emailVerified();
+                } else {
+                    emailNotVerified();
+                }
+
+                /**
+                 * Documentos
+                 */
+
+                if (response.data.personal_document_translate === 'pending' || response.data.personal_document_translate === 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                } else {
+                    $("#text-alert-documents-cpf").hide();
+                }
+
+                if (response.data.personal_document_translate === 'approved' || response.data.personal_document_translate === 'analyzing') {
+                    $('#document').attr('disabled', 'disabled');
+                    $("#personal-document-id").hide();
+                }
+
+                if (response.data.address_document_translate == 'pending' || response.data.address_document_translate == 'refused') {
+                    $("#text-alert-documents-cpf").show();
+                    $("#address-document-id").show();
+                }
+
+                if (response.data.address_document_translate == 'approved' || response.data.address_document_translate == 'analyzing') {
+                    $("#address-document-id").hide();
+                }
+
+                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
+
+                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
+                user = response.data.id_code;
+
+                verifyDocuments(response.data);
+                verifyUserAddress(response.data);
+                changeMaskByUserCountry(response.data);
+                loadLabelsByCountry(response.data);
+            }
+        });
+    }
+    getDataProfile();
 
     // Verificar número de celular
     $("#btn_verify_cellphone").on("click", function () {
@@ -119,147 +270,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    getDataProfile();
-    function getDataProfile() {
-        $.ajax({
-            url: "/api/profile",
-            type: "GET",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            cache: false,
-            async: false,
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                /**
-                 * Dados Pessoais
-                 */
-                if (response.data.personal_document_translate == 'pending' || response.data.personal_document_translate == 'refused') {
-                    $("#text-alert-documents-cpf").show();
-                }
-
-                if (response.data.personal_document_translate == 'approved' || response.data.personal_document_translate == 'analyzing') {
-                    $('#document').attr('disabled', 'disabled');
-                    $("#personal-document-id").hide();
-                }
-
-                $('#name').val(response.data.name);
-                $('#email').val(response.data.email);
-                $('#document').val(response.data.document);
-                $('#cellphone').val(response.data.cellphone);
-                $('#date_birth').val(response.data.date_birth);
-
-                /**
-                 * Imagem Perfil
-                 */
-                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
-                $("#previewimage").on("error", function () {
-                    $(this).attr('src', '/modules/global/img/user-default.png');
-                });
-
-                /**
-                 * Dados Residenciais
-                 */
-                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
-                    $('.dados-residenciais').attr('disabled', 'disabled');
-
-                } else {
-                    $("#text-alert-documents").show();
-                    $('.dados-residenciais').removeAttr('disabled');
-                }
-                $('#zip_code').val(response.data.zip_code);
-                $('#street').val(response.data.street);
-                $('#number').val(response.data.number);
-                $('#neighborhood').val(response.data.neighborhood);
-                $('#complement').val(response.data.complement);
-                $('#city').val(response.data.city);
-                $('#state').val(response.data.state);
-
-                //seleciona a opcao do select de acordo com o país do usuário
-                $("#country").find('option').each(function () {
-                    if (response.data.country == $(this).val()) {
-                        $(this).attr('selected', true);
-                    }
-                });
-                //só mostra o campo estado se o país for Brasil e Estados Unidos
-                if (response.data.country == 'brazil' || response.data.country == 'usa') {
-                    $(".div-state").show();
-                }
-                /**
-                 * Notificações
-                 */
-                if (response.data.boleto_compensated) {
-                    $("#boleto_compensated_switch").attr("checked", "checked");
-                }
-                if (response.data.sale_approved) {
-                    $("#sale_approved_switch").attr("checked", "checked");
-                }
-                if (response.data.notazz) {
-                    $("#notazz_switch").attr("checked", "checked");
-                }
-
-                if (response.data.released_balance) {
-                    $("#released_balance_switch").attr("checked", "checked");
-                }
-                if (response.data.domain_approved) {
-                    $("#domain_approved_switch").attr("checked", "checked");
-                }
-                if (response.data.shopify) {
-                    $("#shopify_switch").attr("checked", "checked");
-                }
-
-                if (response.data.billet_generated) {
-                    $("#billet_generated_switch").attr("checked", "checked");
-                }
-                if (response.data.credit_card_in_proccess) {
-                    $("#credit_card_in_proccess_switch").attr("checked", "checked");
-                }
-
-                // Verificação de telefone
-
-                if (response.data.cellphone_verified) {
-                    cellphoneVerified();
-                } else {
-                    cellphoneNotVerified();
-                }
-
-                // Verificação de email
-
-                if (response.data.email_verified) {
-                    emailVerified();
-                } else {
-                    emailNotVerified();
-                }
-
-                /**
-                 * Documentos
-                 */
-                if (response.data.address_document_translate == 'pending' || response.data.address_document_translate == 'refused') {
-                    $("#text-alert-documents-cpf").show();
-                    $("#address-document-id").show();
-                }
-
-                if (response.data.address_document_translate == 'approved' || response.data.address_document_translate == 'analyzing') {
-                    $('#document').attr('disabled', 'disabled');
-                    $("#address-document-id").hide();
-                }
-
-                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
-
-                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
-                user = response.data.id_code;
-
-                verifyDocuments(response.data);
-                verifyUserAddress(response.data);
-                changeMaskByUserCountry(response.data);
-                loadLabelsByCountry(response.data);
-            }
-        });
-    }
 
     function cellphoneVerified() {
         $("#message_not_verified_cellphone").css("display", "none");
@@ -556,6 +566,8 @@ $(document).ready(function () {
         $("#boleto-tax").val(data.boleto_tax + '%');
         $("#credit-card-release").val('plan-' + data.credit_card_release_money);
         $("#debit-card-release").val(data.debit_card_release_money);
+        $("#transaction-tax-abroad").html(data.abroad_transfer_tax +'%.');
+
         $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
@@ -647,6 +659,7 @@ $(document).ready(function () {
             });
         }
     }
+
     function verifyUserAddress(user) {
         if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null || user.state == null) {
             $('#row_dropzone_documents').hide();
@@ -656,6 +669,7 @@ $(document).ready(function () {
             $('#div_address_pending').hide();
         }
     }
+
     function changeMaskByUserCountry(user) {
         if (user.country == 'brazil') {
             $('#zip_code').mask('00000-000');
@@ -711,7 +725,7 @@ $(document).ready(function () {
                 dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
-                        
+
                     </tr>`;
                 $("#profile-documents-modal").append(dados);
 
@@ -801,8 +815,8 @@ $(document).ready(function () {
                                                                             <li class='text-left'><b>CPTS (Carteira de Trabalho e Previdência Social)</b></li>
                                                                             <li class='text-left'><b>Passaporte</b></li>
                                                                             </ul>
-                
-                 
+
+
                                                                         </small>`);
         } else {
             $("#modal-title-documents").html('Documento Compravante de Residência');
@@ -901,12 +915,14 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
                         dados += `<td class='text-center'>
                             <a href='${value.document_url}' target='_blank' role='button' class='detalhes_document'><i class='material-icons gradient'>remove_red_eye</i></a>
                         </td>
-                        
+
                     </tr>`;
                         $("#profile-documents-modal").append(dados);
 
                     });
                 }
+
+                getDataProfile();
 
             }
         });

@@ -1302,7 +1302,7 @@ class ShopifyService
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
             $delivery     = $sale->delivery;
-            $client       = $sale->client;
+            $client       = $sale->customer;
             $checkout     = $sale->checkout;
 
             $totalValue = $sale->present()->getSubTotal();
@@ -1873,7 +1873,7 @@ class ShopifyService
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
             if (!empty($sale) && !empty($sale->shopify_order)) {
-                $client   = $sale->client;
+                $client   = $sale->customer;
 
                 $shippingAddress = [
                     "phone" => $client->telephone,

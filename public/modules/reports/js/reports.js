@@ -159,7 +159,8 @@ $(function () {
                     }),
                     fullWidth: !0,
                     chartPadding: {
-                        right: 30
+                        right: 30,
+                        left: 40
                     },
                     series: {
                         "credit-card-data": {
@@ -174,7 +175,20 @@ $(function () {
                     },
                     axisY: {
                         labelInterpolationFnc: function labelInterpolationFnc(value) {
-                            return chartData.currency + value;
+                            value = Math.round(value,1);
+                            var str = value.toString();
+                            str = str.replace('.','');
+                            let complete = 3 - str.length;
+                            if(complete == 1) {
+                                str = '0'+str;
+                            } else if (complete == 2) {
+                                str = '00'+str;
+                            }
+                            str = str.replace(/([0-9]{2})$/g, ",$1");
+                            if( str.length > 6 ) {
+                                str = str.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                            }
+                            return chartData.currency + str;
                             return value / 1e3 + "K";
                         },
                         scaleMinSpace: 40

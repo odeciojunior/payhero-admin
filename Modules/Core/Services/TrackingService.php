@@ -235,7 +235,7 @@ class TrackingService
                 'tracking',
                 'sale.plansSales.plan.productsPlans',
                 'sale.delivery',
-                'sale.client',
+                'sale.customer',
                 'product',
             ])
             ->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId) {

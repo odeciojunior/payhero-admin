@@ -17,9 +17,20 @@ use Modules\Register\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
-    public function create($parameter)
+    public function create(Request $request)
     {
-        return view('register::create');
+        $companyId = current(Hashids::decode($request->segment(2)));
+        if (!empty($companyId)) {
+            $invitation = Invitation::where(['company_id' => $companyId])->first();
+            if (!empty($invitation) && $invitation->company_id == 22) {
+                return view('register::create');
+            } else {
+                return view('register::notInvite');
+            }
+        } else {
+            return view('register::notInvite');
+        }
+
     }
 
     public function loginAsSomeUser($userId)

@@ -40,7 +40,7 @@ $(() => {
         alertCustom('success', 'Linha Digitável copiado!');
     });
 
-    $('.btn-edit-client').on('click', function(){
+    $('.btn-edit-client').on('click', function () {
         let container = $(this).parent();
         container.find('input')
             .removeClass('fake-label')
@@ -50,7 +50,7 @@ $(() => {
         container.find('.btn-close-client').show();
     });
 
-    $('.btn-close-client').on('click', function(){
+    $('.btn-close-client').on('click', function () {
         let container = $(this).parent();
         container.find('input')
             .addClass('fake-label')
@@ -61,7 +61,7 @@ $(() => {
     });
 
     //atualiza códigos de rastreio
-    $('.btn-save-client').on('click', function(){
+    $('.btn-save-client').on('click', function () {
 
         let container = $(this).parent();
         let input = container.find('input');
@@ -75,7 +75,7 @@ $(() => {
 
         $.ajax({
             method: "POST",
-            url: '/api/client/update',
+            url: '/api/customers/update',
             dataType: "json",
             data: data,
             headers: {
@@ -285,7 +285,7 @@ $(() => {
             $('#div_refund_transaction').html('');
         }
 
-        if(sale.status == 2 || sale.status == 1) {
+        if (sale.status == 2 || sale.status == 1) {
             $('#saleReSendEmail').show();
         } else {
             $('#saleReSendEmail').hide();
@@ -455,7 +455,7 @@ $(() => {
     function getClient(client) {
         $.ajax({
             method: "GET",
-            url: '/api/client/' + client,
+            url: '/api/customers/' + client,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -565,7 +565,7 @@ $(() => {
     function renderDelivery(delivery) {
         $('.btn-save-trackingcode').attr('delivery', delivery.id);
         let deliveryAddress = 'Endereço: ' + delivery.street + ', ' + delivery.number;
-        if(!isEmpty(delivery.complement)){
+        if (!isEmpty(delivery.complement)) {
             deliveryAddress += ', ' + delivery.complement;
         }
         $('#delivery-address').text(deliveryAddress);
@@ -668,7 +668,7 @@ $(() => {
     // reenvia email da venda para o cliente
     function saleReSendEmail(sale) {
         let btnSaleReSendEmail = $('#btnSaleReSendEmail');
-        if(!btnSaleReSendEmail.hasClass('sending')) {
+        if (!btnSaleReSendEmail.hasClass('sending')) {
             btnSaleReSendEmail.css('opacity', '.5')
                 .addClass('sending');
             $.ajax({
