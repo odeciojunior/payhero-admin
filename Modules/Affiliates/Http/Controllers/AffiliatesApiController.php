@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
+use Modules\Affiliates\Http\Requests\AffiliateUpdateRequest;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
@@ -135,7 +136,7 @@ class AffiliatesApiController extends Controller
         try {
             $affiliateId    = current(Hashids::decode($id));
             if ($affiliateId) {
-                $affiliate = Affiliate::find($affiliateId);
+                $affiliate = Affiliate::with('user', 'company')->find($affiliateId);
                 return new AffiliateResource($affiliate);
             }
 
@@ -157,15 +158,12 @@ class AffiliatesApiController extends Controller
         try {
             $data      = $request->validated();
             $affiliateId    = current(Hashids::decode($id));
-            // $data = [
-            //     "percentage"  => $request->input(),
-            //     "status_enum" => ,
-            // ];
+
             $update = Affiliate::find($affiliateId)->update($data);
             if($update) {
                 return response()->json([
                                             'message' => 'Afiliado atualizado com sucesso!',
-                                        ], 400); 
+                                        ], 200); 
             }
             return response()->json([
                                         'message' => 'Ocorreu um erro ao atualizar afiliado!',
@@ -243,6 +241,31 @@ class AffiliatesApiController extends Controller
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
+    }
+
+    public function evaluateAffiliateRequest(Request $request)
+    {
+            $data      = $request->all();
+            dd($data);
+        // try {
+
+        //     $affiliateId    = current(Hashids::decode($id));
+
+        //     $update = Affiliate::find($affiliateId)->update($data);
+        //     if($update) {
+        //         return response()->json([
+        //                                     'message' => 'Afiliado atualizado com sucesso!',
+        //                                 ], 200); 
+        //     }
+        //     return response()->json([
+        //                                 'message' => 'Ocorreu um erro ao atualizar afiliado!',
+        //                             ], 400);
+        // } catch (Exception $e) {
+        //     report($e);
+        //     return response()->json([
+        //                                 'message' => 'Ocorreu um erro ao atualizar afiliado!',
+        //                             ], 400);
+        // }
     }
 
 

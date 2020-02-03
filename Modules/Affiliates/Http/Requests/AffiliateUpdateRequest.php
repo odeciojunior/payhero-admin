@@ -14,8 +14,8 @@ class AffiliateUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'status_enum' => 'nullable|integer',
-            'percentage'  => 'required|integer',
+            'status_enum' => 'required|integer',
+            'percentage'  => 'nullable|integer|max:100',
         ];
     }
 

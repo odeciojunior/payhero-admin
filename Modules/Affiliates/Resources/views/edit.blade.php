@@ -2,43 +2,37 @@
     @csrf
     @method('PUT')
     <input type="hidden" value="" class="affiliate-id" name="affiliateId">
-
     <div class="row">
         <div class="form-group col-xl-12">
-            <label for="name">Nome</label>
-            <input value="" name="name" type="text" class="form-control affiliate-name">
+            <label>Nome</label>
+            <input type="text" class="form-control affiliate-name" readonly>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-xl-12">
-            <label for="name">Email</label>
-            <input value="" name="name" type="text" class="form-control affiliate-email" >
+            <label>Email</label>
+            <input type="text" class="form-control affiliate-email" readonly>
         </div>
     </div>
-
-
     <div class="row">
         <div class="form-group col-xl-12">
-            <label for="name">Empresa</label>
-            <input value="" name="company" type="text" class="form-control affiliate-company">
+            <label>Empresa</label>
+            <input name="company" type="text" class="form-control affiliate-company" readonly>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-xl-6">
-            <label for="type">Status</label>
-            <select name="type" class="form-control affiliate-status" required>
-                <option value="1">Porcentagem</option>
-                <option value="2">Valor</option>
-                <option value="3">Valor</option>
-                <option value="4">Valor</option>
+            <label for="status_enum">Status</label>
+            <select name="status_enum" class="form-control affiliate-status" required>
+                <option value="1">Pendente</option>
+                <option value="2">Em análise</option>
+                <option value="3">Aprovado</option>
+                <option value="4">Recusado</option>
             </select>
         </div>
         <div class="form-group col-xl-6">
             <label for="percentage">Porcentagem</label>
-            <input value="" name="percentage" type="text" class="form-control affiliate-percentage" placeholder="Porcentagem">
+            <input name="percentage" type="text" class="form-control affiliate-percentage" data-mask="0#" maxlength="2">
         </div>
     </div>
-
 </form>

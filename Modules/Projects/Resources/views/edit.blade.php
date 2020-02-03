@@ -436,9 +436,9 @@
                         <tr>
                             <th>Nome</th>
                             <th>Data</th>
-                            <th>Porcentagem</th>
-                            <th>Status</th>
-                            <th>Ações</th>
+                            <th class="text-center">Porcentagem</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Ações</th>
                             {{-- excluir, ativar/inativar --}}
                         </tr>
                     </thead>
@@ -585,11 +585,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     <div id="modal-edit-affiliate" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-simple">
             <div class="modal-content p-10">
