@@ -202,7 +202,7 @@ class AffiliatesApiController extends Controller
     {
         try {
             $affiliateId = current(Hashids::decode($id));
-            $affiliate   = Affiliate::find($affiliateId);
+            $affiliate   = Affiliate::with('affiliateLinks')->find($affiliateId);
 
             // if (Gate::denies('destroy', [$affiliate])) {
             //     return response()->json([
@@ -211,6 +211,11 @@ class AffiliatesApiController extends Controller
             //     );
             // }
 
+            if (!empty($affiliate->affiliateLinks) && $affiliate->affiliateLinks->isNotEmpty()) {
+                    foreach ($affiliate->affiliateLinks as $affiliateLink) {
+                    $affiliateLink->delete();
+                }
+            }
             $affiliateDeleted = $affiliate->delete();
 
             if ($affiliateDeleted) {
