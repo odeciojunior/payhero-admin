@@ -26,9 +26,12 @@ class CollaboratorsApiController extends Controller
     {
         try {
             $userModel = new User();
-            $user      = $userModel->where([['account_owner_id', auth()->user()->account_owner_id], ['id', '!=', auth()->user()->account_owner_id]]);
+            $user = $userModel->where([
+                ['account_owner_id', auth()->user()->account_owner_id],
+                ['id', '!=', auth()->user()->account_owner_id]
+            ]);
 
-            activity()->on($userModel)->tap(function(Activity $activity) {
+            activity()->on($userModel)->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos colaboradores');
 
@@ -52,44 +55,44 @@ class CollaboratorsApiController extends Controller
     public function store(StoreCollaboratorRequest $request)
     {
         try {
-            $data                                        = $request->validated();
-            $userModel                                   = new User();
-            $data['password']                            = bcrypt($data['password']);
-            $data['percentage_rate']                     = '5.9';
-            $data['transaction_rate']                    = '1.00';
-            $data['balance']                             = '0';
-            $data['foxcoin']                             = '0';
+            $data = $request->validated();
+            $userModel = new User();
+            $data['password'] = bcrypt($data['password']);
+            $data['percentage_rate'] = '5.9';
+            $data['transaction_rate'] = '1.00';
+            $data['balance'] = '0';
+            $data['foxcoin'] = '0';
             $data['credit_card_antecipation_money_days'] = '30';
-            $data['release_money_days']                  = '30';
-            $data['boleto_antecipation_money_days']      = '2';
-            $data['antecipation_tax']                    = '0';
-            $data['percentage_antecipable']              = '100';
-            $data['email_amount']                        = '0';
-            $data['call_amount']                         = '0';
-            $data['score']                               = '0';
-            $data['sms_zenvia_amount']                   = '0';
-            $data['invites_amount']                      = 1;
-            $data['address_document_status']             = 3;
-            $data['personal_document_status']            = 3;
-            $data['account_owner_id']                    = auth()->user()->account_owner_id;
-            $user                                        = $userModel->create($data);
+            $data['release_money_days'] = '30';
+            $data['boleto_antecipation_money_days'] = '2';
+            $data['antecipation_tax'] = '0';
+            $data['percentage_antecipable'] = '100';
+            $data['email_amount'] = '0';
+            $data['call_amount'] = '0';
+            $data['score'] = '0';
+            $data['sms_zenvia_amount'] = '0';
+            $data['invites_amount'] = 1;
+            $data['address_document_status'] = 3;
+            $data['personal_document_status'] = 3;
+            $data['account_owner_id'] = auth()->user()->account_owner_id;
+            $user = $userModel->create($data);
             $user->assignRole($data['role']);
             if (!empty($user)) {
                 return response()->json([
-                                            'message' => 'Calaborador cadastrado com sucesso!',
-                                        ], 200);
+                    'message' => 'Calaborador cadastrado com sucesso!',
+                ], 200);
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro ao cadastrar colaborador',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro ao cadastrar colaborador',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao cadastrar colaborador  CollaboratorsApiController - store');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao cadastrar colaborador',
-                                    ], 400);
+                'message' => 'Ocorreu um erro ao cadastrar colaborador',
+            ], 400);
         }
     }
 
@@ -101,20 +104,20 @@ class CollaboratorsApiController extends Controller
     {
         try {
             $userModel = new User();
-            $userId    = current(Hashids::decode($id));
+            $userId = current(Hashids::decode($id));
 
             if ($userId) {
                 $user = $userModel->with('roles')->find($userId);
 
-                activity()->on($userModel)->tap(function(Activity $activity) use ($userId) {
-                    $activity->log_name   = 'visualization';
+                activity()->on($userModel)->tap(function (Activity $activity) use ($userId) {
+                    $activity->log_name = 'visualization';
                     $activity->subject_id = $userId;
                 })->log('Visualizou tela editar colaborador ' . $user->name);
 
                 if (Gate::denies('show', [$user])) {
                     return response()->json([
-                                                'message' => 'Sem permissão',
-                                            ], Response::HTTP_FORBIDDEN
+                        'message' => 'Sem permissão',
+                    ], Response::HTTP_FORBIDDEN
                     );
                 }
 
@@ -122,13 +125,13 @@ class CollaboratorsApiController extends Controller
                     return new CollaboratorsResource($user);
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro ao buscar colaborador',
-                                            ], 400);
+                        'message' => 'Ocorreu um erro ao buscar colaborador',
+                    ], 400);
                 }
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro ao buscar colaborador',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro ao buscar colaborador',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar colaboradorer (CollaboratorsApiController - show)');
@@ -150,38 +153,48 @@ class CollaboratorsApiController extends Controller
     public function update(UpdateCollaboratorRequest $request, $id)
     {
         try {
-            $data      = $request->validated();
+            $data = $request->validated();
             $userModel = new User();
-            $userId    = current(Hashids::decode($id));
+            $userId = current(Hashids::decode($id));
             if ($userId) {
                 $user = $userModel->find($userId);
 
                 if (Gate::denies('update', [$user])) {
                     return response()->json([
-                                                'message' => 'Sem permissão',
-                                            ], Response::HTTP_FORBIDDEN
+                        'message' => 'Sem permissão',
+                    ], Response::HTTP_FORBIDDEN
                     );
                 }
 
                 if (!empty($data['password'])) {
                     $data['password'] = bcrypt($data['password']);
                 }
-                $userUpdated = $user->update($data);
-                $user->syncRoles([$data['role']]);
-                if ($userUpdated) {
-                    return response()->json([
-                                                'message' => 'Colaborador atualizado com sucesso!',
-                                            ], 200);
+
+                $userFind = $userModel->where('email', $data['email'])->first();
+
+                if ((!empty($userFind) && $userFind->id == $user->id) || empty($userFind)) {
+                    $userUpdated = $user->update($data);
+                    $user->syncRoles([$data['role']]);
+                    if ($userUpdated) {
+                        return response()->json([
+                            'message' => 'Colaborador atualizado com sucesso!',
+                        ], 200);
+                    } else {
+                        return response()->json([
+                            'message' => 'Ocorreu um erro ao atualizar colaborador',
+                        ], 400);
+                    }
                 } else {
                     return response()->json([
-                                                'message' => 'Ocorreu um erro ao atualizar colaborador',
-                                            ], 400);
+                        'message' => 'Email informado ja esta sendo utilizado',
+                    ], 400);
                 }
+
             } else {
 
                 return response()->json([
-                                            'message' => 'Ocorreu um erro ao atualizar colaborador',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro ao atualizar colaborador',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao atualizar colaborador  CollaboratorsApiController - update');
@@ -189,8 +202,8 @@ class CollaboratorsApiController extends Controller
             dd($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao atualizar colaborador',
-                                    ], 400);
+                'message' => 'Ocorreu um erro ao atualizar colaborador',
+            ], 400);
         }
     }
 
@@ -201,31 +214,31 @@ class CollaboratorsApiController extends Controller
     public function destroy($id)
     {
         $userModel = new User();
-        $userId    = current(Hashids::decode($id));
+        $userId = current(Hashids::decode($id));
         if ($userId) {
             $user = $userModel->find($userId);
 
             if (Gate::denies('destroy', [$user])) {
                 return response()->json([
-                                            'message' => 'Sem permissão',
-                                        ], Response::HTTP_FORBIDDEN
+                    'message' => 'Sem permissão',
+                ], Response::HTTP_FORBIDDEN
                 );
             }
 
             $userDeleted = $user->delete();
             if ($userDeleted) {
                 return response()->json([
-                                            'message' => 'Colaborador removido com sucesso!',
-                                        ], 200);
+                    'message' => 'Colaborador removido com sucesso!',
+                ], 200);
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro ao remover colaborador',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro ao remover colaborador',
+                ], 400);
             }
         } else {
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao remover colaborador',
-                                    ], 400);
+                'message' => 'Ocorreu um erro ao remover colaborador',
+            ], 400);
         }
     }
 }
