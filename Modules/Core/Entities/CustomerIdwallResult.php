@@ -5,16 +5,10 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property integer $id
- * @property integer $client_id
- * @property mixed $send_dataxi
- * @property mixed $received_data
- * @property mixed $exception
- * @property string $created_at
- * @property string $updated_at
- * @property Client $client
+ * Class CustomerIdwallResult
+ * @package Modules\Core\Entities
  */
-class ClientIdwallResult extends Model
+class CustomerIdwallResult extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.

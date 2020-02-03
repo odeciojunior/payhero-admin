@@ -12,17 +12,17 @@ class CreateClientIdwallResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_idwall_results', function(Blueprint $table) {
+        Schema::create('customer_idwall_results', function(Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id')->index();
+            $table->unsignedBigInteger('customer_id')->index();
             $table->json('send_data');
             $table->json('received_data');
             $table->json('exception');
             $table->timestamps();
         });
 
-        Schema::table('client_idwall_results', function(Blueprint $table) {
-            $table->foreign('client_id')->references('id')->on('clients');
+        Schema::table('customer_idwall_results', function(Blueprint $table) {
+            $table->foreign('customer_id')->references('id')->on('customers');
         });
     }
 
@@ -32,10 +32,10 @@ class CreateClientIdwallResultsTable extends Migration
      */
     public function down()
     {
-        Schema::table('client_idwall_results', function(Blueprint $table) {
-            $table->dropForeign(["client_id"]);
+        Schema::table('customer_idwall_results', function(Blueprint $table) {
+            $table->dropForeign(["customer_id"]);
         });
 
-        Schema::dropIfExists('client_idwall_results');
+        Schema::dropIfExists('customer_idwall_results');
     }
 }
