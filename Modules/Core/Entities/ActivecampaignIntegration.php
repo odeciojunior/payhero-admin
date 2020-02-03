@@ -100,4 +100,12 @@ class ActivecampaignIntegration extends Model
     {
         return $this->hasMany('Modules\Core\Entities\ActivecampaignEvent');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function customFields()
+    {
+        return $this->hasMany('Modules\Core\Entities\ActivecampaignCustom');
+    }
 }

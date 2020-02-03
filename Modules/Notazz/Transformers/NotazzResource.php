@@ -31,6 +31,7 @@ class NotazzResource extends Resource
             'pending_days'    => $this->pending_days,
             'remove_tax'      => $this->discount_plataform_tax_flag,
             'emit_zero'       => $this->generate_zero_invoice_flag,
+            'active_flag'     => $this->active_flag,
             'created_at'      => $this->created_at->format('d/m/Y'),
         ];
     }

@@ -3,7 +3,9 @@
 namespace Modules\Notazz\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +25,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class NotazzApiController extends Controller
 {
     /**
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index()
     {
@@ -54,7 +56,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(NotazzStoreRequest $request)
     {
@@ -123,7 +125,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param $integrationCode
-     * @return \Illuminate\Http\JsonResponse|NotazzResource
+     * @return JsonResponse|NotazzResource
      */
     public function show($integrationCode)
     {
@@ -163,7 +165,7 @@ class NotazzApiController extends Controller
     /**
      * @param NotazzUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(NotazzUpdateRequest $request, $id)
     {
@@ -180,14 +182,17 @@ class NotazzApiController extends Controller
 
                 $integrationNotazz = $notazzIntegrationModel->find($integrationId);
 
-                $integrationNotazz->update([
-                                               'token_webhook'               => $dataRequest['token_webhook_edit'],
-                                               'token_api'                   => $dataRequest['token_api_edit'],
-                                               'token_logistics'             => $dataRequest['token_logistics_edit'],
-                                               'pending_days'                => $dataRequest['select_pending_days_edit'],
-                                               'discount_plataform_tax_flag' => $dataRequest['remove_tax_edit'] ?? null,
-                                               'generate_zero_invoice_flag'  => $dataRequest['emit_zero_edit'] ?? null,
-                                           ]);
+                $integrationNotazz->update(array_filter([
+                                                            'token_webhook'               => $dataRequest['token_webhook_edit'],
+                                                            'token_api'                   => $dataRequest['token_api_edit'],
+                                                            'token_logistics'             => $dataRequest['token_logistics_edit'],
+                                                            'pending_days'                => $dataRequest['select_pending_days_edit'],
+                                                            'discount_plataform_tax_flag' => $dataRequest['remove_tax_edit'] ?? null,
+                                                            'generate_zero_invoice_flag'  => $dataRequest['emit_zero_edit'] ?? null,
+                                                            'active_flag'                 => $dataRequest['active_flag'] ?? null,
+                                                        ], function($value) {
+                    return !is_null($value);
+                }));
 
                 return response()->json([
                                             'message' => 'Integração atualizada com sucesso.',
@@ -211,7 +216,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
@@ -268,7 +273,7 @@ class NotazzApiController extends Controller
 
     /**
      * @param $code
-     * @return \Illuminate\Http\JsonResponse|NotazzInvoiceResource
+     * @return JsonResponse|NotazzInvoiceResource
      */
     public function getInvoice($code)
     {

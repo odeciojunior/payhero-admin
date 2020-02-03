@@ -107,6 +107,8 @@ class Project extends Model
         'support_phone',
         'support_phone_verified',
         'cost_currency_type',
+        'discount_recovery_status',
+        'discount_recovery_value',
         'checkout_type',
         'created_at',
         'updated_at',
@@ -308,15 +310,6 @@ class Project extends Model
         return $this->belongsToMany('Modules\Core\Entities\User', 'users_projects', 'project_id', 'user_id');
     }
 
-
-    /**
-     * @return HasMany
-     */
-    /*public function zenviaSms()
-    {
-        return $this->hasMany('Modules\Core\Entities\ZenviaSms');
-    }*/
-
     /**
      * @return HasOne
      */
@@ -324,4 +317,14 @@ class Project extends Model
     {
         return $this->hasOne('Modules\Core\Entities\NotazzIntegration');
     }
+
+
+    /**
+     * @return HasMany
+     */
+    public function notifications()
+    {
+        return $this->hasMany('Modules\Core\Entities\ProjectNotification');
+    }
+
 }

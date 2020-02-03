@@ -4,7 +4,7 @@ namespace Modules\Core\Events;
 
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Delivery;
 use Illuminate\Queue\SerializesModels;
@@ -30,9 +30,9 @@ class SaleApprovedEvent
      */
     public $delivery;
     /**
-     * @var Client
+     * @var Customer
      */
-    public $client;
+    public $customer;
 
     /**
      * Create a new event instance.
@@ -40,15 +40,15 @@ class SaleApprovedEvent
      * @param Sale $sale
      * @param Project $project
      * @param Delivery $delivery
-     * @param Client $client
+     * @param Customer $customer
      */
-    public function __construct(Plan $plan, Sale $sale, Project $project, Delivery $delivery, Client $client)
+    public function __construct(Plan $plan, Sale $sale, Project $project, Delivery $delivery, Customer $customer)
     {
         $this->plan     = $plan;
         $this->sale     = $sale;
         $this->project  = $project;
         $this->delivery = $delivery;
-        $this->client   = $client;
+        $this->customer = $customer;
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
@@ -44,9 +45,8 @@ class ProfileApiController
 
             if (Gate::allows('view', [$user])) {
                 $user->load(["userNotification", "userDocuments"]);
-                $userResource = new UserResource($user);
 
-                return new UserResource($userResource);
+                return new UserResource($user);
             } else {
                 //sem permissao
 
@@ -68,8 +68,12 @@ class ProfileApiController
             $user = auth()->user();
 
             if (Gate::allows('update', [$user])) {
-
                 $requestData = $request->validated();
+                if ($requestData['country'] == 'brazil' && !empty($requestData['cellphone'])) {
+                    $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
+                }
+                $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
+                $requestData['name']     = preg_replace('/( )+/', ' ', $requestData['name']);
 
                 $user->fill(
                     [
@@ -79,8 +83,8 @@ class ProfileApiController
                         'cellphone'    => $requestData['cellphone'],
                         'date_birth'   => $requestData['date_birth'],
                         'zip_code'     => $requestData['zip_code'],
-                        'country'      => 'br',
-                        'state'        => $requestData['state'],
+                        'country'      => $requestData['country'],
+                        'state'        => $requestData['country'] == 'brazil' || $requestData['country'] == 'usa' ? $requestData['state'] : null,
                         'city'         => $requestData['city'],
                         'neighborhood' => $requestData['neighborhood'],
                         'street'       => $requestData['street'],
@@ -95,6 +99,13 @@ class ProfileApiController
                 }
                 if (isset($userUpdateChanges["cellphone"])) {
                     $user->fill(["cellphone_verified" => false])->save();
+                }
+                if (isset($userUpdateChanges['document'])) {
+                    $companyModel = new Company();
+                    $company      = $companyModel->where('user_id', $user->id)->where('company_type',$companyModel->present()->getCompanyType('physical person'))->first();
+                    if (!empty($company)) {
+                        $company->update(['company_document' => $user->document]);
+                    }
                 }
 
                 $userPhoto = $request->file('profile_photo');
@@ -224,7 +235,7 @@ class ProfileApiController
 
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
-            $smsService->sendSms(FoxUtils::prepareCellPhoneNumber($cellphone), $message);
+            $smsService->sendSms($cellphone, $message);
 
             return response()->json(
                 [

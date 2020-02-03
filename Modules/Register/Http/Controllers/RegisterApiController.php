@@ -252,7 +252,7 @@ class RegisterApiController extends Controller
     public function getBanks()
     {
         $bankService = new BankService();
-        $banks       = $bankService->getBanks('BR');
+        $banks       = $bankService->getBanks('brazil');
 
         return response([
                             'banks' => $banks,

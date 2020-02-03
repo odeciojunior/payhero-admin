@@ -5,6 +5,7 @@ namespace Modules\Core\Listeners;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\SendEmailEvent;
+use Modules\Core\Services\EmailService;
 use Modules\Core\Services\SendgridService;
 
 /**
@@ -17,7 +18,7 @@ class SendEmailListener implements ShouldQueue
     /**
      * @var SendgridService
      */
-    private $sendGridService;
+    private $emailService;
 
     /**
      * Create the event listener.
@@ -25,7 +26,7 @@ class SendEmailListener implements ShouldQueue
      */
     public function __construct()
     {
-        $this->sendGridService = new SendgridService();
+        $this->emailService = new EmailService();
     }
 
     /**
@@ -34,7 +35,7 @@ class SendEmailListener implements ShouldQueue
     public function handle(SendEmailEvent $event)
     {
         $data      = $event->request;
-        $smsReturn = $this->sendGridService->sendEmail('noreply@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
+        $smsReturn = $this->emailService->sendEmail('noreply@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
         if ($smsReturn) {
             $data['checkout']->increment('email_sent_amount');
         }

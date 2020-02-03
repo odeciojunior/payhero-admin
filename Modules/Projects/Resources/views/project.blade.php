@@ -1,8 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
 @endpush
 
 @section('content')
@@ -115,7 +114,7 @@
                         </div>
                         <!-- Painel de Sms -->
                         <div class="tab-pane" id="tab_sms-panel" role="tabpanel">
-                            @include('sms::index')
+                            @include('projectnotification::index')
                         </div>
                         <!-- Painel de Fretes -->
                         <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
@@ -167,7 +166,7 @@
         <script src="{{asset('modules/shipping/js/shipping.js?v=2')}}"></script>
         {{--<script src="{{asset('modules/domain/js/domain.js')}}"></script>--}}
         <script src="{{asset('modules/domain/js/domainEdit.js?v=1')}}"></script>
-        <script src="{{asset('modules/sms-message/js/smsMessage.js?v=2')}}"></script>
+        <script src="{{asset('modules/project-notification/js/projectNotification.js?v=1')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=1')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v=7')}}"></script>

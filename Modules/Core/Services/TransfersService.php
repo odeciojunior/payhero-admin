@@ -56,47 +56,11 @@ class TransfersService
                 $transfers[] = $transfer->toArray();
             } catch (Exception $e) {
                 report($e);
-                continue;
             }
         }
 
-        $transactionsAnticipateds = $transactionModel->where([
-                                                                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                                                                 ['status', 'anticipated'],
-                                                             ]);
-        $transfersAnticipateds    = [];
+        event(new ReleasedBalanceEvent(collect($transfers)));
 
-        foreach ($transactionsAnticipateds->cursor() as $transactionsAnticipated) {
-            try {
-                $company = $companyModel->find($transactionsAnticipated->company_id);
-
-                $transferAnticipted = $transferModel->create([
-                                                                 'transaction_id' => $transactionsAnticipated->id,
-                                                                 'user_id'        => $company->user_id,
-                                                                 'company_id'     => $company->id,
-                                                                 'type_enum'      => $transferModel->present()
-                                                                                                   ->getTypeEnum('in'),
-                                                                 'value'          => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
-                                                                 'type'           => 'in',
-                                                             ]);
-
-                $transactionsAnticipated->update([
-                                                     'status' => 'transfered',
-                                                 ]);
-
-                $company->update([
-                                     'balance' => intval($company->balance) + $transferAnticipted->value,
-                                 ]);
-
-                $transfersAnticipateds[] = $transferAnticipted->toArray();
-            } catch (Exception $e) {
-                report($e);
-                continue;
-            }
-        }
-        $arrayTransfers = array_merge($transfers, $transfersAnticipateds);
-        event(new ReleasedBalanceEvent(collect($arrayTransfers)));
         Log::info('transferencias criadas ' . print_r($transfers, true));
-        Log::info('transferencias antecipadas criadas ' . print_r($transfersAnticipateds, true));
     }
 }

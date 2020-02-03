@@ -251,8 +251,9 @@ $(() => {
                         .attr('integration-status', shopifyIntegrations[0].status)
                         .show();
                 }
-            }
 
+                $('#skiptocart-input').prop('checked', shopifyIntegrations[0].skip_to_cart).val(shopifyIntegrations[0].skip_to_cart);
+            }
         }
 
         $("#checkout_type").val(project.checkout_type);
@@ -269,6 +270,20 @@ $(() => {
             supportphoneVerified();
         } else {
             supportphoneNotVerified();
+        }
+
+        if (project.discount_recovery_status) {
+            $('#discount_recovery_status').prop('checked', true)
+            $('#discount_recovery_value').show('fast', 'linear')
+            $('#discount-recovery-alert').show('fast', 'linear')
+        } else {
+            $('#discount_recovery_status').prop('checked', false)
+        }
+
+        if (project.discount_recovery_value >= 10) {
+            $('#discount_recovery_value').val(project.discount_recovery_value)
+        } else {
+            $('#discount_recovery_value').val(10)
         }
 
         //select cartão de credito no checkout
@@ -747,5 +762,55 @@ $(() => {
             }
         });
     });
+
+    $('#skiptocart-input').on('change', function () {
+
+        let input = $(this);
+        input.attr('disabled', true).parent()
+            .parent()
+            .css('opacity', '.5');
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/skiptocart',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+                skip_to_cart: parseInt(input.val()),
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+                input.attr('disabled', false).parent()
+                    .parent()
+                    .css('opacity', '1');
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
+                input.attr('disabled', false).parent()
+                    .parent()
+                    .css('opacity', '1');
+            }
+        });
+    });
+    $('.discount-recovery').on("click", function () {
+        recoveryDiscountColor()
+    })
+
+    recoveryDiscountColor()
+
+    function recoveryDiscountColor() {
+        let chk = $('.discount-recovery').prop('checked');
+        if (chk) {
+            $('#discount_recovery_value').show('fast', 'linear')
+            $('#discount-recovery-alert').show('fast', 'linear')
+        } else {
+            $('#discount_recovery_value').hide('fast', 'linear')
+            $('#discount-recovery-alert').hide('fast', 'linear')
+        }
+    }
 });
 

@@ -3,8 +3,7 @@
 namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
-use function foo\func;
-use Laravel\Socialite\Facades\Socialite;
+use Modules\Core\Services\FoxUtils;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +20,6 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Shopify\Transformers\ShopifyResource;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -320,6 +318,8 @@ class ShopifyApiController extends Controller
 
                             foreach ($project->shopifyIntegrations as $shopifyIntegration) {
                                 $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setSkipToCart($shopifyIntegration->skip_to_cart);
 
                                 $shopify->setThemeByRole('main');
                                 $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
@@ -666,6 +666,61 @@ class ShopifyApiController extends Controller
             return response()->json([
                                         'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde',
                                     ], 400);
+        }
+    }
+
+    public function setSkipToCart(Request $request)
+    {
+        $data                    = $request->all();
+        $shopifyIntegrationModel = new ShopifyIntegration();
+        $projectModel = new Project();
+
+        if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
+            $projectId = current(Hashids::decode($data['project_id']));
+            $project = $projectModel->with(['domains'])->find($projectId);
+
+            if ($projectId) {
+                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+
+                try {
+
+                    if (FoxUtils::isProduction()) {
+
+                        $shopify = new ShopifyService($integration->url_store, $integration->token);
+
+                        $shopify->setSkipToCart(boolval($data['skip_to_cart']));
+
+                        $shopify->setThemeByRole('main');
+
+                        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                        $domain = $project->domains->first();
+                        $domainName = $domain ? $domain->name : null;
+
+                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
+
+                        $integration->skip_to_cart = boolval($data['skip_to_cart']);
+                        $integration->save();
+
+                        activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
+                            $activity->log_name = 'updated';
+                            $activity->subject_id = current(Hashids::decode($projectId));
+                        })->log('Skip to cart atualizado no projeto ' . $project->name);
+
+                        return response()->json(['message' => 'Skip to cart atualizado no projeto']);
+                    } else {
+                        return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
+                    }
+                } catch (Exception $e) {
+                    report($e);
+
+                    return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
+            }
+        } else {
+            return response()->json(['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'], 400);
         }
     }
 }

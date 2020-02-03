@@ -21,7 +21,7 @@ class NotazzInvoiceReportResource extends Resource
             'sale_code'        => ($this->sale->id) ? Hashids::connection('sale_id')->encode($this->sale->id) : null,
             'project'          => $this->sale->project->name,
             'product'          => ($this->sale) ? ((count($this->sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $this->sale->plansSales->first()->plan->name) : null,
-            'client'           => $this->sale->client->name,
+            'client'           => $this->sale->customer->name,
             'value'            => $this->sale->sub_total,
             'invoice_type'     => $this->invoice_type,
             'date_pending'     => ($this->date_pending) ? Carbon::parse($this->date_pending)

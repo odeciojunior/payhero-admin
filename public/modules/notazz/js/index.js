@@ -31,7 +31,7 @@ $(document).ready(function () {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow show-integration" integration=` + data.id + `>
-                                    <a href='/apps/notazz/${data.id}' class=''>           
+                                    <a href='/apps/notazz/${data.id}' class=''>
                                         <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}" style='cursor:pointer'/>
                                     </a>
                                     <div class="card-body">
@@ -53,8 +53,9 @@ $(document).ready(function () {
                                 </div>
                             </div>
                         `);
+                        $("#active_flag_" + data.id).val(data.active_flag);
+                        $("#active_flag_" + data.id).prop('checked', ($("#active_flag_" + data.id).val() == '1'));
                     });
-
                     $(".delete-integration").unbind('click');
                     $('.delete-integration').on('click', function (e) {
                         e.preventDefault();
@@ -144,6 +145,9 @@ $(document).ready(function () {
 
                                         $("#remove_tax_edit").val(response.data.remove_tax);
                                         $("#remove_tax_edit").prop('checked', ($("#remove_tax_edit").val() == '1'));
+
+                                        $("#active_flag").val(response.data.active_flag);
+                                        $("#active_flag").prop('checked', ($("#active_flag").val() == '1'));
 
                                         $("#modal_add_integracao").modal('show');
                                         $("#form_add_integration").hide();

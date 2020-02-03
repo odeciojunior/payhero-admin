@@ -139,16 +139,13 @@
                 </div>
             </div>
         </div>
-
         <div class='row'>
             <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
                  aria-controls="collapseOne">
-                <h3>Configurações Avançadas
-                    <i class="material-icons showMore">add</i>
+                <h3>Configurações Avançadas <i class="material-icons showMore">add</i>
                 </h3>
             </div>
         </div>
-
         {{--COMEÇO CONFIGURAÇÕES AVANÇADAS--}}
         <div class='mt-10 mb-15'>
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -279,24 +276,47 @@
                         <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
                         <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
                     </p>
+                    <div class='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <div class="switch-holder">
+                            <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança com desconto</label>
+                            <label class="switch" style='top:3px'>
+                                <input type="checkbox" id="discount_recovery_status" name="discount_recovery_status" class='check discount-recovery' value='0'>
+                                <span class="slider round"></span>
+                            </label>
+                            <select id='discount_recovery_value' name='discount_recovery_value' class='form-control select-pad' id="checkout_type">
+                                <option value='10'>10%</option>
+                                <option value='20'>20%</option>
+                                <option value='30'>30%</option>
+                                <option value='40'>40%</option>
+                                <option value='50'>50%</option>
+                            </select>
+                            <span id='discount-recovery-error' class='text-danger'></span>
+                        </div>
+                    </div>
+                    <div id='discount-recovery-alert' class='col-sm-6 col-md-6 col-lg-6 col-xl-6 vertical-align' style='height: 20px !important'>
+                        <p class="info col-12" style="font-size: 10px; color:#d55b25;">
+                            <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor de todos os seus planos, pois, esta recobrança será aplicada a todos os planos pertencentes a este projeto.
+                        </p>
+                    </div>
+                    <p class="info mt-5 col-12" style="font-size: 10px;">
+                        <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar está função, tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor maximo que poderá ser aplicado.
+                    </p>
                 </div>
             </div>
         </div>
         {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
-
         <div id="shopify-configs" style="display:none">
             <div class='row'>
                 <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOneShopify"
                      aria-expanded="true" aria-controls="collapseOne">
-                    <h3>Configurações Shopify
-                        <i class="material-icons showMore">add</i>
+                    <h3>Configurações Shopify <i class="material-icons showMore">add</i>
                     </h3>
                 </div>
             </div>
             {{-- COMEÇO CONFIGURAÇÕES SHOPIFY --}}
             <div id='collapseOneShopify' class='collapse mb-15'>
                 <div class='row justify-content-center'>
-                    <div class="col-md-4 pt-sm-20">
+                    <div class="col-md-4 pt-20">
                         <a id="bt-change-shopify-integration" role="button" integration-status=""
                            class="pointer align-items-center" data-toggle="modal"
                            data-target="#modal-change-shopify-integration">
@@ -308,7 +328,7 @@
                             <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
                         </div>
                     </div>
-                    <div class='col-md-4 pt-sm-20'>
+                    <div class='col-md-4 pt-20'>
                         <a id="bt-shopify-sincronization-product" role="button" integration-status=""
                            class="pointer align-items-center" data-toggle="modal"
                            data-target="#modal-change-shopify-integration">
@@ -316,7 +336,7 @@
                             <span class="gray"> Sincronizar produtos com shopify </span>
                         </a>
                     </div>
-                    <div class='col-md-4 pt-sm-20'>
+                    <div class='col-md-4 pt-20'>
                         <a id="bt-shopify-sincronization-template" role="button"
                            integration-status=""
                            class="pointer align-items-center" data-toggle="modal"
@@ -337,13 +357,22 @@
                         </div>
                         <input id='shopify-token' class='form-control' style='display:none;'>
                     </div>
-                    <div id='div-shopify-permissions' class='col-md-4 pt-md-35 pt-sm-20' style='display:none;'>
+                    <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
                         <a id="bt-shopify-verify-permissions" role="button"
                            integration-status=""
                            class="pointer align-items-center">
                             <i class="material-icons gray"> sync </i>
                             <span class="gray"> Verificar permissões do Token</span>
                         </a>
+                    </div>
+                    <div class='col-md-4 pt-20'>
+                        <div class="switch-holder">
+                            <div class="gray mb-5">Skip to cart</div>
+                            <label class="switch">
+                                <input id="skiptocart-input" type="checkbox" value="0" class="check">
+                                <span class="slider gray round"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
