@@ -152,13 +152,15 @@ class ProjectsApiController extends Controller
                                                                      'project_id'        => $project->id,
                                                                      'company_id'        => $requestValidated['company'],
                                                                      'type'              => 'producer',
+                                                                     'type_enum'         => $userProjectModel->present()->getTypeEnum('producer'),
                                                                      'access_permission' => 1,
                                                                      'edit_permission'   => 1,
                                                                      'status'            => 'active',
+                                                                     'status_flag'       => $userProjectModel->present()->getTypeFlag('active'),
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
-                        
+
                         if (!empty($userProject)) {
                             $projectNotificationService->createProjectNotificationDefault($project->id);
                             return response()->json(['message', 'Projeto salvo com sucesso']);

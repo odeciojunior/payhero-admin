@@ -12,6 +12,8 @@ class UserProjectsPresenter
             switch ($type) {
                 case 1:
                     return 'producer';
+                case 2:
+                    return 'partner';
 
             }
 
@@ -20,13 +22,15 @@ class UserProjectsPresenter
             switch ($type) {
                 case 'producer':
                     return 1;
+                case 'partner':
+                    return 2;
             }
 
             return '';
         }
     }
 
-    public function getTypeFlag($status)
+    public function getStatusEnum($status)
     {
         if (is_numeric($status)) {
 
@@ -34,14 +38,14 @@ class UserProjectsPresenter
                 case 1:
                     return "active";
                 case 0:
-                    return "disabled";
+                    return "inactive";
             }
         } else {
             switch ($status) {
                 case "active":
                 case "ativo":
                     return 1;
-                case "disabled":
+                case "inactive":
                     return 0;
             }
         }

@@ -157,10 +157,12 @@ class ShopifyApiController extends Controller
                                                       'project_id'           => $project->id,
                                                       'company_id'           => $companyId,
                                                       'type'                 => 'producer',
+                                                      'type'                 => 'producer',
                                                       'shipment_responsible' => true,
                                                       'permissao_acesso'     => true,
                                                       'permissao_editar'     => true,
                                                       'status'               => 'active',
+                                                      'status_enum'               => $userProjectModel->getTy('active'),
                                                   ]);
                         if (!empty($userProjectModel)) {
 
