@@ -182,14 +182,17 @@ class NotazzApiController extends Controller
 
                 $integrationNotazz = $notazzIntegrationModel->find($integrationId);
 
-                $integrationNotazz->update([
-                                               'token_webhook'               => $dataRequest['token_webhook_edit'],
-                                               'token_api'                   => $dataRequest['token_api_edit'],
-                                               'token_logistics'             => $dataRequest['token_logistics_edit'],
-                                               'pending_days'                => $dataRequest['select_pending_days_edit'],
-                                               'discount_plataform_tax_flag' => $dataRequest['remove_tax_edit'] ?? null,
-                                               'generate_zero_invoice_flag'  => $dataRequest['emit_zero_edit'] ?? null,
-                                           ]);
+                $integrationNotazz->update(array_filter([
+                                                            'token_webhook'               => $dataRequest['token_webhook_edit'],
+                                                            'token_api'                   => $dataRequest['token_api_edit'],
+                                                            'token_logistics'             => $dataRequest['token_logistics_edit'],
+                                                            'pending_days'                => $dataRequest['select_pending_days_edit'],
+                                                            'discount_plataform_tax_flag' => $dataRequest['remove_tax_edit'] ?? null,
+                                                            'generate_zero_invoice_flag'  => $dataRequest['emit_zero_edit'] ?? null,
+                                                            'active_flag'                 => $dataRequest['active_flag'] ?? null,
+                                                        ], function($value) {
+                    return !is_null($value);
+                }));
 
                 return response()->json([
                                             'message' => 'Integração atualizada com sucesso.',
