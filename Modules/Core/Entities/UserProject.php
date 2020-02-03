@@ -2,9 +2,13 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\UserProjectsPresenter;
 
 /**
  * @property integer $id
@@ -25,12 +29,16 @@ use App\Traits\LogsActivity;
  */
 class UserProject extends Model
 {
-    use LogsActivity;
+    use LogsActivity, PresentableTrait, FoxModelTrait, SoftDeletes;
     /**
      * The table associated with the model.
      * @var string
      */
     protected $table = 'users_projects';
+    /**
+     * @var string
+     */
+    protected $presenter = UserProjectsPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -51,10 +59,12 @@ class UserProject extends Model
         'user_id',
         'project_id',
         'company_id',
+        'type_enum',
         'type',
         'remuneration_value',
         'access_permission',
         'edit_permission',
+        'status_flag',
         'status',
         'created_at',
         'updated_at',
