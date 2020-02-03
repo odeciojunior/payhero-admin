@@ -67,6 +67,9 @@
     </style>
 </head>
 <body>
+{{-- loading --}}
+<div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
+</div>
 @yield('content')
 
 <!-- Plugins -->
@@ -96,8 +99,6 @@
 <script>
     verifyDocumentPending();
 </script>
-
-
 @stack('scripts')
 {{-- Laravel Mix - JS File --}}
 {{-- <script src="{{ mix('js/affiliates.js') }}"></script> --}}

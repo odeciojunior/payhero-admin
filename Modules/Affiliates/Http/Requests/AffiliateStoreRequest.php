@@ -28,4 +28,11 @@ class AffiliateStoreRequest extends FormRequest
     {
         return true;
     }
+
+    public function messages()
+    {
+        return [
+            'company_id.required' => 'O campo Empresa é obrigatório',
+        ];
+    }
 }

@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
 use Modules\Affiliates\Http\Requests\AffiliateUpdateRequest;
+use Modules\Affiliates\Transformers\ProjectAffiliateResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
@@ -67,11 +68,11 @@ class AffiliatesApiController extends Controller
                     $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         return response()->json([
-                                                    'messsage' => 'Afiliação criada com sucesso!',
+                                                    'message' => 'Afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
                         return response()->json([
-                                                    'messsage' => 'Ocorreu um erro ao criar afiliação!',
+                                                    'message' => 'Ocorreu um erro ao criar afiliação!',
                                                 ], 400);
                     }
                 } else {
@@ -85,17 +86,17 @@ class AffiliatesApiController extends Controller
                                                                             ]);
                     if ($affiliateRequest) {
                         return response()->json([
-                                                    'messsage' => 'Solicitação de afiliação criada com sucesso!',
+                                                    'message' => 'Solicitação de afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
                         return response()->json([
-                                                    'messsage' => 'Ocorreu um erro ao solicitar afiliação!',
+                                                    'message' => 'Ocorreu um erro ao solicitar afiliação!',
                                                 ], 400);
                     }
                 }
             } else {
                 return response()->json([
-                                            'messsage' => 'Ocorreu um erro ao criar a afiliação',
+                                            'message' => 'Ocorreu um erro ao criar a afiliação',
                                         ], 400);
             }
         } catch (Exception $e) {
@@ -114,15 +115,14 @@ class AffiliatesApiController extends Controller
         $projectModel = new Project();
         $projectId    = current(Hashids::decode($id));
         if ($projectId) {
-            $project = $projectModel->find($projectId);
+            $project = $projectModel->with('usersProjects')->find($projectId);
 
-            return new ProjectsResource($project);
+            return new ProjectAffiliateResource($project);
         }
 
         return response()->json([
                                     'message' => 'Projeto não encontrado',
                                 ], 400);
-        //        return view('affiliates::show');
     }
 
     /**
@@ -134,7 +134,7 @@ class AffiliatesApiController extends Controller
     {
         // return view('affiliates::edit');
         try {
-            $affiliateId    = current(Hashids::decode($id));
+            $affiliateId = current(Hashids::decode($id));
             if ($affiliateId) {
                 $affiliate = Affiliate::with('user', 'company')->find($affiliateId);
                 return new AffiliateResource($affiliate);
@@ -143,6 +143,7 @@ class AffiliatesApiController extends Controller
             return response()->json(['message' => 'Afiliado não encontrado'], 400);
         } catch (Exception $e) {
             report($e);
+
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
@@ -156,20 +157,22 @@ class AffiliatesApiController extends Controller
     public function update(AffiliateUpdateRequest $request, $id)
     {
         try {
-            $data      = $request->validated();
-            $affiliateId    = current(Hashids::decode($id));
+            $data        = $request->validated();
+            $affiliateId = current(Hashids::decode($id));
 
             $update = Affiliate::find($affiliateId)->update($data);
-            if($update) {
+            if ($update) {
                 return response()->json([
                                             'message' => 'Afiliado atualizado com sucesso!',
-                                        ], 200); 
+                                        ], 200);
             }
+
             return response()->json([
                                         'message' => 'Ocorreu um erro ao atualizar afiliado!',
                                     ], 400);
         } catch (Exception $e) {
             report($e);
+
             return response()->json([
                                         'message' => 'Ocorreu um erro ao atualizar afiliado!',
                                     ], 400);
