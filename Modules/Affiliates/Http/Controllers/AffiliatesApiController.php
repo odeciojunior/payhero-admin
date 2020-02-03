@@ -15,6 +15,8 @@ use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\AffiliateService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\UserService;
 use Modules\Projects\Transformers\ProjectsResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Affiliates\Transformers\AffiliateResource;
@@ -52,6 +54,18 @@ class AffiliatesApiController extends Controller
             $projectId = current(Hashids::decode($data['project_id']));
             $companyId = current(Hashids::decode($data['company_id']));
             if ($projectId && $companyId) {
+                $companyService = new CompanyService();
+                $userService    = new UserService();
+                if (!$companyService->isDocumentValidated($companyId)) {
+                    return response()->json([
+                                                'message' => 'Para se afiliar os documentos da empresa precisam estar aprovados!',
+                                            ], 400);
+                }
+                if (!$userService->isDocumentValidated()) {
+                    return response()->json([
+                                                'message' => 'Para se afiliar os seus documentos pessoais precisam estar aprovados!',
+                                            ], 400);
+                }
                 $projectModel = new Project();
                 $project      = $projectModel->find($projectId);
                 if ($data['type'] == 'affiliate') {

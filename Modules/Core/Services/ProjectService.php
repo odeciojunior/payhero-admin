@@ -135,9 +135,9 @@ class ProjectService
         try {
 
             return $this->getProjectModel()
-                ->has('sales')
-                ->where('id', $projectId)
-                ->count();
+                        ->has('sales')
+                        ->where('id', $projectId)
+                        ->count();
         } catch (Exception $e) {
             Log::warning('ProjectService - Erro ao remover projeto');
             report($e);
@@ -157,19 +157,22 @@ class ProjectService
             $projectModel = new Project();
 
             $project = $this->getProjectModel()
-                ->with([
-                    'domains',
-                    'shopifyIntegrations',
-                    'plans',
-                    'plans.productsPlans',
-                    'plans.productsPlans.product',
-                    'pixels',
-                    'discountCoupons',
-                    'shippings',
-                    'usersProjects',
-                    'notifications',
-                ])
-                ->where('id', $projectId)->first();
+                            ->with([
+                                       'domains',
+                                       'shopifyIntegrations',
+                                       'plans',
+                                       'plans.productsPlans',
+                                       'plans.productsPlans.product',
+                                       'pixels',
+                                       'discountCoupons',
+                                       'shippings',
+                                       'usersProjects',
+                                       'notifications',
+                                       'affiliateRequests',
+                                       'affiliates',
+                                       'affiliates.affiliateLinks',
+                                   ])
+                            ->where('id', $projectId)->first();
 
             if ($project) {
 
@@ -199,7 +202,7 @@ class ProjectService
                     $this->getSendgridService()->deleteZone($domain->name);
 
                     $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
-                    $domainDeleted = $domain->delete();
+                    $domainDeleted  = $domain->delete();
 
                     if (!empty($project->shopify_id)) {
                         //se for shopify, voltar as integraçoes ao html padrao
@@ -224,7 +227,7 @@ class ProjectService
 
                 //remover integração do shopify
                 $shopifyIntegration = $this->getShopifyIntegration()
-                    ->where('project_id', $project->id)->first();
+                                           ->where('project_id', $project->id)->first();
 
                 if (!empty($shopifyIntegration)) {
                     $shopifyIntegration->delete();
@@ -234,18 +237,18 @@ class ProjectService
 
                 foreach ($products as $product) {
                     $product->update([
-                        'shopify_variant_id' => '',
-                        'shopify_id' => '',
-                    ]);
+                                         'shopify_variant_id' => '',
+                                         'shopify_id'         => '',
+                                     ]);
                 }
 
                 $plans = Plan::where('project_id', $project->id)->get();
 
                 foreach ($plans as $plan) {
                     $plan->update([
-                        'shopify_variant_id' => '',
-                        'shopify_id' => '',
-                    ]);
+                                      'shopify_variant_id' => '',
+                                      'shopify_id'         => '',
+                                  ]);
                 }
 
                 if (!empty($project->notifications) && $project->notifications->isNotEmpty()) {
@@ -254,10 +257,27 @@ class ProjectService
                     }
                 }
 
+                if (!empty($project->affiliateRequests) && $project->affiliateRequests->isNotEmpty()) {
+                    foreach ($project->affiliateRequests as $affiliateRequests) {
+                        $affiliateRequests->delete();
+                    }
+                }
+
+                if (!empty($project->affiliates) && $project->affiliates->isNotEmpty()) {
+                    foreach ($project->affiliates as $affiliate) {
+                        if (!empty($affiliate->affiliateLinks) && $affiliate->affiliateLinks->isNotEmpty()) {
+                            foreach ($affiliate->affiliateLinks as $affiliateLink) {
+                                $affiliateLink->delete();
+                            }
+                        }
+                        $affiliate->delete();
+                    }
+                }
+
                 $projectUpdated = $project->update([
-                    'name' => $project->name . ' (Excluído)',
-                    'status' => $projectModel->present()->getStatus('disabled'),
-                ]);
+                                                       'name'   => $project->name . ' (Excluído)',
+                                                       'status' => $projectModel->present()->getStatus('disabled'),
+                                                   ]);
 
                 if ($projectUpdated) {
                     return true;
@@ -271,7 +291,6 @@ class ProjectService
                 return false;
             }
         } catch (Exception $e) {
-
             throw new ServiceException('ProjectService - Erro ao remover projeto - ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
@@ -283,12 +302,12 @@ class ProjectService
      */
     public function getUserProjects(string $pagination, array $status)
     {
-        $projectModel = new Project();
+        $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
         $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->pluck('project_id');
-        $projects = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
-            ->orderBy('id', 'DESC');
+        $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
+                             ->orderBy('id', 'DESC');
         if ($pagination) {
             return ProjectsSelectResource::collection($projects->get());
         } else {
