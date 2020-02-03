@@ -19,7 +19,7 @@ class TrackingService
      *
      * Data em que migrou da aftership/perfectlog para a trackingmore
      */
-    private $migrationDate = '2020-02-03 10:15:00';
+    private $migrationDate = '2020-02-03 10:20:00';
 
     /**
      * @param Tracking $tracking
