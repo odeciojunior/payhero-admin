@@ -46,6 +46,7 @@ class NotazzIntegration extends Model
         'pending_days',
         'generate_zero_invoice_flag',
         'discount_plataform_tax_flag',
+        'active_flag',
         'created_at',
         'updated_at',
         'deleted_at',
