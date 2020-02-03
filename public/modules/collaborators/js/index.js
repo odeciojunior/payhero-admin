@@ -13,6 +13,7 @@ $(document).ready(function () {
 
     create();
     index();
+
     function index() {
         // loadOnTable('#table-body-collaborators', '#table-collaborators');
 
@@ -143,7 +144,7 @@ $(document).ready(function () {
                             });
 
                             $(".btn-update").unbind('click');
-                            $(document).on('click', '.btn-update', function () {
+                            $(".btn-update").on('click', function () {
                                 if ($('#name_edit').val() == '' || $('#email_edit').val() == '' || $('#cellphone_edit').val() == '' || $('#document_edit').val() == '') {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;
@@ -181,10 +182,10 @@ $(document).ready(function () {
                         }
                     });
                 });
-
             }
         });
     }
+
     function create() {
         $(".btn-save").unbind('click');
         $(document).on('click', '.btn-save', function () {
@@ -229,6 +230,7 @@ $(document).ready(function () {
         $("#form_add_collaborator").show();
         $("#form_update_collaborator").hide();
     });
+
     function clearFields() {
         $('#name').val('');
         $('#email').val('');
@@ -236,6 +238,7 @@ $(document).ready(function () {
         $('#document').val('');
         $('#password').val('');
     }
+
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
             $("#primeira_pagina_" + model).hide();

@@ -8,7 +8,9 @@
     @endpush
     <div class="page">
         <div class="page-header container">
-            <button id="add-collaborator" title='Adicionar colaborador' type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
+            <button id="add-collaborator" title='Adicionar colaborador' type="button"
+                    class="btn btn-floating btn-danger"
+                    style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Colaboradores</h2>
         </div>
@@ -21,27 +23,30 @@
                     {{--                        <strong>ganhe 1% de tudo que seu convidado vender durante um ano!</strong></p>--}}
                 </div>
             </div>
-            <div class="card shadow mt-30" id='card-table-collaborators' data-plugin="matchHeight" style='display:none;'>
+            <div class="card shadow mt-30" id='card-table-collaborators' data-plugin="matchHeight"
+                 style='display:none;'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table id='table-collaborators' class="table table-striped unify">
                         <thead class="text-center">
-                            <th class="text-left">Colaborador</th>
-                            <th class="text-center">Nome</th>
-                            <th class="text-center">Email</th>
-                            <th class="text-center">Função</th>
-                            <th class="text-center">Data cadastro</th>
-                            <td class='table-title text-center options-column-width'>Opções</td>
+                        <th class="text-left">Colaborador</th>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Função</th>
+                        <th class="text-center">Data cadastro</th>
+                        <td class='table-title text-center options-column-width'>Opções</td>
                         </thead>
                         <tbody id='table-body-collaborators'>
-                            {{-- js invites carrega  --}}
+                        {{-- js invites carrega  --}}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <ul id="pagination-collaborators" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-collaborators" class="pagination-sm"
+                style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
-            <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle"
+                 role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-simple">
                 </div>
             </div>
@@ -73,11 +78,13 @@
     <!-- End Modal -->
 
     <!-- Modal padrão para excluir -->
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-invitation" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-invitation" aria-hidden="true"
+         aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close"
+                       id="fechar_modal_excluir">
                         <i class="material-icons md-16">close</i>
                     </a>
                 </div>
@@ -89,15 +96,19 @@
                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                    <button id="btn-delete-collaborator" type="button" class="col-4 btn btn-danger" style="width: 20%;" data-dismiss="modal">Excluir</button>
+                    <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal"
+                            style="width: 20%;">Cancelar
+                    </button>
+                    <button id="btn-delete-collaborator" type="button" class="col-4 btn btn-danger" style="width: 20%;"
+                            data-dismiss="modal">Excluir
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/collaborators/js/index.js') }}"></script>
+        <script src="{{asset('modules/collaborators/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection

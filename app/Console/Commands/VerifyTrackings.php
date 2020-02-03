@@ -4,14 +4,8 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\PostbackLog;
-use Modules\Core\Entities\ProductPlanSale;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
-use Vinkla\Hashids\Facades\Hashids;
 
 class VerifyTrackings extends Command
 {
@@ -46,78 +40,33 @@ class VerifyTrackings extends Command
      */
     public function handle()
     {
-        //envia emails de atualizacao de tracking
-        try {
-            $this->line(date('Y-m-d H:i:s') . ' Executando...');
-            $salesModel = new Sale();
-            $productPlanSaleModel = new ProductPlanSale();
-            $trackingModel = new Tracking();
+        try{
+
             $trackingService = new TrackingService();
-            $productService = new ProductService();
 
-            //DB::beginTransaction();
-
-            $sales = $salesModel->with(['productsPlansSale', 'client', 'plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
-                ->where('status', 1)
-                ->whereNotNull('shopify_order')
-                ->where('id', '<', 7380)
-                ->orderBy('id', 'desc')
+            $trackings = Tracking::where('tracking_status_enum', 1)
+                ->orderByDesc('id')
+                ->skip(0)
+                ->take(1000)
                 ->get();
 
-            foreach ($sales as $sale) {
-                $this->line('Venda: ' . $sale->id . ' procurando postback...');
-                $postback = PostbackLog::select('data')
-                    ->where('description', 'shopify-tracking')
-                    ->whereRaw('JSON_EXTRACT(data, "$.fulfillments[0].tracking_number") IS NOT NULL')
-                    ->whereRaw('JSON_EXTRACT(data, "$.id") = ' . $sale->shopify_order)
-                    ->orderBy('id', 'desc')
-                    ->get()
-                    ->map(function ($item) {
-                        return json_decode($item->data);
-                    })->last();
-                if (isset($postback)) {
-                    $this->line('POSTBACK ENCONTRADOOOOOOOOOOOOOOOOOOOOOO! Verificando dados...');
-                    $saleProducts = $productService->getProductsBySale($sale);
-                    foreach ($postback->fulfillments as $fulfillment) {
-                        if (!empty($fulfillment->tracking_number)) {
-                            //percorre os produtos que vieram no postback
-                            foreach ($fulfillment->line_items as $line_item) {
-                                //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
-                                $products = $saleProducts->where('shopify_variant_id', $line_item->variant_id)
-                                    ->where('amount', $line_item->quantity);
-                                if ($products->count()) {
-                                    foreach ($products as &$product) {
-                                        try{
-                                            $this->line('Procurando tracking...');
-                                            $tracking = $trackingModel->find(current(Hashids::decode($product->tracking_id)));
-                                            if(!isset($tracking)){
-                                                $this->line('Tracking nao encontrado. Criando ...');
-                                                $productPlanSale = $productPlanSaleModel->with(['sale.plansSales.plan.productsPlans', 'sale.delivery'])
-                                                    ->find($product->product_plan_sale_id);
-                                                $tracking = $trackingService->createTracking($fulfillment->tracking_number, $productPlanSale);
-                                            }
-                                            $this->line('Enviando para a PerfectLog...');
-                                            $trackingService->sendTrackingToApi($tracking);
-                                        }catch (\Exception $ex){
-                                            $this->line('Erro: ' . $ex->getMessage());
-                                            Log::error($ex->getMessage());
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            $count = $trackings->count();
+
+            foreach ($trackings as $key => $tracking){
+
+                $this->line(($key+1) . ' de ' . $count . '. Enviando tracking: ' . $tracking->tracking_code);
+
+                $result = $trackingService->findTrackingApi($tracking);
+
+                if(!empty($result->error)){
+                    $this->line('Tem não zé');
                 }else{
-                    $this->line('Nenhum postback nao encontrado.');
+                    $this->line('Foi!');
                 }
             }
 
-            //DB::commit();
-
-            $this->line(date('Y-m-d H:i:s') . ' Funcionou paizao!');
         } catch (Exception $e) {
-            //DB::rollBack();
-            $this->line(date('Y-m-d H:i:s') . ' Error: ' . $e->getMessage());
+            $this->line($e->getMessage());
         }
     }
 }

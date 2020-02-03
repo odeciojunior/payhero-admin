@@ -5,33 +5,30 @@ namespace Modules\PostBack\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\AftershipService;
+use Modules\Core\Services\TrackingmoreService;
 
-/**
- * Class PostBackAftershipController
- * @package App\Http\Controllers\WebService\Aftership
- */
-class PostBackAftershipController extends Controller
+class PostBackTrackingmoreController extends Controller
 {
     /**
      * @param Request $request
-     * @return array
-     * @see https://docs.aftership.com/api/4/webhook
-     * @see https://docs.aftership.com/api/4/delivery-status
+     * @return JsonResponse
+     * @see https://www.trackingmore.com/webhook.html
+     * @see https://www.trackingmore.com/api-logistics_status.html
      */
     public function postBackListener(Request $request)
     {
         try {
             $data = $request->all();
 
-            $aftershipService = new AftershipService();
+            $trackingmoreService = new TrackingmoreService();
             $trackingModel = new Tracking();
 
-            $trackingCode = $data['msg']['tracking_number'] ?? '';
-            $trackingStatus =  $data['msg']['tag'] ?? '';
-            $trackingStatus = $aftershipService->parseStatus($trackingStatus);
+            $trackingCode = $data['data']['tracking_number'] ?? '';
+            $trackingStatus =  $data['data']['status'] ?? '';
+            $trackingStatus = $trackingmoreService->parseStatus($trackingStatus);
 
             $trackings = $trackingModel->where('tracking_code', $trackingCode)->get();
 
