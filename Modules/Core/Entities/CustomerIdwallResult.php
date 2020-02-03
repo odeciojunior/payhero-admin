@@ -21,7 +21,7 @@ class CustomerIdwallResult extends Model
      * @var array
      */
     protected $fillable = [
-        'client_id',
+        'customer_id',
         'send_data',
         'received_data',
         'exception',
