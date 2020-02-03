@@ -114,7 +114,7 @@ class AffiliatesApiController extends Controller
         $projectModel = new Project();
         $projectId    = current(Hashids::decode($id));
         if ($projectId) {
-            $project = $projectModel->find($projectId);
+            $project = $projectModel->with('usersProjects')->find($projectId);
 
             return new ProjectAffiliateResource($project);
         }
@@ -133,15 +133,17 @@ class AffiliatesApiController extends Controller
     {
         // return view('affiliates::edit');
         try {
-            $affiliateId    = current(Hashids::decode($id));
+            $affiliateId = current(Hashids::decode($id));
             if ($affiliateId) {
                 $affiliate = Affiliate::find($affiliateId);
+
                 return new AffiliateResource($affiliate);
             }
 
             return response()->json(['message' => 'Afiliado não encontrado'], 400);
         } catch (Exception $e) {
             report($e);
+
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
@@ -155,23 +157,25 @@ class AffiliatesApiController extends Controller
     public function update(AffiliateUpdateRequest $request, $id)
     {
         try {
-            $data      = $request->validated();
-            $affiliateId    = current(Hashids::decode($id));
+            $data        = $request->validated();
+            $affiliateId = current(Hashids::decode($id));
             // $data = [
             //     "percentage"  => $request->input(),
             //     "status_enum" => ,
             // ];
             $update = Affiliate::find($affiliateId)->update($data);
-            if($update) {
+            if ($update) {
                 return response()->json([
                                             'message' => 'Afiliado atualizado com sucesso!',
-                                        ], 400); 
+                                        ], 400);
             }
+
             return response()->json([
                                         'message' => 'Ocorreu um erro ao atualizar afiliado!',
                                     ], 400);
         } catch (Exception $e) {
             report($e);
+
             return response()->json([
                                         'message' => 'Ocorreu um erro ao atualizar afiliado!',
                                     ], 400);
@@ -244,6 +248,4 @@ class AffiliatesApiController extends Controller
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
-
-
 }

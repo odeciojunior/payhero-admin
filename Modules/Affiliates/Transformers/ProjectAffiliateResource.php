@@ -23,6 +23,16 @@ class ProjectAffiliateResource extends Resource
     public function toArray($request)
     {
         $userId = auth()->user()->account_owner_id;
+
+        //verifica se é o dono do projeto
+        $userProject = $this->usersProjects[0];
+        if ($userProject->user_id == $userId) {
+            $producer = true;
+        } else {
+            $producer = false;
+        }
+
+        //verifica se é o projeto tem afiliação automatica
         if ($this->automatic_affiliation) {
             $affiliateModel     = new Affiliate();
             $affiliatePresenter = $affiliateModel->present();
@@ -31,12 +41,10 @@ class ProjectAffiliateResource extends Resource
                                                  ->first();
             $affiliatedMessage  = !empty($affiliate) ? 'Você ja está afiliado a esse projeto.' : '';
         } else {
-            $affiliateRequestModel     = new AffiliateRequest();
-            $affiliateRequestPresenter = $affiliateRequestModel->present();
-            $affiliateRequest          = $affiliateRequestModel->where('user_id', $userId)
-                                                               ->where('status', $affiliateRequestPresenter->getStatus('pending'))
-                                                               ->first();
-            $affiliatedMessage         = !empty($affiliateRequest) ? 'Você já solicitou afiliação a esse projeto, por favor aguarde.' : '';
+            $affiliateRequestModel = new AffiliateRequest();
+            $affiliateRequest      = $affiliateRequestModel->where('user_id', $userId)
+                                                           ->first();
+            $affiliatedMessage     = !empty($affiliateRequest) ? 'Você já solicitou afiliação a esse projeto.' : '';
         }
 
         return [
@@ -62,6 +70,7 @@ class ProjectAffiliateResource extends Resource
             'terms_affiliates'       => $this->terms_affiliates ?? '',
             'percentage_affiliates'  => $this->percentage_affiliates ?? '',
             'affiliatedMessage'      => $affiliatedMessage,
+            'producer'               => $producer,
         ];
     }
 }

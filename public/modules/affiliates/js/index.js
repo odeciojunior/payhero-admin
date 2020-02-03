@@ -26,14 +26,16 @@ $(document).ready(function () {
                 $('.text-about-project').html(response.data.description);
                 $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
                 $('.created_at').html(` <strong >Criado em: ${response.data.created_at}</strong>`);
-                if (response.data.affiliatedMessage != '') {
-                    $('.div-button').html(`<div class="alert alert-info">${response.data.affiliatedMessage}</div>`);
-                    $('.div-button').toggleClass('text-center');
-                } else {
-                    if (response.data.automatic_affiliation) {
-                        $('.div-button').html('<button id="btn-affiliation" class="btn btn-primary" data-type="affiliate">Confimar Afiliação</button>');
+                if (!response.data.producer) {
+                    if (response.data.affiliatedMessage != '') {
+                        $('.div-button').html(`<div class="alert alert-info">${response.data.affiliatedMessage}</div>`);
+                        $('.div-button').toggleClass('text-center');
                     } else {
-                        $('.div-button').html('<button id="btn-affiliation" class="btn btn-primary" data-type="affiliate_request">Solicitar Afiliação</button>');
+                        if (response.data.automatic_affiliation) {
+                            $('.div-button').html('<button id="btn-affiliation" class="btn btn-primary" data-type="affiliate">Confimar Afiliação</button>');
+                        } else {
+                            $('.div-button').html('<button id="btn-affiliation" class="btn btn-primary" data-type="affiliate_request">Solicitar Afiliação</button>');
+                        }
                     }
                 }
                 if (response.data.percentage_affiliates != '') {
@@ -96,13 +98,13 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadingOnScreenRemove();
                 $('#modal_store_affiliate').modal('hide');
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                loadingOnScreenRemove();
                 $('#modal_store_affiliate').modal('hide');
+                loadingOnScreenRemove();
                 getProjectData();
                 alertCustom('success', response.message);
             }
