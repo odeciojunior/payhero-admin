@@ -84,6 +84,18 @@
                     <small>Remover da nota fiscal o valor cobrado pela plataforma.</small>
                 </div>
             </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>Integração Ativa?</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" id='active_flag' name="active_flag" class='check active_flag' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                    <br>
+                    <small>Desativa toda a emissão de notas para essa integração.</small>
+                </div>
+            </div>
         </div>
     </div>
 </form>
