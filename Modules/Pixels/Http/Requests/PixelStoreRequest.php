@@ -21,6 +21,7 @@ class PixelStoreRequest extends FormRequest
             'checkout'        => 'nullable',
             'purchase_boleto' => 'nullable',
             'purchase_card'   => 'nullable',
+            'affiliate_id'    => 'nullable',
         ];
     }
 

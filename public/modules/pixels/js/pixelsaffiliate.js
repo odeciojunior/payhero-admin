@@ -5,6 +5,7 @@ let statusPixel = {
 
 $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-2);
+    let affiliateId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
     $('#tab_pixels').on('click', function () {
@@ -173,6 +174,7 @@ $(function () {
         formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
         formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
         formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
+        formData.append('affiliate_id', affiliateId);
 
         loadingOnScreen();
         $.ajax({

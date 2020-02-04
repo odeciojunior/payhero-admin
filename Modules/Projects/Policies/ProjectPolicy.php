@@ -65,14 +65,15 @@ class ProjectPolicy
      * @param Project $project
      * @return bool
      */
-    public function edit(User $user, Project $project, $checkAffiliate = false)
+    public function edit(User $user, Project $project, $affiliateId = 0)
     {
         $userProject = UserProject::where('user_id', $user->account_owner_id)
                                   ->where('project_id', $project->id)
                                   ->first();
-        if($checkAffiliate) {
+        if($affiliateId) {
             $affiliate = Affiliate::where('user_id', $user->account_owner_id)
                                   ->where('project_id', $project->id)
+                                  ->where('id', $affiliateId)
                                   ->first();
         }
         if ($userProject || $affiliate) {
