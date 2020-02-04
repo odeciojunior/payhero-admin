@@ -49,7 +49,7 @@ class CustomFieldsActiveCampaign extends Command
 
         foreach ($userProjects->cursor() as $value) {
             $value->update([
-                'status_flag' => $value->present()->getTypeFlag($value->status),
+                'status_flag' => $value->present()->getStatusFlag($value->status),
                 'type_enum' => $value->present()->getTypeEnum($value->type)
             ]);
         }
