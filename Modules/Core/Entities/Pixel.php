@@ -109,7 +109,7 @@ class Pixel extends Model
     /**
      * @return BelongsTo
      */
-    public function project()
+    public function affiliate()
     {
         return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
