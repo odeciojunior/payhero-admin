@@ -182,7 +182,7 @@ class PostBackShopifyController extends Controller
 
             $userProject = $userProjectModel->where([
                 ['project_id', $project->id],
-                ['type', 'producer'],
+                ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
             ])->first();
 
             try {

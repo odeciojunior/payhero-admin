@@ -153,16 +153,16 @@ class ShopifyApiController extends Controller
                         $companyId = current(Hashids::decode($dataRequest['company']));
 
                         $userProjectModel->create([
-                                                      'user_id'              => auth()->user()->id,
+                                                      'user_id'              => auth()->user()->account_owner_id,
                                                       'project_id'           => $project->id,
                                                       'company_id'           => $companyId,
                                                       'type'                 => 'producer',
-                                                      'type'                 => 'producer',
+                                                      'type_enum'            => $userProjectModel->present()->getTypeEnum('producer'),
                                                       'shipment_responsible' => true,
-                                                      'permissao_acesso'     => true,
-                                                      'permissao_editar'     => true,
+                                                      'access_permission'    => true,
+                                                      'edit_permission'      => true,
                                                       'status'               => 'active',
-                                                      'status_enum'               => $userProjectModel->getTy('active'),
+                                                      'status_flag'          => $userProjectModel->present()->getStatusFlag('active'),
                                                   ]);
                         if (!empty($userProjectModel)) {
 

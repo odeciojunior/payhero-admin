@@ -3,9 +3,16 @@
 
 namespace Modules\Core\Presenters;
 
-
+/**
+ * Class UserProjectsPresenter
+ * @package Modules\Core\Presenters
+ */
 class UserProjectsPresenter
 {
+    /**
+     * @param $type
+     * @return int|string
+     */
     public function getTypeEnum($type)
     {
         if (is_numeric($type)) {
@@ -30,7 +37,11 @@ class UserProjectsPresenter
         }
     }
 
-    public function getStatusEnum($status)
+    /**
+     * @param $status
+     * @return int|string
+     */
+    public function getStatusFlag($status)
     {
         if (is_numeric($status)) {
 
@@ -49,6 +60,8 @@ class UserProjectsPresenter
                     return 0;
             }
         }
+
+        return '';
 
     }
 }
