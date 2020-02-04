@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Pixel;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Affiliate;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Spatie\Activitylog\Models\Activity;
@@ -35,13 +36,22 @@ class PixelsApiController extends Controller
 
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
+                $affiliate = Affiliate::where('project_id', $project->id)
+                                      ->where('user_id', auth()->user()->account_owner_id)
+                                      ->where('status_enum', 3)
+                                      ->first();
+                $checkAffiliate = !empty($affiliate->id) ? true : false;
+
                 activity()->on($pixelModel)->tap(function(Activity $activity){
                     $activity->log_name = 'visualization';
                 })->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
 
+                if (Gate::allows('edit', [$project, $checkAffiliate])) {
 
-                if (Gate::allows('edit', [$project])) {
                     $pixels = $pixelModel->where('project_id', $project->id);
+                    if($checkAffiliate) {
+                        $pixels = $pixels->where('affiliate_id', $affiliate->id);
+                    }
 
                     return PixelsResource::collection($pixels->orderBy('id', 'DESC')->paginate(5));
                 } else {
