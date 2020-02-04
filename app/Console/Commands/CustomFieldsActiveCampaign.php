@@ -5,10 +5,12 @@ namespace App\Console\Commands;
 use DB;
 use Carbon\Carbon;
 use Exception;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Log;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserProject;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Entities\ShopifyIntegration;
@@ -39,14 +41,25 @@ class CustomFieldsActiveCampaign extends Command
     }
 
     /**
-     * Execute the console command.
-     * @return mixed
+     *
      */
     public function handle()
     {
+        $userProjects = UserProject::withTrashed();
 
-        $webHooksUpdated = 0;
+        foreach ($userProjects->cursor() as $value) {
+            $value->update([
+                'status_flag' => $value->present()->getTypeFlag($value->status),
+                'type_enum' => $value->present()->getTypeEnum($value->type)
+            ]);
+        }
+    }
 
+
+        /*
+        $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
+                     ->whereDate('created_at', '<=', '2020-01-22 17:00:00.0');
+$webHooksUpdated = 0;
         foreach(ShopifyIntegration::all() as $shopifyIntegration){
 
             try{
@@ -77,12 +90,12 @@ class CustomFieldsActiveCampaign extends Command
                     $webHooksUpdated++;
                 }
             }
-            catch(\Exception $e){
+        }catch(\Exception $e){
                 // dump($e);
-            }
+            }*/
 
-            dump($webHooksUpdated);
-        }
+
+//            dump($webHooksUpdated);
 
         // $sales = Sale::whereDate('created_at', '>=', '2020-01-20 15:00:00.0')->whereNotNull('shopify_order')
         //              ->whereDate('created_at', '<=', '2020-01-22 17:00:00.0');
@@ -161,5 +174,5 @@ class CustomFieldsActiveCampaign extends Command
         //         }
         //     }
         // }
-    }
+//    }
 }

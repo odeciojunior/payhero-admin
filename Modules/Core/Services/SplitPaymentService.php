@@ -45,7 +45,7 @@ class SplitPaymentService
             //Parceiro Projeto
             $partners = $userProjectModel->where([
                                                      ['project_id', $project->id],
-                                                     ['type', '!=', 'producer'],
+                                                     ['type_enum', '!=', $userProjectModel->present()->getTypeEnum('producer')],
                                                  ])->get();
 
             if (count($partners) > 0) {
@@ -190,7 +190,7 @@ class SplitPaymentService
             }
 
             $userProject = $userProjectModel->where([
-                                                        ['type', 'producer'],
+                                                        ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
                                                         ['project_id', $project->id],
                                                     ])->first();
             //Restante do producer

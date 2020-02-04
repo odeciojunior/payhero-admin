@@ -22,12 +22,12 @@ class SalesRecoveryService
 {
     /**
      * @param string $type
-     * @param string $projectId
-     * @param string $dateStart
-     * @param string $dateEnd
-     * @param string $client
-     * @return AnonymousResourceCollection|string
-     * Verifica tipo de recuperação
+     * @param string|null $projectId
+     * @param string|null $dateStart
+     * @param string|null $dateEnd
+     * @param string|null $client
+     * @return mixed
+     * @throws PresenterException
      */
     public function verifyType(string $type, string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
@@ -45,14 +45,14 @@ class SalesRecoveryService
     }
 
     /**
-     * @param string $projectId
-     * @param string $dateStart
-     * @param string $dateEnd
      * @param int $paymentMethod
      * @param array $status
+     * @param string $projectId
+     * @param string|null $dateStart
+     * @param string|null $dateEnd
      * @param string|null $customer
-     * @return AnonymousResourceCollection
-     *  Monta Tabela quando for boleto expirado ou cartão recusado
+     * @return mixed
+     * @throws PresenterException
      */
     public function getSaleExpiredOrRefused(int $paymentMethod, array $status, string $projectId, string $dateStart = null, string $dateEnd = null, string $customer = null)
     {
@@ -90,7 +90,7 @@ class SalesRecoveryService
         } else {
             $userProjects = $userProjectsModel->where([
                                                           ['user_id', auth()->user()->account_owner_id],
-                                                          ['type', 'producer'],
+                                                          ['type_enum', $userProjectsModel->present()->getTypeEnum('producer')],
                                                       ])->pluck('project_id')->toArray();
 
             $salesExpired->whereIn('sales.project_id', $userProjects);
