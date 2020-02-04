@@ -12,7 +12,7 @@ Route::group(['middleware' => ['web'], 'prefix' => 'postback', 'namespace' => 'M
 
     Route::post('/perfectlog', 'PostBackPerfectLogController@postBackListener');
 
-    Route::post('/aftership', 'PostBackAftershipController@postBackListener');
+    Route::post('/trackingmore', 'PostBackTrackingmoreController@postBackListener');
 });
 
 // ['web','VerifyShopifyPostback']

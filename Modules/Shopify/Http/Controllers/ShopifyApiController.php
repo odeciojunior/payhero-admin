@@ -35,10 +35,10 @@ class ShopifyApiController extends Controller
     public function index()
     {
         try {
-            $projectModel            = new Project();
+            $projectModel = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
 
-            activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+            activity()->on($shopifyIntegrationModel)->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações com o shopify');
 
@@ -49,7 +49,7 @@ class ShopifyApiController extends Controller
             foreach ($shopifyIntegrations as $shopifyIntegration) {
 
                 $project = $projectModel->where('id', $shopifyIntegration->project_id)
-                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
+                    ->where('status', $projectModel->present()->getStatus('active'))->first();
 
                 if (!empty($project)) {
                     $projects[] = $project;

@@ -74,7 +74,6 @@ class Kernel extends ConsoleKernel
 
         //verify last domains on sendgrid
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
-
     }
 
     /**
