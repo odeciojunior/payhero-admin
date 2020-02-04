@@ -107,6 +107,9 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
                 getProjectData();
                 alertCustom('success', response.message);
+                if (response.type == 'affiliate') {
+                    window.location = "/projects";
+                }
             }
         });
     });

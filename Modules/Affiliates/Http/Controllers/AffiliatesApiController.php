@@ -83,6 +83,7 @@ class AffiliatesApiController extends Controller
                     $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         return response()->json([
+                                                    'type'    => 'affiliate',
                                                     'message' => 'Afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
@@ -101,6 +102,7 @@ class AffiliatesApiController extends Controller
                                                                             ]);
                     if ($affiliateRequest) {
                         return response()->json([
+                                                    'type'    => 'affiliate_request',
                                                     'message' => 'Solicitação de afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
