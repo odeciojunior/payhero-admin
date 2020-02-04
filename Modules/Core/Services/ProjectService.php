@@ -16,6 +16,7 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
@@ -300,12 +301,17 @@ class ProjectService
      * @param string|null $status
      * @return AnonymousResourceCollection
      */
-    public function getUserProjects(string $pagination, array $status)
+    public function getUserProjects(string $pagination, array $status, $affiliate = false)
     {
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
         $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->pluck('project_id');
+        if($affiliate) {
+            $affiliateProjects = Affiliate::where('user_id', auth()->user()->account_owner_id)->get()->pluck('project_id');
+
+            $userProjects = $userProjects->merge($affiliateProjects);
+        }
         $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
                              ->orderBy('id', 'DESC');
         if ($pagination) {

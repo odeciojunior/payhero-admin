@@ -62,7 +62,7 @@ class ProjectsApiController extends Controller
                 ];
             }
 
-            return $projectService->getUserProjects($pagination, $projectStatus);
+            return $projectService->getUserProjects($pagination, $projectStatus, true);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -448,7 +448,7 @@ class ProjectsApiController extends Controller
                 $projectModel->present()->getStatus('active'),
             ];
 
-            return $projectService->getUserProjects(true, $projectStatus);
+            return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);
