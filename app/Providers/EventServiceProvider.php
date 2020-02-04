@@ -30,10 +30,10 @@ class EventServiceProvider extends ServiceProvider
             BilletPaidSendEmailListener::class,
             BilletPaidWhatsapp2Listener::class,
         ],
-        BilletExpiredEvent::class => [
+        BilletExpiredEvent::class                             => [
             BilletExpiredWhatsapp2Listener::class,
         ],
-        SaleRefundedEvent::class => [
+        SaleRefundedEvent::class                              => [
             SaleRefundedWhatsapp2Listener::class,
         ],
         'Modules\Core\Events\ShopifyIntegrationEvent'         => [
@@ -87,7 +87,12 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\SendSmsEvent'                    => [
             'Modules\Core\Listeners\SendSmsListener',
         ],
-
+        'Modules\Core\Events\AffiliateRequestEvent'           => [
+            'Modules\Core\Listeners\AffiliateRequestSendEmailListener',
+        ],
+        'Modules\Core\Events\AffiliateEvent'           => [
+            'Modules\Core\Listeners\AffiliateSendEmailListener',
+        ],
     ];
 
     /**
