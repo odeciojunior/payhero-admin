@@ -31,6 +31,9 @@ Route::group(
         Route::get('/affiliates/getaffiliaterequests/{projectId}', 'AffiliatesApiController@getAffiliateRequests')
              ->middleware('role:account_owner|admin');
 
+        Route::get('/affiliates/affiliatelinks/{affiliateId}', 'AffiliatesApiController@getAffiliateLinks')
+             ->middleware('role:account_owner|admin');
+
     }
 );
 //Route::middleware('auth:api')->get('/affiliates', function (Request $request) {
