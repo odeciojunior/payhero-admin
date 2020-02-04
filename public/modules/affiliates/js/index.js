@@ -20,7 +20,7 @@ $(document).ready(function () {
             success: (response) => {
                 loadOnAny('.page-content', true);
                 $('.page-content').show();
-                $('.project-header').html(response.data.name);
+                $('.project-header').html(`Afiliação no projeto ${response.data.name}`);
                 $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.png'}`);
                 $('#created_by').html(`Produtor: ${response.data.user_name}`);
                 $('.text-about-project').html(response.data.description);

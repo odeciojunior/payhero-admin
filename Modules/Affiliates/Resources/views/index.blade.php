@@ -6,8 +6,10 @@
             <div class='row'>
                 <div class='col-md-12'>
                     <div class='row mx-10'>
+                        <div class='col-md-12'>
+                            <label class='page-title project-header' style='font-size: 2em'></label>
+                        </div>
                         <div class='col-md-6'>
-                            <h1 class='page-title project-header'></h1>
                             <p class="card-text sm mt-10 mx-5" id="created_by"></p>
                             <img class='project-image img-fluid rounded'>
                         </div>
@@ -79,6 +81,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=5') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=6') }}"></script>
     @endpush
 @endsection
