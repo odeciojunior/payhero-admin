@@ -33,8 +33,8 @@
                         </li>
                        
                         <li class="nav-item" role="presentation">
-                            <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
-                                Planos
+                            <a id="tab_links" class="nav-link" data-toggle="tab" href="#tab_links-panel" aria-controls="tab_links" role="tab">
+                                Links
                             </a>
                         </li>
                     </ul>
@@ -82,8 +82,8 @@
                             @include('pixels::index')
                         </div>
                         <!--- Painel de Planos -->
-                        <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
-                            @include('plans::index')
+                        <div class="tab-pane" id="tab_links-panel" role="tabpanel">
+                            @include('affiliates::links')
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
     @push('scripts')
         {{-- <script src="{{asset('modules/pixels/js/pixels.js?v=1')}}"></script> --}}
         <script src="{{asset('modules/projects/js/projectaffiliate.js?v=1')}}"></script>
-        {{-- <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script> --}}
+        <script src="{{asset('modules/affiliates/js/links.js?v=1')}}"></script>
     @endpush
 @endsection
 

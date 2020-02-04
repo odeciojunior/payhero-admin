@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Affiliates\Http\Requests\AffiliateStoreRequest;
 use Modules\Affiliates\Http\Requests\AffiliateUpdateRequest;
 use Modules\Affiliates\Transformers\ProjectAffiliateResource;
+use Modules\Affiliates\Transformers\AffiliateLinkResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
@@ -322,8 +323,33 @@ class AffiliatesApiController extends Controller
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao avaliar solicitação de afiliação 2!',
+                                        'message' => 'Ocorreu um erro ao avaliar solicitação de afiliação!',
                                     ], 400);
+        }
+    }
+
+    public function getAffiliateLinks($projectId, Request $request)
+    {
+        try {
+
+            $projectId = current(Hashids::decode($projectId));
+            $userId = auth()->user()->account_owner_id;
+
+            $links = AffiliateLink::whereHas('affiliate', function($q) use($userId, $projectId) {
+                                        $q->where('user_id', $userId )
+                                           ->where('project_id', $projectId);
+                                  })
+                                  ->with('affiliate.project.domains', 'plan');
+            if (!empty($request->input('plan'))) {
+                $links = $links->whereHas('plan', function($q2) use($request) {
+                    $q2->where('name', 'like', '%' . $request->input('plan') . '%');
+                });
+            }
+
+            return AffiliateLinkResource::collection($links->paginate(5));
+        } catch (Exception $e) {
+
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
 

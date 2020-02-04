@@ -22,6 +22,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $checkout
  * @property string $purchase_boleto
  * @property string $purchase_card
+ * @property biginteger $affiliate_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -48,6 +49,7 @@ class Pixel extends Model
         'checkout',
         'purchase_boleto',
         'purchase_card',
+        'affiliate_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -102,5 +104,13 @@ class Pixel extends Model
     public function project()
     {
         return $this->belongsTo('Modules\Core\Entities\Project');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function project()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Affiliate;
 
 class ProjectPolicy
 {
@@ -47,7 +48,12 @@ class ProjectPolicy
         $userProject = UserProject::where('user_id', $user->account_owner_id)
                                   ->where('project_id', $project->id)
                                   ->first();
-        if ($userProject) {
+
+        $affiliateProject = Affiliate::where('user_id', $user->account_owner_id)
+                                      ->where('project_id', $project->id)
+                                      ->first();
+
+        if ($userProject || $affiliateProject) {
             return true;
         } else {
             return false;
