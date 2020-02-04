@@ -62,7 +62,7 @@ class TransfersController extends Controller
             }
 
             if(!empty($data['type'])){
-                $transfers->where('transfers.type', $data['type']);
+                $transfers->where('transfers.type_enum', $transfersModel->present()->getTypeEnum($data['type']));
             }
 
             if(!empty($data['reason'])){
@@ -74,7 +74,7 @@ class TransfersController extends Controller
                 $transfers->where('transfers.value', $value);
             }
 
-            $balanceInPeriod = $transfers->selectRaw("sum(CASE WHEN transfers.type = 'out' THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod")
+            $balanceInPeriod = $transfers->selectRaw("sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod")
                 ->first();
 
             if(!empty($balanceInPeriod)){
