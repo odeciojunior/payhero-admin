@@ -37,12 +37,14 @@ class ProjectAffiliateResource extends Resource
             $affiliateModel     = new Affiliate();
             $affiliatePresenter = $affiliateModel->present();
             $affiliate          = $affiliateModel->where('user_id', $userId)
+                                                 ->where('project_id', $this->id)
                                                  ->where('status_enum', $affiliatePresenter->getStatus('approved'))
                                                  ->first();
             $affiliatedMessage  = !empty($affiliate) ? 'Você ja está afiliado a esse projeto.' : '';
         } else {
             $affiliateRequestModel = new AffiliateRequest();
             $affiliateRequest      = $affiliateRequestModel->where('user_id', $userId)
+                                                           ->where('project_id', $this->id)
                                                            ->first();
             $affiliatedMessage     = !empty($affiliateRequest) ? 'Você já solicitou afiliação a esse projeto.' : '';
         }
@@ -61,11 +63,9 @@ class ProjectAffiliateResource extends Resource
             'support_phone'          => $this->support_phone ?? '',
             'support_phone_verified' => $this->support_phone_verified,
             'status'                 => isset($this->domains[0]->name) ? 1 : 0,
-            "terms_affiliates"       => $this->terms_affiliates,
             "cookie_duration"        => $this->cookie_duration,
             "automatic_affiliation"  => $this->automatic_affiliation,
             "url_affiliates"         => route('index', Hashids::encode($this->id)),
-            "percentage_affiliates"  => $this->percentage_affiliates,
             'user_name'              => $this->users[0]->name,
             'terms_affiliates'       => $this->terms_affiliates ?? '',
             'percentage_affiliates'  => $this->percentage_affiliates ?? '',

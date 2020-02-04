@@ -5,6 +5,7 @@ namespace Modules\Projects\Transformers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Modules\Core\Entities\Affiliate;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -38,6 +39,11 @@ class ProjectsResource extends Resource
      */
     public function toArray($request)
     {
+        $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
+                               ->where('project_id', $this->id)
+                               ->first();
+        $affiliated = !empty($affiliate) ? true : false;
+
         return [
             'id'                         => Hashids::encode($this->id),
             'photo'                      => $this->photo,
@@ -68,9 +74,7 @@ class ProjectsResource extends Resource
             "automatic_affiliation"      => $this->automatic_affiliation,
             "url_affiliates"             => route('index', Hashids::encode($this->id)),
             "percentage_affiliates"      => $this->percentage_affiliates,
-            'user_name'                  => $this->users[0]->name,
-            'terms_affiliates'           => $this->terms_affiliates ?? '',
-            'percentage_affiliates'      => $this->percentage_affiliates ?? '',
+            'affiliated'                 => $affiliated,
         ];
     }
 }

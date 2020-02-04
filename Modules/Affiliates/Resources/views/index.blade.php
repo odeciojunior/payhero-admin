@@ -81,6 +81,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=6') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=7') }}"></script>
     @endpush
 @endsection

@@ -82,6 +82,7 @@ class AffiliatesApiController extends Controller
                     $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         return response()->json([
+                                                    'type'    => 'affiliate',
                                                     'message' => 'Afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
@@ -100,6 +101,7 @@ class AffiliatesApiController extends Controller
                                                                             ]);
                     if ($affiliateRequest) {
                         return response()->json([
+                                                    'type'    => 'affiliate_request',
                                                     'message' => 'Solicitação de afiliação criada com sucesso!',
                                                 ], 200);
                     } else {
@@ -151,6 +153,7 @@ class AffiliatesApiController extends Controller
             $affiliateId = current(Hashids::decode($id));
             if ($affiliateId) {
                 $affiliate = Affiliate::with('user', 'company')->find($affiliateId);
+
                 return new AffiliateResource($affiliate);
             }
 
@@ -212,7 +215,7 @@ class AffiliatesApiController extends Controller
             // }
 
             if (!empty($affiliate->affiliateLinks) && $affiliate->affiliateLinks->isNotEmpty()) {
-                    foreach ($affiliate->affiliateLinks as $affiliateLink) {
+                foreach ($affiliate->affiliateLinks as $affiliateLink) {
                     $affiliateLink->delete();
                 }
             }
@@ -274,28 +277,28 @@ class AffiliatesApiController extends Controller
             $affiliateRequestId = $request->input('affiliate');
             $affiliateRequestId = current(Hashids::decode($affiliateRequestId));
 
-            $affiliateRequest = AffiliateRequest::where('id',$affiliateRequestId)
-                                         ->wherehas('project.users', function($q) use($userId) {
-                                            $q->where('users.id', $userId);
-                                         })
-                                         ->where('status', '<>', 3)
-                                         ->first();
+            $affiliateRequest = AffiliateRequest::where('id', $affiliateRequestId)
+                                                ->wherehas('project.users', function($q) use ($userId) {
+                                                    $q->where('users.id', $userId);
+                                                })
+                                                ->where('status', '<>', 3)
+                                                ->first();
 
-            if(!empty($affiliateRequest->id)) {
+            if (!empty($affiliateRequest->id)) {
 
-                if($status == 3 && (int)$affiliateRequest->status != 3) {
+                if ($status == 3 && (int) $affiliateRequest->status != 3) {
                     $project          = Project::find($affiliateRequest->project_id);
                     $affiliateService = new AffiliateService();
                     $affiliate        = Affiliate::create([
-                                                            'user_id'     => $affiliateRequest->user_id,
-                                                            'project_id'  => $project->id,
-                                                            'company_id'  => $affiliateRequest->company_id,
-                                                            'percentage'  => $project->percentage_affiliates,
-                                                            'status_enum' => $status,
-                                                        ]);
+                                                              'user_id'     => $affiliateRequest->user_id,
+                                                              'project_id'  => $project->id,
+                                                              'company_id'  => $affiliateRequest->company_id,
+                                                              'percentage'  => $project->percentage_affiliates,
+                                                              'status_enum' => $status,
+                                                          ]);
                     $affiliateRequest->update(['status' => $status]);
 
-                    $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
+                    $affiliateLink = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         return response()->json([
                                                     'message' => 'Afiliação criada com sucesso!',
@@ -305,16 +308,16 @@ class AffiliatesApiController extends Controller
                                                     'message' => 'Ocorreu um erro ao criar afiliação!',
                                                 ], 400);
                     }
-
-                } elseif (in_array($status, [2,4])) {
+                } else if (in_array($status, [2, 4])) {
                     $update = $affiliateRequest->update(['status' => $status]);
-                    if($update) {
+                    if ($update) {
                         return response()->json([
                                                     'message' => 'Solicitação de afiliação avaliada com sucesso!',
                                                 ], 200);
                     }
                 }
             }
+
             return response()->json([
                                         'message' => 'Ocorreu um erro ao avaliar solicitação de afiliação!',
                                     ], 400);
@@ -326,6 +329,4 @@ class AffiliatesApiController extends Controller
                                     ], 400);
         }
     }
-
-
 }
