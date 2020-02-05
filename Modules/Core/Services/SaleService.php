@@ -259,7 +259,7 @@ class SaleService
             ->first();
 
         if (!empty($transactionConvertax)) {
-            $convertaxValue = ($userTransaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value,
+            $convertaxValue = 'R$ ' . substr_replace($transactionConvertax->value,
                     ',', strlen($transactionConvertax->value) - 2, 0);
         } else {
             $convertaxValue = '0,00';
@@ -267,8 +267,7 @@ class SaleService
 
         $value = $userTransaction->value;
 
-        $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',',
-                strlen($value) - 2, 0);
+        $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
 
         $taxa = 0;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {

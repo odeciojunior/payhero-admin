@@ -40,31 +40,7 @@ class GenericCommand extends Command
     public function handle()
     {
 
-        $checkoutModel = new Checkout();
-
-        foreach (Checkout::whereNull('status_enum')->orderBy('id', 'desc')->cursor() as $checkout) {
-
-            $checkout->update([
-                'status_enum' => $checkoutModel->present()->getStatusEnum($checkout->status)
-            ]);
-        }
-
-        dump('checkout feito');
-
-        $transactionModel = new Transaction();
-
-        foreach (Transaction::cursor() as $transaction) {
-
-            if($transaction->status == 'waiting_payment' || $transaction->status == 'in_process'){
-                $transaction->update([
-                    'status' => 'pending'
-                ]);
-            }
-
-            $transaction->update([
-                'status_enum' => $transactionModel->present()->getStatusEnum($transaction->status)
-            ]);
-        }
+        //
 
     }
 }

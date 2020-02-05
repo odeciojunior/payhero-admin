@@ -46,24 +46,7 @@ class CustomFieldsActiveCampaign extends Command
      */
     public function handle()
     {
-        $transfers = Transfer::all();
 
-        foreach ($transfers as $transfer) {
-            $transfer->update(
-                [
-                    'type_enum' => $transfer->present()->getTypeEnum($transfer->type)
-                ]
-            );
-        }
-
-        /*$userProjects = UserProject::withTrashed();
-
-        foreach ($userProjects->cursor() as $value) {
-            $value->update([
-                'status_flag' => $value->present()->getStatusFlag($value->status),
-                'type_enum' => $value->present()->getTypeEnum($value->type)
-            ]);
-        }*/
     }
 
 
