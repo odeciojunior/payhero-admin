@@ -39,9 +39,10 @@ class ProjectsResource extends Resource
      */
     public function toArray($request)
     {
-        $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
-                               ->where('project_id', $this->id)
-                               ->first();
+        // $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
+        //                        ->where('project_id', $this->id)
+        //                        ->first();
+        $affiliate = $this->affiliates[0] ?? '';
         $affiliated = !empty($affiliate) ? true : false;
 
         return [

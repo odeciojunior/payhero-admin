@@ -306,14 +306,28 @@ class ProjectService
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
-        $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->pluck('project_id');
-        if($affiliate) {
-            $affiliateProjects = Affiliate::where('user_id', auth()->user()->account_owner_id)->get()->pluck('project_id');
+        $userId = auth()->user()->account_owner_id;
+        $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $userProjects = $userProjects->merge($affiliateProjects);
-        }
-        $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
+        if($affiliate) {
+            $projects    = $this->getProjectModel()
+                                ->whereIn('status', $status)
+                                ->with(['affiliates' => function($query) use($userId) {
+                                    $query->where('user_id', $userId);
+                                }])
+                                ->where(function($query2) use($userId, $userProjects) {
+                                    $query2->whereIn('id', $userProjects)
+                                           ->orWhereHas('affiliates', function($query3) use($userId)  {
+                                                $query3->where('user_id', $userId);
+                                           });
+                                })
+                                ->orderBy('id', 'DESC');
+
+        } else {
+            $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
                              ->orderBy('id', 'DESC');
+        }
+
         if ($pagination) {
             return ProjectsSelectResource::collection($projects->get());
         } else {

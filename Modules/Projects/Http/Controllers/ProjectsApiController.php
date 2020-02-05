@@ -407,11 +407,15 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
-
+            $userId = auth()->user()->account_owner_id;
             if ($id) {
 
                 $project = $projectModel->where('id', current(Hashids::decode($id)))
-                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
+                                        ->where('status', $projectModel->present()->getStatus('active'))
+                                        ->with(['affiliates' => function($query) use ($userId) {
+                                            $query->where('user_id', $userId)->where('status_enum', 3);
+                                        }])
+                                        ->first();
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
