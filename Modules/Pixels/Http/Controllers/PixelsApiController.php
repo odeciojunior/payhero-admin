@@ -82,6 +82,7 @@ class PixelsApiController extends Controller
             }
 
             $validator['project_id'] = current(Hashids::decode($projectId));
+            $validator['platform_enum'] = $pixelModel->present()->getPlatformEnum($validator['platform']);
 
             $project = $projectModel->find($validator['project_id']);
 
