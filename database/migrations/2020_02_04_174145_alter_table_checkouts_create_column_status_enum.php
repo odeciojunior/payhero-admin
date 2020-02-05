@@ -17,15 +17,6 @@ class AlterTableCheckoutsCreateColumnStatusEnum extends Migration
         Schema::table('checkouts', function (Blueprint $table) {
             $table->integer('status_enum')->default(0)->after('status');
         });
-
-        $checkoutModel = new Checkout();
-
-        foreach (Checkout::cursor() as $checkout) {
-
-            $checkout->update([
-                'status_enum' => $checkoutModel->present()->getStatusEnum($checkout->status)
-            ]);
-        }
     }
 
     /**
