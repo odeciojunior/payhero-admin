@@ -110,7 +110,7 @@ class PartnersController extends Controller
                     });*/
                 }
                 $requestvalidated['status'] = 'inactive';
-                $requestvalidated['status_enum'] = $userProjectModel->present()->getTypeFlag('inactive');
+                $requestvalidated['status_enum'] = $userProjectModel->present()->getStatusFlag('inactive');
                 $requestvalidated['user'] = $user->account_owner_id ?? null;
                 $userProjectModel->create($requestvalidated);
 

@@ -156,7 +156,7 @@ class ProjectsApiController extends Controller
                                                                      'access_permission' => 1,
                                                                      'edit_permission'   => 1,
                                                                      'status'            => 'active',
-                                                                     'status_flag'       => $userProjectModel->present()->getTypeFlag('active'),
+                                                                     'status_flag'       => $userProjectModel->present()->getStatusFlag('active'),
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
