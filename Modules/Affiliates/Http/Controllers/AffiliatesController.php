@@ -36,14 +36,6 @@ class AffiliatesController extends Controller
     }
 
     /**
-     * @param Request $request
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Show the specified resource.
      * @param int $id
      * @return Response
@@ -63,24 +55,8 @@ class AffiliatesController extends Controller
         return view('affiliates::edit');
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
+    public function projectAffiliates()
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
+        return view('affiliates::projectaffiliates');
     }
 }

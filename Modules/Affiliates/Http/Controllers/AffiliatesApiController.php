@@ -15,6 +15,7 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\AffiliateRequest;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
 use Modules\Core\Events\EvaluateAffiliateRequestEvent;
@@ -30,21 +31,11 @@ use Illuminate\Support\Facades\Gate;
 class AffiliatesApiController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Response
+     *
      */
     public function index()
     {
-        return view('affiliates::index');
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create()
-    {
-        return view('affiliates::create');
     }
 
     /**
@@ -248,13 +239,42 @@ class AffiliatesApiController extends Controller
         }
     }
 
-    public function getAffiliates($projectId)
+    //    public function getAffiliates($projectId)
+    //    {
+    //        try {
+    //
+    //            $projectId = current(Hashids::decode($projectId));
+    //
+    //            $affiliates = Affiliate::with('user')->where('project_id', $projectId)->get();
+    //
+    //            return response()->json(['data' => AffiliateResource::collection($affiliates)], 200);
+    //        } catch (Exception $e) {
+    //            return response()->json(['message' => 'Ocorreu um erro'], 400);
+    //        }
+    //    }
+
+    //    public function getAffiliateRequests($projectId)
+    //    {
+    //        try {
+    //
+    //            $projectId = current(Hashids::decode($projectId));
+    //
+    //            $affiliates = AffiliateRequest::with('user')->where('project_id', $projectId)->get();
+    //
+    //            return response()->json(['data' => AffiliateRequestResource::collection($affiliates)], 200);
+    //        } catch (Exception $e) {
+    //            return response()->json(['message' => 'Ocorreu um erro'], 400);
+    //        }
+    //    }
+    public function getAffiliates()
     {
         try {
+            $userProjectModel = new UserProject();
+            $affiliateModel   = new Affiliate();
+            $userId           = auth()->user()->account_owner_id;
+            $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $projectId = current(Hashids::decode($projectId));
-
-            $affiliates = Affiliate::with('user')->where('project_id', $projectId)->get();
+            $affiliates = $affiliateModel->with('user')->whereIn('project_id', $userProjects)->get();
 
             return response()->json(['data' => AffiliateResource::collection($affiliates)], 200);
         } catch (Exception $e) {
@@ -262,13 +282,15 @@ class AffiliatesApiController extends Controller
         }
     }
 
-    public function getAffiliateRequests($projectId)
+    public function getAffiliateRequests()
     {
         try {
+            $userProjectModel = new UserProject();
+            $affiliateRequest = new AffiliateRequest();
+            $userId           = auth()->user()->account_owner_id;
+            $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $projectId = current(Hashids::decode($projectId));
-
-            $affiliates = AffiliateRequest::with('user')->where('project_id', $projectId)->get();
+            $affiliates = $affiliateRequest->with('user')->whereIn('project_id', $userProjects)->get();
 
             return response()->json(['data' => AffiliateRequestResource::collection($affiliates)], 200);
         } catch (Exception $e) {
