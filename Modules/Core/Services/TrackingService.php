@@ -187,20 +187,12 @@ class TrackingService
             ->where('sale_id', $productPlanSale->sale_id)
             ->first();
 
-        $productPlan = $planSale->plan
-            ->productsPlans
-            ->where('product_id', $productPlanSale->product_id)
-            ->where('plan_id', $productPlanSale->plan_id)
-            ->first();
-
-        $amount = $productPlan->amount * $planSale->amount;
-
         $tracking = $trackingModel->create([
-            'sale_id' => $productPlanSale->sale->id,
+            'sale_id' => $productPlanSale->sale_id,
             'product_id' => $productPlanSale->product_id,
             'product_plan_sale_id' => $productPlanSale->id,
             'plans_sale_id' => $planSale->id,
-            'amount' => $amount,
+            'amount' => $productPlanSale->amount,
             'delivery_id' => $productPlanSale->sale->delivery->id,
             'tracking_code' => $trackingCode,
             'tracking_status_enum' => $trackingModel->present()
@@ -233,7 +225,6 @@ class TrackingService
         $productPlanSales = $productPlanSaleModel
             ->with([
                 'tracking',
-                'sale.plansSales.plan.productsPlans',
                 'sale.delivery',
                 'sale.customer',
                 'product',

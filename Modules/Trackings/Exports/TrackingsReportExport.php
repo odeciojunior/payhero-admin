@@ -45,7 +45,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
             'tracking_code' => '',
             'product_id' => '#' . Hashids::encode($row->product->id),
             'product_name' => $row->product->name . ($row->product->description ? ' (' . $row->product->description . ')' : ''),
-            'product_amount' => '',
+            'product_amount' => $row->amount,
             'product_sku' => $row->product->sku,
             'client_name' => $row->sale->customer->name ?? '',
             'client_telephone' => $row->sale->customer->telephone ?? '',
@@ -62,29 +62,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
         ];
 
         if ($row->tracking) {
-            $return['product_amount'] = $row->tracking->amount;
             $return['tracking_code'] = $row->tracking->tracking_code;
-        } else {
-            if ($row->sale->relationLoaded('plansSales')) {
-                $planSale = $row->sale
-                    ->plansSales
-                    ->where('plan_id', $row->plan_id)
-                    ->where('sale_id', $row->sale_id)
-                    ->first();
-                if (isset($planSale)) {
-                    if ($planSale->relationLoaded('plan') && $planSale->plan->relationLoaded('productsPlans')) {
-                        $productPlan = $planSale->plan
-                            ->productsPlans
-                            ->where('product_id', $row->product_id)
-                            ->where('plan_id', $row->plan_id)
-                            ->first();
-
-                        if (isset($productPlan)) {
-                            $return['product_amount'] = $planSale->amount * $productPlan->amount;
-                        }
-                    }
-                }
-            }
         }
 
         return $return;

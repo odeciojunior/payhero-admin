@@ -223,7 +223,7 @@ class DashboardApiService {
                     $todayBalance   = 0;
 
                     $pendingTransactions = $transactionModel->where('company_id', $company->id)
-                        ->where('status', 'paid')
+                        ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                         ->whereDate('release_date', '>', Carbon::today()
                             ->toDateString())
                         ->get();

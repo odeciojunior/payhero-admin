@@ -34,7 +34,7 @@ class TransfersResource extends Resource
             $reason = $this->reason;
         }
 
-        $type     = $this->type == 'out' ? '-' : '';
+        $type     = $this->type_enum == 2 ? '-' : '';
         $value    = number_format(intval($type . $this->value) / 100, 2, ',', '.');
         $currency = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
         $value    = $currency . $value;

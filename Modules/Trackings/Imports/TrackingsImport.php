@@ -48,27 +48,19 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
             $productId = str_replace('#', '', $row[2]);
 
             $saleId = current(Hashids::connection('sale_id')->decode($saleId));
+            $productId = current(Hashids::decode($productId));
 
-            $sale = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
-                ->where('id', $saleId)
-                ->where('owner_id', $this->user->account_owner_id)->first();
+            $sale = $saleModel->with([
+                'productsPlansSale.tracking',
+                'productsPlansSale.sale.plansSales',
+                'productsPlansSale.sale.delivery'
+            ])->where('id', $saleId)
+                ->where('owner_id', $this->user->account_owner_id)
+                ->first();
 
             if (isset($sale)) {
-
-                $product = null;
-
-                foreach ($sale->plansSales as $planSale) {
-                    foreach ($planSale->plan->productsPlans as $productPlan) {
-                        if($productId =  $productPlan->product->id){
-                            $product = $productPlan->product;
-                        }
-                    }
-                }
-
-                if (isset($product)) {
-                    $productPlanSale = $product->productsPlanSales->where('sale_id', $sale->id)
-                        ->first();
-
+                $productPlanSale = $sale->productsPlansSale->where('product_id', $productId)->first();
+                if (isset($productPlanSale)) {
                     if (isset($productPlanSale)) {
                         $tracking = $productPlanSale->tracking;
 
