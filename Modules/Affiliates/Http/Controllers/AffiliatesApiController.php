@@ -17,6 +17,7 @@ use Modules\Core\Entities\AffiliateRequest;
 use Modules\Core\Entities\Project;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
+use Modules\Core\Events\EvaluateAffiliateRequestEvent;
 use Modules\Core\Services\AffiliateService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\UserService;
@@ -84,7 +85,7 @@ class AffiliatesApiController extends Controller
                                                                 ]);
                     $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
-//                        event(new AffiliateEvent($affiliate));
+                        event(new AffiliateEvent($affiliate));
 
                         return response()->json([
                                                     'type'    => 'affiliate',
@@ -290,7 +291,6 @@ class AffiliatesApiController extends Controller
                                                 })
                                                 ->where('status', '<>', 3)
                                                 ->first();
-
             if (!empty($affiliateRequest->id)) {
 
                 if ($status == 3 && (int) $affiliateRequest->status != 3) {
@@ -307,6 +307,8 @@ class AffiliatesApiController extends Controller
 
                     $affiliateLink = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
                     if ($affiliateLink) {
+                        event(new EvaluateAffiliateRequestEvent($affiliateRequest));
+
                         return response()->json([
                                                     'message' => 'Afiliação criada com sucesso!',
                                                 ], 200);
@@ -318,6 +320,8 @@ class AffiliatesApiController extends Controller
                 } else if (in_array($status, [2, 4])) {
                     $update = $affiliateRequest->update(['status' => $status]);
                     if ($update) {
+                        event(new EvaluateAffiliateRequestEvent($affiliateRequest));
+
                         return response()->json([
                                                     'message' => 'Solicitação de afiliação avaliada com sucesso!',
                                                 ], 200);

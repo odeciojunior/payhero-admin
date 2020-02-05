@@ -40,6 +40,14 @@ class AffiliateService
                                                 ]);
                 }
 
+                //criar affiliate link sem plano
+                $affiliateLinkModel->create([
+                                                'affiliate_id'  => $affiliateId,
+                                                'plan_id'       => null,
+                                                'parameter'     => $affiliateHash,
+                                                'clicks_amount' => 0,
+                                            ]);
+
                 return true;
             } else {
                 return false;
