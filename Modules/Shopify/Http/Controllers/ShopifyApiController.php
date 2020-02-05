@@ -128,6 +128,7 @@ class ShopifyApiController extends Controller
                                                      'boleto'                     => '1',
                                                      'installments_amount'        => '12',
                                                      'installments_interest_free' => '1',
+                                                     'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
             if (!empty($project)) {
                 $shippingModel->create([

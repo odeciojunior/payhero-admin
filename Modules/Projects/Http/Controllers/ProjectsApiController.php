@@ -116,8 +116,8 @@ class ProjectsApiController extends Controller
                                                      'visibility'                 => 'private',
                                                      'automatic_affiliation'      => 0,
                                                      'boleto'                     => 1,
-                                                     'status'                     => $projectModel->present()
-                                                                                                  ->getStatus('active'),
+                                                     'status'                     => $projectModel->present()->getStatus('active'),
+                                                     'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
                 if (!empty($project)) {
                     $shipping = $shippingModel->create([
