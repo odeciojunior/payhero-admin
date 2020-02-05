@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Transaction;
 
 class GenericCommand extends Command
 {
@@ -48,6 +49,22 @@ class GenericCommand extends Command
             ]);
         }
 
-        dd("Feito");
+        dump('checkout feito');
+
+        $transactionModel = new Transaction();
+
+        foreach (Transaction::cursor() as $transaction) {
+
+            if($transaction->status == 'waiting_payment' || $transaction->status == 'in_process'){
+                $transaction->update([
+                    'status' => 'pending'
+                ]);
+            }
+
+            $transaction->update([
+                'status_enum' => $transactionModel->present()->getStatusEnum($transaction->status)
+            ]);
+        }
+
     }
 }
