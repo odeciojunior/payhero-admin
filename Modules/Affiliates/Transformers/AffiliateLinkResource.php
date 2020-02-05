@@ -29,14 +29,25 @@ class AffiliateLinkResource extends Resource
         $companyDocumentValidated = $companyService->isDocumentValidated($companyId);
         $userDocumentValidated    = $userService->isDocumentValidated();
 
+        $linkPlan = $linkAffiliate = 'Domínio não configurado';
+
+        if(!empty($this->affiliate->project->domains[0]->name)) {
+            $linkPlan      = (!empty($this->plan->code)) ? 'https://checkout.' . $this->affiliate->project->domains[0]->name . '/' . $this->plan->code : null;
+            $linkAffiliate = (!empty($this->parameter)) ? 'https://affiliate.' . $this->affiliate->project->domains[0]->name . '/' . $this->parameter : null;
+        }
+
         return [
-            'id'                => Hashids::encode($this->id),
-            'plan_name'         => $this->plan->name ?? null,
-            'description'       => $this->plan->description ?? null,
-            'link'              => isset($this->affiliate->project->domains[0]->name) ? 'https://affiliate.' . $this->affiliate->project->domains[0]->name . '/' . $this->parameter : 'Domínio não configurado',
-            'price'             => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.'),
-            'commission'        => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", (($this->plan->price ?? 0 * $this->affiliate->percentage) / 100))) / 100, 2, ',', '.'),
-            'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
+            'id'              => Hashids::encode($this->id),
+            'plan_name'       => $this->plan->name ?? null,
+            'description'     => $this->plan->description ?? null,
+            'link'            => $this->link ?? null,
+            'link_project'    => $this->affiliate->project->url_page ?? null,
+            'project_name'    => $this->affiliate->project->name ?? null,
+            'link_plan'       => $linkPlan,
+            'link_affiliate'  => $linkAffiliate,
+            'price'           => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.'),
+            'commission'      => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", (($this->plan->price ?? 0 * $this->affiliate->percentage) / 100))) / 100, 2, ',', '.'),
+            'document_status' => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
         ];
     }
 }

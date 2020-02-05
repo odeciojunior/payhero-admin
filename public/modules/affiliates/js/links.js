@@ -64,20 +64,30 @@ $(function () {
 
                     if (response.data[0].document_status == 'approved') {
                         $.each(response.data, function (index, value) {
-                            if(value.plan_name != null) {
-                                data = '';
-                                data += '<tr>';
-                                data += '<td id="" class="">' + value.plan_name + '</td>';
-                                data += '<td id="" class="">' + value.description + '</td>';
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">' + value.link + '</td>';
-                                data += '<td id="" class="display-lg-none display-xlg-none" style=""><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
-                                data += '<td id="" class="text-center" >' + value.price + '<br><small>('+ value.commission +' commissão)<small></td>';
-                                data += '</tr>';
-                                $("#data-table-link").append(data);
-                                $('#table-links').addClass('table-striped');
+                            data = '';
+                            data += '<tr>';
+                            if(value.link_plan == null) {
+                                data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link_project + '">';
+                                data += value.link_project + ' <br><small>('+ value.project_name +')</small> </td>';
+                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link_project+'"> file_copy</a></td>';
                             } else {
-                                $('#link_shop').html('<span class="copy_link_shop" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">' + value.link + '</span>');
+                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_plan + '">';
+                                data += value.link_plan + ' <br><small>('+ value.plan_name + value.description +')</small> </td>';
+                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link_plan+'"> file_copy</a></td>';
                             }
+                            if(value.link_affiliate == null) {
+                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">' + value.link + '</td>';
+                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link+'"> file_copy</a></td>';
+                            } else {
+                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + value.link_affiliate + '</td>';
+                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link_affiliate+'"> file_copy</a></td>';
+                            }
+
+                            data += '<td class="text-center" >' + value.price + '<br><small>('+ value.commission +' commissão)<small></td>';
+                            data += '<td></td>'
+                            data += '</tr>';
+                            $("#data-table-link").append(data);
+                            $('#table-links').addClass('table-striped');
                         });
 
                         pagination(response, 'links', index);
@@ -90,7 +100,7 @@ $(function () {
             }
         });
 
-        $("#table-links").on("click", ".copy_link", function () {
+        $(".table-links").on("click", ".copy_link", function () {
             var temp = $("<input>");
             $("#table-links").append(temp);
             temp.val($(this).attr('link')).select();
@@ -99,7 +109,7 @@ $(function () {
             alertCustom('success', 'Link copiado!');
         });
 
-        $("#link_shop").on("click", ".copy_link_shop", function () {
+        $(".table-links").on("click", ".copy_link_plan", function () {
             var temp = $("<input>");
             $("#table-links").append(temp);
             temp.val($(this).attr('link')).select();

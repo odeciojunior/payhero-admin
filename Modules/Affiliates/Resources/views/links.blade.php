@@ -7,9 +7,7 @@
                       <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
                     </span>
                 </div>
-            <div class='col-md-8'>
-                <label>Link da loja: </label>
-                <span id="link_shop"></span>
+            <div class='col-md-6'>
             </div>
         </div>
     </div>
@@ -20,10 +18,10 @@
             <table id='table-links' class='table text-left table-links table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title'>Nome</td>
-                        <td class='table-title'>Descrição</td>
-                        <td class='table-title'>Link</td>
+                        <td class='table-title'>Link Plano</td>
+                        <td class='table-title'>Link Afiliado</td>
                         <td class='table-title text-center'>Preço</td>
+                        <td class='table-title text-center'>Ações</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-link' class='min-row-height'>
