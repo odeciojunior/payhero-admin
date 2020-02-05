@@ -70,7 +70,7 @@ $(function () {
                             data += '<td id="" class="">' + value.description + '</td>';
                             data += '<td id="link" class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">' + value.link + '</td>';
                             data += '<td id="" class="display-lg-none display-xlg-none" style=""><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
-                            data += '<td id="" class="" style="">' + value.price + '</td>';
+                            data += '<td id="" class="text-center" >' + value.price + '<br><small>('+ value.commission +' commissão)<small></td>';
                             data += '</tr>';
                             $("#data-table-link").append(data);
                             $('#table-links').addClass('table-striped');

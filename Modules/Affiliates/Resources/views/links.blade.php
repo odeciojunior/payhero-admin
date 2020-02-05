@@ -21,7 +21,7 @@
                         <td class='table-title'>Nome</td>
                         <td class='table-title'>Descrição</td>
                         <td class='table-title'>Link</td>
-                        <td class='table-title'>Preço</td>
+                        <td class='table-title text-center'>Preço</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-link' class='min-row-height'>

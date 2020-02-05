@@ -75,6 +75,8 @@ class ProjectsResource extends Resource
             "url_affiliates"             => route('index', Hashids::encode($this->id)),
             "percentage_affiliates"      => $this->percentage_affiliates,
             'affiliated'                 => $affiliated,
+            'affiliate_id'               => Hashids::encode($affiliate->id ?? ''),
+            'affiliate_date'             => (!empty($affiliate->created_at)) ? (new Carbon($affiliate->created_at))->format('d/m/Y') : '',
         ];
     }
 }

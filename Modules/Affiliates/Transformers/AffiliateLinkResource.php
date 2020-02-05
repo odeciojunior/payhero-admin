@@ -33,9 +33,9 @@ class AffiliateLinkResource extends Resource
             'id'                => Hashids::encode($this->id),
             'plan_name'         => $this->plan->name ?? null,
             'description'       => $this->plan->description ?? null,
-            'link'              => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->parameter : 'Domínio não configurado',
-            'price'             => $this->plan->price,
-            'commission'        => ($this->plan->price * $this->affiliate->percentage) / 100,
+            'link'              => isset($this->affiliate->project->domains[0]->name) ? 'https://checkout.' . $this->affiliate->project->domains[0]->name . '/' . $this->parameter : 'Domínio não configurado',
+            'price'             => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price)) / 100, 2, ',', '.'),
+            'commission'        => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", (($this->plan->price * $this->affiliate->percentage) / 100))) / 100, 2, ',', '.'),
             'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
         ];
     }

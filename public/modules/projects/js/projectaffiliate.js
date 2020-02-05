@@ -49,7 +49,7 @@ $(() => {
                 let project = response.data;
                 $('.page-title, .title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
-                $('#created_at').text('Criado em ' + project.created_at);
+                $('#created_at').text('Afiliado em ' + project.affiliate_date);
                 if (project.visibility === 'public') {
                     $('#show-visibility').text('Público').addClass('badge-primary');
                 } else {
