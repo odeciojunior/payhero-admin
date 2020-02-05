@@ -7,7 +7,9 @@
                       <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
                     </span>
                 </div>
-            <div class='col-md-6'>
+            <div class='col-md-8'>
+                <label>Link da loja: </label>
+                <span id="link_shop"></span>
             </div>
         </div>
     </div>
