@@ -27,7 +27,7 @@ class TransfersService
 
         $transactions = $transactionModel->where([
                                                      ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                                                     ['status', 'paid'],
+                                                     ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                                                  ]);
 
         $transfers = [];

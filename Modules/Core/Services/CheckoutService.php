@@ -48,8 +48,10 @@ class CheckoutService
         $checkoutModel = new Checkout();
         $domainModel = new Domain();
 
-        $abandonedCarts = $checkoutModel->whereIn('status', ['recovered', 'abandoned cart'])
-            ->where('project_id', $projectId);
+        $abandonedCarts = $checkoutModel->whereIn('status_enum', [
+            $checkoutModel->present()->getStatusEnum('recovered'),
+            $checkoutModel->present()->getStatusEnum('abandoned cart')
+        ])->where('project_id', $projectId);
 
         if (!empty($client)) {
             $abandonedCarts->where('client_name', 'like', '%' . $client . '%');

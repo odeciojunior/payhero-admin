@@ -39,7 +39,7 @@ class CartRecoveryService
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
             $data                = [];
-            $checkoutModel->where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
+            $checkoutModel->where([['status', '=',$checkoutModel->present()->getStatusEnum('abandoned cart')], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
@@ -155,7 +155,7 @@ class CartRecoveryService
 
             $date = Carbon::now()->subDay('1')->toDateString();
             $data = [];
-            $checkoutModel->where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
+            $checkoutModel->where([['status', '=', $checkoutModel->present()->getStatusEnum('abandoned cart')], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {

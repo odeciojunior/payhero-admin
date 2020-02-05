@@ -350,10 +350,10 @@ class ReportsApiController extends Controller
 
                     // calculos dashboard
                     $checkoutsDetails = $checkoutsModel->select([
-                                                            DB::raw('SUM(CASE WHEN checkouts.status = "accessed" THEN 1 ELSE 0 END) AS contCheckoutsAcessed'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.status = "abandoned cart" THEN 1 ELSE 0 END) AS contCheckoutsAbandoned'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.status = "recovered" THEN 1 ELSE 0 END) AS contCheckoutsRecovered'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.status = "sale finalized" THEN 1 ELSE 0 END) AS contCheckoutsFinalized'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 1 THEN 1 ELSE 0 END) AS contCheckoutsAcessed'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 2 THEN 1 ELSE 0 END) AS contCheckoutsAbandoned'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 3 THEN 1 ELSE 0 END) AS contCheckoutsRecovered'),
+                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 4 THEN 1 ELSE 0 END) AS contCheckoutsFinalized'),
                                                             DB::raw('SUM(CASE WHEN checkouts.is_mobile = 0 THEN 1 ELSE 0 END) AS contCheckoutsDesktop'),
                                                             DB::raw('SUM(CASE WHEN checkouts.is_mobile = 1 THEN 1 ELSE 0 END) AS contCheckoutsMobile'),
                                                         ])
@@ -457,13 +457,15 @@ class ReportsApiController extends Controller
 
             if(!empty($company->id)) {
 
-                $itens = Transaction::select([
+                $transactionModel = new Transaction();
+
+                $itens = $transactionModel->select([
                                             DB::raw('SUM(transactions.value) as value'),
                                             DB::raw('DATE(transactions.release_date) as date'),
                                     ])
                                     ->where('company_id', $companyId)
                                     ->whereIn('transactions.type', collect([2,3,4,5]))
-                                    ->where('transactions.status', 'paid')
+                                    ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                     ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
                                     ->groupBy('date')
                                     ->get();
@@ -495,7 +497,9 @@ class ReportsApiController extends Controller
                     $transactions[] = ['date' => 'Total', 'value' => number_format(intval(preg_replace("/[^0-9]/", "", $total)) / 100, 2, ',', '.')];
                 }
 
-                $transactionTotal = Transaction::join('sales', 'transactions.sale_id', 'sales.id')
+                $transactionModel = new Transaction();
+
+                $transactionTotal = $transactionModel->join('sales', 'transactions.sale_id', 'sales.id')
                                                 ->select([
                                                             DB::raw('SUM(transactions.value) as value'),
                                                             DB::raw('SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) AS valueBillet'),
@@ -503,7 +507,7 @@ class ReportsApiController extends Controller
                                                         ])
                                                 ->where('company_id', $companyId)
                                                 ->whereIn('transactions.type', collect([2,3,4,5]))
-                                                ->where('transactions.status', 'paid')
+                                                ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                                 ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
                                                 ->groupBy('transactions.company_id')
                                                 ->first();
@@ -550,7 +554,9 @@ class ReportsApiController extends Controller
         $header    = ['Data', 'Valor'];
         $companyId  = current(Hashids::decode($request->input('company')));
 
-        $itens = Transaction::select([
+        $transactionModel = new Transaction();
+
+        $itens = $transactionModel->select([
                                         DB::raw('SUM(transactions.value) as value'),
                                         DB::raw('DATE(transactions.release_date) as date')
                                     ])
@@ -558,7 +564,7 @@ class ReportsApiController extends Controller
                                     ->where('companies.user_id', auth()->user()->id)
                                     ->where('companies.id',  $companyId)
                                     ->whereIn('transactions.type', collect([2,3,4,5]))
-                                    ->where('transactions.status', 'paid')
+                                    ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                     ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
                                     ->groupBy('date')
                                     ->get();
