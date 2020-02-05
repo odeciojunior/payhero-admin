@@ -199,7 +199,7 @@ class TrackingsApiController extends Controller
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
                 $productId = current(Hashids::decode($data['product_id']));
                 if ($saleId && $productId) {
-                        $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales.plan.productsPlans', 'sale.delivery'])
+                        $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales', 'sale.delivery'])
                             ->where([['sale_id', $saleId], ['product_id', $productId]])
                             ->first();
 
