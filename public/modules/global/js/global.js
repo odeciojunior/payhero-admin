@@ -195,7 +195,7 @@ function pagination(response, model, callback) {
         $(paginationContainer + ' .first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
     }
 
-    $(document).on("click", paginationContainer + ' .first_page', function () {
+    $(paginationContainer + ' .first_page').on("click", function () {
         callback('?page=1');
     });
 
@@ -207,7 +207,7 @@ function pagination(response, model, callback) {
 
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
 
-        $(document).on("click", paginationContainer + " .page_" + (currentPage - x), function () {
+        $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
             callback('?page=' + $(this).html());
         });
     }
@@ -227,7 +227,7 @@ function pagination(response, model, callback) {
 
         $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
 
-        $(document).on("click", paginationContainer + " .page_" + (currentPage + x), function () {
+        $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
             callback('?page=' + $(this).html());
         });
     }
@@ -241,7 +241,7 @@ function pagination(response, model, callback) {
             $(paginationContainer + ' .last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
         }
 
-        $(document).on("click", paginationContainer + ' .last_page', function () {
+        $(paginationContainer + ' .last_page').on("click", function () {
             callback('?page=' + lastPage);
         });
     }

@@ -1,11 +1,10 @@
 <?php
 
-use Modules\Core\Entities\Checkout;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTableCheckoutsCreateColumnStatusEnum extends Migration
+class AddColumnAmountTableProductsPlansSales extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +13,8 @@ class AlterTableCheckoutsCreateColumnStatusEnum extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->integer('status_enum')->default(0)->after('status');
+        Schema::table('products_plans_sales', function(Blueprint $table) {
+            $table->integer('amount')->nullable()->after('sale_id');
         });
     }
 
@@ -26,11 +25,8 @@ class AlterTableCheckoutsCreateColumnStatusEnum extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function (Blueprint $table) {
-            $table->dropColumn('status_enum');
+        Schema::table('products_plans_sales', function(Blueprint $table) {
+            $table->dropColumn('amount');
         });
     }
-
 }
-
-
