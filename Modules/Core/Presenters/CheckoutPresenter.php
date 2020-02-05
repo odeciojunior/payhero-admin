@@ -83,4 +83,34 @@ class CheckoutPresenter extends Presenter
     {
         return 15 * $this->id;
     }
+
+    public function getStatusEnum($status)
+    {
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'accessed';
+                case 2:
+                    return 'abandoned cart';
+                case 3:
+                    return 'recovered';
+                case 4:
+                    return 'sale finalized';
+            }
+        } else {
+            switch ($status) {
+                case 'accessed':
+                    return 1;
+                case 'abandoned cart':
+                    return 2;
+                case 'recovered':
+                    return 3;
+                case 'sale finalized':
+                    return 4;
+            }
+        }
+
+        return '';
+    }
+
 }

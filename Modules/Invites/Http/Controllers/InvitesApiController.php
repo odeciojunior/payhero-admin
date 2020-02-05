@@ -242,9 +242,9 @@ class InvitesApiController extends Controller
                 ->pluck('id')
                 ->toArray();
             $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)
-                ->where('status', 'transfered')->sum('value');
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('transfered'))->sum('value');
             $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)
-                ->where('status', 'paid')->sum('value');
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))->sum('value');
 
             return response()->json(
                 [

@@ -100,35 +100,30 @@ class FinanceApiService
     public function getBalances(Request $request)
     {
         try {
-            /** @var Company $companyModel */
             $companyModel = new Company();
-            /** @var Transaction $transactionModel */
             $transactionModel   = new Transaction();
             $antecipableBalance = 0;
             $pendingBalance     = 0;
             if ($request->has('company') && !empty($request->input('company'))) {
+
                 $companyId = current(Hashids::decode($request->input('company')));
-                /** @var Company $company */
+
                 $company = $companyModel->newQuery()->find($companyId);
                 if (!empty($company)) {
-                    //                    $pendingTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                    //                                                            ->where('status', 'paid')
-                    //                                                            ->whereDate('release_date', '>', now()->startOfDay())
-                    //                                                            ->get();
                     $pendingTransactions     = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status', 'paid')
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                                                 ->whereDate('release_date', '>', now()->startOfDay())
                                                                 ->select(DB::raw('sum( value ) as pending_balance'))
                                                                 ->first();
                     $pendingBalance          += $pendingTransactions->pending_balance;
                     $anticipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status', 'anticipated')
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
                                                                 ->whereDate('release_date', '>', now()->startOfDay())
                                                                 ->select(DB::raw('sum( value - antecipable_value ) as pending_balance'))
                                                                 ->first();
                     $pendingBalance          += $anticipableTransactions->pending_balance;
                     $antecipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status', 'paid')
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                                                 ->whereDate('release_date', '>', Carbon::today())
                                                                 ->whereDate('antecipation_date', '<=', Carbon::today())
                                                                 ->select(DB::raw('sum( antecipable_value ) as antecipable_balance'))
@@ -168,21 +163,16 @@ class FinanceApiService
      */
     public function getAccountInformation(Request $request)
     {
-        /** @var Company $companyModel */
         $companyModel = new Company();
-        /** @var BankService $bankService */
         $bankService = new BankService();
-        /** @var User $userModel */
         $userModel = new User();
 
         if ($request->has('company') && !empty($request->input('company'))) {
-            /** @var Company $company */
             $company = $companyModel->find(current(Hashids::decode($request->input('company'))));
         } else {
             return ['message' => 'Não foi possível recuperar o companyId! (FinanceApiService - getAccountInformation)'];
         }
         if (Gate::allows('edit', [$company])) {
-            /** @var User $user */
             $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
             if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
                 $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {

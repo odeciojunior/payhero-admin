@@ -51,12 +51,13 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
+        // dd(env('DB_USERNAME'));
 
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
         // $this->restartShopifyWebhooks();
 
-        $this->createProjectNotifications();
+        // $this->createProjectNotifications();
     }
 
     public function restartShopifyWebhooks(){
