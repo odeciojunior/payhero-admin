@@ -14,6 +14,9 @@
 Route::group(['middleware' => ['web', 'auth', 'setUserAsLogged']], function() {
     Route::get('/affiliates/{projectId}', 'AffiliatesController@index')
          ->name('index');
+
+    Route::get('/affiliates', 'AffiliatesController@projectAffiliates')
+         ->name('projectaffiliates');
 });
 
 //Route::prefix('affiliates')->group(function() {

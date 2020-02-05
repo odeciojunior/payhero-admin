@@ -27,9 +27,10 @@ class AffiliateResource extends Resource
             'email'             => $this->user->email ?? null,
             'company'           => $this->company->fantasy_name ?? null,
             'status'            => $this->status_enum,
-            'percentage'        => $this->percentage,
+            'percentage'        => $this->percentage ? $this->percentage . '%' : '',
             'date'              => Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/Y H:i:s'),
-            'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status_enum)),
+            'status_translated' => Lang::get('definitions.enum.status.' . $this->present()
+                                                                               ->getStatus($this->status_enum)),
         ];
     }
 }
