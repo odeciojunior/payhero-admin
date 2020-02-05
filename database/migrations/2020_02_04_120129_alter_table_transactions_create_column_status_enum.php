@@ -14,24 +14,24 @@ class AlterTableTransactionsCreateColumnStatusEnum extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->integer('status_enum')->default(0)->after('status');
-        });
+        // Schema::table('transactions', function (Blueprint $table) {
+        //     $table->integer('status_enum')->default(0)->after('status');
+        // });
 
-        $transactionModel = new Transaction();
+        // $transactionModel = new Transaction();
 
-        foreach (Transaction::cursor() as $transaction) {
+        // foreach (Transaction::cursor() as $transaction) {
 
-            if($transaction->status == 'waiting_payment' || $transaction->status == 'in_process'){
-                $transaction->update([
-                    'status' => 'pending'
-                ]);
-            }
+        //     if($transaction->status == 'waiting_payment' || $transaction->status == 'in_process'){
+        //         $transaction->update([
+        //             'status' => 'pending'
+        //         ]);
+        //     }
 
-            $transaction->update([
-                'status_enum' => $transactionModel->present()->getStatusEnum($transaction->status)
-            ]);
-        }
+        //     $transaction->update([
+        //         'status_enum' => $transactionModel->present()->getStatusEnum($transaction->status)
+        //     ]);
+        // }
 
     }
 
