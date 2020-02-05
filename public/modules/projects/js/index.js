@@ -29,7 +29,7 @@ $(() => {
                                             <div class="card-body">
                                                 <h5 class="card-title">${project.name}</h5>
                                                 <p class="card-text sm">Criado em ${project.created_at}</p>
-                                                <a href="/projects/${project.id}" class="stretched-link"></a>
+                                                <a href="/projects/${project.id}${project.affiliated ? '/' + project.affiliate_id : ''}" class="stretched-link"></a>
                                             </div>
                                         </div>
                                     </div>`;

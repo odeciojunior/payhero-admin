@@ -20,7 +20,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/projects/js/index.js?v=2')}}"></script>
+        <script src="{{asset('modules/projects/js/index.js?v=3')}}"></script>
     @endpush
 
 @endsection
