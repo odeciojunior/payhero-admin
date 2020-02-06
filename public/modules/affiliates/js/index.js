@@ -1,5 +1,6 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
+    let countCompanies;
     getProjectData();
     getCompanyData();
 
@@ -68,8 +69,9 @@ $(document).ready(function () {
             error: (response) => {
             },
             success: (response) => {
+                countCompanies = response.data.length;
                 for (let company of response.data) {
-                    $('#companies').append(`<option value='${company.id}' ${(company.company_document_status == 'pending' ? 'disabled' : '')}>
+                    $('#companies').append(`<option value='${company.id}'>
                                                 ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
                                             </option>`);
                 }
@@ -78,7 +80,11 @@ $(document).ready(function () {
 
     }
     $(document).on('click', '#btn-affiliation', function () {
-        $('#modal_store_affiliate').modal('show');
+        if (countCompanies == 0) {
+            $("#modal-not-companies").modal('show');
+        } else {
+            $('#modal_store_affiliate').modal('show');
+        }
     });
 
     $(document).on('click', '#btn-store-affiliation', function () {

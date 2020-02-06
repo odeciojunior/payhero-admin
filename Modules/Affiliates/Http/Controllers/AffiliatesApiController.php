@@ -70,7 +70,7 @@ class AffiliatesApiController extends Controller
                                                                     'user_id'     => auth()->user()->account_owner_id,
                                                                     'project_id'  => $project->id,
                                                                     'company_id'  => $companyId,
-                                                                    'percentage'  => $project->percentage_affiliates,
+                                                                    'percentage'  => $project->percentage_affiliates ?? 20,
                                                                     'status_enum' => $affiliateModel->present()
                                                                                                     ->getStatus('approved'),
                                                                 ]);
@@ -322,7 +322,7 @@ class AffiliatesApiController extends Controller
                                                               'user_id'     => $affiliateRequest->user_id,
                                                               'project_id'  => $project->id,
                                                               'company_id'  => $affiliateRequest->company_id,
-                                                              'percentage'  => $project->percentage_affiliates,
+                                                              'percentage'  => $project->percentage_affiliates ?? 20,
                                                               'status_enum' => $status,
                                                           ]);
                     $affiliateRequest->update(['status' => $status]);
