@@ -70,9 +70,18 @@ class AffiliateLinksApiController extends Controller
 
             if (!empty($affiliateId) && !empty($link)) {
 
-                $affiliate = Affiliate::where('id', $affiliateId)
+                $affiliate = Affiliate::with(['project.domains' => function($query) {
+                                        $query->where('status', 3);
+                                      }])
+                                      ->where('id', $affiliateId)
                                       ->where('user_id', auth()->user()->account_owner_id)
                                       ->first();
+
+                $domain = $affiliate->project->domains->first()->name;
+                if(strpos($link, $domain) === false) {
+                    return response()->json(['message' => 'Link inválido'], 400);
+                }
+
                 if (!empty($affiliate->id)) {
                     $affiliateLink = AffiliateLink::create([
                                                                 'link'         => $link,
@@ -130,6 +139,16 @@ class AffiliateLinksApiController extends Controller
 
                 $linkAffiliate = AffiliateLink::with('affiliate')->find($linkId);
                 if($linkAffiliate->affiliate->user_id == auth()->user()->account_owner_id) {
+                    $project = Project::with(['domains' => function($query) {
+                                        $query->where('status', 3);
+                                    }])
+                                    ->find($linkAffiliate->affiliate->project_id);
+
+                    $domain = $project->domains->first()->name;
+                    if(strpos($link, $domain) === false) {
+                        return response()->json(['message' => 'Link inválido'], 400);
+                    }
+
                     $update = $linkAffiliate->update(['link' => $link]);
                     if ($update) {
                         return response()->json(['message' => 'Link atualizado com sucesso!'], 200);
