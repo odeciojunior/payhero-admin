@@ -32,15 +32,16 @@ Route::group(
              ->only('index', 'show', 'store', 'update', 'destroy', 'edit')->names('api.affiliates')
              ->middleware('role:account_owner|admin');
 
+        Route::apiResource('/affiliatelinks', 'AffiliateLinksApiController')
+             ->only('index', 'show', 'store', 'update', 'destroy', 'edit')->names('api.affiliatelinks')
+             ->middleware('role:account_owner|admin');
+
         //        Route::get('/affiliates/getaffiliates/{projectId}', 'AffiliatesApiController@getAffiliates')
         //             ->middleware('role:account_owner|admin');
         //
         //        Route::get('/affiliates/getaffiliaterequests/{projectId}', 'AffiliatesApiController@getAffiliateRequests')
         //             ->middleware('role:account_owner|admin');
 
-
-//        Route::get('/affiliates/affiliatelinks/{affiliateId}', 'AffiliatesApiController@getAffiliateLinks')
-//             ->middleware('role:account_owner|admin');
     }
 );
 //Route::middleware('auth:api')->get('/affiliates', function (Request $request) {

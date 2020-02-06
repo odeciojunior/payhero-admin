@@ -41,6 +41,7 @@ class AffiliateLinkResource extends Resource
             'plan_name'       => $this->plan->name ?? null,
             'description'     => $this->plan->description ?? null,
             'link'            => $this->link ?? null,
+            'clicks'          => $this->clicks_amount ?? null,
             'link_project'    => $this->affiliate->project->url_page ?? null,
             'project_name'    => $this->affiliate->project->name ?? null,
             'link_plan'       => $linkPlan,
