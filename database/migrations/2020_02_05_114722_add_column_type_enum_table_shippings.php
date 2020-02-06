@@ -15,13 +15,6 @@ class AddColumnTypeEnumTableShippings extends Migration
         Schema::table('shippings', function (Blueprint $table) {
             $table->integer('type_enum')->nullable();
         });
-
-        $shippingsModel = new Shipping();
-        foreach (Shipping::cursor() as $shipping) {
-            $shipping->update([
-                'type_enum' => $shippingsModel->present()->getTypeEnum($shipping->type)
-            ]);
-        }
     }
 
     /**
