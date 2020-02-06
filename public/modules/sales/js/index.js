@@ -328,10 +328,10 @@ $(document).ready(function () {
                         $('#comission').append(`<div>R$ ${response.real.comission}</div>`);
                         $('#total').append(`<div>R$ ${response.real.total}</div>`);
                     }
-                    if (!isEmpty(response.dolar)) {
+                    /*if (!isEmpty(response.dolar)) {
                         $('#comission').append(`<div>$ ${response.dolar.comission}</div>`);
                         $('#total').append(`<div>$ ${response.dolar.total}</div>`);
-                    }
+                    }*/
                 }
 
             }

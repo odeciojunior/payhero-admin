@@ -60,6 +60,11 @@ return [
                 "yes" => "Sim",
                 "no"  => "Não",
             ],
+            "type" => [
+                'static' => 'Estático',
+                'sedex' => 'SEDEX - Calculado automáticamente',
+                'pac' => 'PAC - Calculado automáticamente'
+            ]
         ],
         "plan"                     => [
             "status" => [
