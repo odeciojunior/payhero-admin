@@ -135,6 +135,8 @@ class PixelsApiController extends Controller
                         $validated['code'] = str_replace($order, '', $validated['code']);
                     }
 
+                    $validated['platform_enum'] = $pixelModel->present()->getPlatformEnum($validated['platform']);
+
                     $pixelUpdated = $pixel->update($validated);
                     if ($pixelUpdated) {
                         return response()->json('Sucesso', 200);
