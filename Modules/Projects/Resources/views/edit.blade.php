@@ -335,13 +335,33 @@
                         </p>
                         <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
                     </div>
-
                     <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                         <label for='percentage-affiliates'>Porcentagem</label>
                         <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='number' min="0" max="100">
                         <span id='input-pad-error' class='text-danger'></span>
                     </div>
-                    <div class='form-group col-md-6 col-sm-12 col-xs-12'>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for="status-url-affiliates">Habilitar link afiliação</label>
+                        <select class='status-url-affiliates form-control select-pad' name='status_url_affiliates'>
+                            <option value='0'>Não</option>
+                            <option value='1'>Sim</option>
+                        </select>
+                        {{-- <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Habilitar link afiliação
+                        </p> --}}
+                        <span id='error-status-url-affiliates' class='text-danger' style='display: none'></span>
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for='commission-type-enum'>Tipo comissão</label>
+                        <select class='commission-type-enum form-control select-pad' name='commission_type_enum' class='form-control select-pad'>
+                            <option value='1'>Primeiro clique</option>
+                            <option value='2'>Último clique</option>
+                        </select>
+                        {{-- <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> 
+                        </p> --}}
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12 col-xs-12 div-url-affiliate'>
                         <label for='url-affiliates'>Link afiliação</label>
                         <div id="affiliate-link-select" class="input-group">
                             <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
@@ -427,46 +447,6 @@
             </div>
         </div>
         {{-- FIM CONFIGURAÇÕES SHOPIFY --}}
-
-        <div class="row">
-            <div class="col-12">
-                <h4>Afiliados</h4>
-                <table class='table text-left table-striped unify' style='width:100%'>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Data</th>
-                            <th class="text-center">Porcentagem</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Ações</th>
-                            {{-- excluir, ativar/inativar --}}
-                        </tr>
-                    </thead>
-                    <tbody class="body-table-affiliates">
-                        {{-- js carrega --}}
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="col-12">
-                <h4>Solicitações de Afiliação</h4>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Data</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Ações</th>
-                            {{-- aceitar, recusar --}}
-                        </tr>
-                    </thead>
-                    <tbody class="body-table-affiliate-requests">
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
         <div class="mt-30">
             <div class="row">
@@ -564,49 +544,4 @@
         </div>
     </div>
 
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">
-        <div class="modal-dialog  modal-dialog-centered  modal-simple">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir_affiliate">
-                        <i class="material-icons md-16">close</i>
-                    </a>
-                </div>
-                <div id="modal_excluir_body_affiliate" class="modal-body text-center p-20">
-                    <div class="d-flex justify-content-center">
-                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
-                    </div>
-                    <h3 class="black"> Você tem certeza? </h3>
-                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
-                </div>
-                <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                    <button type="button" class="col-4 btn btn-danger btn-delete" data-dismiss="modal" style="width: 20%;">Excluir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="modal-edit-affiliate" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-simple">
-            <div class="modal-content p-10">
-                <div class="modal-header simple-border-bottom mb-10">
-                    <h4 class="modal-title" id="modal-title">Editar afiliado</h4>
-                    <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                        <i class="material-icons md-16">close</i>
-                    </a>
-                </div>
-                <div class="modal-body" style='min-height: 100px'>
-                    @include('affiliates::edit')
-                </div>
-                <div class="modal-footer">
-                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
-                        Fechar
-                    </a>
-                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-update" data-dismiss="modal">
-                        <i class="material-icons btn-fix"> save </i> Atualizar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

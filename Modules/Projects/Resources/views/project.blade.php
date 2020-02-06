@@ -16,7 +16,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container">
+        <div class="page-content container page-project">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -169,7 +169,7 @@
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v=1')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=1')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js?v=7')}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js?v=8')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
 

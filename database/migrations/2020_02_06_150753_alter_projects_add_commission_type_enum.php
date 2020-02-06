@@ -16,6 +16,7 @@ class AlterProjectsAddCommissionTypeEnum extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->tinyInteger('commission_type_enum')->after('terms_affiliates')->default(2);
             $table->tinyInteger('status_url_affiliates')->after('terms_affiliates')->default(0);
+            $table->boolean('automatic_affiliation')->default(0)->change();
         });
     }
 
@@ -29,6 +30,7 @@ class AlterProjectsAddCommissionTypeEnum extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->dropColumn('commission_type_enum');
             $table->dropColumn('status_url_affiliates');
+            $table->boolean('automatic_affiliation')->default(1)->change();
         });
     }
 }

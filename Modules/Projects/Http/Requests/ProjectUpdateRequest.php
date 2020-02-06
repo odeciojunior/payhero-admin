@@ -46,6 +46,8 @@ class ProjectUpdateRequest extends FormRequest
             "percentage_affiliates"      => 'nullable',
             "cookie_duration"            => 'nullable',
             "automatic_affiliation"      => 'nullable',
+            "status_url_affiliates"      => 'nullable|int|max:1',
+            "commission_type_enum"       => 'nullable|int|max:2',
 
         ];
     }
