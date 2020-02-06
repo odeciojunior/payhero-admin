@@ -137,7 +137,8 @@ class ShopifyApiController extends Controller
                                            'information'  => 'de 15 até 30 dias',
                                            'value'        => '0,00',
                                            'type'         => 'static',
-                                           'status'       => '1',
+                                            'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
+                                            'status'       => '1',
                                            'pre_selected' => '1',
                                        ]);
                 if (!empty($shippingModel)) {
