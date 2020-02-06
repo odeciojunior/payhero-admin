@@ -79,13 +79,4 @@ class ShippingPresenter extends Presenter
 
         return '';
     }
-
-    /**
-     * @param $type
-     * @return string
-     */
-    public function getTransalatedType(int $type)
-    {
-        return $type == 1 ? 'Estático' : ($this->type == 2 ? 'SEDEX - Calculado automáticamente' : 'PAC - Calculado automáticamente');
-    }
 }

@@ -3,8 +3,17 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\ProjectNotificationService;
 
+/**
+ * Class GenericCommand
+ * @package App\Console\Commands
+ */
 class GenericCommand extends Command
 {
     /**
@@ -12,7 +21,7 @@ class GenericCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:generic';
+    protected $signature = 'generic';
 
     /**
      * The console command description.
@@ -32,12 +41,34 @@ class GenericCommand extends Command
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @throws PresenterException
      */
     public function handle()
     {
+        $shippingsModel = new Shipping();
+        foreach (Shipping::cursor() as $shipping) {
+            if ($shipping->type == 'pac' || $shipping->type == 'sedex' || $shipping->type == 'static') {
+                $shipping->update([
+                    'type_enum' => $shippingsModel->present()->getTypeEnum($shipping->type)
+                ]);
+
+            } else {
+                if ($shipping->type == 'sexed') {
+                    $shipping->update([
+                        'type' => 'sedex',
+                        'type_enum' => $shippingsModel->present()->getTypeEnum('sedex')
+                    ]);
+                }else{
+                    printf('vazio');
+
+                }
+
+
+            }
+        }
+        dd('acabou');
+       /* print_r('Terminou Frete');
+        print_r('Começou checkout');
 
         $checkoutModel = new Checkout();
 
@@ -47,7 +78,7 @@ class GenericCommand extends Command
                 'status_enum' => $checkoutModel->present()->getStatusEnum($checkout->status)
             ]);
         }
+        print_r('Acabou checkout');*/
 
-        dd("Feito");
     }
 }
