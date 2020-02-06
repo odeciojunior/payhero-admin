@@ -274,9 +274,9 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliates = $affiliateModel->with('user')->whereIn('project_id', $userProjects)->get();
+            $affiliates = $affiliateModel->with('user')->whereIn('project_id', $userProjects);
 
-            return response()->json(['data' => AffiliateResource::collection($affiliates)], 200);
+            return AffiliateResource::collection($affiliates->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
@@ -290,9 +290,9 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliates = $affiliateRequest->with('user')->whereIn('project_id', $userProjects)->get();
+            $affiliatesRequest = $affiliateRequest->with('user')->whereIn('project_id', $userProjects);
 
-            return response()->json(['data' => AffiliateRequestResource::collection($affiliates)], 200);
+            return AffiliateRequestResource::collection($affiliatesRequest->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
