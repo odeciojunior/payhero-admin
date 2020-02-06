@@ -90,6 +90,8 @@ class Project extends Model
         'invoice_description',
         'percentage_affiliates',
         'terms_affiliates',
+        'status_url_affiliates',
+        'commission_type_enum',
         'url_page',
         'automatic_affiliation',
         'shopify_id',
