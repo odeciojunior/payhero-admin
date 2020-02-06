@@ -178,7 +178,7 @@ $(document).ready(function () {
             }, success: function (response) {
                 $(".body-table-affiliate-requests").html('');
                 if (response.data == '') {
-                    $(".body-table-affiliate-requests").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum solicitação de afiliação encontrada</td></tr>");
+                    $(".body-table-affiliate-requests").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhuma solicitação de afiliação encontrada</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
                         data = '';
