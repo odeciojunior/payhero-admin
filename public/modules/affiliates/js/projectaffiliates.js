@@ -6,10 +6,30 @@ $(document).ready(function () {
         4: "danger",
     };
     getAffiliates();
+    getAffiliatesRequest();
+
+    $('#tab-affiliates').on('click', function () {
+        getAffiliates();
+    });
+
+    $('#tab-affiliates-request').on('click', function () {
+        getAffiliatesRequest();
+    });
+
     function getAffiliates() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (link == null) {
+            link = '/api/affiliates/getaffiliates';
+        } else {
+            link = '/api/affiliates/getaffiliates' + link;
+        }
+
+        loadOnTable('.body-table-affiliates', '.table-affiliate');
+
         $.ajax({
             method: "GET",
-            url: "/api/affiliates/getaffiliates",
+            url: link,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -19,20 +39,26 @@ $(document).ready(function () {
 
             }, success: function (response) {
                 $(".body-table-affiliates").html('');
-                $.each(response.data, function (index, value) {
-                    data = '';
-                    data += '<tr>';
-                    data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
-                    data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + '</td>';
-                    data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
-                    data += "<td class='text-center'>";
-                    data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><i class='material-icons gradient'>edit</i></a>"
-                    data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>delete_outline</i></a>";
-                    data += "</td>";
-                    data += '</tr>';
-                    $(".body-table-affiliates").append(data);
-                });
+                if (response.data == '') {
+                    $(".body-table-affiliates").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum afiliado encontrado</td></tr>");
+                } else {
+                    $.each(response.data, function (index, value) {
+                        data = '';
+                        data += '<tr>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
+                        data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + '</td>';
+                        data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
+                        data += "<td class='text-center'>";
+                        data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><i class='material-icons gradient'>edit</i></a>"
+                        data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>delete_outline</i></a>";
+                        data += "</td>";
+                        data += '</tr>';
+                        $(".body-table-affiliates").append(data);
+                    });
+                }
+                $('.table-affiliate').addClass('table-striped');
+                pagination(response, 'affiliates', getAffiliates);
 
                 $('.delete-affiliate').on('click', function (event) {
                     event.preventDefault();
@@ -127,10 +153,21 @@ $(document).ready(function () {
 
             }
         });
+    }
+    function getAffiliatesRequest() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (link == null) {
+            link = '/api/affiliates/getaffiliaterequests';
+        } else {
+            link = '/api/affiliates/getaffiliaterequests' + link;
+        }
+
+        loadOnTable('.body-table-affiliate-requests', '.table-affiliate-request');
 
         $.ajax({
             method: "GET",
-            url: "/api/affiliates/getaffiliaterequests",
+            url: link,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -140,25 +177,31 @@ $(document).ready(function () {
 
             }, success: function (response) {
                 $(".body-table-affiliate-requests").html('');
-                $.each(response.data, function (index, value) {
-                    data = '';
-                    data += '<tr>';
-                    data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
-                    data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
-                    data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
-                    data += "<td class='text-center'>";
-                    if (value.status != 3) {
-                        data += "<a title='Aprovar' class='text-white ml-2 badge badge-success pointer evaluate-affiliate' affiliate='" + value.id + "' status='3'>Aprovar</a>";
-                        if (value.status != 4) {
-                            data += "<a title='Recusar' class='text-white ml-2 badge badge-danger pointer evaluate-affiliate' affiliate='" + value.id + "' status='4'>Recusar</a>";
+                if (response.data == '') {
+                    $(".body-table-affiliate-requests").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum solicitação de afiliação encontrada</td></tr>");
+                } else {
+                    $.each(response.data, function (index, value) {
+                        data = '';
+                        data += '<tr>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
+                        data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
+                        data += "<td class='text-center'>";
+                        if (value.status != 3) {
+                            data += "<a title='Aprovar' class='text-white ml-2 badge badge-success pointer evaluate-affiliate' affiliate='" + value.id + "' status='3'>Aprovar</a>";
+                            if (value.status != 4) {
+                                data += "<a title='Recusar' class='text-white ml-2 badge badge-danger pointer evaluate-affiliate' affiliate='" + value.id + "' status='4'>Recusar</a>";
+                            }
                         }
-                    }
 
-                    data += "</td>";
-                    data += '</tr>';
-                    $(".body-table-affiliate-requests").append(data);
-                });
+                        data += "</td>";
+                        data += '</tr>';
+                        $(".body-table-affiliate-requests").append(data);
+                    });
+                }
+                $('.table-affiliate-request').addClass('table-striped');
+                pagination(response, 'affiliates-request', getAffiliatesRequest);
 
                 $(".evaluate-affiliate").on('click', function () {
                     let affiliate = $(this).attr('affiliate');
@@ -181,13 +224,12 @@ $(document).ready(function () {
                         success: function success(data) {
                             loadingOnScreenRemove();
                             alertCustom("success", "Solicitação de afiliação atualizada com sucesso");
-                            getAffiliates();
+                            getAffiliatesRequest();
                         }
                     });
                 });
 
             }
         });
-
     }
 });

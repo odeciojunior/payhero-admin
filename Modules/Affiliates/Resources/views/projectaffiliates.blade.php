@@ -34,7 +34,7 @@
                         <div id="tab_affiliates_panel" class="tab-pane active" role="tabpanel">
                             <div class="fixhalf"></div>
                             <div class="card shadow " style="min-height: 300px">
-                                <table class='table text-left table-striped unify' style='width:100%'>
+                                <table class='table text-left table-striped unify table-affiliate' style='width:100%'>
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
@@ -50,11 +50,14 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates" style="margin-top:10px;position:relative;float:right">
+                                {{-- js carrega... --}}
+                            </ul>
                         </div>
                         <div id="tab_affiliates_request_panel" class="tab-pane" role="tabpanel">
                             <div class="fixhalf"></div>
                             <div class="card shadow " style="min-height: 300px">
-                                <table class="table table-striped">
+                                <table class="table table-striped table-affiliate-request">
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
@@ -69,6 +72,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request" style="margin-top:10px;position:relative;float:right">
+                                {{-- js carrega... --}}
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -125,6 +131,6 @@
         {{-- END MODAL --}}
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/projectaffiliates.js') }}"></script>
+        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=1') }}"></script>
     @endpush
 @endsection
