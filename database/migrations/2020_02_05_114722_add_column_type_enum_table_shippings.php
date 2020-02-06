@@ -29,3 +29,5 @@ class AddColumnTypeEnumTableShippings extends Migration
         });
     }
 }
+
+
