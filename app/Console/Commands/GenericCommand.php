@@ -8,7 +8,11 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\ProjectNotificationService;
+use Illuminate\Support\Carbon;
+use Vinkla\Hashids\Facades\Hashids;
+
 
 /**
  * Class GenericCommand
@@ -21,7 +25,7 @@ class GenericCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generic';
+    protected $signature = 'generic:command';
 
     /**
      * The console command description.
@@ -45,29 +49,61 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        $shippingsModel = new Shipping();
-        foreach (Shipping::cursor() as $shipping) {
-            if ($shipping->type == 'pac' || $shipping->type == 'sedex' || $shipping->type == 'static') {
-                $shipping->update([
-                    'type_enum' => $shippingsModel->present()->getTypeEnum($shipping->type)
-                ]);
 
-            } else {
-                if ($shipping->type == 'sexed') {
-                    $shipping->update([
-                        'type' => 'sedex',
-                        'type_enum' => $shippingsModel->present()->getTypeEnum('sedex')
-                    ]);
-                }else{
-                    printf('vazio');
+        $transactionModel = new Transaction();
+        $transferModel    = new Transfer();
 
-                }
+        $transactions = $transactionModel->where([
+            ['release_date', '>=', Carbon::now()->subDays('5')->format('Y-m-d')],
+            ['status', 'transfered']
+        ])
+        ->whereHas('transfers', null, '>', 1);
 
+        $totalValue = 0;
+        $realValue = 0;
+        $wrongValue = 0;
 
+        foreach($transactions->cursor() as $key => $transaction){
+
+            if($key % 300 == 0){
+                dump($key);
             }
+
+            $value = 0;
+            foreach($transaction->transfers as $key => $transfer){
+                $totalValue += $transfer->value;
+
+                if($key > 0){
+                    $value += $transfer->value;
+                }
+                else{
+                    $realValue += $transfer->value;
+                }
+            }
+
+            $wrongValue += $value;
+
+            $company = $transaction->company;
+
+            $company->update([
+                'balance' => intval($company->balance) - intval($value),
+            ]);
+
+            $transfer = $transferModel->create([
+                'user_id'        => $company->user_id,
+                'company_id'     => $company->id,
+                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                'value'          => $value,
+                'type'           => 'out',
+                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+            ]);
         }
-        dd('acabou');
 
-
+        dd(
+            number_format(intval($totalValue) / 100, 2, ',', '.'),
+            number_format(intval($realValue) / 100, 2, ',', '.'),
+            number_format(intval($wrongValue) / 100, 2, ',', '.')
+           );
     }
+
 }
