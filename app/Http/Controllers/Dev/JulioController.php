@@ -51,13 +51,73 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-        // dd(env('DB_USERNAME'));
-
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
         // $this->restartShopifyWebhooks();
 
         // $this->createProjectNotifications();
+
+        $this->checkTransactions();
+    }
+
+    public function checkTransactions(){
+
+        $transactionModel = new Transaction();
+        $transferModel    = new Transfer();
+
+        $transactions = $transactionModel->where([
+            ['release_date', '>=', Carbon::now()->subDays('5')->format('Y-m-d')],
+            ['status', 'transfered']
+        ])
+        ->whereHas('transfers', null, '>', 1);
+
+        $totalValue = 0;
+        $realValue = 0;
+        $wrongValue = 0;
+
+        foreach($transactions->cursor() as $key => $transaction){
+
+            if($key % 300 == 0){
+                dump($key);
+            }
+
+            $value = 0;
+            foreach($transaction->transfers as $key => $transfer){
+                $totalValue += $transfer->value;
+
+                if($key > 0){
+                    $value += $transfer->value;
+                }
+                else{
+                    $realValue += $transfer->value;
+                }
+            }
+
+            $wrongValue += $value;
+
+            $company = $transaction->company;
+
+//            $company->update([
+//                'balance' => intval($company->balance) - intval($value),
+//            ]);
+//
+//            $transfer = $transferModel->create([
+//                'user_id'        => $company->user_id,
+//                'company_id'     => $company->id,
+//                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+//                'value'          => $value,
+//                'type'           => 'out',
+//                'reason'         => 'Múltiplas transferencias da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+//            ]);
+
+        }
+
+        dump(
+            number_format(intval($totalValue) / 100, 2, ',', '.'),
+            number_format(intval($realValue) / 100, 2, ',', '.'),
+            number_format(intval($wrongValue) / 100, 2, ',', '.')
+           );
+
     }
 
     public function restartShopifyWebhooks(){
