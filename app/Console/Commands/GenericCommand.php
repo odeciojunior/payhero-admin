@@ -65,10 +65,6 @@ class GenericCommand extends Command
 
         foreach($transactions->cursor() as $key => $transaction){
 
-            if($key % 300 == 0){
-                dump($key);
-            }
-
             $value = 0;
             foreach($transaction->transfers as $key => $transfer){
                 $totalValue += $transfer->value;
