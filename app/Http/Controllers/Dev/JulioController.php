@@ -56,8 +56,6 @@ class JulioController extends Controller
         // $this->restartShopifyWebhooks();
 
         // $this->createProjectNotifications();
-
-        $this->checkTransactions();
     }
 
     public function checkTransactions(){
@@ -97,22 +95,22 @@ class JulioController extends Controller
 
             $company = $transaction->company;
 
-            $company->update([
-                'balance' => intval($company->balance) - intval($value),
-            ]);
-
-            $transfer = $transferModel->create([
-                'user_id'        => $company->user_id,
-                'company_id'     => $company->id,
-                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                'value'          => $value,
-                'type'           => 'out',
-                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
-            ]);
+//            $company->update([
+//                'balance' => intval($company->balance) - intval($value),
+//            ]);
+//
+//            $transfer = $transferModel->create([
+//                'user_id'        => $company->user_id,
+//                'company_id'     => $company->id,
+//                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+//                'value'          => $value,
+//                'type'           => 'out',
+//                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+//            ]);
 
         }
 
-        dump(
+        dd(
             number_format(intval($totalValue) / 100, 2, ',', '.'),
             number_format(intval($realValue) / 100, 2, ',', '.'),
             number_format(intval($wrongValue) / 100, 2, ',', '.')
