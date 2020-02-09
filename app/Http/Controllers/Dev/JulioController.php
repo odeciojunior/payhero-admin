@@ -97,18 +97,18 @@ class JulioController extends Controller
 
             $company = $transaction->company;
 
-//            $company->update([
-//                'balance' => intval($company->balance) - intval($value),
-//            ]);
-//
-//            $transfer = $transferModel->create([
-//                'user_id'        => $company->user_id,
-//                'company_id'     => $company->id,
-//                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-//                'value'          => $value,
-//                'type'           => 'out',
-//                'reason'         => 'Múltiplas transferencias da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
-//            ]);
+            $company->update([
+                'balance' => intval($company->balance) - intval($value),
+            ]);
+
+            $transfer = $transferModel->create([
+                'user_id'        => $company->user_id,
+                'company_id'     => $company->id,
+                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                'value'          => $value,
+                'type'           => 'out',
+                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+            ]);
 
         }
 
