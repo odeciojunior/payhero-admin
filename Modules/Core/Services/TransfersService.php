@@ -46,8 +46,9 @@ class TransfersService
                                                    ]);
 
                 $transaction->update([
-                                         'status' => 'transfered',
-                                     ]);
+                                         'status'      => 'transfered',
+                                         'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                                    ]);
 
                 $company->update([
                                      'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
