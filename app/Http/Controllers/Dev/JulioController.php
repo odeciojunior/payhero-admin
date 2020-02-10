@@ -51,6 +51,13 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
+        $sale = Sale::find(3000);
+
+        foreach($sale->transactions as $transaction){
+            dump($transaction);
+        }
+
+        dd("foii");
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
         // $this->restartShopifyWebhooks();
