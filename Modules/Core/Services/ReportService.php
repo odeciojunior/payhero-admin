@@ -881,7 +881,7 @@ class ReportService
                 ->select(\DB::raw('SUM(value) as value, DATE(release_date) as date'))
                 ->where('company_id', $companyId)
                 ->whereIn('type', collect([2,3,4,5]))
-                ->where('status', $transactionModel->present()->getStatusEnum('paid'))
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                 ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(20)->format('Y-m-d')])
                 ->groupBy('date')
                 ->get()->toArray();
