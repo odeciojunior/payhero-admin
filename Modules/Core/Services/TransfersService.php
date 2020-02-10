@@ -60,7 +60,7 @@ class TransfersService
             }
         }
 
-        event(new ReleasedBalanceEvent(collect($transfers)));
+        //event(new ReleasedBalanceEvent(collect($transfers)));
 
         Log::info('transferencias criadas ' . print_r($transfers, true));
     }
