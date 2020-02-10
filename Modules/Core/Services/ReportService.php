@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
