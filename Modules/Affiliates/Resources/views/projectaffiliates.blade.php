@@ -38,6 +38,8 @@
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
+                                            <th>Email</th>
+                                            <th>Projeto</th>
                                             <th>Data</th>
                                             <th class="text-center">Porcentagem</th>
                                             <th class="text-center">Status</th>
@@ -62,6 +64,7 @@
                                         <tr>
                                             <th>Nome</th>
                                             <th>Email</th>
+                                            <th>Projeto</th>
                                             <th>Data</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Opções</th>
@@ -131,6 +134,6 @@
         {{-- END MODAL --}}
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=1') }}"></script>
+        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=2') }}"></script>
     @endpush
 @endsection

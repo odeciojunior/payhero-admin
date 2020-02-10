@@ -89,11 +89,17 @@
                         <div id="convertax-value" class='col-lg-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-6'>
-                            <h4 class='table-title'>Comissão: </h4>
+                        <div class='col-lg-6 div-producer-comission'>
+                            {{--                            <h4 class='table-title'>Comissão: </h4>--}}
                         </div>
-                        <div class='col-lg-6 text-right'>
-                            <h4 id="comission-value" class='table-title'></h4>
+                        <div class='col-lg-6 text-right div-producer-comission-value'>
+                            {{--                            <h4 id="comission-value" class='table-title'></h4>--}}
+                        </div>
+                        <div class='col-lg-6 div-affiliate-comission' style='display:none;'>
+                            <h4 class='table-title'>Comissão do afiliado: </h4>
+                        </div>
+                        <div class='col-lg-6 text-right div-affiliate-comission-value' style='display:none;'>
+                            {{--                            <h4 id="affiliate-comission-value" class='table-title'></h4>--}}
                         </div>
                     </div>
                 </div>
@@ -131,15 +137,19 @@
                             <label for="client-telephone" class="table-title gray mb-0">Telefone:</label>&nbsp;
                             <input id="client-telephone" name="client-telephone" class="detail-input mr-2 table-title gray fake-label" readonly>
                             <a class="pointer btn-edit-client"><i class="material-icons font-size-18">edit</i></a>
-                            <a class="pointer btn-save-client" style="display:none;"><i class="material-icons font-size-18">save</i></a>
-                            <a class="pointer btn-close-client ml-2" style="display:none;"><i class="material-icons font-size-18">close</i></a>
+                            <a class="pointer btn-save-client" style="display:none;">
+                                <i class="material-icons font-size-18">save</i></a>
+                            <a class="pointer btn-close-client ml-2" style="display:none;">
+                                <i class="material-icons font-size-18">close</i></a>
                         </div>
                         <div class="d-flex align-items-center">
                             <label for="client-email" class="table-title gray mb-0">E-mail:</label>&nbsp;
                             <input id="client-email" type="email" name="client-email" class="detail-input mr-2 table-title gray fake-label" readonly>
                             <a class="pointer btn-edit-client"><i class="material-icons font-size-18">edit</i></a>
-                            <a class="pointer btn-save-client" style="display:none;"><i class="material-icons font-size-18">save</i></a>
-                            <a class="pointer btn-close-client ml-2" style="display:none;"><i class="material-icons font-size-18">close</i></a>
+                            <a class="pointer btn-save-client" style="display:none;">
+                                <i class="material-icons font-size-18">save</i></a>
+                            <a class="pointer btn-close-client ml-2" style="display:none;">
+                                <i class="material-icons font-size-18">close</i></a>
                         </div>
                         <span id="client-document" class="table-title gray"></span>
                         <div class="mt-15 mb-5">
@@ -166,15 +176,15 @@
                             <h4> Rastreio </h4>
                             <table class='table table-striped mb-10'>
                                 <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Rastreio</th>
-                                    <th>Status</th>
-                                    {{-- <th>Ações</th> --}}
-                                </tr>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Rastreio</th>
+                                        <th>Status</th>
+                                        {{-- <th>Ações</th> --}}
+                                    </tr>
                                 </thead>
                                 <tbody id='data-tracking-products'>
-                                {{-- js carregado--}}
+                                    {{-- js carregado--}}
                                 </tbody>
                             </table>
                         </div>
@@ -231,16 +241,16 @@
                             <h4> Integração Notazz </h4>
                             <table class='table table-striped mt-15'>
                                 <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Status</th>
-                                    <th>Code</th>
-                                    <th>Message</th>
-                                    <th>Ações</th>
-                                </tr>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Code</th>
+                                        <th>Message</th>
+                                        <th>Ações</th>
+                                    </tr>
                                 </thead>
                                 <tbody id='data-notazz-invoices'>
-                                {{-- js carregado--}}
+                                    {{-- js carregado--}}
                                 </tbody>
                             </table>
                             <div id='div_notazz_schedule'>
@@ -255,5 +265,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=1') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=2') }}"></script>
 @endpush

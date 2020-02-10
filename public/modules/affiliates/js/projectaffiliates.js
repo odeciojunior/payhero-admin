@@ -46,6 +46,8 @@ $(document).ready(function () {
                         data = '';
                         data += '<tr>';
                         data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.project_name + '</td>';
                         data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + '</td>';
                         data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
@@ -185,6 +187,7 @@ $(document).ready(function () {
                         data += '<tr>';
                         data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
                         data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
+                        data += '<td class="" style="vertical-align: middle;">' + value.project_name + '</td>';
                         data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
                         data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center'>";

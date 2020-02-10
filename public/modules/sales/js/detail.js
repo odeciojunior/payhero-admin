@@ -225,7 +225,31 @@ $(() => {
             $('#convertax-label, #convertax-value').show();
         }
 
+        if (sale.user_sale_type == 'affiliate') {
+            $('.div-affiliate-comission-value').html("<h4 id='affiliate-comission-value' class='table-title'></h4>");
+            $('.div-producer-comission-value').html("<span id='comission-value' class='text-muted ft-12'></span>");
+            $('.div-producer-comission').html("<span class='text-muted ft-12'>Comissão: </span>");
+            $('.div-affiliate-comission').html("<h4 class='table-title'>Comissão do afiliado: </h4>");
+        } else {
+            $('.div-affiliate-comission-value').html("<span id='affiliate-comission-value' class='text-muted ft-12'></span>");
+            $('.div-producer-comission-value').html("<h4 id='comission-value' class='table-title'></h4>");
+            $('.div-producer-comission').html("<h4 class='table-title'>Comissão: </h4>");
+            $('.div-affiliate-comission').html("<span class='text-muted ft-12'>Comissão do afiliado: </span>");
+        }
+
         $('#comission-value').text(sale.comission ? sale.comission : '');
+
+        //comissão do afiliado
+        if (sale.affiliate_comission != '') {
+            $('#affiliate-comission-value').text(sale.affiliate_comission);
+            $('.div-affiliate-comission').show();
+            $('.div-affiliate-comission-value').show();
+
+        } else {
+            $('#affiliate-comission-value').text('');
+            $('.div-affiliate-comission').hide();
+            $('.div-affiliate-comission-value').hide();
+        }
 
         //Detalhes do shopify
         if (sale.has_shopify_integration) {
@@ -243,7 +267,6 @@ $(() => {
                 $(".btn_new_order_shopify").unbind('click');
                 $(".btn_new_order_shopify").on('click', function () {
                     var sale = $(this).attr('sale');
-                    console.log(sale)
                     $('#modal-new-order-shopify').modal('show');
                     $('#modal_detalhes').modal('hide');
                     $(".btn-confirm-new-order-shopify").unbind('click');

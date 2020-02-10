@@ -274,7 +274,7 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliates = $affiliateModel->with('user')->whereIn('project_id', $userProjects);
+            $affiliates = $affiliateModel->with('user', 'company', 'project')->whereIn('project_id', $userProjects);
 
             return AffiliateResource::collection($affiliates->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {
@@ -290,7 +290,7 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliatesRequest = $affiliateRequest->with('user')->whereIn('project_id', $userProjects);
+            $affiliatesRequest = $affiliateRequest->with('user', 'company', 'project')->whereIn('project_id', $userProjects);
 
             return AffiliateRequestResource::collection($affiliatesRequest->orderBy('id', 'DESC')->paginate(5));
         } catch (Exception $e) {

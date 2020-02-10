@@ -165,10 +165,13 @@ class SaleService
         $sale = $saleModel->with([
                                      'transactions',
                                      'notazzInvoices',
+                                     'affiliate',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
         //add details to sale
-        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+        //        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+        $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
+
         $this->getDetails($sale, $userCompanies);
 
         //invoices
@@ -188,7 +191,6 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-
         $userTransaction = $sale->transactions->whereIn('company_id', $userCompanies)->first();
 
         //calcule total
@@ -218,9 +220,18 @@ class SaleService
             $convertaxValue = '0,00';
         }
 
+        //valor do produtor
         $value = $userTransaction->value;
 
         $comission = ($userTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
+
+        //valor do afiliado
+        $affiliateComission = '';
+        if (!empty($sale->affiliate)) {
+            $affiliateTransaction = $sale->transactions->where('company_id', $sale->affiliate->company_id)->first();
+            $affiliateValue       = $affiliateTransaction->value;
+            $affiliateComission   = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue, ',', strlen($affiliateValue) - 2, 0);
+        }
 
         $taxa = 0;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
@@ -253,16 +264,17 @@ class SaleService
 
         //add details to sale
         $sale->details = (object) [
-            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
-            'percentage_rate'  => $userTransaction->percentage_rate ?? 0,
-            'total'            => number_format(intval($total) / 100, 2, ',', '.'),
-            'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),
-            'discount'         => number_format(intval($discount) / 100, 2, ',', '.'),
-            'comission'        => $comission,
-            'convertax_value'  => $convertaxValue,
-            'taxa'             => number_format($taxa / 100, 2, ',', '.'),
-            'taxaReal'         => $taxaReal,
-            'release_date'     => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
+            'transaction_rate'    => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
+            'percentage_rate'     => $userTransaction->percentage_rate ?? 0,
+            'total'               => number_format(intval($total) / 100, 2, ',', '.'),
+            'subTotal'            => number_format(intval($subTotal) / 100, 2, ',', '.'),
+            'discount'            => number_format(intval($discount) / 100, 2, ',', '.'),
+            'comission'           => $comission,
+            'convertax_value'     => $convertaxValue,
+            'taxa'                => number_format($taxa / 100, 2, ',', '.'),
+            'taxaReal'            => $taxaReal,
+            'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
+            'affiliate_comission' => $affiliateComission,
         ];
     }
 
