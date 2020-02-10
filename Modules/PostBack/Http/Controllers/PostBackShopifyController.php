@@ -56,8 +56,11 @@ class PostBackShopifyController extends Controller
 
                 $shopifyOrder = $requestData['id'];
 
-                $sale = $salesModel->with(['productsPlansSale.tracking', 'plansSales.plan.productsPlans', 'delivery'])
-                    ->where('shopify_order', $shopifyOrder)
+                $sale = $salesModel->with([
+                    'productsPlansSale.tracking',
+                    'plansSales.plan.productsPlans.product.productsPlanSales.tracking',
+                    'delivery'
+                ])->where('shopify_order', $shopifyOrder)
                     ->where('project_id', $project->id)
                     ->first();
 
