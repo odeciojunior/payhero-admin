@@ -44,6 +44,7 @@ class Pixel extends Model
         'name',
         'code',
         'platform',
+        'platform_enum',
         'status',
         'checkout',
         'purchase_boleto',

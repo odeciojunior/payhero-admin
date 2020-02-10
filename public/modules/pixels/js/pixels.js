@@ -127,6 +127,7 @@ $(function () {
     function renderEditPixel(pixel) {
         $('#modal-edit-pixel .pixel-id').val(pixel.id_code);
         $('#modal-edit-pixel .pixel-description').val(pixel.name);
+
         if (pixel.platform == 'facebook') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 0).change();
         }
@@ -136,6 +137,13 @@ $(function () {
         if (pixel.platform == 'google_analytics') {
             $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 2).change();
         }
+        if (pixel.platform == 'taboola') {
+            $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 3).change();
+        }
+        if (pixel.platform == 'outbrain') {
+            $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 4).change();
+        }
+
         if (pixel.status == '1') { //Ativo
             $('#modal-edit-pixel .pixel-status').prop("selectedIndex", 0).change();
         } else {//Desativado
