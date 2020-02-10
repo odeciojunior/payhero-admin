@@ -99,7 +99,7 @@ class DashboardApiController extends Controller
                     $todayBalance = 0;
 
                     $pendingTransactions = $transactionModel->where('company_id', $company->id)
-                        ->where('status', 'paid')
+                        ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                         ->whereDate('release_date', '>', Carbon::today()
                             ->toDateString())
                         ->get();
@@ -160,16 +160,16 @@ class DashboardApiController extends Controller
                     }
 
                     return [
-                        'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                        'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                        'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                        'today_balance' => number_format(intval($todayBalance) / 100, 2, ',', '.'),
-                        'currency' => $company->country == 'usa' ? '$' : 'R$',
+                        'available_balance'      => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                        'total_balance'          => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                        'pending_balance'        => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                        'today_balance'          => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                        'currency'               => 'R$',
                         'total_sales_approved'   => $totalSalesApproved ?? 0,
                         'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
-                        'news' => $news,
-                        'releases' => $releases,
+                        'news'                   => $news,
+                        'releases'               => $releases,
                     ];
                 } else {
                     return [];

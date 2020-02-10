@@ -116,8 +116,8 @@ class ProjectsApiController extends Controller
                                                      'visibility'                 => 'private',
                                                      'automatic_affiliation'      => 0,
                                                      'boleto'                     => 1,
-                                                     'status'                     => $projectModel->present()
-                                                                                                  ->getStatus('active'),
+                                                     'status'                     => $projectModel->present()->getStatus('active'),
+                                                     'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
                 if (!empty($project)) {
                     $shipping = $shippingModel->create([
@@ -126,6 +126,7 @@ class ProjectsApiController extends Controller
                                                            'information'  => 'de 15 até 30 dias',
                                                            'value'        => '0,00',
                                                            'type'         => 'static',
+                                                           'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
                                                            'status'       => '1',
                                                            'pre_selected' => '1',
                                                        ]);

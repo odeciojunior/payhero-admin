@@ -54,19 +54,13 @@ class FinancesApiController extends Controller
                 if (!empty($company)) {
 
                     $pendingTransactions     = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status', 'paid')
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                                                 ->whereDate('release_date', '>', now()->startOfDay())
                                                                 ->select(DB::raw('sum( value ) as pending_balance'))
                                                                 ->first();
                     $pendingBalance          += $pendingTransactions->pending_balance;
-                    $anticipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status', 'anticipated')
-                                                                ->whereDate('release_date', '>', now()->startOfDay())
-                                                                ->select(DB::raw('sum( value - antecipable_value ) as pending_balance'))
-                                                                ->first();
-                    $pendingBalance          += $anticipableTransactions->pending_balance;
                     $antecipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status', 'paid')
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                                                 ->whereDate('release_date', '>', Carbon::today())
                                                                 ->whereDate('antecipation_date', '<=', Carbon::today())
                                                                 ->select(DB::raw('sum( antecipable_value ) as antecipable_balance'))

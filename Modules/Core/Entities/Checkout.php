@@ -16,6 +16,7 @@ use App\Traits\LogsActivity;
  * @property int $project_id
  * @property string $created_at
  * @property string $status
+ * @property int $status_enum
  * @property string $operational_system
  * @property string $browser
  * @property string $id_log_session
@@ -63,6 +64,7 @@ class Checkout extends Model
     protected $fillable = [
         'project_id',
         'status',
+        'status_enum',
         'operational_system',
         'browser',
         'id_log_session',

@@ -13,6 +13,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Services\ProjectNotificationService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
@@ -128,15 +129,18 @@ class ShopifyApiController extends Controller
                                                      'boleto'                     => '1',
                                                      'installments_amount'        => '12',
                                                      'installments_interest_free' => '1',
+                                                     'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
             if (!empty($project)) {
+
                 $shippingModel->create([
                                            'project_id'   => $project->id,
                                            'name'         => 'Frete gratis',
                                            'information'  => 'de 15 até 30 dias',
                                            'value'        => '0,00',
                                            'type'         => 'static',
-                                           'status'       => '1',
+                                            'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
+                                            'status'       => '1',
                                            'pre_selected' => '1',
                                        ]);
                 if (!empty($shippingModel)) {
@@ -165,6 +169,8 @@ class ShopifyApiController extends Controller
                                                       'status_flag'          => $userProjectModel->present()->getStatusFlag('active'),
                                                   ]);
                         if (!empty($userProjectModel)) {
+                            $projectNotificationService = new ProjectNotificationService();
+                            $projectNotificationService->createProjectNotificationDefault($project->id);
 
                             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
                         } else {

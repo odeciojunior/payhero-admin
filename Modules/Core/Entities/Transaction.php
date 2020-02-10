@@ -62,6 +62,7 @@ class Transaction extends Model
         'value',
         'type',
         'status',
+        'status_enum',
         'release_date',
         'antecipation_date',
         'antecipable_value',

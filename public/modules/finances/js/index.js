@@ -512,7 +512,7 @@ $(document).ready(function () {
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
-                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';
+                            data +=    '<td style="vertical-align: middle; color:green;">' + value.value + ' </td>';
                         } else {
                             data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
                         }

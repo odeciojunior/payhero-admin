@@ -37,7 +37,7 @@ class TransactionResource extends Resource
                                                                                    ->getStatus($sale->status)),
             'start_date'       => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
             'end_date'         => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
-            'total_paid'       => ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
+            'total_paid'       => 'R$ ' . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
             'brand'            => $flag,
             'email_status'     => $sale->checkout ? $sale->checkout->present()->getEmailSentAmount() : 'Não enviado',
             'sms_status'       => $sale->checkout ? $sale->checkout->present()->getSmsSentAmount() : 'Não enviado',
