@@ -100,6 +100,7 @@ class PostBackPagarmeController extends Controller
 
                         $transaction->update([
                             'status' => 'paid',
+                            'status_enum' => $transactionModel->present()->getStatusEnum('paid'),
                             'release_date' => Carbon::now()
                                 ->addDays($user['boleto_release_money_days'])
                                 ->format('Y-m-d'),
@@ -109,6 +110,7 @@ class PostBackPagarmeController extends Controller
                         ]);
                     } else {
                         $transaction->update([
+                            'status_enum' => $transactionModel->present()->getStatusEnum('paid'),
                             'status' => 'paid',
                         ]);
                     }
@@ -200,6 +202,7 @@ class PostBackPagarmeController extends Controller
 
                         $transaction->update([
                             'status' => 'chargedback',
+                            'status_enum' => $transactionModel->present()->getStatusEnum('chargedback'),
                         ]);
                     }
 
@@ -258,6 +261,7 @@ class PostBackPagarmeController extends Controller
                             }
 
                             $transaction->update([
+                                'status_enum' => $transactionModel->present()->getStatusEnum('refunded'),
                                 'status' => 'refunded',
                             ]);
                         }
@@ -267,7 +271,10 @@ class PostBackPagarmeController extends Controller
                         ]);
 
                         foreach ($transactions as $transaction) {
-                            $transaction->update(['status' => $requestData['transaction']['status']]);
+                            $transaction->update([
+                                'status' => $requestData['transaction']['status'],
+                                'status_enum' => $transactionModel->present()->getStatusEnum($requestData['transaction']['status']),
+                            ]);
                         }
                     }
                 }

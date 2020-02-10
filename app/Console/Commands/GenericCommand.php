@@ -8,7 +8,11 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\ProjectNotificationService;
+use Illuminate\Support\Carbon;
+use Vinkla\Hashids\Facades\Hashids;
+
 
 /**
  * Class GenericCommand
@@ -21,7 +25,7 @@ class GenericCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generic';
+    protected $signature = 'generic:command';
 
     /**
      * The console command description.
@@ -45,29 +49,7 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        $shippingsModel = new Shipping();
-        foreach (Shipping::cursor() as $shipping) {
-            if ($shipping->type == 'pac' || $shipping->type == 'sedex' || $shipping->type == 'static') {
-                $shipping->update([
-                    'type_enum' => $shippingsModel->present()->getTypeEnum($shipping->type)
-                ]);
-
-            } else {
-                if ($shipping->type == 'sexed') {
-                    $shipping->update([
-                        'type' => 'sedex',
-                        'type_enum' => $shippingsModel->present()->getTypeEnum('sedex')
-                    ]);
-                }else{
-                    printf('vazio');
-
-                }
-
-
-            }
-        }
-        dd('acabou');
-
-
+        //
     }
+
 }
