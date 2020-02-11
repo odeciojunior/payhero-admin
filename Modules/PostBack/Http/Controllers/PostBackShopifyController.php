@@ -31,6 +31,13 @@ class PostBackShopifyController extends Controller
      */
     public function postBackTracking(Request $request)
     {
+
+        if($request->project_id == 'YKV603krmgw8ymD'){
+            return response()->json([
+                'message' => 'Rejeitado',
+            ], 200);
+        }
+
         $postBackLogModel = new PostbackLog();
         $salesModel = new Sale();
         $projectModel = new Project();
