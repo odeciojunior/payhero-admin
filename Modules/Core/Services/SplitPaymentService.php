@@ -45,7 +45,10 @@ class SplitPaymentService
             //Parceiro Projeto
             $partners = $userProjectModel->where([
                                                      ['project_id', $project->id],
-                                                     ['type_enum', '!=', $userProjectModel->present()->getTypeEnum('producer')],
+                                                     [
+                                                         'type_enum', '!=', $userProjectModel->present()
+                                                                                             ->getTypeEnum('producer'),
+                                                     ],
                                                  ])->get();
 
             if (count($partners) > 0) {
@@ -81,6 +84,8 @@ class SplitPaymentService
                                                                                         ->addDays($partnerGodfather->user->{$antecipationDaysKey})
                                                                                         ->format('Y-m-d'),
                                                       'status'                 => 'pending',
+                                                      'status_enum'            => $transactionModel->present()
+                                                                                                   ->getStatusEnum('pending'),
                                                       'antecipable_value'      => $antecipableValue,
                                                       'antecipable_tax'        => $partnerGodfather->user->antecipation_tax,
                                                       'currency'               => '',
@@ -105,6 +110,8 @@ class SplitPaymentService
                                                                                     ->addDays($partner->user->{$antecipationDaysKey})
                                                                                     ->format('Y-m-d'),
                                                   'status'                 => 'pending',
+                                                  'status_enum'            => $transactionModel->present()
+                                                                                               ->getStatusEnum('pending'),
                                                   'antecipable_value'      => intval($partnerValue / 100 * $partner->user->percentage_antecipable),
                                                   'antecipable_tax'        => $partner->user->antecipation_tax,
                                                   'currency'               => '',
@@ -137,6 +144,8 @@ class SplitPaymentService
                                               'value'                  => $valueProducerGodfather,
                                               'release_date'           => null,
                                               'status'                 => 'pending',
+                                              'status_enum'            => $transactionModel->present()
+                                                                                           ->getStatusEnum('pending'),
                                               'antecipable_value'      => 0,
                                               'antecipable_tax'        => 0,
                                               'currency'               => '',
@@ -176,6 +185,8 @@ class SplitPaymentService
                                               'release_date'           => null,
                                               'antecipation_date'      => null,
                                               'status'                 => 'pending',
+                                              'status_enum'            => $transactionModel->present()
+                                                                                           ->getStatusEnum('pending'),
                                               'antecipable_value'      => intval($convertaxIntegration->value / 100 * $convertaxUser->percentage_antecipable),
                                               'antecipable_tax'        => $convertaxUser->antecipation_tax,
                                               'currency'               => ($convertaxCompany->country == 'usa') ? 'dolar' : 'real',
@@ -190,7 +201,10 @@ class SplitPaymentService
             }
 
             $userProject = $userProjectModel->where([
-                                                        ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
+                                                        [
+                                                            'type_enum', $userProjectModel->present()
+                                                                                          ->getTypeEnum('producer'),
+                                                        ],
                                                         ['project_id', $project->id],
                                                     ])->first();
             //Restante do producer
@@ -211,6 +225,8 @@ class SplitPaymentService
                                           'release_date'           => null,
                                           'antecipation_date'      => null,
                                           'status'                 => 'pending',
+                                          'status_enum'            => $transactionModel->present()
+                                                                                       ->getStatusEnum('pending'),
                                           'antecipable_value'      => intval($producerValue / 100 * $user->percentage_antecipable),
                                           'antecipable_tax'        => $user->antecipation_tax,
                                           'currency'               => ($producerCompany->country == 'usa') ? 'dolar' : 'real',
@@ -224,6 +240,8 @@ class SplitPaymentService
                                           'sale_id'  => $sale->id,
                                           'value'    => $cloudfoxValue,
                                           'status'   => 'pending',
+                                          'status_enum'            => $transactionModel->present()
+                                                                                       ->getStatusEnum('pending'),
                                           'currency' => ($producerCompany->country == 'usa') ? 'dolar' : 'real',
                                           'type'     => $transactionModel->present()->getType('cloudfox'),
                                       ]);

@@ -4,8 +4,16 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
+/**
+ * Class WithdrawalPresenter
+ * @package Modules\Core\Presenters
+ */
 class WithdrawalPresenter extends Presenter
 {
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getStatus($status)
     {
 
@@ -46,6 +54,22 @@ class WithdrawalPresenter extends Presenter
                     return 7;
             }
 
+            return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateReleaseFormatted($releaseDate)
+    {
+        if (!empty($releaseDate)) {
+            if (strstr($releaseDate->format('d/m/Y H:i:s'), '00:00:00')) {
+                return $releaseDate->format('d/m/Y');
+            } else {
+                return $releaseDate->format('d/m/Y H:i:s');
+            }
+        } else {
             return '';
         }
     }

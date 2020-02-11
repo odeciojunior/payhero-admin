@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Laracasts\Presenter\Exceptions\PresenterException;
 use SendGrid;
 use Exception;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\FoxUtils;
+use SendGrid\Mail\Mail;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\SmsService;
 use Modules\Core\Entities\Transaction;
@@ -37,7 +39,8 @@ class CheckoutService
      * @param string|null $dateStart
      * @param string|null $dateEnd
      * @param string|null $client
-     * @return AnonymousResourceCollection
+     * @return mixed
+     * @throws PresenterException
      */
     public function getAbandonedCart(
         string $projectId = null,
@@ -198,7 +201,7 @@ class CheckoutService
                 $domainName = $domain->name ?? 'cloudfox.net';
                 $regenerateBilletUrl = 'https://checkout.' . $domainName . '/api/payment/regeneratebillet';
             } else {
-                $regenerateBilletUrl = 'http://checkout.devcloudfox.net/api/payment/regeneratebillet';
+                $regenerateBilletUrl = 'http://dev.checkout.com.br/api/payment/regeneratebillet';
             }
 
             $data = [
@@ -331,7 +334,7 @@ class CheckoutService
             foreach ($emails as $email) {
 
                 try {
-                    $sendgridMail = new \SendGrid\Mail\Mail();
+                    $sendgridMail = new Mail();
                     $sendgridMail->setFrom('noreply@cloudfox.net', 'cloudfox');
                     $sendgridMail->addTo($email, 'cloudfox');
                     $sendgridMail->setTemplateId('d-f44033c3eaec46d2a6226f796313d9fc');
