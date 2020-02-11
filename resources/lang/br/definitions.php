@@ -59,6 +59,11 @@ return [
                 "yes" => "Sim",
                 "no"  => "Não",
             ],
+            "type" => [
+                'static' => 'Estático',
+                'sedex' => 'SEDEX - Calculado automáticamente',
+                'pac' => 'PAC - Calculado automáticamente'
+            ]
         ],
         "plan"            => [
             "status" => [
@@ -115,6 +120,11 @@ return [
             "france"   => "França",
             "italy"    => "Itália",
             "chile"    => "Chile",
+        ],
+        "currency" => [
+            "real"  => "R$",
+            "dolar" => "$",
+            "euro"  => "€",
         ],
     ],
 

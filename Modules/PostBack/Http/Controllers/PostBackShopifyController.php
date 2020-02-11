@@ -31,6 +31,13 @@ class PostBackShopifyController extends Controller
      */
     public function postBackTracking(Request $request)
     {
+
+        if($request->project_id == 'YKV603krmgw8ymD'){
+            return response()->json([
+                'message' => 'Rejeitado',
+            ], 200);
+        }
+
         $postBackLogModel = new PostbackLog();
         $salesModel = new Sale();
         $projectModel = new Project();
@@ -56,8 +63,11 @@ class PostBackShopifyController extends Controller
 
                 $shopifyOrder = $requestData['id'];
 
-                $sale = $salesModel->with(['productsPlansSale.tracking', 'plansSales.plan.productsPlans', 'delivery'])
-                    ->where('shopify_order', $shopifyOrder)
+                $sale = $salesModel->with([
+                    'productsPlansSale.tracking',
+                    'plansSales.plan.productsPlans.product.productsPlanSales.tracking',
+                    'delivery'
+                ])->where('shopify_order', $shopifyOrder)
                     ->where('project_id', $project->id)
                     ->first();
 
@@ -182,7 +192,7 @@ class PostBackShopifyController extends Controller
 
             $userProject = $userProjectModel->where([
                 ['project_id', $project->id],
-                ['type', 'producer'],
+                ['type_enum', $userProjectModel->present()->getTypeEnum('producer')],
             ])->first();
 
             try {

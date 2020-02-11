@@ -2,10 +2,11 @@
 
 namespace Modules\Withdrawals\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\BankService;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\CompanyService;
+use Illuminate\Http\Resources\Json\Resource;
 
 class WithdrawalResource extends Resource
 {
@@ -20,6 +21,16 @@ class WithdrawalResource extends Resource
 
         $accountName = $bankService->getBankName($this->bank);
 
+        if(!empty($this->value_transferred)){
+
+            $companyService = new CompanyService();
+            $currency = $companyService->getCurrency($this->company);
+            $valueTransferred = Lang::get('definitions.enum.currency.' . $currency) . ' ' . number_format(intval($this->value_transferred) / 100, 2, ',', '.');
+        }
+        else{
+            $valueTransferred = '';
+        }
+
         return [
             'id'                  => Hashids::encode($this->id),
             'account_information' => $accountName . ' - Agência: ' . $this->agency . ' - Digito: ' . $this->agency_digit . ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit,
@@ -30,7 +41,8 @@ class WithdrawalResource extends Resource
             'status_translated'   => Lang::get('definitions.enum.withdrawals.status.' . $this->present()
                                                                                              ->getStatus($this->status)),
             'tax_value'           => $this->value,
-            'value_transferred'   => number_format(intval($this->value_transferred) / 100, 2, ',', '.'),
+            'value_transferred'   => $valueTransferred,
         ];
     }
 }
+

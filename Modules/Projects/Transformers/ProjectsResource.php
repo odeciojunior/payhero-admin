@@ -50,6 +50,8 @@ class ProjectsResource extends Resource
             'photo'                      => $this->photo,
             'name'                       => $this->name,
             'description'                => $this->description,
+            'discount_recovery_status'   => $this->discount_recovery_status,
+            'discount_recovery_value'    => $this->discount_recovery_value,
             'created_at'                 => (new Carbon($this->created_at))->format('d/m/Y'),
             'shopify_id'                 => $this->shopify_id,
             'logo'                       => $this->logo,

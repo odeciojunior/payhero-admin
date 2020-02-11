@@ -3,21 +3,22 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Modules\Core\Entities\ProjectNotification;
-use Modules\Core\Events\BilletExpiredEvent;
 use function foo\func;
 use Illuminate\Support\Carbon;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\User;
-use Modules\Core\Events\BoletoPaidEvent;
-use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Events\SendEmailEvent;
+use Modules\Core\Events\BoletoPaidEvent;
+use Modules\Core\Events\BilletExpiredEvent;
+use Modules\Core\Entities\ProjectNotification;
 
 /**
  * Class BoletoService
@@ -472,7 +473,9 @@ class BoletoService
     {
         try {
 
-            $saleModel = new Sale();
+            $saleModel        = new Sale();
+            $transactionModel = new Transaction();
+
             $boletos   = $saleModel->with(['customer'])
                                    ->where([
                                                ['payment_method', '=', '2'],
@@ -484,7 +487,17 @@ class BoletoService
                                                ],
                                            ]);
             foreach ($boletos->cursor() as $boleto) {
-                $boleto->update(['status' => 5]);
+                $boleto->update([
+                    'status'         => 5,
+                    'gateway_status' => 'canceled'
+                ]);
+
+                foreach($boleto->transactions as $transaction){
+                    $transaction->update([
+                        'status'      => 'canceled',
+                        'status_enum' => $transactionModel->present()->getStatusEnum('canceled')
+                    ]);
+                }
 
                 event(new BilletExpiredEvent($boleto));
             }

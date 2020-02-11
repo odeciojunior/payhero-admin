@@ -265,7 +265,7 @@ $(document).ready(function () {
                                                             <h4>Transferência para o exterior:</h4>
                                                             <div><b>Moeda:</b> ${response.data.currency}</div>
                                                             <div><b>Cotação:</b> R$ ${response.data.quotation}</div>
-                                                            <div><b>Taxa de IOF:</b> $ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
+                                                            <div><b>Taxa de IOF:</b> R$ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
                                                             <div><b>Custo:</b> R$ ${response.data.cost.value} (${response.data.cost.tax}%)</div>
                                                             <div><b>Total:</b> R$ ${response.data.abroad_transfer.value} (${response.data.abroad_transfer.tax}%)</div>
                                                          </div>`;
@@ -512,7 +512,7 @@ $(document).ready(function () {
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
-                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';
+                            data +=    '<td style="vertical-align: middle; color:green;">' + value.value + ' </td>';
                         } else {
                             data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
                         }
@@ -577,4 +577,68 @@ $(document).ready(function () {
             $('table').addClass('table-striped');
         }
     }
+
+    function getFilters(urlParams = false) {
+        let data = {
+            'company': $("#extract_company_select").val(),
+            'reason': $("#reason").val(),
+            'transaction': $("#transaction").val().replace('#', ''),
+            'type': $("#type").val(),
+            'value': $("#transaction-value").val(),
+            'date_range': $("#date_range").val(),
+            'date_type': $("#date_type").val(),
+        };
+
+        if (urlParams) {
+            let params = "";
+            for (let param in data) {
+                params += '&' + param + '=' + data[param];
+            }
+            return encodeURI(params);
+        } else {
+            return data;
+        }
+    }
+
+
+    function extractExport(fileFormat) {
+
+        let data = getFilters();
+        data['format'] = fileFormat;
+        $.ajax({
+            method: "POST",
+            url: '/api/finances/export',
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#export-email').text(response.email);
+                $('#alert-export').show()
+                    .shake();
+            }
+        });
+    }
+
+    $("#bt_get_csv").on("click", function () {
+        extractExport('csv');
+    });
+
+    $("#bt_get_xls").on("click", function () {
+        extractExport('xls');
+    });
+
+    $("#nav-profile-tab").on("click", function () {
+        $('#export-excel').show();
+    });
+
+    $("#nav-home-tab").on("click", function () {
+        $('#export-excel').hide();
+    });
+
+
 });

@@ -111,6 +111,8 @@ class Project extends Model
         'support_phone',
         'support_phone_verified',
         'cost_currency_type',
+        'discount_recovery_status',
+        'discount_recovery_value',
         'checkout_type',
         'created_at',
         'updated_at',

@@ -19,6 +19,7 @@ class NotazzUpdateRequest extends FormRequest
             'select_pending_days_edit' => 'required|numeric|digits_between:1,70',
             'remove_tax_edit'          => 'nullable|boolean',
             'emit_zero_edit'           => 'nullable|boolean',
+            'active_flag'              => 'nullable|boolean',
         ];
     }
 
@@ -28,6 +29,7 @@ class NotazzUpdateRequest extends FormRequest
         $this->merge([
                          'remove_tax_edit' => $this->request->get('remove_tax_edit', false) == '1' ? 1 : 0,
                          'emit_zero_edit'  => $this->request->get('emit_zero_edit', false) == '1' ? 1 : 0,
+                         'active_flag'     => $this->request->get('active_flag', false) == '1' ? 1 : 0,
                      ]);
 
         return parent::getValidatorInstance();

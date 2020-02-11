@@ -48,21 +48,21 @@ class PostBackPagarmeController extends Controller
         $postBackLogModel = new PostbackLog();
 
         $postBackLogModel->create([
-                                      'origin'      => 2,
-                                      'data'        => json_encode($requestData),
-                                      'description' => 'pagarme',
-                                  ]);
+            'origin' => 2,
+            'data' => json_encode($requestData),
+            'description' => 'pagarme',
+        ]);
 
         if (isset($requestData['event']) && $requestData['event'] == 'transaction_status_changed') {
 
-            $saleModel        = new Sale();
+            $saleModel = new Sale();
             $transactionModel = new Transaction();
-            $companyModel     = new Company();
-            $userModel        = new User();
-            $planModel        = new Plan();
-            $planSaleModel    = new PlanSale();
+            $companyModel = new Company();
+            $userModel = new User();
+            $planModel = new Plan();
+            $planSaleModel = new PlanSale();
 
-            $sale               = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
+            $sale = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
             $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
             if (!empty($shopifyIntegration)) {
                 $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
@@ -85,10 +85,10 @@ class PostBackPagarmeController extends Controller
                 date_default_timezone_set('America/Sao_Paulo');
 
                 $sale->update([
-                                  'end_date'       => Carbon::now(),
-                                  'gateway_status' => 'paid',
-                                  'status'         => '1',
-                              ]);
+                    'end_date' => Carbon::now(),
+                    'gateway_status' => 'paid',
+                    'status' => '1',
+                ]);
 
                 foreach ($transactions as $transaction) {
 
@@ -99,18 +99,20 @@ class PostBackPagarmeController extends Controller
                         $user = $userModel->find($company['user_id']);
 
                         $transaction->update([
-                                                 'status'            => 'paid',
-                                                 'release_date'      => Carbon::now()
-                                                                              ->addDays($user['boleto_release_money_days'])
-                                                                              ->format('Y-m-d'),
-                                                 'antecipation_date' => Carbon::now()
-                                                                              ->addDays($user['boleto_antecipation_money_days'])
-                                                                              ->format('Y-m-d'),
-                                             ]);
+                            'status' => 'paid',
+                            'status_enum' => $transactionModel->present()->getStatusEnum('paid'),
+                            'release_date' => Carbon::now()
+                                ->addDays($user['boleto_release_money_days'])
+                                ->format('Y-m-d'),
+                            'antecipation_date' => Carbon::now()
+                                ->addDays($user['boleto_antecipation_money_days'])
+                                ->format('Y-m-d'),
+                        ]);
                     } else {
                         $transaction->update([
-                                                 'status' => 'paid',
-                                             ]);
+                            'status_enum' => $transactionModel->present()->getStatusEnum('paid'),
+                            'status' => 'paid',
+                        ]);
                     }
                 }
 
@@ -127,11 +129,11 @@ class PostBackPagarmeController extends Controller
                     try {
                         $credential = new PublicAppCredential($shopifyIntegration['token']);
 
-                        $client            = new Client($credential, $shopifyIntegration['url_store'], [
+                        $client = new Client($credential, $shopifyIntegration['url_store'], [
                             'metaCacheDir' => './tmp',
                         ]);
                         $transactionUpdate = [
-                            "kind"   => "sale",
+                            "kind" => "sale",
                             "source" => "external",
                         ];
                         if ($sale->payment_method == 2) {
@@ -146,118 +148,135 @@ class PostBackPagarmeController extends Controller
 
                 $sale->load('client');
                 event(new BilletPaidEvent($plan, $sale, $sale->customer));
-            } else if ($requestData['transaction']['status'] == 'chargedback') {
-                $sale->update([
-                                  'gateway_status' => 'chargedback',
-                                  'status'         => '4',
-                              ]);
-                if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
-
-                    $shopifyService->refundOrder($sale);
-                    $shopifyService->saveSaleShopifyRequest();
-                }
-                $transferModel = new Transfer();
-
-                foreach ($transactions as $transaction) {
-
-                    if ($transaction->status == 'transfered') {
-                        $company = $companyModel->find($transaction->company_id);
-
-                        $transferModel->create([
-                                                   'transaction_id' => $transaction->id,
-                                                   'user_id'        => $company->user_id,
-                                                   'value'          => $transaction->value,
-                                                   'type'           => 'out',
-                                                   'reason'         => 'chargedback',
-                                                   'company_id'     => $company->id,
-                                               ]);
-
-                        $company->update([
-                                             'balance' => $company->balance -= $transaction->value,
-                                         ]);
-                    } else if ($transaction->status == 'anticipated') {
-
-                        $company = $companyModel->find($transaction->company_id);
-
-                        $transferModel->create([
-                                                   'transaction_id' => $transaction->id,
-                                                   'user_id'        => $company->user_id,
-                                                   'value'          => $transaction->antecipable_value,
-                                                   'type'           => 'out',
-                                                   'reason'         => 'chargedback',
-                                                   'company_id'     => $company->id,
-                                               ]);
-
-                        $company->update([
-                                             'balance' => $company->balance -= $transaction->value,
-                                         ]);
-                    }
-
-                    $transaction->update([
-                                             'status' => 'chargedback',
-                                         ]);
-                }
-
-                EmailService::userSaleChargeback($sale);
-                PusherNotificationService::userSaleChargeback($sale);
-            } else if ($requestData['transaction']['status'] == 'refunded') {
-                $sale->update([
-                                  'gateway_status' => 'refunded',
-                                  'status'         => '7',
-                              ]);
-                if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
-
-                    $shopifyService->refundOrder($sale);
-                    $shopifyService->saveSaleShopifyRequest();
-                }
-                $transferModel = new Transfer();
-
-                foreach ($transactions as $transaction) {
-
-                    if ($transaction->status == 'transfered') {
-                        $company = $companyModel->find($transaction->company_id);
-
-                        $transferModel->create([
-                                                   'transaction_id' => $transaction->id,
-                                                   'user_id'        => $company->user_id,
-                                                   'value'          => $transaction->value,
-                                                   'type'           => 'out',
-                                                   'reason'         => 'refunded',
-                                                   'company_id'     => $company->id,
-                                               ]);
-
-                        $company->update([
-                                             'balance' => $company->balance -= $transaction->value,
-                                         ]);
-                    } else if ($transaction->status == 'anticipated') {
-
-                        $company = $companyModel->find($transaction->company_id);
-
-                        $transferModel->create([
-                                                   'transaction_id' => $transaction->id,
-                                                   'user_id'        => $company->user_id,
-                                                   'value'          => $transaction->antecipable_value,
-                                                   'type'           => 'out',
-                                                   'reason'         => 'chargedback',
-                                                   'company_id'     => $company->id,
-                                               ]);
-
-                        $company->update([
-                                             'balance' => $company->balance -= $transaction->value,
-                                         ]);
-                    }
-
-                    $transaction->update([
-                                             'status' => 'refunded',
-                                         ]);
-                }
             } else {
-                $sale->update([
-                                  'gateway_status' => $requestData['transaction']['status'],
-                              ]);
+                if ($requestData['transaction']['status'] == 'chargedback') {
+                    $sale->update([
+                        'gateway_status' => 'chargedback',
+                        'status' => '4',
+                    ]);
+                    if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
 
-                foreach ($transactions as $transaction) {
-                    $transaction->update(['status' => $requestData['transaction']['status']]);
+                        $shopifyService->refundOrder($sale);
+                        $shopifyService->saveSaleShopifyRequest();
+                    }
+                    $transferModel = new Transfer();
+
+                    foreach ($transactions as $transaction) {
+
+                        if ($transaction->status == 'transfered') {
+                            $company = $companyModel->find($transaction->company_id);
+
+                            $transferModel->create([
+                                'transaction_id' => $transaction->id,
+                                'user_id' => $company->user_id,
+                                'value' => $transaction->value,
+                                'type' => 'out',
+                                'type_enum' => $transferModel->present()->getTypeEnum('out'),
+                                'reason' => 'chargedback',
+                                'company_id' => $company->id,
+                            ]);
+
+                            $company->update([
+                                'balance' => $company->balance -= $transaction->value,
+                            ]);
+                        } else {
+                            if ($transaction->status == 'anticipated') {
+
+                                $company = $companyModel->find($transaction->company_id);
+
+                                $transferModel->create([
+                                    'transaction_id' => $transaction->id,
+                                    'user_id' => $company->user_id,
+                                    'value' => $transaction->antecipable_value,
+                                    'type' => 'out',
+                                    'type_enum' => $transferModel->present()->getTypeEnum('out'),
+                                    'reason' => 'chargedback',
+                                    'company_id' => $company->id,
+                                ]);
+
+                                $company->update([
+                                    'balance' => $company->balance -= $transaction->value,
+                                ]);
+                            }
+                        }
+
+                        $transaction->update([
+                            'status' => 'chargedback',
+                            'status_enum' => $transactionModel->present()->getStatusEnum('chargedback'),
+                        ]);
+                    }
+
+                    EmailService::userSaleChargeback($sale);
+                    PusherNotificationService::userSaleChargeback($sale);
+                } else {
+                    if ($requestData['transaction']['status'] == 'refunded') {
+                        $sale->update([
+                            'gateway_status' => 'refunded',
+                            'status' => '7',
+                        ]);
+                        if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
+
+                            $shopifyService->refundOrder($sale);
+                            $shopifyService->saveSaleShopifyRequest();
+                        }
+                        $transferModel = new Transfer();
+
+                        foreach ($transactions as $transaction) {
+
+                            if ($transaction->status == 'transfered') {
+                                $company = $companyModel->find($transaction->company_id);
+
+                                $transferModel->create([
+                                    'transaction_id' => $transaction->id,
+                                    'user_id' => $company->user_id,
+                                    'value' => $transaction->value,
+                                    'type' => 'out',
+                                    'type_enum' => $transferModel->present()->getTypeEnum('out'),
+                                    'reason' => 'refunded',
+                                    'company_id' => $company->id,
+                                ]);
+
+                                $company->update([
+                                    'balance' => $company->balance -= $transaction->value,
+                                ]);
+                            } else {
+                                if ($transaction->status == 'anticipated') {
+
+                                    $company = $companyModel->find($transaction->company_id);
+
+                                    $transferModel->create([
+                                        'transaction_id' => $transaction->id,
+                                        'user_id' => $company->user_id,
+                                        'value' => $transaction->antecipable_value,
+                                        'type' => 'out',
+                                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
+                                        'reason' => 'chargedback',
+                                        'company_id' => $company->id,
+                                    ]);
+
+                                    $company->update([
+                                        'balance' => $company->balance -= $transaction->value,
+                                    ]);
+                                }
+                            }
+
+                            $transaction->update([
+                                'status_enum' => $transactionModel->present()->getStatusEnum('refunded'),
+                                'status' => 'refunded',
+                            ]);
+                        }
+                    } else {
+                        $sale->update([
+                            'gateway_status' => $requestData['transaction']['status'],
+                        ]);
+
+                        foreach ($transactions as $transaction) {
+                            $transaction->update([
+                                'status' => $requestData['transaction']['status'],
+                                'status_enum' => $transactionModel->present()->getStatusEnum($requestData['transaction']['status']),
+                            ]);
+                        }
+                    }
                 }
             }
         }

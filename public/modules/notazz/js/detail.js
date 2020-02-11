@@ -247,7 +247,7 @@ $(() => {
                                     Sucesso
                                 </td>
                                 <td>
-                                    
+
                                 </td>
                             </tr>`;
                 $('#data-notazz-invoices').append(data);
@@ -296,7 +296,7 @@ $(() => {
                                     ${invoice.return_message}
                                 </td>
                                 <td>
-                                    
+
                                 </td>
                             </tr>`;
                 $('#data-notazz-invoices').append(data);
@@ -320,7 +320,7 @@ $(() => {
                                     ${postback_message}
                                 </td>
                                 <td>
-                                    
+
                                 </td>
                             </tr>`;
                 $('#data-notazz-invoices').append(data);

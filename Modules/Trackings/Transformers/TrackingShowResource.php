@@ -10,7 +10,7 @@ class TrackingShowResource extends Resource
 {
     public function toArray($request)
     {
-        $linkBase = $this->product->project->domains->first()->name ?? '';
+        $linkBase = $this->productPlanSale->plan->project->domains->first()->name ?? '';
 
         return [
             'id' => Hashids::encode($this->id),

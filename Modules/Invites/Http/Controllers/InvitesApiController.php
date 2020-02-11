@@ -37,7 +37,7 @@ class InvitesApiController extends Controller
 
             $invites = $invitationModel->where('invite', auth()->user()->account_owner_id)->with('company');
 
-            activity()->on($invitationModel)->tap(function(Activity $activity) {
+            activity()->on($invitationModel)->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela convites');
 
@@ -63,20 +63,20 @@ class InvitesApiController extends Controller
         try {
             if (!empty($request->input('email')) && !empty($request->input('company'))) {
                 $invitationModel = new Invitation();
-                $userModel       = new User();
-                $inviteSaved     = null;
+                $userModel = new User();
+                $inviteSaved = null;
 
                 $invitesSent = $invitationModel->where('invite', auth()->user()->account_owner_id)->count();
 
                 if ($invitesSent >= auth()->user()->invites_amount) {
                     return response()->json([
-                                                'message' => 'Envio de convites indisponível, limite atingido!',
-                                            ], 400);
+                        'message' => 'Envio de convites indisponível, limite atingido!',
+                    ], 400);
                 }
 
                 $company = current(Hashids::decode($request->input('company')));
 
-                if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
+                if (FoxUtils::validateEmail($request->input('email')) && !empty($company) && auth()->user()->account_owner_id == 19) {
                     try {
                         $companyService = new CompanyService();
                         if (!$companyService->isDocumentValidated($company)) {
@@ -87,12 +87,12 @@ class InvitesApiController extends Controller
                             );
                         }
 
-                        $invite          = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
-                                                           ->first();
-                        $user            = $userModel->where('email', $request->input('email'))->first();
-                        $sendgridService = new EmailService();
+                        $invite = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
+                            ->first();
+                        $user = $userModel->where('email', $request->input('email'))->first();
+                        $emailService = new EmailService();
                         if (empty($user)) {
-                            $emailInvited = $sendgridService->sendInvite($request->input('email'), Hashids::encode($company));
+                            $emailInvited = $emailService->sendInvite($request->input('email'), Hashids::encode($company));
                         } else {
                             return response()->json(
                                 [
@@ -117,11 +117,11 @@ class InvitesApiController extends Controller
                             } else {
                                 if (!$invite) {
                                     $data = [
-                                        'invite'        => auth()->user()->account_owner_id,
-                                        'status'        => $invitationModel->present()->getStatus('pending'),
-                                        'company_id'    => current(Hashids::decode($request->input('company'))),
+                                        'invite' => auth()->user()->account_owner_id,
+                                        'status' => $invitationModel->present()->getStatus('pending'),
+                                        'company_id' => current(Hashids::decode($request->input('company'))),
                                         'email_invited' => $request->input('email'),
-                                        'parameter'     => $request->input('company'),
+                                        'parameter' => $request->input('company'),
                                     ];
                                     $invitationModel->create($data);
                                 }
@@ -186,9 +186,9 @@ class InvitesApiController extends Controller
     {
         try {
             $invitationModel = new Invitation();
-            $invitationId    = current(Hashids::decode($id));
+            $invitationId = current(Hashids::decode($id));
             if ($invitationId) {
-                $invitation        = $invitationModel->find($invitationId);
+                $invitation = $invitationModel->find($invitationId);
                 $invitationDeleted = $invitation->delete();
                 if ($invitationDeleted) {
                     return response()->json(
@@ -222,8 +222,8 @@ class InvitesApiController extends Controller
     public function getInvitationData()
     {
         try {
-            $invitationModel         = new Invitation();
-            $transactionModel        = new Transaction();
+            $invitationModel = new Invitation();
+            $transactionModel = new Transaction();
             $invitationAcceptedCount = $invitationModel->where(
                 [
                     [
@@ -236,25 +236,25 @@ class InvitesApiController extends Controller
                     ],
                 ]
             )->count();
-            $invitationSentCount     = $invitationModel->where('invite', auth()->user()->account_owner_id)
-                                                       ->count();
-            $userIdInvites           = $invitationModel->where('invite', auth()->user()->account_owner_id)
-                                                       ->pluck('id')
-                                                       ->toArray();
-            $commissionPaid          = $transactionModel->whereIn('invitation_id', $userIdInvites)
-                                                        ->where('status', 'transfered')->sum('value');
-            $commissionPending       = $transactionModel->whereIn('invitation_id', $userIdInvites)
-                                                        ->where('status', 'paid')->sum('value');
+            $invitationSentCount = $invitationModel->where('invite', auth()->user()->account_owner_id)
+                ->count();
+            $userIdInvites = $invitationModel->where('invite', auth()->user()->account_owner_id)
+                ->pluck('id')
+                ->toArray();
+            $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('transfered'))->sum('value');
+            $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)
+                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))->sum('value');
 
             return response()->json(
                 [
                     'message' => 'Dados dos convites retornados com sucesso',
-                    'data'    => [
+                    'data' => [
                         'invitation_accepted_count' => $invitationAcceptedCount,
-                        'invitation_sent_count'     => $invitationSentCount,
-                        'commission_paid'           => 'R$ ' . number_format(intval($commissionPaid) / 100, 2, ',', '.'),
-                        'commission_pending'        => 'R$ ' . number_format(intval($commissionPending) / 100, 2, ',', '.'),
-                        'invitations_available'     => auth()->user()->invites_amount - $invitationSentCount,
+                        'invitation_sent_count' => $invitationSentCount,
+                        'commission_paid' => 'R$ ' . number_format(intval($commissionPaid) / 100, 2, ',', '.'),
+                        'commission_pending' => 'R$ ' . number_format(intval($commissionPending) / 100, 2, ',', '.'),
+                        'invitations_available' => auth()->user()->invites_amount - $invitationSentCount,
                     ],
                 ], 200
             );
@@ -278,14 +278,14 @@ class InvitesApiController extends Controller
     {
         try {
             $invitationModel = new Invitation();
-            $userModel       = new User();
-            $data            = $request->all();
-            $invitationId    = current(Hashids::decode($data['invitationId']));
+            $userModel = new User();
+            $data = $request->all();
+            $invitationId = current(Hashids::decode($data['invitationId']));
             if ($invitationId) {
                 $sendgridService = new EmailService();
-                $invitation      = $invitationModel->find($invitationId);
+                $invitation = $invitationModel->find($invitationId);
 
-                activity()->on($invitationModel)->tap(function(Activity $activity) {
+                activity()->on($invitationModel)->tap(function (Activity $activity) {
                     $activity->log_name = 'visualization';
                 })->log('Reenviou convite');
 
@@ -345,30 +345,30 @@ class InvitesApiController extends Controller
     public function verifyInviteRegistration($inviteId)
     {
         try {
-            $companyModel    = new Company();
+            $companyModel = new Company();
             $invitationModel = new Invitation();
 
-            activity()->on($invitationModel)->tap(function(Activity $activity){
-                $activity->log_name   = 'visualization';
+            activity()->on($invitationModel)->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
             })->log('Verificou convite');
 
             if (strlen($inviteId) > 15) {
                 $inviteId = substr($inviteId, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
-                $invite   = $invitationModel->where('id', $inviteId)->first();
+                $invite = $invitationModel->where('id', $inviteId)->first();
                 if (isset($invite->id) && $invite->status == 2) {
                     return response()->json(
                         [
                             'message' => 'Convite válido!',
-                            'data'    => 'email',
-                            'email'   => $invite->email_invited,
+                            'data' => 'email',
+                            'email' => $invite->email_invited,
                         ], 200
                     );
                 } else {
                     return response()->json(
                         [
                             'message' => 'Convite inválido!',
-                            'data'    => 'invalido',
+                            'data' => 'invalido',
                         ], 400
                     );
                 }
@@ -380,7 +380,7 @@ class InvitesApiController extends Controller
                     return response()->json(
                         [
                             'message' => 'Link convite inválido!',
-                            'data'    => 'invalido',
+                            'data' => 'invalido',
                         ], 400
                     );
                 } else {
@@ -390,14 +390,14 @@ class InvitesApiController extends Controller
                         return response()->json(
                             [
                                 'message' => 'Convite indisponivel, limite atingido!',
-                                'data'    => 'invalido',
+                                'data' => 'invalido',
                             ], 400
                         );
                     } else {
                         return response()->json(
                             [
                                 'message' => 'Convite valido!',
-                                'data'    => 'valido',
+                                'data' => 'valido',
                             ], 200
                         );
                     }

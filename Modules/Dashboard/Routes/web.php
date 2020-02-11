@@ -10,3 +10,4 @@ Route::group(
         Route::resource('/dashboard', 'DashboardController')->only('index');
     }
 );
+

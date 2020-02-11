@@ -176,72 +176,76 @@ $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').att
 
 function pagination(response, model, callback) {
 
-    $("#pagination-" + model).html("");
+    let paginationContainer = "#pagination-" + model;
 
-    var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
+    $(paginationContainer).html("");
 
-    if (response.meta.last_page === 1) {
+    let currentPage = response.meta.current_page;
+    let lastPage = response.meta.last_page;
+
+    if (lastPage === 1) {
         return false;
     }
 
-    $("#pagination-" + model).append(first_page);
+    let first_page = `<button class='btn nav-btn first_page'>1</button>`;
 
-    if (response.meta.current_page === 1) {
-        $('#pagination-' + model + ' #first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
+    $(paginationContainer).append(first_page);
+
+    if (currentPage === 1) {
+        $(paginationContainer + ' .first_page').attr('disabled', true).addClass('nav-btn').addClass('active');
     }
 
-    $('#pagination-' + model + ' #first_page').on("click", function () {
+    $(paginationContainer + ' .first_page').on("click", function () {
         callback('?page=1');
     });
 
-    for (x = 3; x > 0; x--) {
+    for (let x = 3; x > 0; x--) {
 
-        if (response.meta.current_page - x <= 1) {
+        if (currentPage - x <= 1) {
             continue;
         }
 
-        $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+        $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage - x)}'>${(currentPage - x)}</button>`);
 
-        $('#page_' + (response.meta.current_page - x)).on("click", function () {
+        $(paginationContainer + " .page_" + (currentPage - x)).on("click", function () {
             callback('?page=' + $(this).html());
         });
     }
 
-    if (response.meta.current_page !== 1 && response.meta.current_page !== response.meta.last_page) {
-        var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+    if (currentPage !== 1 && currentPage !== lastPage) {
+        var current_page = `<button class='btn nav-btn active current_page'>${currentPage}</button>`;
 
-        $("#pagination-" + model).append(current_page);
+        $(paginationContainer).append(current_page);
 
-        $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+        $(paginationContainer + " .current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
     }
-    for (x = 1; x < 4; x++) {
+    for (let x = 1; x < 4; x++) {
 
-        if (response.meta.current_page + x >= response.meta.last_page) {
+        if (currentPage + x >= lastPage) {
             continue;
         }
 
-        $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+        $(paginationContainer).append(`<button class='btn nav-btn page_${(currentPage + x)}'>${(currentPage + x)}</button>`);
 
-        $('#page_' + (response.meta.current_page + x)).on("click", function () {
+        $(paginationContainer + " .page_" + (currentPage + x)).on("click", function () {
             callback('?page=' + $(this).html());
         });
     }
 
-    if (response.meta.last_page !== 1) {
-        var last_page = "<button id='last_page' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+    if (lastPage !== 1) {
+        var last_page = `<button class='btn nav-btn last_page'>${lastPage}</button>`;
 
-        $("#pagination-" + model).append(last_page);
+        $(paginationContainer).append(last_page);
 
-        if (response.meta.current_page === response.meta.last_page) {
-            $('#pagination-' + model + ' #last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
+        if (currentPage === lastPage) {
+            $(paginationContainer + ' .last_page').attr('disabled', true).addClass('nav-btn').addClass('active');
         }
 
-        $('#pagination-' + model + ' #last_page').on("click", function () {
-            callback('?page=' + response.meta.last_page);
+        $(paginationContainer + ' .last_page').on("click", function () {
+            callback('?page=' + lastPage);
         });
     }
     $('table').addClass('table-striped')
-
 }
 
 function copyToClipboard(element) {

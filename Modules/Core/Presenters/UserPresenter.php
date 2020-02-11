@@ -14,6 +14,8 @@ class UserPresenter extends Presenter
         return number_format($this->transaction_rate, 2, ',', '.');
     }
 
+
+
     public function getStatus($status)
     {
 

@@ -135,47 +135,10 @@ class SalesApiController extends Controller
 
             $data = $request->all();
 
-            $transactions = $saleService->getAllSales($data);
+            $resume = $saleService->getResume($data);
 
-            if ($transactions->count()) {
-                $resume = $transactions->reduce(function ($carry, $item) use ($saleService) {
-                    //quantidade de vendas
-                    $carry['total_sales'] += 1;
-                    //cria um item no array pra cada moeda inclusa nas vendas
-                    $item->currency = $item->currency ?? 'real';
-                    $carry[$item->currency] = $carry[$item->currency] ?? ['comission' => 0, 'total' => 0];
-                    //comissao
-                    $carry[$item->currency]['comission'] += in_array($item->status, ['paid', 'transfered', 'anticipated']) ? (floatval($item->value) / 100) : 0;
-                    //calcula o total
-                    $total = $item->sale->sub_total;
-                    $total += $item->sale->shipment_value;
-                    $shopify_discount = floatval($item->sale->shopify_discount) / 100;
-                    if ($shopify_discount > 0) {
-                        $total -= $shopify_discount;
-                    }
-                    if ($item->sale->dolar_quotation != 0) {
-                        $iof = preg_replace('/[^0-9]/', '', $item->sale->iof);
-                        $iof = substr_replace($iof, '.', strlen($iof) - 2, 0);
-                        $total += floatval($iof);
-                    }
-                    $carry[$item->currency]['total'] += $total;
+            return response()->json($resume);
 
-                    return $carry;
-                }, ['total_sales' => 0]);
-
-                //formata os valores
-                foreach ($resume as &$item) {
-                    if (is_array($item)) {
-                        foreach ($item as &$value) {
-                            $value = number_format($value, 2, ',', '.');
-                        }
-                    }
-                }
-
-                return response()->json($resume);
-            } else {
-                return response()->json([]);
-            }
         } catch (Exception $e) {
             Log::warning('Erro ao exibir resumo das venda  SalesApiController - resume');
             report($e);
@@ -273,7 +236,7 @@ class SalesApiController extends Controller
             $planModel = new Plan();
 
             $plan = $planModel->find($requestData['plan_id']);
-            $sale = $saleModel->with(['client'])->find($requestData['sale_id']);
+            $sale = $saleModel->with(['customer'])->find($requestData['sale_id']);
 
             activity()->on($saleModel)->tap(function (Activity $activity) use ($requestData) {
                 $activity->log_name = 'visualization';

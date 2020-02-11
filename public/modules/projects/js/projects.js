@@ -252,7 +252,7 @@ $(() => {
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
-        
+
         CKEDITOR.instances.termsaffiliates.setData(project.terms_affiliates);
 
         if(project.automatic_affiliation == 1) {
@@ -336,6 +336,20 @@ $(() => {
             supportphoneVerified();
         } else {
             supportphoneNotVerified();
+        }
+
+        if (project.discount_recovery_status) {
+            $('#discount_recovery_status').prop('checked', true)
+            $('#discount_recovery_value').show('fast', 'linear')
+            $('#discount-recovery-alert').show('fast', 'linear')
+        } else {
+            $('#discount_recovery_status').prop('checked', false)
+        }
+
+        if (project.discount_recovery_value >= 10) {
+            $('#discount_recovery_value').val(project.discount_recovery_value)
+        } else {
+            $('#discount_recovery_value').val(10)
         }
 
         //select cartão de credito no checkout
@@ -848,6 +862,27 @@ $(() => {
             }
         });
     });
+
+    $('.discount-recovery').on("click", function () {
+        recoveryDiscountColor()
+    })
+
+    recoveryDiscountColor()
+
+    function recoveryDiscountColor() {
+        let chk = $('.discount-recovery').prop('checked');
+        if (chk) {
+            $('#discount_recovery_value').show('fast', 'linear')
+            $('#discount-recovery-alert').show('fast', 'linear')
+        } else {
+            $('#discount_recovery_value').hide('fast', 'linear')
+            $('#discount-recovery-alert').hide('fast', 'linear')
+        }
+    }
+    $('.discount-recovery').on("click", function () {
+        recoveryDiscountColor()
+    })
+
 
 });
 

@@ -328,6 +328,8 @@ class SendgridService
                     return false;
                 }
             }
+
+
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
             $email->addTo($toEmail, $toName);

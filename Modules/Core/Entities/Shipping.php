@@ -53,6 +53,7 @@ class Shipping extends Model
         'information',
         'value',
         'type',
+        'type_enum',
         'zip_code_origin',
         'status',
         'rule_value',

@@ -28,7 +28,10 @@ class UpdateCheckoutTableListener implements ShouldQueue
                                         ->leftjoin('logs', function($join) {
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.checkout_id = checkouts.id)"));
                                         })
-                                        ->whereIn('status', ['recovered', 'abandoned cart'])
+                                        ->whereIn('status_enum', [
+                                            $checkoutModel->present()->getStatusEnum('recovered'),
+                                            $checkoutModel->present()->getStatusEnum('abandoned cart')
+                                        ])
                                         ->whereNull('client_name')
                                         ->take(1000)->get();
 

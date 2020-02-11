@@ -45,7 +45,7 @@ class ShowcaseController extends Controller {
 
             $userProject = $userProjectModel->where([
                 ['project',$project['id']],
-                ['type','producer']
+                ['type', $userProjectModel->present()->getTypeEnum('producer')]
             ])->first();
 
             $user = $userModel->find($userProject['user']);
@@ -65,7 +65,7 @@ class ShowcaseController extends Controller {
 
         return view('showcase::index',[
             'projects' => $projects
-        ]); 
+        ]);
     }
 
 }

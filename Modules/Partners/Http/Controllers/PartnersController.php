@@ -33,7 +33,7 @@ class PartnersController extends Controller
                 $projectId = current(Hashids::decode($request->input('project')));
 
                 $partners = $userProjectModel->with('userId')->where('project_id', $projectId)
-                                             ->where('type', '!=', 'producer')->get();
+                    ->where('type_enum', '!=', $userProjectModel->present()->getTypeEnum('producer'))->get();
 
                 return PartnersResource::collection($partners);
             }
@@ -63,19 +63,19 @@ class PartnersController extends Controller
     public function store(PartnersStoreRequest $request)
     {
         try {
-            $userModel        = new User();
-            $companyModel     = new Company();
-            $invitationModel  = new Invitation();
+            $userModel = new User();
+            $companyModel = new Company();
+            $invitationModel = new Invitation();
             $userProjectModel = new UserProject();
 
             $requestvalidated = $request->validated();
             if ($requestvalidated) {
 
-                $user                        = $userModel->where('email', $requestvalidated['email_invited'])
-                                                         ->first();
+                $user = $userModel->where('email', $requestvalidated['email_invited'])
+                    ->first();
                 $requestvalidated['project'] = current(Hashids::decode($requestvalidated['project']));
                 if ($user) {
-                    $company                    = $companyModel->where('user', $user->account_owner_id)->first();
+                    $company = $companyModel->where('user', $user->account_owner_id)->first();
                     $requestvalidated['status'] = 'active';
 
                     if ($company) {
@@ -90,18 +90,19 @@ class PartnersController extends Controller
 
                     while (!$parameter) {
                         $parameter = StringHelper::randString(15);
-                        $invite    = $invitationModel->where('parameter', $parameter)->first();
+                        $invite = $invitationModel->where('parameter', $parameter)->first();
 
                         if (!$invite) {
-                            $parameter                          = true;
+                            $parameter = true;
                             $requestDataInvitation['parameter'] = $parameter;
                         }
                     }
 
-                    $requestDataInvitation['company'] = $companyModel->where('user_id', auth()->user()->account_owner_id)
-                                                                     ->first()->id;
-                    $requestDataInvitation['invite']  = auth()->user()->account_owner_id;
-                    $invite                           = $invitationModel->create($requestDataInvitation);
+                    $requestDataInvitation['company'] = $companyModel->where('user_id',
+                        auth()->user()->account_owner_id)
+                        ->first()->id;
+                    $requestDataInvitation['invite'] = auth()->user()->account_owner_id;
+                    $invite = $invitationModel->create($requestDataInvitation);
                     /*Mail::send('convites::email_convite', ['convite' => $invite], function($mail) use ($requestDataInvitation) {
                         $mail->from('teste@teste', 'cloudfox');
                         $mail->to($requestDataInvitation['email_invited'], 'Cloudfox')
@@ -109,7 +110,8 @@ class PartnersController extends Controller
                     });*/
                 }
                 $requestvalidated['status'] = 'inactive';
-                $requestvalidated['user']   = $user->account_owner_id ?? null;
+                $requestvalidated['status_enum'] = $userProjectModel->present()->getStatusFlag('inactive');
+                $requestvalidated['user'] = $user->account_owner_id ?? null;
                 $userProjectModel->create($requestvalidated);
 
                 return response()->json('success');
@@ -184,7 +186,7 @@ class PartnersController extends Controller
             $userProjectModel = new UserProject();
             if ($request->input('data')) {
                 $partnerId = current(Hashids::decode($request->input('data')));
-                $partner   = $userProjectModel->with(['userId'])->find($partnerId);
+                $partner = $userProjectModel->with(['userId'])->find($partnerId);
 
                 if ($partner) {
                     $view = view("partners::details", ['partner' => $partner, 'user' => $partner->userId]);
@@ -210,15 +212,15 @@ class PartnersController extends Controller
 
         $requestData = $request->all();
 
-        $partner    = UserProjeto::where('id', Hashids::decode($requestData['id_parceiro']))->first();
+        $partner = UserProject::where('id', Hashids::decode($requestData['id_parceiro']))->first();
         $idParceiro = Hashids::encode($partner->id);
 
         $user = User::find($partner->user);
 
         $form = view('parceiros::editar', [
             'id_parceiro' => $idParceiro,
-            'parceiro'    => $partner,
-            'user'        => $user,
+            'parceiro' => $partner,
+            'user' => $user,
         ]);
 
         return response()->json($form->render());
@@ -235,8 +237,8 @@ class PartnersController extends Controller
 
             $requestValidated = $request->validated();
             if ($requestValidated) {
-                $userProjectId  = current(Hashids::decode($id));
-                $partner        = $userProjectModel->where('id', $userProjectId)->first();
+                $userProjectId = current(Hashids::decode($id));
+                $partner = $userProjectModel->where('id', $userProjectId)->first();
                 $partnerDeleted = $partner->update($requestValidated);
                 if ($partnerDeleted) {
                     return response()->json('Parceito atualizado com sucesso!', 200);
@@ -253,7 +255,7 @@ class PartnersController extends Controller
 
         unset($requestData['projeto']);
 
-        $partner = UserProjeto::where('id', Hashids::decode($requestData['id']))->first();
+        $partner = UserProject::where('id', Hashids::decode($requestData['id']))->first();
 
         $partner->update($requestData);
 
@@ -269,8 +271,8 @@ class PartnersController extends Controller
         try {
             $userProjectModel = new UserProject();
             if ($id) {
-                $userProject    = current(Hashids::decode($id));
-                $partner        = $userProjectModel->where('id', $userProject)->first();
+                $userProject = current(Hashids::decode($id));
+                $partner = $userProjectModel->where('id', $userProject)->first();
                 $partnerDeleted = $partner->delete();
                 if ($partnerDeleted) {
                     return response()->json('Parceiro removido com sucesso', 200);

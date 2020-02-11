@@ -16,6 +16,7 @@ use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\PlanSale;
@@ -37,49 +38,153 @@ use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Sales\Exports\Reports\Report;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProjectNotificationService;
 
 class JulioController extends Controller
 {
 
     public function julioFunction()
     {
+        $sale = Sale::find(3000);
 
-        // $dataSms = [
-        //     'message'   => 'teste',
-        //     'telephone' => '5555996931098',
-        // ];
+        foreach($sale->transactions as $transaction){
+            dump($transaction);
+        }
 
-        // event(new SendSmsEvent($dataSms));
+        dd("foii");
+        //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
-        // dd("foi");
+        // $this->restartShopifyWebhooks();
 
-        // $connection = null;
-        // $default = 'default';
+        // $this->createProjectNotifications();
+    }
 
-        // Queue::size();
+    public function checkTransactions(){
 
-        //For the delayed jobs
-        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':delayed' ,0, -1) );
+        $transactionModel = new Transaction();
+        $transferModel    = new Transfer();
 
-        //For the reserved jobs
-        // var_dump( \Queue::getRedis()->connection($connection)->zrange('queues:'.$default.':reserved' ,0, -1) );    }
+        $transactions = $transactionModel->where([
+            ['release_date', '>=', Carbon::now()->subDays('5')->format('Y-m-d')],
+            ['status', 'transfered']
+        ])
+        ->whereHas('transfers', null, '>', 1);
 
-        // $remessaOnlineService = new RemessaOnlineService();
+        $totalValue = 0;
+        $realValue = 0;
+        $wrongValue = 0;
 
-        // $quotation = $remessaOnlineService->getCurrentDolarQuotation('eurofd');
+        foreach($transactions->cursor() as $key => $transaction){
 
-        // dd($quotation);
+            if($key % 300 == 0){
+                dump($key);
+            }
 
-        // SELECT sale_id, fantasy_name, value, transactions.created_at FROM `transactions` JOIN companies WHERE sale_id IN ('184340','168175','173651','182919','235479','50397','127525','89524','165410','96095','209409','155379','211457','166421', '38161','168686','172741','132421','179943','110939','154692','159452','106670','86760','197990','67294','239153','180017', '176561','181595','105822','160265','114464','60007','76954','154251','159343','129864','180227','156828','27861','117638') and company_id = companies.id and invitation_id is null and company_id is not null ORDER BY sale_id
+            $value = 0;
+            foreach($transaction->transfers as $key => $transfer){
+                $totalValue += $transfer->value;
 
-        (new Report(User::find(24)))->queue('arquivo.xls');
+                if($key > 0){
+                    $value += $transfer->value;
+                }
+                else{
+                    $realValue += $transfer->value;
+                }
+            }
+
+            $wrongValue += $value;
+
+            $company = $transaction->company;
+
+//            $company->update([
+//                'balance' => intval($company->balance) - intval($value),
+//            ]);
+//
+//            $transfer = $transferModel->create([
+//                'user_id'        => $company->user_id,
+//                'company_id'     => $company->id,
+//                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+//                'value'          => $value,
+//                'type'           => 'out',
+//                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+//            ]);
+
+        }
+
+        dd(
+            number_format(intval($totalValue) / 100, 2, ',', '.'),
+            number_format(intval($realValue) / 100, 2, ',', '.'),
+            number_format(intval($wrongValue) / 100, 2, ',', '.')
+           );
 
     }
+
+    public function restartShopifyWebhooks(){
+
+        $webHooksUpdated = 0;
+
+        foreach(ShopifyIntegration::all() as $shopifyIntegration){
+
+            try{
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
+
+                if(count($shopifyService->getShopWebhook()) != 3){
+
+                    $shopifyService->deleteShopWebhook();
+
+                    $this->createShopWebhook([
+                        "topic"   => "products/create",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "format"  => "json",
+                    ]);
+
+                    $this->createShopWebhook([
+                        "topic"   => "products/update",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                        "format"  => "json",
+                    ]);
+
+                    $this->createShopWebhook([
+                        "topic"   => "orders/updated",
+                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
+                        "format"  => "json",
+                    ]);
+
+                    $webHooksUpdated++;
+                }
+            }
+            catch(\Exception $e){
+                // dump($e);
+            }
+
+            dump($webHooksUpdated);
+        }
+    }
+
+    public function testSms($data){
+
+        event(new SendSmsEvent($dataSms));
+    }
+
+    public function createProjectNotifications(){
+
+        $projectNotificationService = new ProjectNotificationService();
+
+        foreach(Project::whereDoesntHave('notifications')->get() as $project){
+
+            if(count($project->notifications) == 0){
+                $projectNotificationService->createProjectNotificationDefault($project->id);
+            }
+
+        }
+    }
+
 }
 
 

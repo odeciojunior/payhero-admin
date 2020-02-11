@@ -39,7 +39,7 @@ class CartRecoveryService
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
             $data                = [];
-            $checkoutModel->where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
+            $checkoutModel->where([['status', '=',$checkoutModel->present()->getStatusEnum('abandoned cart')], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
@@ -63,7 +63,7 @@ class CartRecoveryService
                                           $project         = $projectModel->find($abandonedCart['project_id']);
                                           $domain          = $domainModel->where('project_id', $project->id)
                                                                          ->first();
-                                          $clientTelephone = $log['telephone'];
+                                          $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
 
                                           $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                                           $clientNameExploded = explode(' ', $log['name']);
@@ -155,7 +155,7 @@ class CartRecoveryService
 
             $date = Carbon::now()->subDay('1')->toDateString();
             $data = [];
-            $checkoutModel->where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
+            $checkoutModel->where([['status', '=', $checkoutModel->present()->getStatusEnum('abandoned cart')], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
@@ -182,8 +182,10 @@ class CartRecoveryService
                                                              ->where('status', 3)
                                                              ->first();
 
-                                      $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
-                                      $clientTelephone    = $log['telephone'];
+                                      $linkCheckout = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
+
+                                      $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
+
                                       $clientNameExploded = explode(' ', $log['name']);
 
                                       //Traz a mensagem do sms formatado

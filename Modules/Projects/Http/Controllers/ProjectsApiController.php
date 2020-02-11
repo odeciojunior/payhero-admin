@@ -47,11 +47,10 @@ class ProjectsApiController extends Controller
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
 
-            if(!$pagination){
+            if (!$pagination) {
                 activity()->on($projectModel)->tap(function(Activity $activity) {
                     $activity->log_name = 'visualization';
                 })->log('Visualizou tela todos os projetos');
-
             }
 
             if (!empty($request->input('status')) && $request->input('status') == 'active') {
@@ -117,8 +116,8 @@ class ProjectsApiController extends Controller
                                                      'visibility'                 => 'private',
                                                      'automatic_affiliation'      => 0,
                                                      'boleto'                     => 1,
-                                                     'status'                     => $projectModel->present()
-                                                                                                  ->getStatus('active'),
+                                                     'status'                     => $projectModel->present()->getStatus('active'),
+                                                     'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
                 if (!empty($project)) {
                     $shipping = $shippingModel->create([
@@ -127,6 +126,7 @@ class ProjectsApiController extends Controller
                                                            'information'  => 'de 15 até 30 dias',
                                                            'value'        => '0,00',
                                                            'type'         => 'static',
+                                                           'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
                                                            'status'       => '1',
                                                            'pre_selected' => '1',
                                                        ]);
@@ -153,13 +153,15 @@ class ProjectsApiController extends Controller
                                                                      'project_id'        => $project->id,
                                                                      'company_id'        => $requestValidated['company'],
                                                                      'type'              => 'producer',
+                                                                     'type_enum'         => $userProjectModel->present()->getTypeEnum('producer'),
                                                                      'access_permission' => 1,
                                                                      'edit_permission'   => 1,
                                                                      'status'            => 'active',
+                                                                     'status_flag'       => $userProjectModel->present()->getStatusFlag('active'),
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
-                        
+
                         if (!empty($userProject)) {
                             $projectNotificationService->createProjectNotificationDefault($project->id);
                             return response()->json(['message', 'Projeto salvo com sucesso']);
@@ -381,6 +383,18 @@ class ProjectsApiController extends Controller
                             }
                         }
 
+                        //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
+                        if (isset($projectChanges["discount_recovery_status"])) {
+                            $project->update([
+                                                 'discount_recovery_status' => $requestValidated['discount_recovery_status'],
+                                                 'discount_recovery_value'  => $requestValidated['discount_recovery_value'],
+                                             ]);
+                        } else {
+                            $project->update([
+                                                 'discount_recovery_status' => 0,
+                                             ]);
+                        }
+
                         return response()->json(['message' => 'Projeto atualizado!'], 200);
                     }
 
@@ -486,7 +500,8 @@ class ProjectsApiController extends Controller
             activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::decode($projectId));
-            })->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
+            })
+                      ->log('Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name);
 
             if ($supportPhone != $project->support_phone) {
                 $project->support_phone = $supportPhone;
@@ -631,13 +646,12 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
-            $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
+            $project      = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
 
-            activity()->on($projectModel)->tap(function(Activity $activity) use($projectId) {
-                $activity->log_name = 'updated';
+            activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
+                $activity->log_name   = 'updated';
                 $activity->subject_id = current(Hashids::decode($projectId));
             })->log('Validação código email de contato do projeto: ' . $project->name);
-
 
             $data       = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;

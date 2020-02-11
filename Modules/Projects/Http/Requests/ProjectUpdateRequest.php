@@ -40,6 +40,8 @@ class ProjectUpdateRequest extends FormRequest
             "photo"                      => 'nullable',
             "logo"                       => 'nullable',
             "support_phone"              => 'nullable',
+            "discount_recovery_status"   => 'nullable',
+            "discount_recovery_value"    => 'nullable',
             "cost_currency_type"         => 'required|string|max:5',
             "checkout_type"              => 'required',
             "terms_affiliates"           => 'nullable',

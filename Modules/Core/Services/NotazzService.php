@@ -159,7 +159,7 @@ class NotazzService
 
                 $shippingCost = preg_replace("/[^0-9]/", "", $sale->shipment_value);
 
-                $subTotal  = preg_replace("/[^0-9]/", "", $sale->sub_total);
+                $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
 
                 $discountPlataformTax = $sale->project->notazzIntegration->discount_plataform_tax_flag ?? false;
                 if ($discountPlataformTax == true) {
@@ -167,12 +167,12 @@ class NotazzService
                     foreach ($sale->transactions as $transaction) {
                         if ((!empty($transaction->company)) && ($transaction->company->user->id == $sale->owner_id)) {
                             //plataforma
-                            $trasactionRate =  preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
-                            $costTotal += (int) $trasactionRate;
-                            $costTotal += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
+                            $trasactionRate = preg_replace("/[^0-9]/", "", $transaction->transaction_rate);
+                            $costTotal      += (int) $trasactionRate;
+                            $costTotal      += (int) (($subTotal + $shippingCost) * ($transaction->percentage_rate / 100));
 
                             $installmentTaxValue = $sale->installment_tax_value ?? 0;
-                            $costTotal += (int) ($installmentTaxValue);
+                            $costTotal           += (int) ($installmentTaxValue);
                         }
                     }
                 }
@@ -725,12 +725,12 @@ class NotazzService
 
         foreach ($notazzInvoices as $notazzInvoice) {
             //cria as jobs para enviar as invoices
-                $notazzInvoice->update([
-                                           'status' => $notazzInvoiceModel->present()
-                                                                          ->getStatus('in_process'),
-                                       ]);
+            $notazzInvoice->update([
+                                       'status' => $notazzInvoiceModel->present()
+                                                                      ->getStatus('in_process'),
+                                   ]);
 
-                SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
+            SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
         }
     }
 
@@ -842,6 +842,7 @@ class NotazzService
                                                      ])
                                               ->whereNotNull('start_date')
                                               ->whereNull('retroactive_generated_date')
+                                              ->where('active_flag', true)
                                               ->get();
 
             foreach ($integrations as $integration) {
@@ -882,7 +883,7 @@ class NotazzService
             $integrations = $notazzIntegration->with([
                                                          'project',
                                                          'user',
-                                                     ])
+                                                     ])->where('active_flag', true)
                                               ->get();
 
             foreach ($integrations as $integration) {

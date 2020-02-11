@@ -60,6 +60,7 @@ class ProductPlanSale extends Model
         'product_id',
         'plan_id',
         'sale_id',
+        'amount',
         'name',
         'description',
         'guarantee',

@@ -170,7 +170,7 @@ class ActiveCampaignApiController extends Controller
                 $projectId   = current(Hashids::decode($id));
                 $integration = $activecampaignIntegrationModel->where('project_id', $projectId)->first();
 
-                if (Gate::denies('edit', [$activecampaignIntegration])) {
+                if (Gate::denies('edit', [$integration])) {
                     return response()->json([
                             'message' => 'Sem permissão',
                         ],Response::HTTP_FORBIDDEN

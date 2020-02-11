@@ -27,7 +27,7 @@ class TransfersService
 
         $transactions = $transactionModel->where([
                                                      ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                                                     ['status', 'paid'],
+                                                     ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                                                  ]);
 
         $transfers = [];
@@ -46,8 +46,9 @@ class TransfersService
                                                    ]);
 
                 $transaction->update([
-                                         'status' => 'transfered',
-                                     ]);
+                                         'status'      => 'transfered',
+                                         'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                                    ]);
 
                 $company->update([
                                      'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
@@ -59,7 +60,7 @@ class TransfersService
             }
         }
 
-        event(new ReleasedBalanceEvent(collect($transfers)));
+        //event(new ReleasedBalanceEvent(collect($transfers)));
 
         Log::info('transferencias criadas ' . print_r($transfers, true));
     }
