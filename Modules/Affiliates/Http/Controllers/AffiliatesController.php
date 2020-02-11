@@ -13,12 +13,13 @@ class AffiliatesController extends Controller
     /**
      * @param $projectId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function index($projectId)
     {
         $projectModel = new Project();
         $projectId    = current(Hashids::decode($projectId));
-        $project      = $projectModel->find($projectId);
+        $project      = $projectModel->where('id', $projectId)->where('status','!=', $projectModel->present()->getStatus('disabled'))->first();
         if ($project) {
             return view('affiliates::index');
         } else {
