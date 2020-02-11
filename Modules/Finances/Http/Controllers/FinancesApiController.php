@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Transaction;
+use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\CompanyService;
 use Symfony\Component\HttpFoundation\Response;
 use Modules\Core\Services\RemessaOnlineService;
+use Modules\Finances\Exports\Reports\ExtractReportExport;
 
 /**
  * Class FinancesApiController
@@ -103,6 +105,29 @@ class FinancesApiController extends Controller
                 [
                     'message' => 'Ocorreu algum erro, tente novamente!',
                 ], 400);
+        }
+    }
+
+    public function export(Request $request)
+    {
+        try {
+            $dataRequest = $request->all();
+
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Exportou tabela ' . $dataRequest['format'] . ' de transferências');
+
+            $user = auth()->user();
+
+            $filename = 'extract_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+
+            (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
+            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
     }
 }
