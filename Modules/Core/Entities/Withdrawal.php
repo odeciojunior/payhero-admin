@@ -36,6 +36,13 @@ class Withdrawal extends Model
      * @var string
      */
     protected $keyType = 'integer';
+
+    protected $dates = [
+        'release_date',
+        'created_at',
+        'updated_at',
+        'release_date_new'
+    ];
     /**
      * @var array
      */
@@ -55,7 +62,8 @@ class Withdrawal extends Model
         'account',
         'account_digit',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'release_date_new'
     ];
 
     /**
