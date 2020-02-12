@@ -51,12 +51,58 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-dd(env('DB_HOST'));
+
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
         // $this->restartShopifyWebhooks();
 
         // $this->createProjectNotifications();
+
+        $this->checkPaidBoletos();
+    }
+
+    public function checkPaidBoletos(){
+
+        $saleModel = new Sale();
+
+        $sales = $saleModel->where([
+            ['status',1],
+            ['payment_method', 1],
+            ['start_date', '>',  '2019-09-01']
+        ])
+        ->whereHas('transactions', function($query){
+            $query->whereNotIn('status_enum', [1,2]);
+            $query->whereNotNull('company_id');
+        })->get();
+
+        echo "<table>";
+        echo "<thead>";
+        echo "<th>ID</th>";
+        echo "<th>Code</th>";
+        echo "<th>Data</th>";
+        echo "<th>Status</th>";
+        echo "<th>Usuario</th>";
+        echo "<th>Transações</th>";
+        echo "</thead>";
+        foreach($sales as $sale){
+            echo "<tr>";
+            echo "<td>" . $sale->id . "</td>";
+            echo "<td>" . Hashids::connection('sale_id')->encode($sale->id) . "</td>";
+            echo "<td>" . $sale->start_date . "</td>";
+            echo "<td>" . $saleModel->present()->getStatus($sale->status) . "</td>";
+            echo "<td>" . $sale->user->name . "</td>";
+            echo "<td>";
+            foreach($sale->transactions as $transaction){
+                if(!empty($transaction->company_id)){
+                    echo $transaction->status . ' - ';
+                }
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+
+        // dd($sales->with('transactions')->limit(10)->get()->toArray());
     }
 
     public function checkTransactions(){
@@ -96,18 +142,18 @@ dd(env('DB_HOST'));
 
             $company = $transaction->company;
 
-//            $company->update([
-//                'balance' => intval($company->balance) - intval($value),
-//            ]);
-//
-//            $transfer = $transferModel->create([
-//                'user_id'        => $company->user_id,
-//                'company_id'     => $company->id,
-//                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-//                'value'          => $value,
-//                'type'           => 'out',
-//                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
-//            ]);
+            //            $company->update([
+            //                'balance' => intval($company->balance) - intval($value),
+            //            ]);
+            //
+            //            $transfer = $transferModel->create([
+            //                'user_id'        => $company->user_id,
+            //                'company_id'     => $company->id,
+            //                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+            //                'value'          => $value,
+            //                'type'           => 'out',
+            //                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+            //            ]);
 
         }
 
