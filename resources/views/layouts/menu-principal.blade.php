@@ -161,8 +161,8 @@
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub  disabled">
-                <a class="disabled" href="{{ route('attendance') }}">
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('attendance.index') }}">
                     <i class="material-icons">chat_bubble_outline</i>
                     <span class="site-menu-title">Atendimento (em breve)</span>
                 </a>
