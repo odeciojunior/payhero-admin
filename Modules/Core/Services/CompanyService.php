@@ -156,7 +156,7 @@ class CompanyService
         }
     }
 
-    public function getCurrency(Company $company){
+    public function getCurrency(Company $company, $symbol = false){
 
         $dolar = [
             'usa'
@@ -176,13 +176,13 @@ class CompanyService
         ];
 
         if(in_array($company->country, $dolar)){
-            return 'dolar';
+            return $symbol ? '$' : 'dolar';
         }
         elseif(in_array($company->country, $euro)){
-            return 'euro';
+            return $symbol ? '€' : 'euro';
         }
         elseif(in_array($company->country, $real)){
-            return 'real';
+            return $symbol ? 'R$' :'real';
         }
         else{
             return null;
