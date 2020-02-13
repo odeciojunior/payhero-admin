@@ -48,7 +48,7 @@ class SalesApiController extends Controller
             activity()->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as vendas');
-
+ 
             $saleService = new SaleService();
 
             $data = $request->all();

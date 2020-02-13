@@ -467,8 +467,10 @@ class SaleService
     public function recalcSaleRefund($sale, $refundAmount)
     {
         try {
-            $companyModel   = new Company();
-            $transferModel  = new Transfer();
+            $companyModel     = new Company();
+            $transferModel    = new Transfer();
+            $transactionModel = new Transaction();
+
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
             if ($totalPaidValue > 0) {
                 $percentRefund = (int) round((($refundAmount / $totalPaidValue) * 100));
@@ -522,6 +524,7 @@ class SaleService
                 }
                 if ($transactionRefundAmount == $transactionValue) {
                     $refundTransaction->status = 'refunded';
+                    $refundTransaction->status_enum = $transactionModel->present()->getStatusEnum('refunded');
                 }
                 $refundTransaction->save();
             }

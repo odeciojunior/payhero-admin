@@ -22,6 +22,7 @@ use App\Traits\LogsActivity;
  * @property string $agency_digit
  * @property string $account
  * @property string $account_digit
+ * @property string $file
  * @property Company $company
  */
 class Withdrawal extends Model
@@ -63,7 +64,8 @@ class Withdrawal extends Model
         'account_digit',
         'created_at',
         'updated_at',
-        'release_date_new'
+        'release_date_new',
+        'file'
     ];
 
     /**
