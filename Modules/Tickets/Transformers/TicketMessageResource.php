@@ -13,6 +13,7 @@ class TicketMessageResource extends Resource
         return [
             'id' => Hashids::encode($this->id),
             'message' => $this->message,
+            'from_admin' => $this->from_admin,
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y H:i:s'),
         ];
     }

@@ -11,6 +11,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $id
  * @property integer $ticket_id
  * @property string $message
+ * @property boolean $from_admin
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -30,6 +31,7 @@ class TicketMessage extends Model
     protected $fillable = [
         'ticket_id',
         'message',
+        'from_admin',
         'created_at',
         'updated_at',
         'deleted_at',
