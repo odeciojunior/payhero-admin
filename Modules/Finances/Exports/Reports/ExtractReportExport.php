@@ -119,12 +119,13 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
 
         $type     = $transfer->type_enum == 2 ? '-' : '';
         $value    = number_format(intval($type . $transfer->value) / 100, 2, ',', '.');
-        $currency = $transfer->currency == 'dolar' ? '$ ' . $value : 'R$ ';
-        $value    = $currency . $value;
+        // $currency = $transfer->currency == 'dolar' ? '$ ' . $value : 'R$ ';
+        // $value    = $currency . $value;
 
         $transferData = [
             'reason' => $reason . '#'. Hashids::connection('sale_id')->encode($transfer->sale_id),
             'date'   => $transfer->created_at->format('d/m/Y'),
+            'type'   => ($transfer->type_enum == 1) ? 'Entrada' : (($transfer->type_enum == 2) ? 'Saída' : ''),
             'value'  => $value,
         ];
 
@@ -136,6 +137,7 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
         return [
             'Razão',
             'Data da transferência',
+            'Tipo',
             'Valor',
         ];
     }
