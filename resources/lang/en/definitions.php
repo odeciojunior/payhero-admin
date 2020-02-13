@@ -130,6 +130,19 @@ return [
                 "exception"        => "Problema na entrega",
             ],
         ],
+        "ticket"                   => [
+            "category"             => [
+                "complaint"        => "Reclamação",
+                "doubt"            => "Dúvida",
+                "suggestion"       => "Sugestão",
+
+            ],
+            "status"               => [
+                "open"             => "Aberto",
+                "closed"           => "Resolvido",
+                "mediation"        => "Em mediação"
+            ]
+        ],
         "invoices"                 => [
             "status" => [
                 "pending"            => "Pendente",
