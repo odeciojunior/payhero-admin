@@ -62,13 +62,23 @@
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
                         </div>
                     </div>
-
                     <div class='text-right mt-10'>
-                        <button id='solve' class='btn btn-outline-danger mr-20'>Resolver chamado</button>
-                        <button id='answer' class='btn btn-primary'>Responder</button>
+                        <button id='btn-solve' class='btn btn-outline-danger mr-20'>Resolver chamado</button>
+                        <button id='btn-answer' class='btn btn-primary'>Responder</button>
+                    </div>
+                    <div class='row div-message' style='display:none;'>
+                        <div class='col-lg-12'>
+                            <div class='form-group'>
+                                <label>Mensagem</label>
+                                <textarea class='form-control' placeholder='Digite sua resposta' rows='6'></textarea>
+                            </div>
+                        </div>
+                        <div class='col-lg-12 text-right'>
+                            <button id='btn-cancel' class='btn mr-20'>Cancelar</button>
+                            <button id='btn-send' class='btn btn-primary'>Enviar</button>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

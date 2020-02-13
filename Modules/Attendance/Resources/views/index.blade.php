@@ -30,6 +30,12 @@
                                     <input id='' class='form-control' type='text' placeholder='Nome do cliente'>
                                 </div>
                             </div>
+                            <div class='col-md-3'>
+                                <div class='form-group'>
+                                    <label>Código do chamado:</label>
+                                    <input id='' class='form-control' type='text' placeholder='Código do chamado'>
+                                </div>
+                            </div>
                             <div class="col-lg-3 col-md-6 mt-25">
                                 <button id="btn-filter" class="btn btn-primary w-full">
                                     <i class="icon wb-check" aria-hidden="true"></i>Aplicar
