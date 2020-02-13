@@ -15,7 +15,5 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
     Route::post('tickets/sendmessage', 'TicketsApiController@sendMessage')->name('api.tickets.sendmessage');
-    Route::post('tickets/upload', 'TicketsApiController@upload')->name('api.tickets.upload');
-    Route::post('tickets/deletefile', 'TicketsApiController@deleteFile')->name('api.tickets.deletefile');
-    Route::apiResource('tickets', 'TicketsApiController')->only('index', 'show', 'create', 'store', 'update')->names('api.tickets');
+    Route::apiResource('tickets', 'TicketsApiController')->only('index', 'show', 'update')->names('api.tickets');
 });
