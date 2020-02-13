@@ -315,10 +315,8 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/register",
-            dataType: "json",
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
-                'Accept': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
                 name: $('#firstname').val() + ' ' + $('#lastname').val(),
@@ -357,31 +355,57 @@ $(document).ready(function () {
                 account: $('#account').val(),
                 account_digit: $('#account_digit').val(),
             },
-            error: function error(response) {
+            error: function (_error) {
+                function error(_x) {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
                 $(".div5").show();
                 $(".div6").hide();
                 $("#btn-go").show();
-                alertCustom('error', 'Ocorreu algum erro');
-            },
+                loadingOnScreenRemove();
+            }),
             success: function success(response) {
-                accessToken = response.access_token;
-                $.ajax({
-                    method: "GET",
-                    url: "/api/register/welcome/",
-                    headers: {
-                        'Authorization': 'Bearer ' + accessToken,
-                        'Accept': 'application/json',
-                    },
-                    error: function error(response) {
-                    },
-                    success: function success(response) {
-                    }
-                });
-                setTimeout(registerComplete, 10000);
+                loadingOnScreenRemove();
+                if (response.success == 'true') {
+                    accessToken = response.access_token;
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/register/welcome/",
+                        headers: {
+                            'Authorization': 'Bearer ' + accessToken,
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                        },
+                        success: function success(response) {
+                        }
+                    });
+                    setTimeout(registerComplete, 10000);
+
+                } else {
+                    $(".div5").show();
+                    $(".div6").hide();
+                    $("#btn-go").show();
+                    loadingOnScreenRemove();
+                    alertCustom('error', response.message);
+                }
             }
 
         });
     }
+
     function residentialDataCompanyComplete() {
         if (!validateResidentialDataCompany()) {
             alertCustom('error', 'Revise os dados informados');
