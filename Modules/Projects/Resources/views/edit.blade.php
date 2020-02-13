@@ -304,6 +304,99 @@
                 </div>
             </div>
         </div>
+
+        {{--INICIO CONFIGURAÇÕES AFFILIADOS--}}
+        <div class='row'>
+            <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOneAffiliates" aria-expanded="true"
+                 aria-controls="collapseOneAffiliates">
+                <h3>Configurações Afiliados
+                    <i class="material-icons showMore">add</i>
+                </h3>
+            </div>
+        </div>
+
+        <div class='mt-10 mb-15'>
+            <div id="collapseOneAffiliates" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class='row'>
+                    <div class='form-group col-12 col-xs-12'>
+                        <label for='terms-affiliates'>Termos de Afiliação</label>
+                        <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+                        <textarea class='input-pad'id='termsaffiliates' placeholder='Termos'></textarea>
+                        <span id='terms-affiliates-error' class='text-danger'></span>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Termos exibidos na Vitrine para afiliação
+                        </p>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for='automatic-affiliation'>Afiliação automática</label>
+                        <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
+                            <option value='0'>Não</option>
+                            <option value='1'>Sim</option>
+                        </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova automaticamente as solicitações de afiliação
+                        </p>
+                    </div>
+
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for="cookie-duration">Duração do cookie</label>
+                        <select class='cookie-duration form-control select-pad' name='cookie_duration'>
+                            <option value="0"> Eterno</option>
+                            <option value="7"> 7 dias</option>
+                            <option value="15"> 15 dias</option>
+                            <option value="30"> 1 mês</option>
+                            <option value="60"> 2 meses</option>
+                            <option value="180"> 6 meses</option>
+                            <option value="365"> 1 ano</option>
+                        </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Duração do cookie
+                        </p>
+                        <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12 col-xs-12'>
+                        <label for='percentage-affiliates'>Porcentagem</label>
+                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='number' min="0" max="100">
+                        <span id='input-pad-error' class='text-danger'></span>
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for="status-url-affiliates">Habilitar link afiliação</label>
+                        <select class='status-url-affiliates form-control select-pad' name='status_url_affiliates'>
+                            <option value='0'>Não</option>
+                            <option value='1'>Sim</option>
+                        </select>
+                        {{-- <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Habilitar link afiliação
+                        </p> --}}
+                        <span id='error-status-url-affiliates' class='text-danger' style='display: none'></span>
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12'>
+                        <label for='commission-type-enum'>Tipo comissão</label>
+                        <select class='commission-type-enum form-control select-pad' name='commission_type_enum' class='form-control select-pad'>
+                            <option value='1'>Primeiro clique</option>
+                            <option value='2'>Último clique</option>
+                        </select>
+                        {{-- <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> 
+                        </p> --}}
+                    </div>
+                    <div class='form-group col-md-6 col-sm-12 col-xs-12 div-url-affiliate'>
+                        <label for='url-affiliates'>Link afiliação</label>
+                        <div id="affiliate-link-select" class="input-group">
+                            <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
+                            <span class="input-group-btn">
+                                <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{--FIM CONFIGURAÇÕES AFFILIADOS--}}
+
         {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
         <div id="shopify-configs" style="display:none">
             <div class='row'>
