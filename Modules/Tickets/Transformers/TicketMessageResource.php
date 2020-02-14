@@ -11,10 +11,11 @@ class TicketMessageResource extends Resource
     public function toArray($request)
     {
         return [
-            'id' => Hashids::encode($this->id),
-            'message' => $this->message,
-            'from_admin' => $this->from_admin,
-            'created_at' => Carbon::parse($this->created_at)->format('d/m/Y H:i:s'),
+            'id'            => Hashids::encode($this->id),
+            'message'       => $this->message,
+            'from_admin'    => $this->from_admin,
+            'created_at'    => Carbon::parse($this->created_at)->format('d/m/Y H:i:s'),
+            'admin_name'    => auth()->user()->name,
         ];
     }
 }

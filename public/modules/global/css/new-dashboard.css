@@ -139,6 +139,11 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
+.red-gradient {
+    background: -webkit-linear-gradient(rgb(247, 107, 28), rgb(255, 97, 97));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 .drop-empresas {
     min-height: 140px;
