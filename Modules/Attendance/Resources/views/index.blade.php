@@ -168,7 +168,7 @@
         </ul>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/attendance/js/index.js')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js')}}'></script>
     @endpush
 
 @endsection
