@@ -100,7 +100,7 @@
             </div>
             <div id='div-ticket-empty' class='row' style='display:none;'>
                 <div class='col-12 col-lg-12'>
-                    <div class="card card-shadow bg-white p-20">
+                    <div class="card card-shadow bg-white p-5">
                         <div class='alert alert-info font-size-14 text-center mt-10'>Nenhum chamado encontrado</div>
                     </div>
                 </div>
