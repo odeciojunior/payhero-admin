@@ -116,7 +116,7 @@ class TicketsApiController extends Controller
     {
         try {
 
-            $tickeMessageModel = new TicketMessage();
+            $ticketMessageModel = new TicketMessage();
 
             $data = $request->all();
 
@@ -125,7 +125,7 @@ class TicketsApiController extends Controller
             if (!empty($ticketId)) {
 
                 if (!empty($data['message'])) {
-                    $message = $tickeMessageModel->create([
+                    $message = $ticketMessageModel->create([
                                                               'ticket_id'  => $ticketId,
                                                               'message'    => $data['message'],
                                                               'from_admin' => true,
@@ -174,32 +174,4 @@ class TicketsApiController extends Controller
         }
     }
 
-    public function createMessage(Request $request)
-    {
-        try {
-            $data               = $request->all();
-            $ticketMessageModel = new TicketMessage();
-            if (!empty($data['message'])) {
-                $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
-                if (!empty($ticketId)) {
-                    $MessageCreated = $ticketMessageModel->create([
-                                                                      'ticket_id'  => $ticketId,
-                                                                      'message'    => $data['message'],
-                                                                      'from_admin' => 1,
-                                                                  ]);
-                    if ($MessageCreated) {
-                        return response()->json(['message' => 'Mensagem enviada com sucesso'], 200);
-                    } else {
-                        return response()->json(['message' => 'Erro ao enviar mensagem'], 400);
-                    }
-                }
-            }
-
-            return response()->json(['message' => 'Erro ao enviar mensagem'], 400);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(['message' => 'Erro ao enviar mensagem'], 400);
-        }
-    }
 }

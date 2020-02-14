@@ -97,7 +97,7 @@ $(document).ready(function () {
         }
         $.ajax({
             method: "POST",
-            url: '/api/tickets/createmessage',
+            url: '/api/tickets/sendmessage',
             dataType: "json",
             data: {
                 message: $('.user-message').val(),
@@ -112,7 +112,7 @@ $(document).ready(function () {
             },
             success: (response) => {
                 $(".div-message").slideUp();
-                alertCustom("success", response.message);
+                alertCustom("success", "Mensagem enviada com sucesso");
                 getTicket();
                 $('.user-message').val('');
             }
