@@ -147,7 +147,6 @@ $(document).ready(function () {
                         ${companyStatusTranslated[company.contract_document_status]}
                     </span>
                     `);
-                configSubmits();
                 verifyDocuments(company);
                 // getRefusedDocuments(response.company.refusedDocuments);
                 verifyCompanyAddress(company);
@@ -207,90 +206,88 @@ $(document).ready(function () {
     });
 
     //Config Submit
-    function configSubmits() {
-        companyUpdateForm.on("submit", function (event) {
-            event.preventDefault();
-            $("#company_document").remove('disabled');
-            $(".info-complemented").removeAttr('disabled');
+    companyUpdateForm.on("submit", function (event) {
+        event.preventDefault();
+        $("#company_document").remove('disabled');
+        $(".info-complemented").removeAttr('disabled');
 
-            $("#country").removeAttr('disabled');
-            let form_data = new FormData(document.getElementById('company_update_form'));
-            $('#country').attr('disabled', true);
+        $("#country").removeAttr('disabled');
+        let form_data = new FormData(document.getElementById('company_update_form'));
+        $('#country').attr('disabled', true);
 
-            loadingOnScreen();
-            $.ajax({
-                method: "POST",
-                url: companyUpdateForm.attr('action'),
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: form_data,
-                error: function (response) {
-                    errorAjaxResponse(response);
-                    // $("#company_document").attr('disabled', 'disabled');
-                },
-                success: function success(response) {
-                    alertCustom('success', response.message);
-                    loadingOnScreenRemove();
-                    // $("#company_document").attr('disabled', 'disabled');
-                }
-            });
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: companyUpdateForm.attr('action'),
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (response) {
+                errorAjaxResponse(response);
+                // $("#company_document").attr('disabled', 'disabled');
+            },
+            success: function success(response) {
+                alertCustom('success', response.message);
+                loadingOnScreenRemove();
+                // $("#company_document").attr('disabled', 'disabled');
+            }
         });
-        companyBankUpdateForm.on("submit", function (event) {
-            event.preventDefault();
-            let form_data = new FormData(document.getElementById('company_bank_update_form'));
-            loadingOnScreen();
-            $.ajax({
-                method: "POST",
-                url: companyBankUpdateForm.attr('action'),
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: form_data,
-                error: function (response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    loadingOnScreenRemove();
-                    alertCustom('success', response.message);
-                    initForm();
-                }
-            });
+    });
+    companyBankUpdateForm.on("submit", function (event) {
+        event.preventDefault();
+        let form_data = new FormData(document.getElementById('company_bank_update_form'));
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: companyBankUpdateForm.attr('action'),
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                initForm();
+            }
         });
-        companyBankUpdateRoutingForm.on("submit", function (event) {
-            event.preventDefault();
-            let form_data = new FormData(document.getElementById('company_bank_routing_number_form'));
-            loadingOnScreen();
-            $.ajax({
-                method: "POST",
-                url: companyBankUpdateRoutingForm.attr('action'),
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: form_data,
-                error: function (response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    loadingOnScreenRemove();
-                    alertCustom('success', response.message);
-                    initForm();
-                }
-            });
+    });
+    companyBankUpdateRoutingForm.on("submit", function (event) {
+        event.preventDefault();
+        let form_data = new FormData(document.getElementById('company_bank_routing_number_form'));
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: companyBankUpdateRoutingForm.attr('action'),
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                initForm();
+            }
         });
-    }
+    });
 
     function openDocument() {
         $(".document-url").on("click", function (e) {
