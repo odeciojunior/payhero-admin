@@ -65,6 +65,9 @@ $(document).ready(function () {
                 } else {
                     $('#div-ticket-comments').append('<div class="alert alert-info text-center font-size-14">Nenhuma mensagem encontrada</div>');
                 }
+                if (response.data.ticket_status == 'Resolvido') {
+                    $('#btn-solve').hide();
+                }
             }
 
         });
@@ -87,6 +90,28 @@ $(document).ready(function () {
 
     $('#btn-solve').on('click', function (event) {
         event.preventDefault();
+        let status = $(this).data('status');
+        $.ajax({
+            method: "PUT",
+            url: '/api/tickets/' + ticketId,
+            dataType: "json",
+            data: {
+                ticket_id: ticketId,
+                status: status,
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                getTicket();
+                $('#btn-solve').hide();
+                alertCustom("success", "Chamado marcado como resolvido");
+            }
+        });
     });
 
     $('#btn-send').on('click', function (event) {

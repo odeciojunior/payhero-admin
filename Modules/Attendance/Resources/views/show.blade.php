@@ -51,20 +51,10 @@
                         <hr class='mb-0 mt-10'>
                     </div>
                     <div id='div-ticket-comments'>
-                        {{--                        <div class="d-flex flex-row mb-3">--}}
-                        {{--                            <div class="p-2 bd-highlight">--}}
-                        {{--                                <img src="https://i.pinimg.com/736x/27/72/43/277243ecf332f1c672a861a2c536a690.jpg" style='height:50px;width:50px;' class="img-fluid rounded-circle">--}}
-                        {{--                            </div>--}}
-                        {{--                            <div class="p-2">--}}
-                        {{--                                <span class='font-weight-bold'>Matheus Silva</span>--}}
-                        {{--                                <br>--}}
-                        {{--                                <span>Postado em: 17/09/2019 12:00</span>--}}
-                        {{--                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>--}}
-                        {{--                            </div>--}}
-                        {{--                        </div>--}}
+                        {{-- js carrega... --}}
                     </div>
                     <div class='text-right mt-10 div-buttons'>
-                        <button id='btn-solve' class='btn btn-outline-danger mr-20'>Resolver chamado</button>
+                        <button id='btn-solve' class='btn btn-outline-danger mr-20' data-status='closed'>Resolver chamado</button>
                         <button id='btn-answer' class='btn btn-primary'>Responder</button>
                     </div>
                     <div class='row div-message' style='display:none;'>

@@ -60,7 +60,7 @@ $(document).ready(function () {
                                                 <i class="material-icons" id="dropdownMenuButton" title='Opções' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='cursor:pointer'>more_vert</i>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                                     <a class="dropdown-item details" href="${locationUrl}/${ticket.id}">Detalhes</a>
-                                                    <a class="dropdown-item solve" href="#">Resolver</a>
+                                                    ${ticket.ticket_status != 'Resolvido' ? `<a class="dropdown-item solve" href="#" data-status="closed" data-ticket="${ticket.id}">Resolver</a` : ''}
                                                 </div>
                                             </div>
                                         </div>
@@ -122,19 +122,6 @@ $(document).ready(function () {
         });
     }
     function getTotalValues() {
-        // loadOnAny('.ticket-number', false, {
-        //     styles: {
-        //         container: {
-        //             minHeight: '32px',
-        //             height: 'auto'
-        //         },
-        //         loader: {
-        //             width: '20px',
-        //             height: '20px',
-        //             borderWidth: '4px'
-        //         },
-        //     }
-        // });
         $.ajax({
             method: "GET",
             url: '/api/tickets/getvalues',
@@ -144,12 +131,10 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                // loadOnAny('.ticket-number', true);
                 errorAjaxResponse(response);
 
             },
             success: (response) => {
-                // loadOnAny('.ticket-number', true);
                 $('#ticket-open').html(`${response.total_ticket_open}`);
                 $('#ticket-mediation').html(`${response.total_ticket_mediation}`);
                 $('#ticket-closed').html(`${response.total_ticket_closed}`);
@@ -158,4 +143,29 @@ $(document).ready(function () {
 
         });
     }
+    $(document).on('click', '.solve', function (event) {
+        event.preventDefault();
+        let status = $(this).data('status');
+        let ticketId = $(this).data('ticket');
+        $.ajax({
+            method: "PUT",
+            url: '/api/tickets/' + ticketId,
+            dataType: "json",
+            data: {
+                ticket_id: ticketId,
+                status: status,
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                getTickets();
+                alertCustom("success", "Chamado marcado como resolvido");
+            }
+        });
+    });
 });
