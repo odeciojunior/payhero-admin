@@ -38,6 +38,11 @@ class TicketsApiController extends Controller
                     ->present()
                     ->getTicketStatusEnum($data['status']));
             }
+            if (!empty($data['category'])) {
+                $tickets->where('ticket_category_enum', $ticketsModel
+                    ->present()
+                    ->getTicketCategoryEnum($data['category']));
+            }
             if (!empty($data['customer'])) {
                 $customerName = $data['customer'];
                 $tickets->whereHas('customer', function($query) use ($customerName) {

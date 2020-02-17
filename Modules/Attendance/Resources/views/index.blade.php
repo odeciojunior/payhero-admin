@@ -15,7 +15,7 @@
                         <div class='row'>
                             <div class='col-12 col-md-3 col-lg-3'>
                                 <div class='form-group'>
-                                    <label>Status:</label>
+                                    <label>Status</label>
                                     <select id='status-filter' class='form-control'>
                                         <option value="">Selecione...</option>
                                         <option value="open">Em aberto</option>
@@ -26,23 +26,34 @@
                             </div>
                             <div class='col-12 col-md-3 col-lg-3'>
                                 <div class='form-group'>
-                                    <label>Cliente:</label>
+                                    <label>Motivo</label>
+                                    <select id='category-filter' class='form-control'>
+                                        <option value="">Selecione...</option>
+                                        <option value="complaint">Reclamação</option>
+                                        <option value="doubt">Dúvida</option>
+                                        <option value="suggestion">Sugestão</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='form-group'>
+                                    <label>Cliente</label>
                                     <input id='customer-filter' class='form-control' type='text' placeholder='Nome do cliente'>
                                 </div>
                             </div>
                             <div class='col-12 col-md-3 col-lg-3'>
                                 <div class='form-group'>
-                                    <label>Código do chamado:</label>
-                                    <input id='ticker-code-filter' class='form-control' type='text' placeholder='Código do chamado'>
+                                    <label>Data</label>
+                                    <input name='date_range' id="date_range" class="form-control" placeholder="Clique para editar..." readonly>
                                 </div>
                             </div>
                             <div class='col-12 col-md-3 col-lg-3'>
                                 <div class='form-group'>
-                                    <label>Data:</label>
-                                    <input name='date_range' id="date_range" class="form-control" placeholder="Clique para editar..." readonly>
+                                    <label>Código do chamado</label>
+                                    <input id='ticker-code-filter' class='form-control' type='text' placeholder='Código do chamado'>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-3 col-lg-3 ">
+                            <div class="col-12 col-md-3 col-lg-3 mt-25">
                                 <button id="btn-filter" class="btn btn-primary w-full">
                                     <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                 </button>
