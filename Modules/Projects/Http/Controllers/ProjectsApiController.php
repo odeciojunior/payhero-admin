@@ -14,6 +14,7 @@ use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
@@ -430,6 +431,13 @@ class ProjectsApiController extends Controller
                                             $query->where('user_id', $userId)->where('status_enum', 3);
                                         }])
                                         ->first();
+
+                $producer = User::whereHas('usersProjects', function($query) use($project) {
+                    $query->where('project_id', $project->id)
+                          ->where('type_enum', 1);
+                })->first();
+
+                $project->producer = $producer->name ?? '';
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';

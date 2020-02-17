@@ -57,21 +57,21 @@
                                                     <h4 class="title-pad"></h4>
                                                     <p class="card-text sm" id="created_at"></p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <div class="d-flex">
                                                         <div class="p-2 d-flex flex-column">
-                                                            <span class="details-text">Visibilidade</span>
-                                                            <p id="show-visibility" class="card-text text-center sm badge-pill"></p>
-                                                        </div>
-                                                        <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Status</span>
-                                                            <p id="show-status" class="card-text sm badge-pill"></p>
+                                                            <span id="show-status" class="card-text sm badge-pill"></span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <h5 class="sm-title"><strong> Descrição </strong></h5>
                                             <p id="show-description" class="card-text sm"></p>
+                                            <h5 class="sm-title"><strong> Produtor </strong></h5>
+                                            <p id="show-producer" class="card-text sm"></p>
+                                            <h5 class="sm-title"><strong> Comissão </strong></h5>
+                                            <p id="show-commission" class="card-text sm"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
 
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=1')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=2')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=3')}}"></script>
         <script src="{{asset('modules/affiliates/js/links.js?v=4')}}"></script>
     @endpush
 @endsection
