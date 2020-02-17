@@ -47,7 +47,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             //Traz a mensagem do sms formatado
             $projectNotificationPresenter = $projectNotificationModel->present();
             $projectNotificationSms = $projectNotificationModel->where('project_id', $event->sale->project->id)
-                ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_billet_due_today'))
+                ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_tracking_immediate'))
                 ->where('status', $projectNotificationPresenter->getStatus('active'))
                 ->first();
             //Traz o assunto, titulo e texto do email formatados
