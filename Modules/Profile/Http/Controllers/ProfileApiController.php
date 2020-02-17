@@ -94,17 +94,26 @@ class ProfileApiController
                 )->save();
 
                 $userUpdateChanges = $user->getChanges();
-                if (isset($userUpdateChanges["email"])) {
-                    $user->fill(["email_verified" => false])->save();
-                }
-                if (isset($userUpdateChanges["cellphone"])) {
-                    $user->fill(["cellphone_verified" => false])->save();
-                }
-                if (isset($userUpdateChanges['document'])) {
-                    $companyModel = new Company();
-                    $company      = $companyModel->where('user_id', $user->id)->where('company_type',$companyModel->present()->getCompanyType('physical person'))->first();
-                    if (!empty($company)) {
-                        $company->update(['company_document' => $user->document]);
+                if (!empty($userUpdateChanges)) {
+
+
+                    if ((!empty($userUpdateChanges['email']) || array_key_exists('email', $userUpdateChanges))) {
+                        $user->fill(["email_verified" => false])->save();
+                    }
+                    if ((!empty($userUpdateChanges['cellphone']) || array_key_exists('cellphone', $userUpdateChanges))) {
+
+                        $user->fill(["cellphone_verified" => false])->save();
+                    }
+                    if ((!empty($userUpdateChanges['document']) || array_key_exists('document', $userUpdateChanges))) {
+
+                        $companyModel = new Company();
+                        $company      = $companyModel->where('user_id', $user->id)
+                                                     ->where('company_type', $companyModel->present()
+                                                                                          ->getCompanyType('physical person'))
+                                                     ->first();
+                        if (!empty($company)) {
+                            $company->update(['company_document' => $user->document]);
+                        }
                     }
                 }
 
