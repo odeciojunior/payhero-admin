@@ -14,6 +14,7 @@ use Modules\Core\Entities\Customer;
  * @property int $last_four_digits
  * @property string $card_token
  * @property string $association_code
+ * @property boolean $deleted_by_user
  * @property string $created_at
  * @property string $updated_at
  * @property Customer $customer
@@ -36,6 +37,7 @@ class CustomerCard extends Model
         'last_four_digits',
         'card_token',
         'association_code',
+        'deleted_by_user',
         'created_at',
         'updated_at',
     ];
