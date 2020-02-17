@@ -39,6 +39,7 @@ $(document).ready(function () {
                 $('.sale-code').html(`${response.data.sale_code}`);
                 $('.ticket-status').html(`${response.data.ticket_status}`);
                 $('.ticket-status').addClass(`${letterColorByStatus[response.data.ticket_status_enum]}`);
+                $('.ticket-products').html('');
                 for (let product of response.data.products) {
                     $('.ticket-products').append(`${product.name}<br>`);
                 }
