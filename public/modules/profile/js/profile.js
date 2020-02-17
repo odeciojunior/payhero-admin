@@ -661,7 +661,7 @@ $(document).ready(function () {
     }
 
     function verifyUserAddress(user) {
-        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null || user.state == null) {
+        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null ) {
             $('#row_dropzone_documents').hide();
             $('#div_address_pending').show();
         } else {
