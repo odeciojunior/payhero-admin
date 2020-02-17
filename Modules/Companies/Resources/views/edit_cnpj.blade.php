@@ -140,10 +140,16 @@
                                                 <span class="badge badge-secondary">CC</span>
                                                 <span class="badge badge-secondary">DDD</span>
                                                 <ul class="pl-20 mt-10">
-                                                    <li>Os quatro primeiros dígitos representam o <strong>código do banco</strong></li>
-                                                    <li>O segundo grupo tem 2 dígitos e representa o <strong>código do país</strong></li>
-                                                    <li>Os terceiro grupo tem 2 dígitos podem ser letras ou números e representa o <strong>código de localização</strong> da sede do banco</li>
-                                                    <li>Os três últimos dígitos representam o <strong>código do agência</strong>. XXX representa a sede</li>
+                                                    <li>Os quatro primeiros dígitos representam o
+                                                        <strong>código do banco</strong></li>
+                                                    <li>O segundo grupo tem 2 dígitos e representa o
+                                                        <strong>código do país</strong></li>
+                                                    <li>Os terceiro grupo tem 2 dígitos podem ser letras ou números e representa o
+                                                        <strong>código de localização</strong> da sede do banco
+                                                    </li>
+                                                    <li>Os três últimos dígitos representam o
+                                                        <strong>código do agência</strong>. XXX representa a sede
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -284,7 +290,7 @@
                             </table>
                         </div>
                         <div class='col-lg-12'>
-                            <div id='dropzone'>
+                            <div id='dropzone' style='display:none;'>
                                 <form method='POST' enctype='multipart/form-data' class='dropzone' id='dropzoneDocumentsJuridicPerson'>
                                     @csrf
                                     <div class="dz-message needsclick text-dropzone dropzone-previews" id='dropzone-text-document'>
@@ -305,12 +311,11 @@
     </div>
 
     <style>
-        .select2-selection--single{
+        .select2-selection--single {
             border: 1px solid #dddddd !important;
             border-radius: .215rem !important;
             height: 43px !important;
         }
-
         .select2-selection__rendered {
             color: #707070 !important;
             font-size: 16px !important;
@@ -319,22 +324,21 @@
             padding-left: 14px !important;
             padding-right: 38px !important;
         }
-
-        .select2-selection__arrow{
+        .select2-selection__arrow {
             height: 43px !important;
             right: 10px !important;
         }
         .select2-selection__arrow b {
             border-color: #8f9ca2 transparent transparent transparent !important;
         }
-        .select2-container--open .select2-selection__arrow b{
+        .select2-container--open .select2-selection__arrow b {
             border-color: transparent transparent #8f9ca2 transparent !important;
         }
     </style>
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=1')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=2')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

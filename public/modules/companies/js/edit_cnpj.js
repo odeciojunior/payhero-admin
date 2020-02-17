@@ -1,18 +1,18 @@
-let companyStatus = {
+var companyStatus = {
     pending: 'badge badge-primary',
     analyzing: 'badge badge-pending',
     approved: 'badge badge-success',
     refused: 'badge badge-danger',
 };
 
-let companyStatusTranslated = {
+var companyStatusTranslated = {
     pending: 'Pendente',
     analyzing: 'Em análise',
     approved: 'Aprovado',
     refused: 'Recusado',
 };
 
-let companyTypeDocument = {
+var companyTypeDocument = {
     bank_document_status: 'Comprovante de extrato bancário',
     address_document_status: 'Comprovante de endereço',
     contract_document_status: 'Comprovante de contrato social'
@@ -23,18 +23,18 @@ var htmlTable = null;
 $(document).ready(function () {
     //On Ready
     //Clear all content of form
-    let redirectBackLink = $("#redirect_back_link");
-    let companyUpdateForm = $("#company_update_form");
-    let companyBankUpdateForm = $("#company_bank_update_form");
-    let companyBankUpdateRoutingForm = $("#company_bank_routing_number_form");
+    var redirectBackLink = $("#redirect_back_link");
+    var companyUpdateForm = $("#company_update_form");
+    var companyBankUpdateForm = $("#company_bank_update_form");
+    var companyBankUpdateRoutingForm = $("#company_bank_routing_number_form");
     initLinks();
 
     //Functions
     function initLinks() {
-        let encodedId = extractIdFromPathName();
-        let origin = $(location).attr('origin');
-        let path = origin + '/companies';
-        let apiPath = origin + '/api/companies';
+        var encodedId = extractIdFromPathName();
+        var origin = $(location).attr('origin');
+        var path = origin + '/companies';
+        var apiPath = origin + '/api/companies';
         redirectBackLink.attr('href', path);
         companyUpdateForm.attr('action', (apiPath + "/" + encodedId));
         companyBankUpdateForm.attr('action', (apiPath + "/" + encodedId));
@@ -75,7 +75,7 @@ $(document).ready(function () {
 
     initForm = function () {
         //Get CompanyId from path
-        let encodedId = extractIdFromPathName();
+        var encodedId = extractIdFromPathName();
         //Get Company data from laravel api
         $.ajax({
             method: "GET",
@@ -87,11 +87,14 @@ $(document).ready(function () {
             },
             error: function (response) {
                 errorAjaxResponse(response);
+                $("#dropzone").css('display', 'block');
+
             },
             success: function success(response) {
-                let company = response.company;
-                let banks = response.banks;
+                var company = response.company;
+                var banks = response.banks;
 
+                $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
                 $('#company_document').val(company.company_document);
                 $('#business_website').val(company.business_website);
@@ -114,7 +117,7 @@ $(document).ready(function () {
                     $('#company_bank_routing_number_form').show();
                 } else {
                     if (company.country === 'brazil' || company.country === 'portugal') {
-                        for (let bank of banks) {
+                        for (var bank of banks) {
                             $('#bank').append(`<option value="${bank.code}" ${bank.code === company.bank ? 'selected' : ''}>${bank.code} - ${bank.name}</option>`)
                         }
                     } else {
@@ -125,8 +128,6 @@ $(document).ready(function () {
                     $('#agency_digit').val(company.agency_digit);
                     $('#account').val(company.account);
                     $('#account_digit').val(company.account_digit);
-
-                    $("#company_id").val(company.id_code);
 
                 }
                 htmlModifyAlerts(company);
@@ -155,6 +156,7 @@ $(document).ready(function () {
                 if (company.country == 'brazil' || company.country == 'usa') {
                     $(".div-state").show();
                 }
+
                 //verifica país da empresa e coloca mascara
                 changeMaskByCompanyCountry(company);
                 loadLabelsByCountry(company);
@@ -183,19 +185,19 @@ $(document).ready(function () {
     //Couting number
     $('#rounting_number').on('input', function () {
 
-        let value = $(this).val();
+        var value = $(this).val();
 
         if (value.length === 9 && !isNaN(parseInt(value))) {
             $.ajax({
                 url: 'https://www.routingnumbers.info/api/data.json?rn=' + $(this).val(),
-                success: response => {
+                success: function (response) {
                     if (!isEmpty(response.customer_name)) {
                         $('#bank_routing_number').val(response.customer_name);
                     } else {
                         $('#bank_routing_number').val('Digite um routing number válido...');
                     }
                 },
-                error: response => {
+                error: function (response) {
                     $('#bank_routing_number').val('Digite um routing number válido...');
                     alertCustom('error', 'Erro ao buscar routing number');
                 }
@@ -212,7 +214,7 @@ $(document).ready(function () {
         $(".info-complemented").removeAttr('disabled');
 
         $("#country").removeAttr('disabled');
-        let form_data = new FormData(document.getElementById('company_update_form'));
+        var form_data = new FormData(document.getElementById('company_update_form'));
         $('#country').attr('disabled', true);
 
         loadingOnScreen();
@@ -240,7 +242,7 @@ $(document).ready(function () {
     });
     companyBankUpdateForm.on("submit", function (event) {
         event.preventDefault();
-        let form_data = new FormData(document.getElementById('company_bank_update_form'));
+        var form_data = new FormData(document.getElementById('company_bank_update_form'));
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -265,7 +267,7 @@ $(document).ready(function () {
     });
     companyBankUpdateRoutingForm.on("submit", function (event) {
         event.preventDefault();
-        let form_data = new FormData(document.getElementById('company_bank_routing_number_form'));
+        var form_data = new FormData(document.getElementById('company_bank_routing_number_form'));
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -292,7 +294,7 @@ $(document).ready(function () {
     function openDocument() {
         $(".document-url").on("click", function (e) {
             e.preventDefault();
-            let documentUrl = $(this).attr('href');
+            var documentUrl = $(this).attr('href');
             loadingOnScreen();
             $.ajax({
                 method: "POST",
@@ -349,7 +351,7 @@ $(document).ready(function () {
         }
     }
     function loadLabelsByCountry(company) {
-        let companyDocumentName = {
+        var companyDocumentName = {
             brazil: 'CNPJ',
             portugal: 'NIPC',
             usa: 'EIN',
@@ -383,6 +385,8 @@ $(document).ready(function () {
                 $("#loaderLine").remove();
                 htmlTable(response.data);
                 $("#company-id").val(encodedId);
+                $("#dropzone").css('display', 'block');
+
                 $("#modal-document-person-fisic").modal('show');
             },
         });
@@ -418,7 +422,7 @@ $(document).ready(function () {
     htmlTable = function (dataTable) {
         $("#loaderLine").remove();
 
-        let dados = '';
+        var dados = '';
         $("#table-body-document-person-juridic").html('');
         if (dataTable.length == 0) {
             $("#table-body-document-person-juridic").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
@@ -487,7 +491,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsJuridicPerson', {
 
     }, complete: function () {
         loadOnTable('#table-body-document-person-juridic', '#table-document-person-juridic');
-        let codeId = extractIdFromPathName();
+        var codeId = extractIdFromPathName();
 
         $.ajax({
             method: 'POST',

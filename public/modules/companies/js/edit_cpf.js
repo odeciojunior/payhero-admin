@@ -1,11 +1,11 @@
-let companyStatus = {
+var companyStatus = {
     pending: 'badge badge-primary',
     analyzing: 'badge badge-pending',
     approved: 'badge badge-success',
     refused: 'badge badge-danger',
 };
 
-let companyStatusTranslated = {
+var companyStatusTranslated = {
     pending: 'Pendente',
     analyzing: 'Em análise',
     approved: 'Aprovado',
@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     initForm = function () {
 
-        let encodedId = extractIdFromPathName();
+        var encodedId = extractIdFromPathName();
 
         loadOnAny('#tab_user');
 
@@ -77,7 +77,7 @@ $(document).ready(function () {
 
     $("#update_bank_data").on("click", function (event) {
         event.preventDefault();
-        let form_data = new FormData(document.getElementById('company_update_bank_form'));
+        var form_data = new FormData(document.getElementById('company_update_bank_form'));
         loadingOnScreen();
 
         var encodedId = extractIdFromPathName();
@@ -135,7 +135,7 @@ $(document).ready(function () {
 
     function htmlTable(dataTable) {
         $("#loaderLine").remove();
-        let dados = '';
+        var dados = '';
         if (dataTable.length == 0) {
             $("#table-body-documents-person-fisic").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>')
         } else {
@@ -204,7 +204,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
         myDropzone.removeFile(file);
     }, complete: function () {
         loadOnTable('#table-body-documents-person-fisic', '#table-documents-person-fisic');
-        let codeId = extractIdFromPathName();
+        var codeId = extractIdFromPathName();
 
         $.ajax({
             method: 'POST',
@@ -233,13 +233,13 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
 
         function htmlTableDoc(dataTable) {
             document.querySelector('#loaderLine').remove();
-            let dados = '';
+            var dados = '';
             if (dataTable.length == 0) {
                 document.querySelector("#table-body-documents-person-fisic").innerHTML = '<span>Nenhum documento enviado</span>';
             } else {
                 document.querySelector("#table-body-documents-person-fisic").innerHTML = '';
                 document.querySelector("#document-person-fisic-refused-motived").innerHTML = '';
-                for (let value  of dataTable) {
+                for (var value  of dataTable) {
                     dados += `<tr>
                         <td class='text-center'>${value.date}</td>
                         <td class='text-center' style='cursor: pointer;'>
