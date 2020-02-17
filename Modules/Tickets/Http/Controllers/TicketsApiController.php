@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketMessage;
+use Modules\Core\Services\FoxUtils;
 use Modules\Tickets\Transformers\TicketMessageResource;
 use Modules\Tickets\Transformers\TicketResource;
 use Modules\Tickets\Transformers\TicketShowResource;
@@ -17,20 +18,21 @@ class TicketsApiController extends Controller
     public function index(Request $request)
     {
         try {
-
             $ticketsModel = new Ticket();
-
-            $data    = $request->all();
-            $userId  = auth()->user()->account_owner_id;
-            $tickets = $ticketsModel->with([
-                                               'messages',
-                                               'customer',
-                                               'sale',
-                                           ])
-                                    ->whereHas('sale', function($query) use ($userId) {
-                                        $query->where('owner_id', $userId);
-                                    });
-
+            $data         = $request->all();
+            $userId       = auth()->user()->account_owner_id;
+            $tickets      = $ticketsModel->with([
+                                                    'messages',
+                                                    'customer',
+                                                    'sale',
+                                                ])
+                                         ->whereHas('sale', function($query) use ($userId) {
+                                             $query->where('owner_id', $userId);
+                                         });
+            if (!empty($data['date'])) {
+                $date = FoxUtils::validateDateRange($data["date"]);
+                $tickets->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
+            }
             if (!empty($data['status'])) {
                 $tickets->where('ticket_status_enum', $ticketsModel
                     ->present()
@@ -126,10 +128,10 @@ class TicketsApiController extends Controller
 
                 if (!empty($data['message'])) {
                     $message = $ticketMessageModel->create([
-                                                              'ticket_id'  => $ticketId,
-                                                              'message'    => $data['message'],
-                                                              'from_admin' => true,
-                                                          ]);
+                                                               'ticket_id'  => $ticketId,
+                                                               'message'    => $data['message'],
+                                                               'from_admin' => true,
+                                                           ]);
 
                     return new TicketMessageResource($message);
                 } else {
@@ -145,10 +147,11 @@ class TicketsApiController extends Controller
         }
     }
 
-    public function getTotalValues()
+    public function getTotalValues(Request $request)
     {
         try {
             $ticketsModel    = new Ticket();
+            $data            = $request->all();
             $userId          = auth()->user()->account_owner_id;
             $ticketPresenter = $ticketsModel->present();
             $ticket          = $ticketsModel->selectRaw('count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('open') . ' then 1 end) as openCount,
@@ -157,8 +160,13 @@ class TicketsApiController extends Controller
                                             ')
                                             ->whereHas('sale', function($query) use ($userId) {
                                                 $query->where('owner_id', $userId);
-                                            })->first();
-            $totalCount      = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
+                                            });
+            if (!empty($data['date'])) {
+                $date = FoxUtils::validateDateRange($data["date"]);
+                $ticket->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
+            }
+            $ticket     = $ticket->first();
+            $totalCount = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
 
             return response()->json([
                                         'total_ticket_open'      => $ticket->openCount,
@@ -173,5 +181,4 @@ class TicketsApiController extends Controller
             return response()->json(['message' => 'Erro ao carregar valores totais!'], 400);
         }
     }
-
 }

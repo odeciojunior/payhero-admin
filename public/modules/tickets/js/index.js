@@ -10,12 +10,14 @@ $(document).ready(function () {
         2: 'green-gradient',
         3: 'red-gradient',
     };
+    dateRangePicker();
     getTickets();
     getTotalValues();
 
     $("#btn-filter").on("click", function (event) {
         event.preventDefault();
         getTickets();
+        getTotalValues();
     });
 
     function getTickets() {
@@ -24,9 +26,9 @@ $(document).ready(function () {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         if (link == null) {
-            link = '/api/tickets?' + 'status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val();
+            link = '/api/tickets?' + 'status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val() + '&date=' + $("#date_range").val();
         } else {
-            link = '/api/tickets/' + link + '&status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val();
+            link = '/api/tickets/' + link + '&status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val() + '&date=' + $("#date_range").val();
         }
         $.ajax({
             method: "GET",
@@ -60,7 +62,7 @@ $(document).ready(function () {
                                                 <i class="material-icons" id="dropdownMenuButton" title='Opções' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='cursor:pointer'>more_vert</i>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                                     <a class="dropdown-item details" href="${locationUrl}/${ticket.id}">Detalhes</a>
-                                                    ${ticket.ticket_status != 'Resolvido' ? `<a class="dropdown-item solve" href="#" data-status="closed" data-ticket="${ticket.id}">Resolver</a` : ''}
+                                                    ${ticket.ticket_status != 'Resolvido' ? `<a class="dropdown-item solve" href="#" data-status="closed" data-ticket="${ticket.id}">Resolver</a>` : ''}
                                                 </div>
                                             </div>
                                         </div>
@@ -126,6 +128,9 @@ $(document).ready(function () {
             method: "GET",
             url: '/api/tickets/getvalues',
             dataType: "json",
+            data: {
+                date: $("#date_range").val(),
+            },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -143,6 +148,7 @@ $(document).ready(function () {
 
         });
     }
+
     $(document).on('click', '.solve', function (event) {
         event.preventDefault();
         let status = $(this).data('status');
@@ -168,4 +174,43 @@ $(document).ready(function () {
             }
         });
     });
+
+    //DatePicker
+    function dateRangePicker() {
+        let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+        let endDate = moment().format('YYYY-MM-DD');
+        $('#date_range').daterangepicker({
+            startDate: moment().subtract(30, 'days'),
+            endDate: moment(),
+            opens: 'center',
+            maxDate: moment().endOf("day"),
+            alwaysShowCalendar: true,
+            showCustomRangeLabel: 'Customizado',
+            autoUpdateInput: true,
+            locale: {
+                locale: 'pt-br',
+                format: 'DD/MM/YYYY',
+                applyLabel: "Aplicar",
+                cancelLabel: "Limpar",
+                fromLabel: 'De',
+                toLabel: 'Até',
+                customRangeLabel: 'Customizado',
+                weekLabel: 'W',
+                daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                firstDay: 0
+            },
+            ranges: {
+                'Hoje': [moment(), moment()],
+                'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                'Este mês': [moment().startOf('month'), moment().endOf('month')],
+                'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, function (start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
+    }
 });

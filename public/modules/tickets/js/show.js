@@ -40,32 +40,40 @@ $(document).ready(function () {
                 $('.ticket-status').html(`${response.data.ticket_status}`);
                 $('.ticket-status').addClass(`${letterColorByStatus[response.data.ticket_status_enum]}`);
                 $('.ticket-products').html('');
+
                 for (let product of response.data.products) {
                     $('.ticket-products').append(`${product.name}<br>`);
                 }
+
+                //Monta a div de comentários
                 $("#div-ticket-comments").html('');
                 if (!isEmpty(response.data.messages)) {
+                    let customerNameSplit = response.data.customer_name.split(' ');
+                    let adminSrcImage = $('.img-user-menu-principal').attr('src');
 
                     for (let ticketMessage of response.data.messages) {
                         let data = '';
                         data = `
                         <div class="d-flex flex-row mb-10">
                             <div class="p-2 bd-highlight">
-                                <img src="https://i.pinimg.com/736x/27/72/43/277243ecf332f1c672a861a2c536a690.jpg" style='height:50px;width:50px;' class="img-fluid rounded-circle">
+                                <img ${ticketMessage.from_admin == 1 ? `src="${adminSrcImage}"` : `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
+                                style='height:50px;width:50px;' class="img-fluid rounded-circle">
                             </div>
                             <div class="p-2">
                                 <span class='font-weight-bold'>${ticketMessage.from_admin == 1 ? ticketMessage.admin_name : response.data.customer_name}</span>
                                 <br>
-                                <span>${ticketMessage.created_at}</span>
+                                <small>${ticketMessage.created_at}</small>
                                 <p>${ticketMessage.message}</p>
                             </div>
                         </div>`;
 
                         $('#div-ticket-comments').append(data);
                     }
+
                 } else {
                     $('#div-ticket-comments').append('<div class="alert alert-info text-center font-size-14">Nenhuma mensagem encontrada</div>');
                 }
+
                 if (response.data.ticket_status == 'Resolvido') {
                     $('#btn-solve').hide();
                 }

@@ -36,7 +36,13 @@
                                     <input id='ticker-code-filter' class='form-control' type='text' placeholder='Código do chamado'>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-3 col-lg-3 mt-25">
+                            <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='form-group'>
+                                    <label>Data:</label>
+                                    <input name='date_range' id="date_range" class="form-control" placeholder="Clique para editar..." readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-3 col-lg-3 ">
                                 <button id="btn-filter" class="btn btn-primary w-full">
                                     <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                 </button>
@@ -112,6 +118,8 @@
     </div>
     @push('scripts')
         <script src='{{asset('/modules/tickets/js/index.js')}}'></script>
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
 
 @endsection
