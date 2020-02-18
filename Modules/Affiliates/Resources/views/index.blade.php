@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class='alert alert-danger text-center font-size-18 div-disabled-url-affiliates' style='display:none;'>Link para afiliação não disponível</div>
+{{--        <div class='alert alert-danger text-center font-size-18 div-disabled-url-affiliates' style='display:none;'>Link para afiliação não disponível</div>--}}
         <!-- Modal affiliates -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_store_affiliate"
              aria-hidden="true"
@@ -115,6 +115,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=8') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=9') }}"></script>
     @endpush
 @endsection

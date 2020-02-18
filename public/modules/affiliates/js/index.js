@@ -56,7 +56,20 @@ $(document).ready(function () {
                         $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
                     }
                 } else {
-                    $('.div-disabled-url-affiliates').show();
+                    // $('.div-disabled-url-affiliates').show();
+                    swal({
+                        title: 'Esse projeto não está disponível para afiliação',
+                        type: 'warning',
+                        confirmButtonColor: "#ec6421",
+                        confirmButtonClass: "btn btn-warning",
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.replace('/dashboard');
+                        } else {
+                            window.location.replace('/dashboard');
+                        }
+                    })
                 }
             }
         });
