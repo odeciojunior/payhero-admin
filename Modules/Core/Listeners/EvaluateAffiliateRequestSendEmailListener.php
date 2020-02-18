@@ -29,6 +29,8 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
 
     /**
      * @param EvaluateAffiliateRequestEvent $event
+     * Email de avaliação de pedido de afiliação
+     * Para o usuario que solicitou a afiliação
      */
     public function handle(EvaluateAffiliateRequestEvent $event)
     {
@@ -45,12 +47,21 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
                 'date'         => $affiliateRequest->created_at->format('d/m/Y'),
                 'link'         => env('APP_URL') . '/projects/' . $idEncoded,
             ];
+
             if ($affiliateRequest->status == $affiliateRequestPresenter->getStatus('approved')) {
                 $templateId = 'd-f777e4ed8416473b8b2673923139db60';
             } else {
                 $templateId = 'd-14c40a9bd9704f9e8999a5d8fdc9cf7c';
             }
-            $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, $templateId, $data);
+
+            $user->load('userNotification');
+
+            /**
+             * Verifica se o usuario habilitou notificação email
+             */
+            if ($user->userNotification->approved_affiliation) {
+                $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, $templateId, $data);
+            }
         } catch (Exception $e) {
             Log::warning('erro ao enviar email de avaliação de afiliado para o projeto ' . $project->id);
             report($e);

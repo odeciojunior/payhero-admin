@@ -25,7 +25,7 @@ class GenericCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generic:command';
+    protected $signature = 'generic';
 
     /**
      * The console command description.
@@ -49,7 +49,7 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        //
+        dd(getenv('DB_HOST'));
     }
 
 }

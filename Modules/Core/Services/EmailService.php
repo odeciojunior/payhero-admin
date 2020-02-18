@@ -96,7 +96,7 @@ class EmailService
 
             if (stristr($sale->customer->email, 'invalido') === false) {
                 $sendEmail->sendEmail('noreply@' . $domain->name, $sale->project->name, $sale->customer->email, $sale->customer->present()
-                                                                                                                           ->getFirstName(), 'd-ed70ee0df3a04153aa835e8e4f652434', $data);
+                                                                                                                               ->getFirstName(), 'd-ed70ee0df3a04153aa835e8e4f652434', $data);
             }
 
             return;
@@ -177,7 +177,7 @@ class EmailService
                 if (stristr($customer->email, 'invalido') === false) {
 
                     $sendEmail->sendEmail('noreply@' . $domain->name, $project->name, $customer->email, $customer->present()
-                                                                                                             ->getFirstName(), 'd-c521a65b247645a9b5f7be6b9b0db262', $data);
+                                                                                                                 ->getFirstName(), 'd-c521a65b247645a9b5f7be6b9b0db262', $data);
                 }
             } else {
                 $data = [
@@ -197,7 +197,7 @@ class EmailService
                 if (stristr($customer->email, 'invalido') === false) {
 
                     $sendEmail->sendEmail('noreply@' . $domain->name, $project->name, $customer->email, $customer->present()
-                                                                                                             ->getFirstName(), 'd-b80c0854a9d342428532d8d4b0e2f654', $data);
+                                                                                                                 ->getFirstName(), 'd-b80c0854a9d342428532d8d4b0e2f654', $data);
                 }
             }
 
@@ -210,6 +210,15 @@ class EmailService
         }
     }
 
+    /**
+     * @param $fromEmail
+     * @param $fromName
+     * @param $toEmail
+     * @param $toName
+     * @param $templateId
+     * @param $data
+     * @return bool
+     */
     public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
@@ -219,7 +228,7 @@ class EmailService
                 $fromEmail = getenv('EMAIL_TEST');
             }
 
-            if (stristr($fromEmail, 'invalido') === false) {
+            if (!empty($fromEmail) && stristr($fromEmail, 'invalido') === false) {
                 return $sendGridService->sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data);
             } else {
                 return false;
