@@ -17,6 +17,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $document
  * @property string $email
  * @property string $telephone
+ * @property integer $balance
+ * @property string $birthday
  * @property integer $id_kapsula_client
  * @property string $created_at
  * @property string $updated_at
@@ -43,6 +45,8 @@ class Customer extends Model
         'document',
         'email',
         'telephone',
+        'balance',
+        'birthday',
         'id_kapsula_client',
         'created_at',
         'updated_at',
