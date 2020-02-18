@@ -59,7 +59,7 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
             /**
              * Verifica se o usuario habilitou notificação email
              */
-            if ($user->userNotification->approved_affiliation) {
+            if ($user->userNotification->affiliation) {
                 $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, $templateId, $data);
             }
         } catch (Exception $e) {

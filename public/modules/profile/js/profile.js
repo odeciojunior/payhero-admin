@@ -109,14 +109,8 @@ $(document).ready(function () {
                     $("#credit_card_in_proccess_switch").attr("checked", "checked");
                 }
 
-                if (response.data.new_affiliation) {
-                    $("#new_affiliation_switch").attr("checked", "checked");
-                }
-                if (response.data.new_affiliation_request) {
-                    $("#new_affiliation_request_switch").attr("checked", "checked");
-                }
-                if (response.data.approved_affiliation) {
-                    $("#approved_affiliation_switch").attr("checked", "checked");
+                if (response.data.affiliation) {
+                    $("#affiliation_switch").attr("checked", "checked");
                 }
 
                 // Verificação de telefone

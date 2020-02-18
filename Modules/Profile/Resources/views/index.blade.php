@@ -475,32 +475,10 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="new_affiliation_switch" class="mb-10">Nova afiliação</label>
+                                                <label for="affiliation_switch" class="mb-10">Afiliação</label>
                                                 <br>
                                                 <label class="switch">
-                                                    <input type="checkbox" id="new_affiliation_switch" name="new_affiliation"
-                                                           class="check notification_switch" value='1'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="switch-holder">
-                                                <label for="new_affiliation_request_switch" class="mb-10">Pedido de afiliação</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="new_affiliation_request_switch" name="new_affiliation_request"
-                                                           class="check notification_switch" value='1'>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 mt-4">
-                                            <div class="switch-holder">
-                                                <label for="approved_affiliation_switch" class="mb-10">Afiliação aprovada</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="approved_affiliation_switch" name="approved_affiliation"
+                                                    <input type="checkbox" id="affiliation_switch" name="affiliation"
                                                            class="check notification_switch" value='1'>
                                                     <span class="slider round"></span>
                                                 </label>
@@ -666,7 +644,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=2')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=3')}}"></script>
     @endpush
 
 @endsection
