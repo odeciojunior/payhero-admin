@@ -74,7 +74,7 @@ class AffiliatesApiController extends Controller
                                                                     'status_enum' => $affiliateModel->present()
                                                                                                     ->getStatus('approved'),
                                                                 ]);
-                    $affiliateLink    = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
+                    $affiliateLink    = $affiliateService->createAffiliateLinks($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         event(new AffiliateEvent($affiliate));
 
@@ -206,13 +206,6 @@ class AffiliatesApiController extends Controller
             $affiliateId = current(Hashids::decode($id));
             $affiliate   = Affiliate::with('affiliateLinks')->find($affiliateId);
 
-            // if (Gate::denies('destroy', [$affiliate])) {
-            //     return response()->json([
-            //             'message' => 'Sem permissão',
-            //         ],Response::HTTP_FORBIDDEN
-            //     );
-            // }
-
             if (!empty($affiliate->affiliateLinks) && $affiliate->affiliateLinks->isNotEmpty()) {
                 foreach ($affiliate->affiliateLinks as $affiliateLink) {
                     $affiliateLink->delete();
@@ -239,33 +232,6 @@ class AffiliatesApiController extends Controller
         }
     }
 
-    //    public function getAffiliates($projectId)
-    //    {
-    //        try {
-    //
-    //            $projectId = current(Hashids::decode($projectId));
-    //
-    //            $affiliates = Affiliate::with('user')->where('project_id', $projectId)->get();
-    //
-    //            return response()->json(['data' => AffiliateResource::collection($affiliates)], 200);
-    //        } catch (Exception $e) {
-    //            return response()->json(['message' => 'Ocorreu um erro'], 400);
-    //        }
-    //    }
-
-    //    public function getAffiliateRequests($projectId)
-    //    {
-    //        try {
-    //
-    //            $projectId = current(Hashids::decode($projectId));
-    //
-    //            $affiliates = AffiliateRequest::with('user')->where('project_id', $projectId)->get();
-    //
-    //            return response()->json(['data' => AffiliateRequestResource::collection($affiliates)], 200);
-    //        } catch (Exception $e) {
-    //            return response()->json(['message' => 'Ocorreu um erro'], 400);
-    //        }
-    //    }
     public function getAffiliates()
     {
         try {
@@ -327,7 +293,7 @@ class AffiliatesApiController extends Controller
                                                           ]);
                     $affiliateRequest->update(['status' => $status]);
 
-                    $affiliateLink = $affiliateService->createAffiliateLink($affiliate->id, $project->id);
+                    $affiliateLink = $affiliateService->createAffiliateLinks($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         event(new EvaluateAffiliateRequestEvent($affiliateRequest));
 
