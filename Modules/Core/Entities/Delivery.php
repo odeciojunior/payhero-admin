@@ -13,6 +13,7 @@ use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
+ * @property integer $customer_id
  * @property int $carrier_id
  * @property string $receiver_name
  * @property string $zip_code
@@ -32,7 +33,7 @@ use App\Traits\LogsActivity;
  * @property string $deleted_at
  * @property Carrier $carrier
  * @property Sale[] $sales
- * @property TrackingHistory[] $trackingHistories
+ * @property Customer $customer
  */
 class Delivery extends Model
 {
@@ -50,6 +51,7 @@ class Delivery extends Model
      * @var array
      */
     protected $fillable = [
+        'customer_id',
         'carrier_id',
         'receiver_name',
         'zip_code',
@@ -104,10 +106,9 @@ class Delivery extends Model
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function trackingHistories()
-    {
-        return $this->hasMany('Modules\Core\Entities\TrackingHistory');
+    public function customer(){
+        return $this->belongsTo(Customer::class);
     }
 }

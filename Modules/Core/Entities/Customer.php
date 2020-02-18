@@ -6,6 +6,7 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CustomerPresenter;
 use App\Traits\LogsActivity;
@@ -23,7 +24,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Sale[] $sales
+ * @property Collection $sales
+ * @property Collection $deliveries
  */
 class Customer extends Model
 {
@@ -102,5 +104,21 @@ class Customer extends Model
     public function clientCards()
     {
         return $this->hasMany('App\Entities\ClientCard');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(CustomerBankAccount::class, 'customer_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function deliveries()
+    {
+        return $this->hasMany(Delivery::class);
     }
 }
