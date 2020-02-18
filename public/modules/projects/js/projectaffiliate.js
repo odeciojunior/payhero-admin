@@ -55,12 +55,19 @@ $(() => {
                 } else {
                     $('#show-visibility').text('Privado').addClass('badge-danger');
                 }
-                if (project.status == '1') {
-                    $('#show-status').text('Ativo').addClass('badge-primary');
-                } else {
-                    $('#show-status').text('Inativo').addClass('badge-danger');
+
+                if (project.status_affiliate == '1') {
+                    $('#show-status').text('Pendente').addClass('badge-primary');
+                } else if (project.status_affiliate == '2'){
+                    $('#show-status').text('Em análise').addClass('badge-warning');
+                } else if (project.status_affiliate == '3'){
+                    $('#show-status').text('Ativo').addClass('badge-success');
+                } else if (project.status_affiliate == '4'){
+                    $('#show-status').text('Recusado').addClass('badge-danger');
                 }
                 $('#show-description').text(project.description);
+                $('#show-producer').text(project.producer);
+                $('#show-commission').text(project.commission_affiliate + '%');
 
                 loadOnAny('#tab_info_geral .card', true);
             },

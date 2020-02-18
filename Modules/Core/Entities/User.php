@@ -301,7 +301,7 @@ class User extends Authenticable
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
     /**

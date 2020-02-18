@@ -82,6 +82,9 @@ class ProjectsResource extends Resource
             'affiliate_date'             => (!empty($affiliate->created_at)) ? (new Carbon($affiliate->created_at))->format('d/m/Y') : '',
             "status_url_affiliates"      => $this->status_url_affiliates,
             "commission_type_enum"       => $this->commission_type_enum,
+            "commission_affiliate"       => $affiliate->percentage ?? '',
+            "status_affiliate"           => $affiliate->status_enum ?? '',
+            "producer"                   => $this->producer ?? '',
         ];
     }
 }
