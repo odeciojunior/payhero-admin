@@ -34,7 +34,7 @@ $(function () {
             $("#code-pixel").attr("placeholder", '52342343245553');
         } else if (value === 'google_adwords') {
             $("#input-code-pixel").html('AW-').show();
-            $("#code-pixel").attr("placeholder", '8981445741-4');
+            $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
         } else if (value === 'google_analytics') {
             $("#input-code-pixel").html('UA-').show();
             $("#code-pixel").attr("placeholder", '8984567741-3');
@@ -110,7 +110,7 @@ $(function () {
                         $("#code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#code-pixel-edit").html('AW-').show();
-                        $("#code-pixel").attr("placeholder", '8981445741-4');
+                        $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
                         $("#code-pixel-edit").html('UA-').show();
                         $("#code-pixel").attr("placeholder", '8984567741-3');
@@ -348,7 +348,7 @@ $(function () {
                         $("#code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
                         $("#input-code-pixel").html('AW-').show();
-                        $("#code-pixel").attr("placeholder", '8981445741-4');
+                        $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
                         $("#input-code-pixel").html('UA-').show();
                         $("#code-pixel").attr("placeholder", '8984567741-3');
