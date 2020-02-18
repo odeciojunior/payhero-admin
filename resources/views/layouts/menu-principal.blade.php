@@ -57,7 +57,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
-                  <img src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png' !!}" onerror="this.onerror=null; this.src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'" alt="">
+                  <img class='img-user-menu-principal' src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png' !!}" onerror="this.onerror=null; this.src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png'" alt="">
                   <i></i>
                 </span>
                     </a>
@@ -161,8 +161,8 @@
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub  disabled">
-                <a class="disabled" href="{{ route('attendance') }}">
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('attendance.index') }}">
                     <i class="material-icons">chat_bubble_outline</i>
                     <span class="site-menu-title">Atendimento (em breve)</span>
                 </a>
