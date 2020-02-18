@@ -66,11 +66,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5 class="sm-title"><strong> Descrição </strong></h5>
+                                            <h5 class=""><strong> Descrição </strong></h5>
                                             <p id="show-description" class="card-text sm"></p>
-                                            <h5 class="sm-title"><strong> Produtor </strong></h5>
+                                            <h5 class=""><strong> Produtor </strong></h5>
                                             <p id="show-producer" class="card-text sm"></p>
-                                            <h5 class="sm-title"><strong> Comissão </strong></h5>
+                                            <h5 class=""><strong> Comissão </strong></h5>
                                             <p id="show-commission" class="card-text sm"></p>
                                         </div>
                                     </div>
