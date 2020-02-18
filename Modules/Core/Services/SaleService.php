@@ -314,7 +314,6 @@ class SaleService
         }
 
         //add details to sale
-<<<<<<< HEAD
         $sale->details = (object) [
             'transaction_rate'    => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
             'percentage_rate'     => $userTransaction->percentage_rate ?? 0,
@@ -327,20 +326,6 @@ class SaleService
             'taxaReal'            => $taxaReal,
             'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
             'affiliate_comission' => $affiliateComission,
-=======
-        $sale->details = (object)[
-            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '',
-                        $userTransaction->transaction_rate) / 100, 2, ',', '.'),
-            'percentage_rate' => $userTransaction->percentage_rate ?? 0,
-            'total' => number_format(intval($total) / 100, 2, ',', '.'),
-            'subTotal' => number_format(intval($subTotal) / 100, 2, ',', '.'),
-            'discount' => number_format(intval($discount) / 100, 2, ',', '.'),
-            'comission' => $comission,
-            'convertax_value' => $convertaxValue,
-            'taxa' => number_format($taxa / 100, 2, ',', '.'),
-            'taxaReal' => $taxaReal,
-            'release_date' => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
->>>>>>> 169cb3a1357c6814d82b95d27939c2e94a76da7c
         ];
     }
 

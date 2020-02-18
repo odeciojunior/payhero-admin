@@ -168,7 +168,7 @@ class SalesApiController extends Controller
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
             } else {
-                $result = $saleService->refund($saleId);
+                $result = $saleService->refund($saleId); 
             }
             if ($result['status'] == 'success') {
                 $sale->update([

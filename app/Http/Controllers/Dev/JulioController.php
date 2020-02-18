@@ -51,13 +51,6 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-        $sale = Sale::find(3000);
-
-        foreach($sale->transactions as $transaction){
-            dump($transaction);
-        }
-
-        dd("foii");
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
         // $this->restartShopifyWebhooks();
@@ -102,18 +95,18 @@ class JulioController extends Controller
 
             $company = $transaction->company;
 
-//            $company->update([
-//                'balance' => intval($company->balance) - intval($value),
-//            ]);
-//
-//            $transfer = $transferModel->create([
-//                'user_id'        => $company->user_id,
-//                'company_id'     => $company->id,
-//                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-//                'value'          => $value,
-//                'type'           => 'out',
-//                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
-//            ]);
+            //            $company->update([
+            //                'balance' => intval($company->balance) - intval($value),
+            //            ]);
+            //
+            //            $transfer = $transferModel->create([
+            //                'user_id'        => $company->user_id,
+            //                'company_id'     => $company->id,
+            //                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+            //                'value'          => $value,
+            //                'type'           => 'out',
+            //                'reason'         => 'Múltiplas transferências da transação #' . Hashids::connection('sale_id')->encode($transaction->sale_id)
+            //            ]);
 
         }
 
