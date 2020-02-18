@@ -71,6 +71,7 @@ class ProjectAffiliateResource extends Resource
             'percentage_affiliates'  => $this->percentage_affiliates ?? '',
             'affiliatedMessage'      => $affiliatedMessage,
             'producer'               => $producer,
+            'status_url_affiliates'  => $this->status_url_affiliates,
         ];
     }
 }

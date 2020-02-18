@@ -3,8 +3,15 @@ $(() => {
 
     CKEDITOR.replace('termsaffiliates', {
         language: 'br',
-        uiColor: '#AAAAAA',
-        height: 250
+        uiColor: '#F1F4F5',
+        height: 250,
+        toolbarGroups: [
+            { name: 'basicstyles', groups: [ 'basicstyles' ] },
+            { name: 'paragraph', groups: [ 'list', 'blocks' ] },
+            { name: 'links', groups: [ 'links' ] },
+            { name: 'styles', groups: [ 'styles' ] },
+        ],
+        removeButtons: 'Anchor,Superscript,Subscript',
     });
 
     // COMPORTAMENTOS DA TELA
@@ -277,12 +284,11 @@ $(() => {
             $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
         }
 
-        if(project.status_url_affiliates == 1) {
-            $('#update-project .status-url-affiliates').prop('selectedIndex', 1).change();
-            $('.div-url-affiliate').show();
+        if (project.status_url_affiliates == 1) {
+            $('#update-project .status-url-affiliates').prop('checked', true)
+            $('.div-url-affiliate').show('fast', 'linear')
         } else {
-            $('#update-project .status-url-affiliates').prop('selectedIndex', 0).change();
-            $('.div-url-affiliate').hide();
+            $('.div-url-affiliate').prop('checked', false)
         }
 
         if(project.commission_type_enum == 1) {
@@ -585,7 +591,12 @@ $(() => {
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
         let verify = verificaParcelas(parcelas, parcelasJuros);
         $('#terms_affiliates').val(CKEDITOR.instances.termsaffiliates.getData());
+        let statusUrlAffiliates = 0;
+        if($('#status-url-affiliates').prop('checked')) {
+            statusUrlAffiliates = 1;
+        }
         let formData = new FormData(document.getElementById("update-project"));
+        formData.append('status_url_affiliates', statusUrlAffiliates);
 
         if (!verify) {
             $.ajax({
@@ -883,6 +894,20 @@ $(() => {
         recoveryDiscountColor()
     })
 
+    $('.status-url-affiliates').on("click", function () {
+        statusUrlAffiliatesColor()
+    })
+
+    statusUrlAffiliatesColor()
+
+    function statusUrlAffiliatesColor() {
+        let chk = $('.status-url-affiliates').prop('checked');
+        if (chk) {
+            $('.div-url-affiliate').show('fast', 'linear')
+        } else {
+            $('.div-url-affiliate').hide('fast', 'linear')
+        }
+    }
 
 });
 
