@@ -93,21 +93,6 @@ class CheckoutService
         return $total;
     }
 
-    /*
-        public function getProducts()
-        {
-            $products = [];
-            foreach ($this->checkoutPlans as $checkoutPlan) {
-                foreach ($checkoutPlan->plan()->first()->productsPlans as $productPlan) {
-                    $product           = $productPlan->product()->first()->toArray();
-                    $product['amount'] = $productPlan->amount * $checkoutPlan->amount;
-                    $products[]        = $product;
-                }
-            }
-
-            return $products;
-        }*/
-
     public function cancelPayment($sale, $refundAmount)
     {
         try {
