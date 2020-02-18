@@ -61,6 +61,7 @@ class SaleService
                 'sale.checkout',
                 'sale.delivery',
                 'sale.transactions',
+                'sale.affiliate.user',
             ])->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereNull('invitation_id');
@@ -277,8 +278,10 @@ class SaleService
         $affiliateComission = '';
         if (!empty($sale->affiliate)) {
             $affiliateTransaction = $sale->transactions->where('company_id', $sale->affiliate->company_id)->first();
-            $affiliateValue       = $affiliateTransaction->value;
-            $affiliateComission   = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue, ',', strlen($affiliateValue) - 2, 0);
+            if(!empty($affiliateTransaction)){
+                $affiliateValue       = $affiliateTransaction->value;
+                $affiliateComission   = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue, ',', strlen($affiliateValue) - 2, 0);
+            }
         }
 
         $taxa = 0;
