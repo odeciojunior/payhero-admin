@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-content container col-md-6" style='display:none;'>
-        <div class="card shadow p-30">
+        <div class="card shadow p-30 div-project" style='display:none;'>
             <div class='row'>
                 <div class='col-md-12'>
                     <div class='row mx-10'>
@@ -51,6 +51,7 @@
                 </div>
             </div>
         </div>
+        <div class='alert alert-danger text-center font-size-18 div-disabled-url-affiliates' style='display:none;'>Link para afiliação não disponível</div>
         <!-- Modal affiliates -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_store_affiliate"
              aria-hidden="true"

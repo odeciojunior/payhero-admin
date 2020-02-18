@@ -16,6 +16,7 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\PlanService;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
@@ -101,6 +102,7 @@ class PlansApiController extends Controller
             $productPlan        = new ProductPlan();
             $projectModel       = new Project();
             $affiliateLinkModel = new AffiliateLink();
+            $planService        = new PlanService();
 
             $requestData               = $request->validated();
             $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
@@ -140,15 +142,14 @@ class PlansApiController extends Controller
                                                      ]);
                             }
                             if (count($project->affiliates) > 0) {
-                                $projectHash = Hashids::connection('affiliate')->encode($project->id);
                                 foreach ($project->affiliates as $affiliate) {
-                                    $userHash      = Hashids::connection('affiliate')->encode($affiliate->user->account_owner_id);
-                                    $affiliateHash = $projectHash . $userHash;
+                                    $affiliateHash = Hashids::connection('affiliate')->encode($affiliate->id);
                                     $affiliateLinkModel->create([
                                                                     'affiliate_id'  => $affiliate->id,
                                                                     'plan_id'       => $plan->id,
-                                                                    'parameter'     => $affiliateHash,
+                                                                    'parameter'     => $affiliateHash . Hashids::connection('affiliate')->encode($plan->id),
                                                                     'clicks_amount' => 0,
+                                                                    'link'          => $planService->getCheckoutLink($plan),
                                                                 ]);
                                 }
                             }

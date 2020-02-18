@@ -34,7 +34,7 @@ class AffiliateRequestSendEmailListener implements ShouldQueue
     public function handle(AffiliateRequestEvent $event)
     {
         try {
-            $emailService     = new EmailService();
+            $sendGridService = new SendgridService();
             $affiliateRequest = $event->affiliateRequest->load('user', 'project', 'project.users');
             $producer         = $affiliateRequest->project->users[0];
             $affiliate        = $affiliateRequest->user;
