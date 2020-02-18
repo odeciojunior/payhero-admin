@@ -45,6 +45,6 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        dd('acabou');
+        dd(getenv('DB_HOST'));
     }
 }

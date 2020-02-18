@@ -36,7 +36,7 @@ class CompaniesApiController extends Controller
 {
     /**
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {

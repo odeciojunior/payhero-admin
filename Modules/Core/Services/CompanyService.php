@@ -138,9 +138,12 @@ class CompanyService
     {
         $companyChanges = $company->getChanges();
 
-        if (!empty($companyChanges['bank']) || !empty($companyChanges['agency'])
-            || !empty($companyChanges['agency_digit']) || !empty($companyChanges['account'])
-            || !empty($companyChanges['account_digit'])) {
+        if ((!empty($companyChanges['bank']) || array_key_exists('bank', $companyChanges))
+            || (!empty($companyChanges['agency']) || array_key_exists('agency', $companyChanges))
+            || (!empty($companyChanges['account']) || array_key_exists('account', $companyChanges))
+            || (!empty($companyChanges['agency_digit']) || array_key_exists('agency_digit', $companyChanges))
+            || (!empty($companyChanges['account_digit']) || array_key_exists('account_digit', $companyChanges))
+        ) {
             $company->update([
                                  'bank_document_status' => $company->present()->getStatus('pending'),
                              ]);
@@ -156,10 +159,11 @@ class CompanyService
         }
     }
 
-    public function getCurrency(Company $company){
+    public function getCurrency(Company $company)
+    {
 
         $dolar = [
-            'usa'
+            'usa',
         ];
 
         $euro = [
@@ -172,26 +176,23 @@ class CompanyService
 
         $real = [
             'brazil',
-            'brasil'
+            'brasil',
         ];
 
-        if(in_array($company->country, $dolar)){
+        if (in_array($company->country, $dolar)) {
             return 'dolar';
-        }
-        elseif(in_array($company->country, $euro)){
+        } else if (in_array($company->country, $euro)) {
             return 'euro';
-        }
-        elseif(in_array($company->country, $real)){
+        } else if (in_array($company->country, $real)) {
             return 'real';
-        }
-        else{
+        } else {
             return null;
         }
-
     }
 
     /**
      * @param $cnpj
+     * @return mixed|void
      */
     public function getNameCompanyByApiCNPJ($cnpj)
     {
@@ -202,10 +203,10 @@ class CompanyService
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
             curl_close($ch);
+
             return json_decode($response, true);
         } catch (Exception $e) {
             return;
         }
     }
-
 }
