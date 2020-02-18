@@ -88,6 +88,7 @@ class AffiliateLinksApiController extends Controller
                                                                 'affiliate_id' => $affiliateId,
                                                         ]);
                     if($affiliateLink) {
+                        $affiliateLink->update(['parameter' => Hashids::connection('affiliate')->encode($affiliateLink->id)]);
                         return response()->json(['message' => 'Link criado com sucesso'], 200);
                     }
                 }

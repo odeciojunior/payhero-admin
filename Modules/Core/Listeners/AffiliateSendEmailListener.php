@@ -28,7 +28,7 @@ class AffiliateSendEmailListener implements ShouldQueue
     }
 
     /**
-     * @param AffiliateRequestEvent $event
+     * @param AffiliateEvent $event
      */
     public function handle(AffiliateEvent $event)
     {
@@ -43,10 +43,18 @@ class AffiliateSendEmailListener implements ShouldQueue
                 'producer_name'  => $producer->name,
                 'affiliate_name' => $affiliate->name,
                 'project_name'   => $project->name,
-                'date'           => $affiliate->created_at->format('d/m/Y h:i:s'),
+                'date'           => $affiliateEvent->created_at->format('d/m/Y h:i:s'),
                 'link'           => env('APP_URL') . '/projects/' . $idEncoded,
             ];
-            $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-d8c9706d9d064f38a0a203174d1d43a8', $data);
+
+            $producer->load('userNotification');
+
+            /**
+             * Verifica se o usuario habilitou notificação email de nova afiliação para produtor
+             */
+            if ($producer->userNotification->new_affiliation) {
+                $sendGridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $producer->email, $producer->name, 'd-d8c9706d9d064f38a0a203174d1d43a8', $data);
+            }
         } catch (Exception $e) {
             Log::warning('erro ao enviar email de nova afiliação ao para o projeto ' . $project->id);
             report($e);
