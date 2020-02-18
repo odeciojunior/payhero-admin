@@ -163,7 +163,6 @@
                                     <p class="sm-text mt-2">Evite senhas usadas em outros sites e que sejam fáceis de
                                         identificar.</p>
                                     <div class="progress align-items-center justify-content-between">
-                                        </span>
                                         <div class="progress-bar" id='progress-password' role="progressbar"
                                              aria-valuenow="25"
                                              aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
@@ -539,7 +538,7 @@
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>--}}
-<script src="{{asset('modules/register/js/register.js?v=9')}}"></script>
+<script src="{{asset('modules/register/js/register.js?v=1')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>

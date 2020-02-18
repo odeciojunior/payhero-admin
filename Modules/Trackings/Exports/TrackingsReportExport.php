@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
+use Carbon\Carbon;
 
 class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithMapping, WithEvents
 {
@@ -59,6 +60,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
             'client_city' => $row->sale->delivery->city ?? '',
             'client_state' => $row->sale->delivery->state ?? '',
             'client_country' => $row->sale->delivery->country ?? '',
+            'date' => (!empty($row->sale->end_date)) ? Carbon::parse($row->sale->end_date)->format('d/m/Y') : '',
         ];
 
         if ($row->tracking) {
@@ -130,6 +132,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
             'Cidade',
             'Estado',
             'País',
+            'Data Aprovação',
         ];
     }
 }

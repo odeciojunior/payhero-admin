@@ -1,23 +1,23 @@
-let documentType = '';
-let bagder = '';
-let badgeArray = {
+var documentType = '';
+var bagder = '';
+var badgeArray = {
     'pending': 'badge-primary',
     'analyzing': 'badge-pending',
     'approved': 'badge-success',
     'refused': 'badge-danger',
 };
 
-let statusArray = {
+var statusArray = {
     'pending': 'Pendente',
     'analyzing': 'Em análise',
     'approved': 'Aprovado',
     'refused': 'Recusado',
 };
-let getDataProfile = '';
+var getDataProfile = '';
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
-    let user = '';
+    var user = '';
 
     getDataProfile = function () {
         $.ajax({
@@ -175,7 +175,7 @@ $(document).ready(function () {
     $("#btn_verify_cellphone").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
-        let cellphone = $("#cellphone").val();
+        var cellphone = $("#cellphone").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifycellphone',
@@ -208,7 +208,7 @@ $(document).ready(function () {
     $("#btn_verify_email").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
-        let email = $("#email").val();
+        var email = $("#email").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifyemail',
@@ -238,7 +238,7 @@ $(document).ready(function () {
     });
 
     $(".notification_switch").on("click", function () {
-        let object = this;
+        var object = this;
         if (object.getAttribute("checked")) {
             object.removeAttribute("checked");
             object.value = 0;
@@ -337,7 +337,7 @@ $(document).ready(function () {
 
     $("#match_cellphone_verifycode_form").on("submit", function (event) {
         event.preventDefault();
-        let verify_code = $("#cellphone_verify_code").val();
+        var verify_code = $("#cellphone_verify_code").val();
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -372,7 +372,7 @@ $(document).ready(function () {
 
     $("#match_email_verifycode_form").on("submit", function (event) {
         event.preventDefault();
-        let verify_code = $("#email_verify_code").val();
+        var verify_code = $("#email_verify_code").val();
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -566,7 +566,7 @@ $(document).ready(function () {
         $("#boleto-tax").val(data.boleto_tax + '%');
         $("#credit-card-release").val('plan-' + data.credit_card_release_money);
         $("#debit-card-release").val(data.debit_card_release_money);
-        $("#transaction-tax-abroad").html(data.abroad_transfer_tax +'%.');
+        $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
 
         $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
@@ -595,7 +595,7 @@ $(document).ready(function () {
     });
     $(".document-url").on("click", function (e) {
         e.preventDefault();
-        let documentUrl = $(this).attr('href');
+        var documentUrl = $(this).attr('href');
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -618,7 +618,7 @@ $(document).ready(function () {
     });
 
     $('#country').on('change', function () {
-        let documentName = {
+        var documentName = {
             brazil: 'CPF',
             portugal: 'NIF (Número de Identificação Fiscal)',
             usa: 'SSN (Social Security Number)',
@@ -661,7 +661,7 @@ $(document).ready(function () {
     }
 
     function verifyUserAddress(user) {
-        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null || user.state == null) {
+        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null ) {
             $('#row_dropzone_documents').hide();
             $('#div_address_pending').show();
         } else {
@@ -682,7 +682,7 @@ $(document).ready(function () {
     }
 
     function loadLabelsByCountry(user) {
-        let documentName = {
+        var documentName = {
             brazil: 'CPF',
             portugal: 'NIF (Número de Identificação Fiscal)',
             usa: 'SSN (Social Security Number)',
@@ -697,8 +697,8 @@ $(document).ready(function () {
     }
 
     function htmlTableDocuments(data) {
-        let dados = '';
-        let verifyReason = false;
+        var dados = '';
+        var verifyReason = false;
         if (data.length == 0) {
             $("#profile-documents-modal").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
         } else {
@@ -888,7 +888,7 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
             success: function success(response) {
                 $("#loaderLine").remove();
 
-                let dados = '';
+                var dados = '';
                 if (response.data.length == 0) {
                     $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
                 } else {

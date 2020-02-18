@@ -8,11 +8,11 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\ProjectNotificationService;
 use Illuminate\Support\Carbon;
 use Vinkla\Hashids\Facades\Hashids;
-
 
 /**
  * Class GenericCommand
@@ -41,29 +41,10 @@ class GenericCommand extends Command
     }
 
     /**
-     * @throws PresenterException
+     *
      */
     public function handle()
     {
-        $withdrawals = new Withdrawal();
-        foreach ($withdrawals->cursor() as $withdrawal) {
-            $withdrawal->update([
-                                    'release_date_new' => $withdrawal->release_date,
-                                ]);
-        }
-        dd('acabou');
-        /* print_r('Terminou Frete');
-         print_r('Começou checkout');
-
-         $checkoutModel = new Checkout();
-
-         foreach (Checkout::whereNull('status_enum')->orderBy('id', 'desc')->cursor() as $checkout) {
-
-             $checkout->update([
-                 'status_enum' => $checkoutModel->present()->getStatusEnum($checkout->status)
-             ]);
-         }
-         print_r('Acabou checkout');*/
+        dd(getenv('DB_HOST'));
     }
-
 }
