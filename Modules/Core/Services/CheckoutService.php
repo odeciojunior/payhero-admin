@@ -47,13 +47,14 @@ class CheckoutService
         string $dateStart = null,
         string $dateEnd = null,
         string $client = null
-    ) {
+    )
+    {
         $checkoutModel = new Checkout();
-        $domainModel = new Domain();
+        $domainModel   = new Domain();
 
         $abandonedCarts = $checkoutModel->whereIn('status_enum', [
             $checkoutModel->present()->getStatusEnum('recovered'),
-            $checkoutModel->present()->getStatusEnum('abandoned cart')
+            $checkoutModel->present()->getStatusEnum('abandoned cart'),
         ])->where('project_id', $projectId);
 
         if (!empty($client)) {
@@ -72,11 +73,11 @@ class CheckoutService
         }
 
         return $abandonedCarts->with([
-            'project.domains' => function ($query) use ($domainModel) {
-                $query->where('status', $domainModel->present()->getStatus('approved'));
-            },
-            'checkoutPlans.plan',
-        ])->orderBy('id', 'DESC')->paginate(10);
+                                         'project.domains' => function($query) use ($domainModel) {
+                                             $query->where('status', $domainModel->present()->getStatus('approved'));
+                                         },
+                                         'checkoutPlans.plan',
+                                     ])->orderBy('id', 'DESC')->paginate(10);
     }
 
     /**
@@ -89,7 +90,7 @@ class CheckoutService
         foreach ($checkoutPlans as $checkoutPlan) {
             if (!empty($checkoutPlan->plan)) {
                 $total += intval(preg_replace("/[^0-9]/", "",
-                        $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
+                                              $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
             }
         }
 
@@ -114,66 +115,64 @@ class CheckoutService
     public function cancelPayment($sale, $refundAmount)
     {
         try {
-            $saleService = new SaleService();
+            $saleService      = new SaleService();
             $transactionModel = new Transaction();
-            $transferModel = new Transfer();
-            $companyModel = new Company();
-            $saleAmount = Str::replaceFirst(',', '',
-                Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
+            $transferModel    = new Transfer();
+            $companyModel     = new Company();
+            $saleAmount       = Str::replaceFirst(',', '',
+                                                  Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             // TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
             if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
                 $result = [
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => 'Valor não confere com o da Venda.',
                 ];
             }
-            $domain = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $domainName = $domain->name ?? 'cloudfox.net';
-                $urlCancelPayment = 'https://checkout.' . $domainName . '/api/payment/cancel/' . Hashids::connection('sale_id')
-                        ->encode($sale->id);
+                $urlCancelPayment = 'https://checkout.cloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
+                                                                                                 ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
-                        ->encode($sale->id);
+                                                                                                ->encode($sale->id);
             }
             $dataCancel = [
                 'refundAmount' => $refundAmount,
             ];
-            $response = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
+            $response   = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if (($response->status ?? '') == 'success') {
                 $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
                 if ($checkUpdate) {
                     $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
-                    $transaction = $transactionModel->where('sale_id', $sale->id)
-                        ->whereIn('company_id', $userCompanies)
-                        ->first();
+                    $transaction   = $transactionModel->where('sale_id', $sale->id)
+                                                      ->whereIn('company_id', $userCompanies)
+                                                      ->first();
                     $transferModel->create([
-                        'transaction_id' => $transaction->id,
-                        'user_id' => auth()->user()->account_owner_id,
-                        'value' => 100,
-                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                        'type' => 'out',
-                        'reason' => 'Taxa de estorno',
-                        'company_id' => $transaction->company_id,
-                    ]);
+                                               'transaction_id' => $transaction->id,
+                                               'user_id'        => auth()->user()->account_owner_id,
+                                               'value'          => 100,
+                                               'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                               'type'           => 'out',
+                                               'reason'         => 'Taxa de estorno',
+                                               'company_id'     => $transaction->company_id,
+                                           ]);
                     $transaction->company->update([
-                        'balance' => $transaction->company->balance -= 100,
-                    ]);
+                                                      'balance' => $transaction->company->balance -= 100,
+                                                  ]);
                     $result = [
-                        'status' => 'success',
+                        'status'  => 'success',
                         'message' => 'Venda Estornada com sucesso.',
                     ];
                 } else {
                     $result = [
-                        'status' => 'error',
+                        'status'  => 'error',
                         'message' => 'Venda Estornada, mas não atualizada na plataforma.',
                     ];
                 }
             } else {
                 $result = [
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => 'Error ao tentar cancelar venda.',
-                    'error' => $response->message,
+                    'error'   => $response->message,
                 ];
             }
 
@@ -182,9 +181,9 @@ class CheckoutService
             report($ex);
 
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Error ao tentar cancelar venda.',
-                'error' => $ex->getMessage(),
+                'error'   => $ex->getMessage(),
             ];
         }
     }
@@ -194,62 +193,61 @@ class CheckoutService
 
         try {
             $saleModel = new Sale();
-            $sale = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
-                ->decode($saleId))->first();
-            $domain = $sale->project->domains->where('status', 3)->first();
+            $sale      = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
+                                                                                 ->decode($saleId))->first();
+            $domain    = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
-                $domainName = $domain->name ?? 'cloudfox.net';
-                $regenerateBilletUrl = 'https://checkout.' . $domainName . '/api/payment/regeneratebillet';
+                $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
             } else {
                 $regenerateBilletUrl = 'http://dev.checkout.com.br/api/payment/regeneratebillet';
             }
 
             $data = [
-                'sale_id' => $saleId,
-                'due_date' => $dueDate,
+                'sale_id'          => $saleId,
+                'due_date'         => $dueDate,
                 'total_paid_value' => $totalPaidValue,
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
             if ($response->status == 'success' && $response->response->status == 'success') {
-                $saleModel = new Sale();
-                $dataUpdate = (array)$response->response->response;
-                $check = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
-                    ->update(array_merge($dataUpdate,
-                        [
-                            'start_date' => Carbon::now()
-                            ,
-                            'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
-                        ]));
+                $saleModel  = new Sale();
+                $dataUpdate = (array) $response->response->response;
+                $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
+                                        ->update(array_merge($dataUpdate,
+                                                             [
+                                                                 'start_date'       => Carbon::now()
+                                                                 ,
+                                                                 'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
+                                                             ]));
                 if ($check) {
                     $transactionModel = new Transaction();
-                    $sale = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
-                        ->decode($saleId))
-                        ->first();
-                    $transactions = $transactionModel->where('sale_id', Hashids::connection('sale_id')
-                        ->decode($saleId))->delete();
+                    $sale             = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
+                                                                                                ->decode($saleId))
+                                                  ->first();
+                    $transactions     = $transactionModel->where('sale_id', Hashids::connection('sale_id')
+                                                                                   ->decode($saleId))->delete();
 
                     $splitPaymentService = new SplitPaymentService();
 
                     $splitPaymentService->splitPayment($totalPaidValue, $sale, $sale->project, $sale->user);
                     $result = [
-                        'status' => 'success',
-                        'message' => print_r($response->message, true) ?? '',
+                        'status'   => 'success',
+                        'message'  => print_r($response->message, true) ?? '',
                         'response' => $response,
                     ];
                 } else {
                     $result = [
-                        'status' => 'error',
-                        'error' => 'error',
-                        'message' => 'Error ao tentar regerar boleto, tente novamente em instantes!',
+                        'status'   => 'error',
+                        'error'    => 'error',
+                        'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
                         'response' => $response,
                     ];
                 }
             } else {
                 $result = [
-                    'status' => 'error',
-                    'error' => 'error',
-                    'message' => 'Error ao tentar regerar boleto, tente novamente em instantes!',
+                    'status'   => 'error',
+                    'error'    => 'error',
+                    'message'  => 'Error ao tentar regerar boleto, tente novamente em instantes!',
                     'response' => $response,
                 ];
             }
@@ -259,9 +257,9 @@ class CheckoutService
             report($ex);
 
             return [
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => 'Error ao tentar regerar boleto.',
-                'error' => $ex->getMessage(),
+                'error'   => $ex->getMessage(),
             ];
         }
     }
@@ -278,7 +276,7 @@ class CheckoutService
     {
         try {
             $this->internalApiToken = env('ADMIN_TOKEN');
-            $headers = [
+            $headers                = [
                 'Content-Type: application/json',
                 'Accpet: application/json',
             ];
@@ -297,7 +295,7 @@ class CheckoutService
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            $result = curl_exec($ch);
+            $result   = curl_exec($ch);
             $response = json_decode($result);
 
             return $response;
@@ -328,7 +326,7 @@ class CheckoutService
                 '5522981071202',
             ];
 
-            $sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
+            $sendgrid   = new SendGrid(getenv('SENDGRID_API_KEY'));
             $smsService = new SmsService();
 
             foreach ($emails as $email) {

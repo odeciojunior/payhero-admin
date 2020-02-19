@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;

@@ -341,33 +341,37 @@
                                         <div class='form-group col-xl-5'>
                                             <div class='form-group'>
                                                 <label for='boleto-release'>Dias para liberação:</label>
-                                                <input id='boleto-release' disabled='disabled' class="form-control">
+                                                <select id="boleto-release" class="form-control">
+                                                    <option value="plan-30">30 dias (taxa de 5.9%)</option>
+                                                    <option value="plan-2">2 dias (taxa de 6.5%)</option>
+                                                    <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)</option>
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-12">
-                                            <p class='info' style='font-size: 10px; margin-top: -10px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de
-                                                <label id="installment-tax" style="color: gray"></label>
-                                                % ao mês.
-                                            </p>
-                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
-                                                <label style="color: gray" id="transaction-tax"></label>
-                                                por transação.
-                                            </p>
-                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de transferência para empresas do exterior de
-                                                <label style="color: gray" id="transaction-tax-abroad"></label>
-                                            </p>
-                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-12 text-right" style="margin-top: 30px">
-                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">
-                                                Atualizar taxas
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class='info' style='font-size: 10px; margin-top: -10px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de
+                                            <label id="installment-tax" style="color: gray"></label>
+                                            % ao mês.
+                                        </p>
+                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
+                                            <label style="color: gray" id="transaction-tax"></label>
+                                            por transação.
+                                        </p>
+                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de transferência para empresas do exterior de
+                                            <label style="color: gray" id="transaction-tax-abroad"></label>
+                                        </p>
+                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                        <button id="update_taxes" type="button" class="btn btn-success mr-100">
+                                            Atualizar taxas
+                                        </button>
                                     </div>
                                     {{--BOLETO--}}
                                 </div>
@@ -633,7 +637,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=2')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=3')}}"></script>
     @endpush
 
 @endsection
