@@ -229,7 +229,7 @@ $(document).ready(function () {
                         dados = `  <tr class='` + tableClass + `'>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
                                     <td>${value.project}</td>
-                                    <td>${value.product}</td>
+                                    <td>${value.product}${value.affiliate != null ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
