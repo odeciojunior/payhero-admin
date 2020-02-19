@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
@@ -28,16 +29,10 @@ class PostBackShopifyController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws PresenterException
      */
     public function postBackTracking(Request $request)
     {
-
-        if($request->project_id == 'YKV603krmgw8ymD'){
-            return response()->json([
-                'message' => 'Rejeitado',
-            ], 200);
-        }
-
         $postBackLogModel = new PostbackLog();
         $salesModel = new Sale();
         $projectModel = new Project();
