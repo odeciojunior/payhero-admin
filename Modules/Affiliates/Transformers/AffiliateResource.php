@@ -32,6 +32,10 @@ class AffiliateResource extends Resource
             'status_translated' => Lang::get('definitions.enum.status.' . $this->present()
                                                                                ->getStatus($this->status_enum)),
             'project_name'      => $this->project->name,
+            'project_photo'     => $this->project->photo,
+            'project_logo'      => $this->project->logo,
+            'suport_contact'    => $this->suport_contact,
+            'suport_phone'      => $this->suport_phone,
         ];
     }
 }

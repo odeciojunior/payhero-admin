@@ -235,25 +235,22 @@ $(function () {
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';
-                            if(value.link_plan == null) {
-                                data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link_project + '">';
-                                data += value.link_project + ' <br><small>('+ value.project_name +')</small> </td>';
-                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link_project+'"> file_copy</a></td>';
+                            data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">';
+                            if(value.plan_name == null) {
+                                data += value.link + ' <br><small>('+ value.project_name +')</small> </td>';
                             } else {
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_plan + '">';
                                 data += value.link_plan + ' <br><small>('+ value.plan_name + value.description +')</small> </td>';
-                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link_plan+'"> file_copy</a></td>';
                             }
-                            if(value.link_affiliate == null) {
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">' + value.link + '</td>';
-                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link+'"> file_copy</a></td>';
-                            } else {
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + value.link_affiliate + '</td>';
-                                data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link_affiliate+'"> file_copy</a></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link+'"> file_copy</a></td>';
+                            let linkAffiliate = value.link_affiliate;
+                            if(linkAffiliate.length > 40) {
+                                linkAffiliate = linkAffiliate.substr(0,40) + '...';
                             }
+
+                            data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + linkAffiliate + '</td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link_affiliate+'"> file_copy</a></td>';
 
                             data += '<td class="text-center" >' + value.price + '<br><small>('+ value.commission +' commissão)<small></td>';
-
                             data += '<td style="text-align:center">';
                             data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="'+value.id+'" data-target="#modal-details-link" data-toggle="modal"><i class="material-icons gradient">remove_red_eye</i></a>';
 

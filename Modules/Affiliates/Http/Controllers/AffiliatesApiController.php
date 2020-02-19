@@ -353,4 +353,27 @@ class AffiliatesApiController extends Controller
             return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
+
+    public function updateConfigAffiliate(Request $request, $id)
+    {
+        try {
+            $data        = $request->only(['suport_contact', 'suport_phone']);
+            $affiliateId = current(Hashids::decode($id));
+            $update = Affiliate::find($affiliateId)->update($data);
+            if ($update) {
+                return response()->json([
+                                            'message' => 'Configuração salva com sucesso!',
+                                        ], 200);
+            }
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao salvar!',
+                                    ], 400);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao salvar!',
+                                    ], 400);
+        }
+    }
 }
