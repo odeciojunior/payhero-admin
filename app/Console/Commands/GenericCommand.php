@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;

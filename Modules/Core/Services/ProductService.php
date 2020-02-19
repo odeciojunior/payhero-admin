@@ -40,34 +40,31 @@ class ProductService
             $sale = $saleParam;
         } else if (is_int($saleParam)) {
             $saleModel = new Sale();
-            $sale      = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
-                                   ->find($saleParam);
+            $sale = $saleModel->with(['productsPlansSale.tracking'])
+                ->find($saleParam);
         } else if (is_string($saleParam)) {
             $saleModel = new Sale();
-            $saleId    = current(Hashids::connection('sale_id')->decode($saleParam));
-            $sale      = $saleModel->with(['plansSales.plan.productsPlans.product.productsPlanSales.tracking'])
-                                   ->find($saleId);
+            $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
+            $sale = $saleModel->with(['productsPlansSale.tracking'])
+                ->find($saleId);
         }
 
         $productsSale = collect();
 
         if (!empty($sale)) {
-            foreach ($sale->plansSales as $planSale) {
-                foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $product                         = $productPlan->product;
-                    $productPlanSale                 = $product->productsPlanSales->where('sale_id', $sale->id)
-                                                                                  ->first();
-                    $tracking                        = $productPlanSale ? $productPlanSale->tracking ?? null : null;
-                    $product['product_plan_sale_id'] = $productPlanSale ? $productPlanSale->id ? $productPlanSale->id : 0 : 0;
-                    $product['sale_status']          = $sale->status;
-                    $product['amount']               = $productPlan->amount * $planSale->amount;
-                    $product['tracking_id']          = $tracking ? Hashids::encode($tracking->id) : '';
-                    $product['tracking_code']        = $tracking ? $tracking->tracking_code ?? '' : '';
-                    $product['tracking_status_enum'] = $tracking ? $tracking->tracking_status_enum != null ?
-                        __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
-                                                                                        ->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não informado' : 'Não informado';
-                    $productsSale->add($product);
-                }
+            foreach ($sale->productsPlansSale as $productsPlanSale) {
+                $product = $productsPlanSale->product;
+                $tracking = $productsPlanSale->tracking;
+                $product['product_plan_sale_id'] = $productsPlanSale->id;
+                $product['sale_status'] = $sale->status;
+                $product['amount'] = $productsPlanSale->amount;
+                $product['tracking_id'] = Hashids::encode($tracking->id ?? '');
+                $product['tracking_code'] = $tracking->tracking_code ?? '';
+                $product['tracking_status_enum'] = $tracking
+                    ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                            ->getTrackingStatusEnum($tracking->tracking_status_enum))
+                    : 'Não informado';
+                $productsSale->add($product);
             }
         }
 
