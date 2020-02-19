@@ -1508,12 +1508,6 @@ class ShopifyService
         try {
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
-            //            $credential   = new PublicAppCredential($shopifyIntegration->token);
-            //
-            //            $client = new Client($credential, $shopifyIntegration->url_store, [
-            //                'metaCacheDir' => '/var/tmp',
-            //            ]);
-            //            $order = $client->getOrderManager()->find($sale->shopify_order);
 
             $order = $this->client->get('orders/' . $sale->shopify_order);
             if (!FoxUtils::isEmpty($order)) {
@@ -1537,7 +1531,7 @@ class ShopifyService
                     $this->receivedData = $this->convertToArray($result);
                 }
             } else {
-                throw new Exception('Ordem não encontrado no shopify para a venda - ' . $order);
+                return false;
             }
         } catch (Exception $ex) {
             $this->exceptions[] = $ex->getMessage();
