@@ -45,7 +45,7 @@ class EvaluateAffiliateRequestSendEmailListener implements ShouldQueue
                 'name'         => $user->name,
                 'project_name' => $project->name,
                 'date'         => $affiliateRequest->created_at->format('d/m/Y'),
-                'link'         => env('APP_URL') . '/projects/' . $idEncoded,
+                'link'         => env('APP_URL') . '/projects',
             ];
 
             if ($affiliateRequest->status == $affiliateRequestPresenter->getStatus('approved')) {

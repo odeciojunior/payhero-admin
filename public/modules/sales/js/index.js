@@ -226,7 +226,7 @@ $(document).ready(function () {
                             tableClass = ''
                         }
 
-                        dados = `  <tr class='` + tableClass + `'>
+                        dados = `  <tr class='` + tableClass + `'${value.affiliate != null ? `style="background-color:#cce5ff;"` : ''}>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
                                     <td>${value.project}</td>
                                     <td>${value.product}${value.affiliate != null ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
