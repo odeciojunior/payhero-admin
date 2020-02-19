@@ -268,6 +268,7 @@ $(function () {
                             data += '</tr>';
                             $("#data-table-link").append(data);
                             $('#table-links').addClass('table-striped');
+                            $('.domain-project-link').html(value.domain);
                         });
 
                         pagination(response, 'links', index);
