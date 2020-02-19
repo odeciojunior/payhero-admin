@@ -78,4 +78,37 @@ $(() => {
         });
     }
 
+    //abre o modal de cancelar afiliação
+    $('#bt-cancel-affiliation').on('click', function (event) {
+        event.preventDefault();
+
+        $("#modal-cancel-affiliation").modal('show');
+        $("#modal-cancel-affiliation .btn-cancel-affiliation").on('click', function () {
+            $("#modal-cancel-affiliation").modal('hide');
+            loadingOnScreen()
+            $.ajax({
+                method: "POST",
+                url: "/api/projects/" + projectId,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                    loadingOnScreenRemove()
+                },
+                success: function (data) {
+                    loadingOnScreenRemove();
+                    if (data == 'success') {
+                        window.location = "/projects";
+                    } else {
+                        alertCustom('error', "Erro ao cancelar afiliação");
+                    }
+                }
+            });
+        });
+
+    });
+
 });
