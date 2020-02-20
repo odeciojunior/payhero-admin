@@ -164,7 +164,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <i class="material-icons">chat_bubble_outline</i>
-                    <span class="site-menu-title">Atendimento (em breve)</span>
+                    <span class="site-menu-title">Atendimento</span>
                 </a>
             </li>
         @endif
