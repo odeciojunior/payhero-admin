@@ -89,8 +89,9 @@ class ShopifyService
      * ShopifyService constructor.
      * @param string $urlStore
      * @param string $token
+     * @param bool $getThemes
      */
-    public function __construct(string $urlStore, string $token)
+    public function __construct(string $urlStore, string $token, $getThemes = true)
     {
         if (!$this->cacheDir) {
             $cache = '/var/tmp';
@@ -103,7 +104,9 @@ class ShopifyService
             'metaCacheDir' => $cache // Metadata cache dir, required
         ]);
 
-        $this->getAllThemes();
+        if($getThemes) {
+            $this->getAllThemes();
+        }
     }
 
     /**
@@ -1893,6 +1896,16 @@ class ShopifyService
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
             Log::emergency('Erro ao atualizar uma ordem no shopify com a venda ' . $sale->id);
+        }
+    }
+
+    public function findFulfillments($orderId)
+    {
+        try {
+            return $this->client->getFulfillmentManager()->findAll($orderId);
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
+            Log::error('Erro ao buscar fulfillments no shopify com a order ' . $orderId);
         }
     }
 }

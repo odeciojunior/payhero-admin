@@ -63,6 +63,7 @@ use App\Traits\LogsActivity;
  * @property User $user
  * @property PlanSale[] $plansSales
  * @property Transaction[] $transactions
+ * @property Tracking $tracking
  * @method SalePresenter present()
  */
 class Sale extends Model
@@ -242,5 +243,13 @@ class Sale extends Model
     public function gateway()
     {
         return $this->belongsTo('Modules\Core\Entities\Gateway');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function tracking()
+    {
+        return $this->hasMany(Tracking::class);
     }
 }
