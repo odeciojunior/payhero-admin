@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddBalanceToCustomersTable extends Migration
+class AddOtherColumnsToCustomersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,6 +17,9 @@ class AddBalanceToCustomersTable extends Migration
             $table->bigInteger('balance')
                 ->default(0)
                 ->after('remember_token');
+            $table->timestamp('birthday')
+                ->nullable()
+                ->after('balance');
         });
     }
 
@@ -29,6 +32,7 @@ class AddBalanceToCustomersTable extends Migration
     {
         Schema::table('customers', function (Blueprint $table) {
             $table->dropColumn('balance');
+            $table->dropColumn('birthday');
         });
     }
 }
