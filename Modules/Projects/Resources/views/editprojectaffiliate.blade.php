@@ -16,15 +16,6 @@
                 </div>
             </div>
             <div class='row col-md-8 col-lg-8 col-sm-12'>
-                <div class='col-lg-12'>
-                    <div class='row'>
-                        <div class='form-group col-lg-12'>
-                            <button id="bt-cancel-affiliation" type="button" class="btn btn-danger">
-                                Cancelar afiliação
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-12 row">
                     <div class="form-group col-12">
                         <label for="contact">Email de Contato (checkout e email)</label>
@@ -74,7 +65,13 @@
 
         <div class="mt-30">
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
+                    <a id="bt-cancel-affiliation" role="button" class="pointer align-items-center" style="float: left;">
+                        <i class="material-icons gray"> delete </i>
+                        <span class="gray"> Excluir afiliação</span>
+                    </a>
+                </div>
+                <div class="col-6">
                     <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;">
                         Atualizar
                     </button>
@@ -96,11 +93,11 @@
                         <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                     </div>
                     <h3 class="black"> Você tem certeza? </h3>
-                    <p class="gray"> Se você cancelar a afiliação, não será possível recuperá-la! </p>
+                    <p class="gray"> Se você excluir a afiliação, não será possível recuperá-la! </p>
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Fechar</button>
-                    <button type="button" class="col-4 btn btn-danger btn-cancel-affiliation" data-dismiss="modal" style="width: 20%;">Cancelar afiliação</button>
+                    <button type="button" class="col-4 btn btn-danger btn-cancel-affiliation" data-dismiss="modal" style="width: 20%;">Excluir</button>
                 </div>
             </div>
         </div>
