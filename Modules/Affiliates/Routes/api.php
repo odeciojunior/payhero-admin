@@ -28,6 +28,9 @@ Route::group(
         Route::post('/affiliates/evaluateaffiliaterequest', 'AffiliatesApiController@evaluateAffiliateRequest')
              ->middleware('role:account_owner|admin');
 
+        Route::post('/affiliates/updateconfigaffiliate/{affiliateId}', 'AffiliatesApiController@updateConfigAffiliate')
+             ->middleware('role:account_owner|admin');
+
         Route::apiResource('/affiliates', 'AffiliatesApiController')
              ->only('index', 'show', 'store', 'update', 'destroy', 'edit')->names('api.affiliates')
              ->middleware('role:account_owner|admin');

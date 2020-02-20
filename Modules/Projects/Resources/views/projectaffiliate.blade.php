@@ -37,6 +37,11 @@
                                 Links
                             </a>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <a id="tab_settings_affiliate" class="nav-link" data-toggle="tab" href="#tab_settings_affiliate-panel" aria-controls="tab_settings_affiliate" role="tab">
+                                Configurações
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -66,11 +71,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5 class="sm-title"><strong> Descrição </strong></h5>
+                                            <h5 class=""><strong> Descrição </strong></h5>
                                             <p id="show-description" class="card-text sm"></p>
-                                            <h5 class="sm-title"><strong> Produtor </strong></h5>
+                                            <h5 class=""><strong> Produtor </strong></h5>
                                             <p id="show-producer" class="card-text sm"></p>
-                                            <h5 class="sm-title"><strong> Comissão </strong></h5>
+                                            <h5 class=""><strong> Comissão </strong></h5>
                                             <p id="show-commission" class="card-text sm"></p>
                                         </div>
                                     </div>
@@ -85,6 +90,10 @@
                         <div class="tab-pane" id="tab_links-panel" role="tabpanel">
                             @include('affiliates::links')
                         </div>
+                        <!--- Painel de Configurações -->
+                        <div class="tab-pane" id="tab_settings_affiliate-panel" role="tabpanel">
+                            @include('projects::editprojectaffiliate')
+                        </div>
                     </div>
                 </div>
             </div>
@@ -93,8 +102,8 @@
 
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=1')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=3')}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v=4')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=6')}}"></script>
+        <script src="{{asset('modules/affiliates/js/links.js?v=8')}}"></script>
     @endpush
 @endsection
 

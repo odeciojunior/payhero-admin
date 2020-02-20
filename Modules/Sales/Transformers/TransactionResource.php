@@ -53,6 +53,11 @@ class TransactionResource extends Resource
         } else {
             $data['has_shopify_integration'] = null;
         }
+        if (!empty($sale->affiliate_id)) {
+            $data['affiliate'] = $sale->affiliate->user->name;
+        } else {
+            $data['affiliate'] = null;
+        }
 
         return $data;
     }

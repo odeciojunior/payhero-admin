@@ -46,6 +46,7 @@ class AffiliateLinkResource extends Resource
             'project_name'    => $this->affiliate->project->name ?? null,
             'link_plan'       => $linkPlan,
             'link_affiliate'  => $linkAffiliate,
+            'domain'          => $this->affiliate->project->domains[0]->name ?? '',
             'price'           => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.'),
             'commission'      => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", (($this->plan->price ?? 0 * $this->affiliate->percentage) / 100))) / 100, 2, ',', '.'),
             'document_status' => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
