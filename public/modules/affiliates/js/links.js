@@ -237,17 +237,13 @@ $(function () {
                             data += '<tr>';
                             data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">';
                             if(value.plan_name == null) {
-                                data += value.link + ' <br><small>('+ value.project_name +')</small> </td>';
+                                data += limitLink(value.link, 50) + ' <br><small>('+ value.project_name +')</small> </td>';
                             } else {
-                                data += value.link_plan + ' <br><small>('+ value.plan_name + value.description +')</small> </td>';
+                                data += limitLink(value.link_plan, 50) + ' <br><small>('+ value.plan_name + ' - ' + value.description +')</small> </td>';
                             }
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link+'"> file_copy</a></td>';
-                            let linkAffiliate = value.link_affiliate;
-                            if(linkAffiliate.length > 40) {
-                                linkAffiliate = linkAffiliate.substr(0,40) + '...';
-                            }
 
-                            data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + linkAffiliate + '</td>';
+                            data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link_affiliate+'"> file_copy</a></td>';
 
                             data += '<td class="text-center" >' + value.price + '<br><small>('+ value.commission +' commissão)<small></td>';
@@ -277,6 +273,13 @@ $(function () {
                 }
             }
         });
+
+        function limitLink(link, length) {
+            if(link.length > length) {
+                return link.substr(0,length) + '...';
+            }
+            return link;
+        }
 
         $(".table-links").on("click", ".copy_link", function () {
             var temp = $("<input>");
