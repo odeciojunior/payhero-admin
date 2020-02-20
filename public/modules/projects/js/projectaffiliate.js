@@ -122,7 +122,6 @@ $(() => {
                 errorAjaxResponse(response);
 
             }, success: function (data) {
-                console.log(data.data.id);
                 $('#update-project #previewimage').attr('src', data.data.project_photo ? data.data.project_photo : '/modules/global/img/projeto.png');
                 $('#update-project #image-logo-email').attr('src', data.data.project_logo ? data.data.project_logo : '/modules/global/img/projeto.png');
                 $('#update-project #contact').val(data.data.suport_contact);

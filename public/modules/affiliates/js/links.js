@@ -237,9 +237,9 @@ $(function () {
                             data += '<tr>';
                             data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">';
                             if(value.plan_name == null) {
-                                data += limitLink(value.link, 50) + ' <br><small>('+ value.project_name +')</small> </td>';
+                                data += limitLink(value.link, 50) + ' <br><small>'+ value.project_name +'</small> </td>';
                             } else {
-                                data += limitLink(value.link_plan, 50) + ' <br><small>('+ value.plan_name + ' - ' + value.description +')</small> </td>';
+                                data += limitLink(value.link_plan, 50) + ' <br><small>'+ value.plan_name + ' <br> ' + value.description +'</small> </td>';
                             }
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link+'"> file_copy</a></td>';
 
