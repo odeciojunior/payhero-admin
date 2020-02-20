@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketMessage;
+use Modules\Core\Events\TicketMessageEvent;
 use Modules\Core\Services\FoxUtils;
 use Modules\Tickets\Transformers\TicketMessageResource;
 use Modules\Tickets\Transformers\TicketResource;
@@ -132,11 +133,15 @@ class TicketsApiController extends Controller
             if (!empty($ticketId)) {
 
                 if (!empty($data['message'])) {
-                    $message = $ticketMessageModel->create([
-                                                               'ticket_id'  => $ticketId,
-                                                               'message'    => $data['message'],
-                                                               'from_admin' => true,
-                                                           ]);
+                    $lastAdminMessage = $ticketMessageModel->where('ticket_id', $ticketId)
+                                                           ->where('from_admin', true)->latest('id')
+                                                           ->first();
+                    $message          = $ticketMessageModel->create([
+                                                                        'ticket_id'  => $ticketId,
+                                                                        'message'    => $data['message'],
+                                                                        'from_admin' => true,
+                                                                    ]);
+                    event(new TicketMessageEvent($message, $lastAdminMessage));
 
                     return new TicketMessageResource($message);
                 } else {

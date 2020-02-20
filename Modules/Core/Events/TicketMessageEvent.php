@@ -10,14 +10,17 @@ class TicketMessageEvent
 {
     use SerializesModels;
     public $ticketMessage;
+    public $lastAdminMessage;
 
     /**
-     * TicketMessagedEvent constructor.
+     * TicketMessageEvent constructor.
      * @param TicketMessage $ticketMessage
+     * @param TicketMessage $lastAdminMessage
      */
-    public function __construct(TicketMessage $ticketMessage)
+    public function __construct(TicketMessage $ticketMessage, $lastAdminMessage = null)
     {
-        $this->ticketMessage = $ticketMessage;
+        $this->ticketMessage    = $ticketMessage;
+        $this->lastAdminMessage = $lastAdminMessage;
     }
 
     /**

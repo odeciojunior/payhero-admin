@@ -129,6 +129,7 @@ $(document).ready(function () {
             alertCustom("error", "Preencha o campo mensagem");
             return false;
         }
+        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: '/api/tickets/sendmessage',
@@ -142,9 +143,11 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
+                loadingOnScreenRemove();
                 $(".div-message").slideUp();
                 alertCustom("success", "Mensagem enviada com sucesso");
                 getTicket();
