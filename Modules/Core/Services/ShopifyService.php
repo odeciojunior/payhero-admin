@@ -1342,7 +1342,7 @@ class ShopifyService
                         "title"             => $productPlan->product->name,
                         "variant_id"        => $productPlan->product->shopify_variant_id,
                         "variant_title"     => $productPlan->product->name,
-                        "name"              => $productPlan->product->name,
+                        "name"              => $productPlan->product->description,
                         "gift_card"         => false,
                     ];
                 }
