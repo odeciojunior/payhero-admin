@@ -1341,8 +1341,8 @@ class ShopifyService
                         "sku"               => $productPlan->product->sku,
                         "title"             => $productPlan->product->name,
                         "variant_id"        => $productPlan->product->shopify_variant_id,
-                        "variant_title"     => $productPlan->product->name,
-                        "name"              => $productPlan->product->description,
+                        "variant_title"     => $productPlan->product->description,
+                        "name"              => $productPlan->product->name,
                         "gift_card"         => false,
                     ];
                 }
