@@ -4,6 +4,7 @@ namespace Modules\Notifications\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -35,7 +36,7 @@ class NotificationsApiController extends Controller
     }
 
     /**
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function getUnreadNotificationsCount()
     {
