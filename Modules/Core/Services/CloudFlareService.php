@@ -30,7 +30,7 @@ class CloudFlareService
 {
     const shopifyIp   = '23.227.38.32';
     const checkoutIp  = '104.248.122.89';
-    const sacIp       = '104.248.122.89';
+    const sacIp       = '157.245.81.127';
     const affiliateIp = '104.248.122.89';
     const adminIp     = '165.22.13.237';
 
