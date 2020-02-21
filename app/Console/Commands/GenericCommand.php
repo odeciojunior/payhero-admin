@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Services\CloudFlareService;
-use function foo\func;
 
 /**
  * Class GenericCommand
@@ -39,19 +38,19 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        try {
 
-            $cloudflareService = new CloudFlareService();
 
-            $domains = Domain::where('name', 'tiamatcabuloso.ml')
-                ->get();
+        $cloudflareService = new CloudFlareService();
 
-            $total = $domains->count();
+        $domains = Domain::all();
 
-            foreach ($domains as $key => $domain) {
+        $total = $domains->count();
 
-                $this->info($key + 1 . ' de ' . $total . '. Domínio: ' . $domain->name);
+        foreach ($domains as $key => $domain) {
 
+            $this->info($key + 1 . ' de ' . $total . '. Domínio: ' . $domain->name);
+
+            try {
                 $records = $cloudflareService->getRecords($domain->name);
                 $sacRecord = collect($records)->first(function ($item) {
                     if (Str::contains($item->name, 'sac.')) {
@@ -69,13 +68,11 @@ class GenericCommand extends Command
                 } else {
                     $this->warn('Record não encontrado');
                 }
+            } catch (\Exception $e) {
+
+                $this->error($e->getMessage());
             }
-
-            $this->info('ACABOOOOOOOOOOOOOU!');
-
-        } catch (\Exception $e) {
-
-            $this->error($e->getMessage());
         }
+        $this->info('ACABOOOOOOOOOOOOOU!');
     }
 }
