@@ -36,10 +36,10 @@ class ShopifyApiController extends Controller
     public function index()
     {
         try {
-            $projectModel = new Project();
+            $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
 
-            activity()->on($shopifyIntegrationModel)->tap(function (Activity $activity) {
+            activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos as integrações com o shopify');
 
@@ -50,7 +50,7 @@ class ShopifyApiController extends Controller
             foreach ($shopifyIntegrations as $shopifyIntegration) {
 
                 $project = $projectModel->where('id', $shopifyIntegration->project_id)
-                    ->where('status', $projectModel->present()->getStatus('active'))->first();
+                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
 
                 if (!empty($project)) {
                     $projects[] = $project;
@@ -78,9 +78,13 @@ class ShopifyApiController extends Controller
 
             $dataRequest = $request->all();
 
-            $shopifyIntegration = $shopifyIntegrationModel
-                ->where('token', $dataRequest['token'])
-                ->first();
+            //tratamento parcial do dominio
+            $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
+            $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
+
+            $shopifyIntegration = $shopifyIntegrationModel->where('url_store', $dataRequest['url_store'] . '.myshopify.com')
+                                                          ->orWhere('token', $dataRequest['token'])
+                                                          ->first();
 
             if ($shopifyIntegration) {
                 if ($shopifyIntegration->status == 1) {
@@ -91,9 +95,7 @@ class ShopifyApiController extends Controller
             }
 
             try {
-                //tratamento parcial do dominio
-                $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
-                $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
+
                 $dataRequest['url_store'] = 'http://' . $dataRequest['url_store'];
                 $dataRequest['url_store'] = parse_url($dataRequest['url_store'], PHP_URL_HOST);
 
@@ -139,8 +141,8 @@ class ShopifyApiController extends Controller
                                            'information'  => 'de 15 até 30 dias',
                                            'value'        => '0,00',
                                            'type'         => 'static',
-                                            'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
-                                            'status'       => '1',
+                                           'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
+                                           'status'       => '1',
                                            'pre_selected' => '1',
                                        ]);
                 if (!empty($shippingModel)) {
@@ -161,12 +163,14 @@ class ShopifyApiController extends Controller
                                                       'project_id'           => $project->id,
                                                       'company_id'           => $companyId,
                                                       'type'                 => 'producer',
-                                                      'type_enum'            => $userProjectModel->present()->getTypeEnum('producer'),
+                                                      'type_enum'            => $userProjectModel->present()
+                                                                                                 ->getTypeEnum('producer'),
                                                       'shipment_responsible' => true,
                                                       'access_permission'    => true,
                                                       'edit_permission'      => true,
                                                       'status'               => 'active',
-                                                      'status_flag'          => $userProjectModel->present()->getStatusFlag('active'),
+                                                      'status_flag'          => $userProjectModel->present()
+                                                                                                 ->getStatusFlag('active'),
                                                   ]);
                         if (!empty($userProjectModel)) {
                             $projectNotificationService = new ProjectNotificationService();
@@ -217,18 +221,16 @@ class ShopifyApiController extends Controller
 
             $projectModel = new Project();
 
-
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
                     ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.product', 'pixels', 'discountCoupons', 'shippings'])
                     ->find($projectId);
 
-                activity()->on($projectModel)->tap(function(Activity $activity) use($projectId) {
-                    $activity->log_name = 'updated';
+                activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
+                    $activity->log_name   = 'updated';
                     $activity->subject_id = current(Hashids::decode($projectId));
                 })->log('Integração com o shopify desfeita para o projeto ' . $project->name);
-
 
                 if (!empty($project->shopify_id)) {
                     //se for shopify, voltar as integraçoes ao html padrao
@@ -288,7 +290,6 @@ class ShopifyApiController extends Controller
             $shopifyIntegrationModel = new ShopifyIntegration();
             $domainModel             = new Domain();
 
-
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
@@ -303,11 +304,9 @@ class ShopifyApiController extends Controller
                            ])
                     ->find($projectId);
 
-
-                activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity){
-                    $activity->log_name   = 'updated';
+                activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+                    $activity->log_name = 'updated';
                 })->log('Reintegração do shopify para o projeto ' . $project->name);
-
 
                 //puxa todos os produtos
                 foreach ($project->shopifyIntegrations as $shopifyIntegration) {
@@ -406,14 +405,14 @@ class ShopifyApiController extends Controller
     public function synchronizeProducts(Request $request)
     {
         try {
-            $requestData  = $request->all();
+            $requestData = $request->all();
 
             $projectId    = current(Hashids::decode($requestData['project_id']));
             $shopifyModel = new ShopifyIntegration();
             $projectModel = new Project();
-            $project = $projectModel->find($projectId);
+            $project      = $projectModel->find($projectId);
 
-            activity()->on($shopifyModel)->tap(function(Activity $activity){
+            activity()->on($shopifyModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'updated';
             })->log('Sicronizou produtos do shopify para o projeto ' . $project->name);
 
@@ -465,11 +464,9 @@ class ShopifyApiController extends Controller
                                                ])
                                         ->find($projectId);
 
-
-                activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity){
+                activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
                     $activity->log_name = 'updated';
                 })->log('Sicronizou template do shopify para o projeto ' . $project->name);
-
 
                 // procura dominio aprovado
                 $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
@@ -573,16 +570,15 @@ class ShopifyApiController extends Controller
     {
         $data                    = $request->all();
         $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel = new Project();
+        $projectModel            = new Project();
 
         if (!empty($data['token'])) {
             $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->find($projectId);
+            $project   = $projectModel->find($projectId);
 
             activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'updated';
             })->log('Atualizou token de integração do shopify para o projeto ' . $project->name);
-
 
             if ($projectId) {
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
@@ -627,18 +623,15 @@ class ShopifyApiController extends Controller
 
         $data                    = $request->all();
         $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel = new Project();
-
+        $projectModel            = new Project();
 
         if (!empty($data['project_id'])) {
             $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->find($projectId);
-
+            $project   = $projectModel->find($projectId);
 
             activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Verificação de permissões do token de integração do shopify para o projeto: ' . $project->name);
-
 
             if ($projectId) {
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
@@ -681,11 +674,11 @@ class ShopifyApiController extends Controller
     {
         $data                    = $request->all();
         $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel = new Project();
+        $projectModel            = new Project();
 
         if (!empty($data['project_id']) && isset($data['skip_to_cart'])) {
             $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->with(['domains'])->find($projectId);
+            $project   = $projectModel->with(['domains'])->find($projectId);
 
             if ($projectId) {
                 $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
@@ -702,7 +695,7 @@ class ShopifyApiController extends Controller
 
                         $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
-                        $domain = $project->domains->first();
+                        $domain     = $project->domains->first();
                         $domainName = $domain ? $domain->name : null;
 
                         $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domainName);
@@ -710,8 +703,8 @@ class ShopifyApiController extends Controller
                         $integration->skip_to_cart = boolval($data['skip_to_cart']);
                         $integration->save();
 
-                        activity()->on($projectModel)->tap(function (Activity $activity) use ($projectId) {
-                            $activity->log_name = 'updated';
+                        activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {
+                            $activity->log_name   = 'updated';
                             $activity->subject_id = current(Hashids::decode($projectId));
                         })->log('Skip to cart atualizado no projeto ' . $project->name);
 

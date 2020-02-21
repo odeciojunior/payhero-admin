@@ -84,8 +84,7 @@
                         <div class="input-holder d-flex flex-column">
                             <label for="firstname">Nome</label>
                             <input type="text" name="firstname" id="firstname" placeholder="Digite seu nome" required>
-                            <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -93,8 +92,7 @@
                             <label for="lastname">Sobrenome</label>
                             <input type="text" name="lastname" id="lastname" placeholder="Digite seu sobrenome"
                                    required>
-                            <p class='sm-tex text-danger' id='lastNameError' style='display:none;'>O campo sobrenome é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='lastNameError' style='display:none;'>O campo sobrenome é obrigatório</p>
                         </div>
                     </div>
                 </div>
@@ -103,20 +101,16 @@
                         <div class="input-holder d-flex flex-column">
                             <label for="document">CPF</label>
                             <input type="text" name="document" id="document" placeholder="Digite seu CPF" required>
-                            <p class='sm-tex text-danger' id='documentError' style='display:none;'>O campo CPF é
-                                obrigatório</p>
-                            <p class='sm-tex text-danger' id='documentExistError' style='display:none;'>Esse CPF já está
-                                cadastrado na plataforma</p>
-                            <p class='sm-tex text-danger' id='documentInvalidError' style='display:none;'>CPF
-                                inválido</p>
+                            <p class='sm-tex text-danger' id='documentError' style='display:none;'>O campo CPF é obrigatório</p>
+                            <p class='sm-tex text-danger' id='documentExistError' style='display:none;'>Esse CPF já está cadastrado na plataforma</p>
+                            <p class='sm-tex text-danger' id='documentInvalidError' style='display:none;'>CPF inválido</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-holder d-flex flex-column">
                             <label for="phone">Celular</label>
                             <input type="text" name="cellphone" id="phone" placeholder="Digite seu celular" required>
-                            <p class='sm-tex text-danger' id='phoneError' style='display:none;'>O campo celular é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='phoneError' style='display:none;'>O campo celular é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -124,8 +118,8 @@
                             <label for="document">Data de nascimento</label>
                             <input type="date" name="date_birth" id="date_birth"
                                    placeholder="Digite sua data de nascimento" required>
-                            <p class='sm-tex text-danger' id='dateBirthError' style='display:none;'>O campo Data de
-                                nascimento é obrigatório</p>
+                            <p class='sm-tex text-danger' id='dateBirthError' style='display:none;'>O campo Data de nascimento é obrigatório</p>
+                            <p class='sm-tex text-danger' id='dateBirthIncorrect' style='display:none;'>O campo Data de nascimento está incorreto</p>
                         </div>
                     </div>
                 </div>
@@ -145,10 +139,8 @@
                                     <label for="email">E-mail</label>
                                     <input type="email" name="email" id="email" value="" placeholder="Digite seu email"
                                            required>
-                                    <p class='sm-tex text-danger' id='emailError' style='display:none;'>O campo E-mail é
-                                        obrigatório</p>
-                                    <p class='sm-tex text-danger' id='emailExistError' style='display:none;'>Esse email
-                                        já está cadastrado na plataforma</p>
+                                    <p class='sm-tex text-danger' id='emailError' style='display:none;'>O campo E-mail é obrigatório</p>
+                                    <p class='sm-tex text-danger' id='emailExistError' style='display:none;'>Esse email já está cadastrado na plataforma</p>
                                 </div>
                             </div>
                         </div>
@@ -158,10 +150,8 @@
                                     <label for="password">Senha</label>
                                     <input type="password" name="password" id="password" value="" placeholder="Password"
                                            required>
-                                    <p class='sm-tex text-danger' id='passwordError' style='display:none;'>O campo senha
-                                        é obrigatório</p>
-                                    <p class="sm-text mt-2">Evite senhas usadas em outros sites e que sejam fáceis de
-                                        identificar.</p>
+                                    <p class='sm-tex text-danger' id='passwordError' style='display:none;'>O campo senha é obrigatório</p>
+                                    <p class="sm-text mt-2">Evite senhas usadas em outros sites e que sejam fáceis de identificar.</p>
                                     <div class="progress align-items-center justify-content-between">
                                         <div class="progress-bar" id='progress-password' role="progressbar"
                                              aria-valuenow="25"
@@ -243,16 +233,14 @@
                         <div class="input-holder d-flex flex-column">
                             <label for="zip_code">CEP</label>
                             <input type="text" name="zip_code" id="zip_code" placeholder="Digite seu CEP" required>
-                            <p class='sm-tex text-danger' id='zipCodeError' style='display:none;'>O campo CEP é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='zipCodeError' style='display:none;'>O campo CEP é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="input-holder d-flex flex-column">
                             <label for="street">Endereço</label>
                             <input type="text" name="street" id="street" placeholder="Digite o seu endereço" required>
-                            <p class='sm-tex text-danger' id='streetError' style='display:none;'>O campo Rua é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='streetError' style='display:none;'>O campo Rua é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -260,16 +248,14 @@
                             <label for="number">Número</label>
                             <input type="text" name="number" id="number" value=""
                                    placeholder="Digite seu número residencial" required>
-                            <p class='sm-tex text-danger' id='numberError' style='display:none;'>O campo Número é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='numberError' style='display:none;'>O campo Número é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="input-holder d-flex flex-column">
                             <label for="document">Complemento</label>
                             <input type="text" name="complement" id="complement" placeholder="Digite o complemento">
-                            <p class='sm-tex text-danger' id='complementError' style='display:none;'>O campo Complemento
-                                é obrigatório</p>
+                            <p class='sm-tex text-danger' id='complementError' style='display:none;'>O campo Complemento é obrigatório</p>
                         </div>
                     </div>
                 </div>
@@ -279,24 +265,21 @@
                             <label for="neighborhood">Bairro</label>
                             <input type="text" name="neighborhood" id="neighborhood"
                                    placeholder="Digite o nome do seu bairro" required>
-                            <p class='sm-tex text-danger' id='neighborhoodError' style='display:none;'>O campo Bairro é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='neighborhoodError' style='display:none;'>O campo Bairro é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-holder d-flex flex-column">
                             <label for="city">Cidade</label>
                             <input type="text" name="city" id="city" placeholder="Digite o nome da sua cidade" required>
-                            <p class='sm-tex text-danger' id='cityError' style='display:none;'>O campo Cidade é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='cityError' style='display:none;'>O campo Cidade é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="input-holder d-flex flex-column">
                             <label for="state">Estado</label>
                             <input type="text" name="state" id="state" placeholder="Digite seu estado" required>
-                            <p class='sm-tex text-danger' id='stateError' style='display:none;'>O campo Estado é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='stateError' style='display:none;'>O campo Estado é obrigatório</p>
                         </div>
                     </div>
                 </div>
@@ -314,13 +297,11 @@
                 </div>
                 <div class='row justify-content-center text-center mt-40'>
                     <div class='col-lg-6'>
-                        <button id='btn-physical-person' class='btn btn-info' data-type='physical person'>Pessoa
-                            fisíca
+                        <button id='btn-physical-person' class='btn btn-info' data-type='physical person'>Pessoa fisíca
                         </button>
                     </div>
                     <div class='col-lg-6'>
-                        <button id='btn-juridical-person' class='btn btn-info' data-type='juridical person'>Pessoa
-                            jurídica
+                        <button id='btn-juridical-person' class='btn btn-info' data-type='juridical person'>Pessoa jurídica
                         </button>
                     </div>
                 </div>
@@ -331,10 +312,8 @@
                                 <label for="company_document">CNPJ</label>
                                 <input type="text" name="company_document" id="company_document"
                                        placeholder="Digite seu CNPJ" required>
-                                <p class='sm-tex text-danger' id='companyDocumentError' style='display:none;'>O campo
-                                    CNPJ é obrigatório</p>
-                                <p class='sm-tex text-danger' id='companydocumentExistError' style='display:none;'>Esse
-                                    CNPJ já está cadastrado na plataforma</p>
+                                <p class='sm-tex text-danger' id='companyDocumentError' style='display:none;'>O campo CNPJ é obrigatório</p>
+                                <p class='sm-tex text-danger' id='companydocumentExistError' style='display:none;'>Esse CNPJ já está cadastrado na plataforma</p>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -342,8 +321,7 @@
                                 <label for="fantasy_name">Razão social</label>
                                 <input type="text" name="company_document" id="fantasy_name"
                                        placeholder="Digite a razão social" required>
-                                <p class='sm-tex text-danger' id='fantasyNameError' style='display:none;'>O campo Razão
-                                    social é obrigatório</p>
+                                <p class='sm-tex text-danger' id='fantasyNameError' style='display:none;'>O campo Razão social é obrigatório</p>
                             </div>
                         </div>
                     </div>
@@ -353,8 +331,7 @@
                                 <label for="support_email">E-mail</label>
                                 <input type="text" name="support_email" id="support_email" placeholder="Digite o e-mail"
                                        required>
-                                <p class='sm-tex text-danger' id='supportEmailError' style='display:none;'>O campo
-                                    E-mail é obrigatório</p>
+                                <p class='sm-tex text-danger' id='supportEmailError' style='display:none;'>O campo E-mail é obrigatório</p>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -362,8 +339,7 @@
                                 <label for="support_telephone">Telefone</label>
                                 <input type="text" name="support_telephone" id="support_telephone"
                                        placeholder="Digite o telefone" required>
-                                <p class='sm-tex text-danger' id='supportTelephoneError' style='display:none;'>O campo
-                                    Telefone é obrigatório</p>
+                                <p class='sm-tex text-danger' id='supportTelephoneError' style='display:none;'>O campo Telefone é obrigatório</p>
                             </div>
                         </div>
                     </div>
@@ -382,8 +358,7 @@
                             <select id="bank" class="form-control" name="bank" style='width:100%' data-plugin="select2">
                                 <option value="">Selecione</option>
                             </select>
-                            <p class='sm-tex text-danger' id='bankError' style='display:none;'>O campo Banco é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='bankError' style='display:none;'>O campo Banco é obrigatório</p>
                         </div>
                     </div>
                 </div>
@@ -392,8 +367,7 @@
                         <div class="input-holder d-flex flex-column">
                             <label for="agency">Agência</label>
                             <input type="text" name="agency" id="agency" placeholder="Digite a agência" required>
-                            <p class='sm-tex text-danger' id='agencyError' style='display:none;'>O campo Agência é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='agencyError' style='display:none;'>O campo Agência é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -407,8 +381,7 @@
                         <div class="input-holder d-flex flex-column">
                             <label for="account">Conta</label>
                             <input type="text" name="account" id="account" placeholder="Digite a conta" required>
-                            <p class='sm-tex text-danger' id='accountError' style='display:none;'>O campo Conta é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='accountError' style='display:none;'>O campo Conta é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -425,8 +398,7 @@
                     <img
                         src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/cloudfox-loading-register.gif">
                     <h1 class="bold orange mt10"> Tudo pronto! </h1>
-                    <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você
-                        estará na sua nova dashboard.
+                    <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você estará na sua nova dashboard.
                 </div>
             </div>
             <div class='div7' style="display:none;">
@@ -441,8 +413,7 @@
                             <label for="zip_code_company">CEP</label>
                             <input type="text" name="zip_code_company" id="zip_code_company" placeholder="Digite o CEP"
                                    required>
-                            <p class='sm-tex text-danger' id='zipCodeCompanyError' style='display:none;'>O campo CEP é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='zipCodeCompanyError' style='display:none;'>O campo CEP é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -450,8 +421,7 @@
                             <label for="street_company">Endereço</label>
                             <input type="text" name="street_company" id="street_company" placeholder="Digite o endereço"
                                    required>
-                            <p class='sm-tex text-danger' id='streetCompanyError' style='display:none;'>O campo Endereço
-                                é obrigatório</p>
+                            <p class='sm-tex text-danger' id='streetCompanyError' style='display:none;'>O campo Endereço é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -459,8 +429,7 @@
                             <label for="number_company">Número</label>
                             <input type="text" name="number_company" id="number_company" placeholder="Digite o número"
                                    required>
-                            <p class='sm-tex text-danger' id='numberCompanyError' style='display:none;'>O campo Número é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='numberCompanyError' style='display:none;'>O campo Número é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -477,8 +446,7 @@
                             <label for="neighborhood_company">Bairro</label>
                             <input type="text" name="neighborhood_company" id="neighborhood_company"
                                    placeholder="Digite o bairro" required>
-                            <p class='sm-tex text-danger' id='neighborhoodCompanyError' style='display:none;'>O campo
-                                Bairro é obrigatório</p>
+                            <p class='sm-tex text-danger' id='neighborhoodCompanyError' style='display:none;'>O campo Bairro é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -486,8 +454,7 @@
                             <label for="city_company">Cidade</label>
                             <input type="text" name="city_company" id="city_company"
                                    placeholder="Digite o nome da cidade" required>
-                            <p class='sm-tex text-danger' id='cityCompanyError' style='display:none;'>O campo Cidade é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='cityCompanyError' style='display:none;'>O campo Cidade é obrigatório</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -495,8 +462,7 @@
                             <label for="state_company">Estado</label>
                             <input type="text" name="state_company" id="state_company" placeholder="Digite o estado"
                                    required>
-                            <p class='sm-tex text-danger' id='stateCompanyError' style='display:none;'>O campo Estado é
-                                obrigatório</p>
+                            <p class='sm-tex text-danger' id='stateCompanyError' style='display:none;'>O campo Estado é obrigatório</p>
                         </div>
                     </div>
                 </div>
@@ -504,8 +470,7 @@
             <div id='alert-row' class='row mt-100' style='display:none;'>
                 <div class='col-lg-12 mt-80'>
                     <p class='info pt-5' style='font-size: 15px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i> Essas informações poderão ser alteradas
-                        depois.
+                        <i class='icon wb-info-circle' aria-hidden='true'></i> Essas informações poderão ser alteradas depois.
                     </p>
                 </div>
             </div>
@@ -538,7 +503,8 @@
 <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>--}}
-<script src="{{asset('modules/register/js/register.js?v=1')}}"></script>
+<script src="{{asset('modules/register/js/register.js?v=2')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
@@ -577,12 +543,10 @@
         align-items: center;
         justify-content: center;
     }
-
     .logo {
         margin-bottom: 20px;
         width: 60px;
     }
-
     .content-error {
         color: black;
         display: flex;
@@ -594,13 +558,11 @@
     {{--  padding: 20px;  --}}
 
     }
-
     .big {
         font-size: 45px;
         color: black;
         font-weight: 700;
     }
-
     .btn.orange {
         background: transparent;
         background-color: transparent;
@@ -613,7 +575,6 @@
         padding: 10px 22px;
         transition: all 300ms linear;
     }
-
     .btn.orange:hover {
         background-color: orangered;
         border-color: orangered;
