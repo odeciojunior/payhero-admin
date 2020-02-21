@@ -68,6 +68,7 @@ class AffiliateLinksApiController extends Controller
             $affiliateId = current(Hashids::decode($request->input('affiliate')));
             $link = $request->input('link-affiliate');
 
+            $request->validate(['link-affiliate' => 'required|max:254']);
             if (!empty($affiliateId) && !empty($link)) {
 
                 $affiliate = Affiliate::with(['project.domains' => function($query) {
@@ -133,6 +134,7 @@ class AffiliateLinksApiController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $request->validate(['link' => 'required|max:254']);
             $linkId = current(Hashids::decode($id));
             $link = $request->input('link');
 
