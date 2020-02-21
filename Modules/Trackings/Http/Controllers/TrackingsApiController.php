@@ -44,9 +44,14 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $trackings = $trackingService->getPaginatedTrackings($data);
+            if (!empty($data["date_updated"])) {
 
-            return TrackingResource::collection($trackings);
+                $trackings = $trackingService->getPaginatedTrackings($data);
+
+                return TrackingResource::collection($trackings);
+            } else {
+                return response()->json(['message' => 'Erro ao exibir códigos de rastreio'], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao exibir códigos de rastreio (TrackingApiController - index)');
             report($e);
@@ -120,37 +125,36 @@ class TrackingsApiController extends Controller
 
             $tracking = $trackingModel->where('tracking_code', $trackingCode)->first();
 
-            if(!empty($tracking)) {
+            if (!empty($tracking)) {
                 $apiTracking = $trackingService->findTrackingApi($tracking);
 
                 $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
-                $checkpoints = collect();
+                $checkpoints  = collect();
 
                 //objeto postado
                 $checkpoints->add([
-                    'tracking_status_enum' => $postedStatus,
-                    'tracking_status' => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
-                            ->getTrackingStatusEnum($postedStatus)),
-                    'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                    'event' => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
-                ]);
+                                      'tracking_status_enum' => $postedStatus,
+                                      'tracking_status'      => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                                                                                                                                ->getTrackingStatusEnum($postedStatus)),
+                                      'created_at'           => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                                      'event'                => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
+                                  ]);
 
                 $checkpointsApi = $trackingService->getCheckpointsApi($tracking, $apiTracking);
 
                 $checkpoints = $checkpoints->merge($checkpointsApi)->unique()->sortKeysDesc()->values()->toArray();
 
                 $trackingArray = [
-                    'id' => Hashids::encode($tracking->id),
-                    'tracking_code' => $tracking->tracking_code,
+                    'id'                   => Hashids::encode($tracking->id),
+                    'tracking_code'        => $tracking->tracking_code,
                     'tracking_status_enum' => $tracking->tracking_status_enum,
-                    'checkpoints' => $checkpoints,
+                    'checkpoints'          => $checkpoints,
                 ];
 
                 return response()->json(['data' => $trackingArray]);
             } else {
                 return response()->json(['message' => 'Erro ao exibir detalhes do código de rastreio'], 400);
             }
-
         } catch (Exception $e) {
             Log::warning('Erro ao exibir detalhes do código de rastreio (TrackingApiController - show)');
             report($e);
@@ -170,11 +174,16 @@ class TrackingsApiController extends Controller
 
             $data = $request->all();
 
-            $resume = $trackingService->getResume($data);
+            if (!empty($data["date_updated"])) {
 
-            return response()->json([
-                                        'data' => $resume,
-                                    ]);
+                $resume = $trackingService->getResume($data);
+
+                return response()->json([
+                                            'data' => $resume,
+                                        ]);
+            } else {
+                return response()->json(['message' => 'Erro ao exibir resumo dos rastreamentos'], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao exibir resumo dos rastreamentos (TrackingApiController - resume)');
             report($e);
@@ -199,80 +208,86 @@ class TrackingsApiController extends Controller
                 $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
                 $productId = current(Hashids::decode($data['product_id']));
                 if ($saleId && $productId) {
-                        $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales', 'sale.delivery'])
-                            ->where([['sale_id', $saleId], ['product_id', $productId]])
-                            ->first();
+                    $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales', 'sale.delivery'])
+                                                            ->where([['sale_id', $saleId], ['product_id', $productId]])
+                                                            ->first();
 
-                        $tracking = $productPlanSale->tracking;
+                    $tracking = $productPlanSale->tracking;
 
-                        //create
-                        if (!isset($tracking)) {
+                    //create
+                    if (!isset($tracking)) {
 
-                            DB::beginTransaction();
-                            $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
-                            if ($tracking) {
-                                $apiResult = $trackingService->sendTrackingToApi($tracking);
-                                if (empty($apiResult)) {
-                                    DB::rollBack();
-                                    return response()->json([
-                                        'message' => 'Erro ao salvar código de rastreio',
-                                    ], 400);
-                                } else {
-                                    DB::commit();
-                                    return response()->json([
-                                        'message' => 'Código de rastreio salvo',
-                                        'data' => [
-                                            'tracking_code' => $tracking->tracking_code,
-                                            'tracking_status_enum' => $tracking->tracking_status_enum,
-                                            'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
-                                                    ->getTrackingStatusEnum($tracking->tracking_status_enum)),
-                                        ],
-                                    ], 200);
-                                }
-                            } else {
+                        DB::beginTransaction();
+                        $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
+                        if ($tracking) {
+                            $apiResult = $trackingService->sendTrackingToApi($tracking);
+                            if (empty($apiResult)) {
                                 DB::rollBack();
+
                                 return response()->json([
-                                    'message' => 'Erro ao salvar código de rastreio',
-                                ], 400);
+                                                            'message' => 'Erro ao salvar código de rastreio',
+                                                        ], 400);
+                            } else {
+                                DB::commit();
+
+                                return response()->json([
+                                                            'message' => 'Código de rastreio salvo',
+                                                            'data'    => [
+                                                                'tracking_code'        => $tracking->tracking_code,
+                                                                'tracking_status_enum' => $tracking->tracking_status_enum,
+                                                                'tracking_status'      => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
+                                                                                                                                                                      ->getTrackingStatusEnum($tracking->tracking_status_enum)),
+                                                            ],
+                                                        ], 200);
                             }
-                        //update
                         } else {
-                            DB::beginTransaction();
-                            $trackingCodeupdated = $tracking->update([
-                                'tracking_code' => $data['tracking_code'],
-                            ]);
-                            if ($trackingCodeupdated) {
-                                $apiResult = $trackingService->sendTrackingToApi($tracking);
-                                if (empty($apiResult)) {
-                                    DB::rollBack();
-                                    return response()->json([
-                                        'message' => 'Erro ao atualizar código de rastreio',
-                                    ], 400);
-                                } else {
-                                    DB::commit();
-                                    return response()->json([
-                                        'message' => 'Código de rastreio alterado',
-                                        'data' => [
-                                            'tracking_code' => $tracking->tracking_code,
-                                            'tracking_status_enum' => $tracking->tracking_status_enum,
-                                            'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
-                                                    ->getTrackingStatusEnum($tracking->tracking_status_enum)),
-                                        ],
-                                    ], 200);
-                                }
-                            } else {
+                            DB::rollBack();
+
+                            return response()->json([
+                                                        'message' => 'Erro ao salvar código de rastreio',
+                                                    ], 400);
+                        }
+                        //update
+                    } else {
+                        DB::beginTransaction();
+                        $trackingCodeupdated = $tracking->update([
+                                                                     'tracking_code' => $data['tracking_code'],
+                                                                 ]);
+                        if ($trackingCodeupdated) {
+                            $apiResult = $trackingService->sendTrackingToApi($tracking);
+                            if (empty($apiResult)) {
                                 DB::rollBack();
+
                                 return response()->json([
-                                    'message' => 'Erro ao atualizar código de rastreio',
-                                ], 400);
+                                                            'message' => 'Erro ao atualizar código de rastreio',
+                                                        ], 400);
+                            } else {
+                                DB::commit();
+
+                                return response()->json([
+                                                            'message' => 'Código de rastreio alterado',
+                                                            'data'    => [
+                                                                'tracking_code'        => $tracking->tracking_code,
+                                                                'tracking_status_enum' => $tracking->tracking_status_enum,
+                                                                'tracking_status'      => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
+                                                                                                                                                                      ->getTrackingStatusEnum($tracking->tracking_status_enum)),
+                                                            ],
+                                                        ], 200);
                             }
+                        } else {
+                            DB::rollBack();
+
+                            return response()->json([
+                                                        'message' => 'Erro ao atualizar código de rastreio',
+                                                    ], 400);
                         }
                     }
-                }else{
-                    return response()->json([
-                                                'message' => 'Erro ao salvar código de rastreio',
-                                            ], 400);
-                                        }
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao salvar código de rastreio',
+                                        ], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar alterar código de rastreio (TrackingApiController - store)');
             report($e);

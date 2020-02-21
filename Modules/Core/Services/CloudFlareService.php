@@ -33,7 +33,6 @@ class CloudFlareService
     const sacIp       = '157.245.81.127';
     const affiliateIp = '104.248.122.89';
     const adminIp     = '165.22.13.237';
-
     /**
      * @var APIKey
      */
@@ -160,11 +159,15 @@ class CloudFlareService
 
     /**
      * @param string $zone
-     * @return stdClass
+     * @return bool|stdClass
      */
     public function addZone(string $zone)
     {
-        return $this->zones->addZone($zone);
+        try {
+            return $this->zones->addZone($zone);
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     /**
@@ -426,13 +429,13 @@ class CloudFlareService
 
             $recordId = $this->addRecord("A", 'tracking', self::adminIp);
             $this->getDomainRecordModel()->create([
-                'domain_id'            => $domainModelId,
-                'cloudflare_record_id' => $recordId,
-                'type'                 => 'A',
-                'name'                 => 'tracking',
-                'content'              => self::adminIp,
-                'system_flag'          => 1,
-            ]);
+                                                      'domain_id'            => $domainModelId,
+                                                      'cloudflare_record_id' => $recordId,
+                                                      'type'                 => 'A',
+                                                      'name'                 => 'tracking',
+                                                      'content'              => self::adminIp,
+                                                      'system_flag'          => 1,
+                                                  ]);
 
             $this->getSendgridService()->deleteZone($newZone->name);
             $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
@@ -560,13 +563,13 @@ class CloudFlareService
 
             $recordId = $this->addRecord("A", 'tracking', self::adminIp);
             $this->getDomainRecordModel()->create([
-                'domain_id'            => $domainModelId,
-                'cloudflare_record_id' => $recordId,
-                'type'                 => 'A',
-                'name'                 => 'tracking',
-                'content'              => self::adminIp,
-                'system_flag'          => 1,
-            ]);
+                                                      'domain_id'            => $domainModelId,
+                                                      'cloudflare_record_id' => $recordId,
+                                                      'type'                 => 'A',
+                                                      'name'                 => 'tracking',
+                                                      'content'              => self::adminIp,
+                                                      'system_flag'          => 1,
+                                                  ]);
 
             $this->getSendgridService()->deleteZone($newZone->name);
             $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);

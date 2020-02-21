@@ -391,9 +391,7 @@ class DomainsApiController extends Controller
             $domainModel       = new Domain();
             $cloudFlareService = new CloudFlareService();
 
-
-
-            $domainId = current(Hashids::decode($domain));
+            $domainId          = current(Hashids::decode($domain));
             if (!empty($domainId)) {
                 // hashid ok
                 $domain = $domainModel->with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
@@ -420,7 +418,7 @@ class DomainsApiController extends Controller
                                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
                                             try {
-                                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token, false);
                                                 $shopify->setThemeByRole('main');
                                             } catch (Exception $e) {
                                                 report($e);
