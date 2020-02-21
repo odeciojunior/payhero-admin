@@ -70,6 +70,12 @@ class SalesResource extends Resource
             $data['user_sale_type'] = 'affiliate';
         }
 
+        if (!empty($this->affiliate_id)) {
+            $data['affiliate'] = $this->affiliate->user->name;
+        } else {
+            $data['affiliate'] = null;
+        }
+
         return $data;
     }
 }
