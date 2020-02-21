@@ -363,6 +363,40 @@ class TesteController extends Controller
             $this->error($e->getMessage());
         }*/
 
+        /*
+         $cloudflareService = new CloudFlareService();
+
+            $domains = Domain::where('name', 'tiamatcabuloso.ml')
+                ->get();
+
+            $total = $domains->count();
+
+            foreach ($domains as $key => $domain) {
+
+                $this->info($key + 1 . ' de ' . $total . '. Domínio: ' . $domain->name);
+
+                $records = $cloudflareService->getRecords($domain->name);
+                $sacRecord = collect($records)->first(function ($item) {
+                    if (Str::contains($item->name, 'sac.')) {
+                        return $item;
+                    }
+                });
+
+                if (isset($sacRecord)) {
+                    $deleted = $cloudflareService->deleteRecord($sacRecord->id);
+                    if ($deleted) {
+                        $this->line('Record antigo deletado!');
+                        $recordId = $cloudflareService->addRecord("A", 'sac', $cloudflareService::sacIp);
+                        $this->line('Novo record criado: ' . $recordId);
+                    }
+                } else {
+                    $this->warn('Record não encontrado');
+                }
+            }
+
+            $this->info('ACABOOOOOOOOOOOOOU!');
+         */
+
         dd('oi');
     }
 
