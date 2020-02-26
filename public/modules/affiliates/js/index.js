@@ -124,7 +124,7 @@ $(document).ready(function () {
             error: (response) => {
                 $('#modal_store_affiliate').modal('hide');
                 loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                // errorAjaxResponse(response);
             },
             success: (response) => {
                 $('#modal_store_affiliate').modal('hide');
