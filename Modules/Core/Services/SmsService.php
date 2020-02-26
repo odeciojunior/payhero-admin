@@ -21,8 +21,10 @@ class SmsService
         try {
             //            $zenvia = new ZenviaSmsService();
             //            $zenvia->sendSms($number, $message);
+            $easySms = new EasySendSmsService($number, $message);
+            $easySms->submit();
 
-            DisparoProService::sendMessage($number, $message);
+            //            DisparoProService::sendMessage($number, $message);
 
             return true;
         } catch (Exception $e) {
