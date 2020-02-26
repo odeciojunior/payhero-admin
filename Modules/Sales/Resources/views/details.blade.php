@@ -26,6 +26,8 @@
                 </div>
                 <div class="clearfix"></div>
                 <div id='sale-details-card' class="card shadow pr-20 pl-20 p-10">
+                    <div class='div-sale-by-affiliate' style='display:none;'>
+                    </div>
                     <div class="row">
                         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
                         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
@@ -89,18 +91,26 @@
                         <div id="convertax-value" class='col-lg-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-lg-6 div-producer-comission'>
-                            {{--                            <h4 class='table-title'>Comissão: </h4>--}}
-                        </div>
-                        <div class='col-lg-6 text-right div-producer-comission-value'>
-                            {{--                            <h4 id="comission-value" class='table-title'></h4>--}}
-                        </div>
-                        <div class='col-lg-6 div-affiliate-comission' style='display:none;'>
+{{--                        <div class='col-lg-6 div-producer-comission'>--}}
+{{--                            --}}{{--                            <h4 class='table-title'>Comissão: </h4>--}}
+{{--                        </div>--}}
+{{--                        <div class='col-lg-6 text-right div-producer-comission-value'>--}}
+{{--                            --}}{{--                            <h4 id="comission-value" class='table-title'></h4>--}}
+{{--                        </div>--}}
+                        <div class='col-lg-6 div-user-type-comission' style='display:none;'>
                             <h4 class='table-title'>Comissão do afiliado: </h4>
                         </div>
-                        <div class='col-lg-6 text-right div-affiliate-comission-value' style='display:none;'>
+                        <div class='col-lg-6 text-right div-user-type-comission-value' style='display:none;'>
                             {{--                            <h4 id="affiliate-comission-value" class='table-title'></h4>--}}
                         </div>
+
+                        <div class='col-lg-6 div-main-comission'>
+                            {{--                            <h4 class='table-title'>Comissão: </h4>--}}
+                        </div>
+                        <div class='col-lg-6 text-right div-main-comission-value'>
+                            {{--                            <h4 id="comission-value" class='table-title'></h4>--}}
+                        </div>
+
                     </div>
                 </div>
                 {{--resend shopfy order--}}
@@ -265,5 +275,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=2') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=3') }}"></script>
 @endpush

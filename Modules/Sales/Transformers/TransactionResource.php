@@ -53,6 +53,13 @@ class TransactionResource extends Resource
         } else {
             $data['has_shopify_integration'] = null;
         }
+
+        if ($sale->owner_id == auth()->user()->account_owner_id) {
+            $data['user_sale_type'] = 'producer';
+        } else {
+            $data['user_sale_type'] = 'affiliate';
+        }
+
         if (!empty($sale->affiliate_id)) {
             $data['affiliate'] = $sale->affiliate->user->name;
         } else {

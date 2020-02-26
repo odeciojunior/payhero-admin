@@ -225,30 +225,41 @@ $(() => {
             $('#convertax-label, #convertax-value').show();
         }
 
+        //comissao afiliado
         if (sale.user_sale_type == 'affiliate') {
-            $('.div-affiliate-comission-value').html("<h4 id='affiliate-comission-value' class='table-title'></h4>");
-            $('.div-producer-comission-value').html("<span id='comission-value' class='text-muted ft-12'></span>");
-            $('.div-producer-comission').html("<span class='text-muted ft-12'>Comissão: </span>");
-            $('.div-affiliate-comission').html("<h4 class='table-title'>Comissão do afiliado: </h4>");
+
+            $('.div-main-comission-value').html("<h4 id='comission-value' class='table-title'></h4>");
+            $('.div-main-comission').html("<h4 class='table-title'>Comissão: </h4>");
+
+            if (sale.affiliate != null) {
+                $('.div-user-type-comission-value').show().html("<span id='user-type-comission-value' class='text-muted ft-12'></span>");
+                $('.div-user-type-comission').show().html("<span class='text-muted ft-12'>Comissão do produtor: </span>");
+                $('#user-type-comission-value').html(sale.comission);
+            } else {
+                $('.div-user-type-comission-value').hide();
+                $('.div-user-type-comission').hide();
+            }
         } else {
-            $('.div-affiliate-comission-value').html("<span id='affiliate-comission-value' class='text-muted ft-12'></span>");
-            $('.div-producer-comission-value').html("<h4 id='comission-value' class='table-title'></h4>");
-            $('.div-producer-comission').html("<h4 class='table-title'>Comissão: </h4>");
-            $('.div-affiliate-comission').html("<span class='text-muted ft-12'>Comissão do afiliado: </span>");
+            $('.div-main-comission-value').html("<h4 id='comission-value' class='table-title'></h4>");
+            $('.div-main-comission').html("<h4 class='table-title'>Comissão: </h4>");
+
+            if (sale.affiliate != null) {
+                $('.div-sale-by-affiliate').show().html("<h4 class='table-title'>Venda realizada pelo afiliado " + sale.affiliate + "</h4>");
+                $('.div-user-type-comission-value').show().html("<span id='user-type-comission-value' class='text-muted ft-12'></span>");
+                $('.div-user-type-comission').show().html("<span class='text-muted ft-12'>Comissão do afiliado: </span>");
+                $('#user-type-comission-value').html(sale.affiliate_comission);
+            } else {
+                $('.div-sale-by-affiliate').hide();
+                $('.div-affiliate-name').hide().html("");
+                $('.div-user-type-comission-value').hide();
+                $('.div-user-type-comission').hide();
+            }
+
+            $('#comission-value').text(sale.comission ? sale.comission : '');
         }
 
-        $('#comission-value').text(sale.comission ? sale.comission : '');
-
-        //comissão do afiliado
-        if (sale.affiliate_comission != '') {
-            $('#affiliate-comission-value').text(sale.affiliate_comission);
-            $('.div-affiliate-comission').show();
-            $('.div-affiliate-comission-value').show();
-
-        } else {
-            $('#affiliate-comission-value').text('');
-            $('.div-affiliate-comission').hide();
-            $('.div-affiliate-comission-value').hide();
+        if (sale.affiliate_comission != '' && sale.user_sale_type == 'affiliate') {
+            $('#comission-value').text(sale.affiliate_comission);
         }
 
         //Detalhes do shopify
