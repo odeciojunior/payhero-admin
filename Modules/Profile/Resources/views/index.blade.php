@@ -85,7 +85,8 @@
                                                            style='color:red; display:none;'>Email não verificado, clique
                                                         <a href='#' id='btn_verify_email'
                                                            onclick='event.preventDefault();' data-toggle='modal'
-                                                           data-target='#modal_verify_email'>aqui</a>
+                                                           data-target='#modal_verify_email'>aqui
+                                                        </a>
                                                         para verificá-lo!
                                                     </small>
                                                 </div>
@@ -108,11 +109,11 @@
                                                                placeholder="Celular" aria-describedby="addon-cellphone">
                                                     </div>
                                                     <small id="message_not_verified_cellphone"
-                                                           style='color:red; display:none;'>Celular não verificado,
-                                                        clique
+                                                           style='color:red; display:none;'>Celular não verificado, clique
                                                         <a href='#' id='btn_verify_cellphone'
                                                            onclick='event.preventDefault();' data-toggle='modal'
-                                                           data-target='#modal_verify_cellphone'>aqui</a>
+                                                           data-target='#modal_verify_cellphone'>aqui
+                                                        </a>
                                                         para verificá-lo!
                                                     </small>
                                                 </div>
@@ -209,8 +210,7 @@
                                                class="mr-10">
                                                 <i class="icon fa-lock" aria-hidden="true"></i> Alterar senha
                                             </a>
-                                            <button id="update_profile" type="submit" class="btn btn-success">Atualizar
-                                                Dados
+                                            <button id="update_profile" type="submit" class="btn btn-success">Atualizar Dados
                                             </button>
                                         </div>
                                     </div>
@@ -220,12 +220,10 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h5 class="title-pad"> Documentos </h5>
-                                        <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de
-                                            algumas comprovações. </p>
+                                        <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de algumas comprovações. </p>
                                         <div class="alert alert-info alert-dismissible fade show text-center"
                                              id='text-alert-documents-cpf' role="alert" style='display:none;'>
-                                            <strong>Atenção!</strong> Os documentos somente serão analisados após todos
-                                            serem enviados.
+                                            <strong>Atenção!</strong> Os documentos somente serão analisados após todos serem enviados.
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
                                             </button>
@@ -238,37 +236,37 @@
                                     <div class="col-lg-12">
                                         <table class="table table-hover">
                                             <thead>
-                                            <tr>
-                                                <th scope="col">Documento</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col"></th>
-                                            </tr>
+                                                <tr>
+                                                    <th scope="col">Documento</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col"></th>
+                                                </tr>
                                             </thead>
                                             <tbody class="custom-t-body">
-                                            <tr>
-                                                <td>
-                                                    Documento com foto
-                                                </td>
-                                                <td id="td_personal_status"></td>
-                                                <td>
-                                                    <i id='personal-document-id' title='Enviar documento'
-                                                       class='icon wb-upload gradient details-document'
-                                                       data-document='personal_document' aria-hidden="true"
-                                                       style="cursor:pointer; font-size: 20px"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Comprovante de residência
-                                                </td>
-                                                <td id="td_address_status"></td>
-                                                <td>
-                                                    <i id='address-document-id' title='Enviar Documento'
-                                                       class='icon wb-upload gradient details-document'
-                                                       data-document='address_document' aria-hidden="true"
-                                                       style="cursor:pointer; font-size: 20px"></i>
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td>
+                                                        Documento com foto
+                                                    </td>
+                                                    <td id="td_personal_status"></td>
+                                                    <td>
+                                                        <i id='personal-document-id' title='Enviar documento'
+                                                           class='icon wb-upload gradient details-document'
+                                                           data-document='personal_document' aria-hidden="true"
+                                                           style="cursor:pointer; font-size: 20px"></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Comprovante de residência
+                                                    </td>
+                                                    <td id="td_address_status"></td>
+                                                    <td>
+                                                        <i id='address-document-id' title='Enviar Documento'
+                                                           class='icon wb-upload gradient details-document'
+                                                           data-document='address_document' aria-hidden="true"
+                                                           style="cursor:pointer; font-size: 20px"></i>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -277,8 +275,7 @@
                                     <div class='col-md-12'>
                                         <div id='div_address_pending' class='alert alert-info text-center my-20'
                                              style='display:none;'>
-                                            <p>Antes de enviar os documentos é necessário completar todos os seus dados
-                                                residenciais na aba MEUS DADOS.</p>
+                                            <p>Antes de enviar os documentos é necessário completar todos os seus dados residenciais na aba MEUS DADOS.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -303,11 +300,10 @@
                                         <div class='form-group col-xl-5'>
                                             <div class='form-group'>
                                                 <label for='credit-card-release'>Dias para liberação:</label>
-                                                <select id="credit-card-release" class="form-control" disabled>
+                                                <select id="credit-card-release" class="form-control">
                                                     <option value="plan-30">30 dias (taxa de 5.9%)</option>
                                                     <option value="plan-15">15 dias (taxa de 6.5%)</option>
-                                                    <option value="plan-tracking-code" disabled>Ao informar o código de
-                                                        rastreio (em breve)
+                                                    <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)
                                                     </option>
                                                 </select>
                                             </div>
@@ -345,37 +341,37 @@
                                         <div class='form-group col-xl-5'>
                                             <div class='form-group'>
                                                 <label for='boleto-release'>Dias para liberação:</label>
-                                                <input id='boleto-release' disabled='disabled' class="form-control">
+                                                <select id="boleto-release" class="form-control">
+                                                    <option value="plan-30">30 dias (taxa de 5.9%)</option>
+                                                    <option value="plan-2">2 dias (taxa de 6.5%)</option>
+                                                    <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)</option>
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-12">
-                                            <p class='info' style='font-size: 10px; margin-top: -10px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                parcelamento no cartão de crédito de
-                                                <label id="installment-tax" style="color: gray"></label>
-                                                % ao mês.
-                                            </p>
-                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
-                                                <label style="color: gray" id="transaction-tax"></label>
-                                                por transação.
-                                            </p>
-                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de
-                                                transferência para empresas do exterior de
-                                                <label style="color: gray" id="transaction-tax-abroad"></label>
-                                            </p>
-                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o
-                                                valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
-                                            </p>
-
-                                        </div>
-                                        <div class="col-lg-12 text-right" style="margin-top: 30px">
-                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">
-                                                Atualizar taxas
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class='info' style='font-size: 10px; margin-top: -10px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de
+                                            <label id="installment-tax" style="color: gray"></label>
+                                            % ao mês.
+                                        </p>
+                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
+                                            <label style="color: gray" id="transaction-tax"></label>
+                                            por transação.
+                                        </p>
+                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de transferência para empresas do exterior de
+                                            <label style="color: gray" id="transaction-tax-abroad"></label>
+                                        </p>
+                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                        <button id="update_taxes" type="button" class="btn btn-success mr-100">
+                                            Atualizar taxas
+                                        </button>
                                     </div>
                                     {{--BOLETO--}}
                                 </div>
@@ -413,8 +409,7 @@
                                         </div>
                                         <div class="col-4 mt-4">
                                             <div class="switch-holder">
-                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo
-                                                    (Cartão)</label>
+                                                <label for="credit_card_in_proccess" class="mb-10">Em Processo (Cartão)</label>
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="credit_card_in_proccess_switch"
@@ -534,8 +529,7 @@
                             <br>
                             <form method="POST" enctype="multipart/form-data" id='match_cellphone_verifycode_form'>
                                 @csrf
-                                <label for="cellphone_verify_code" style="margin-top: 20px">Código de
-                                    verificação</label>
+                                <label for="cellphone_verify_code" style="margin-top: 20px">Código de verificação</label>
                                 <input id="cellphone_verify_code" type="number" min='0' max='9999999' minlength='6'
                                        maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
                                 <button type='submit' class='btn btn-success mt-1'>
@@ -603,12 +597,12 @@
                                      style='min-height:100px;max-height:150px; overflow-x:hidden; overflow-y:scroll;margin-bottom: 20px;'>
                                     <table class="table table-striped table-hover table-sm table-striped">
                                         <thead>
-                                        <tr>
-                                            <th class='text-center' scope="col">Data Envio</th>
-                                            <th class='text-center' scope="col">Status</th>
-                                            <th class='text-center' scope="col"></th>
-                                            <th class='text-center' scope="col"></th>
-                                        </tr>
+                                            <tr>
+                                                <th class='text-center' scope="col">Data Envio</th>
+                                                <th class='text-center' scope="col">Status</th>
+                                                <th class='text-center' scope="col"></th>
+                                                <th class='text-center' scope="col"></th>
+                                            </tr>
                                         </thead>
                                         <tbody id='profile-documents-modal' class="custom-t-body">
                                         </tbody>
@@ -643,7 +637,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=2')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=3')}}"></script>
     @endpush
 
 @endsection

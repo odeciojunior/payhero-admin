@@ -89,8 +89,9 @@ class ShopifyService
      * ShopifyService constructor.
      * @param string $urlStore
      * @param string $token
+     * @param bool $getThemes
      */
-    public function __construct(string $urlStore, string $token)
+    public function __construct(string $urlStore, string $token, $getThemes = true)
     {
         if (!$this->cacheDir) {
             $cache = '/var/tmp';
@@ -103,7 +104,9 @@ class ShopifyService
             'metaCacheDir' => $cache // Metadata cache dir, required
         ]);
 
-        $this->getAllThemes();
+        if($getThemes) {
+            $this->getAllThemes();
+        }
     }
 
     /**
@@ -1338,7 +1341,7 @@ class ShopifyService
                         "sku"               => $productPlan->product->sku,
                         "title"             => $productPlan->product->name,
                         "variant_id"        => $productPlan->product->shopify_variant_id,
-                        "variant_title"     => $productPlan->product->name,
+                        "variant_title"     => $productPlan->product->description,
                         "name"              => $productPlan->product->name,
                         "gift_card"         => false,
                     ];
@@ -1508,12 +1511,6 @@ class ShopifyService
         try {
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
-            //            $credential   = new PublicAppCredential($shopifyIntegration->token);
-            //
-            //            $client = new Client($credential, $shopifyIntegration->url_store, [
-            //                'metaCacheDir' => '/var/tmp',
-            //            ]);
-            //            $order = $client->getOrderManager()->find($sale->shopify_order);
 
             $order = $this->client->get('orders/' . $sale->shopify_order);
             if (!FoxUtils::isEmpty($order)) {
@@ -1537,7 +1534,7 @@ class ShopifyService
                     $this->receivedData = $this->convertToArray($result);
                 }
             } else {
-                throw new Exception('Ordem não encontrado no shopify para a venda - ' . $order);
+                return false;
             }
         } catch (Exception $ex) {
             $this->exceptions[] = $ex->getMessage();
@@ -1899,6 +1896,16 @@ class ShopifyService
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
             Log::emergency('Erro ao atualizar uma ordem no shopify com a venda ' . $sale->id);
+        }
+    }
+
+    public function findFulfillments($orderId)
+    {
+        try {
+            return $this->client->getFulfillmentManager()->findAll($orderId);
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
+            Log::error('Erro ao buscar fulfillments no shopify com a order ' . $orderId);
         }
     }
 }

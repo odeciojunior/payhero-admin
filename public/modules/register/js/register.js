@@ -508,6 +508,8 @@ $(document).ready(function () {
 
         var isDataValid = true;
 
+        moment()
+
         $("#nameError").css('display', 'none');
         $("#lastNameError").css('display', 'none');
         $("#emailError").css('display', 'none');
@@ -516,6 +518,7 @@ $(document).ready(function () {
         $("#documentExistError").css('display', 'none');
         $("#documentInvalidError").css('display', 'none');
         $("#dateBirthError").css('display', 'none');
+        $("#dateBirthIncorrect").css('display', 'none');
 
         if ($("#firstname").val().length < 3) {
             $("#nameError").show();
@@ -555,7 +558,10 @@ $(document).ready(function () {
                 $('#documentExistError').hide();
             }
         }
-        if ($("#date_birth").val().replace(/[^0-9]/g, '').length < 8) {
+        if ($("#date_birth").val().replace(/[^0-9]/g, '').length > 8) {
+            $("#dateBirthIncorrect").show();
+            isDataValid = false;
+        } else if ($("#date_birth").val().replace(/[^0-9]/g, '').length === 0) {
             $("#dateBirthError").show();
             isDataValid = false;
         }

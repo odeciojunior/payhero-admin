@@ -1,23 +1,23 @@
-let documentType = '';
-let bagder = '';
-let badgeArray = {
+var documentType = '';
+var bagder = '';
+var badgeArray = {
     'pending': 'badge-primary',
     'analyzing': 'badge-pending',
     'approved': 'badge-success',
     'refused': 'badge-danger',
 };
 
-let statusArray = {
+var statusArray = {
     'pending': 'Pendente',
     'analyzing': 'Em análise',
     'approved': 'Aprovado',
     'refused': 'Recusado',
 };
-let getDataProfile = '';
+var getDataProfile = '';
 $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
-    let user = '';
+    var user = '';
 
     getDataProfile = function () {
         $.ajax({
@@ -116,7 +116,7 @@ $(document).ready(function () {
                 } else {
                     cellphoneNotVerified();
                 }
-
+ 
                 if (response.data.role.name !== 'account_owner') {
                     $("#nav_notifications").hide();
                     $("#nav_taxs").hide();
@@ -175,7 +175,7 @@ $(document).ready(function () {
     $("#btn_verify_cellphone").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
-        let cellphone = $("#cellphone").val();
+        var cellphone = $("#cellphone").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifycellphone',
@@ -208,7 +208,7 @@ $(document).ready(function () {
     $("#btn_verify_email").on("click", function () {
         event.preventDefault();
         loadingOnScreen();
-        let email = $("#email").val();
+        var email = $("#email").val();
         $.ajax({
             method: "POST",
             url: '/api/profile/verifyemail',
@@ -238,7 +238,7 @@ $(document).ready(function () {
     });
 
     $(".notification_switch").on("click", function () {
-        let object = this;
+        var object = this;
         if (object.getAttribute("checked")) {
             object.removeAttribute("checked");
             object.value = 0;
@@ -337,7 +337,7 @@ $(document).ready(function () {
 
     $("#match_cellphone_verifycode_form").on("submit", function (event) {
         event.preventDefault();
-        let verify_code = $("#cellphone_verify_code").val();
+        var verify_code = $("#cellphone_verify_code").val();
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -372,7 +372,7 @@ $(document).ready(function () {
 
     $("#match_email_verifycode_form").on("submit", function (event) {
         event.preventDefault();
-        let verify_code = $("#email_verify_code").val();
+        var verify_code = $("#email_verify_code").val();
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -566,9 +566,9 @@ $(document).ready(function () {
         $("#boleto-tax").val(data.boleto_tax + '%');
         $("#credit-card-release").val('plan-' + data.credit_card_release_money);
         $("#debit-card-release").val(data.debit_card_release_money);
-        $("#transaction-tax-abroad").html(data.abroad_transfer_tax +'%.');
+        $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
 
-        $("#boleto-release").val(data.boleto_release_money).attr('disabled', 'disabled');
+        $("#boleto-release").val('plan-' + data.boleto_release_money);
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
     }
@@ -578,24 +578,31 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/profile/updatetaxes',
-            dataType: "json",
+            dataType: "json", 
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {plan: $("#credit-card-release").val()},
+            data: {
+                credit_card_plan: $("#credit-card-release").val(),
+                boleto_plan     : $("#boleto-release").val()
+            },
             error: function (response) {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 alertCustom('success', response.message);
-                $("#credit-card-tax").val(response.data.new_tax_value);
+                $("#credit-card-tax").val(response.data.new_card_tax_value);
+                $("#debit-card-tax").val(response.data.new_card_tax_value);
+                $("#boleto-tax").val(response.data.new_boleto_tax_value);
+                $("#debit-card-release").val($("#credit-card-release option:selected").html());
             }
         });
     });
+
     $(".document-url").on("click", function (e) {
         e.preventDefault();
-        let documentUrl = $(this).attr('href');
+        var documentUrl = $(this).attr('href');
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -618,7 +625,7 @@ $(document).ready(function () {
     });
 
     $('#country').on('change', function () {
-        let documentName = {
+        var documentName = {
             brazil: 'CPF',
             portugal: 'NIF (Número de Identificação Fiscal)',
             usa: 'SSN (Social Security Number)',
@@ -661,7 +668,7 @@ $(document).ready(function () {
     }
 
     function verifyUserAddress(user) {
-        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null || user.state == null) {
+        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null ) {
             $('#row_dropzone_documents').hide();
             $('#div_address_pending').show();
         } else {
@@ -682,7 +689,7 @@ $(document).ready(function () {
     }
 
     function loadLabelsByCountry(user) {
-        let documentName = {
+        var documentName = {
             brazil: 'CPF',
             portugal: 'NIF (Número de Identificação Fiscal)',
             usa: 'SSN (Social Security Number)',
@@ -697,8 +704,8 @@ $(document).ready(function () {
     }
 
     function htmlTableDocuments(data) {
-        let dados = '';
-        let verifyReason = false;
+        var dados = '';
+        var verifyReason = false;
         if (data.length == 0) {
             $("#profile-documents-modal").append('<tr><td class="text-center" colspan="4">Nenhum documento enviado</td></tr>');
         } else {
@@ -888,7 +895,7 @@ const myDropzone = new Dropzone('#dropzoneDocuments', {
             success: function success(response) {
                 $("#loaderLine").remove();
 
-                let dados = '';
+                var dados = '';
                 if (response.data.length == 0) {
                     $("#profile-documents-modal").append('<span>Nenhum documento enviado</span>');
                 } else {
