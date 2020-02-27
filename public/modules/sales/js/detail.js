@@ -243,7 +243,6 @@ $(() => {
                 $(".btn_new_order_shopify").unbind('click');
                 $(".btn_new_order_shopify").on('click', function () {
                     var sale = $(this).attr('sale');
-                    console.log(sale)
                     $('#modal-new-order-shopify').modal('show');
                     $('#modal_detalhes').modal('hide');
                     $(".btn-confirm-new-order-shopify").unbind('click');
@@ -611,7 +610,6 @@ $(() => {
 
     //Estornar venda
     function refundedClick(sale) {
-        console.log(currentPage)
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -627,7 +625,6 @@ $(() => {
                 atualizar(currentPage);
             },
             success: (response) => {
-                console.log(response);
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 atualizar(currentPage);
@@ -637,7 +634,6 @@ $(() => {
 
     //Gera ordem shopify
     function newOrderClick(sale) {
-        console.log(currentPage)
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -653,7 +649,6 @@ $(() => {
                 atualizar(currentPage);
             },
             success: (response) => {
-                console.log(response);
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 atualizar(currentPage);

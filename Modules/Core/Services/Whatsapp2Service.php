@@ -83,7 +83,7 @@ class Whatsapp2Service
      * @param $planSales
      * @param $domain
      * @param $eventSale
-     * @return bool|string
+     * @return array
      */
     public function sendSale($sale, $planSales, $domain, $eventSale)
     {
@@ -133,9 +133,10 @@ class Whatsapp2Service
                 $totalValue = substr_replace($totalValue, '.', strlen($totalValue) - 2, 0);
 
                 $data = [
-                    'type'       => 'order',
-                    'api_token'  => $this->apiToken,
-                    'order'      => [
+                    'type'         => 'order',
+                    'api_token'    => $this->apiToken,
+                    'payment_type' => (new Sale())->present()->getPaymentType($sale->payment_method),
+                    'order'        => [
                         'token'            => Hashids::encode($sale->checkout_id),
                         'financial_status' => $status,
                         'billet_url'       => $sale->boleto_link,
@@ -163,8 +164,8 @@ class Whatsapp2Service
                         ],
                         'products'         => $dataProducts,
                     ],
-                    'created_at' => $sale->start_date,
-                    'updated_at' => Carbon::createFromFormat('Y-m-d H:i:s', $sale->updated_at)->toDateTimeString(),
+                    'created_at'   => $sale->start_date,
+                    'updated_at'   => Carbon::createFromFormat('Y-m-d H:i:s', $sale->updated_at)->toDateTimeString(),
                 ];
 
                 $return = $this->sendPost($data, $this->urlOrder);
