@@ -169,7 +169,7 @@ body {
 }
 
 .progress-bar {
-    background: linear-gradient(to right, #5849e2, #51c4ec);
+    background: linear-gradient(to right, #3fda58, #51ecc3);
 }
 
 .progress-bar.bg-warning {
