@@ -96,17 +96,18 @@ $(document).ready(function () {
         let last10Days = trackings.last_10_days;
         let last30Days = trackings.last_30_days;
         let total = trackings.total;
-        $('#tracking-10-days').css('width', last10Days + "%")
-            .html(last10Days > 0 ? last10Days + '%' : '')
-            .addClass(last10Days <= 66.66 ? last10Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '');
 
-        $('#tracking-30-days').css('width', last30Days + "%")
-            .html(last30Days > 0 ? last30Days + '%' : '')
-            .addClass(last30Days <= 66.66 ? last30Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '');
+        $('#tracking-10-days').html(last10Days > 4 ? last10Days + '%' : '')
+            .addClass(last10Days <= 66.66 ? last10Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
+            .animate({ width: last10Days + "%" });
 
-        $('#tracking-total').css('width', total + "%")
-            .html(total > 0 ? total + '%' : '')
-            .addClass(total <= 66.66 ? total <= 33.33 ? 'bg-danger' : 'bg-warning' : '');
+        $('#tracking-30-days').html(last30Days > 4 ? last30Days + '%' : '')
+            .addClass(last30Days <= 66.66 ? last30Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
+            .animate({ width: last30Days + "%" });
+
+        $('#tracking-total').html(total > 4 ? total + '%' : '')
+            .addClass(total <= 66.66 ? total <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
+            .animate({ width: total + "%" });
 
     }
 

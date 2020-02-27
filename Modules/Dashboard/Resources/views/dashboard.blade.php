@@ -123,7 +123,7 @@
                                 <div class="progress-bar" id="tracking-total"></div>
                             </div>
                         </div>
-                        <div class="card-bottom blue"></div>
+                        <div class="card-bottom green"></div>
                     </div>
                 </div>
 
