@@ -10,7 +10,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Spatie\Activitylog\Models\Activity;
@@ -92,7 +91,6 @@ class DashboardApiController extends Controller
                 $companyModel = new Company();
                 $saleModel = new Sale();
                 $transactionModel = new Transaction();
-                $productPlanSaleModel = new ProductPlanSale();
                 $companyId = current(Hashids::decode($companyHash));
                 $company = $companyModel->find($companyId);
                 $userId = auth()->user()->account_owner_id;
