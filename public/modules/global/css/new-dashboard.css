@@ -163,3 +163,19 @@ body {
 {
     background-color: #ffa040;
 }
+
+.progress {
+    background-color: #e5e5e5;
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #5849e2, #51c4ec);
+}
+
+.progress-bar.bg-warning {
+    background: linear-gradient(to right, #fad961, #f76b1c);
+}
+
+.progress-bar.bg-danger{
+    background: linear-gradient(to right, #f76b1c, #ff6161);
+}
