@@ -69,7 +69,8 @@ $(document).ready(function () {
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
 
-                updateProgressBar(data.chargeback_tax);
+                updateTrackings(data.trackings);
+                updateChargeback(data.chargeback_tax);
                 updateNews(data.news);
                 updateReleases(data.releases);
                 loadOnAny('.page-content', true);
@@ -77,7 +78,7 @@ $(document).ready(function () {
         });
     }
 
-    function updateProgressBar(value) {
+    function updateChargeback(value) {
         $('.circle').circleProgress({
             size: 176,
             startAngle: -Math.PI / 2,
@@ -89,6 +90,24 @@ $(document).ready(function () {
 
         $('.circle strong').addClass('loaded')
             .text(parseFloat(value).toFixed(2) + '%');
+    }
+
+    function updateTrackings(trackings) {
+        let last10Days = trackings.last_10_days;
+        let last30Days = trackings.last_30_days;
+        let total = trackings.total;
+        $('#tracking-10-days').css('width', last10Days + "%")
+            .html(last10Days > 0 ? last10Days + '%' : '')
+            .addClass(last10Days <= 66.66 ? last10Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '');
+
+        $('#tracking-30-days').css('width', last30Days + "%")
+            .html(last30Days > 0 ? last30Days + '%' : '')
+            .addClass(last30Days <= 66.66 ? last30Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '');
+
+        $('#tracking-total').css('width', total + "%")
+            .html(total > 0 ? total + '%' : '')
+            .addClass(total <= 66.66 ? total <= 33.33 ? 'bg-danger' : 'bg-warning' : '');
+
     }
 
     function updateNews(data) {

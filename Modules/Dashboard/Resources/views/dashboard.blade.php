@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=1') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=2') }}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
@@ -28,8 +28,9 @@
             </div>
         </div>
         <div class="page-content container" style="display:none">
-            <!-- CARDS EXTRATO -->
-            <div class="row" id="card-extrato">
+
+            <!-- Saldos -->
+            <div class="row">
                 <div class="col-6 col-lg-3">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -45,6 +46,8 @@
                         </div>
                         <div class="card-bottom orangered"></div>
                     </div>
+                </div>
+                <div class="col-6 col-lg-3">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
@@ -75,6 +78,8 @@
                         </div>
                         <div class="card-bottom green"></div>
                     </div>
+                </div>
+                <div class="col-6 col-lg-3">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
@@ -86,6 +91,37 @@
                             class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
                             <span class="moeda">R$</span>
                             <span id="total_money" class="text-money"></span>
+                        </div>
+                        <div class="card-bottom blue"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chargeback e Tracking -->
+            <div class="row">
+
+                <div class="col-12 col-lg-6">
+                    <div class="card card-shadow bg-white">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/shipping.svg') }}"
+                                     width="35px">
+                                <span class="card-desc">Códigos de rastreio informados</span>
+                            </div>
+                        </div>
+                        <div class="card-body pb-2">
+                            <label>Últimos 10 dias:</label>
+                            <div class="progress">
+                                <div class="progress-bar" id="tracking-10-days"></div>
+                            </div>
+                            <label>Últimos 30 dias:</label>
+                            <div class="progress">
+                                <div class="progress-bar" id="tracking-30-days"></div>
+                            </div>
+                            <label>Total:</label>
+                            <div class="progress">
+                                <div class="progress-bar" id="tracking-total"></div>
+                            </div>
                         </div>
                         <div class="card-bottom blue"></div>
                     </div>
@@ -119,6 +155,7 @@
                 </div>
             </div>
 
+            <!-- Notícias e Releases -->
             <div class="row">
                 <div class="col-lg-8" id="news-col" style="display:none">
                     <div id="carouselNews" class="carousel slide" data-ride="carousel">
@@ -155,7 +192,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=18') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=19') }}"></script>
     @endpush
 
 @endsection

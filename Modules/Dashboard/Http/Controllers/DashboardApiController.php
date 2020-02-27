@@ -7,8 +7,10 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Spatie\Activitylog\Models\Activity;
@@ -90,32 +92,30 @@ class DashboardApiController extends Controller
                 $companyModel = new Company();
                 $saleModel = new Sale();
                 $transactionModel = new Transaction();
+                $productPlanSaleModel = new ProductPlanSale();
                 $companyId = current(Hashids::decode($companyHash));
                 $company = $companyModel->find($companyId);
                 $userId = auth()->user()->account_owner_id;
 
                 if (!empty($company)) {
-                    $pendingBalance = 0;
-                    $todayBalance = 0;
-
-                    $pendingTransactions = $transactionModel->where('company_id', $company->id)
+                    //Balance
+                    $pendingBalance = $transactionModel->where('company_id', $company->id)
                         ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                         ->whereDate('release_date', '>', Carbon::today()
                             ->toDateString())
-                        ->get();
-                    if (count($pendingTransactions)) {
-                        foreach ($pendingTransactions as $pendingTransaction) {
-                            $pendingBalance += $pendingTransaction->value;
-                        }
-                    }
-                    $sales = $saleModel->with([
-                        'transactions' => function ($query) use ($companyId) {
-                            $query->where('company_id', $companyId);
-                        },
-                    ])->where('status', 1)
-                        ->whereDate('end_date', Carbon::today()->toDateString())
-                        ->get();
+                        ->sum('value');
 
+                    $todayBalance = $saleModel
+                        ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+                        ->where('t.company_id', $companyId)
+                        ->where('sales.status', $saleModel->present()->getStatus('approved'))
+                        ->whereDate('sales.end_date', Carbon::today()->toDateString())
+                        ->sum('t.value');
+
+                    $availableBalance = $company->balance;
+                    $totalBalance = $availableBalance + $pendingBalance;
+
+                    //Chargeback
                     $chargebackData = $saleModel->selectRaw("SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
                                                              SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved")
                         ->where('payment_method', 1)
@@ -134,19 +134,7 @@ class DashboardApiController extends Controller
                         $chargebackTax = "0.00";
                     }
 
-                    foreach ($sales as $sale) {
-                        foreach ($sale->transactions as $transaction) {
-                            if ($sale->status == 1) {
-                                $todayBalance += $transaction->value;
-                            } else {
-                                continue;
-                            }
-                        }
-                    }
-
-                    $availableBalance = $company->balance;
-                    $totalBalance = $availableBalance + $pendingBalance;
-
+                    //News and releases
                     $newsData = settings()->group('dashboard_news')->all(true);
                     $news = [];
                     foreach ($newsData as $key => $value){
@@ -158,6 +146,16 @@ class DashboardApiController extends Controller
                     foreach ($releasesData as $key => $value){
                         $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
                     }
+                    //Trackings
+                    $informedTrackings = DB::table("products_plans_sales as pps")
+                        ->selectRaw("ROUND(100 - IFNULL(SUM(t.id IS NULL) * 100 / COUNT(*), 100), 2) AS total,
+                                                ROUND(100 - IFNULL(SUM(s.end_date >= DATE_SUB(CURDATE(), interval 10 day) and t.id is null) * 100 / SUM(s.end_date >= DATE_SUB(CURDATE(), interval 10 day)), 100), 2) AS last_10_days,
+                                                ROUND(100 - IFNULL(SUM(s.end_date >= DATE_SUB(CURDATE(), interval 30 day) and t.id is null) * 100 / SUM(s.end_date >= DATE_SUB(CURDATE(), interval 30 day)), 100), 2) AS last_30_days")
+                        ->join('sales as s', 's.id', '=', 'pps.sale_id')
+                        ->leftJoin('trackings as t', 't.product_plan_sale_id', '=', 'pps.id')
+                        ->where('s.owner_id', $userId)
+                        ->where('s.status', $saleModel->present()->getStatus('approved'))
+                        ->first();
 
                     return [
                         'available_balance'      => number_format(intval($availableBalance) / 100, 2, ',', '.'),
@@ -170,6 +168,7 @@ class DashboardApiController extends Controller
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
                         'news'                   => $news,
                         'releases'               => $releases,
+                        'trackings'              => $informedTrackings
                     ];
                 } else {
                     return [];
