@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Routing\Controller;
@@ -174,31 +175,43 @@ class SalesApiController extends Controller
                     $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
                 })->log('Tentativa estorno transação: #' . $saleId);
 
-                return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
+                $pendingTransactions = $transactionModel->whereIn('company_id', $userCompanies)
+                                                        ->where('status_enum', $transactionModel->present()
+                                                                                                ->getStatusEnum('paid'))
+                                                        ->whereDate('release_date', '>', now()->startOfDay())
+                                                        ->select(DB::raw('sum( value ) as pending_balance'))
+                                                        ->first();
+
+                $pendingBalance      = intval($pendingTransactions->pending_balance);
+                $valuePendingBalance = $pendingBalance - $refundAmount;
+
+                if ($valuePendingBalance < -1000) {
+
+                    return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
+                }
+            }
+
+            activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
+            })->log('Estorno transação: #' . $saleId);
+
+            if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
+                // Zoop e Cielo CancelPayment
+                $result = $checkoutService->cancelPayment($sale, $refundAmount);
             } else {
+                $result = $saleService->refund($saleId);
+            }
+            if ($result['status'] == 'success') {
+                $sale->update([
+                                  'date_refunded' => Carbon::now(),
+                              ]);
 
-                activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
-                })->log('Estorno transação: #' . $saleId);
+                event(new SaleRefundedEvent($sale));
 
-                if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
-                    // Zoop e Cielo CancelPayment
-                    $result = $checkoutService->cancelPayment($sale, $refundAmount);
-                } else {
-                    $result = $saleService->refund($saleId);
-                }
-                if ($result['status'] == 'success') {
-                    $sale->update([
-                                      'date_refunded' => Carbon::now(),
-                                  ]);
-
-                    event(new SaleRefundedEvent($sale));
-
-                    return response()->json(['message' => $result['message']], Response::HTTP_OK);
-                } else {
-                    return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
-                }
+                return response()->json(['message' => $result['message']], Response::HTTP_OK);
+            } else {
+                return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');

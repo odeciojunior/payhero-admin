@@ -163,4 +163,35 @@ class SalePresenter extends Presenter
 
         return $productsSale;
     }
+
+    /**
+     * @param null $paymentType
+     * @return int|string|null
+     */
+    public function getPaymentType($paymentType = null)
+    {
+        if (is_numeric($paymentType)) {
+            switch ($paymentType) {
+                case 1:
+                    return 'credit_card';
+                case 2:
+                    return 'boleto';
+                case 3:
+                    return 'debito';
+            }
+
+            return null;
+        } else {
+            switch ($paymentType) {
+                case 'credit_card':
+                    return 1;
+                case 'boleto':
+                    return 2;
+                case 'debito':
+                    return 3;
+            }
+
+            return null;
+        }
+    }
 }
