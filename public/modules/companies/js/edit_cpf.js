@@ -52,6 +52,12 @@ $(document).ready(function () {
                     $("#account_digit").val(response.company.account_digit);
                 }
 
+                if (response.company.country === 'brazil') {
+                    $('#agency').attr('maxlength', '4');
+                } else {
+                    $('#agency').attr('maxlength', '20');
+                }
+
                 $("#td-status-document-person-fisic").html('');
                 $("#td-status-document-person-fisic").append(`<span class='badge ${companyStatus[response.company.document_status]}'>${companyStatusTranslated[response.company.document_status]}</span>`);
 
@@ -132,6 +138,14 @@ $(document).ready(function () {
             },
         });
     }
+
+    $('#agency').on('input', function () {
+        $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
+    });
+
+    $('#account').on('input', function () {
+        $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
+    });
 
     function htmlTable(dataTable) {
         $("#loaderLine").remove();

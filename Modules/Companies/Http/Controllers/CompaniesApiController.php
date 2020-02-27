@@ -54,8 +54,8 @@ class CompaniesApiController extends Controller
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
         }
     }
 
@@ -76,28 +76,27 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $requestData = $request->validated();
+            $requestData  = $request->validated();
 
             $company = $companyModel->create(
                 [
-                    'user_id' => auth()->user()->account_owner_id,
-                    'country' => $requestData["country"],
-                    'fantasy_name' => ($requestData['company_type'] == $companyModel->present()
-                            ->getCompanyType('physical person')) ? auth()->user()->name : $requestData['fantasy_name'],
+                    'user_id'          => auth()->user()->account_owner_id,
+                    'country'          => $requestData["country"],
+                    'fantasy_name'     => ($requestData['company_type'] == $companyModel->present()
+                                                                                        ->getCompanyType('physical person')) ? auth()->user()->name : $requestData['fantasy_name'],
                     'company_document' => ($requestData['company_type'] == $companyModel->present()
-                            ->getCompanyType('physical person')) ? auth()->user()->document : preg_replace("/[^0-9]/", "", $requestData['company_document']),
-                    'company_type' => $requestData['company_type'],
+                                                                                        ->getCompanyType('physical person')) ? auth()->user()->document : preg_replace("/[^0-9]/", "", $requestData['company_document']),
+                    'company_type'     => $requestData['company_type'],
                 ]
             );
 
             return response()->json(
                 [
-                    'message' => 'Empresa cadastrada com sucesso',
+                    'message'   => 'Empresa cadastrada com sucesso',
                     'idEncoded' => Hashids::encode($company->id),
                 ],
                 Response::HTTP_OK
             );
-
         } catch (Exception $e) {
             Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
             report($e);
@@ -134,7 +133,7 @@ class CompaniesApiController extends Controller
                 return response()->json(
                     [
                         'company' => $companyResource,
-                        'banks' => $banks,
+                        'banks'   => $banks,
                     ],
                     Response::HTTP_OK
                 );
@@ -162,10 +161,10 @@ class CompaniesApiController extends Controller
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
         try {
-            $companyModel = new Company();
+            $companyModel   = new Company();
             $companyService = new CompanyService();
-            $requestData = $request->validated();
-            $company = $companyModel->find(current(Hashids::decode($encodedId)));
+            $requestData    = $request->validated();
+            $company        = $companyModel->find(current(Hashids::decode($encodedId)));
             if (Gate::allows('update', [$company])) {
 
                 if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
@@ -174,7 +173,9 @@ class CompaniesApiController extends Controller
                 if (!empty($requestData['company_document'])) {
                     $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
                 }
-
+                if ($company->country == 'brazil' && !empty($requestData['agency']) && strlen($requestData['agency']) == 3) {
+                    $requestData['agency'] = substr_replace($requestData['agency'], '0', 0, 0);
+                }
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);
 
@@ -201,10 +202,10 @@ class CompaniesApiController extends Controller
             $projectModel = new Project();
 
             $company = $companyModel->with('usersProjects')->withCount([
-                'transactions',
-                'usersProjects',
-            ])
-                ->find(current(Hashids::decode($encodedId)));
+                                                                           'transactions',
+                                                                           'usersProjects',
+                                                                       ])
+                                    ->find(current(Hashids::decode($encodedId)));
             if ($company) {
                 if (Gate::allows('destroy', [$company])) {
                     if ($company->transactions_count > 0) {
@@ -213,9 +214,9 @@ class CompaniesApiController extends Controller
                         $projects = [];
                         foreach ($company->usersProjects as $userProject) {
                             $projects = $projectModel->where('id', $userProject->project->id)
-                                ->where('status', $projectModel->present()
-                                    ->getStatus('active'))
-                                ->get();
+                                                     ->where('status', $projectModel->present()
+                                                                                    ->getStatus('active'))
+                                                     ->get();
                         }
 
                         if (count($projects) > 0) {
@@ -261,11 +262,11 @@ class CompaniesApiController extends Controller
             $digitalOceanFileService = app()->make(DigitalOceanFileService::class);
 
             $companyDocumentModel = new CompanyDocument();
-            $dataForm = $request->validated();
+            $dataForm             = $request->validated();
 
             $company = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
             if (Gate::allows('uploadDocuments', [$company])) {
-                $document = $request->file('file');
+                $document         = $request->file('file');
                 $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
 
                 $documentType = $companyDocumentModel->present()->getDocumentType($dataForm["document_type"]);
@@ -275,37 +276,37 @@ class CompaniesApiController extends Controller
 
                 $companyDocumentModel->create(
                     [
-                        'company_id' => $company->id,
-                        'document_url' => $digitalOceanPath,
+                        'company_id'         => $company->id,
+                        'document_url'       => $digitalOceanPath,
                         'document_type_enum' => $documentType,
-                        'status' => $companyDocumentModel->present()->getTypeEnum('analyzing'),
+                        'status'             => $companyDocumentModel->present()->getTypeEnum('analyzing'),
                     ]
                 );
                 if ($documentType == $company->present()->getDocumentType('bank_document_status')) {
                     $company->update(
                         [
                             'bank_document_status' => $company->present()
-                                ->getBankDocumentStatus('analyzing'),
+                                                              ->getBankDocumentStatus('analyzing'),
                         ]
                     );
                 }
                 if ($documentType == $company->present()
-                        ->getDocumentType('address_document_status')
+                                             ->getDocumentType('address_document_status')
                 ) {
                     $company->update(
                         [
                             'address_document_status' => $company->present()
-                                ->getAddressDocumentStatus('analyzing'),
+                                                                 ->getAddressDocumentStatus('analyzing'),
                         ]
                     );
                 }
                 if ($documentType == $company->present()
-                        ->getDocumentType('contract_document_status')
+                                             ->getDocumentType('contract_document_status')
                 ) {
                     $company->update(
                         [
                             'contract_document_status' => $company->present()
-                                ->getContractDocumentStatus('analyzing'),
+                                                                  ->getContractDocumentStatus('analyzing'),
                         ]
                     );
                 }
@@ -339,7 +340,7 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $companies = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)->get();
+            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)->get();
 
             return CompaniesSelectResource::collection($companies);
         } catch (Exception $e) {
@@ -362,7 +363,7 @@ class CompaniesApiController extends Controller
     {
         try {
             $digitalOceanFileService = app(DigitalOceanFileService::class);
-            $data = $request->all();
+            $data                    = $request->all();
             if (!empty($data['document_url'])) {
                 $temporaryUrl = $digitalOceanFileService->getTemporaryUrlFile($data['document_url'], 180);
 
@@ -383,7 +384,7 @@ class CompaniesApiController extends Controller
     public function verify()
     {
         $companyModel = new Company();
-        $company = $companyModel->where(
+        $company      = $companyModel->where(
             [
                 ['user_id', auth()->user()->account_owner_id],
                 [
@@ -404,18 +405,18 @@ class CompaniesApiController extends Controller
      */
     public function verifyCnpj(Request $request)
     {
-        $data = $request->all();
+        $data           = $request->all();
         $companyService = new CompanyService();
-        $cnpj = $companyService->verifyCnpj($data['company_document']);
+        $cnpj           = $companyService->verifyCnpj($data['company_document']);
         if ($cnpj) {
             return response()->json([
-                'cnpj_exist' => 'true',
-                'message' => 'Esse CNPJ já está cadastrado na plataforma',
-            ]);
+                                        'cnpj_exist' => 'true',
+                                        'message'    => 'Esse CNPJ já está cadastrado na plataforma',
+                                    ]);
         } else {
             return response()->json([
-                'cnpj_exist' => 'false',
-            ]);
+                                        'cnpj_exist' => 'false',
+                                    ]);
         }
     }
 
@@ -426,26 +427,26 @@ class CompaniesApiController extends Controller
 
             if (!empty($companyId) && !empty($request->input('document_type'))) {
                 $companyDocumentModel = new CompanyDocument();
-                $companyDocuments = $companyDocumentModel->where('company_id', current(Hashids::decode($companyId)));
+                $companyDocuments     = $companyDocumentModel->where('company_id', current(Hashids::decode($companyId)));
 
                 if (!empty($request->input('document_type'))) {
                     $companyDocuments->where('document_type_enum', $companyDocumentModel->present()
-                        ->getDocumentType($request->input('document_type')));
+                                                                                        ->getDocumentType($request->input('document_type')));
                 }
 
                 return CompanyDocumentsResource::collection($companyDocuments->get());
             } else {
 
                 return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ], 400);
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
             }
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 
@@ -454,7 +455,7 @@ class CompaniesApiController extends Controller
         try {
             if (!empty($request->input('cnpj'))) {
                 $companyService = new CompanyService();
-                $companyGet = $companyService->getNameCompanyByApiCNPJ($request->input('cnpj'));
+                $companyGet     = $companyService->getNameCompanyByApiCNPJ($request->input('cnpj'));
                 if (!empty($companyGet['nome'])) {
                     return response()->json(['name' => $companyGet['nome']], 200);
                 }
