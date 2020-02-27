@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=3') }}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
@@ -123,7 +123,7 @@
                                 <div class="progress-bar" id="tracking-total"></div>
                             </div>
                         </div>
-                        <div class="card-bottom green"></div>
+                        <div class="card-bottom orangered"></div>
                     </div>
                 </div>
 
