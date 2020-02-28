@@ -207,7 +207,7 @@ $(() => {
         }
 
         $("#taxas-installment-free-label, #taxa-installment-value").hide();
-        if (sale.installment_tax_value !== '0,00') {
+        if (sale.installment_tax_value !== '0,00' && sale.user_sale_type == 'producer') {
             $("#taxa-installment-value").html('R$ ' + sale.installment_tax_value);
             $("#taxas-installment-free-label").show();
             $("#taxa-installment-value").show();
