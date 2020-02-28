@@ -29,7 +29,7 @@ use stdClass;
 class CloudFlareService
 {
     const shopifyIp   = '23.227.38.32';
-    const checkoutIp  = '104.248.122.89';
+    const checkoutIp  = '104.248.234.121';
     const sacIp       = '104.248.122.89';
     const affiliateIp = '104.248.122.89';
     const adminIp     = '165.22.13.237';
