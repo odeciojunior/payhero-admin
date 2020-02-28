@@ -42,9 +42,7 @@ class GenericCommand extends Command
 
         $cloudflareService = new CloudFlareService();
 
-        //$domains = Domain::all();
-
-        $domains = Domain::where('name', 'like', 'tiamat%')->get();
+        $domains = Domain::all();
 
         $total = $domains->count();
 
