@@ -130,6 +130,13 @@ $(document).ready(function () {
                     $('#account_digit').val(company.account_digit);
 
                 }
+
+                if (company.country === 'brazil') {
+                    $('#agency').attr('maxlength', '4');
+                } else {
+                    $('#agency').attr('maxlength', '20');
+                }
+
                 htmlModifyAlerts(company);
 
                 $("#td-bank-status").html('').append(`
@@ -418,6 +425,13 @@ $(document).ready(function () {
             });
         });
     }
+
+    $('#agency').on('input', function () {
+        $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
+    });
+    $('#account').on('input', function () {
+        $(this).val($(this).val().replace(/[^a-z0-9]/gi, ''));
+    });
 
     htmlTable = function (dataTable) {
         $("#loaderLine").remove();

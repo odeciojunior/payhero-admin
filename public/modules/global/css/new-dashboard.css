@@ -210,3 +210,19 @@ body {
 #releases-div::-webkit-scrollbar-thumb {
     background-color: #FFA040;
 }
+
+.progress {
+    background-color: #e5e5e5;
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #3fda58, #51ecc3);
+}
+
+.progress-bar.bg-warning {
+    background: linear-gradient(to right, #fad961, #f76b1c);
+}
+
+.progress-bar.bg-danger{
+    background: linear-gradient(to right, #f76b1c, #ff6161);
+}

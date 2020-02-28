@@ -126,7 +126,8 @@ class ProjectsApiController extends Controller
                                                            'information'  => 'de 15 até 30 dias',
                                                            'value'        => '0,00',
                                                            'type'         => 'static',
-                                                           'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
+                                                           'type_enum'    => $shippingModel->present()
+                                                                                           ->getTypeEnum('static'),
                                                            'status'       => '1',
                                                            'pre_selected' => '1',
                                                        ]);
@@ -153,17 +154,20 @@ class ProjectsApiController extends Controller
                                                                      'project_id'        => $project->id,
                                                                      'company_id'        => $requestValidated['company'],
                                                                      'type'              => 'producer',
-                                                                     'type_enum'         => $userProjectModel->present()->getTypeEnum('producer'),
+                                                                     'type_enum'         => $userProjectModel->present()
+                                                                                                             ->getTypeEnum('producer'),
                                                                      'access_permission' => 1,
                                                                      'edit_permission'   => 1,
                                                                      'status'            => 'active',
-                                                                     'status_flag'       => $userProjectModel->present()->getStatusFlag('active'),
+                                                                     'status_flag'       => $userProjectModel->present()
+                                                                                                             ->getStatusFlag('active'),
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
 
                         if (!empty($userProject)) {
                             $projectNotificationService->createProjectNotificationDefault($project->id);
+
                             return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
                             $digitalOceanPath->deleteFile($project->photo);
@@ -427,6 +431,9 @@ class ProjectsApiController extends Controller
 
                 $project = $projectModel->where('id', current(Hashids::decode($id)))
                                         ->where('status', $projectModel->present()->getStatus('active'))->first();
+                if (empty($project)) {
+                    return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+                }
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
