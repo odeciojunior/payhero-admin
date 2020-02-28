@@ -116,27 +116,27 @@
                                 <div class="card-header">
                                     <h4> Dispositivos </h4>
                                 </div>
-                                <div class="custom-table min-250">
+                                <div class="custom-table min-250" style="height: 150px;">
                                     <div class="row">
-                                        <div class="col-6 col-md-12 col-lg-12 ">
+                                        <div class="col-12 col-md-12 col-lg-12 ">
                                             <div class="data-holder b-bottom">
                                                 <div class="row wrap justify-content-between">
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-6 col-sm-8 col-8">
                                                         <i class="material-icons"> desktop_mac </i> Desktop
                                                     </div>
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-6 col-sm-4 col-4">
                                                         <span class="money-td green" id='percent-desktop'>0</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-12 col-lg-12 ">
+                                        <div class="col-12 col-md-12 col-lg-12 ">
                                             <div class="data-holder b-bottom">
                                                 <div class="row wrap justify-content-between">
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-6 col-sm-8 col-8">
                                                         <i class="material-icons"> stay_current_portrait </i> Mobile
                                                     </div>
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-6 col-sm-4 col-4">
                                                         <span class="money-td green" id='percent-mobile'>0</span>
                                                     </div>
                                                 </div>
@@ -202,6 +202,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/report-checkouts.js?v=3')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/report-checkouts.js?v=4')}}'></script>
 @endpush
 
