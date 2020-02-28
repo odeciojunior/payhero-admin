@@ -72,6 +72,7 @@ class ProjectAffiliateResource extends Resource
             'affiliatedMessage'      => $affiliatedMessage,
             'producer'               => $producer,
             'status_url_affiliates'  => $this->status_url_affiliates,
+            'cookie_duration'        => $this->cookie_duration ?? '',
         ];
     }
 }

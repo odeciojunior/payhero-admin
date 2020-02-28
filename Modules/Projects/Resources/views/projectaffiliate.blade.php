@@ -25,13 +25,11 @@
                                aria-controls="tab_info_geral" role="tab">Informações gerais
                             </a>
                         </li>
-            
                         <li class="nav-item" role="presentation">
                             <a id="tab_pixels" class="nav-link" data-toggle="tab" href="#tab_pixels-panel"
                                aria-controls="tab_pixels" role="tab">Pixels
                             </a>
                         </li>
-                       
                         <li class="nav-item" role="presentation">
                             <a id="tab_links" class="nav-link" data-toggle="tab" href="#tab_links-panel" aria-controls="tab_links" role="tab">
                                 Links
@@ -71,12 +69,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5 class=""><strong> Descrição </strong></h5>
-                                            <p id="show-description" class="card-text sm"></p>
-                                            <h5 class=""><strong> Produtor </strong></h5>
-                                            <p id="show-producer" class="card-text sm"></p>
-                                            <h5 class=""><strong> Comissão </strong></h5>
-                                            <p id="show-commission" class="card-text sm"></p>
+                                            <div class='row'>
+                                                <div class='col-md-6'>
+                                                    <h5 class=""><strong> Descrição </strong></h5>
+                                                    <p id="show-description" class="card-text sm"></p>
+                                                    <h5 class=""><strong> Produtor </strong></h5>
+                                                    <p id="show-producer" class="card-text sm"></p>
+                                                    <h5 class=""><strong> Comissão </strong></h5>
+                                                    <p id="show-commission" class="card-text sm"></p>
+                                                </div>
+                                                <div class='col-md-6'>
+                                                    <h5 class=""><strong> Dias para liberar dinheiro </strong></h5>
+                                                    <p id="show-release-money-days" class="card-text sm"></p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -102,8 +108,8 @@
 
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=1')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=6')}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v=8')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=7')}}"></script>
+        <script src="{{asset('modules/affiliates/js/links.js?v=9')}}"></script>
     @endpush
 @endsection
 

@@ -68,7 +68,7 @@ $(() => {
                 $('#show-description').text(project.description);
                 $('#show-producer').text(project.producer);
                 $('#show-commission').text(project.commission_affiliate + '%');
-
+                $('#show-release-money-days').text(project.release_money_days);
                 loadOnAny('#tab_info_geral .card', true);
             },
             error: (response) => {

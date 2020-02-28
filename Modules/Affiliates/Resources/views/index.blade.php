@@ -45,6 +45,7 @@
                                 <div class="tab-pane fade" id="tab_about" role="tabpanel">
                                     {{--                                    <p class='text-about-project'></p>--}}
                                     <p class='percentage-affiliate'></p>
+                                    <p class='cookie_duration'></p>
                                     <p class='url_page'></p>
                                     <p class='contact'></p>
                                     <p class='support_phone'></p>
@@ -122,6 +123,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=1') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=2') }}"></script>
     @endpush
 @endsection
