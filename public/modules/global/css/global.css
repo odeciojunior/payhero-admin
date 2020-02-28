@@ -238,21 +238,39 @@ body {
     text-align: start !important;
 }
 
-/* Document Pending Alert */
-.document-pending {
-    height: 80px;
-    width: 100%;
-    position: fixed;
-    background: rgba(255, 193, 7, 0.9);
+/* TOP ALERT */
+.top-alert-container{
     z-index: 1101;
     margin: 0;
-    padding: 0 20px 0 80px;
+    padding: 0 0 0 65px;
+    width: 100%;
+    position: fixed;
+}
+
+.top-alert {
+    height: 80px;
+    width: 100%;
+    background: rgba(7, 175, 255, 0.9);
+    margin: 0;
     border: none;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.btn-finalize {
+
+.top-alert.success {
+    background: rgba(7, 255, 85, 0.9);
+}
+
+.top-alert.warning {
+    background: rgba(255, 193, 7, 0.9);
+}
+
+.top-alert.danger {
+    background: rgba(255, 7, 75, 0.9);
+}
+
+.top-alert-action {
     display: block;
     background: rgba(85,85,85,0.3);
     color: #fff !important;
@@ -261,33 +279,34 @@ body {
     margin-left: 10px;
     text-align: center;
 }
-.btn-finalize:hover {
+.top-alert-action:hover {
     background: rgba(0,0,0,0.3);
 }
-.message-pending{
+.top-alert-message {
     color:#000;
     font-size: 20px
 }
-.message-container {
+.top-alert-message-container {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.document-pending-close {
-    font-size: 30px;
-    color: #000;
+.top-alert-close {
+    margin-right: 15px;
+    color: #000 !important;
     cursor: pointer;
 }
+
 @media (max-width: 768px) {
-    .document-pending {
+    .top-alert {
         padding: 10px 20px;
     }
-    .message-pending{
+    .top-alert-message{
         font-size: inherit;
     }
 }
-/* End - Document Pending Alert */
+/* END - TOP ALERT */
 
 .modal-sidebar{
     width: 500px;

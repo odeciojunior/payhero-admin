@@ -338,6 +338,16 @@ $(document).on('click', 'a[data-copy_text],a[data-copy_id]', function (event, i)
     alert("Link " + $(inputId).val() + " copiado com Sucesso!");
 });
 
+
+/* TOP ALERT */
+
+$('.top-alert-close').on('click', function(){
+    $(this).parent().fadeOut();
+});
+
+/* END - TOP ALERT */
+
+
 /* Document Pending Alert */
 
 sessionStorage.removeItem('documentsPending');
@@ -356,17 +366,17 @@ function ajaxVerifyDocumentPending(){
         success: response => {
             sessionStorage.setItem('documentsPending', JSON.stringify(response));
             if (response.pending) {
-                $('.document-pending').show();
-                $('.btn-finalize').attr('href', response.link);
+                $('#document-pending').show();
+                $('#document-pending .top-alert-action').attr('href', response.link);
             }
         },
     });
 }
 
-function verifyDocumentPending(){
+function verifyDocumentPending() {
     if(window.location.href.includes('/dashboard')){
         sessionStorage.removeItem('documentsPending');
-        $('.document-pending').hide();
+        $('#document-pending').hide();
     }
 
     if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
@@ -376,8 +386,8 @@ function verifyDocumentPending(){
         } else {
             documentsPending = JSON.parse(documentsPending);
             if (documentsPending.pending) {
-                $('.document-pending').show();
-                $('.btn-finalize').attr('href', documentsPending.link);
+                $('#document-pending').show();
+                $('#document-pending .top-alert-action').attr('href', documentsPending.link);
             }
         }
     }
