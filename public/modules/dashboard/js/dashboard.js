@@ -109,6 +109,19 @@ $(document).ready(function () {
             .addClass(total <= 66.66 ? total <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
             .animate({ width: total + "%" });
 
+        if(total > 0){
+            if(last10Days < 40 || last30Days < 90){
+                let icon = $('#alert-trackings');
+                icon.show();
+                setInterval(function(){
+                    if (icon.hasClass('text-danger')) {
+                        icon.removeClass('text-danger');
+                    } else {
+                        icon.addClass('text-danger');
+                    }
+                }, 1000);
+            }
+        }
     }
 
     function updateNews(data) {

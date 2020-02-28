@@ -108,6 +108,10 @@
                                      width="35px">
                                 <span class="card-desc">Códigos de rastreio informados</span>
                             </div>
+                            <i class="material-icons gray text-danger" id="alert-trackings" data-toggle="tooltip"
+                               data-placement="bottom"
+                               title="Não informar os códigos de rastreio corretamente pode ocasionar bloqueio de saque"
+                               style="transition: all .5s; display:none">warning</i>
                         </div>
                         <div class="card-body pb-2">
                             <label>Últimos 10 dias:</label>
@@ -192,7 +196,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=19') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=20') }}"></script>
     @endpush
 
 @endsection
