@@ -264,6 +264,8 @@ class ProfileApiController
 
             $verifyCode = random_int(100000, 999999);
 
+            $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
+
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
             $smsService->sendSms($cellphone, $message);
