@@ -42,7 +42,10 @@ $(document).ready(function () {
                         }
                     }
                     if (response.data.percentage_affiliates != '') {
-                        $('.percentage-affiliate').html(`<strong >Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
+                        $('.percentage-affiliate').html(`<strong>Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
+                    }
+                    if (response.data.cookie_duration != '') {
+                        $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>${response.data.cookie_duration}</span></strong>`);
                     }
                     if (response.data.terms_affiliates != '') {
                         $('.text-terms').html(response.data.terms_affiliates);
@@ -60,15 +63,11 @@ $(document).ready(function () {
                     swal({
                         title: 'Esse projeto não está disponível para afiliação',
                         type: 'warning',
-                        confirmButtonColor: "#ec6421",
+                        confirmButtonColor: "#EC6421",
                         confirmButtonClass: "btn btn-warning",
                         confirmButtonText: 'OK'
                     }).then((result) => {
-                        if (result.value) {
-                            window.location.replace('/dashboard');
-                        } else {
-                            window.location.replace('/dashboard');
-                        }
+                        window.location.replace('/dashboard');
                     })
                 }
             }
@@ -124,7 +123,7 @@ $(document).ready(function () {
             error: (response) => {
                 $('#modal_store_affiliate').modal('hide');
                 loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                // errorAjaxResponse(response);
             },
             success: (response) => {
                 $('#modal_store_affiliate').modal('hide');

@@ -1,7 +1,14 @@
 @extends('affiliates::layouts.master')
 
 @section('content')
-    <div class="page-content container col-md-6" style='display:none;'>
+    <style>
+        @media (min-width: 1200px) {
+            .container-lg {
+                max-width: 700px;
+            }
+        }
+    </style>
+    <div class="page-content container col-md-6 container-lg" style='display:none;'>
         <div class="card shadow p-30 div-project" style='display:none;'>
             <div class='row'>
                 <div class='col-md-12'>
@@ -38,6 +45,7 @@
                                 <div class="tab-pane fade" id="tab_about" role="tabpanel">
                                     {{--                                    <p class='text-about-project'></p>--}}
                                     <p class='percentage-affiliate'></p>
+                                    <p class='cookie_duration'></p>
                                     <p class='url_page'></p>
                                     <p class='contact'></p>
                                     <p class='support_phone'></p>
@@ -51,8 +59,8 @@
                 </div>
             </div>
         </div>
-{{--        <div class='alert alert-danger text-center font-size-18 div-disabled-url-affiliates' style='display:none;'>Link para afiliação não disponível</div>--}}
-        <!-- Modal affiliates -->
+    {{--        <div class='alert alert-danger text-center font-size-18 div-disabled-url-affiliates' style='display:none;'>Link para afiliação não disponível</div>--}}
+    <!-- Modal affiliates -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_store_affiliate"
              aria-hidden="true"
              aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -115,6 +123,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=9') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=2') }}"></script>
     @endpush
 @endsection

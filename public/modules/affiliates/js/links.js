@@ -170,7 +170,7 @@ $(function () {
                 $('#modal-detail-link .link-commission').html(response.data.commission);
                 $('#modal-detail-link .link-project').html(response.data.link_project);
                 $('#modal-detail-link .link-plan-link').html(response.data.link_plan);
-                if(response.data.link != null) {
+                if (response.data.link != null) {
                     $('#modal-detail-link .link-affiliate-link').val(response.data.link);
                 } else {
                     $('#modal-detail-link .link-affiliate-link').val(response.data.link_affiliate);
@@ -236,23 +236,26 @@ $(function () {
                             data = '';
                             data += '<tr>';
                             data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">';
-                            if(value.plan_name == null) {
-                                data += limitLink(value.link, 50) + ' <br><small>'+ value.project_name +'</small> </td>';
+                            if (value.plan_name == null) {
+                                data += limitLink(value.link, 50) + ' <br><small>' + value.project_name + '</small> </td>';
                             } else {
-                                data += limitLink(value.link_plan, 50) + ' <br><small>'+ value.plan_name + ' <br> ' + value.description +'</small> </td>';
+                                data += limitLink(value.link_plan, 50) + ' <br><small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
                             }
-                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="'+value.link+'"> file_copy</a></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="' + value.link + '"> file_copy</a></td>';
 
                             data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
-                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="'+value.link_affiliate+'"> file_copy</a></td>';
-
-                            data += '<td class="text-center" >' + value.price + '<br><small>('+ value.commission +' commissão)<small></td>';
+                            data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> file_copy</a></td>';
+                            if (value.price != '' && value.commission != '') {
+                                data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' commissão)<small></td>';
+                            } else {
+                                data += '<td class="text-center" ></td>';
+                            }
                             data += '<td style="text-align:center">';
-                            data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="'+value.id+'" data-target="#modal-details-link" data-toggle="modal"><i class="material-icons gradient">remove_red_eye</i></a>';
+                            data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><i class="material-icons gradient">remove_red_eye</i></a>';
 
-                            if(value.plan_name == null && value.link != null) {
-                                data += '<a title="Editar" class="mg-responsive edit-link pointer" link="'+value.id+'" data-toggle="modal"><i class="material-icons gradient">edit</i></a>';
-                                data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="'+value.id+'" data-toggle="modal"><i class="material-icons gradient">delete_outline</i></a>';
+                            if (value.plan_name == null && value.link != null) {
+                                data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><i class="material-icons gradient">edit</i></a>';
+                                data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><i class="material-icons gradient">delete_outline</i></a>';
                             } else {
                                 data += '<a title="Editar" class="mg-responsive pointer disabled"><i class="material-icons gradient">edit</i></a>';
                                 data += '<a title="Excluir" class="mg-responsive pointer disabled"><i class="material-icons gradient">delete_outline</i></a>';
@@ -275,8 +278,8 @@ $(function () {
         });
 
         function limitLink(link, length) {
-            if(link.length > length) {
-                return link.substr(0,length) + '...';
+            if (link.length > length) {
+                return link.substr(0, length) + '...';
             }
             return link;
         }
@@ -299,5 +302,12 @@ $(function () {
             alertCustom('success', 'Link copiado!');
         });
     }
+
+    $('#link-affiliate').on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            return false;
+        }
+    });
+
 })
 ;

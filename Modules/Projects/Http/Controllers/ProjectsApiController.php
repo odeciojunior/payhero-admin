@@ -117,7 +117,8 @@ class ProjectsApiController extends Controller
                                                      'visibility'                 => 'private',
                                                      'automatic_affiliation'      => 0,
                                                      'boleto'                     => 1,
-                                                     'status'                     => $projectModel->present()->getStatus('active'),
+                                                     'status'                     => $projectModel->present()
+                                                                                                  ->getStatus('active'),
                                                      'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
                 if (!empty($project)) {
@@ -127,7 +128,8 @@ class ProjectsApiController extends Controller
                                                            'information'  => 'de 15 até 30 dias',
                                                            'value'        => '0,00',
                                                            'type'         => 'static',
-                                                           'type_enum'    => $shippingModel->present()->getTypeEnum('static'),
+                                                           'type_enum'    => $shippingModel->present()
+                                                                                           ->getTypeEnum('static'),
                                                            'status'       => '1',
                                                            'pre_selected' => '1',
                                                        ]);
@@ -154,17 +156,20 @@ class ProjectsApiController extends Controller
                                                                      'project_id'        => $project->id,
                                                                      'company_id'        => $requestValidated['company'],
                                                                      'type'              => 'producer',
-                                                                     'type_enum'         => $userProjectModel->present()->getTypeEnum('producer'),
+                                                                     'type_enum'         => $userProjectModel->present()
+                                                                                                             ->getTypeEnum('producer'),
                                                                      'access_permission' => 1,
                                                                      'edit_permission'   => 1,
                                                                      'status'            => 'active',
-                                                                     'status_flag'       => $userProjectModel->present()->getStatusFlag('active'),
+                                                                     'status_flag'       => $userProjectModel->present()
+                                                                                                             ->getStatusFlag('active'),
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
 
                         if (!empty($userProject)) {
                             $projectNotificationService->createProjectNotificationDefault($project->id);
+
                             return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
                             $digitalOceanPath->deleteFile($project->photo);
@@ -315,7 +320,7 @@ class ProjectsApiController extends Controller
                         $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                     }
 
-                    $requestValidated['status']          = 1;
+                    $requestValidated['status'] = 1;
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
@@ -422,22 +427,25 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
-            $userId = auth()->user()->account_owner_id;
+            $userId       = auth()->user()->account_owner_id;
             if ($id) {
 
                 $project = $projectModel->where('id', current(Hashids::decode($id)))
                                         ->where('status', $projectModel->present()->getStatus('active'))
-                                        ->with(['affiliates' => function($query) use ($userId) {
-                                            $query->where('user_id', $userId)->where('status_enum', 3);
-                                        }])
+                                        ->with([
+                                                   'affiliates' => function($query) use ($userId) {
+                                                       $query->where('user_id', $userId)->where('status_enum', 3);
+                                                   },
+                                               ])
                                         ->first();
 
-                $producer = User::whereHas('usersProjects', function($query) use($project) {
+                $producer = User::whereHas('usersProjects', function($query) use ($project) {
                     $query->where('project_id', $project->id)
                           ->where('type_enum', 1);
                 })->first();
 
-                $project->producer = $producer->name ?? '';
+                $project->producer           = $producer->name ?? '';
+                $project->release_money_days = $producer->release_money_days ?? '';
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';

@@ -31,7 +31,7 @@ class AffiliateLinkResource extends Resource
 
         $linkPlan = $linkAffiliate = 'Domínio não configurado';
 
-        if(!empty($this->affiliate->project->domains[0]->name)) {
+        if (!empty($this->affiliate->project->domains[0]->name)) {
             $linkPlan      = (!empty($this->plan->code)) ? 'https://checkout.' . $this->affiliate->project->domains[0]->name . '/' . $this->plan->code : null;
             $linkAffiliate = (!empty($this->parameter)) ? 'https://affiliate.' . $this->affiliate->project->domains[0]->name . '/' . $this->parameter : null;
         }
@@ -47,8 +47,8 @@ class AffiliateLinkResource extends Resource
             'link_plan'       => $linkPlan,
             'link_affiliate'  => $linkAffiliate,
             'domain'          => $this->affiliate->project->domains[0]->name ?? '',
-            'price'           => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.'),
-            'commission'      => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", (($this->plan->price ?? 0 * $this->affiliate->percentage) / 100))) / 100, 2, ',', '.'),
+            'price'           => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.') : '',
+            'commission'      => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", (($this->plan->price ?? 0 * $this->affiliate->percentage) / 100))) / 100, 2, ',', '.') : '',
             'document_status' => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
         ];
     }
