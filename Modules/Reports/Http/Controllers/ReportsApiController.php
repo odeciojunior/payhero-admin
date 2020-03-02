@@ -390,25 +390,35 @@ class ReportsApiController extends Controller
                         $conversaoMobile  = "0.00";
                         $conversaoDesktop = "0.00";
                     }
+
+                    $totalCheckouts      = $countCheckoutsAcessed + $countCheckoutsAbandoned + $countCheckoutsRecovered + $countCheckoutsFinalized;
+                    $accessedPercentage  = $totalCheckouts ? number_format(($countCheckoutsAcessed * 100) / $totalCheckouts, 2, ',', '.') . '%' : '0,00%';
+                    $finalizedPercentage = $totalCheckouts ? number_format(($countCheckoutsFinalized * 100) / $totalCheckouts, 2, ',', '.') . '%' : '0,00%';
+                    $recoveredPercentage = $countCheckoutsAbandoned ? number_format(($countCheckoutsRecovered * 100) / $countCheckoutsAbandoned, 2, ',', '.') . '%' : '0,00%';
+                    $abandonedPercentage = $totalCheckouts ? number_format(($countCheckoutsAbandoned * 100) / $totalCheckouts, 2, ',', '.') . '%' : '0,00%';
                 }
             }
             if (empty($chartData)) {
                 $chartData = [
-                    'label_list'       => ['', ''],
+                    'label_list'    => ['', ''],
                     'checkout_data' => [0, 0],
                 ];
             }
 
             return response()->json([
-                                        'contAcessed'            => $countCheckoutsAcessed ?? 0,
-                                        'contAbandoned'          => $countCheckoutsAbandoned ?? 0,
-                                        'contRecovered'          => $countCheckoutsRecovered ?? 0,
-                                        'contFinalized'          => $countCheckoutsFinalized ?? 0,
-                                        'contCheckouts'          => $countCheckoutsAcessed + $countCheckoutsAbandoned + $countCheckoutsRecovered + $countCheckoutsFinalized,
-                                        'chartData'              => $chartData,
-                                        'conversaoMobile'        => $conversaoMobile ?? 0,
-                                        'conversaoDesktop'       => $conversaoDesktop ?? 0,
-                                        'plans'                  => $plans ?? 0,
+                                        'contAcessed'      => $countCheckoutsAcessed ?? 0,
+                                        'contAbandoned'    => $countCheckoutsAbandoned ?? 0,
+                                        'contRecovered'    => $countCheckoutsRecovered ?? 0,
+                                        'contFinalized'    => $countCheckoutsFinalized ?? 0,
+                                        'contCheckouts'    => $totalCheckouts ?? 0,
+                                        'chartData'        => $chartData,
+                                        'conversaoMobile'  => $conversaoMobile ?? 0,
+                                        'conversaoDesktop' => $conversaoDesktop ?? 0,
+                                        'plans'            => $plans ?? 0,
+                                        'percentAbandoned' => $abandonedPercentage ?? 0,
+                                        'percentAcessed'   => $accessedPercentage ?? 0,
+                                        'percentFinalized' => $finalizedPercentage ?? 0,
+                                        'percentRecovered' => $recoveredPercentage ?? 0,
                                     ]);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados - ReportsController - checkouts');

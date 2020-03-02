@@ -128,6 +128,7 @@ return [
                 "delivered"        => "Entregue",
                 "out_for_delivery" => "Saiu para entrega",
                 "exception"        => "Problema na entrega",
+                "ignored"          => "Ignorado",
             ],
         ],
         "invoices"                 => [
