@@ -1,0 +1,14 @@
+{
+    "name": "ProjectUpsellRule",
+    "alias": "projectupsellrule",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\ProjectUpsellRule\\Providers\\ProjectUpsellRuleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
