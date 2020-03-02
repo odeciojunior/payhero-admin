@@ -62,7 +62,7 @@ $(function () {
             },
             success: function success(response) {
 
-                $("#qtd-acessed").html( response.contAcessed + ' ('+ response.percentAcessed +')');
+                // $("#qtd-acessed").html( response.contAcessed + ' ('+ response.percentAcessed +')');
                 $("#qtd-abandoned").html(response.contAbandoned + ' ('+ response.percentAbandoned +')');
                 $("#qtd-recovered").html(response.contRecovered + ' (' + response.percentRecovered +')');
                 $("#qtd-finalized").html(response.contFinalized + ' (' + response.percentFinalized + ')');

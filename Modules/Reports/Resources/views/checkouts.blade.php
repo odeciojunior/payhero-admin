@@ -43,9 +43,14 @@
                             <div class="card shadow">
                                 <div class="wrap">
                                     <div class="row justify-content-between gutter_top">
-                                        <div class="col">
+                                        {{-- <div class="col">
                                             <h6 class="label-price relatorios"> Acessados </h6>
                                             <h4 id='qtd-acessed' class="number blue-800">0</h4>
+                                        </div> --}}
+                                        <div class="col">
+                                            <h6 class="label-price relatorios"> Total </h6>
+                                            <h4 id='qtd-total-checkouts' class="number blue-800">0<i class="fas fa-check"></i>
+                                            </h4>
                                         </div>
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Abandonos </h6>
@@ -60,11 +65,6 @@
                                         <div class="col">
                                             <h6 class="label-price relatorios"> Venda Finalizada </h6>
                                             <h4 id='qtd-finalized' class="number green-500">0<i class="fas fa-check"></i>
-                                            </h4>
-                                        </div>
-                                        <div class="col">
-                                            <h6 class="label-price relatorios"> Total </h6>
-                                            <h4 id='qtd-total-checkouts' class="number blue-800">0<i class="fas fa-check"></i>
                                             </h4>
                                         </div>
                                     </div>
@@ -202,6 +202,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/report-checkouts.js?v=4')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/report-checkouts.js?v=5')}}'></script>
 @endpush
 
