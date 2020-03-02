@@ -14,9 +14,11 @@ class SmsService
     /**
      * @param $number
      * @param $message
+     * @param string $sender
+     * @param string $msgType
      * @return bool
      */
-    public function sendSms($number, $message)
+    public function sendSms($number, $message, $sender = '', $msgType = '1')
     {
         try {
             /*
@@ -24,7 +26,11 @@ class SmsService
                 $zenvia->sendSms($number, $message);
                 DisparoProService::sendMessage($number, $message);
             */
-            $easySms = new EasySendSmsService($number, $message);
+            $number = preg_replace("/[^0-9]/", "", $number);
+            if (strlen($number) == 11) {
+                $number = '55' . $number;
+            }
+            $easySms = new EasySendSmsService($number, $message, $sender, $msgType);
             $easySms->submit();
 
             return true;
