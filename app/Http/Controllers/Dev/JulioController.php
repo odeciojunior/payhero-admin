@@ -51,6 +51,8 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
+        dd(env('DB_HOST'));
+
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
         // $this->restartShopifyWebhooks();
@@ -162,7 +164,7 @@ class JulioController extends Controller
 
     public function testSms($data){
 
-        event(new SendSmsEvent($dataSms));
+        event(new SendSmsEvent($data));
     }
 
     public function createProjectNotifications(){

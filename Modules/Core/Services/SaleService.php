@@ -244,7 +244,7 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->whereIn('company_id', $userCompanies)->first();
+        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)->first();
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);

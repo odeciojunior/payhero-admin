@@ -5,7 +5,7 @@ namespace Modules\Sales\Transformers;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Lang;
-use Modules\Core\Services\FoxUtils;
+use Modules\Core\Entities\Affiliate;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TransactionResource extends Resource
@@ -61,7 +61,8 @@ class TransactionResource extends Resource
         }
 
         if (!empty($sale->affiliate_id)) {
-            $data['affiliate'] = $sale->affiliate->user->name;
+            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $data['affiliate'] = $affiliate->user->name;
         } else {
             $data['affiliate'] = null;
         }
@@ -69,3 +70,5 @@ class TransactionResource extends Resource
         return $data;
     }
 }
+
+
