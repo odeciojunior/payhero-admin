@@ -326,5 +326,11 @@ class Project extends Model
     {
         return $this->hasMany('Modules\Core\Entities\ProjectNotification');
     }
-
+    /**
+     * @return HasMany
+     */
+    public function upsellRules()
+    {
+        return $this->hasMany('Modules\Core\Entities\ProjectUpsellRule');
+    }
 }
