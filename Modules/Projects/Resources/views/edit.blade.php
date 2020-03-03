@@ -378,6 +378,48 @@
             </div>
         </div>
         {{-- FIM CONFIGURAÇÕES SHOPIFY --}}
+
+        {{--INICIO CONFIGURAÇÕES UPSELL--}}
+        <div class='row'>
+            <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOneUpsell" aria-expanded="true"
+                 aria-controls="collapseOneUpsell">
+                <h3>Configurações Upsell
+                    <i class="material-icons showMore">add</i>
+                </h3>
+            </div>
+        </div>
+        <div class='mt-10 mb-15'>
+            <div id="collapseOneUpsell" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class='row no-gutters mb-10'>
+                    <div class="top-holder text-right mb-5" style="width: 100%;">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <div id="add-upsell" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_upsell">
+                                <span class="link-button-dependent red"> Adicionar Upsell </span>
+                                <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-md-12'>
+                        <table id='table-upsell' class='table text-left table-striped unify' style='width:100%'>
+                            <thead>
+                                <tr>
+                                    <td class='table-title'>Descrição</td>
+                                    <td class='table-title'>Status</td>
+                                    <td class='table-title text-center options-column-width'>Opções</td>
+                                </tr>
+                            </thead>
+                            <tbody id='data-table-upsell' class='min-row-height'>
+                                {{-- js carregando dados --}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{--FIM CONFIGURAÇÕES UPSELL--}}
+
         <div class="mt-30">
             <div class="row">
                 <div class="col-6">
@@ -473,4 +515,27 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal add-edit upsell --}}
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg d-flex justify-content-center">
+            <div class="modal-content w-450" id="conteudo_modal_add">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title text-center" style="font-weight: 700;"></h4>
+                </div>
+                <div class="pt-10 pr-20 pl-20 modal_upsell_body">
+                    @include('projectupsellrule::create')
+                </div>
+                <div class="modal-footer" style="margin-top: 15px">
+                    <button id="bt_upsell" type="button" class="btn btn-success"></button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- End Modal  --}}
+
 </div>

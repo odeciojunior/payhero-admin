@@ -194,7 +194,7 @@ $(() => {
     }
 
     function renderProjectConfig(data) {
-        let {project, companies, userProject, shopifyIntegrations} = data;
+        let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
         $('#update-project #name').val(project.name);
         $('#cost_currency_type').val(project.cost_currency_type);
@@ -286,6 +286,25 @@ $(() => {
             $('#discount_recovery_value').val(10)
         }
 
+        $('#data-table-upsell').html('');
+        if (projectUpsell != '') {
+            let dados = '';
+            for (let upsell of projectUpsell) {
+                dados = `
+                        <tr>
+                            <td>${upsell.description}</td>
+                            <td>${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td style='text-align:center'>
+                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' upsell="${upsell.id}"><i class='material-icons gradient'> edit </i></a>
+                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' upsell="${upsell.id}"><i class='material-icons gradient'> delete_outline </i></a>
+                            </td>
+                        </tr>
+                        `;
+                $('#data-table-upsell').append(dados);
+            }
+        } else {
+            $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma upsell encontrado</td></tr>");
+        }
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -293,7 +312,43 @@ $(() => {
         //     $('#credit_card .credit_card_no').attr('selected', true);
         // }
     }
-
+    $("#add-upsell").on('click', function () {
+        $('.modal-title').html("Novo upsell");
+        $("#bt_upsell").addClass('btn-save-upsell');
+        $("#bt_upsell").text('Salvar');
+        $('#form_add_upsell').show();
+        $('#form_edit_upsell').hide();
+    });
+    $(document).on('click', '.btn-save-upsell', function () {
+        if ($('#add_description_upsell').val() == '') {
+            alertCustom('error', 'Dados informados inválidos');
+            return false;
+        }
+        loadingOnScreen();
+        var form_data = new FormData(document.getElementById('form_add_upsell'));
+        form_data.append('project_id', projectId);
+        $.ajax({
+            method: "POST",
+            url: "/api/projectupsellrule",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function error(response) {
+                loadingOnScreenRemove();
+            },
+            success: function success(response) {
+                loadingOnScreenRemove();
+                $('#modal_add_upsell').modal('hide');
+                updateConfiguracoes();
+                alertCustom('success', response.message);
+            }
+        });
+    });
     function supportphoneVerified() {
         $("#message_not_verified_support_phone").css("display", "none");
         $("#input_group_support_phone").css("border-color", "forestgreen");

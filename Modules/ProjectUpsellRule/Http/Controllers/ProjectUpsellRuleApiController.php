@@ -5,6 +5,8 @@ namespace Modules\ProjectUpsellRule\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\ProjectUpsellRule;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProjectUpsellRuleApiController extends Controller
 {
@@ -24,7 +26,22 @@ class ProjectUpsellRuleApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $projectUpsellModel = new ProjectUpsellRule();
+        $data               = $request->all();
+        $projectId          = current(Hashids::decode($data['project_id']));
+        if ($projectId) {
+            $projectUpsellModel->create([
+                                            'project_id'  => $projectId,
+                                            'description' => $data['description'],
+                                            'active_flag' => !empty($data['active_flag']) ? $data['active_flag'] : 0,
+                                        ]);
+
+            return response()->json(['message' => 'Upsell criado com sucesso!'], 200);
+        } else {
+            return response()->json([
+                                        'message' => 'Erro ao criar upsell',
+                                    ], 400);
+        }
     }
 
     /**
@@ -36,6 +53,7 @@ class ProjectUpsellRuleApiController extends Controller
     {
         return view('projectupsellrule::show');
     }
+
     /**
      * Update the specified resource in storage.
      * @param Request $request
