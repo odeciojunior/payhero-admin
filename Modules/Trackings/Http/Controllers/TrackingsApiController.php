@@ -225,7 +225,7 @@ class TrackingsApiController extends Controller
                                 DB::rollBack();
 
                                 return response()->json([
-                                                            'message' => 'Erro ao salvar código de rastreio',
+                                                            'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
                                                         ], 400);
                             } else {
                                 DB::commit();
