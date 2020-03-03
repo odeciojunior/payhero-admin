@@ -3,9 +3,10 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Services\FoxUtils;
 use PHPHtmlParser\Dom;
+use PHPHtmlParser\Exceptions\LogicalException;
 use Slince\Shopify\Client;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\User;
@@ -104,7 +105,7 @@ class ShopifyService
             'metaCacheDir' => $cache // Metadata cache dir, required
         ]);
 
-        if($getThemes) {
+        if ($getThemes) {
             $this->getAllThemes();
         }
     }
@@ -425,6 +426,7 @@ class ShopifyService
      * @throws NotLoadedException
      * @throws StrictException
      * @throws UnknownChildTypeException
+     * @throws LogicalException
      */
     public function updateCartTemplateAjax($htmlCart, $domain)
     {
@@ -594,11 +596,11 @@ class ShopifyService
     /**
      * @param $htmlCart
      * @param null $domain
-     * @param bool $skipToCart
-     * @return mixed|string|string[]|null
+     * @return string|string[]|null
      * @throws ChildNotFoundException
      * @throws CircularException
      * @throws CurlException
+     * @throws LogicalException
      * @throws NotLoadedException
      * @throws StrictException
      * @throws UnknownChildTypeException
@@ -1306,7 +1308,6 @@ class ShopifyService
             $this->saleId = $sale->id;
             $delivery     = $sale->delivery;
             $client       = $sale->customer;
-            $checkout     = $sale->checkout;
 
             $totalValue = $sale->present()->getSubTotal();
 
@@ -1354,16 +1355,27 @@ class ShopifyService
             }
             $address .= ' - ' . $delivery->neighborhood;
 
+            // Endereço de faturamento
+            $billingAddress = [
+                "first_name" => $delivery->present()->getReceiverFirstName(),
+                "last_name"  => $delivery->present()->getReceiverLastName(),
+                "address1"   => $address,
+                "phone"      => $client->present()->getTelephoneShopify(),
+                "city"       => $delivery->city,
+                "province"   => $delivery->state,
+                "country"    => "Brasil",
+                "zip"        => FoxUtils::formatCEP($delivery->zip_code),
+            ];
+
             $shippingAddress = [
                 "address1"      => $address,
-                //                "address2"      => "(" . FoxUtilsService::formatDocument($client->document) . ")",
                 "address2"      => "",
                 "city"          => $delivery->city,
                 "company"       => $client->document,
                 "country"       => "Brasil",
                 "first_name"    => $delivery->present()->getReceiverFirstName(),
                 "last_name"     => $delivery->present()->getReceiverLastName(),
-                "phone"         => $client->telephone,
+                "phone"         => $client->present()->getTelephoneShopify(),
                 "province"      => $delivery->state,
                 "zip"           => FoxUtils::formatCEP($delivery->zip_code),
                 "name"          => $client->name,
@@ -1386,11 +1398,12 @@ class ShopifyService
                 "accepts_marketing"       => false,
                 "currency"                => "BRL",
                 "email"                   => $client->email,
-                "phone"                   => $client->telephone,
+                "phone"                   => $client->present()->getTelephoneShopify(),
                 "first_name"              => $delivery->present()->getReceiverFirstName(),
                 "last_name"               => $delivery->present()->getReceiverLastName(),
                 "buyer_accepts_marketing" => false,
                 "line_items"              => $items,
+                "billing_address"         => $billingAddress,
                 "shipping_address"        => $shippingAddress,
                 "shipping_lines"          => $shipping,
                 "note_attributes"         => [
@@ -1416,14 +1429,6 @@ class ShopifyService
 
                 $orderData += [
                     "financial_status" => "pending",
-                    //                    "transactions"     => [
-                    //                        [
-                    //                            "kind"    => "Boleto",
-                    //                            "gateway" => "Boleto",
-                    //                            "status"  => "success",
-                    //                            "amount"  => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
-                    //                        ],
-                    //                    ],
                 ];
             } else if (($sale->payment_method == 2) && $sale->status == 1) {
                 //boleto pago
@@ -1445,12 +1450,11 @@ class ShopifyService
             }
 
             $this->sendData = $orderData;
-            //            $order              = $this->client->getOrderManager()->create($orderData);
 
             $order = $this->client->post('orders', [
                 'order' => $orderData,
             ]);
-            //            $this->receivedData = $this->convertToArray($order);
+
             $this->receivedData = $order;
 
             if (FoxUtils::isEmpty($order['order']['id'])) {
@@ -1504,6 +1508,7 @@ class ShopifyService
 
     /**
      * @param $sale
+     * @return bool
      * @throws Exception
      */
     public function refundOrder($sale)
@@ -1589,7 +1594,7 @@ class ShopifyService
     }
 
     /**
-     * @return array
+     * @return array|false|string
      */
     private function getSendData()
     {
@@ -1597,7 +1602,7 @@ class ShopifyService
     }
 
     /**
-     * @return array
+     * @return array|false|string
      */
     private function getReceivedData()
     {
@@ -1870,7 +1875,7 @@ class ShopifyService
             $this->method = __METHOD__;
             $this->saleId = $sale->id;
             if (!empty($sale) && !empty($sale->shopify_order)) {
-                $client   = $sale->customer;
+                $client = $sale->customer;
 
                 $shippingAddress = [
                     "phone" => $client->telephone,
@@ -1886,7 +1891,7 @@ class ShopifyService
 
                 $this->sendData = $orderData;
                 $order          = $this->client->put('orders/' . $sale->shopify_order, [
-                    'order'    => $orderData,
+                    'order' => $orderData,
                 ]);
 
                 $this->receivedData = $order;

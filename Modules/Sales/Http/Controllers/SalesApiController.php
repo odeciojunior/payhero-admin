@@ -221,6 +221,11 @@ class SalesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $saleId
+     * @return JsonResponse
+     */
     public function newOrderShopify(Request $request, $saleId)
     {
         try {
