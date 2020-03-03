@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 @endpush
 
 @section('content')
@@ -173,6 +174,6 @@
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v=7')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection
-

@@ -10,15 +10,19 @@
             </div>
             <div class='form-group col-12'>
                 <label for="link">Ao comprar o plano</label>
-                <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="apply_on_plans" id="add_apply_on_plans" placeholder="Digite a descrição">
-                </div>
+                <select name="apply_on_plans[]" id="add_apply_on_plans" class="form-control select2-primary" style='width:100%' data-plugin="select2" multiple>
+                    <option value="AL">Alabama</option>
+                    ...
+                    <option value="WY">Wyoming</option>
+                </select>
             </div>
             <div class='form-group col-12'>
                 <label for="link">Oferecer o plano</label>
-                <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="offer_on_plans" id="add_offer_on_plans" placeholder="Digite a descrição">
-                </div>
+                <select name="offer_on_plans[]" id="add_offer_on_plans" class="form-control select2-primary" style='width:100%' data-plugin="select2" multiple>
+                    <option value="AL">Alabama</option>
+                    ...
+                    <option value="WY">Wyoming</option>
+                </select>
             </div>
         </div>
         <div class="row">
