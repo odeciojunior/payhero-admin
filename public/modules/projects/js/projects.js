@@ -305,6 +305,9 @@ $(() => {
         } else {
             $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma upsell encontrado</td></tr>");
         }
+
+        $('#add_apply_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
+        $('#add_offer_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -312,18 +315,36 @@ $(() => {
         //     $('#credit_card .credit_card_no').attr('selected', true);
         // }
     }
+
     $("#add-upsell").on('click', function () {
         $('.modal-title').html("Novo upsell");
         $("#bt_upsell").addClass('btn-save-upsell');
         $("#bt_upsell").text('Salvar');
         $('#form_add_upsell').show();
         $('#form_edit_upsell').hide();
+        $('#add_apply_on_plans').html('');
+        $('#add_offer_on_plans').html('');
+
+        $.ajax({
+            method: "GET",
+            url: "/api/plans/user-plans",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {project_id: projectId},
+            error: function error(response) {
+            },
+            success: function success(response) {
+                for (let plan of response.data) {
+                    $('#add_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                    $('#add_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                }
+            }
+        });
     });
+
     $(document).on('click', '.btn-save-upsell', function () {
-        if ($('#add_description_upsell').val() == '') {
-            alertCustom('error', 'Dados informados inválidos');
-            return false;
-        }
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_add_upsell'));
         form_data.append('project_id', projectId);
@@ -340,12 +361,14 @@ $(() => {
             data: form_data,
             error: function error(response) {
                 loadingOnScreenRemove();
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 loadingOnScreenRemove();
                 $('#modal_add_upsell').modal('hide');
                 updateConfiguracoes();
                 alertCustom('success', response.message);
+                $('#add_description_upsell').html('');
             }
         });
     });

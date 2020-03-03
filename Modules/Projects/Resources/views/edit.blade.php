@@ -383,8 +383,7 @@
         <div class='row'>
             <div class='col-12 pointer toggler' data-toggle="collapse" data-target="#collapseOneUpsell" aria-expanded="true"
                  aria-controls="collapseOneUpsell">
-                <h3>Configurações Upsell
-                    <i class="material-icons showMore">add</i>
+                <h3>Configurações Upsell <i class="material-icons showMore">add</i>
                 </h3>
             </div>
         </div>
@@ -419,7 +418,6 @@
             </div>
         </div>
         {{--FIM CONFIGURAÇÕES UPSELL--}}
-
         <div class="mt-30">
             <div class="row">
                 <div class="col-6">
@@ -515,9 +513,8 @@
             </div>
         </div>
     </div>
-
     {{-- Modal add-edit upsell --}}
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
         <div class="modal-dialog modal-lg d-flex justify-content-center">
             <div class="modal-content w-450" id="conteudo_modal_add">
                 <div class="modal-header">
@@ -537,5 +534,4 @@
         </div>
     </div>
     {{-- End Modal  --}}
-
 </div>
