@@ -61,6 +61,9 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
         $saleData = [];
         foreach ($sale->products as $product) {
+
+            $productName = $product->name . ($product->description ? ' (' . $product->description . ')' : '');
+
             $saleData[] = [
                 //sale
                 'sale_code' => '#' . Hashids::connection('sale_id')->encode($sale->id),
@@ -83,10 +86,10 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'comission' => $sale->details->comission,
                 //plan
                 'project_name' => $sale->project->name ?? '',
-                'plan' => $product->plan_name,
+                'plan' => utf8_encode($product->plan_name),
                 'price' => $product->plan_price,
                 'product_id' => '#' . Hashids::encode($product->id),
-                'product' => $product->name . ($product->description ? ' (' . $product->description . ')' : ''),
+                'product' => utf8_encode($productName),
                 'product_shopify_id' => $product->shopify_id,
                 'product_shopify_variant_id' => $product->shopify_variant_id,
                 'amount' => $product->amount,
