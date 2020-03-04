@@ -5,6 +5,10 @@ $(document).ready(function () {
         3: "success",
         4: "danger",
     };
+    var badgeAffiliates = {
+        1: "success",
+        2: "danger",
+    };
     getAffiliates();
     getAffiliatesRequest();
 
@@ -46,12 +50,13 @@ $(document).ready(function () {
                         data = '';
                         data += '<tr>';
                         data += '<td class="" style="vertical-align: middle;">' + value.name + '</td>';
-                        data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
+                        // data += '<td class="" style="vertical-align: middle;">' + value.email + '</td>';
                         data += '<td class="" style="vertical-align: middle;">' + value.project_name + '</td>';
                         data += '<td class="" style="vertical-align: middle;">' + value.date + '</td>';
                         data += '<td class="text-center" style="vertical-align: middle;">' + value.percentage + '</td>';
-                        data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
+                        data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliates[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td class='text-center'>";
+                        data += "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>remove_red_eye</i></a>";
                         data += "<a title='Editar' class='mg-responsive pointer edit-affiliate'    affiliate='" + value.id + "'><i class='material-icons gradient'>edit</i></a>"
                         data += "<a title='Excluir' class='mg-responsive pointer delete-affiliate' affiliate='" + value.id + "'><i class='material-icons gradient'>delete_outline</i></a>";
                         data += "</td>";
@@ -66,6 +71,8 @@ $(document).ready(function () {
                     event.preventDefault();
                     let affiliate = $(this).attr('affiliate');
                     $('#modal-delete-affiliate').modal('show');
+
+                    $("#modal-delete-affiliate .btn-delete").unbind('click');
                     $("#modal-delete-affiliate .btn-delete").on('click', function () {
                         $("#modal-delete").modal('hide');
                         loadingOnScreen()
@@ -107,26 +114,55 @@ $(document).ready(function () {
                         }, success: function success(response) {
                             $('#modal-edit-affiliate .affiliate-id').val(affiliate);
                             $('#modal-edit-affiliate .affiliate-name').val(response.data.name);
-                            $('#modal-edit-affiliate .affiliate-email').val(response.data.email);
-                            $('#modal-edit-affiliate .affiliate-company').val(response.data.company);
+                            // $('#modal-edit-affiliate .affiliate-email').val(response.data.email);
+                            // $('#modal-edit-affiliate .affiliate-company').val(response.data.company);
                             $('#modal-edit-affiliate .affiliate-percentage').val(response.data.percentage);
                             if (response.data.status == 1) {
                                 $('#modal-edit-affiliate .affiliate-status').prop("selectedIndex", 0).change();
                             } else if (response.data.status == 2) {
                                 $('#modal-edit-affiliate .affiliate-status').prop("selectedIndex", 1).change();
-                            } else if (response.data.status == 3) {
-                                $('#modal-edit-affiliate .affiliate-status').prop("selectedIndex", 2).change();
-                            } else if (response.data.status == 4) {
-                                $('#modal-edit-affiliate .affiliate-status').prop("selectedIndex", 3).change();
                             }
-
                             $('#modal-edit-affiliate').modal('show');
                         }
                     });
                 });
 
+                $(document).on('click', '.details-affiliate', function () {
+                    let affiliate = $(this).attr('affiliate');
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/affiliates/" + affiliate + "/edit",
+                        dataType: "json",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                            errorAjaxResponse(response);
+                        }, success: function success(response) {
+                            $('#modal-show-affiliate .affiliate-name').text(response.data.name);
+                            $('#modal-show-affiliate .affiliate-email').text(response.data.email);
+                            $('#modal-show-affiliate .affiliate-company').text(response.data.company);
+                            $('#modal-show-affiliate .affiliate-project').text(response.data.project_name);
+                            $('#modal-show-affiliate .affiliate-phone').text(response.data.cellphone);
+                            $('#modal-show-affiliate .affiliate-percent').text(response.data.percentage);
+                            $('#modal-show-affiliate .affiliate-date').text(response.data.date);
+                            $('#modal-show-affiliate .affiliate-status').html('<span class="badge badge-' + badgeAffiliates[response.data.status] + '">' + response.data.status_translated + '</span>');
+
+                            $('#modal-show-affiliate .affiliate-percentage').text(response.data.percentage);
+                            $('#modal-show-affiliate .affiliate-percentage').text(response.data.percentage);
+
+                            $('#modal-show-affiliate').modal('show');
+                        }
+                    });
+                });
+
+                $("#modal-edit-affiliate .btn-update").unbind('click');
                 $("#modal-edit-affiliate .btn-update").on('click', function () {
                     let formData = new FormData(document.getElementById('form-update-affiliate'));
+                    console.log(formData);
+                    // formData.append("integration_id", integrationId);
+
                     let affiliate = $('#modal-edit-affiliate .affiliate-id').val();
                     loadingOnScreen();
                     $.ajax({

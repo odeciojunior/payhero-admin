@@ -8,26 +8,18 @@
             <input type="text" class="form-control affiliate-name" readonly>
         </div>
     </div>
-    <div class="row">
+{{--     <div class="row">
         <div class="form-group col-xl-12">
             <label>Email</label>
             <input type="text" class="form-control affiliate-email" readonly>
         </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-xl-12">
-            <label>Empresa</label>
-            <input name="company" type="text" class="form-control affiliate-company" readonly>
-        </div>
-    </div>
+    </div> --}}
     <div class="row">
         <div class="form-group col-xl-6">
             <label for="status_enum">Status</label>
             <select name="status_enum" class="form-control affiliate-status" required>
-                <option value="1">Pendente</option>
-                <option value="2">Em análise</option>
-                <option value="3">Aprovado</option>
-                <option value="4">Recusado</option>
+                <option value="1">Ativo</option>
+                <option value="2">Desativado</option>
             </select>
         </div>
         <div class="form-group col-xl-6">

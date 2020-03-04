@@ -11,26 +11,18 @@ class AffiliatePresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return 'active';
                 case 2:
-                    return 'analyzing';
-                case 3:
-                    return 'approved';
-                case 4:
-                    return 'refused';
+                    return 'disabled';
             }
 
             return '';
         } else {
             switch ($status) {
-                case 'pending':
+                case 'active':
                     return 1;
-                case 'analyzing':
+                case 'disabled':
                     return 2;
-                case 'approved':
-                    return 3;
-                case 'refused':
-                    return 4;
             }
 
             return '';

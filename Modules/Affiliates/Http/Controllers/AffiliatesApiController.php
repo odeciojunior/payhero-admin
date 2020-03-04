@@ -72,7 +72,7 @@ class AffiliatesApiController extends Controller
                                                                     'company_id'  => $companyId,
                                                                     'percentage'  => $project->percentage_affiliates ?? 20,
                                                                     'status_enum' => $affiliateModel->present()
-                                                                                                    ->getStatus('approved'),
+                                                                                                    ->getStatus('active'),
                                                                 ]);
                     $affiliateLink    = $affiliateService->createAffiliateLinks($affiliate->id, $project->id);
                     if ($affiliateLink) {
@@ -175,7 +175,7 @@ class AffiliatesApiController extends Controller
         try {
             $data        = $request->validated();
             $affiliateId = current(Hashids::decode($id));
-
+            $data['percentage'] = preg_replace( '/[^0-9]/', '', $data['percentage']);
             $update = Affiliate::find($affiliateId)->update($data);
             if ($update) {
                 return response()->json([
@@ -284,12 +284,13 @@ class AffiliatesApiController extends Controller
                 if ($status == 3 && (int) $affiliateRequest->status != 3) {
                     $project          = Project::find($affiliateRequest->project_id);
                     $affiliateService = new AffiliateService();
-                    $affiliate        = Affiliate::create([
+                    $affiliateModel   = new Affiliate();
+                    $affiliate        = $affiliateModel->create([
                                                               'user_id'     => $affiliateRequest->user_id,
                                                               'project_id'  => $project->id,
                                                               'company_id'  => $affiliateRequest->company_id,
                                                               'percentage'  => $project->percentage_affiliates ?? 20,
-                                                              'status_enum' => $status,
+                                                              'status_enum' => $affiliateModel->present()->getStatus('active'),
                                                           ]);
                     $affiliateRequest->update(['status' => $status]);
 

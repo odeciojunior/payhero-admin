@@ -28,6 +28,10 @@ return [
             "refused"   => "Recusado",
 
         ],
+        "status_affiliate" => [
+            "active"   => "Ativo",
+            "disabled" => "Desativado",
+        ],
         "pixel"                    => [
             "status" => [
                 "active"   => "Ativo",

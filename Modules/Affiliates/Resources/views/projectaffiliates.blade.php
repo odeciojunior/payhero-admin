@@ -38,9 +38,9 @@
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
-                                            <th>Email</th>
+                                            {{-- <th>Email</th> --}}
                                             <th>Projeto</th>
-                                            <th>Data</th>
+                                            <th>Data afiliação</th>
                                             <th class="text-center">Porcentagem</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Opções</th>
@@ -132,8 +132,30 @@
             </div>
         </div>
         {{-- END MODAL --}}
+        {{-- MODAL DETAILS--}}
+        <div id="modal-show-affiliate" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-simple">
+                <div class="modal-content p-10">
+                    <div class="modal-header simple-border-bottom mb-10">
+                        <h4 class="modal-title" id="modal-title">Visualizar afiliado</h4>
+                        <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                            <i class="material-icons md-16">close</i>
+                        </a>
+                    </div>
+                    <div class="modal-body" style='min-height: 100px'>
+                        @include('affiliates::show')
+                    </div>
+                    <div class="modal-footer">
+                        <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                            Fechar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- END MODAL --}}
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=3') }}"></script>
+        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=4') }}"></script>
     @endpush
 @endsection

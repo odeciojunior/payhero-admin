@@ -37,7 +37,6 @@ class ProjectAffiliateResource extends Resource
         $affiliatePresenter = $affiliateModel->present();
         $affiliate          = $affiliateModel->where('user_id', $userId)
                                              ->where('project_id', $this->id)
-                                             ->where('status_enum', $affiliatePresenter->getStatus('approved'))
                                              ->first();
         if(!empty($affiliate->id)) {
             $affiliatedMessage  = !empty($affiliate) ? 'Você ja está afiliado a esse projeto.' : '';
