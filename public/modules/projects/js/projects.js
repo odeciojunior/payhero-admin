@@ -320,7 +320,7 @@ $(() => {
 
     // UPSELL
     $("#add-upsell").on('click', function () {
-        $('.modal-title').html("Novo upsell");
+        $('#modal_add_upsell .modal-title').html("Novo upsell");
         $(".bt-upsell-save").show();
         $(".bt-upsell-update").hide();
         $('#form_add_upsell').show();
@@ -332,7 +332,7 @@ $(() => {
     $(document).on('click', '.edit-upsell', function (event) {
         event.preventDefault();
         let upsellId = $(this).data('upsell');
-        $('.modal-title').html("Editar upsell");
+        $('#modal_add_upsell .modal-title').html("Editar upsell");
         $(".bt-upsell-save").hide();
         $(".bt-upsell-update").show();
         $("#form_add_upsell").hide();
