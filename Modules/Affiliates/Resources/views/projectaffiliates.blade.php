@@ -66,7 +66,7 @@
                                             <th>Email</th>
                                             <th>Projeto</th>
                                             <th>Data</th>
-                                            <th class="text-center">Status</th>
+                                            {{-- <th class="text-center">Status</th> --}}
                                             <th class="text-center">Opções</th>
                                             {{-- aceitar, recusar --}}
                                         </tr>
@@ -134,6 +134,6 @@
         {{-- END MODAL --}}
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=2') }}"></script>
+        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=3') }}"></script>
     @endpush
 @endsection
