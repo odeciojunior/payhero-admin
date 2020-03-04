@@ -5,7 +5,7 @@ namespace Modules\ProjectUpsellRule\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class ProjectUpsellStoreRequest extends FormRequest
+class ProjectUpsellUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,6 @@ class ProjectUpsellStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id'     => 'required',
             'description'    => 'required',
             'active_flag'    => 'nullable',
             'apply_on_plans' => 'required|array',

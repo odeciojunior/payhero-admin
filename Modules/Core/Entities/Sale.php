@@ -57,7 +57,7 @@ use App\Traits\LogsActivity;
  * @property Project $project
  * @property Shipping $shipping
  * @property Affiliate $affiliate
- * @property Customer $client
+ * @property Customer $customer
  * @property Delivery $delivery
  * @property SaleRefundHistory $saleRefundHistory
  * @property User $user

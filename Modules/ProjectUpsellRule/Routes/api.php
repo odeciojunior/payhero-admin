@@ -18,7 +18,7 @@ Route::group(
     ],
     function() {
         Route::apiResource('/projectupsellrule', 'ProjectUpsellRuleApiController')
-             ->only('index', 'store', 'destroy', 'update', 'show')
+             ->only('index', 'store', 'destroy', 'update', 'show', 'edit')
              ->middleware('role:account_owner|admin');
     }
 );

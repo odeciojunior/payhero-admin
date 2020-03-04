@@ -295,19 +295,21 @@ $(() => {
                             <td>${upsell.description}</td>
                             <td>${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
-                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' upsell="${upsell.id}"><i class='material-icons gradient'> edit </i></a>
-                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' upsell="${upsell.id}"><i class='material-icons gradient'> delete_outline </i></a>
+                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${upsell.id}" data-toggle="modal" data-target="#modal_add_upsell"><i class='material-icons gradient'> edit </i></a>
+                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${upsell.id}" data-toggle="modal" data-target="#modal-delete-upsell"><i class='material-icons gradient'> delete_outline </i></a>
                             </td>
                         </tr>
                         `;
                 $('#data-table-upsell').append(dados);
             }
         } else {
-            $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma upsell encontrado</td></tr>");
+            $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
         }
 
         $('#add_apply_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
         $('#add_offer_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
+        $('#edit_apply_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
+        $('#edit_offer_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -316,35 +318,67 @@ $(() => {
         // }
     }
 
+    // UPSELL
     $("#add-upsell").on('click', function () {
         $('.modal-title').html("Novo upsell");
-        $("#bt_upsell").addClass('btn-save-upsell');
-        $("#bt_upsell").text('Salvar');
+        $(".bt-upsell-save").show();
+        $(".bt-upsell-update").hide();
         $('#form_add_upsell').show();
         $('#form_edit_upsell').hide();
         $('#add_apply_on_plans').html('');
         $('#add_offer_on_plans').html('');
+        loadPlans('create');
+    });
+    $(document).on('click', '.edit-upsell', function (event) {
+        event.preventDefault();
+        let upsellId = $(this).data('upsell');
+        $('.modal-title').html("Editar upsell");
+        $(".bt-upsell-save").hide();
+        $(".bt-upsell-update").show();
+        $("#form_add_upsell").hide();
+        $("#form_edit_upsell").show();
+        $('#edit_description_upsell').val('');
+        $('#edit_apply_on_plans').html('');
+        $('#edit_offer_on_plans').html('');
+        loadPlans('edit');
+        $('#form_edit_upsell .upsell-id').val(upsellId);
 
         $.ajax({
             method: "GET",
-            url: "/api/plans/user-plans",
+            url: "/api/projectupsellrule/" + upsellId + '/edit',
+            dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
-            },
-            data: {project_id: projectId},
-            error: function error(response) {
-            },
-            success: function success(response) {
-                for (let plan of response.data) {
-                    $('#add_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                    $('#add_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+            }, error: function (response) {
+
+            }, success: function (response) {
+                let upsell = response.data;
+                $('#edit_description_upsell').val(`${upsell.description}`);
+                let applyArray = [];
+                let offerArray = [];
+                for (let plan of upsell.apply_on_plans) {
+                    $("#edit_apply_on_plans").find('option').each(function () {
+                        if (plan.id == $(this).val()) {
+                            applyArray.push(plan.id);
+                            $("#edit_apply_on_plans").val(applyArray);
+                            $("#edit_apply_on_plans").trigger('change');
+                        }
+                    });
+                }
+                for (let plan of upsell.offer_on_plans) {
+                    $("#edit_offer_on_plans").find('option').each(function () {
+                        if (plan.id == $(this).val()) {
+                            offerArray.push(plan.id);
+                            $("#edit_offer_on_plans").val(offerArray);
+                            $("#edit_offer_on_plans").trigger('change');
+                        }
+                    });
                 }
             }
         });
     });
-
-    $(document).on('click', '.btn-save-upsell', function () {
+    $(document).on('click', '.bt-upsell-save', function () {
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_add_upsell'));
         form_data.append('project_id', projectId);
@@ -364,14 +398,96 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                loadingOnScreenRemove();
                 $('#modal_add_upsell').modal('hide');
+                loadingOnScreenRemove();
                 updateConfiguracoes();
                 alertCustom('success', response.message);
-                $('#add_description_upsell').html('');
             }
         });
     });
+
+    $(document).on('click', '.bt-upsell-update', function (event) {
+        event.preventDefault();
+        loadingOnScreen();
+        var form_data = new FormData(document.getElementById('form_edit_upsell'));
+        let upsellId = $('#form_edit_upsell .upsell-id').val();
+        $.ajax({
+            method: "POST",
+            url: "/api/projectupsellrule/" + upsellId,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                $('#modal_add_upsell').modal('hide');
+                loadingOnScreenRemove();
+                updateConfiguracoes();
+                alertCustom('success', response.message);
+            }
+        });
+    });
+
+    $(document).on('click', '.delete-upsell', function (event) {
+        event.preventDefault();
+        let upsellId = $(this).data('upsell');
+        $('.btn-delete-upsell').on('click', function () {
+            loadingOnScreen();
+            $.ajax({
+                method: "DELETE",
+                url: "/api/projectupsellrule/" + upsellId,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                    loadingOnScreenRemove()
+                },
+                success: function (response) {
+                    loadingOnScreenRemove();
+                    updateConfiguracoes();
+                    alertCustom('success', response.message);
+                }
+            });
+        });
+    });
+    function loadPlans(type) {
+        $.ajax({
+            method: "GET",
+            url: "/api/plans/user-plans",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {project_id: projectId},
+            error: function error(response) {
+            },
+            success: function success(response) {
+                if (type == 'create') {
+                    for (let plan of response.data) {
+                        $('#add_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                        $('#add_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                    }
+                } else {
+                    for (let plan of response.data) {
+                        $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                        $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                    }
+                }
+            }
+        });
+    }
+    // END UPSELL
+
     function supportphoneVerified() {
         $("#message_not_verified_support_phone").css("display", "none");
         $("#input_group_support_phone").css("border-color", "forestgreen");
