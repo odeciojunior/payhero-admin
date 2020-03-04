@@ -130,7 +130,7 @@ class AffiliatesApiController extends Controller
         $projectModel = new Project();
         $projectId    = current(Hashids::decode($id));
         if ($projectId) {
-            $project = $projectModel->with('usersProjects')->find($projectId);
+            $project = $projectModel->with('usersProjects.user')->find($projectId);
 
             return new ProjectAffiliateResource($project);
         }
@@ -296,7 +296,7 @@ class AffiliatesApiController extends Controller
                     $affiliateLink = $affiliateService->createAffiliateLinks($affiliate->id, $project->id);
                     if ($affiliateLink) {
                         event(new EvaluateAffiliateRequestEvent($affiliateRequest));
-
+                        $affiliateRequest->delete();
                         return response()->json([
                                                     'message' => 'Afiliação criada com sucesso!',
                                                 ], 200);
@@ -309,6 +309,7 @@ class AffiliatesApiController extends Controller
                     $update = $affiliateRequest->update(['status' => $status]);
                     if ($update) {
                         event(new EvaluateAffiliateRequestEvent($affiliateRequest));
+                        $affiliateRequest->delete();
 
                         return response()->json([
                                                     'message' => 'Solicitação de afiliação avaliada com sucesso!',

@@ -50,6 +50,7 @@
                                     <p class='contact'></p>
                                     <p class='support_phone'></p>
                                     <p class='created_at'></p>
+                                    <p class='release_days'></p>
                                 </div>
                             </div>
                         </div>
@@ -123,6 +124,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=2') }}"></script>
+        <script src="{{asset('modules/affiliates/js/index.js?v=3') }}"></script>
     @endpush
 @endsection

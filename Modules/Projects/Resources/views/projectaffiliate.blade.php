@@ -80,7 +80,13 @@
                                                 </div>
                                                 <div class='col-md-6'>
                                                     <h5 class=""><strong> Dias para liberar dinheiro </strong></h5>
-                                                    <p id="show-release-money-days" class="card-text sm"></p>
+                                                    <p class="card-text sm">Cartão de débito: <span id='show-debit-release'></span></p>
+                                                    <p class="card-text sm">Cartão de crédito: <span id='show-credit-release'></span></p>
+                                                    <p class="card-text sm">Boleto: <span id='show-billet-release'></span></p>
+
+                                                    <h5 class=""><strong> Duração do cookie </strong></h5>
+                                                    <p id="show-cookie-duration" class="card-text sm"></p>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +114,7 @@
 
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=1')}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=7')}}"></script>
+        <script src="{{asset('modules/projects/js/projectaffiliate.js?v=8')}}"></script>
         <script src="{{asset('modules/affiliates/js/links.js?v=9')}}"></script>
     @endpush
 @endsection

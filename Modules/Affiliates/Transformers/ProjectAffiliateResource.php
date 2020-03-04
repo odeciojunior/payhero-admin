@@ -33,13 +33,13 @@ class ProjectAffiliateResource extends Resource
         }
 
         //verifica se é o projeto tem afiliação automatica
-        if ($this->automatic_affiliation) {
-            $affiliateModel     = new Affiliate();
-            $affiliatePresenter = $affiliateModel->present();
-            $affiliate          = $affiliateModel->where('user_id', $userId)
-                                                 ->where('project_id', $this->id)
-                                                 ->where('status_enum', $affiliatePresenter->getStatus('approved'))
-                                                 ->first();
+        $affiliateModel     = new Affiliate();
+        $affiliatePresenter = $affiliateModel->present();
+        $affiliate          = $affiliateModel->where('user_id', $userId)
+                                             ->where('project_id', $this->id)
+                                             ->where('status_enum', $affiliatePresenter->getStatus('approved'))
+                                             ->first();
+        if(!empty($affiliate->id)) {
             $affiliatedMessage  = !empty($affiliate) ? 'Você ja está afiliado a esse projeto.' : '';
         } else {
             $affiliateRequestModel = new AffiliateRequest();
@@ -73,6 +73,9 @@ class ProjectAffiliateResource extends Resource
             'producer'               => $producer,
             'status_url_affiliates'  => $this->status_url_affiliates,
             'cookie_duration'        => $this->cookie_duration ?? '',
+            'debit_release_days'     => $userProject->user->debit_card_release_money_days ?? '',
+            'credit_release_days'    => $userProject->user->credit_card_release_money_days ?? '',
+            'billet_release_days'    => $userProject->user->boleto_release_money_days ?? '',
         ];
     }
 }

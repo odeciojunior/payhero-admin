@@ -27,7 +27,11 @@ $(document).ready(function () {
                     $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.png'}`);
                     $('#created_by').html(`Produtor: ${response.data.user_name}`);
                     $('.text-about-project').html(response.data.description);
-                    $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
+                    if(response.data.url_page != '' && response.data.url_page != null) {
+                        $('.url_page').html(` <strong >URL da página principal: <a href='${response.data.url_page}' target='_blank'>${response.data.url_page}</a></strong>`);
+                    } else {
+                        $('.url_page').html('');
+                    }
                     $('.created_at').html(` <strong >Criado em: ${response.data.created_at}</strong>`);
                     if (!response.data.producer) {
                         if (response.data.affiliatedMessage != '') {
@@ -44,8 +48,13 @@ $(document).ready(function () {
                     if (response.data.percentage_affiliates != '') {
                         $('.percentage-affiliate').html(`<strong>Porcentagem de afiliado: <span class='green-gradient'>${response.data.percentage_affiliates}%</span></strong>`);
                     }
+                    console.log(response.data.cookie_duration);
                     if (response.data.cookie_duration != '') {
-                        $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>${response.data.cookie_duration}</span></strong>`);
+                        if (response.data.cookie_duration == 0) {
+                            $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>Eterno</span></strong>`);
+                        }  else if (response.data.cookie_duration >= 1) {
+                            $('.cookie_duration').html(` <strong>Duração do cookie: <span class='green-gradient'>${response.data.cookie_duration} dias</span></strong>`);
+                        }
                     }
                     if (response.data.terms_affiliates != '') {
                         $('.text-terms').html(response.data.terms_affiliates);
@@ -58,6 +67,12 @@ $(document).ready(function () {
                     if (response.data.support_phone != '') {
                         $('.support_phone').html(`<strong>Telefone: ${response.data.support_phone}</strong>`);
                     }
+                    let dataRelease = '<strong>Dias para liberar dinheiro<br>';
+                    dataRelease += `Boleto: <span class='green-gradient'>${response.data.billet_release_days} dias</span><br>`;
+                    dataRelease += `Cartão de crédito: <span class='green-gradient'>${response.data.credit_release_days} dias</span><br>`;
+                    dataRelease += `Cartão de débito: <span class='green-gradient'>${response.data.debit_release_days} dias</span>`;
+                    dataRelease += '</strong>';
+                    $('.release_days').html(dataRelease);
                 } else {
                     // $('.div-disabled-url-affiliates').show();
                     swal({

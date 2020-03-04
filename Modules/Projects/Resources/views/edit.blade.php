@@ -378,7 +378,7 @@
                             </div>
                             <div class='form-group col-md-12 col-sm-12 col-xs-12'>
                                 <label for='percentage-affiliates'>Porcentagem</label>
-                                <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='number' min="0" max="100">
+                                <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
                                 <span id='input-pad-error' class='text-danger'></span>
                             </div>
                             <div class='form-group col-md-12 col-sm-12'>

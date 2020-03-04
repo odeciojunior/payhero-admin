@@ -66,9 +66,16 @@ $(() => {
                     $('#show-status').text('Recusado').addClass('badge-danger');
                 }
                 $('#show-description').text(project.description);
+                if(project.cookie_duration == 0) {
+                    $('#show-cookie-duration').text('Eterno'); 
+                } else if (project.cookie_duration > 0) {
+                    $('#show-cookie-duration').text(project.cookie_duration + ' dias');
+                }
                 $('#show-producer').text(project.producer);
                 $('#show-commission').text(project.commission_affiliate + '%');
-                $('#show-release-money-days').text(project.release_money_days);
+                $('#show-debit-release').text(project.debit_card_release_money_days);
+                $('#show-credit-release').text(project.credit_card_release_money_days);
+                $('#show-billet-release').text(project.boleto_release_money_days);
                 loadOnAny('#tab_info_geral .card', true);
             },
             error: (response) => {

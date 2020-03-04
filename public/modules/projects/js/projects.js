@@ -13,6 +13,7 @@ $(() => {
         ],
         removeButtons: 'Anchor,Superscript,Subscript',
     });
+    // $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
 
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
@@ -225,6 +226,16 @@ $(() => {
 
     function renderProjectConfig(data) {
         let {project, companies, userProject, shopifyIntegrations} = data;
+
+        $('#percentage-affiliates').mask('000', {
+            reverse: true,
+            onKeyPress: function(val, e, field, options) {
+                if (val > 100) {
+                    $('#percentage-affiliates').val('')
+                }
+            }
+        });
+
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
         $('#update-project #name').val(project.name);
         $('#cost_currency_type').val(project.cost_currency_type);
