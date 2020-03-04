@@ -147,6 +147,8 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 if (response.type == 'affiliate') {
                     window.location = "/projects";
+                } else {
+                    setTimeout(function(){ window.location = "/dashboard" }, 4000);
                 }
             }
         });
