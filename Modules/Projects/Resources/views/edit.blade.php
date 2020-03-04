@@ -525,10 +525,37 @@
                 </div>
                 <div class="pt-10 pr-20 pl-20 modal_upsell_body">
                     @include('projectupsellrule::create')
+                    @include('projectupsellrule::edit')
                 </div>
                 <div class="modal-footer" style="margin-top: 15px">
-                    <button id="bt_upsell" type="button" class="btn btn-success"></button>
+                    <button type="button" class="btn btn-success bt-upsell-save" style='display:none;'>Salvar</button>
+                    <button type="button" class="btn btn-success bt-upsell-update" style='display:none;'>Atualizar</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- End Modal  --}}
+
+    {{-- Modal delete upsell --}}
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-upsell" aria-hidden="true" role="dialog" tabindex="-1">
+        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div id="modal_excluir_body" class="modal-body text-center p-20">
+                    <div class="d-flex justify-content-center">
+                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                    </div>
+                    <h3 class="black"> Você tem certeza? </h3>
+                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+                </div>
+                <div class="modal-footer d-flex align-items-center justify-content-center">
+                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                    <button type="button" class="col-4 btn btn-danger btn-delete-upsell" data-dismiss="modal" style="width: 20%;">Excluir</button>
                 </div>
             </div>
         </div>
