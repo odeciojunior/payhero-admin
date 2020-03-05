@@ -143,7 +143,6 @@ $(document).ready(function () {
             success: (response) => {
                 $('#modal_store_affiliate').modal('hide');
                 loadingOnScreenRemove();
-                getProjectData();
                 alertCustom('success', response.message);
                 if (response.type == 'affiliate') {
                     window.location = "/projects";
