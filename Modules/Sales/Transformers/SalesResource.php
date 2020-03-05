@@ -5,6 +5,7 @@ namespace Modules\Sales\Transformers;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
+use Modules\Core\Entities\Affiliate;
 
 /**
  * Class SalesResource
@@ -71,7 +72,8 @@ class SalesResource extends Resource
         }
 
         if (!empty($this->affiliate_id)) {
-            $data['affiliate'] = $this->affiliate->user->name;
+            $affiliate = Affiliate::withTrashed()->find($this->affiliate_id);
+            $data['affiliate'] = $affiliate->user->name;
         } else {
             $data['affiliate'] = null;
         }

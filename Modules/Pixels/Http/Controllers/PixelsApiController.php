@@ -38,7 +38,6 @@ class PixelsApiController extends Controller
 
                 $affiliate = Affiliate::where('project_id', $project->id)
                                       ->where('user_id', auth()->user()->account_owner_id)
-                                      ->where('status_enum', 3)
                                       ->first();
 
                 $affiliateId = $affiliate->id ?? 0;

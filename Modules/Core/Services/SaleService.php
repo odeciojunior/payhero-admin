@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
@@ -233,7 +234,7 @@ class SaleService
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
         $sale->details->invoices = $invoices;
-
+ 
         return $sale;
     }
 
@@ -282,8 +283,9 @@ class SaleService
         //valor do afiliado
         $affiliateComission = '';
         $affiliateValue     = 0;
-        if (!empty($sale->affiliate)) {
-            $affiliateTransaction = $sale->transactions->where('company_id', $sale->affiliate->company_id)->first();
+        if (!empty($sale->affiliate_id)) {
+            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue     = $affiliateTransaction->value;
                 $affiliateComission = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue, ',', strlen($affiliateValue) - 2, 0);
@@ -297,7 +299,7 @@ class SaleService
         } else {
             $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
         }
-        if (!empty($sale->affiliate)) {
+        if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;
         }
         $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
