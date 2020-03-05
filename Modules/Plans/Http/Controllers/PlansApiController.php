@@ -391,14 +391,23 @@ class PlansApiController extends Controller
             $planModel = new Plan();
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
-                $plans = $planModel->where('project_id', $projectId);
+                if (!empty($data['search'])) {
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
+                                       ->where('project_id', $projectId);
+                    if (!empty($plans)) {
+                        return PlansSelectResource::collection($plans->get());
+                    }
+                } else {
+                    $plans = $planModel->where('project_id', $projectId);
 
-                return PlansSelectResource::collection($plans->get());
+                    return PlansSelectResource::collection($plans->orderBy('id', 'DESC')->paginate(10));
+                }
             } else {
                 return response()->json([
                                             'message' => 'Ocorreu um erro, ao buscar dados dos planos',
                                         ], 400);
             }
+
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados dos planos (PlansApiController - getPlans)');
             report($e);

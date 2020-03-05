@@ -172,7 +172,7 @@
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v=1')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=2')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js?v=8')}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js?v=9')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush

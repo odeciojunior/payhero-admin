@@ -306,10 +306,12 @@ $(() => {
             $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
         }
 
-        $('#add_apply_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
-        $('#add_offer_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
-        $('#edit_apply_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
-        $('#edit_offer_on_plans').select2({dropdownParent: $('#modal_add_upsell'), placeholder: 'Nome do plano'});
+        $('#add_apply_on_plans').html('');
+        $('#add_offer_on_plans').html('');
+        $('#edit_apply_on_plans').html('');
+        $('#edit_offer_on_plans').html('');
+        loadPlans();
+
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -324,10 +326,8 @@ $(() => {
         $(".bt-upsell-save").show();
         $(".bt-upsell-update").hide();
         $('#form_add_upsell').show();
-        $('#form_edit_upsell').hide();
-        $('#add_apply_on_plans').html('');
-        $('#add_offer_on_plans').html('');
-        loadPlans('create');
+        $('#form_edit_upsell').hide()
+        $('#add_description_upsell').val('');
     });
     $(document).on('click', '.edit-upsell', function (event) {
         event.preventDefault();
@@ -338,10 +338,8 @@ $(() => {
         $("#form_add_upsell").hide();
         $("#form_edit_upsell").show();
         $('#edit_description_upsell').val('');
-        $('#edit_apply_on_plans').html('');
-        $('#edit_offer_on_plans').html('');
-        loadPlans('edit');
         $('#form_edit_upsell .upsell-id').val(upsellId);
+        loadingOnScreen();
 
         $.ajax({
             method: "GET",
@@ -355,29 +353,64 @@ $(() => {
             }, success: function (response) {
                 let upsell = response.data;
                 $('#edit_description_upsell').val(`${upsell.description}`);
+
+                // Seleciona a opção do select de acordo com o que vem do banco
                 let applyArray = [];
                 let offerArray = [];
-                for (let plan of upsell.apply_on_plans) {
-                    $("#edit_apply_on_plans").find('option').each(function () {
+                let differentApplyArray = [];
+                let differentOfferArray = [];
+                let selectApplyIdsArray = [];
+                let selectOfferIdsArray = [];
+                $("#edit_apply_on_plans").find('option').each(function () {
+                    selectApplyIdsArray.push($(this).val());
+                    for (let plan of upsell.apply_on_plans) {
                         if (plan.id == $(this).val()) {
                             applyArray.push(plan.id);
                             $("#edit_apply_on_plans").val(applyArray);
                             $("#edit_apply_on_plans").trigger('change');
+                        } else {
+                            differentApplyArray[plan.id] = plan.name;
                         }
-                    });
+                    }
+                });
+                if (applyArray.length != upsell.apply_on_plans.length) {
+                    let idPlanArray = [];
+                    for (let key in differentApplyArray) {
+                        if (!selectApplyIdsArray.includes(key)) {
+                            $('#edit_apply_on_plans').append(`<option value="${key}">${differentApplyArray[key]}</option>`);
+                        }
+                        idPlanArray.push(key);
+                    }
+                    $("#edit_apply_on_plans").val(idPlanArray);
                 }
-                for (let plan of upsell.offer_on_plans) {
-                    $("#edit_offer_on_plans").find('option').each(function () {
+                $("#edit_offer_on_plans").find('option').each(function () {
+                    selectOfferIdsArray.push($(this).val());
+                    for (let plan of upsell.offer_on_plans) {
                         if (plan.id == $(this).val()) {
                             offerArray.push(plan.id);
                             $("#edit_offer_on_plans").val(offerArray);
                             $("#edit_offer_on_plans").trigger('change');
+                        } else {
+                            differentOfferArray[plan.id] = plan.name;
                         }
-                    });
+                    }
+                });
+                if (offerArray.length != upsell.offer_on_plans.length) {
+                    let idPlanArray = [];
+                    for (let key in differentOfferArray) {
+                        if (!selectOfferIdsArray.includes(key)) {
+                            $('#edit_offer_on_plans').append(`<option value="${key}">${differentOfferArray[key]}</option>`);
+                        }
+                        idPlanArray.push(key);
+                    }
+                    $("#edit_offer_on_plans").val(idPlanArray);
                 }
+                loadingOnScreenRemove();
+                // END
             }
         });
     });
+
     $(document).on('click', '.bt-upsell-save', function () {
         loadingOnScreen();
         var form_data = new FormData(document.getElementById('form_add_upsell'));
@@ -460,7 +493,47 @@ $(() => {
             });
         });
     });
-    function loadPlans(type) {
+
+    //Search plan
+    $('#add_apply_on_plans, #add_offer_on_plans, #edit_apply_on_plans, #edit_offer_on_plans').select2({
+        placeholder: 'Nome do plano',
+        multiple: true,
+        dropdownParent: $('#modal_add_upsell'),
+        language: {
+            noResults: function () {
+                return 'Nenhum plano encontrado';
+            },
+            searching: function () {
+                return 'Procurando...';
+            }
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: 'plan',
+                    search: params.term,
+                    project_id: projectId,
+                };
+            },
+            method: "GET",
+            url: "/api/plans/user-plans",
+            delay: 300,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {id: obj.id, text: obj.name};
+                    })
+                };
+            },
+        }
+    });
+
+    function loadPlans() {
         $.ajax({
             method: "GET",
             url: "/api/plans/user-plans",
@@ -472,16 +545,12 @@ $(() => {
             error: function error(response) {
             },
             success: function success(response) {
-                if (type == 'create') {
-                    for (let plan of response.data) {
-                        $('#add_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                        $('#add_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                    }
-                } else {
-                    for (let plan of response.data) {
-                        $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                        $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                    }
+                for (let plan of response.data) {
+                    $('#add_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                    $('#add_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+
+                    $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                    $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
                 }
             }
         });
