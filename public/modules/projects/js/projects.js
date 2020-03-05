@@ -353,7 +353,11 @@ $(() => {
             }, success: function (response) {
                 let upsell = response.data;
                 $('#edit_description_upsell').val(`${upsell.description}`);
-
+                if (upsell.active_flag) {
+                    $('#edit_active_flag').val(1).prop('checked', true);
+                } else {
+                    $('#edit_active_flag').val(0).prop('checked', false);
+                }
                 // Seleciona a opção do select de acordo com o que vem do banco
                 let applyArray = [];
                 let offerArray = [];
