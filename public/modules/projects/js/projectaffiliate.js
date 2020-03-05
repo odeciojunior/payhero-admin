@@ -57,14 +57,11 @@ $(() => {
                 }
 
                 if (project.status_affiliate == '1') {
-                    $('#show-status').text('Pendente').addClass('badge-primary');
+                    $('#show-status').text('Ativo').addClass('badge-primary');
                 } else if (project.status_affiliate == '2'){
-                    $('#show-status').text('Em análise').addClass('badge-warning');
-                } else if (project.status_affiliate == '3'){
-                    $('#show-status').text('Ativo').addClass('badge-success');
-                } else if (project.status_affiliate == '4'){
-                    $('#show-status').text('Recusado').addClass('badge-danger');
+                    $('#show-status').text('Desativado').addClass('badge-warning');
                 }
+
                 $('#show-description').text(project.description);
                 if(project.cookie_duration == 0) {
                     $('#show-cookie-duration').text('Eterno'); 
