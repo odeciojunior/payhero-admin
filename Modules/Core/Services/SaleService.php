@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PlanSale;
@@ -61,6 +62,7 @@ class SaleService
                                                         'sale.checkout',
                                                         'sale.delivery',
                                                         'sale.transactions',
+                                                        'sale.affiliate.user',
                                                     ])->whereIn('company_id', $userCompanies)
                                              ->join('sales', 'sales.id', 'transactions.sale_id')
                                              ->whereNull('invitation_id');
@@ -158,7 +160,7 @@ class SaleService
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
-        $transactions = $this->getSalesQueryBuilder($filters);
+        $transactions     = $this->getSalesQueryBuilder($filters);
 
         $resume = ['total_sales' => 0];
 
@@ -215,10 +217,13 @@ class SaleService
         $sale = $saleModel->with([
                                      'transactions',
                                      'notazzInvoices',
+                                     'affiliate',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
         //add details to sale
-        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+        //        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
+        $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
+
         $this->getDetails($sale, $userCompanies);
 
         //invoices
@@ -227,7 +232,7 @@ class SaleService
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
         $sale->details->invoices = $invoices;
-
+ 
         return $sale;
     }
 
@@ -238,8 +243,7 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-
-        $userTransaction = $sale->transactions->whereIn('company_id', $userCompanies)->first();
+        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)->first();
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -263,14 +267,28 @@ class SaleService
             ->first();
 
         if (!empty($transactionConvertax)) {
-            $convertaxValue = 'R$ ' . substr_replace($transactionConvertax->value,',', strlen($transactionConvertax->value) - 2, 0);
+            $convertaxValue = 'R$ ' . substr_replace($transactionConvertax->value,
+                                                     ',', strlen($transactionConvertax->value) - 2, 0);
         } else {
             $convertaxValue = '0,00';
         }
 
+        //valor do produtor
         $value = $userTransaction->value;
 
         $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
+
+        //valor do afiliado
+        $affiliateComission = '';
+        $affiliateValue     = 0;
+        if (!empty($sale->affiliate_id)) {
+            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
+            if (!empty($affiliateTransaction)) {
+                $affiliateValue     = $affiliateTransaction->value;
+                $affiliateComission = ($affiliateTransaction->currency == 'dolar' ? 'US$ ' : 'R$ ') . substr_replace($affiliateValue, ',', strlen($affiliateValue) - 2, 0);
+            }
+        }
 
         $taxa = 0;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
@@ -279,7 +297,9 @@ class SaleService
         } else {
             $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
         }
-
+        if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
+            $taxaReal -= $affiliateValue;
+        }
         $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
 
         //set flag
@@ -306,17 +326,17 @@ class SaleService
 
         //add details to sale
         $sale->details = (object) [
-            'transaction_rate' => 'R$ ' . number_format(preg_replace('/[^0-9]/', '',
-                                                                     $userTransaction->transaction_rate) / 100, 2, ',', '.'),
-            'percentage_rate'  => $userTransaction->percentage_rate ?? 0,
-            'total'            => number_format(intval($total) / 100, 2, ',', '.'),
-            'subTotal'         => number_format(intval($subTotal) / 100, 2, ',', '.'),
-            'discount'         => number_format(intval($discount) / 100, 2, ',', '.'),
-            'comission'        => $comission,
-            'convertax_value'  => $convertaxValue,
-            'taxa'             => number_format($taxa / 100, 2, ',', '.'),
-            'taxaReal'         => $taxaReal,
-            'release_date'     => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
+            'transaction_rate'    => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
+            'percentage_rate'     => $userTransaction->percentage_rate ?? 0,
+            'total'               => number_format(intval($total) / 100, 2, ',', '.'),
+            'subTotal'            => number_format(intval($subTotal) / 100, 2, ',', '.'),
+            'discount'            => number_format(intval($discount) / 100, 2, ',', '.'),
+            'comission'           => $comission,
+            'convertax_value'     => $convertaxValue,
+            'taxa'                => number_format($taxa / 100, 2, ',', '.'),
+            'taxaReal'            => $taxaReal,
+            'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
+            'affiliate_comission' => $affiliateComission,
         ];
     }
 
@@ -404,11 +424,7 @@ class SaleService
             $saleModel       = new Sale();
             $responseGateway = $response->response ?? [];
             $statusGateway   = $response->status_gateway ?? '';
-            //            'status'         => 'success',
-            //            'message'        => 'Venda cancelada com sucesso!',
-            //            'status_gateway' => $result['status_gateway'],
-            //            'status_sale'    => $result['status'],
-            //            'response'       => $result['response'],
+
             $newTotalPaidValue = $totalPaidValue - $refundAmount;
             if ($newTotalPaidValue <= 0) {
                 $status = 'refunded';

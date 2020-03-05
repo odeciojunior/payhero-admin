@@ -52,7 +52,7 @@ class JulioController extends Controller
     public function julioFunction()
     {
 
-        dd(env('DB_HOST'));
+        // dd(env('DB_HOST'));
 
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
 
@@ -60,7 +60,7 @@ class JulioController extends Controller
 
         // $this->createProjectNotifications();
 
-        $this->checkPaidBoletos();
+        // $this->checkPaidBoletos();
     }
 
     public function checkPaidBoletos(){

@@ -23,6 +23,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $description
  * @property string $invoice_description
  * @property string $percentage_affiliates
+ * @property string $terms_affiliates
  * @property string $url_page
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
@@ -88,6 +89,9 @@ class Project extends Model
         'description',
         'invoice_description',
         'percentage_affiliates',
+        'terms_affiliates',
+        'status_url_affiliates',
+        'commission_type_enum',
         'url_page',
         'automatic_affiliation',
         'shopify_id',

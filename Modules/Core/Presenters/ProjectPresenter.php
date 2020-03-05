@@ -74,4 +74,31 @@ class ProjectPresenter extends Presenter
             return '';
         }
     }
+
+    /**
+     * @param $currency
+     * @return int|string
+     */
+    public function getCommissionTypeEnum($commissionType)
+    {
+        if (is_numeric($commissionType)) {
+            switch ($commissionType) {
+                case 1:
+                    return 'first_click';
+                case 2:
+                    return 'last_click';
+            }
+
+            return '';
+        } else {
+            switch ($commissionType) {
+                case 'first_click':
+                    return 1;
+                case 'last_click':
+                    return 2;
+            }
+
+            return '';
+        }
+    }
 }
