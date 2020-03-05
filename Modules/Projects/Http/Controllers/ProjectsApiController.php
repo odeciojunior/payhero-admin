@@ -434,7 +434,7 @@ class ProjectsApiController extends Controller
                                         ->where('status', $projectModel->present()->getStatus('active'))
                                         ->with([
                                                    'affiliates' => function($query) use ($userId) {
-                                                       $query->where('user_id', $userId)->where('status_enum', 3);
+                                                       $query->where('user_id', $userId);
                                                    },
                                                ])
                                         ->first();
