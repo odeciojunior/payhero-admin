@@ -1,0 +1,14 @@
+{
+    "name": "SuspectBots",
+    "alias": "suspectbots",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\SuspectBots\\Providers\\SuspectBotsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

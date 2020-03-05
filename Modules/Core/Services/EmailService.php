@@ -214,6 +214,15 @@ class EmailService
         }
     }
 
+    /**
+     * @param $fromEmail
+     * @param $fromName
+     * @param $toEmail
+     * @param $toName
+     * @param $templateId
+     * @param $data
+     * @return bool
+     */
     public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {

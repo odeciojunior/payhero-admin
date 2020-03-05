@@ -38,7 +38,7 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-
+        dd(getenv('DB_HOST'));
 
         $cloudflareService = new CloudFlareService();
 

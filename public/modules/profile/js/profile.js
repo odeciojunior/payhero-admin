@@ -109,6 +109,10 @@ $(document).ready(function () {
                     $("#credit_card_in_proccess_switch").attr("checked", "checked");
                 }
 
+                if (response.data.affiliation) {
+                    $("#affiliation_switch").attr("checked", "checked");
+                }
+
                 // Verificação de telefone
 
                 if (response.data.cellphone_verified) {

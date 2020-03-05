@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Affiliate;
 
 class ProjectPolicy
 {
@@ -47,7 +48,12 @@ class ProjectPolicy
         $userProject = UserProject::where('user_id', $user->account_owner_id)
                                   ->where('project_id', $project->id)
                                   ->first();
-        if ($userProject) {
+
+        $affiliateProject = Affiliate::where('user_id', $user->account_owner_id)
+                                      ->where('project_id', $project->id)
+                                      ->first();
+
+        if ($userProject || $affiliateProject) {
             return true;
         } else {
             return false;
@@ -59,12 +65,19 @@ class ProjectPolicy
      * @param Project $project
      * @return bool
      */
-    public function edit(User $user, Project $project)
+    public function edit(User $user, Project $project, $affiliateId = 0)
     {
         $userProject = UserProject::where('user_id', $user->account_owner_id)
                                   ->where('project_id', $project->id)
                                   ->first();
-        if ($userProject) {
+        $affiliate = false;
+        if($affiliateId) {
+            $affiliate = Affiliate::where('user_id', $user->account_owner_id)
+                                  ->where('project_id', $project->id)
+                                  ->where('id', $affiliateId)
+                                  ->first();
+        }
+        if ($userProject || $affiliate) {
             return true;
         } else {
             return false;
