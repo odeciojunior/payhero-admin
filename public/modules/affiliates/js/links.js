@@ -246,7 +246,7 @@ $(function () {
                             data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> file_copy</a></td>';
                             if (value.price != '' && value.commission != '') {
-                                data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' commissão)<small></td>';
+                                data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' comissão)<small></td>';
                             } else {
                                 data += '<td class="text-center" ></td>';
                             }
