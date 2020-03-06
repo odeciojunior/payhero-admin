@@ -40,20 +40,18 @@ class PixelsApiController extends Controller
                                       ->where('user_id', auth()->user()->account_owner_id)
                                       ->first();
 
-                $affiliateId = $affiliate->id ?? 0;
+                $affiliateId = $affiliate->id ?? null;
 
-                activity()->on($pixelModel)->tap(function(Activity $activity){
+                activity()->on($pixelModel)->tap(function(Activity $activity) {
                     $activity->log_name = 'visualization';
                 })->log('Visualizou tela todos os pixels para o projeto ' . $project->name);
 
                 if (Gate::allows('edit', [$project, $affiliateId])) {
 
-                    $pixels = $pixelModel->where('project_id', $project->id);
-                    if($affiliateId) {
-                        $pixels = $pixels->where('affiliate_id', $affiliateId);
-                    }
+                    $pixels = $pixelModel->where('project_id', $project->id)->where('affiliate_id', $affiliateId)
+                                         ->orderBy('id', 'DESC');
 
-                    return PixelsResource::collection($pixels->orderBy('id', 'DESC')->paginate(5));
+                    return PixelsResource::collection($pixels->paginate(5));
                 } else {
                     return response()->json([
                                                 'message' => 'Sem permissão para listar pixels',
@@ -94,8 +92,8 @@ class PixelsApiController extends Controller
             $validator['project_id'] = current(Hashids::decode($projectId));
 
             $affiliateId = 0;
-            if(!empty($validator['affiliate_id'])) {
-                $affiliateId = current(Hashids::decode($validator['affiliate_id']));
+            if (!empty($validator['affiliate_id'])) {
+                $affiliateId               = current(Hashids::decode($validator['affiliate_id']));
                 $validator['affiliate_id'] = $affiliateId;
             }
 
@@ -140,8 +138,8 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
+                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
+                $project     = $projectModel->find(current(Hashids::decode($projectId)));
                 $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
                 if (Gate::allows('edit', [$project, $affiliateId])) {
 
@@ -182,9 +180,9 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel     = $pixelModel->find(current(Hashids::decode($id)));
-                $projectId = current(Hashids::decode($projectId));
-                $project   = $projectModel->find($projectId);
+                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
+                $projectId   = current(Hashids::decode($projectId));
+                $project     = $projectModel->find($projectId);
                 $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
 
                 if (Gate::allows('edit', [$project, $affiliateId])) {
@@ -220,16 +218,14 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
+                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
+                $project     = $projectModel->find(current(Hashids::decode($projectId)));
                 $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
 
                 activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name = 'visualization';
+                    $activity->log_name   = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
                 })->log('Visualizou tela detalhes do pixel: ' . $pixel->name);
-
-
 
                 if (Gate::allows('edit', [$project, $affiliateId])) {
 
@@ -266,15 +262,14 @@ class PixelsApiController extends Controller
                 $pixelModel   = new Pixel();
                 $projectModel = new Project();
 
-                $pixel   = $pixelModel->find(current(Hashids::decode($id)));
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
+                $pixel       = $pixelModel->find(current(Hashids::decode($id)));
+                $project     = $projectModel->find(current(Hashids::decode($projectId)));
                 $affiliateId = (!empty($pixel->affiliate_id)) ? $pixel->affiliate_id : 0;
 
                 activity()->on($pixelModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
                 })->log('Visualizou tela editar pixel: ' . $pixel->name);
-
 
                 if (Gate::allows('edit', [$project, $affiliateId])) {
 
