@@ -359,8 +359,8 @@ $(() => {
                     $('#edit_active_flag').val(0).prop('checked', false);
                 }
                 // Seleciona a opção do select de acordo com o que vem do banco
-                let applyArray = [];
-                let offerArray = [];
+                let equalApplyArray = [];
+                let equalOfferArray = [];
                 let differentApplyArray = [];
                 let differentOfferArray = [];
                 let selectApplyIdsArray = [];
@@ -369,15 +369,15 @@ $(() => {
                     selectApplyIdsArray.push($(this).val());
                     for (let plan of upsell.apply_on_plans) {
                         if (plan.id == $(this).val()) {
-                            applyArray.push(plan.id);
-                            $("#edit_apply_on_plans").val(applyArray);
+                            equalApplyArray.push(plan.id);
+                            $("#edit_apply_on_plans").val(equalApplyArray);
                             $("#edit_apply_on_plans").trigger('change');
                         } else {
                             differentApplyArray[plan.id] = plan.name;
                         }
                     }
                 });
-                if (applyArray.length != upsell.apply_on_plans.length) {
+                if (equalApplyArray.length != upsell.apply_on_plans.length) {
                     let idPlanArray = [];
                     for (let key in differentApplyArray) {
                         if (!selectApplyIdsArray.includes(key)) {
@@ -391,15 +391,15 @@ $(() => {
                     selectOfferIdsArray.push($(this).val());
                     for (let plan of upsell.offer_on_plans) {
                         if (plan.id == $(this).val()) {
-                            offerArray.push(plan.id);
-                            $("#edit_offer_on_plans").val(offerArray);
+                            equalOfferArray.push(plan.id);
+                            $("#edit_offer_on_plans").val(equalOfferArray);
                             $("#edit_offer_on_plans").trigger('change');
                         } else {
                             differentOfferArray[plan.id] = plan.name;
                         }
                     }
                 });
-                if (offerArray.length != upsell.offer_on_plans.length) {
+                if (equalOfferArray.length != upsell.offer_on_plans.length) {
                     let idPlanArray = [];
                     for (let key in differentOfferArray) {
                         if (!selectOfferIdsArray.includes(key)) {
