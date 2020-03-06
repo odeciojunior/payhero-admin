@@ -141,7 +141,7 @@
         </div>
         {{--Configurações--}}
         <div class="nav-tabs-horizontal mt-20" data-plugin="tabs">
-            <ul class="nav nav-tabs nav-tabs-solid" role="tablist">
+            <ul class="nav nav-tabs nav-tabs-reverse" role="tablist">
                 <li class="nav-item listAdvancedConfiguration" role="presentation">
                     <a class="nav-link" data-toggle="tab" href="#tabAdvancedConfiguration" aria-controls="exampleTabsSolidOne" role="tab" aria-selected="false">
                         <i class="icon wb-settings" aria-hidden="true" style='font-size:15px;'></i> Configurações avançadas
@@ -152,23 +152,17 @@
                         <i class="icon ribbon-shopify-default" aria-hidden="true" style='font-size:15px;'></i> Configurações Shopify
                     </a>
                 </li>
-                <li class="nav-item listUpsellConfiguration" role="presentation">
-                    <a class="nav-link" data-toggle="tab" href="#tabUpsellConfiguration" aria-controls="exampleTabsSolidThree" role="tab" aria-selected="false">
-                        <i class="icon material-icons" aria-hidden="true" style='font-size:15px;'>shopping_basket</i> Configurações Upsell
-                    </a>
-                </li>
                 <li class="dropdown nav-item" role="presentation" style="display: none;">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" aria-expanded="false">Dropdown</a>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item" data-toggle="tab" href="#tabAdvancedConfiguration" aria-controls="exampleTabsSolidOne" role="tab">Configurações avançadas</a>
                         <a class="dropdown-item" data-toggle="tab" href="#tabShopifyConfiguration" aria-controls="exampleTabsSolidTwo" role="tab">Configurações Shopify</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tabUpsellConfiguration" aria-controls="exampleTabsSolidThree" role="tab">Configurações Upsell</a>
                     </div>
                 </li>
             </ul>
-            <div class="tab-content bg-white">
+            <div class="tab-content">
                 <div class="tab-pane" id="tabAdvancedConfiguration" role="tabpanel">
-                    <div class='my-10'>
+                    <div class='my-20'>
                         <div class='row'>
                             <div class='form-group col-6 col-xs-12'>
                                 <label for='invoice-description'>Descrição da Fatura</label>
@@ -386,37 +380,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tabUpsellConfiguration" role="tabpanel">
-                    <div class='my-10'>
-                        <div class='row no-gutters mb-10'>
-                            <div class="top-holder text-right mb-5" style="width: 100%;">
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <div id="add-upsell" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_upsell">
-                                        <span class="link-button-dependent red"> Adicionar Upsell </span>
-                                        <a class="ml-10 rounded-add pointer">
-                                            <i class="icon wb-plus" aria-hidden="true"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-12 col-md-12'>
-                                <table id='table-upsell' class='table text-left table-striped unify' style='width:100%'>
-                                    <thead>
-                                        <tr>
-                                            <td class='table-title'>Descrição</td>
-                                            <td class='table-title'>Status</td>
-                                            <td class='table-title text-center options-column-width'>Opções</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody id='data-table-upsell' class='min-row-height'>
-                                        {{-- js carregando dados --}}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         {{--END Configurações--}}
@@ -515,52 +478,4 @@
             </div>
         </div>
     </div>
-    {{-- Modal add-edit upsell --}}
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
-        <div class="modal-dialog modal-lg d-flex justify-content-center">
-            <div class="modal-content w-450" id="conteudo_modal_add">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title text-center" style="font-weight: 700;"></h4>
-                </div>
-                <div class="pt-10 pr-20 pl-20 modal_upsell_body">
-                    @include('projectupsellrule::create')
-                    @include('projectupsellrule::edit')
-                </div>
-                <div class="modal-footer" style="margin-top: 15px">
-                    <button type="button" class="btn btn-success bt-upsell-save" style='display:none;'>Salvar</button>
-                    <button type="button" class="btn btn-success bt-upsell-update" style='display:none;'>Atualizar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- End Modal  --}}
-
-    {{-- Modal delete upsell --}}
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-upsell" aria-hidden="true" role="dialog" tabindex="-1">
-        <div class="modal-dialog  modal-dialog-centered  modal-simple">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
-                </div>
-                <div id="modal_excluir_body" class="modal-body text-center p-20">
-                    <div class="d-flex justify-content-center">
-                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
-                    </div>
-                    <h3 class="black"> Você tem certeza? </h3>
-                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
-                </div>
-                <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                    <button type="button" class="col-4 btn btn-danger btn-delete-upsell" data-dismiss="modal" style="width: 20%;">Excluir</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- End Modal  --}}
 </div>

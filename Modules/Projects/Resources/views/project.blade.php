@@ -59,6 +59,11 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
+                            <a id="tab_upsell" class="nav-link" data-toggle="tab" href="#tab_upsell-panel" aria-controls="tab_plans" role="tab">
+                                Upsell
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
                                aria-controls="tab_configuration_project" role="tab">Configurações
                             </a>
@@ -127,6 +132,9 @@
                         <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
                             @include('plans::index')
                         </div>
+                        <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
+                            @include('projectupsellrule::index')
+                        </div>
                         <!-- Painel de Parceiros -->
                         <div class="tab-pane" id="tab_partners" role="tabpanel">
                             @include('partners::index')
@@ -174,6 +182,7 @@
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v=8')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
+        <script src="{{asset('modules/projectupsell/js/index.js?v=1')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

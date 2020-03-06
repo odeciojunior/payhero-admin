@@ -2,9 +2,11 @@
 
 namespace Modules\ProjectUpsellRule\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\ProjectUpsellRule\Http\Requests\ProjectUpsellStoreRequest;
 use Modules\ProjectUpsellRule\Http\Requests\ProjectUpsellUpdateRequest;
@@ -14,12 +16,32 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProjectUpsellRuleApiController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('projectupsellrule::index');
+        try {
+            $data               = $request->all();
+            $projectUpsellModel = new ProjectUpsellRule();
+            $projectId          = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+                $projectUpsell = $projectUpsellModel->where('project_id', $projectId);
+
+                return ProjectsUpsellResource::collection($projectUpsell->paginate(5));
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao listar dados de upsell',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar buscar upsell (ProjectUpsellRuleApiController - index)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao listar dados de upsell',
+                                    ], 400);
+        }
     }
 
     /**
