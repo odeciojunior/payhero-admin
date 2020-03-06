@@ -231,9 +231,9 @@ $(() => {
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
 
         $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
-
         if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
+            $('.listShopifyConfiguration').show();
             if (shopifyIntegrations.length !== 0) {
                 $('#div-shopify-token').show();
                 $('#div-shopify-permissions').show();
@@ -486,7 +486,6 @@ $(() => {
                     'Accept': 'application/json',
                 },
                 error: function (response) {
-                    errorAjaxResponse(response);
                     loadingOnScreenRemove()
                 },
                 success: function (response) {

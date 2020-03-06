@@ -24,6 +24,7 @@ use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
+use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\ProjectUpsellRule\Transformers\ProjectsUpsellResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
@@ -235,7 +236,7 @@ class ProjectsApiController extends Controller
                 $projectUpsell = ProjectsUpsellResource::collection($projectUpsell);
 
                 if (Gate::allows('edit', [$project])) {
-                    $project = new ProjectsUpsellResource($project);
+                    $project = new ProjectsResource($project);
 
                     return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations', 'projectUpsell'));
                 } else {
