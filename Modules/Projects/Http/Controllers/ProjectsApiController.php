@@ -448,7 +448,7 @@ class ProjectsApiController extends Controller
                 })->log('Visualizou o projeto ' . $project->name);
 
                 if (Gate::allows('show', [$project])) {
-                    return new ProjectsUpsellResource($project);
+                    return new ProjectsResource($project);
                 } else {
                     return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
                 }
