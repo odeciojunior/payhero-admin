@@ -233,6 +233,37 @@ $(document).ready(function () {
             }
         });
     });
+    $(document).on('click', '.details-upsell', function (event) {
+        event.preventDefault();
+        let upsellId = $(this).data('upsell');
+        $.ajax({
+            method: "GET",
+            url: "/api/projectupsellrule/" + upsellId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+
+            }, success: function success(response) {
+                let upsell = response.data;
+                $('.upsell-description').html('');
+                $('.upsell-status').html('');
+                $('.upsell-apply-plans').html('');
+                $('.upsell-offer-plans').html('');
+                $('.upsell-description').html(`${upsell.description}`);
+                $('.upsell-status').html(`${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);
+                for (let applyPlan of upsell.apply_on_plans) {
+                    $('.upsell-apply-plans').append(`<span>${applyPlan.name}</span><br>`);
+                }
+                for (let offerPlan of upsell.offer_on_plans) {
+                    $('.upsell-offer-plans').append(`<span>${offerPlan.name}</span><br>`);
+                }
+            }
+        });
+    });
 
     //Search plan
     $('#add_apply_on_plans, #add_offer_on_plans, #edit_apply_on_plans, #edit_offer_on_plans').select2({

@@ -88,6 +88,18 @@ class ProjectUpsellRuleApiController extends Controller
      */
     public function show($id)
     {
+        $projectUpsellModel = new ProjectUpsellRule();
+        $upsellId           = current(Hashids::decode($id));
+        if ($upsellId) {
+            $upsell = $projectUpsellModel->find($upsellId);
+
+            return new ProjectsUpsellResource($upsell);
+        } else {
+            return response()->json([
+                                        'message' => 'Erro ao carregar dados do upsell',
+                                    ], 400);
+        }
+
         return view('projectupsellrule::show');
     }
 

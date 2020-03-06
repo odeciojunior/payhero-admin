@@ -3,17 +3,22 @@
         <tr>
             <td class="table-title">Descrição</td>
             <td style='width: 20px'></td>
-            <td class='text-left pixel-description'></td>
+            <td class='text-left upsell-description'></td>
         </tr>
         <tr>
-            <td class="table-title">Planos</td>
+            <td class="table-title">Ao comprar planos</td>
             <td style='width: 20px'></td>
-            <td class='text-left pixel-code'></td>
+            <td class='text-left upsell-apply-plans'></td>
+        </tr>
+        <tr>
+            <td class="table-title">Oferecer planos</td>
+            <td style='width: 20px'></td>
+            <td class='text-left upsell-offer-plans'></td>
         </tr>
         <tr>
             <td class="table-title">Status</td>
             <td style='width: 20px'></td>
-            <td class='text-left pixel-status'>
+            <td class='text-left upsell-status'>
             </td>
         </tr>
     </tbody>
