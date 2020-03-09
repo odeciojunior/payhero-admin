@@ -133,7 +133,7 @@
                             @include('plans::index')
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            @if(env('APP_ENV') != 'local')
+                            @if(env('APP_ENV') == 'local')
                                 @include('projectupsellrule::index')
                             @else
                                 <div class="card shadow" style='height:300px;'>
