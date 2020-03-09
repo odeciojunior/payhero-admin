@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/projectupsellrule",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\ProjectUpsellRule\\Providers\\ProjectUpsellRuleServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\ProjectUpsellRule\\": ""
+        }
+    }
+}

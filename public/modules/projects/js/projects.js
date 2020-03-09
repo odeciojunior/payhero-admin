@@ -225,7 +225,7 @@ $(() => {
     });
 
     function renderProjectConfig(data) {
-        let {project, companies, userProject, shopifyIntegrations} = data;
+        let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
 
         $('#percentage-affiliates').mask('000', {
             reverse: true,
@@ -314,9 +314,9 @@ $(() => {
         $('#update-project #url-affiliates').val(project.url_affiliates);
 
         $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
-
         if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
+            $('.listShopifyConfiguration').show();
             if (shopifyIntegrations.length !== 0) {
                 $('#div-shopify-token').show();
                 $('#div-shopify-permissions').show();

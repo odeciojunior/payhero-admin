@@ -21,6 +21,7 @@ use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
+use Modules\Plans\Transformers\PlansSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
@@ -397,6 +398,40 @@ class PlansApiController extends Controller
 
             return response()->json([
                                         'message' => 'Erro ao buscar dados do plano!',
+                                    ], 400);
+        }
+    }
+
+    public function getPlans(Request $request)
+    {
+        try {
+            $data      = $request->all();
+            $planModel = new Plan();
+            $projectId = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+                if (!empty($data['search'])) {
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
+                                       ->where('project_id', $projectId);
+                    if (!empty($plans)) {
+                        return PlansSelectResource::collection($plans->get());
+                    }
+                } else {
+                    $plans = $planModel->where('project_id', $projectId);
+
+                    return PlansSelectResource::collection($plans->orderBy('id', 'DESC')->paginate(10));
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, ao buscar dados dos planos',
+                                        ], 400);
+            }
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados dos planos (PlansApiController - getPlans)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, ao buscar dados dos planos',
                                     ], 400);
         }
     }
