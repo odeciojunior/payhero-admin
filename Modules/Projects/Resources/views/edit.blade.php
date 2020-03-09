@@ -152,11 +152,17 @@
                         <i class="icon ribbon-shopify-default" aria-hidden="true" style='font-size:15px;'></i> Configurações Shopify
                     </a>
                 </li>
+                <li class="nav-item listAffiliateConfiguration" role="presentation">
+                    <a class="nav-link" data-toggle="tab" href="#tabAffiliateConfiguration" aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
+                        <i class="fa-handshake-o" style='font-size:15px;'></i> Configurações Afiliados
+                    </a>
+                </li>
                 <li class="dropdown nav-item" role="presentation" style="display: none;">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" aria-expanded="false">Dropdown</a>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item" data-toggle="tab" href="#tabAdvancedConfiguration" aria-controls="exampleTabsSolidOne" role="tab">Configurações avançadas</a>
                         <a class="dropdown-item" data-toggle="tab" href="#tabShopifyConfiguration" aria-controls="exampleTabsSolidTwo" role="tab">Configurações Shopify</a>
+                        <a class="dropdown-item" data-toggle="tab" href="#tabAffiliateConfiguration" aria-controls="exampleTabsSolidTwo" role="tab">Configurações Afiliados</a>
                     </div>
                 </li>
             </ul>
@@ -376,6 +382,83 @@
                                     <input id="skiptocart-input" type="checkbox" value="0" class="check">
                                     <span class="slider gray round"></span>
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
+                    <div class='my-20'>
+                        <div class='row'>
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <div class="switch-holder">
+                                    <br>
+                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Habilitar link afiliação</label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class='check status-url-affiliates' value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class='form-group col-md-6 col-sm-12 col-xs-12 div-url-affiliate'>
+                                <div class='form-group col-md-12 col-sm-12 col-xs-12'>
+                                    <label for='url-affiliates'>Link afiliação</label>
+                                    <div id="affiliate-link-select" class="input-group">
+                                        <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
+                                        <span class="input-group-btn">
+                                    <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
+                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="div-url-affiliate">
+                            <div class='row'>
+                                <div class='form-group col-md-6 col-xs-12'>
+                                    <label for='terms-affiliates'>Termos de Afiliação</label>
+                                    <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+                                    <textarea class='input-pad' id='termsaffiliates' placeholder='Termos'></textarea>
+                                    <span id='terms-affiliates-error' class='text-danger'></span>
+                                    <p class='info pt-5' style='font-size: 10px;'>
+                                        <i class='icon wb-info-circle' aria-hidden='true'></i> Termos exibidos na Vitrine para afiliação
+                                    </p>
+                                </div>
+                                <div class='form-group col-md-6 col-xs-12'>
+                                    <div class='form-group col-md-12 col-sm-12 col-xs-12'>
+                                        <label for='automatic-affiliation'>Afiliação automática</label>
+                                        <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
+                                            <option value='0'>Não</option>
+                                            <option value='1'>Sim</option>
+                                        </select>
+                                        <p class='info pt-5' style='font-size: 10px;'>
+                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova automaticamente as solicitações de afiliação
+                                        </p>
+                                    </div>
+                                    <div class='form-group col-md-12 col-sm-12'>
+                                        <label for="cookie-duration">Duração do cookie</label>
+                                        <select class='cookie-duration form-control select-pad' name='cookie_duration'>
+                                            <option value="0"> Eterno</option>
+                                            <option value="7"> 7 dias</option>
+                                            <option value="15"> 15 dias</option>
+                                            <option value="30"> 1 mês</option>
+                                            <option value="60"> 2 meses</option>
+                                            <option value="180"> 6 meses</option>
+                                            <option value="365"> 1 ano</option>
+                                        </select>
+                                        <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
+                                    </div>
+                                    <div class='form-group col-md-12 col-sm-12 col-xs-12'>
+                                        <label for='percentage-affiliates'>Porcentagem</label>
+                                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
+                                        <span id='input-pad-error' class='text-danger'></span>
+                                    </div>
+                                    <div class='form-group col-md-12 col-sm-12'>
+                                        <label for='commission-type-enum'>Tipo comissão</label>
+                                        <select class='commission-type-enum form-control select-pad' name='commission_type_enum' class='form-control select-pad'>
+                                            <option value='1'>Primeiro clique</option>
+                                            <option value='2'>Último clique</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
