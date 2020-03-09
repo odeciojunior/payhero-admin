@@ -15,6 +15,7 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
@@ -63,7 +64,7 @@ class ProjectsApiController extends Controller
                 ];
             }
 
-            return $projectService->getUserProjects($pagination, $projectStatus);
+            return $projectService->getUserProjects($pagination, $projectStatus, true);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -325,8 +326,7 @@ class ProjectsApiController extends Controller
                         $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                     }
 
-                    $requestValidated['cookie_duration'] = 60;
-                    $requestValidated['status']          = 1;
+                    $requestValidated['status'] = 1;
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
@@ -433,14 +433,28 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectModel = new Project();
-
+            $userId       = auth()->user()->account_owner_id;
             if ($id) {
 
                 $project = $projectModel->where('id', current(Hashids::decode($id)))
-                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
-                if (empty($project)) {
-                    return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
-                }
+                                        ->where('status', $projectModel->present()->getStatus('active'))
+                                        ->with([
+                                                   'affiliates' => function($query) use ($userId) {
+                                                       $query->where('user_id', $userId);
+                                                   },
+                                               ])
+                                        ->first();
+
+                $producer = User::whereHas('usersProjects', function($query) use ($project) {
+                    $query->where('project_id', $project->id)
+                          ->where('type_enum', 1);
+                })->first();
+
+                $project->producer           = $producer->name ?? '';
+                $project->release_money_days = $producer->release_money_days ?? '';
+                $project->boleto_release_money_days = $producer->boleto_release_money_days ?? '';
+                $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
+                $project->debit_card_release_money_days = $producer->debit_card_release_money_days ?? '';
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
@@ -477,7 +491,7 @@ class ProjectsApiController extends Controller
                 $projectModel->present()->getStatus('active'),
             ];
 
-            return $projectService->getUserProjects(true, $projectStatus);
+            return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);

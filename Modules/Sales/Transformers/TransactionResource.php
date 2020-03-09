@@ -5,6 +5,7 @@ namespace Modules\Sales\Transformers;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Lang;
+use Modules\Core\Entities\Affiliate;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TransactionResource extends Resource
@@ -53,6 +54,21 @@ class TransactionResource extends Resource
             $data['has_shopify_integration'] = null;
         }
 
+        if ($sale->owner_id == auth()->user()->account_owner_id) {
+            $data['user_sale_type'] = 'producer';
+        } else {
+            $data['user_sale_type'] = 'affiliate';
+        }
+
+        if (!empty($sale->affiliate_id)) {
+            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $data['affiliate'] = $affiliate->user->name;
+        } else {
+            $data['affiliate'] = null;
+        }
+
         return $data;
     }
 }
+
+

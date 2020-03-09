@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\AffiliatePresenter;
 
 /**
  * @property integer $id
@@ -14,6 +16,7 @@ use App\Traits\LogsActivity;
  * @property int $project_id
  * @property int $company_id
  * @property string $percentage
+ * @property tinyinteger $status_enum
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -27,7 +30,11 @@ use App\Traits\LogsActivity;
  */
 class Affiliate extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, PresentableTrait;
+    /**
+     * @var string
+     */
+    protected $presenter = AffiliatePresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -41,6 +48,11 @@ class Affiliate extends Model
         'project_id',
         'company_id',
         'percentage',
+        'status_enum',
+        'suport_phone_verified',
+        'suport_phone',
+        'suport_contact_verified',
+        'suport_contact',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -19,7 +19,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container">
+        <div class="page-content container page-project">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -195,3 +195,4 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection
+
