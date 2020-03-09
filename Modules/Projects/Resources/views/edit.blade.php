@@ -168,7 +168,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="tabAdvancedConfiguration" role="tabpanel">
-                    <div class='my-20'>
+                    <div class='my-40 mx-30'>
                         <div class='row'>
                             <div class='form-group col-6 col-xs-12'>
                                 <label for='invoice-description'>Descrição da Fatura</label>
@@ -281,6 +281,16 @@
                                 </select>
                             </div>
                             <div class='col-md-8'></div>
+{{--                            <div class='col-md-6'>--}}
+{{--                                <label for="parcelas_sem_juros">Botão Whatsapp na página de obrigado</label>--}}
+{{--                                <select name='whatsapp_button' class='form-control select-pad' id="whatsapp_button">--}}
+{{--                                    <option value='1' class='whatsapp_button_yes'>Sim</option>--}}
+{{--                                    <option value='0' class='whatsapp_button_no'>Não</option>--}}
+{{--                                </select>--}}
+{{--                                <p class='info pt-5' style='font-size: 10px;'>--}}
+{{--                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Botão para receber boleto pelo Whatsapp na página de obrigado do checkout--}}
+{{--                                </p>--}}
+{{--                            </div>--}}
                             <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                                 <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                                 <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
@@ -325,7 +335,7 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
-                    <div class='row justify-content-center'>
+                    <div class='row justify-content-center mx-20 mt-30'>
                         <div class="col-md-4 pt-20">
                             <a id="bt-change-shopify-integration" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
@@ -356,7 +366,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class='row mt-20'>
+                    <div class='row mt-20 mx-20 mb-30'>
                         <div id='div-shopify-token' class='col-md-4' style='display:none;'>
                             <label for="shopify-token" class="text-muted">Token (password) da integração</label>
                             <div class="input-group">
@@ -387,7 +397,7 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
-                    <div class='my-20'>
+                    <div class='my-30 mx-30'>
                         <div class='row'>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <div class="switch-holder">
