@@ -133,7 +133,16 @@
                             @include('plans::index')
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            @include('projectupsellrule::index')
+                            @if(env('APP_ENV') == 'local')
+                                @include('projectupsellrule::index')
+                            @else
+                                <div class="card shadow">
+                                    <div class="text-center my-20">
+                                        <h2>Em desenvolvimento!</h2>
+                                        <img style="width:60px; margin-bottom: 20px;" src="{!! asset('modules/global/img/tools.svg') !!}">
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <!-- Painel de Parceiros -->
                         <div class="tab-pane" id="tab_partners" role="tabpanel">
