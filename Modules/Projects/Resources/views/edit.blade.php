@@ -272,7 +272,7 @@
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout
                                 </p>
                             </div>
-                            <div class='form-group col-md-4 col-sm-12'>
+                            <div class='form-group col-md-6 col-sm-12'>
                                 <label for="default_currency">Tipo de checkout</label>
                                 <select name='checkout_type' class='form-control select-pad' id="checkout_type">
                                     <option value='1'>Checkout de 3 etapas (recomendado)</option>
@@ -280,17 +280,16 @@
                                     <option value='' disabled>Checkout selecionado por IA - inteligência artificial (em breve)</option>
                                 </select>
                             </div>
-                            <div class='col-md-8'></div>
-{{--                            <div class='col-md-6'>--}}
-{{--                                <label for="parcelas_sem_juros">Botão Whatsapp na página de obrigado</label>--}}
-{{--                                <select name='whatsapp_button' class='form-control select-pad' id="whatsapp_button">--}}
-{{--                                    <option value='1' class='whatsapp_button_yes'>Sim</option>--}}
-{{--                                    <option value='0' class='whatsapp_button_no'>Não</option>--}}
-{{--                                </select>--}}
-{{--                                <p class='info pt-5' style='font-size: 10px;'>--}}
-{{--                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Botão para receber boleto pelo Whatsapp na página de obrigado do checkout--}}
-{{--                                </p>--}}
-{{--                            </div>--}}
+                            <div class='col-md-6'>
+                                <label for="parcelas_sem_juros">Botão Whatsapp na página de obrigado</label>
+                                <select name='whatsapp_button' class='form-control select-pad' id="whatsapp_button">
+                                    <option value='1' class='whatsapp_button_yes'>Sim</option>
+                                    <option value='0' class='whatsapp_button_no'>Não</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Botão para receber boleto pelo Whatsapp na página de obrigado do checkout
+                                </p>
+                            </div>
                             <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                                 <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                                 <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
