@@ -110,6 +110,8 @@ class Project extends Model
         'discount_recovery_status',
         'discount_recovery_value',
         'checkout_type',
+        'credit_card_discount',
+        'billet_discount',
         'created_at',
         'updated_at',
         'deleted_at',

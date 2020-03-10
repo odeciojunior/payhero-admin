@@ -340,6 +340,8 @@ $(() => {
         }
 
         $("#checkout_type").val(project.checkout_type);
+        $("#credit_card_discount").val(project.credit_card_discount);
+        $("#billet_discount").val(project.billet_discount);
 
         // Verificação de email de contato
         if (project.contact_verified) {
@@ -501,6 +503,24 @@ $(() => {
         });
     });
 
+    $('#credit_card_discount').mask('000', {
+        reverse: true,
+        onKeyPress: function(val, e, field, options) {
+            if (val > 100) {
+                $('#credit_card_discount').val('')
+            }
+        }
+    });
+
+    $('#billet_discount').mask('000', {
+        reverse: true,
+        onKeyPress: function(val, e, field, options) {
+            if (val > 100) {
+                $('#billet_discount').val('')
+            }
+        }
+    });
+
     // Verificar email de contato
     $("#btn_verify_contact").on("click", function () {
         event.preventDefault();
@@ -608,6 +628,12 @@ $(() => {
         }
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
+        let discountCard = $('#credit_card_discount').val().replace('%','');
+        let discountBillet = $('#billet_discount').val().replace('%','');
+        discountBillet = (discountBillet == '') ? 0 : discountBillet;
+        discountCard = (discountCard == '') ? 0 : discountCard;
+        formData.append('credit_card_discount', discountCard);
+        formData.append('billet_discount', discountBillet);
 
         if (!verify) {
             $.ajax({
