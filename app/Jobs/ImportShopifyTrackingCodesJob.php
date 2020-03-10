@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use Hashids\Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
