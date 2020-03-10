@@ -365,7 +365,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class='row mt-20 mx-20 mb-30'>
+                    <div class='row mt-30 mx-20 mb-30'>
                         <div id='div-shopify-token' class='col-md-4' style='display:none;'>
                             <label for="shopify-token" class="text-muted">Token (password) da integração</label>
                             <div class="input-group">
@@ -377,9 +377,7 @@
                             <input id='shopify-token' class='form-control' style='display:none;'>
                         </div>
                         <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
-                            <a id="bt-shopify-verify-permissions" role="button"
-                               integration-status=""
-                               class="pointer align-items-center">
+                            <a id="bt-shopify-verify-permissions" role="button" integration-status="" class="pointer align-items-center">
                                 <i class="material-icons gray"> sync </i>
                                 <span class="gray"> Verificar permissões do Token</span>
                             </a>
@@ -392,6 +390,14 @@
                                     <span class="slider gray round"></span>
                                 </label>
                             </div>
+                        </div>
+                    </div>
+                    <div class='row mt-30 mx-20 mb-30'>
+                        <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
+                            <a id="bt-shopify-sync-trackings" role="button" integration-status="" class="pointer align-items-center">
+                                <i class="material-icons gray"> sync </i>
+                                <span class="gray"> Sincronizar códigos de rastreio</span>
+                            </a>
                         </div>
                     </div>
                 </div>

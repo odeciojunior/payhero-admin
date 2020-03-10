@@ -886,6 +886,28 @@ $(() => {
         });
     });
 
+    $("#bt-shopify-sync-trackings").on("click", function(){
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/synchronize/trackings',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
+            }
+        });
+    });
+
     $('.discount-recovery').on("click", function () {
         recoveryDiscountColor()
     })

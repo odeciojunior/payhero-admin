@@ -2,6 +2,7 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
+use App\Jobs\ImportShopifyTrackingCodesJob;
 use Exception;
 use Modules\Core\Services\FoxUtils;
 use Illuminate\Http\Request;
@@ -441,6 +442,30 @@ class ShopifyApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
+    public function synchronizeTrackings(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $projectModel    = new Project();
+
+            $project = $projectModel->find(current(Hashids::decode($requestData['project_id'])));
+
+            ImportShopifyTrackingCodesJob::dispatch($project);
+
+            return response()->json([
+                'message' => 'Códigos de rastreio sendo importados...'
+            ], Response::HTTP_OK);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Problema ao sincronizar códigos de rastreio do shopify, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function synchronizeTemplates(Request $request)
     {
         try {
@@ -468,7 +493,6 @@ class ShopifyApiController extends Controller
                     $activity->log_name = 'updated';
                 })->log('Sicronizou template do shopify para o projeto ' . $project->name);
 
-                // procura dominio aprovado
                 $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
 
                 if (!empty($domain)) {
@@ -482,7 +506,7 @@ class ShopifyApiController extends Controller
                                 $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
                                 if ($htmlCart) {
-                                    //template normal
+
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('basic_theme'),
@@ -496,7 +520,6 @@ class ShopifyApiController extends Controller
 
                                     $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
 
-                                    //template ajax
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
@@ -505,14 +528,11 @@ class ShopifyApiController extends Controller
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    //$shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
                                     $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                 }
 
-                                //inserir o javascript para o trackeamento (src, utm)
                                 $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
                                 if ($htmlBody) {
-                                    //template do layout
                                     $shopifyIntegration->update([
                                                                     'layout_theme_html' => $htmlBody,
                                                                 ]);
@@ -528,7 +548,7 @@ class ShopifyApiController extends Controller
 
                             return response()->json(['message' => 'Sincronização do template com o shopify concluida com sucesso!'], Response::HTTP_OK);
                         } catch (Exception $e) {
-                            //throwl
+
                             return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
                         }
                     } else {
