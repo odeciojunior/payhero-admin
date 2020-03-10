@@ -56,6 +56,7 @@ class SalesResource extends Resource
             'release_date'          => $this->details->release_date,
             'affiliate_comission'   => $this->details->affiliate_comission,
             'shopify_order'         => $this->shopify_order ?? null,
+            'automatic_discount'    => $this->details->automatic_discount ?? 0,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
 
