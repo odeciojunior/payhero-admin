@@ -3,7 +3,6 @@
     z-index: 10;
     max-width: 30px;
     max-height: 30px;
-
 }
 .cloud-success {
     content: url("https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/domain-success.svg");
@@ -17,7 +16,6 @@
     max-width: 30px;
     max-height: 30px;
 }
-
 .money-error {
     content: url("https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/money-error.svg");
     z-index: 10;
@@ -36,14 +34,12 @@
     max-width: 30px;
     max-height: 30px;
 }
-
 .tracking-success {
     content: url("https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/tracking.svg");
     z-index: 10;
     max-width: 30px;
     max-height: 30px;
 }
-
 .shopify-default {
     content: url("https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shopify-default.svg");
     z-index: 10;
@@ -62,7 +58,6 @@
     max-width: 30px;
     max-height: 30px;
 }
-
 .ribbon-shopify-default {
     content: url("https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shopify-default.svg");
     z-index: 10;
@@ -71,3 +66,49 @@
     margin-bottom: 3px;
     vertical-align: middle;
 }
+.ribbon-left {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    text-align: right;
+}
+.ribbon-left span {
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    width: 100px;
+    display: block;
+    background: #3e8ef7;
+    background: linear-gradient(#2466d8 0%, #3e8ef7 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px; left: -21px;
+}
+.ribbon-left span::before {
+    content: "";
+    position: absolute; left: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid #3e8ef7;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #3e8ef7;
+}
+.ribbon-left span::after {
+    content: "";
+    position: absolute; right: 0px; top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #3e8ef7;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #3e8ef7;
+}
+/*.ribbon{position:absolute;top:-3px;left:-3px;width:150px;height:150px;text-align:center;background-color:transparent}*/

@@ -66,7 +66,9 @@ class CartRecoveryService
 
                                           $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
 
-                                          $linkCheckout       = "https://checkout." . $domain['name'] ?? 'cloudfox.net' . "/recovery/" . $log->id_log_session;
+                                          $domainName = $domain->name ?? 'cloudfox.net';
+
+                                          $linkCheckout       = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
                                           $clientNameExploded = explode(' ', $log->name);
 
                                           //Traz a mensagem do sms formatado

@@ -38,13 +38,11 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-
-
         $cloudflareService = new CloudFlareService();
 
-        $domains = Domain::all();
+        $domains = $cloudflareService->getZones();
 
-        $total = $domains->count();
+        $total = count($domains);
 
         foreach ($domains as $key => $domain) {
 
@@ -53,7 +51,7 @@ class GenericCommand extends Command
             try {
                 $records = $cloudflareService->getRecords($domain->name);
                 $checkoutRecord = collect($records)->first(function ($item) {
-                    if (Str::contains($item->name, 'checkout.')) {
+                    if (Str::contains($item->name, 'affiliate.')) {
                         return $item;
                     }
                 });
@@ -62,11 +60,13 @@ class GenericCommand extends Command
                     $deleted = $cloudflareService->deleteRecord($checkoutRecord->id);
                     if ($deleted) {
                         $this->line('Record antigo deletado!');
-                        $recordId = $cloudflareService->addRecord("A", 'checkout', $cloudflareService::checkoutIp);
+                        $recordId = $cloudflareService->addRecord("A", 'affiliate', $cloudflareService::affiliateIp);
                         $this->line('Novo record criado: ' . $recordId);
                     }
                 } else {
                     $this->warn('Record não encontrado');
+                    $recordId = $cloudflareService->addRecord("A", 'affiliate', $cloudflareService::affiliateIp);
+                    $this->line('Novo record criado: ' . $recordId);
                 }
             } catch (\Exception $e) {
 

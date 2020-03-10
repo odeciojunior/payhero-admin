@@ -16,11 +16,12 @@ class PixelsResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'       => Hashids::encode($this->id),
-            'name'     => $this->name,
-            'code'     => $this->code,
-            'platform' => $this->platform,
-            'status'   => $this->status,
+            'id'                => Hashids::encode($this->id),
+            'name'              => $this->name,
+            'code'              => $this->code,
+            'platform'          => $this->platform,
+            'status'            => $this->status,
+            'affiliate_id'      => Hashids::encode($this->affiliate_id),
             'status_translated' => Lang::get('definitions.enum.pixel.status.' . $this->present()->getStatus($this->status)),
         ];
     }

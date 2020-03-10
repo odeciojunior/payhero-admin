@@ -24,14 +24,15 @@ class SmsService
             /*
                 $zenvia = new ZenviaSmsService();
                 $zenvia->sendSms($number, $message);
-                DisparoProService::sendMessage($number, $message);
+                $easySms = new EasySendSmsService($number, $message, $sender, $msgType);
+                $easySms->submit();
             */
             $number = preg_replace("/[^0-9]/", "", $number);
             if (strlen($number) == 11) {
                 $number = '55' . $number;
             }
-            $easySms = new EasySendSmsService($number, $message, $sender, $msgType);
-            $easySms->submit();
+
+            DisparoProService::sendMessage($number, $message);
 
             return true;
         } catch (Exception $e) {

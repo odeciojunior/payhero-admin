@@ -19,7 +19,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container">
+        <div class="page-content container page-project">
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -133,7 +133,16 @@
                             @include('plans::index')
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            @include('projectupsellrule::index')
+                            @if(env('APP_ENV') == 'local')
+                                @include('projectupsellrule::index')
+                            @else
+                                <div class="card shadow">
+                                    <div class="text-center my-20">
+                                        <h2>Em desenvolvimento!</h2>
+                                        <img style="width:60px; margin-bottom: 20px;" src="{!! asset('modules/global/img/tools.svg') !!}">
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <!-- Painel de Parceiros -->
                         <div class="tab-pane" id="tab_partners" role="tabpanel">
@@ -184,5 +193,7 @@
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v=1')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
     @endpush
 @endsection
+
