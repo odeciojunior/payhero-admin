@@ -29,6 +29,7 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#data-table-upsell').html('');
                 let projectUpsell = response.data;
+                let upsellLength = response.data.length;
                 if (projectUpsell != '') {
                     let dados = '';
                     for (let upsell of projectUpsell) {
@@ -48,6 +49,11 @@ $(document).ready(function () {
                 } else {
                     $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
                 }
+                if (upsellLength > 0) {
+                    $('.div-config').show();
+                } else {
+                    $('.div-config').hide();
+                }
                 $('#table-upsell').addClass('table-striped');
                 pagination(response, 'upsell', loadUpsell);
 
@@ -62,6 +68,7 @@ $(document).ready(function () {
         $('#form_add_upsell').show();
         $('#form_edit_upsell').hide()
         $('#add_description_upsell').val('');
+        $('#add_discount_upsell').val('');
     });
 
     $(document).on('click', '.edit-upsell', function (event) {
@@ -73,6 +80,7 @@ $(document).ready(function () {
         $("#form_add_upsell").hide();
         $("#form_edit_upsell").show();
         $('#edit_description_upsell').val('');
+        $('#edit_discount_upsell').val('');
         $('#form_edit_upsell .upsell-id').val(upsellId);
         loadingOnScreen();
 
@@ -88,6 +96,8 @@ $(document).ready(function () {
             }, success: function (response) {
                 let upsell = response.data;
                 $('#edit_description_upsell').val(`${upsell.description}`);
+                $('#edit_discount_upsell').val(`${upsell.discount}`);
+
                 if (upsell.active_flag) {
                     $('#edit_active_flag').val(1).prop('checked', true);
                 } else {
@@ -250,10 +260,13 @@ $(document).ready(function () {
             }, success: function success(response) {
                 let upsell = response.data;
                 $('.upsell-description').html('');
+                $('.upsell-discount').html('');
                 $('.upsell-status').html('');
                 $('.upsell-apply-plans').html('');
                 $('.upsell-offer-plans').html('');
                 $('.upsell-description').html(`${upsell.description}`);
+                $('.upsell-discount').html(`${upsell.discount != 0 ? `${upsell.discount}%` : `Valor sem desconto`}`);
+
                 $('.upsell-status').html(`${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);
                 for (let applyPlan of upsell.apply_on_plans) {
                     $('.upsell-apply-plans').append(`<span>${applyPlan.name}</span><br>`);
@@ -302,6 +315,94 @@ $(document).ready(function () {
                 };
             },
         }
+    });
+
+    CKEDITOR.replace('description_config', {
+        language: 'br',
+        uiColor: '#F1F4F5',
+        height: 250,
+        toolbarGroups: [
+            {name: 'basicstyles', groups: ['basicstyles']},
+            {name: 'paragraph', groups: ['list', 'blocks']},
+            {name: 'links', groups: ['links']},
+            {name: 'styles', groups: ['styles']},
+        ],
+        removeButtons: 'Anchor,Superscript,Subscript',
+    });
+
+    $('#countdown_flag').on('change', function () {
+        let switchFlag = $(this);
+        if (switchFlag.is(':checked')) {
+            $('.div-countdown-time').slideDown('fast');
+        } else {
+            $('.div-countdown-time').slideUp('fast');
+        }
+    });
+    $(document).on('click', '#config-upsell', function (event) {
+        event.preventDefault();
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: "/api/projectupsellconfig/" + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+
+            }, success: function success(response) {
+                loadingOnScreenRemove();
+                let upsellConfig = response.data;
+                $('#header_config').val(`${upsellConfig.header}`);
+                $('#title_config').val(`${upsellConfig.title}`);
+                CKEDITOR.instances.description_config.setData(`${upsellConfig.description}`);
+                $('#countdown_time').val(`${upsellConfig.countdown_time}`);
+
+                if (upsellConfig.countdown_flag) {
+                    $('#countdown_flag').prop('checked', true);
+                    $('.div-countdown-time').show();
+                } else {
+                    $('#countdown_flag').prop('checked', false);
+                    $('.div-countdown-time').hide();
+                }
+            }
+        });
+    });
+    $(document).on('click', '.bt-upsell-config-update', function (event) {
+        event.preventDefault();
+        if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
+            alertCustom('error', 'Preencha o campo Contagem');
+            return false;
+        }
+        loadingOnScreen();
+        var form_data = new FormData(document.getElementById('form_config_upsell'));
+        let description = CKEDITOR.instances.description_config.getData();
+        form_data.set('description', description);
+
+        $.ajax({
+            method: "POST",
+            url: "/api/projectupsellconfig/" + projectId,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                $('#modal_config_upsell').modal('hide');
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+            }
+        });
     });
 
     function loadPlans() {

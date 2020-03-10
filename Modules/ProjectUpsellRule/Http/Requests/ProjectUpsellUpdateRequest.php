@@ -15,6 +15,7 @@ class ProjectUpsellUpdateRequest extends FormRequest
     {
         return [
             'description'    => 'required',
+            'discount'       => 'required',
             'active_flag'    => 'nullable',
             'apply_on_plans' => 'required|array',
             'offer_on_plans' => 'required|array|max:5',
@@ -34,6 +35,7 @@ class ProjectUpsellUpdateRequest extends FormRequest
     {
         return [
             'description.required'    => 'O campo Descrição é obrigatório',
+            'discount.required'       => 'O campo Desconto é obrigatório',
             'apply_on_plans.required' => 'O campo Ao comprar o plano é obrigatório',
             'offer_on_plans.required' => 'O campo Oferecer o plano é obrigatório',
             'offer_on_plans.max'      => 'O campo Oferecer o plano não pode ter mais de 5 planos',

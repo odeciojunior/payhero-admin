@@ -68,6 +68,7 @@ class ProjectUpsellRuleApiController extends Controller
             $projectUpsellModel->create([
                                             'project_id'     => $projectId,
                                             'description'    => $data['description'],
+                                            'discount'       => $data['discount'],
                                             'active_flag'    => !empty($data['active_flag']) ? $data['active_flag'] : 0,
                                             'apply_on_plans' => $applyPlanEncoded,
                                             'offer_on_plans' => $offerPlanEncoded,

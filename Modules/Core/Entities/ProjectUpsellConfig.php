@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProjectUpsellRule extends Model
+class ProjectUpsellConfig extends Model
 {
     use PresentableTrait, FoxModelTrait, SoftDeletes;
     /**
@@ -21,11 +21,11 @@ class ProjectUpsellRule extends Model
      */
     protected $fillable = [
         'project_id',
+        'header',
+        'title',
         'description',
-        'discount',
-        'apply_on_plans',
-        'offer_on_plans',
-        'active_flag',
+        'countdown_time',
+        'countdown_flag',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -36,7 +36,7 @@ class ProjectUpsellRule extends Model
      */
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(ProjectUpsellRule::class);
     }
 }
 

@@ -40,6 +40,7 @@ class ProjectsUpsellResource extends Resource
         return [
             'id'             => Hashids::encode($this->id),
             'description'    => Str::limit($this->description, 20),
+            'discount'       => $this->discount,
             'active_flag'    => $this->active_flag,
             'apply_on_plans' => $applyPlanArray,
             'offer_on_plans' => $offerPlanArray,
