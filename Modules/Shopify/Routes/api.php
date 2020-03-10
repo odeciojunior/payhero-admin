@@ -31,7 +31,7 @@ Route::group(
         Route::post('/apps/shopify/synchronize/trackings', [
             'uses' => 'ShopifyApiController@synchronizeTrackings',
             'as'   => 'shopify.synchronize.trackings',
-        ]);
+        ])->middleware('throttle:1');
 
         Route::post('/apps/shopify/synchronize/templates', [
             'uses' => 'ShopifyApiController@synchronizeTemplates',
