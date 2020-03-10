@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\ProjectUpsellRule;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
@@ -25,6 +27,7 @@ use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
+use Modules\ProjectUpsellRule\Transformers\ProjectsUpsellResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -61,7 +64,7 @@ class ProjectsApiController extends Controller
                 ];
             }
 
-            return $projectService->getUserProjects($pagination, $projectStatus);
+            return $projectService->getUserProjects($pagination, $projectStatus, true);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -116,7 +119,8 @@ class ProjectsApiController extends Controller
                                                      'visibility'                 => 'private',
                                                      'automatic_affiliation'      => 0,
                                                      'boleto'                     => 1,
-                                                     'status'                     => $projectModel->present()->getStatus('active'),
+                                                     'status'                     => $projectModel->present()
+                                                                                                  ->getStatus('active'),
                                                      'checkout_type'              => 2 // checkout de 1 passo
                                                  ]);
                 if (!empty($project)) {
@@ -207,6 +211,7 @@ class ProjectsApiController extends Controller
             if (isset($id)) {
                 $userProjectModel        = new UserProject();
                 $shopifyIntegrationModel = new ShopifyIntegration();
+                $projectUpsellModel      = new ProjectUpsellRule();
 
                 $user = auth()->user()->load('companies');
 
@@ -228,10 +233,13 @@ class ProjectsApiController extends Controller
 
                 $companies = CompaniesSelectResource::collection($user->companies);
 
+                $projectUpsell = $projectUpsellModel->where('project_id', $idProject)->get();
+                $projectUpsell = ProjectsUpsellResource::collection($projectUpsell);
+
                 if (Gate::allows('edit', [$project])) {
                     $project = new ProjectsResource($project);
 
-                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
+                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations', 'projectUpsell'));
                 } else {
                     return response()->json(['message' => 'Erro ao carregar configuraçoes do projeto'], 400);
                 }
@@ -318,8 +326,7 @@ class ProjectsApiController extends Controller
                         $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                     }
 
-                    $requestValidated['cookie_duration'] = 60;
-                    $requestValidated['status']          = 1;
+                    $requestValidated['status'] = 1;
 
                     $requestValidated['invoice_description'] = FoxUtils::removeAccents($requestValidated['invoice_description']);
 
@@ -420,20 +427,34 @@ class ProjectsApiController extends Controller
 
     /**
      * @param $id
-     * @return JsonResponse|ProjectsResource
+     * @return JsonResponse|ProjectsUpsellResource
      */
     public function show($id)
     {
         try {
             $projectModel = new Project();
-
+            $userId       = auth()->user()->account_owner_id;
             if ($id) {
 
                 $project = $projectModel->where('id', current(Hashids::decode($id)))
-                                        ->where('status', $projectModel->present()->getStatus('active'))->first();
-                if (empty($project)) {
-                    return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
-                }
+                                        ->where('status', $projectModel->present()->getStatus('active'))
+                                        ->with([
+                                                   'affiliates' => function($query) use ($userId) {
+                                                       $query->where('user_id', $userId);
+                                                   },
+                                               ])
+                                        ->first();
+
+                $producer = User::whereHas('usersProjects', function($query) use ($project) {
+                    $query->where('project_id', $project->id)
+                          ->where('type_enum', 1);
+                })->first();
+
+                $project->producer           = $producer->name ?? '';
+                $project->release_money_days = $producer->release_money_days ?? '';
+                $project->boleto_release_money_days = $producer->boleto_release_money_days ?? '';
+                $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
+                $project->debit_card_release_money_days = $producer->debit_card_release_money_days ?? '';
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
@@ -470,7 +491,7 @@ class ProjectsApiController extends Controller
                 $projectModel->present()->getStatus('active'),
             ];
 
-            return $projectService->getUserProjects(true, $projectStatus);
+            return $projectService->getUserProjects(true, $projectStatus, true);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados empresas (ProjectsApiController - getProjects)');
             report($e);

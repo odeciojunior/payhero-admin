@@ -9,8 +9,6 @@
         "Modules\\Affiliates\\Providers\\AffiliatesServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }

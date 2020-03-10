@@ -54,9 +54,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boletoexpiring')->dailyAt('11:30');
 
         // abandoned carts
-        /*$schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
+        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
 
-        $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');*/
+        $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
         // Alterar status do boletos de pendente para cancelado
         $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');

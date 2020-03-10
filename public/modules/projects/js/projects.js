@@ -1,6 +1,20 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
+    CKEDITOR.replace('termsaffiliates', {
+        language: 'br',
+        uiColor: '#F1F4F5',
+        height: 250,
+        toolbarGroups: [
+            { name: 'basicstyles', groups: [ 'basicstyles' ] },
+            { name: 'paragraph', groups: [ 'list', 'blocks' ] },
+            { name: 'links', groups: [ 'links' ] },
+            { name: 'styles', groups: [ 'styles' ] },
+        ],
+        removeButtons: 'Anchor,Superscript,Subscript',
+    });
+    // $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
+
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
         show();
@@ -20,6 +34,15 @@ $(() => {
             $(this).find('.showMore').html('add');
         } else {
             $(this).find('.showMore').html('remove');
+        }
+    });
+
+
+    $('.status-url-affiliates').on('change', function () {
+        if($(this).prop('selectedIndex') == 0) {
+            $('.div-url-affiliate').hide();
+        } else {
+            $('.div-url-affiliate').show();
         }
     });
 
@@ -193,8 +216,26 @@ $(() => {
         });
     }
 
+    $("#copy-link-affiliation").on("click", function () {
+        var copyText = document.getElementById("url-affiliates");
+        copyText.select();
+        document.execCommand("copy");
+
+        alertCustom('success', 'Link copiado!');
+    });
+
     function renderProjectConfig(data) {
-        let {project, companies, userProject, shopifyIntegrations} = data;
+        let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
+
+        $('#percentage-affiliates').mask('000', {
+            reverse: true,
+            onKeyPress: function(val, e, field, options) {
+                if (val > 100) {
+                    $('#percentage-affiliates').val('')
+                }
+            }
+        });
+
         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
         $('#update-project #name').val(project.name);
         $('#cost_currency_type').val(project.cost_currency_type);
@@ -230,10 +271,52 @@ $(() => {
         $('#update-project #card_redirect').val(project.card_redirect);
         $('#update-project #analyzing_redirect').val(project.analyzing_redirect);
 
-        $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
+        CKEDITOR.instances.termsaffiliates.setData(project.terms_affiliates);
 
+        if(project.automatic_affiliation == 1) {
+            $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
+        } else {
+            $('#update-project .automatic-affiliation').prop('selectedIndex', 0).change();
+        }
+
+        if(project.cookie_duration == 0) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
+        } else if (project.cookie_duration == 7) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 1).change();
+        } else if (project.cookie_duration == 15) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 2).change();
+        } else if (project.cookie_duration == 30) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 3).change();
+        } else if (project.cookie_duration == 60) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 4).change();
+        } else if (project.cookie_duration == 180) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 5).change();
+        } else if (project.cookie_duration == 365) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
+        }
+
+        if (project.status_url_affiliates == 1) {
+            $('#update-project .status-url-affiliates').prop('checked', true)
+            $('.div-url-affiliate').show('fast', 'linear')
+        } else {
+            $('.div-url-affiliate').prop('checked', false)
+        }
+
+        if(project.commission_type_enum == 1) {
+            $('#update-project .commision-type-enum').prop('selectedIndex', 0).change();
+        } else {
+            $('#update-project .commission-type-enum').prop('selectedIndex', 1).change();
+        }
+
+
+
+        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
+        $('#update-project #url-affiliates').val(project.url_affiliates);
+
+        $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
         if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
+            $('.listShopifyConfiguration').show();
             if (shopifyIntegrations.length !== 0) {
                 $('#div-shopify-token').show();
                 $('#div-shopify-permissions').show();
@@ -518,8 +601,13 @@ $(() => {
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
         let verify = verificaParcelas(parcelas, parcelasJuros);
-
+        $('#terms_affiliates').val(CKEDITOR.instances.termsaffiliates.getData());
+        let statusUrlAffiliates = 0;
+        if($('#status-url-affiliates').prop('checked')) {
+            statusUrlAffiliates = 1;
+        }
         let formData = new FormData(document.getElementById("update-project"));
+        formData.append('status_url_affiliates', statusUrlAffiliates);
 
         if (!verify) {
             $.ajax({
@@ -817,17 +905,20 @@ $(() => {
         recoveryDiscountColor()
     })
 
-    recoveryDiscountColor()
+    $('.status-url-affiliates').on("click", function () {
+        statusUrlAffiliatesColor()
+    })
 
-    function recoveryDiscountColor() {
-        let chk = $('.discount-recovery').prop('checked');
+    statusUrlAffiliatesColor()
+
+    function statusUrlAffiliatesColor() {
+        let chk = $('.status-url-affiliates').prop('checked');
         if (chk) {
-            $('#discount_recovery_value').show('fast', 'linear')
-            $('#discount-recovery-alert').show('fast', 'linear')
+            $('.div-url-affiliate').show('fast', 'linear')
         } else {
-            $('#discount_recovery_value').hide('fast', 'linear')
-            $('#discount-recovery-alert').hide('fast', 'linear')
+            $('.div-url-affiliate').hide('fast', 'linear')
         }
     }
+
 });
 
