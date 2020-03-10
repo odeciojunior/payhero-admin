@@ -13,6 +13,7 @@ use App\Traits\LogsActivity;
  * @property integer $campaign_id
  * @property integer $plan_id
  * @property string $parameter
+ * @property string $link
  * @property integer $clicks_amount
  * @property string $created_at
  * @property string $updated_at
@@ -37,6 +38,7 @@ class AffiliateLink extends Model
         'campaign_id',
         'plan_id',
         'parameter',
+        'link',
         'clicks_amount',
         'created_at',
         'updated_at',

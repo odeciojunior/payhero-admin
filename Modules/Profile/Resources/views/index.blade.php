@@ -348,30 +348,30 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <p class='info' style='font-size: 10px; margin-top: -10px'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de
-                                            <label id="installment-tax" style="color: gray"></label>
-                                            % ao mês.
-                                        </p>
-                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
-                                            <label style="color: gray" id="transaction-tax"></label>
-                                            por transação.
-                                        </p>
-                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de transferência para empresas do exterior de
-                                            <label style="color: gray" id="transaction-tax-abroad"></label>
-                                        </p>
-                                        <p class='info' style='font-size: 10px; margin-top: -13px'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
-                                        </p>
-                                    </div>
-                                    <div class="col-lg-12 text-right" style="margin-top: 30px">
-                                        <button id="update_taxes" type="button" class="btn btn-success mr-100">
-                                            Atualizar taxas
-                                        </button>
+                                        <div class="col-12">
+                                            <p class='info' style='font-size: 10px; margin-top: -10px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de
+                                                <label id="installment-tax" style="color: gray"></label>
+                                                % ao mês.
+                                            </p>
+                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$
+                                                <label style="color: gray" id="transaction-tax"></label>
+                                                por transação.
+                                            </p>
+                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de transferência para empresas do exterior de
+                                                <label style="color: gray" id="transaction-tax-abroad"></label>
+                                            </p>
+                                            <p class='info' style='font-size: 10px; margin-top: -13px'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">
+                                                Atualizar taxas
+                                            </button>
+                                        </div>
                                     </div>
                                     {{--BOLETO--}}
                                 </div>
@@ -472,6 +472,17 @@
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="shopify_switch" name="shopify"
+                                                           class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="affiliation_switch" class="mb-10">Afiliação</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="affiliation_switch" name="affiliation"
                                                            class="check notification_switch" value='1'>
                                                     <span class="slider round"></span>
                                                 </label>

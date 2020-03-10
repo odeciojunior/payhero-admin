@@ -240,12 +240,14 @@ class DomainsApiController extends Controller
                         $subdomain = explode('.', $record->name);
 
                         switch ($record->content) {
-                            CASE $cloudFlareService::shopifyIp:
+                            case $cloudFlareService::shopifyIp:
                                 $content = $record->content;
                                 //$content = "Servidores Shopify";
                                 break;
-                            CASE $cloudFlareService::checkoutIp:
-                            CASE $cloudFlareService::adminIp:
+                            case $cloudFlareService::checkoutIp:
+                            case $cloudFlareService::adminIp:
+                            case $cloudFlareService::sacIp:
+                            case $cloudFlareService::affiliateIp:
                                 $content = "Servidores CloudFox";
                                 break;
                             default:
@@ -391,9 +393,7 @@ class DomainsApiController extends Controller
             $domainModel       = new Domain();
             $cloudFlareService = new CloudFlareService();
 
-
-
-            $domainId = current(Hashids::decode($domain));
+            $domainId          = current(Hashids::decode($domain));
             if (!empty($domainId)) {
                 // hashid ok
                 $domain = $domainModel->with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
@@ -420,7 +420,7 @@ class DomainsApiController extends Controller
                                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
                                             try {
-                                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token, false);
                                                 $shopify->setThemeByRole('main');
                                             } catch (Exception $e) {
                                                 report($e);

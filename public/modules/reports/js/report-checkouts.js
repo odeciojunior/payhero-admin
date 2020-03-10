@@ -62,10 +62,10 @@ $(function () {
             },
             success: function success(response) {
 
-                $("#qtd-acessed").html(response.contAcessed);
-                $("#qtd-abandoned").html(response.contAbandoned);
-                $("#qtd-recovered").html(response.contRecovered);
-                $("#qtd-finalized").html(response.contFinalized);
+                // $("#qtd-acessed").html( response.contAcessed + ' ('+ response.percentAcessed +')');
+                $("#qtd-abandoned").html(response.contAbandoned + ' ('+ response.percentAbandoned +')');
+                $("#qtd-recovered").html(response.contRecovered + ' (' + response.percentRecovered +')');
+                $("#qtd-finalized").html(response.contFinalized + ' (' + response.percentFinalized + ')');
                 $("#qtd-total-checkouts").html(response.contCheckouts);
                 $("#percent-desktop").html(response.conversaoDesktop + '%');
                 $("#percent-mobile").html(response.conversaoMobile + '%');

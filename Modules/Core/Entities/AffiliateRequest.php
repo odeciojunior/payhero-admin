@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\AffiliateRequestPresenter;
 
 /**
  * @property integer $id
@@ -20,7 +22,11 @@ use App\Traits\LogsActivity;
  */
 class AffiliateRequest extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, PresentableTrait;
+    /**
+     * @var string
+     */
+    protected $presenter = AffiliateRequestPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -32,6 +38,7 @@ class AffiliateRequest extends Model
     protected $fillable = [
         'user_id',
         'project_id',
+        'company_id',
         'status',
         'created_at',
         'updated_at',
@@ -70,5 +77,13 @@ class AffiliateRequest extends Model
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 }

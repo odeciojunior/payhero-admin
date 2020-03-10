@@ -63,7 +63,7 @@
                             <div class="row">
                                 <div class="form-group col-xl-3">
                                     <label for="agency">Agência</label>
-                                    <input name="agency" value="" type="text" class="input-pad" id="agency" placeholder='Agência' maxlength='255'>
+                                    <input name="agency" value="" type="text" class="input-pad" id="agency" placeholder='Agência'>
                                 </div>
                                 <div class="form-group col-xl-2">
                                     <label for="agency_digit">Digito</label>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="form-group col-xl-3">
                                     <label for="account">Conta</label>
-                                    <input name="account" value="" type="text" class="input-pad" id="account" placeholder='Conta' maxlength='255'>
+                                    <input name="account" value="" type="text" class="input-pad" id="account" placeholder='Conta' maxlength='20'>
                                 </div>
                                 <div class="form-group col-xl-2">
                                     <label for="account_digit">Digito</label>
@@ -217,7 +217,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=2')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=3')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

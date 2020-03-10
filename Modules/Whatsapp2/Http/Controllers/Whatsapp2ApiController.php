@@ -286,16 +286,22 @@ class Whatsapp2ApiController extends Controller
             $integrationId             = current(Hashids::decode($id));
             $whatsapp2IntegrationModel = new Whatsapp2Integration();
             $integration               = $whatsapp2IntegrationModel->find($integrationId);
-            $integrationDeleted        = $integration->delete();
-            if ($integrationDeleted) {
+            if (empty($integration)) {
                 return response()->json([
-                                            'message' => 'Integração Removida com sucesso!',
-                                        ], 200);
-            }
+                                            'message' => 'Erro ao tentar remover Integração',
+                                        ], 400);
+            } else {
+                $integrationDeleted = $integration->delete();
+                if ($integrationDeleted) {
+                    return response()->json([
+                                                'message' => 'Integração Removida com sucesso!',
+                                            ], 200);
+                }
 
-            return response()->json([
-                                        'message' => 'Erro ao tentar remover Integração',
-                                    ], 400);
+                return response()->json([
+                                            'message' => 'Erro ao tentar remover Integração',
+                                        ], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar remover Integração Whatsapp 2.0 (Whatsapp2Controller - destroy)');
             report($e);

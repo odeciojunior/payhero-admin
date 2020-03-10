@@ -1,12 +1,15 @@
 <?php
 
-
 namespace Modules\Core\Services;
 
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * Class EasySendSmsService
+ * @package Modules\Core\Services
+ */
 class EasySendSmsService
 {
     /**
@@ -34,13 +37,12 @@ class EasySendSmsService
      * Message content that is to be transmitted
      */
     private $message;
-    /*
+    /**
      * Type fo the message that is to bet sent
      * 0 -> means plain text
      * 1 -> means unicode (message content should be in hex)
      * 2 -> means plain flash text
      * 3 -> means unicode flash (message content should be in hex)
-     *
      */
     private $messageType;
     /**
@@ -49,7 +51,6 @@ class EasySendSmsService
      */
     public $numberMobile;
 
-
     /**
      * EasySendSmsService constructor.
      * @param string $message
@@ -57,22 +58,21 @@ class EasySendSmsService
      * @param string $sender
      * @param string $msgType
      */
-    public function __construct(string $message, string $numberMobile, string $sender = ' ', string $msgType = '1')
+    public function __construct(string $numberMobile, string $message, string $sender = '', string $msgType = '1')
     {
-        $this->host = 'https://www.easysendsms.com/sms/bulksms-api/bulksms-api';
-        $this->username = getenv('USERNAME_EASY_SMS');
-        $this->password = getenv('PASSWORD_EASY_SMS');
-        $this->sender = $sender;
-        $this->message = $message; //URL Encode The Message..
+        $this->host         = 'https://www.easysendsms.com/sms/bulksms-api/bulksms-api';
+        $this->username     = getenv('USERNAME_EASY_SMS');
+        $this->password     = getenv('PASSWORD_EASY_SMS');
+        $this->sender       = $sender;
+        $this->message      = $message; //URL Encode The Message..
         $this->numberMobile = $numberMobile;
-        $this->messageType = $msgType;
+        $this->messageType  = $msgType;
     }
 
     /**
      * @param $message
      * @return bool|string
      * Transforma message em hexadecimal
-     *
      */
     private function smsUnicode($message)
     {
@@ -80,13 +80,13 @@ class EasySendSmsService
         if (function_exists('Iconv')) {
             $latin = @\iconv('UTF-8', 'ISO-8859-1', $message);
             if (strcmp($latin, $message)) {
-                $arr = unpack('H*Hex', @iconv('UTF-8', 'UCS-2BE', $message));
+                $arr  = unpack('H*Hex', @iconv('UTF-8', 'UCS-2BE', $message));
                 $hex1 = strtoupper($arr['Hex']);
             }
 
             if ($hex1 == '') {
                 $hex2 = '';
-                $hex = '';
+                $hex  = '';
                 for ($i = 0; $i < strlen($message); $i++) {
                     $hex = dechex(ord($message[$i]));
                     $len = strlen($hex);
@@ -98,6 +98,7 @@ class EasySendSmsService
                     }
                     $hex2 .= $hex;
                 }
+
                 return $hex2;
             } else {
                 return $hex1;
@@ -107,6 +108,9 @@ class EasySendSmsService
         }
     }
 
+    /**
+     * Send SMS for users
+     */
     public function submit()
     {
 

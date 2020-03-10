@@ -4,6 +4,10 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
+/**
+ * Class CustomerPresenter
+ * @package Modules\Core\Presenters
+ */
 class CustomerPresenter extends Presenter
 {
     /**
@@ -23,9 +27,26 @@ class CustomerPresenter extends Presenter
     }
 
     /**
+     * @param $number
      * @return string
      */
-    public function getTelephone($ddd = false, $number = false)
+    public function getTelephoneShopify()
+    {
+        $telephone = preg_replace("/[^0-9]/", "", $this->telephone);
+        $length    = strlen($telephone);
+        if ($length == 11) {
+            return '+55' . $telephone;
+        } else if ($length == 12) {
+            return '+' . substr($telephone, 0, $length - 10) . substr($telephone, $length - 10, 2) . "9" . substr($telephone, $length - 8, 4) . substr($telephone, -4);
+        } else {
+            return '+' . $telephone;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormatTelephone($ddd = false, $number = false)
     {
         $this->telephone = preg_replace("/\D/", '', $this->telephone);
 
@@ -61,14 +82,6 @@ class CustomerPresenter extends Presenter
 
             return '';
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getTelephoneShopify()
-    {
-        return preg_replace("/[^0-9]/", "", $this->telephone);
     }
 
     /**

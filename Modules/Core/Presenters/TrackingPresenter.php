@@ -20,6 +20,8 @@ class TrackingPresenter extends Presenter
                     return 'out_for_delivery';
                 case 5:
                     return 'exception';
+                case 6:
+                    return 'ignored';
             }
 
             return '';
@@ -35,6 +37,8 @@ class TrackingPresenter extends Presenter
                     return 4;
                 case 'exception':
                     return 5;
+                case 'ignored':
+                    return 6;
             }
 
             return '';

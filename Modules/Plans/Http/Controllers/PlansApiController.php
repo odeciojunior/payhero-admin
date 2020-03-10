@@ -11,14 +11,17 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\PlanService;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
+use Modules\Plans\Transformers\PlansSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
@@ -96,9 +99,11 @@ class PlansApiController extends Controller
     public function store(PlanStoreRequest $request, $projectID)
     {
         try {
-            $planModel    = new Plan();
-            $productPlan  = new ProductPlan();
-            $projectModel = new Project();
+            $planModel          = new Plan();
+            $productPlan        = new ProductPlan();
+            $projectModel       = new Project();
+            $affiliateLinkModel = new AffiliateLink();
+            $planService        = new PlanService();
 
             $requestData               = $request->validated();
             $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
@@ -109,7 +114,7 @@ class PlansApiController extends Controller
             if ($projectId) {
                 //hash ok
 
-                $project = $projectModel->find($projectId);
+                $project = $projectModel->with('affiliates', 'affiliates.user')->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
@@ -136,6 +141,18 @@ class PlansApiController extends Controller
                                                          'currency_type_enum' => $productPlan->present()
                                                                                              ->getCurrency($requestData['currency'][$keyProduct]),
                                                      ]);
+                            }
+                            if (count($project->affiliates) > 0) {
+                                foreach ($project->affiliates as $affiliate) {
+                                    $affiliateHash = Hashids::connection('affiliate')->encode($affiliate->id);
+                                    $affiliateLinkModel->create([
+                                                                    'affiliate_id'  => $affiliate->id,
+                                                                    'plan_id'       => $plan->id,
+                                                                    'parameter'     => $affiliateHash . Hashids::connection('affiliate')->encode($plan->id),
+                                                                    'clicks_amount' => 0,
+                                                                    'link'          => $planService->getCheckoutLink($plan),
+                                                                ]);
+                                }
                             }
                         } else {
                             return response()->json([
@@ -341,10 +358,9 @@ class PlansApiController extends Controller
 
                 if ($planId) {
                     //hash Ok
-                    $plan = $planModel->with(['productsPlans', 'plansSales', 'project'])
-                                      ->where('id', $planId)
-                                      ->first();
-
+                    $plan    = $planModel->with(['productsPlans', 'plansSales', 'project', 'affiliateLinks'])
+                                         ->where('id', $planId)
+                                         ->first();
                     $project = $plan->project;
                     if (Gate::allows('edit', [$project])) {
 
@@ -354,6 +370,11 @@ class PlansApiController extends Controller
                         if (count($plan->productsPlans) > 0) {
                             foreach ($plan->productsPlans as $productPlan) {
                                 $productPlan->forceDelete();
+                            }
+                        }
+                        if (count($plan->affiliateLinks) > 0) {
+                            foreach ($plan->affiliateLinks as $affiliateLink) {
+                                $affiliateLink->delete();
                             }
                         }
                         $planDeleted = $plan->delete();
@@ -377,6 +398,40 @@ class PlansApiController extends Controller
 
             return response()->json([
                                         'message' => 'Erro ao buscar dados do plano!',
+                                    ], 400);
+        }
+    }
+
+    public function getPlans(Request $request)
+    {
+        try {
+            $data      = $request->all();
+            $planModel = new Plan();
+            $projectId = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+                if (!empty($data['search'])) {
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
+                                       ->where('project_id', $projectId);
+                    if (!empty($plans)) {
+                        return PlansSelectResource::collection($plans->get());
+                    }
+                } else {
+                    $plans = $planModel->where('project_id', $projectId);
+
+                    return PlansSelectResource::collection($plans->orderBy('id', 'DESC')->paginate(10));
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, ao buscar dados dos planos',
+                                        ], 400);
+            }
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados dos planos (PlansApiController - getPlans)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, ao buscar dados dos planos',
                                     ], 400);
         }
     }

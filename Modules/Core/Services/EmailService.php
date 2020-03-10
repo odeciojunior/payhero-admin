@@ -77,6 +77,9 @@ class EmailService
                                         ['project_id', $sale->project->id],
                                         ['status', 3],
                                     ])->first();
+            if (empty($domain)) {
+                return;
+            }
 
             if (getenv('APP_ENV') != 'production') {
                 $sale->customer->email = getenv('EMAIL_TEST');
@@ -96,7 +99,7 @@ class EmailService
 
             if (stristr($sale->customer->email, 'invalido') === false) {
                 $sendEmail->sendEmail('noreply@' . $domain->name, $sale->project->name, $sale->customer->email, $sale->customer->present()
-                                                                                                                           ->getFirstName(), 'd-ed70ee0df3a04153aa835e8e4f652434', $data);
+                                                                                                                               ->getFirstName(), 'd-ed70ee0df3a04153aa835e8e4f652434', $data);
             }
 
             return;
@@ -118,7 +121,6 @@ class EmailService
     {
 
         try {
-            $planSales    = PlanSale::where('sale_id', $sale->id)->get()->toArray();
             $sendEmail    = new SendgridService();
             $productsSale = $sale->present()->getProducts();
             $subTotal     = $sale->present()->getSubTotal();
@@ -133,7 +135,6 @@ class EmailService
             if ($discount == 0 || $discount == null) {
                 $discount = '';
             }
-            $clientNameExploded = explode(' ', $customer->name);
 
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->iof) + preg_replace("/[^0-9]/", "", $sale->total_paid_value);
             $totalPaidValue = substr_replace($totalPaidValue, ',', strlen($totalPaidValue) - 2, 0);
@@ -149,6 +150,9 @@ class EmailService
                                         ['project_id', $project->id],
                                         ['status', 3],
                                     ])->first();
+            if (empty($domain)) {
+                return false;
+            }
 
             if (getenv('APP_ENV') != 'production') {
                 $customer->email = getenv('EMAIL_TEST');
@@ -177,7 +181,7 @@ class EmailService
                 if (stristr($customer->email, 'invalido') === false) {
 
                     $sendEmail->sendEmail('noreply@' . $domain->name, $project->name, $customer->email, $customer->present()
-                                                                                                             ->getFirstName(), 'd-c521a65b247645a9b5f7be6b9b0db262', $data);
+                                                                                                                 ->getFirstName(), 'd-c521a65b247645a9b5f7be6b9b0db262', $data);
                 }
             } else {
                 $data = [
@@ -197,7 +201,7 @@ class EmailService
                 if (stristr($customer->email, 'invalido') === false) {
 
                     $sendEmail->sendEmail('noreply@' . $domain->name, $project->name, $customer->email, $customer->present()
-                                                                                                             ->getFirstName(), 'd-b80c0854a9d342428532d8d4b0e2f654', $data);
+                                                                                                                 ->getFirstName(), 'd-b80c0854a9d342428532d8d4b0e2f654', $data);
                 }
             }
 
@@ -210,6 +214,15 @@ class EmailService
         }
     }
 
+    /**
+     * @param $fromEmail
+     * @param $fromName
+     * @param $toEmail
+     * @param $toName
+     * @param $templateId
+     * @param $data
+     * @return bool
+     */
     public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
@@ -219,7 +232,10 @@ class EmailService
                 $fromEmail = getenv('EMAIL_TEST');
             }
 
-            if (stristr($fromEmail, 'invalido') === false) {
+            if (stristr($fromEmail, 'invalido') === false &&
+                !empty($fromName) && !empty($toEmail) &&
+                !empty($toName) && !empty($templateId)
+            ) {
                 return $sendGridService->sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data);
             } else {
                 return false;

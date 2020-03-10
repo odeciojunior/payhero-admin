@@ -3,17 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Shipping;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Services\ProjectNotificationService;
-use Illuminate\Support\Carbon;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Str;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Services\CloudFlareService;
 
 /**
  * Class GenericCommand
@@ -46,6 +38,41 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        dd(getenv('DB_HOST'));
+        $cloudflareService = new CloudFlareService();
+
+        $domains = $cloudflareService->getZones();
+
+        $total = count($domains);
+
+        foreach ($domains as $key => $domain) {
+
+            $this->info($key + 1 . ' de ' . $total . '. Domínio: ' . $domain->name);
+
+            try {
+                $records = $cloudflareService->getRecords($domain->name);
+                $checkoutRecord = collect($records)->first(function ($item) {
+                    if (Str::contains($item->name, 'affiliate.')) {
+                        return $item;
+                    }
+                });
+
+                if (isset($checkoutRecord)) {
+                    $deleted = $cloudflareService->deleteRecord($checkoutRecord->id);
+                    if ($deleted) {
+                        $this->line('Record antigo deletado!');
+                        $recordId = $cloudflareService->addRecord("A", 'affiliate', $cloudflareService::affiliateIp);
+                        $this->line('Novo record criado: ' . $recordId);
+                    }
+                } else {
+                    $this->warn('Record não encontrado');
+                    $recordId = $cloudflareService->addRecord("A", 'affiliate', $cloudflareService::affiliateIp);
+                    $this->line('Novo record criado: ' . $recordId);
+                }
+            } catch (\Exception $e) {
+
+                $this->error($e->getMessage());
+            }
+        }
+        $this->info('ACABOOOOOOOOOOOOOU!');
     }
 }

@@ -4,13 +4,14 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
 use App\Traits\LogsActivity;
+use Nwidart\Modules\Collection;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -23,6 +24,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $description
  * @property string $invoice_description
  * @property string $percentage_affiliates
+ * @property string $terms_affiliates
  * @property string $url_page
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
@@ -40,26 +42,21 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $card_redirect
  * @property string $analyzing_redirect
  * @property string $support_phone
- * @property Carrier $carrier
- * @property AffiliateRequest[] $affiliateRequests
- * @property Affiliate[] $affiliates
- * @property Checkout[] $checkouts
- * @property ClientsCookie[] $clientsCookies
- * @property ConvertaxIntegration[] $convertaxIntegrations
- * @property DiscountCoupon[] $discountCoupons
- * @property Domain[] $domains
- * @property ExtraMaterial[] $extraMaterials
- * @property Gift[] $gifts
- * @property HotzappIntegration[] $hotzappIntegrations
- * @property Layout[] $layouts
- * @property NotazzIntegration[] $notazzIntegrations
- * @property Pixel[] $pixels
- * @property Plan[] $plans
- * @property Sale[] $sales
- * @property Shipping[] $shippings
- * @property ShopifyIntegration[] $shopifyIntegrations
- * @property UsersProject[] $usersProjects
- * @property ZenviaSm[] $zenviaSms
+ * @property Collection $affiliateRequests
+ * @property Collection $affiliates
+ * @property Collection $checkouts
+ * @property Collection $convertaxIntegrations
+ * @property Collection $discountCoupons
+ * @property Collection $domains
+ * @property Collection $hotzappIntegrations
+ * @property Collection $notazzIntegrations
+ * @property Collection $pixels
+ * @property Collection $plans
+ * @property Collection $sales
+ * @property Collection $shippings
+ * @property Collection $shopifyIntegrations
+ * @property Collection $usersProjects
+ * @method ProjectPresenter present()
  */
 class Project extends Model
 {
@@ -88,6 +85,9 @@ class Project extends Model
         'description',
         'invoice_description',
         'percentage_affiliates',
+        'terms_affiliates',
+        'status_url_affiliates',
+        'commission_type_enum',
         'url_page',
         'automatic_affiliation',
         'shopify_id',
@@ -151,27 +151,11 @@ class Project extends Model
     }
 
     /**
-     * @return mixed
-     */
-    public function getFormattedCreatedAtAttribute()
-    {
-        return $this->created_at->format('d/m/Y');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function carrier()
-    {
-        return $this->belongsTo('Modules\Core\Entities\Carrier');
-    }
-
-    /**
      * @return HasMany
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('Modules\Core\Entities\AffiliateRequest');
+        return $this->hasMany(AffiliateRequest::class);
     }
 
     /**
@@ -179,7 +163,7 @@ class Project extends Model
      */
     public function affiliates()
     {
-        return $this->hasMany('Modules\Core\Entities\Affiliate');
+        return $this->hasMany(Affiliate::class);
     }
 
     /**
@@ -187,15 +171,7 @@ class Project extends Model
      */
     public function checkouts()
     {
-        return $this->hasMany('Modules\Core\Entities\Checkout');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function clientsCookies()
-    {
-        return $this->hasMany('Modules\Core\Entities\ClientsCookie');
+        return $this->hasMany(Checkout::class);
     }
 
     /**
@@ -203,7 +179,7 @@ class Project extends Model
      */
     public function convertaxIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\ConvertaxIntegration');
+        return $this->hasMany(ConvertaxIntegration::class);
     }
 
     /**
@@ -211,7 +187,7 @@ class Project extends Model
      */
     public function discountCoupons()
     {
-        return $this->hasMany('Modules\Core\Entities\DiscountCoupon');
+        return $this->hasMany(DiscountCoupon::class);
     }
 
     /**
@@ -219,23 +195,7 @@ class Project extends Model
      */
     public function domains()
     {
-        return $this->hasMany('Modules\Core\Entities\Domain');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function extraMaterials()
-    {
-        return $this->hasMany('Modules\Core\Entities\ExtraMaterial');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function gifts()
-    {
-        return $this->hasMany('Modules\Core\Entities\Gift');
+        return $this->hasMany(Domain::class);
     }
 
     /**
@@ -243,15 +203,7 @@ class Project extends Model
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function layouts()
-    {
-        return $this->hasMany('Modules\Core\Entities\Layout', 'project');
+        return $this->hasMany(HotzappIntegration::class);
     }
 
     /**
@@ -259,7 +211,7 @@ class Project extends Model
      */
     public function pixels()
     {
-        return $this->hasMany('Modules\Core\Entities\Pixel');
+        return $this->hasMany(Pixel::class);
     }
 
     /**
@@ -267,7 +219,7 @@ class Project extends Model
      */
     public function plans()
     {
-        return $this->hasMany('Modules\Core\Entities\Plan');
+        return $this->hasMany(Plan::class);
     }
 
     /**
@@ -275,7 +227,7 @@ class Project extends Model
      */
     public function sales()
     {
-        return $this->hasMany('Modules\Core\Entities\Sale');
+        return $this->hasMany(Sale::class);
     }
 
     /**
@@ -283,7 +235,7 @@ class Project extends Model
      */
     public function shippings()
     {
-        return $this->hasMany('Modules\Core\Entities\Shipping');
+        return $this->hasMany(Shipping::class);
     }
 
     /**
@@ -291,7 +243,7 @@ class Project extends Model
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\ShopifyIntegration');
+        return $this->hasMany(ShopifyIntegration::class);
     }
 
     /**
@@ -299,15 +251,15 @@ class Project extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UserProject');
+        return $this->hasMany(UserProject::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users()
     {
-        return $this->belongsToMany('Modules\Core\Entities\User', 'users_projects', 'project_id', 'user_id');
+        return $this->belongsToMany(User::class, 'users_projects', 'project_id', 'user_id');
     }
 
     /**
@@ -315,7 +267,7 @@ class Project extends Model
      */
     public function notazzIntegration()
     {
-        return $this->hasOne('Modules\Core\Entities\NotazzIntegration');
+        return $this->hasOne(NotazzIntegration::class);
     }
 
 
@@ -324,7 +276,13 @@ class Project extends Model
      */
     public function notifications()
     {
-        return $this->hasMany('Modules\Core\Entities\ProjectNotification');
+        return $this->hasMany(ProjectNotification::class);
     }
-
+    /**
+     * @return HasMany
+     */
+    public function upsellRules()
+    {
+        return $this->hasMany(ProjectUpsellRule::class);
+    }
 }
