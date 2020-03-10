@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * @property mixed sms_sent_amount
@@ -70,7 +71,7 @@ class CheckoutPresenter extends Presenter
     {
 
         if (!empty($domain)) {
-            return "https://checkout." . $domain->name . "/recovery/" . $this->id_log_session;
+            return "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($this->id);
         } else {
             return '';
         }
@@ -112,5 +113,4 @@ class CheckoutPresenter extends Presenter
 
         return '';
     }
-
 }

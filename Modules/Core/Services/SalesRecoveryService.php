@@ -61,7 +61,7 @@ class SalesRecoveryService
         $customerModel     = new Customer();
 
         $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount',
+            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id',
                      'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
             ->leftJoin('plans_sales as plan_sale', function($join) {
                 $join->on('plan_sale.sale_id', '=', 'sales.id');
@@ -90,7 +90,10 @@ class SalesRecoveryService
         } else {
             $userProjects = $userProjectsModel->where([
                                                           ['user_id', auth()->user()->account_owner_id],
-                                                          ['type_enum', $userProjectsModel->present()->getTypeEnum('producer')],
+                                                          [
+                                                              'type_enum', $userProjectsModel->present()
+                                                                                             ->getTypeEnum('producer'),
+                                                          ],
                                                       ])->pluck('project_id')->toArray();
 
             $salesExpired->whereIn('sales.project_id', $userProjects);
