@@ -277,7 +277,7 @@ class ProjectService
                     }
                 }
 
-                if (!empty($project->upsellConfig) && $project->upsellConfig->isNotEmpty()) {
+                if (!empty($project->upsellConfig)) {
                     $upsellConfig = $project->upsellConfig;
                     $upsellConfig->delete();
                 }
