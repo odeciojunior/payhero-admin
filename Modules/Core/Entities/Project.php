@@ -110,6 +110,7 @@ class Project extends Model
         'discount_recovery_status',
         'discount_recovery_value',
         'checkout_type',
+        'whatsapp_button',
         'created_at',
         'updated_at',
         'deleted_at',
