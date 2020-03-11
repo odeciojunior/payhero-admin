@@ -56,9 +56,14 @@ class ProjectUpsellRuleApiController extends Controller
         if ($projectId) {
             $applyPlanArray = [];
             $offerPlanArray = [];
-            foreach ($data['apply_on_plans'] as $key => $value) {
-                $applyPlanArray[] = current(Hashids::decode($value));
+            if (in_array('all', $data['apply_on_plans'])) {
+                $applyPlanArray[] = 'all';
+            } else {
+                foreach ($data['apply_on_plans'] as $key => $value) {
+                    $applyPlanArray[] = current(Hashids::decode($value));
+                }
             }
+
             foreach ($data['offer_on_plans'] as $key => $value) {
                 $offerPlanArray[] = current(Hashids::decode($value));
             }
@@ -137,8 +142,12 @@ class ProjectUpsellRuleApiController extends Controller
             $upsell         = $projectUpsellModel->find($upsellId);
             $applyPlanArray = [];
             $offerPlanArray = [];
-            foreach ($data['apply_on_plans'] as $key => $value) {
-                $applyPlanArray[] = current(Hashids::decode($value));
+            if (in_array('all', $data['apply_on_plans'])) {
+                $applyPlanArray[] = 'all';
+            } else {
+                foreach ($data['apply_on_plans'] as $key => $value) {
+                    $applyPlanArray[] = current(Hashids::decode($value));
+                }
             }
             foreach ($data['offer_on_plans'] as $key => $value) {
                 $offerPlanArray[] = current(Hashids::decode($value));
