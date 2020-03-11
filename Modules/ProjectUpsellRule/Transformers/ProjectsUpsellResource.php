@@ -24,9 +24,13 @@ class ProjectsUpsellResource extends Resource
         $planModel      = new Plan();
         if (!empty($this->apply_on_plans)) {
             $applyPlanDecoded = json_decode($this->apply_on_plans);
-            foreach ($applyPlanDecoded as $key => $value) {
-                $plan             = $planModel->find($value);
-                $applyPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+            if (in_array('all', $applyPlanDecoded)) {
+                $applyPlanArray[] = ['id' => 'all', 'name' => 'Todos'];
+            } else {
+                foreach ($applyPlanDecoded as $key => $value) {
+                    $plan             = $planModel->find($value);
+                    $applyPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                }
             }
         }
         if (!empty($this->offer_on_plans)) {
