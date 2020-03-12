@@ -168,7 +168,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane" id="tabAdvancedConfiguration" role="tabpanel">
-                    <div class='my-20'>
+                    <div class='my-40 mx-30'>
                         <div class='row'>
                             <div class='form-group col-6 col-xs-12'>
                                 <label for='invoice-description'>Descrição da Fatura</label>
@@ -272,7 +272,7 @@
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com cartão de crédito no checkout
                                 </p>
                             </div>
-                            <div class='form-group col-md-4 col-sm-12'>
+                            <div class='form-group col-md-6 col-sm-12'>
                                 <label for="default_currency">Tipo de checkout</label>
                                 <select name='checkout_type' class='form-control select-pad' id="checkout_type">
                                     <option value='1'>Checkout de 3 etapas (recomendado)</option>
@@ -280,7 +280,16 @@
                                     <option value='' disabled>Checkout selecionado por IA - inteligência artificial (em breve)</option>
                                 </select>
                             </div>
-                            <div class='col-md-8'></div>
+                            <div class='col-md-6'>
+                                <label for="parcelas_sem_juros">Botão Whatsapp na página de obrigado</label>
+                                <select name='whatsapp_button' class='form-control select-pad' id="whatsapp_button">
+                                    <option value='1' class='whatsapp_button_yes'>Sim</option>
+                                    <option value='0' class='whatsapp_button_no'>Não</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Botão para receber boleto pelo Whatsapp na página de obrigado do checkout
+                                </p>
+                            </div>
                             <div class='form-group col-md-6 col-sm-12 col-xs-12'>
                                 <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                                 <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
@@ -296,6 +305,24 @@
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
                                 <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
                             </p>
+                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                <label for="credit_card_discount">Desconto automático cartão de crédito (%)</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control input-pad" id="credit_card_discount" maxlength='3'>
+                                    <div class="input-group-append bg-light">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                <label for="billet_discount">Desconto automático em boletos (%)</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control input-pad" id="billet_discount" maxlength='3'>
+                                    <div class="input-group-append bg-light">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
                                 <div class="switch-holder">
                                     <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança com desconto</label>
@@ -325,7 +352,7 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
-                    <div class='row justify-content-center'>
+                    <div class='row justify-content-center mx-20 mt-30'>
                         <div class="col-md-4 pt-20">
                             <a id="bt-change-shopify-integration" role="button" integration-status=""
                                class="pointer align-items-center" data-toggle="modal"
@@ -356,7 +383,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class='row mt-20'>
+                    <div class='row mt-30 mx-20 mb-30'>
                         <div id='div-shopify-token' class='col-md-4' style='display:none;'>
                             <label for="shopify-token" class="text-muted">Token (password) da integração</label>
                             <div class="input-group">
@@ -368,9 +395,7 @@
                             <input id='shopify-token' class='form-control' style='display:none;'>
                         </div>
                         <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
-                            <a id="bt-shopify-verify-permissions" role="button"
-                               integration-status=""
-                               class="pointer align-items-center">
+                            <a id="bt-shopify-verify-permissions" role="button" integration-status="" class="pointer align-items-center">
                                 <i class="material-icons gray"> sync </i>
                                 <span class="gray"> Verificar permissões do Token</span>
                             </a>
@@ -385,9 +410,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class='row mt-30 mx-20 mb-30'>
+                        <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
+                            <a id="bt-shopify-sync-trackings" role="button" integration-status="" class="pointer align-items-center">
+                                <i class="material-icons gray"> sync </i>
+                                <span class="gray"> Sincronizar códigos de rastreio</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
-                    <div class='my-20'>
+                    <div class='my-30 mx-30'>
                         <div class='row'>
                             <div class='form-group col-md-6 col-sm-12'>
                                 <div class="switch-holder">

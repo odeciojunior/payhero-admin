@@ -6,10 +6,10 @@ $(() => {
         uiColor: '#F1F4F5',
         height: 250,
         toolbarGroups: [
-            { name: 'basicstyles', groups: [ 'basicstyles' ] },
-            { name: 'paragraph', groups: [ 'list', 'blocks' ] },
-            { name: 'links', groups: [ 'links' ] },
-            { name: 'styles', groups: [ 'styles' ] },
+            {name: 'basicstyles', groups: ['basicstyles']},
+            {name: 'paragraph', groups: ['list', 'blocks']},
+            {name: 'links', groups: ['links']},
+            {name: 'styles', groups: ['styles']},
         ],
         removeButtons: 'Anchor,Superscript,Subscript',
     });
@@ -37,9 +37,8 @@ $(() => {
         }
     });
 
-
     $('.status-url-affiliates').on('change', function () {
-        if($(this).prop('selectedIndex') == 0) {
+        if ($(this).prop('selectedIndex') == 0) {
             $('.div-url-affiliate').hide();
         } else {
             $('.div-url-affiliate').show();
@@ -229,7 +228,7 @@ $(() => {
 
         $('#percentage-affiliates').mask('000', {
             reverse: true,
-            onKeyPress: function(val, e, field, options) {
+            onKeyPress: function (val, e, field, options) {
                 if (val > 100) {
                     $('#percentage-affiliates').val('')
                 }
@@ -273,13 +272,13 @@ $(() => {
 
         CKEDITOR.instances.termsaffiliates.setData(project.terms_affiliates);
 
-        if(project.automatic_affiliation == 1) {
+        if (project.automatic_affiliation == 1) {
             $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
         } else {
             $('#update-project .automatic-affiliation').prop('selectedIndex', 0).change();
         }
 
-        if(project.cookie_duration == 0) {
+        if (project.cookie_duration == 0) {
             $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
         } else if (project.cookie_duration == 7) {
             $('#update-project .cookie-duration').prop('selectedIndex', 1).change();
@@ -302,13 +301,11 @@ $(() => {
             $('.div-url-affiliate').prop('checked', false)
         }
 
-        if(project.commission_type_enum == 1) {
+        if (project.commission_type_enum == 1) {
             $('#update-project .commision-type-enum').prop('selectedIndex', 0).change();
         } else {
             $('#update-project .commission-type-enum').prop('selectedIndex', 1).change();
         }
-
-
 
         $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
         $('#update-project #url-affiliates').val(project.url_affiliates);
@@ -340,6 +337,8 @@ $(() => {
         }
 
         $("#checkout_type").val(project.checkout_type);
+        $("#credit_card_discount").val(project.credit_card_discount);
+        $("#billet_discount").val(project.billet_discount);
 
         // Verificação de email de contato
         if (project.contact_verified) {
@@ -368,7 +367,11 @@ $(() => {
         } else {
             $('#discount_recovery_value').val(10)
         }
-
+        if (project.whatsapp_button == 1) {
+            $('#whatsapp_button .whatsapp_button_yes').attr('selected', true);
+        } else {
+            $('#whatsapp_button .whatsapp_button_no').attr('selected', true);
+        }
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -501,6 +504,24 @@ $(() => {
         });
     });
 
+    $('#credit_card_discount').mask('000', {
+        reverse: true,
+        onKeyPress: function(val, e, field, options) {
+            if (val > 100) {
+                $('#credit_card_discount').val('')
+            }
+        }
+    });
+
+    $('#billet_discount').mask('000', {
+        reverse: true,
+        onKeyPress: function(val, e, field, options) {
+            if (val > 100) {
+                $('#billet_discount').val('')
+            }
+        }
+    });
+
     // Verificar email de contato
     $("#btn_verify_contact").on("click", function () {
         event.preventDefault();
@@ -603,11 +624,17 @@ $(() => {
         let verify = verificaParcelas(parcelas, parcelasJuros);
         $('#terms_affiliates').val(CKEDITOR.instances.termsaffiliates.getData());
         let statusUrlAffiliates = 0;
-        if($('#status-url-affiliates').prop('checked')) {
+        if ($('#status-url-affiliates').prop('checked')) {
             statusUrlAffiliates = 1;
         }
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
+        let discountCard = $('#credit_card_discount').val().replace('%','');
+        let discountBillet = $('#billet_discount').val().replace('%','');
+        discountBillet = (discountBillet == '') ? 0 : discountBillet;
+        discountCard = (discountCard == '') ? 0 : discountCard;
+        formData.append('credit_card_discount', discountCard);
+        formData.append('billet_discount', discountBillet);
 
         if (!verify) {
             $.ajax({
@@ -881,6 +908,28 @@ $(() => {
                 input.attr('disabled', false).parent()
                     .parent()
                     .css('opacity', '1');
+            }
+        });
+    });
+
+    $("#bt-shopify-sync-trackings").on("click", function(){
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/synchronize/trackings',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
             }
         });
     });

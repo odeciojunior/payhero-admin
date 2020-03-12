@@ -89,6 +89,9 @@ class ProjectsResource extends Resource
             "credit_card_release_money_days" => $this->credit_card_release_money_days ?? '',
             "debit_card_release_money_days"  => $this->debit_card_release_money_days ?? '',
             "boleto_release_money_days"      => $this->boleto_release_money_days ?? '',
+            'whatsapp_button'                => $this->whatsapp_button,
+            'credit_card_discount'           => $this->credit_card_discount,
+            'billet_discount'                => $this->billet_discount,
         ];
     }
 }
