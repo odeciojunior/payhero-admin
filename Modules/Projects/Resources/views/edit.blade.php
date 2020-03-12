@@ -297,7 +297,7 @@
                                 <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
                             </p>
                             <div class="form-group col-md-6 col-sm-12 col-xs-12">
-                                <label for="credit_card_discount">Desconto cartão de crédito (%)</label>
+                                <label for="credit_card_discount">Desconto automático cartão de crédito (%)</label>
                                 <div class="input-group">
                                 <input type="text" class="form-control input-pad" id="credit_card_discount" maxlength='3'>
                                     <div class="input-group-append bg-light">
@@ -306,7 +306,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-6 col-sm-12 col-xs-12">
-                                <label for="billet_discount">Desconto boleto (%)</label>
+                                <label for="billet_discount">Desconto automático em boletos (%)</label>
                                 <div class="input-group">
                                 <input type="text" class="form-control input-pad" id="billet_discount" maxlength='3'>
                                     <div class="input-group-append bg-light">
