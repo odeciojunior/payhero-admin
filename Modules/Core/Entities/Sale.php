@@ -121,6 +121,7 @@ class Sale extends Model
         'gateway_card_flag',
         'gateway_tax_percent',
         'gateway_tax_value',
+        'automatic_discount',
     ];
     /**
      * @var bool

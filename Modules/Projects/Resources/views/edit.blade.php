@@ -305,6 +305,24 @@
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
                                 <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
                             </p>
+                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                <label for="credit_card_discount">Desconto automático cartão de crédito (%)</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control input-pad" id="credit_card_discount" maxlength='3'>
+                                    <div class="input-group-append bg-light">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12 col-xs-12">
+                                <label for="billet_discount">Desconto automático em boletos (%)</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control input-pad" id="billet_discount" maxlength='3'>
+                                    <div class="input-group-append bg-light">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
                                 <div class="switch-holder">
                                     <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança com desconto</label>

@@ -261,6 +261,8 @@ class SaleService
             $discount = '0,00';
         }
 
+        $total -= $sale->automatic_discount;
+
         //calcule fees
         $transactionConvertax = $sale->transactions
             ->where('company_id', 29)
@@ -331,6 +333,7 @@ class SaleService
             'total'               => number_format(intval($total) / 100, 2, ',', '.'),
             'subTotal'            => number_format(intval($subTotal) / 100, 2, ',', '.'),
             'discount'            => number_format(intval($discount) / 100, 2, ',', '.'),
+            'automatic_discount'  => number_format(intval($sale->automatic_discount) / 100, 2, ',', '.'),
             'comission'           => $comission,
             'convertax_value'     => $convertaxValue,
             'taxa'                => number_format($taxa / 100, 2, ',', '.'),

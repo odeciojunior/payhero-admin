@@ -1,5 +1,5 @@
 @extends("layouts.master")
-
+ 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
