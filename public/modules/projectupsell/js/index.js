@@ -155,16 +155,7 @@ $(document).ready(function () {
                     $("#edit_offer_on_plans").val(idPlanArray);
                 }
                 if ($("#edit_apply_on_plans").val().includes('all')) {
-                    $("#edit_apply_on_plans").find('option').each(function () {
-                        if ($(this).val() != 'all') {
-                            $(this).prop('disabled', true);
-                        }
-                    });
-                    $("#edit_apply_on_plans").select2({
-                        placeholder: 'Nome do plano',
-                        multiple: true,
-                        dropdownParent: $('#modal_add_upsell'),
-                    });
+
                 }
                 loadingOnScreenRemove();
                 // END
@@ -374,68 +365,20 @@ $(document).ready(function () {
 
     $('#add_apply_on_plans').on('select2:select', function () {
         let selectPlan = $(this);
-        if (selectPlan.val().length > 1 && selectPlan.val().includes('all')) {
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
             selectPlan.val(null).trigger("change");
             selectPlan.val('all').trigger("change");
-        } else {
-            if (selectPlan.val() == 'all') {
-                selectPlan.find('option').each(function () {
-                    if ($(this).val() != 'all') {
-                        $(this).prop('disabled', true);
-                    }
-                });
-                //Search plan
-                selectPlan.select2({
-                    placeholder: 'Nome do plano',
-                    multiple: true,
-                    dropdownParent: $('#modal_add_upsell'),
-                });
-            }
-        }
-    });
-    $('#add_apply_on_plans').on('select2:unselecting', function () {
-        let selectPlan = $(this);
-        if (selectPlan.val() == 'all') {
-            selectPlan.find('option').each(function () {
-                if ($(this).is(':disabled')) {
-                    $(this).prop('disabled', false);
-                }
-            });
         }
     });
 
     $('#edit_apply_on_plans').on('select2:select', function () {
         let selectPlan = $(this);
-        if (selectPlan.val().length > 1 && selectPlan.val().includes('all')) {
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
             selectPlan.val(null).trigger("change");
             selectPlan.val('all').trigger("change");
-        } else {
-            if (selectPlan.val() == 'all') {
-                selectPlan.find('option').each(function () {
-                    if ($(this).val() != 'all') {
-                        $(this).prop('disabled', true);
-                    }
-                });
-                //Search plan
-                selectPlan.select2({
-                    placeholder: 'Nome do plano',
-                    multiple: true,
-                    dropdownParent: $('#modal_add_upsell'),
-                });
-            }
         }
     });
 
-    $('#edit_apply_on_plans').on('select2:unselecting', function () {
-        let selectPlan = $(this);
-        if (selectPlan.val() == 'all') {
-            selectPlan.find('option').each(function () {
-                if ($(this).is(':disabled')) {
-                    $(this).prop('disabled', false);
-                }
-            });
-        }
-    });
     CKEDITOR.replace('description_config', {
         language: 'br',
         uiColor: '#F1F4F5',
