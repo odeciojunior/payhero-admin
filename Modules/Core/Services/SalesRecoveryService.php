@@ -260,7 +260,7 @@ class SalesRecoveryService
 
         $domain = $domainModel->where([
                                           ['status', 3],
-                                          ['project_id', $sale->project],
+                                          ['project_id', $sale->project_id],
                                       ])->first();
 
         if (!empty($domain)) {

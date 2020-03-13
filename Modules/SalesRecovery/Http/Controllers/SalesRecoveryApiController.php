@@ -118,7 +118,7 @@ class SalesRecoveryApiController extends Controller
 
     /**
      * @param Request $request
-     * @return SalesRecoveryCartAbandonedDetailsResourceTransformer|SalesRecoverydetailsResourceTransformer
+     * @return JsonResponse|SalesRecoveryCartAbandonedDetailsResourceTransformer|SalesRecoverydetailsResourceTransformer
      */
     public function getDetails(Request $request)
     {
