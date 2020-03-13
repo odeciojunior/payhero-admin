@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Projects\Http\Requests;
+namespace Modules\Projects\Http\Requests; 
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -51,6 +51,9 @@ class ProjectUpdateRequest extends FormRequest
             "status_url_affiliates"      => 'nullable|int|max:1',
             "commission_type_enum"       => 'nullable|int|max:2',
             "whatsapp_button"            => 'nullable',
+            "credit_card_discount"       => 'int|max:100',
+            "billet_discount"            => 'int|max:100',
+
         ];
     }
 

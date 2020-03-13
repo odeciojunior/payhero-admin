@@ -1,5 +1,5 @@
 @extends("layouts.master")
-
+ 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=1') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -188,7 +188,7 @@
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v=1')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=2')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js?v=10')}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js?v=12')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v=1')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
