@@ -38,7 +38,12 @@ class CartRecoveryService
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
 
-            $checkoutModel->where([['status_enum', '=',$checkoutModel->present()->getStatusEnum('abandoned cart')], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
+            $checkoutModel->where([
+                                      [
+                                          'status_enum', '=', $checkoutModel->present()
+                                                                            ->getStatusEnum('abandoned cart'),
+                                      ], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd],
+                                  ])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
@@ -59,10 +64,10 @@ class CartRecoveryService
                                                                   ->orderBy('created_at', 'desc')
                                                                   ->first();
 
-                                          $project         = $abandonedCart->project;
-                                          $domain          = $domainModel->where('project_id', $project->id)
-                                                                            ->where('status', 3)
-                                                                            ->first();
+                                          $project = $abandonedCart->project;
+                                          $domain  = $domainModel->where('project_id', $project->id)
+                                                                 ->where('status', 3)
+                                                                 ->first();
 
                                           $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
 
@@ -155,7 +160,12 @@ class CartRecoveryService
 
             $date = Carbon::now()->subDay('1')->toDateString();
 
-            $checkoutModel->where([['status_enum', '=', $checkoutModel->present()->getStatusEnum('abandoned cart')], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
+            $checkoutModel->where([
+                                      [
+                                          'status_enum', '=', $checkoutModel->present()
+                                                                            ->getStatusEnum('abandoned cart'),
+                                      ], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date],
+                                  ])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
@@ -182,7 +192,13 @@ class CartRecoveryService
                                                              ->where('status', 3)
                                                              ->first();
 
-                                      $linkCheckout = "https://checkout." . $domain->name ?? 'cloudfox.net' . "/recovery/" . $log->id_log_session;
+                                      if (empty($domain)) {
+                                          $domainName = 'cloudfox.net';
+                                      } else {
+                                          $domainName = $domain->name;
+                                      }
+
+                                      $linkCheckout = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
 
                                       $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log->telephone);
 
