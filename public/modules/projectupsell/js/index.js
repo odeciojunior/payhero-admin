@@ -493,11 +493,14 @@ $(document).ready(function () {
             }, success: function success(response) {
                 loadingOnScreenRemove();
                 let upsell = response.data;
+                $('.upsell-config-header').html('');
+                $('.upsell-config-discription').html('');
+                $('.div-upsell-products').html('');
                 $('.upsell-config-header').html(`${upsell.header}`);
                 $('.upsell-config-discription').html(`<h1 class='text-white'>${upsell.title}</h1><p>${upsell.description}</p>`);
                 if (upsell.countdown_flag) {
-                    $('.upsell-config-timer').show();
                     countdown(upsell.countdown_time);
+                    $('.upsell-config-timer').show();
                 } else {
                     $('.upsell-config-timer').hide();
                 }

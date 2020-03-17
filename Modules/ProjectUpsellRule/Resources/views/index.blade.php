@@ -128,7 +128,7 @@
 
 {{-- Modal visualizar configurações do upsell --}}
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
-    <div class="modal-dialog modal-lg d-flex justify-content-center" style='overflow: auto;'>
+    <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
