@@ -21,7 +21,7 @@
                 </textarea>
             </div>
         </div>
-        <div class="row">
+        <div class="row my-10">
             <div class="col-6 mt-5">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Habilitar contagem:</label>
@@ -38,6 +38,12 @@
                     <input type="text" class="form-control" name="countdown_time" id="countdown_time" placeholder="Digite o tempo da contagem em minutos" maxlength='2' data-mask="0#">
                 </div>
             </div>
+        </div>
+        <div class='my-10'>
+            <button class='btn btn-primary btn-sm btn-view-config' style='display:none;'>
+                <i class="material-icons">remove_red_eye</i>
+                 Visualizar configuração
+            </button>
         </div>
     </div>
 </form>

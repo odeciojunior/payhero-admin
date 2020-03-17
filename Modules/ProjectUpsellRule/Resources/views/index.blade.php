@@ -99,6 +99,8 @@
         </div>
     </div>
 </div>
+{{-- End Modal  --}}
+
 {{-- Modal delete upsell --}}
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-upsell" aria-hidden="true" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -118,6 +120,26 @@
             <div class="modal-footer d-flex align-items-center justify-content-center">
                 <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
                 <button type="button" class="col-4 btn btn-danger btn-delete-upsell" data-dismiss="modal" style="width: 20%;">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- End Modal  --}}
+
+{{-- Modal visualizar configurações do upsell --}}
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
+    <div class="modal-dialog modal-lg d-flex justify-content-center" style='overflow: auto;'>
+        <div class="modal-content" id="">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="modal-title">Upsell no checkout</h4>
+            </div>
+            <div class="pt-10 pr-20 pl-20 modal_upsell_body">
+                @include('projectupsellconfig::previewupsellconfig')
+            </div>
+            <div class="modal-footer" style="margin-top: 15px">
             </div>
         </div>
     </div>

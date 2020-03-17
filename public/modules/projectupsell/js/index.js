@@ -413,6 +413,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
 
             }, success: function success(response) {
@@ -429,6 +430,9 @@ $(document).ready(function () {
                 } else {
                     $('#countdown_flag').prop('checked', false);
                     $('.div-countdown-time').hide();
+                }
+                if (upsellConfig.has_upsell) {
+                    $('.btn-view-config').show();
                 }
             }
         });
@@ -466,7 +470,92 @@ $(document).ready(function () {
             }
         });
     });
+    $(document).on('click', '.btn-view-config', function (event) {
+        event.preventDefault();
+        $('#modal_config_upsell').modal('hide');
+        $('#modal-view-upsell-config').modal('show');
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/projectupsellconfig/previewupsell",
+            dataType: "json",
+            data: {
+                project_id: projectId,
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
 
+            }, success: function success(response) {
+                loadingOnScreenRemove();
+                let upsell = response.data;
+                $('.upsell-config-header').html(`${upsell.header}`);
+                $('.upsell-config-discription').html(`<h1 class='text-white'>${upsell.title}</h1><p>${upsell.description}</p>`);
+                if (upsell.countdown_flag) {
+                    $('.upsell-config-timer').show();
+                    countdown(upsell.countdown_time);
+                } else {
+                    $('.upsell-config-timer').hide();
+                }
+                let dataProduct
+                for (let plan of upsell.offer_on_plans) {
+                    for (let product of plan.products) {
+                        dataProduct = `
+                                     <div class="product-row">
+                                        <img src="${product.photo}" class="product-img">
+                                        <h3>${product.name}</h3>
+                                    </div>
+                                    `;
+                    }
+                    let data = `
+                        <div class="product-info">
+                            <div class="d-flex flex-column">
+                                ${dataProduct}
+                            </div>
+                        <div class="d-flex flex-column mt-4 mt-md-0">
+                            <button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
+                        </div>
+                       </div>
+                    `;
+                    $('.div-upsell-products').append(data);
+                }
+            }
+        });
+
+    });
+    function countdown(countdownTime) {
+        let countdown = localStorage.getItem('countdown');
+
+        if (countdown === null) {
+            countdown = new Date().getTime() + countdownTime * 60000; // 10 minutes
+            localStorage.setItem('countdown', countdown);
+        }
+
+        function setIntervalAndExecute(fn, t) {
+            fn();
+            return (setInterval(fn, t));
+        }
+
+        setIntervalAndExecute(() => {
+
+            let now = new Date().getTime();
+            let distance = countdown - now;
+
+            if (distance > 0) {
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                $('#minutes').text(minutes.toString().padStart(2, '0'));
+                $('#seconds').text(seconds.toString().padStart(2, '0'));
+            } else {
+                localStorage.removeItem('countdown');
+            }
+
+        }, 1000);
+    }
     function loadPlans() {
         $('#add_apply_on_plans').html('');
         $('#add_offer_on_plans').html('');

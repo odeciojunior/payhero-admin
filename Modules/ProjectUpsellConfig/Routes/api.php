@@ -20,6 +20,9 @@ Route::group(
         Route::apiResource('/projectupsellconfig', 'ProjectUpsellConfigApiController')
              ->only('index', 'store', 'destroy', 'update', 'show', 'edit')
              ->middleware('role:account_owner|admin');
+
+        Route::post('/projectupsellconfig/previewupsell', 'ProjectUpsellConfigApiController@previewUpsell')
+             ->middleware('role:account_owner|admin');
     }
 );
 //Route::middleware('auth:api')->get('/projectupsellconfig', function (Request $request) {

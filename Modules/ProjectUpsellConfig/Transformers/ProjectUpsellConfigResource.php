@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\ProjectUpsellRule;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -19,6 +20,9 @@ class ProjectUpsellConfigResource extends Resource
      */
     public function toArray($request)
     {
+        $projectUpsellModel = new ProjectUpsellRule();
+        $projectUpsell      = $projectUpsellModel->where('project_id', $this->project_id)->first();
+
         return [
             'id'             => Hashids::encode($this->id),
             'header'         => $this->header,
@@ -26,6 +30,7 @@ class ProjectUpsellConfigResource extends Resource
             'description'    => $this->description,
             'countdown_time' => $this->countdown_time ?? '',
             'countdown_flag' => $this->countdown_flag,
+            'has_upsell'      => $projectUpsell ? true : false,
         ];
     }
 }
