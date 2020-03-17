@@ -496,17 +496,31 @@ $(document).ready(function () {
                 $('.upsell-config-header').html('');
                 $('.upsell-config-discription').html('');
                 $('.div-upsell-products').html('');
+                $('.upsell-config-timer').html('');
                 $('.upsell-config-header').html(`${upsell.header}`);
                 $('.upsell-config-discription').html(`<h1 class='text-white'>${upsell.title}</h1><p>${upsell.description}</p>`);
                 if (upsell.countdown_flag) {
+                    $('.upsell-config-timer').html(`
+                        <div class="timer">
+                          <span class="timer-title">Por apenas um Tempo Limitado:</span>
+                          <div class="d-flex justify-content-center">
+                                <div class="d-flex flex-column">
+                                    <span class="digit" id="minutes">--</span>
+                                    <span class="timer-text">Minutos</span>
+                                </div>
+                                <span class="digit separator">:</span>
+                                <div class="d-flex flex-column">
+                                    <span class="digit" id="seconds">--</span>
+                                    <span class="timer-text">Segundos</span>
+                                </div>
+                          </div>
+                        </div>`
+                    );
                     countdown(upsell.countdown_time);
-                    $('.upsell-config-timer').show();
-                } else {
-                    $('.upsell-config-timer').hide();
                 }
-                let dataProduct
-                for (let plan of upsell.offer_on_plans) {
-                    for (let product of plan.products) {
+                let dataProduct;
+                for (let key in upsell.offer_on_plans) {
+                    for (let product of upsell.offer_on_plans[key]['products']) {
                         dataProduct = `
                                      <div class="product-row">
                                         <img src="${product.photo}" class="product-img">
@@ -523,6 +537,7 @@ $(document).ready(function () {
                             <button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
                         </div>
                        </div>
+                       ${key != upsell.offer_on_plans.length - 1 ? `<hr class="plan-separator">` : ''}
                     `;
                     $('.div-upsell-products').append(data);
                 }
@@ -537,7 +552,6 @@ $(document).ready(function () {
             countdown = new Date().getTime() + countdownTime * 60000; // 10 minutes
             localStorage.setItem('countdown', countdown);
         }
-
         function setIntervalAndExecute(fn, t) {
             fn();
             return (setInterval(fn, t));
