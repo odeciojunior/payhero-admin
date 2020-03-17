@@ -533,6 +533,7 @@ $(document).ready(function () {
                             <div class="d-flex flex-column">
                                 ${dataProduct}
                             </div>
+                        <h4 class="mb-md-4">Total R$ ${upsell.offer_on_plans[key]['price']}</h4>
                         <div class="d-flex flex-column mt-4 mt-md-0">
                             <button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
                         </div>
