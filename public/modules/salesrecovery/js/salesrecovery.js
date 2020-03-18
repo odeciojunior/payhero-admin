@@ -483,5 +483,9 @@ $(document).ready(function () {
         $(".clear-fields").empty();
         // $("#date-as-hours, #table-product, #total-value, #client-name-details, #client-telephone, #client-email, #client-document, #client-street, #client-zip-code, #client-city-state, #sale-motive, #link-sale, #checkout-ip, #checkout-is-mobile, #checkout-operational-system, #checkout-browser, #checkout-src, #checkout-utm-source, #checkout-utm-medium, #checkout-utm-campaign, #checkout-utm-term, #checkout-utm-content").html('');
     }
-
+    $(document).on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            updateSalesRecovery();
+        }
+    });
 });

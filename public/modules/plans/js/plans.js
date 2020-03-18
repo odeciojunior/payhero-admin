@@ -364,7 +364,7 @@ $(function () {
                                                     <label>Custo Total:</label>
                                                     <input value="${product_total}" id="product_total_${index}" class="form-control products_total products_total_edit" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                                 </div>
-                                             
+
                                                  <div class="form-group col-sm-3 col-md-3 col-lg-3">
                                                     <label>Moeda:</label>
                                                     <select id='select_currency_${index}' class='form-control select_currency select_currency_edit' name='currency[]'>
@@ -372,7 +372,7 @@ $(function () {
                                                         <option value='USD' >USD</option>
                                                     </select>
                                                 </div>
-                                                
+
                                                 <div class='form-group col-sm-12 offset-md-4 col-md-4 offset-lg-4 col-lg-4'>
                                                    <!--<label class="display-xsm-none">Remover:</label>-->
                                                    <button class='btn btn-outline btn-danger btnDelete form-control'>
@@ -392,7 +392,7 @@ $(function () {
                                 card_div_edit = $('.products_row_edit').find('#products_div_edit').first().clone();
                             } else {
                                 $('.products_row_edit').append(`
-                                    <div id="products_div_edit" class='card' > 
+                                    <div id="products_div_edit" class='card' >
                                         <div  class="row">
                                             <div class="form-group col-sm-12 col-md-12 col-lg-12">
                                                 <label>Produtos do plano:</label>
@@ -411,7 +411,7 @@ $(function () {
                                                 <label>Custo Total:</label>
                                                 <input value="" id="product_total_${index}" class="form-control products_total" type="text" data-mask='0#' name="product_total[]" placeholder="Custo Total" readonly>
                                             </div>
-                                         
+
                                             <div class="form-group col-sm-4 col-md-3 col-lg-3">
                                                 <label>Moeda:</label>
                                                 <select id='select_currency' class='form-control select_currency' name='currency[]'>
@@ -793,5 +793,10 @@ $(function () {
             $('.products_cost_create, .products_cost_edit').maskMoney('mask', 0.00);
         }
     }
+    $(document).on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            index();
+        }
+    });
 })
 ;
