@@ -389,7 +389,7 @@ $(() => {
 
                     let td = btnSave.parent();
 
-                    td.find('.tracking-add')
+                    td.find('.tracking-add, .tracking-edit, .tracking-detail')
                         .remove();
 
                     td.find('.tracking-close')
