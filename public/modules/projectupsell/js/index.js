@@ -518,27 +518,21 @@ $(document).ready(function () {
                     );
                     countdown(upsell.countdown_time);
                 }
-                let dataProduct;
-                for (let key in upsell.offer_on_plans) {
-                    for (let product of upsell.offer_on_plans[key]['products']) {
-                        dataProduct = `
-                                     <div class="product-row">
-                                        <img src="${product.photo}" class="product-img">
-                                        <h3>${product.name}</h3>
-                                    </div>
-                                    `;
-                    }
+                for (let key in upsell.products) {
                     let data = `
                         <div class="product-info">
                             <div class="d-flex flex-column">
-                                ${dataProduct}
+                                <div class="product-row">
+                                      <img src="${upsell.products[key].photo}" class="product-img">
+                                      <h3>${upsell.products[key].amount}x ${upsell.products[key].name}</h3>
+                                </div>
                             </div>
-                        <h4 class="mb-md-4">Total R$ ${upsell.offer_on_plans[key]['price']}</h4>
+                        <h4 class="mb-md-4">Total R$ ${upsell.products[key].price}</h4>
                         <div class="d-flex flex-column mt-4 mt-md-0">
                             <button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
                         </div>
                        </div>
-                       ${key != upsell.offer_on_plans.length - 1 ? `<hr class="plan-separator">` : ''}
+                       ${key != upsell.products.length - 1 ? `<hr class="plan-separator">` : ''}
                     `;
                     $('.div-upsell-products').append(data);
                 }
