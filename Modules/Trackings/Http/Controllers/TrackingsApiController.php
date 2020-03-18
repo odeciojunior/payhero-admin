@@ -233,6 +233,7 @@ class TrackingsApiController extends Controller
                                 return response()->json([
                                                             'message' => 'Código de rastreio salvo',
                                                             'data'    => [
+                                                                'id'                   => Hashids::encode($tracking->id),
                                                                 'tracking_code'        => $tracking->tracking_code,
                                                                 'tracking_status_enum' => $tracking->tracking_status_enum,
                                                                 'tracking_status'      => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
