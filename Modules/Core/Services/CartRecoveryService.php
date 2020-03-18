@@ -26,7 +26,6 @@ class CartRecoveryService
 
             $checkoutModel              = new Checkout();
             $checkoutLogModel           = new CheckoutLog();
-            $projectModel               = new Project();
             $domainModel                = new Domain();
             $projectNotificationModel   = new ProjectNotification();
             $projectNotificationService = new ProjectNotificationService();
@@ -38,10 +37,10 @@ class CartRecoveryService
             $dateStart->modify('-75 minutes');
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
-            $data                = [];
+
             $checkoutModel->where([['status_enum', '=',$checkoutModel->present()->getStatusEnum('abandoned cart')], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
+                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
                                   foreach ($abandonedCarts as $abandonedCart) {
                                       $products = [];
@@ -56,17 +55,21 @@ class CartRecoveryService
                                               }
                                           }
 
-                                          $log = $checkoutLogModel->where('id_log_session', $abandonedCart->id_log_session)
+                                          $log = $checkoutLogModel->where('checkout_id', $abandonedCart->id)
                                                                   ->orderBy('created_at', 'desc')
                                                                   ->first();
 
-                                          $project         = $projectModel->find($abandonedCart['project_id']);
+                                          $project         = $abandonedCart->project;
                                           $domain          = $domainModel->where('project_id', $project->id)
-                                                                         ->first();
+                                                                            ->where('status', 3)
+                                                                            ->first();
+
                                           $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
 
-                                          $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
-                                          $clientNameExploded = explode(' ', $log['name']);
+                                          $domainName = $domain->name ?? 'cloudfox.net';
+
+                                          $linkCheckout       = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
+                                          $clientNameExploded = explode(' ', $log->name);
 
                                           //Traz a mensagem do sms formatado
                                           $projectNotificationPresenter = $projectNotificationModel->present();
@@ -79,7 +82,6 @@ class CartRecoveryService
                                               $smsMessage = $projectNotificationService->formatNotificationData($message, null, $project, 'sms', $linkCheckout, $log);
                                               if (!empty($smsMessage) && !empty($clientTelephone)) {
                                                   $dataSms = [
-                                                      //'message'   => 'Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link,
                                                       'message'   => $smsMessage,
                                                       'telephone' => $clientTelephone,
                                                       'checkout'  => $abandonedCart,
@@ -116,7 +118,6 @@ class CartRecoveryService
                                                       'projectName' => $project['name'] ?? '',
                                                       'clientEmail' => $log['email'],
                                                       'clientName'  => $log['name'] ?? '',
-                                                      //'templateId'  => 'd-538d3405815c43debcf48aa44ceab965',
                                                       'templateId'  => 'd-92937608e68b47b79dbd2641fd20fd0d',
                                                       'bodyEmail'   => $bodyEmail,
                                                       'checkout'    => $abandonedCart,
@@ -148,16 +149,15 @@ class CartRecoveryService
         try {
             $checkoutModel              = new Checkout();
             $checkoutLogModel           = new CheckoutLog();
-            $projectModel               = new Project();
             $domainModel                = new Domain();
             $projectNotificationModel   = new ProjectNotification();
             $projectNotificationService = new ProjectNotificationService();
 
             $date = Carbon::now()->subDay('1')->toDateString();
-            $data = [];
+
             $checkoutModel->where([['status_enum', '=', $checkoutModel->present()->getStatusEnum('abandoned cart')], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                           ->with('project', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $projectModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
+                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
                                   try {
 
@@ -173,20 +173,20 @@ class CartRecoveryService
                                           }
                                       }
 
-                                      $log = $checkoutLogModel->where('id_log_session', $abandonedCart->id_log_session)
+                                      $log = $checkoutLogModel->where('checkout_id', $abandonedCart->id)
                                                               ->orderBy('created_at', 'desc')
                                                               ->first();
 
-                                      $project = $projectModel->find($abandonedCart['project_id']);
+                                      $project = $abandonedCart->project;
                                       $domain  = $domainModel->where('project_id', $project->id)
                                                              ->where('status', 3)
                                                              ->first();
 
-                                      $linkCheckout = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
+                                      $linkCheckout = "https://checkout." . $domain->name ?? 'cloudfox.net' . "/recovery/" . $log->id_log_session;
 
-                                      $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
+                                      $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log->telephone);
 
-                                      $clientNameExploded = explode(' ', $log['name']);
+                                      $clientNameExploded = explode(' ', $log->name);
 
                                       //Traz a mensagem do sms formatado
                                       $projectNotificationPresenter = $projectNotificationModel->present();
@@ -234,7 +234,6 @@ class CartRecoveryService
                                                   'projectName' => $project['name'] ?? '',
                                                   'clientEmail' => $log['email'],
                                                   'clientName'  => $clientNameExploded[0] ?? '',
-                                                  //'templateId'  => 'd-84ef2d36b629496da42c1a8bcbf6ed53',
                                                   'templateId'  => 'd-613da0ac5d7e478ba436e4d51e2ee42c',
                                                   'bodyEmail'   => $bodyEmail,
                                                   'checkout'    => $abandonedCart,

@@ -36,4 +36,13 @@ class ProjectsController extends Controller
     {
         return view('projects::project');
     }
+
+    /**
+     * @return Factory|View
+     */
+    public function showAffiliate()
+    {
+        return view('projects::projectaffiliate');
+    }
+
 }

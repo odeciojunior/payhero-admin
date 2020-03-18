@@ -96,7 +96,6 @@ class ProfileApiController
                 $userUpdateChanges = $user->getChanges();
                 if (!empty($userUpdateChanges)) {
 
-
                     if ((!empty($userUpdateChanges['email']) || array_key_exists('email', $userUpdateChanges))) {
                         $user->fill(["email_verified" => false])->save();
                     }
@@ -108,9 +107,9 @@ class ProfileApiController
 
                         $companyModel = new Company();
                         $company      = $companyModel->where('user_id', $user->id)
-                            ->where('company_type', $companyModel->present()
-                                ->getCompanyType('physical person'))
-                            ->first();
+                                                     ->where('company_type', $companyModel->present()
+                                                                                          ->getCompanyType('physical person'))
+                                                     ->first();
                         if (!empty($company)) {
                             $company->update(['company_document' => $user->document]);
                         }
@@ -134,8 +133,8 @@ class ProfileApiController
                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile', $userPhoto);
 
                         $user->update([
-                            'photo' => $digitalOceanPath,
-                        ]);
+                                          'photo' => $digitalOceanPath,
+                                      ]);
                     } catch (Exception $e) {
                         Log::warning('ProfileController - update - Erro ao enviar foto do profile');
                         report($e);
@@ -174,7 +173,7 @@ class ProfileApiController
                     'credit_card_release_money_days' => 30,
                     'debit_card_tax'                 => '5.9',
                     'debit_card_release_money_days'  => 30,
-                ]
+                ],
             ];
 
             $boletoTaxes = [
@@ -182,10 +181,10 @@ class ProfileApiController
                     'boleto_tax'                => '5.9',
                     'boleto_release_money_days' => 30,
                 ],
-                'plan-2' => [
+                'plan-2'  => [
                     'boleto_tax'                => '6.5',
                     'boleto_release_money_days' => 2,
-                ]
+                ],
             ];
 
             $newCardTax   = '';
@@ -198,18 +197,18 @@ class ProfileApiController
             $newBoletoTax = $requestData['boleto_plan'] == 'plan-30' ? '5.9%' : '6.5%';
 
             return response()->json([
-                'message' => 'Plano atualizado com sucesso',
-                'data'    => [
-                    'new_card_tax_value'   => $newCardTax,
-                    'new_boleto_tax_value' => $newBoletoTax,
-                ],
-            ]);
+                                        'message' => 'Plano atualizado com sucesso',
+                                        'data'    => [
+                                            'new_card_tax_value'   => $newCardTax,
+                                            'new_boleto_tax_value' => $newBoletoTax,
+                                        ],
+                                    ]);
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu algum erro',
-            ]);
+                                        'message' => 'Ocorreu algum erro',
+                                    ]);
         }
     }
 
@@ -225,8 +224,8 @@ class ProfileApiController
                 $requestData = $request->validated();
 
                 $user->update([
-                    'password' => bcrypt($requestData['new_password']),
-                ]);
+                                  'password' => bcrypt($requestData['new_password']),
+                              ]);
 
                 return response()->json("success");
             } else {
@@ -264,9 +263,11 @@ class ProfileApiController
 
             $verifyCode = random_int(100000, 999999);
 
+            $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
+
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
-            $smsService->sendSms($cellphone, $message);
+            $smsService->sendSms($cellphone, $message, ' ', 1);
 
             return response()->json(
                 [
@@ -275,7 +276,7 @@ class ProfileApiController
                 ],
                 200
             )
-                ->withCookie("cellphoneverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
+                             ->withCookie("cellphoneverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
         } catch (Exception $e) {
             Log::warning('ProfileController verifyCellphone');
             report($e);
@@ -317,7 +318,7 @@ class ProfileApiController
                 ],
                 200
             )
-                ->withCookie(Cookie::forget("cellphoneverifycode_" . Hashids::encode(auth()->id())));
+                             ->withCookie(Cookie::forget("cellphoneverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             Log::warning('ProfileController matchCellphoneVerifyCode');
             report($e);
@@ -378,7 +379,7 @@ class ProfileApiController
                     ],
                     200
                 )
-                    ->withCookie("emailverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
+                                 ->withCookie("emailverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
             }
 
             return response()->json(
@@ -429,7 +430,7 @@ class ProfileApiController
                 ],
                 200
             )
-                ->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
+                             ->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
             Log::warning('ProfileController matchEmailVerifyCode');
             report($e);
@@ -459,26 +460,26 @@ class ProfileApiController
                 $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents', $document, null, null, 'private');
 
                 $documentType = $userModel->present()
-                    ->getDocumentType($dataForm["document_type"]);
+                                          ->getDocumentType($dataForm["document_type"]);
 
                 $documentSaved = $userDocument->create([
-                    'user_id'            => auth()->user()->account_owner_id,
-                    'document_url'       => $digitalOceanPath,
-                    'document_type_enum' => $documentType,
-                    'status'             => $userDocument->present()
-                        ->getTypeEnum('analyzing'),
-                ]);
+                                                           'user_id'            => auth()->user()->account_owner_id,
+                                                           'document_url'       => $digitalOceanPath,
+                                                           'document_type_enum' => $documentType,
+                                                           'status'             => $userDocument->present()
+                                                                                                ->getTypeEnum('analyzing'),
+                                                       ]);
 
                 if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
                     $user->update([
-                        'personal_document_status' => $user->present()
-                            ->getPersonalDocumentStatus('analyzing'),
-                    ]);
+                                      'personal_document_status' => $user->present()
+                                                                         ->getPersonalDocumentStatus('analyzing'),
+                                  ]);
                 } else if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
                     $user->update([
-                        'address_document_status' => $user->present()
-                            ->getAddressDocumentStatus('analyzing'),
-                    ]);
+                                      'address_document_status' => $user->present()
+                                                                        ->getAddressDocumentStatus('analyzing'),
+                                  ]);
                 } else {
                     $documentSaved->delete();
 
@@ -486,12 +487,12 @@ class ProfileApiController
                 }
 
                 return response()->json([
-                    'message'                     => 'Arquivo enviado com sucesso.',
-                    'personal_document_translate' => Lang::get('definitions.enum.personal_document_status.' . $user->present()
-                        ->getPersonalDocumentStatus($user->personal_document_status)),
-                    'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' . $user->present()
-                        ->getAddressDocumentStatus($user->address_document_status)),
-                ], 200);
+                                            'message'                     => 'Arquivo enviado com sucesso.',
+                                            'personal_document_translate' => Lang::get('definitions.enum.personal_document_status.' . $user->present()
+                                                                                                                                           ->getPersonalDocumentStatus($user->personal_document_status)),
+                                            'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' . $user->present()
+                                                                                                                                           ->getAddressDocumentStatus($user->address_document_status)),
+                                        ], 200);
             } else {
                 return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
             }
@@ -517,21 +518,21 @@ class ProfileApiController
                     return new ProfileTaxResource($user);
                 } else {
                     return response()->json([
-                        'message' => 'Ocorreu um erro!',
-                    ], 400);
+                                                'message' => 'Ocorreu um erro!',
+                                            ], 400);
                 }
             } else {
                 return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ], 400);
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar dados taxas do usuario (ProfileApiController - getTax)');
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 
@@ -548,8 +549,8 @@ class ProfileApiController
             $userNotification = $user->userNotification ?? null;
             if (FoxUtils::isEmpty($userNotification)) {
                 return response()->json([
-                    'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
-                ], 400);
+                                            'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
+                                        ], 400);
             }
 
             $column = $data["column"] ?? null;
@@ -557,8 +558,8 @@ class ProfileApiController
 
             if (FoxUtils::isEmpty($column) || is_null($value)) {
                 return response()->json([
-                    'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
-                ], 400);
+                                            'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
+                                        ], 400);
             }
 
             $userNotification->$column = $value;
@@ -573,14 +574,14 @@ class ProfileApiController
             }
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         } catch (Exception $ex) {
             report($ex);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 
@@ -616,21 +617,21 @@ class ProfileApiController
                 $documentType = $userModel->present()->getDocumentType($request->input('document_type'));
 
                 $userDocuments = $userDocumentModel->where('user_id', auth()->user()->account_owner_id)
-                    ->where('document_type_enum', $documentType)->get();
+                                                   ->where('document_type_enum', $documentType)->get();
 
                 return ProfileDocumentsResource::collection($userDocuments);
             } else {
 
                 return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ], 400);
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
             }
         } catch (Exception $e) {
             report($e);
 
             return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-            ], 400);
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 

@@ -40,13 +40,17 @@ class ProductService
             $sale = $saleParam;
         } else if (is_int($saleParam)) {
             $saleModel = new Sale();
-            $sale = $saleModel->with(['productsPlansSale.tracking'])
-                ->find($saleParam);
+            $sale = $saleModel->with([
+                'productsPlansSale.tracking',
+                'productsPlansSale.product',
+            ])->find($saleParam);
         } else if (is_string($saleParam)) {
             $saleModel = new Sale();
             $saleId = current(Hashids::connection('sale_id')->decode($saleParam));
-            $sale = $saleModel->with(['productsPlansSale.tracking'])
-                ->find($saleId);
+            $sale = $saleModel->with([
+                'productsPlansSale.tracking',
+                'productsPlansSale.product',
+            ])->find($saleId);
         }
 
         $productsSale = collect();

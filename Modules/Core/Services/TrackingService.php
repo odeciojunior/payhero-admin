@@ -27,9 +27,11 @@ class TrackingService
      */
     public function sendTrackingToApi(Tracking $tracking)
     {
-        $trackingmoreService = new TrackingmoreService();
+        if(!empty($tracking->tracking_code)) {
+            $trackingmoreService = new TrackingmoreService();
 
-        return $trackingmoreService->createTracking($tracking->tracking_code);
+            return $trackingmoreService->createTracking($tracking->tracking_code);
+        }
     }
 
     /**
@@ -289,6 +291,7 @@ class TrackingService
             $trackingPresenter->getTrackingStatusEnum('delivered'),
             $trackingPresenter->getTrackingStatusEnum('out_for_delivery'),
             $trackingPresenter->getTrackingStatusEnum('exception'),
+            $trackingPresenter->getTrackingStatusEnum('ignored'),
         ];
 
         $productPlanSales = $this->getTrackingsQueryBuilder($filters)
@@ -304,6 +307,7 @@ class TrackingService
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
+                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as ignored,
                                    SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown", $status)
             ->first();
 

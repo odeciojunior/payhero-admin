@@ -57,7 +57,7 @@ use App\Traits\LogsActivity;
  * @property Project $project
  * @property Shipping $shipping
  * @property Affiliate $affiliate
- * @property Customer $client
+ * @property Customer $customer
  * @property Delivery $delivery
  * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
@@ -121,6 +121,7 @@ class Sale extends Model
         'gateway_card_flag',
         'gateway_tax_percent',
         'gateway_tax_value',
+        'automatic_discount',
     ];
     /**
      * @var bool

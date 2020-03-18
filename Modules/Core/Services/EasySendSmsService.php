@@ -6,6 +6,10 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * Class EasySendSmsService
+ * @package Modules\Core\Services
+ */
 class EasySendSmsService
 {
     /**
@@ -33,13 +37,12 @@ class EasySendSmsService
      * Message content that is to be transmitted
      */
     private $message;
-    /*
+    /**
      * Type fo the message that is to bet sent
      * 0 -> means plain text
      * 1 -> means unicode (message content should be in hex)
      * 2 -> means plain flash text
      * 3 -> means unicode flash (message content should be in hex)
-     *
      */
     private $messageType;
     /**
@@ -55,7 +58,7 @@ class EasySendSmsService
      * @param string $sender
      * @param string $msgType
      */
-    public function __construct(string $numberMobile, string $message, string $sender = 'cloudfox', string $msgType = '1')
+    public function __construct(string $numberMobile, string $message, string $sender = '', string $msgType = '1')
     {
         $this->host         = 'https://www.easysendsms.com/sms/bulksms-api/bulksms-api';
         $this->username     = getenv('USERNAME_EASY_SMS');
@@ -105,6 +108,9 @@ class EasySendSmsService
         }
     }
 
+    /**
+     * Send SMS for users
+     */
     public function submit()
     {
 

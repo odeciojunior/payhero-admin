@@ -2,7 +2,6 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use App\Services\FoxUtilsService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +10,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
@@ -31,7 +29,6 @@ use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -200,7 +197,7 @@ class SalesApiController extends Controller
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount);
             } else {
-                $result = $saleService->refund($saleId);
+                $result = $saleService->refund($saleId); 
             }
             if ($result['status'] == 'success') {
                 $sale->update([
@@ -221,6 +218,11 @@ class SalesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $saleId
+     * @return JsonResponse
+     */
     public function newOrderShopify(Request $request, $saleId)
     {
         try {

@@ -95,7 +95,6 @@
         <!-- End Site Navbar Seach -->
     </div>
 </nav>
-
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
@@ -169,22 +168,6 @@
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-            <li class="site-menu-item has-sub  disabled">
-                <ul class="site-menu-sub">
-                    <li class="site-menu-item">
-                        <a href="{!! route('afiliados.minhasafiliacoes') !!}">
-                            <span class="site-menu-title">Minhas afiliações</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="{!! route('afiliados.meusafiliados') !!}">
-                            <span class="site-menu-title">Meus afiliados</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{!! route('finances') !!}">
                     <i class="material-icons align-middle">local_atm</i>
@@ -193,32 +176,57 @@
             </li>
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-                <li class="site-menu-item has-sub">
-                    <a href="javascript:void(0)" id="reports-link">
-                        <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path fill="none" d="M0 0h24v24H0z"/>
-                        </svg>
-                        <span class="site-menu-title">Relatórios</span>
-                        <span class="site-menu-arrow"></span>
-                    </a>
-                    <ul class="site-menu-sub">
-                        <li class="site-menu-item has-sub">
-                            <a href="{!! route('reports.index') !!}">
-                                <span class="site-menu-title">Vendas</span>
-                            </a>
-                        </li>
-                        <li class="site-menu-item">
-                            <a href="{{ route('reports.checkouts') }}">
-                                <span class="site-menu-title">Acessos</span>
-                            </a>
-                        </li>
-                        <li class="site-menu-item">
-                            <a href="{{ route('reports.projections') }}">
-                                <span class="site-menu-title">Projeções</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)" id="reports-link">
+                    <svg class="svg-menu align-middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                        <path fill="none" d="M0 0h24v24H0z"/>
+                    </svg>
+                    <span class="site-menu-title">Relatórios</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item has-sub">
+                        <a href="{!! route('reports.index') !!}">
+                            <span class="site-menu-title">Vendas</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('reports.checkouts') }}">
+                            <span class="site-menu-title">Acessos</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('reports.projections') }}">
+                            <span class="site-menu-title">Projeções</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
+                    <i class="fa-handshake-o" style='font-size: large;'></i>
+                    <span class="site-menu-title mb-5">Afiliados</span>
+                </a>
+            </li>
+            {{--            <li class="site-menu-item has-sub  disabled">--}}
+            {{--                <ul class="site-menu-sub">--}}
+            {{--                    <li class="site-menu-item">--}}
+            {{--                        --}}{{-- <a href="{!! route('afiliados.minhasafiliacoes') !!}"> --}}
+            {{--                        <a href="">--}}
+            {{--                            <span class="site-menu-title">Minhas afiliações</span>--}}
+            {{--                        </a>--}}
+            {{--                    </li>--}}
+            {{--                    <li class="site-menu-item">--}}
+            {{--                        <a href="">--}}
+            {{--                        --}}{{-- <a href="{!! route('afiliados.meusafiliados') !!}"> --}}
+            {{--                            <span class="site-menu-title">Meus afiliados</span>--}}
+            {{--                        </a>--}}
+            {{--                    </li>--}}
+            {{--                </ul>--}}
+            {{--            </li>--}}
         @endif
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">

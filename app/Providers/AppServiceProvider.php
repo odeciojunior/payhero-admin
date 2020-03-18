@@ -21,8 +21,6 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set('America/Sao_Paulo');
 
         Queue::failing(function (JobFailed $event) {
-            Log::warning('Te peguei');
-            Log::warning($event->exception);
             report($event->exception);
         });
     }
