@@ -162,7 +162,13 @@ class SalesApiController extends Controller
                                               ->whereIn('company_id', $userCompanies)
                                               ->first();
 
-            $refundAmount = preg_replace('/\D/', '', $sale->total_paid_value);
+            // $refundAmount = preg_replace('/\D/', '', $sale->total_paid_value);
+            $partial = $request->input('partial');
+            $refundSale = preg_replace('/\D/', '', $sale->total_paid_value);
+            $refundAmount = ($partial == true) ? preg_replace('/\D/', '', $request->input('refunded_value')) : $refundSale;
+            if($refundAmount > $refundSale) {
+                return response()->json(['message' => 'O valor a estornar deve ser menor ou igual ao valor da venda.'], Response::HTTP_BAD_REQUEST);
+            }
 
             $value = $transaction->company->balance - $refundAmount;
 
@@ -192,10 +198,14 @@ class SalesApiController extends Controller
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
             })->log('Estorno transação: #' . $saleId);
+            $partialValues = '';
+            if($partial == true) {
+                $partialValues = $saleService->getValuesPartialRefund($sale, $refundAmount);
+            }
 
             if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
                 // Zoop e Cielo CancelPayment
-                $result = $checkoutService->cancelPayment($sale, $refundAmount);
+                $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues);
             } else {
                 $result = $saleService->refund($saleId); 
             }

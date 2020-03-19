@@ -97,7 +97,7 @@ class CheckoutService
         return $total;
     }
 
-    public function cancelPayment($sale, $refundAmount)
+    public function cancelPayment($sale, $refundAmount, $partialValues = '')
     {
         try {
             $saleService      = new SaleService();
@@ -107,7 +107,8 @@ class CheckoutService
             $saleAmount       = Str::replaceFirst(',', '',
                                                   Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             // TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
-            if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
+            // if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
+            if ($refundAmount > $saleAmount ) {
                 $result = [
                     'status'  => 'error',
                     'message' => 'Valor não confere com o da Venda.',
@@ -117,15 +118,17 @@ class CheckoutService
                 $urlCancelPayment = 'https://checkout.cloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                  ->encode($sale->id);
             } else {
-                $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
+                // $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id') // @TODO - voltar
+                $urlCancelPayment = 'http://dev.foxcheckout.com.br/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                 ->encode($sale->id);
             }
             $dataCancel = [
-                'refundAmount' => $refundAmount,
+                'refundAmount' => (!empty($partialValues['value_to_refund'])) ? $partialValues['value_to_refund'] : $refundAmount,
+                'partial'      => (!empty($partialValues)) ? true : false,
             ];
             $response   = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if (($response->status ?? '') == 'success') {
-                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
+                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response, $partialValues);
                 if ($checkUpdate) {
                     $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
                     $transaction   = $transactionModel->where('sale_id', $sale->id)

@@ -122,6 +122,7 @@ class Sale extends Model
         'gateway_tax_percent',
         'gateway_tax_value',
         'automatic_discount',
+        'interest_total_value',
     ];
     /**
      * @var bool

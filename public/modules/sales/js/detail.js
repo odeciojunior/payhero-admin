@@ -104,6 +104,7 @@ $(() => {
 
         loadOnAny('#modal-saleDetails');
         $('#modal_detalhes').modal('show');
+        $("#refundAmount").mask('##.###,#0', {reverse: true});
 
         $.ajax({
             method: "GET",
@@ -119,15 +120,28 @@ $(() => {
             success: (response) => {
                 getSale(response.data);
 
+                $("#refundAmount").val(response.data.total);
                 $(".btn_refund_transaction").unbind('click');
                 $(".btn_refund_transaction").on('click', function () {
                     var sale = $(this).attr('sale');
                     $('#modal-refund-transaction').modal('show');
                     $('#modal_detalhes').modal('hide');
+                    $('#radioTotalRefund').on('click', function () {
+                        $('.value-partial-refund').hide();
+                    });
+                    $('#radioPartialRefund').on('click', function () {
+                        $('.value-partial-refund').show();
+                    });
 
                     $(".btn-confirm-refund-transaction").unbind('click');
                     $(".btn-confirm-refund-transaction").on('click', function () {
-                        refundedClick(sale);
+                        if(document.getElementById('radioPartialRefund').checked) {
+                            var partial = true;
+                        } else {
+                            var partial = false;
+                        }
+                        var refunded_value = $('#refundAmount').val();
+                        refundedClick(sale, refunded_value, partial);
                     })
                 });
             }
@@ -319,7 +333,7 @@ $(() => {
             $('#checkout-attempts').text('Quantidade de tentativas: ' + sale.attempts).show();
         }
 
-        if ((sale.payment_method == 1 || sale.payment_method == 3) && sale.status == 1) {
+        if ((sale.payment_method == 1 || sale.payment_method == 3) && (sale.status == 1 || sale.status == 8)) {
             $('#div_refund_transaction').html('<button class="btn btn-secondary btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
         } else {
             $('#div_refund_transaction').html('');
@@ -650,11 +664,12 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(sale) {
+    function refundedClick(sale, refunded_value = 0, partial = false) {
         loadingOnScreen();
         $.ajax({
             method: "POST",
             url: '/api/sales/refund/' + sale,
+            data: { refunded_value: refunded_value, partial: partial },
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
