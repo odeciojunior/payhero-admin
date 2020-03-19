@@ -648,7 +648,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=3')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=4')}}"></script>
     @endpush
 
 @endsection
