@@ -123,6 +123,7 @@ class Sale extends Model
         'gateway_tax_value',
         'automatic_discount',
         'interest_total_value',
+        'refund_value',
     ];
     /**
      * @var bool

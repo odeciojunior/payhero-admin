@@ -265,6 +265,7 @@ class SaleService
         }
 
         $total -= $sale->automatic_discount;
+        $total -= $sale->refund_value;
 
         //calcule fees
         $transactionConvertax = $sale->transactions
@@ -343,6 +344,7 @@ class SaleService
             'taxaReal'            => $taxaReal,
             'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
             'affiliate_comission' => $affiliateComission,
+            'refund_value'        => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
         ];
     }
 
@@ -445,6 +447,7 @@ class SaleService
                                                   'status'               => $saleModel->present()->getStatus($status),
                                                   'gateway_status'       => $statusGateway,
                                                   'interest_total_value' => $partialValues['interest_value'] ?? null,
+                                                  'refund_value'         => $sale->refund_value + $refundAmount,
                                               ]);
 
             SaleRefundHistory::create([
@@ -452,6 +455,7 @@ class SaleService
                                           'refunded_amount'  => (!empty($partialValues)) ? $partialValues['value_to_refund'] : $refundAmount,
                                           'date_refunded'    => Carbon::now(),
                                           'gateway_response' => json_encode($responseGateway),
+                                          'refund_value'     => $refundAmount,
                                       ]);
             if($status == 'refunded') {
                 $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);

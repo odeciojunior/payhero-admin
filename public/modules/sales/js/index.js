@@ -211,6 +211,7 @@ $(document).ready(function () {
                     1: 'success',
                     6: 'primary',
                     7: 'danger',
+                    8: 'warning',
                     4: 'danger',
                     3: 'danger',
                     2: 'pendente',

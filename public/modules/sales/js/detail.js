@@ -236,6 +236,15 @@ $(() => {
         $("#automatic-discount-value").html("R$ " + sale.automatic_discount);
         $("#total-value").html("R$ " + sale.total);
 
+        if(sale.refund_value == '0,00') {
+            $('.text-partial-refund').hide();
+            $("#partial-refund-value").hide();
+        } else {
+            $('.text-partial-refund').show();
+            $("#partial-refund-value").html("R$ " + sale.refund_value);
+            $("#partial-refund-value").show();
+        }
+
         $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
         $('#taxareal-value').text(sale.taxaReal ? sale.taxaReal : '');
 
