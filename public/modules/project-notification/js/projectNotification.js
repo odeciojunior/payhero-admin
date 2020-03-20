@@ -210,7 +210,7 @@ $(function () {
         });
     });
 
-    
+
     $(document).on('change', '.project_notification_status', function () {
         let status = 0;
         if(this.checked) {
@@ -289,17 +289,25 @@ $(function () {
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
-                                <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">remove_red_eye</i> </a>
-                                <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                <div class="switch-holder d-inline">
-                                   <label class="switch">
-                                       <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}>
-                                       <span class="slider round"></span>
+                                <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}">
+                                    <i class="material-icons gradient">remove_red_eye</i>
+                                </a>
+                                 ${value.notification_enum != 11 ?
+                                `<a role="button" title="Editar" class="mg-responsive edit-project-notification pointer" project-notification='${value.id}'>
+                                    <i class="material-icons gradient">edit</i>
+                                 </a>` :
+                                 `<button style="background-color: transparent;" role="button" class="btn pointer" disabled="">
+                                     <i class="material-icons gradient">edit</i>
+                                 </button>`}
+                                <div class="switch-holder d-inline" ${value.notification_enum == 11 ? 'style=" opacity: 0.5;"' : ''}>
+                                   <label class="switch" ${value.notification_enum == 11 ? 'style="cursor: not-allowed"' : ''}>
+                                       <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
+                                        ${value.notification_enum == 11 ? 'disabled' : ''}>
+                                       <span class="slider round" ${value.notification_enum == 11 ? 'style="cursor: not-allowed"' : ''}></span>
                                    </label>
                                </div>
                             </td>
                         </tr>`;
-
                         $("#data-table-sms").append(data);
                     });
                     pagination(response, 'project-notification', atualizarProjectNotification);

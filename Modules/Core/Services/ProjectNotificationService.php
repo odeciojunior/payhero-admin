@@ -274,4 +274,13 @@ class ProjectNotificationService
             report($ex);
         }
     }
+
+    public function updateSmsCreditCardPaidNotification($projectId)
+    {
+        $projectNotification = ProjectNotification::where('project_id', $projectId)->where('notification_enum', 11)
+                                                  ->first();
+        $projectNotification->update([
+                                             'message' => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato por email {projeto_email} ou telefone {projeto_telefone}. Em breve enviaremos o código de rastreio.',
+                                     ]);
+    }
 }
