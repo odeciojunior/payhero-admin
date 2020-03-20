@@ -120,7 +120,7 @@ class SalesRecoveryService
     {
         $logModel    = new CheckoutLog();
         $domainModel = new Domain();
-        $log         = $logModel->where('id_log_session', $checkout->id_log_session)
+        $log         = $logModel->where('checkout_id', $checkout->id)
                                 ->orderBy('id', 'DESC')->first();
         $whatsAppMsg = 'Olá ' . explode(' ', $log->name)[0];
 
@@ -231,7 +231,7 @@ class SalesRecoveryService
         if ($sale->payment_method == 2) {
             $customer->error = 'Não pago até a data do vencimento';
         } else {
-            $log = $logModel->where('id_log_session', $checkout->id_log_session)
+            $log = $logModel->where('checkout_id', $checkout->id)
                             ->where('event', '=', 'payment error')
                             ->orderBy('id', 'DESC')
                             ->first();
