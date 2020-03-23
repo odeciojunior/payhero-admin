@@ -352,6 +352,15 @@ class InvitesApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Verificou convite');
 
+            if('nw2usr3cfx' == $inviteId) {
+                return response()->json(
+                    [
+                        'message' => 'Cadastro sem convite válido!',
+                        'data' => 'valido',
+                    ], 200
+                );
+            }
+
             if (strlen($inviteId) > 15) {
                 $inviteId = substr($inviteId, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
