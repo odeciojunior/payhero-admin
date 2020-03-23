@@ -65,7 +65,8 @@ class ProfileApiController
     public function update(ProfileUpdateRequest $request, $idCode)
     {
         try {
-            $user = auth()->user();
+            $user      = auth()->user();
+            $userModel = new User();
 
             if (Gate::allows('update', [$user])) {
                 $requestData = $request->validated();
@@ -74,6 +75,12 @@ class ProfileApiController
                 }
                 $requestData['document'] = preg_replace("/[^0-9]/", "", $requestData['document']);
                 $requestData['name']     = preg_replace('/( )+/', ' ', $requestData['name']);
+
+                $equalUserEmail = $userModel->where('email', $requestData['email'])
+                                            ->where('id', '!=', $user->account_owner_id)->first();
+                if (!empty($equalUserEmail)) {
+                    return response()->json(['message' => 'Já existe um usuário cadastrado com esse Email'], 400);
+                }
 
                 $user->fill(
                     [

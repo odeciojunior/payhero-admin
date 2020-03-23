@@ -239,7 +239,7 @@
     </div>
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=1') }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=2') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
 
