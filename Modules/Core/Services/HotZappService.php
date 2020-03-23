@@ -96,7 +96,7 @@ class HotZappService
             $plans[] = [
                 "price" => $planSale->plan()->first()->price,
                 "quantity" => $planSale->amount,
-                "product_name" => $planSale->plan()->first()->name,
+                "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
             ];
         }
 

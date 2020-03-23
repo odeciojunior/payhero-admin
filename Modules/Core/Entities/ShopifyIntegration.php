@@ -27,6 +27,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $theme_html
  * @property string $layout_theme_html
  * @property boolean $status
+ * @property boolean $skip_to_cart
  * @property Project $project
  * @property User $user
  */

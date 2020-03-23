@@ -113,7 +113,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'utm_medium' => $sale->checkout->utm_medium ?? '',
                 'utm_campaign' => $sale->checkout->utm_campaign ?? '',
                 'utm_term' => $sale->checkout->utm_term ?? '',
-                'utm_content' => preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', $sale->checkout->utm_content) ?? '',
+                'utm_content' => preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', ($sale->checkout->utm_content ?? '')) ?? '',
             ];
         }
 

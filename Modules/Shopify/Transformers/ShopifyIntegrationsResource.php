@@ -16,6 +16,7 @@ class ShopifyIntegrationsResource extends Resource
             'user_id'    => Hashids::encode($this->user_id),
             'token'      => $this->token,
             'status'     => $this->status,
+            'skip_to_cart' => $this->skip_to_cart,
         ];
     }
 }
