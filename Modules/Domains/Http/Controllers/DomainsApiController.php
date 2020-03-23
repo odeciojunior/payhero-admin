@@ -139,29 +139,36 @@ class DomainsApiController extends Controller
                                     $requestData['domain_ip'] = 'Domínio Shopify';
                                 }
 
-                                $cloudFlareService->setCloudFlareConfig($requestData['name']);
+                                $setCloudFlareConfig = $cloudFlareService->setCloudFlareConfig($requestData['name']);
 
-                                if ($newDomain) {
-                                    DB::commit();
+                                if ($setCloudFlareConfig) {
+                                    if ($newDomain) {
+                                        DB::commit();
 
-                                    $newNameServers = [];
-                                    foreach ($cloudFlareService->getZones() as $zone) {
-                                        if ($zone->name == $domainCreated->name) {
-                                            foreach ($zone->name_servers as $new_name_server) {
-                                                $newNameServers[] = $new_name_server;
+                                        $newNameServers = [];
+                                        foreach ($cloudFlareService->getZones() as $zone) {
+                                            if ($zone->name == $domainCreated->name) {
+                                                foreach ($zone->name_servers as $new_name_server) {
+                                                    $newNameServers[] = $new_name_server;
+                                                }
                                             }
                                         }
-                                    }
 
-                                    return response()->json([
-                                                                'message' => 'Domínio cadastrado com sucesso',
-                                                                'data'    => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers],
-                                                            ], 200);
+                                        return response()->json([
+                                                                    'message' => 'Domínio cadastrado com sucesso',
+                                                                    'data'    => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers],
+                                                                ], 200);
+                                    } else {
+                                        //problema ao cadastrar dominio
+                                        DB::rollBack();
+
+                                        return response()->json(['message' => 'Erro ao criar domínio.'], 400);
+                                    }
                                 } else {
-                                    //problema ao cadastrar dominio
+                                    //erro ao criar dominio
                                     DB::rollBack();
 
-                                    return response()->json(['message' => 'Erro ao criar domínio.'], 400);
+                                    return response()->json(['message' => 'Domínio inválido!'], 400);
                                 }
                             } else {
                                 //erro ao criar dominio
@@ -393,7 +400,7 @@ class DomainsApiController extends Controller
             $domainModel       = new Domain();
             $cloudFlareService = new CloudFlareService();
 
-            $domainId          = current(Hashids::decode($domain));
+            $domainId = current(Hashids::decode($domain));
             if (!empty($domainId)) {
                 // hashid ok
                 $domain = $domainModel->with(['domainsRecords', 'project', 'project.shopifyIntegrations'])
