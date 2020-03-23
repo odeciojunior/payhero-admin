@@ -700,7 +700,7 @@ class SaleService
 
     public function getValuesPartialRefund($sale, $refundValue)
     {
-        $totalPaidValue       = intval($sale->total_paid_value * 100);
+        $totalPaidValue       = intval(strval($sale->total_paid_value * 100));
         $totalWithoutInterest = $totalPaidValue - $sale->interest_total_value; // total sem juros
         $newTotalvalue        = $totalWithoutInterest - $refundValue; // novo valor total sem juros
 

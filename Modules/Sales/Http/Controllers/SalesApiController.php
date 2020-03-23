@@ -163,7 +163,7 @@ class SalesApiController extends Controller
                                               ->first();
 
             // $refundAmount = preg_replace('/\D/', '', $sale->total_paid_value);
-            $partial = $request->input('partial');
+            $partial = boolval($request->input('partial'));
             $refundSale = preg_replace('/\D/', '', $sale->total_paid_value);
             $refundAmount = ($partial == true) ? preg_replace('/\D/', '', $request->input('refunded_value')) : $refundSale;
             if($refundAmount > $refundSale) {
@@ -184,7 +184,6 @@ class SalesApiController extends Controller
                                                         ->whereDate('release_date', '>', now()->startOfDay())
                                                         ->select(DB::raw('sum( value ) as pending_balance'))
                                                         ->first();
-
                 $pendingBalance      = intval($pendingTransactions->pending_balance);
                 $valuePendingBalance = $pendingBalance - $refundAmount;
 

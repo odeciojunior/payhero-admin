@@ -135,10 +135,9 @@ $(() => {
 
                     $(".btn-confirm-refund-transaction").unbind('click');
                     $(".btn-confirm-refund-transaction").on('click', function () {
+                        var partial = 0;
                         if(document.getElementById('radioPartialRefund').checked) {
-                            var partial = true;
-                        } else {
-                            var partial = false;
+                            var partial = 1;
                         }
                         var refunded_value = $('#refundAmount').val();
                         refundedClick(sale, refunded_value, partial);
@@ -673,7 +672,7 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(sale, refunded_value = 0, partial = false) {
+    function refundedClick(sale, refunded_value = 0, partial = 0) {
         loadingOnScreen();
         $.ajax({
             method: "POST",
