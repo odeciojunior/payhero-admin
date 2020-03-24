@@ -115,7 +115,7 @@
     @push('scripts')
         <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v=1')}}"></script>
         <script src="{{asset('modules/projects/js/projectaffiliate.js?v=9')}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v=11')}}"></script>
+        <script src="{{asset('modules/affiliates/js/links.js?v=12')}}"></script>
     @endpush
 @endsection
 
