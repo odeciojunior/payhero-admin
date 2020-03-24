@@ -17,25 +17,26 @@
             </div>
             <div class='row col-md-8 col-lg-8 col-sm-12'>
                 <div class="col-12 row">
-                    <div class="form-group col-12">
-                        <label for="contact">Email de Contato (checkout e email)</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="input_group_contact" id="addon-contact">
-                                </span>
-                            </div>
-                            <input name="suport_contact" value="" type="text" class="input-pad form-control" id="contact" placeholder="Contato" maxlength='40' aria-describedby="addon-contact">
-                        </div>
-                        <span id='contact-error' class='text-danger'></span>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
-                        </p>
-                    </div>
+{{--                    <div class="form-group col-12">--}}
+{{--                        <label for="contact">Email de Contato (checkout e email)</label>--}}
+{{--                        <div class="input-group">--}}
+{{--                            <div class="input-group-prepend">--}}
+{{--                                <span class="input-group-text" id="input_group_contact" id="addon-contact">--}}
+{{--                                </span>--}}
+{{--                            </div>--}}
+{{--                            <input name="suport_contact" value="" type="text" class="input-pad form-control" id="contact" placeholder="Contato" maxlength='40' aria-describedby="addon-contact">--}}
+{{--                        </div>--}}
+{{--                        <span id='contact-error' class='text-danger'></span>--}}
+{{--                        <p class='info pt-5' style='font-size: 10px;'>--}}
+{{--                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
                     <div class="form-group col-12">
                         <label for="contact">Telefone para suporte</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="input_group_support_phone" id="addon-suport_phone">
+                                    <span class="material-icons">phone</span>
                                 </span>
                             </div>
                             <input name="suport_phone" value="" type="text" class="input-pad form-control" id="suport_phone" placeholder="Telefone" data-mask="(00) 00000-0000" aria-describedby="addon-suport_phone">
