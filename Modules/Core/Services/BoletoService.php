@@ -58,7 +58,6 @@ class BoletoService
                               $subTotal = preg_replace("/[^0-9]/", "", $boleto->sub_total);
                               $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
                               $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
-
                               if ($iof == 0) {
                                   $iof = '';
                               } else {
@@ -74,9 +73,12 @@ class BoletoService
 
                               $clientNameExploded       = explode(' ', $clientName);
                               $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+
                               if ($discount != '') {
                                   $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                                  $discount                 = substr_replace($discount, ',', strlen($discount) - 2, 0);
                               }
+
                               $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                               $products = $saleService->getEmailProducts($boleto->id);
@@ -336,9 +338,11 @@ class BoletoService
                                   }
                                   $clientNameExploded       = explode(' ', $clientName);
                                   $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+
                                   if ($discount != '') {
                                       $boleto->total_paid_value = $boleto->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
                                   }
+
                                   $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                                   $products                 = $saleService->getEmailProducts($boleto->id);
                                   $project                  = $projectModel->find($boleto->project_id);
@@ -476,27 +480,27 @@ class BoletoService
             $saleModel        = new Sale();
             $transactionModel = new Transaction();
 
-            $boletos   = $saleModel->with(['customer'])
-                                   ->where([
-                                               ['payment_method', '=', '2'],
-                                               ['status', '=', '2'],
-                                               [
-                                                   DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
-                                                                                                                     ->subDay('1')
-                                                                                                                     ->toDateString(),
-                                               ],
-                                           ]);
+            $boletos = $saleModel->with(['customer'])
+                                 ->where([
+                                             ['payment_method', '=', '2'],
+                                             ['status', '=', '2'],
+                                             [
+                                                 DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
+                                                                                                                   ->subDay('1')
+                                                                                                                   ->toDateString(),
+                                             ],
+                                         ]);
             foreach ($boletos->cursor() as $boleto) {
                 $boleto->update([
-                    'status'         => 5,
-                    'gateway_status' => 'canceled'
-                ]);
+                                    'status'         => 5,
+                                    'gateway_status' => 'canceled',
+                                ]);
 
-                foreach($boleto->transactions as $transaction){
+                foreach ($boleto->transactions as $transaction) {
                     $transaction->update([
-                        'status'      => 'canceled',
-                        'status_enum' => $transactionModel->present()->getStatusEnum('canceled')
-                    ]);
+                                             'status'      => 'canceled',
+                                             'status_enum' => $transactionModel->present()->getStatusEnum('canceled'),
+                                         ]);
                 }
 
                 event(new BilletExpiredEvent($boleto));
