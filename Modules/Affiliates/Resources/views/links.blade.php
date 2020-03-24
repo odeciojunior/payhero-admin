@@ -22,7 +22,7 @@
             <table id='table-links' class='table text-left table-links table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title'>Link Plano</td>
+                        <td class='table-title'>Descrição</td>
                         <td class='table-title'>Link Afiliado</td>
                         <td class='table-title text-center'>Preço</td>
                         <td class='table-title text-center'>Ações</td>
