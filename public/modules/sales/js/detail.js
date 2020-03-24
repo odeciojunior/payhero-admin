@@ -214,12 +214,14 @@ $(() => {
         }
 
         $("#desconto-value").html("R$ " + sale.discount);
-        if(sale.payment_method == 2) {
-            $('.text-discount').html('Desconto automático boleto');
-        } else {
-            $('.text-discount').html('Desconto automático cartão');
+        if (sale.automatic_discount !== '0,00') {
+            if (sale.payment_method == 2) {
+                $('.text-discount').html('Desconto automático boleto');
+            } else {
+                $('.text-discount').html('Desconto automático cartão');
+            }
+            $("#automatic-discount-value").html("R$ " + sale.automatic_discount);
         }
-        $("#automatic-discount-value").html("R$ " + sale.automatic_discount);
         $("#total-value").html("R$ " + sale.total);
 
         $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
