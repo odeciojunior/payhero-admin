@@ -19,6 +19,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\SaleRefundedEvent;
+use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
@@ -162,12 +163,14 @@ class SalesApiController extends Controller
                                               ->whereIn('company_id', $userCompanies)
                                               ->first();
 
-            // $refundAmount = preg_replace('/\D/', '', $sale->total_paid_value);
-            $partial = boolval($request->input('partial'));
-            $refundSale = preg_replace('/\D/', '', $sale->total_paid_value);
-            $refundAmount = ($partial == true) ? preg_replace('/\D/', '', $request->input('refunded_value')) : $refundSale;
-            if($refundAmount > $refundSale) {
-                return response()->json(['message' => 'O valor a estornar deve ser menor ou igual ao valor da venda.'], Response::HTTP_BAD_REQUEST);
+            $partial              = boolval($request->input('partial'));
+            $refundSale           = intval(strval($sale->total_paid_value * 100));
+            $totalWithoutInterest = $refundSale - $sale->interest_total_value;
+            $refundValue          = preg_replace('/\D/', '', $request->input('refunded_value'));
+            $partial              = ($totalWithoutInterest == $refundValue) ? false : $partial;
+            $refundAmount         = ($partial == true) ? $refundValue : $refundSale;
+            if(($refundAmount > $refundSale) || ($partial == true && $refundValue > ($totalWithoutInterest - 500))) {
+                return response()->json(['message' => 'Valor inválido para estorno parcial.'], Response::HTTP_BAD_REQUEST);
             }
 
             $value = $transaction->company->balance - $refundAmount;
@@ -212,8 +215,11 @@ class SalesApiController extends Controller
                 $sale->update([
                                   'date_refunded' => Carbon::now(),
                               ]);
-
-                event(new SaleRefundedEvent($sale));
+                if($partial == true) {
+                    event(new SaleRefundedPartialEvent($sale));
+                } else {
+                    event(new SaleRefundedEvent($sale));
+                }
 
                 return response()->json(['message' => $result['message']], Response::HTTP_OK);
             } else {

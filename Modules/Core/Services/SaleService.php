@@ -21,7 +21,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\SplitPayment;
+use Modules\Core\Services\SplitPaymentPartialRefundService;
 use Modules\Core\Services\TransfersService;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
@@ -686,7 +686,7 @@ class SaleService
             $cloudfoxValue           = $partialValues['cloudfox_value'];
             $installmentFreeTaxValue = $partialValues['installment_free_tax_value'];
 
-            SplitPayment::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue);
+            SplitPaymentPartialRefundService::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue);
 
             // verify transfers
             $transfersSerice = new TransfersService();

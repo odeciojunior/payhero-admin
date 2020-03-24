@@ -11,9 +11,8 @@ use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\ConvertaxIntegration;
-// use App\Events\SplitPaymentReadyEvent;
 
-class SplitPayment
+class SplitPaymentPartialRefundService
 {
     public $user;
     public $sale;
@@ -55,7 +54,6 @@ class SplitPayment
              ->checkProducerInvitation()
              ->createProducerTransaction()
              ->createCloudfoxTransaction();
-             // ->triggerEvent();
     }
 
     private function setTransactionsStatus()
@@ -328,11 +326,4 @@ class SplitPayment
         return $this;
     }
 
-    // private function triggerEvent()
-    // {
-
-    //     event(new SplitPaymentReadyEvent($this->sale, $this->producerValue));
-
-    //     return $this;
-    // }
 }
