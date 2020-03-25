@@ -9,6 +9,15 @@
                 </div>
             </div>
             <div class='form-group col-12 mb-20'>
+                <label for="link">Desconto</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="discount" id="add_discount_upsell" placeholder="Digite o valor do desconto" maxlength='2' data-mask="0#">
+                    <div class="input-group-append">
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </div>
+            <div class='form-group col-12 mb-20'>
                 <label for="link">Ao comprar o plano</label>
                 <select name="apply_on_plans[]" id="add_apply_on_plans" class="form-control" style='width:100%' data-plugin="select2" multiple='multiple'> </select>
             </div>

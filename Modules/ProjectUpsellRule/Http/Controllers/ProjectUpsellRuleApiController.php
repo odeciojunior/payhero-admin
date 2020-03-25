@@ -3,8 +3,9 @@
 namespace Modules\ProjectUpsellRule\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProjectUpsellRule;
@@ -17,7 +18,7 @@ class ProjectUpsellRuleApiController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -46,7 +47,7 @@ class ProjectUpsellRuleApiController extends Controller
 
     /**
      * @param ProjectUpsellStoreRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(ProjectUpsellStoreRequest $request)
     {
@@ -56,9 +57,14 @@ class ProjectUpsellRuleApiController extends Controller
         if ($projectId) {
             $applyPlanArray = [];
             $offerPlanArray = [];
-            foreach ($data['apply_on_plans'] as $key => $value) {
-                $applyPlanArray[] = current(Hashids::decode($value));
+            if (in_array('all', $data['apply_on_plans'])) {
+                $applyPlanArray[] = 'all';
+            } else {
+                foreach ($data['apply_on_plans'] as $key => $value) {
+                    $applyPlanArray[] = current(Hashids::decode($value));
+                }
             }
+
             foreach ($data['offer_on_plans'] as $key => $value) {
                 $offerPlanArray[] = current(Hashids::decode($value));
             }
@@ -68,6 +74,7 @@ class ProjectUpsellRuleApiController extends Controller
             $projectUpsellModel->create([
                                             'project_id'     => $projectId,
                                             'description'    => $data['description'],
+                                            'discount'       => $data['discount'],
                                             'active_flag'    => !empty($data['active_flag']) ? $data['active_flag'] : 0,
                                             'apply_on_plans' => $applyPlanEncoded,
                                             'offer_on_plans' => $offerPlanEncoded,
@@ -84,7 +91,7 @@ class ProjectUpsellRuleApiController extends Controller
     /**
      * Show the specified resource.
      * @param int $id
-     * @return Response
+     * @return JsonResponse|ProjectsUpsellResource
      */
     public function show($id)
     {
@@ -99,13 +106,11 @@ class ProjectUpsellRuleApiController extends Controller
                                         'message' => 'Erro ao carregar dados do upsell',
                                     ], 400);
         }
-
-        return view('projectupsellrule::show');
     }
 
     /**
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse|ProjectsUpsellResource
      */
     public function edit($id)
     {
@@ -125,7 +130,7 @@ class ProjectUpsellRuleApiController extends Controller
     /**
      * @param ProjectUpsellUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(ProjectUpsellUpdateRequest $request, $id)
     {
@@ -136,8 +141,12 @@ class ProjectUpsellRuleApiController extends Controller
             $upsell         = $projectUpsellModel->find($upsellId);
             $applyPlanArray = [];
             $offerPlanArray = [];
-            foreach ($data['apply_on_plans'] as $key => $value) {
-                $applyPlanArray[] = current(Hashids::decode($value));
+            if (in_array('all', $data['apply_on_plans'])) {
+                $applyPlanArray[] = 'all';
+            } else {
+                foreach ($data['apply_on_plans'] as $key => $value) {
+                    $applyPlanArray[] = current(Hashids::decode($value));
+                }
             }
             foreach ($data['offer_on_plans'] as $key => $value) {
                 $offerPlanArray[] = current(Hashids::decode($value));
@@ -168,7 +177,7 @@ class ProjectUpsellRuleApiController extends Controller
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Response
+     * @return JsonResponse
      */
     public function destroy($id)
     {

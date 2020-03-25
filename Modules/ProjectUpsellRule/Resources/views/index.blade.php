@@ -1,6 +1,13 @@
 <div class='row no-gutters mb-10'>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
+            <div class='div-config' style='display:none;'>
+                <div id="config-upsell" class="btn-holder  d-flex align-items-center pointer mr-20" data-toggle="modal" data-target="#modal_config_upsell" >
+                    <span class="link-button-dependent red"> Configurações Upsell </span>
+                    <a class="ml-10 rounded-add pointer bg-primary">
+                        <i class="icon wb-settings" aria-hidden="true"></i></a>
+                </div>
+            </div>
             <div id="add-upsell" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_upsell">
                 <span class="link-button-dependent red"> Adicionar Upsell </span>
                 <a class="ml-10 rounded-add pointer">
@@ -30,7 +37,6 @@
 <ul id="pagination-upsell" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>
-
 {{-- Modal add-edit upsell --}}
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
     <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -55,6 +61,28 @@
 </div>
 {{-- End Modal  --}}
 
+{{-- Modal config upsell --}}
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
+    <div class="modal-dialog modal-lg d-flex justify-content-center">
+        <div class="modal-content" id="conteudo_modal_add">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title text-center" style="font-weight: 700;">Configurações Upsell</h4>
+            </div>
+            <div class="pt-10 pr-20 pl-20 modal_upsell_body">
+                @include('projectupsellrule::config')
+            </div>
+            <div class="modal-footer" style="margin-top: 15px">
+                <button type="button" class="btn btn-success bt-upsell-config-update">Atualizar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- End Modal  --}}
+
 <!-- Details -->
 <div id="modal-detail-upsell" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
@@ -71,6 +99,7 @@
         </div>
     </div>
 </div>
+{{-- End Modal  --}}
 
 {{-- Modal delete upsell --}}
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-upsell" aria-hidden="true" role="dialog" tabindex="-1">
@@ -91,6 +120,26 @@
             <div class="modal-footer d-flex align-items-center justify-content-center">
                 <button type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
                 <button type="button" class="col-4 btn btn-danger btn-delete-upsell" data-dismiss="modal" style="width: 20%;">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- End Modal  --}}
+
+{{-- Modal visualizar configurações do upsell --}}
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y:auto;'>
+    <div class="modal-dialog modal-lg d-flex justify-content-center">
+        <div class="modal-content" id="">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="modal-title">Upsell no checkout</h4>
+            </div>
+            <div class="pt-10 pr-20 pl-20 modal_upsell_body">
+                @include('projectupsellconfig::previewupsellconfig')
+            </div>
+            <div class="modal-footer" style="margin-top: 15px">
             </div>
         </div>
     </div>

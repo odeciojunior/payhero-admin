@@ -22,6 +22,7 @@ class ProjectUpsellRule extends Model
     protected $fillable = [
         'project_id',
         'description',
+        'discount',
         'apply_on_plans',
         'offer_on_plans',
         'active_flag',
