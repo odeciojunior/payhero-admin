@@ -133,7 +133,8 @@
                             @include('plans::index')
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            @if(env('APP_ENV') == 'local')
+                            {{-- TODO: remover if Natupro  --}}
+                            @if(explode("/", request()->getPathInfo())[2] == "kxQBPZvL6gmVqyN")
                                 @include('projectupsellrule::index')
                             @else
                                 <div class="card shadow" style='height:300px;'>
