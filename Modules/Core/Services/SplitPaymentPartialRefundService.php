@@ -231,7 +231,7 @@ class SplitPaymentPartialRefundService
 
         $invite = Invitation::where([
                                         ['user_invited', $this->sale->user->id],
-                                        ['status', (new Invitation)->present()->getStatus('active')],
+                                        ['status', (new Invitation)->present()->getStatus('accepted')],
                                     ])->first();
 
         if (!empty($invite) && !empty($invite->company_id)) {

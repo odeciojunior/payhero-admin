@@ -443,11 +443,12 @@ class SaleService
 
             $newTotalPaidValue = substr_replace($newTotalPaidValue, '.', strlen($newTotalPaidValue) - 2, 0);
             $updateData        = array_filter([
-                                                  'total_paid_value'     => ($newTotalPaidValue ?? 0),
-                                                  'status'               => $saleModel->present()->getStatus($status),
-                                                  'gateway_status'       => $statusGateway,
-                                                  'interest_total_value' => $partialValues['interest_value'] ?? null,
-                                                  'refund_value'         => $sale->refund_value + $refundAmount,
+                                                  'total_paid_value'      => ($newTotalPaidValue ?? 0),
+                                                  'status'                => $saleModel->present()->getStatus($status),
+                                                  'gateway_status'        => $statusGateway,
+                                                  'interest_total_value'  => $partialValues['interest_value'] ?? null,
+                                                  'refund_value'          => $sale->refund_value + $refundAmount,
+                                                  'installment_tax_value' => $partialValues['installment_free_tax_value'],
                                               ]);
 
             SaleRefundHistory::create([
@@ -752,5 +753,17 @@ class SaleService
             'interest_value'               => $interestValue,
             'value_to_refund'              => $totalPaidValue - $newTotalvalue,
         ];
+    }
+
+    public function updateInterestTotalValue($sale)
+    {
+        $shopifyDiscount     = (!is_null($sale->shopify_discount)) ? intval(preg_replace("/[^0-9]/", "", $sale->shopify_discount)) : 0;
+        $subTotal            = intval(strval($sale->sub_total * 100));
+        $shipmentValue       = intval(strval($sale->shipment_value * 100));
+        $automaticDiscount   = intval($sale->automatic_discount);
+        $totalPaidValue      = intval(strval($sale->total_paid_value * 100));
+        $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
+        $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
+        $sale->update(['interest_total_value' => $interesetTotalValue]);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\CloudFlareService;
+use DB;
 
 /**
  * Class GenericCommand
@@ -39,7 +40,7 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        // dd($this->calInterestTotalValue());
+        // dd($this->calcInterestTotalValue());
 
         $cloudflareService = new CloudFlareService();
 
@@ -79,41 +80,30 @@ class GenericCommand extends Command
         $this->info('ACABOOOOOOOOOOOOOU!');
     }
 
-    public function calInterestTotalValue()
+    public function calcInterestTotalValue()
     {
-        $sales = Sale::whereNull('interest_total_value')
-                     ->where('payment_method', 1)
-                     ->get();
+        Sale::whereNull('interest_total_value')
+            ->where('payment_method', 1)
+            ->chunk(100, function($sales) {
+                foreach ($sales as $sale) {
 
-        $arrayS = [];
-        $count = 0;
-        foreach ($sales as $sale) {
-            
-            $shopifyDiscount   = (!is_null($sale->shopify_discount)) ? intval(preg_replace("/[^0-9]/", "", $sale->shopify_discount)) : 0; // varchar
+                    $shopifyDiscount   = (!is_null($sale->shopify_discount)) ? intval(preg_replace("/[^0-9]/", "", $sale->shopify_discount)) : 0; // varchar
 
-            $subTotal          = intval(strval($sale->sub_total * 100)); // decimal
+                    $subTotal          = intval(strval($sale->sub_total * 100)); // decimal
 
-            $shipmentValue    = intval(strval($sale->shipment_value * 100)); // decimal
+                    $shipmentValue     = intval(strval($sale->shipment_value * 100)); // decimal
 
-            $automaticDiscount = intval($sale->automatic_discount); // int
+                    $automaticDiscount = intval($sale->automatic_discount); // int
 
-            $totalPaidValue    = intval(strval($sale->total_paid_value * 100)); // decimal
+                    $totalPaidValue    = intval(strval($sale->total_paid_value * 100)); // decimal
 
-            $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
+                    $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
 
-            if($interesetTotalValue >= 0) {
-                $s = $sale->update(['interest_total_value' => $interesetTotalValue]);
-            } else {
-                $s = false;
-            }
+                    $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue; 
 
-            if($s == true) {
-                $count ++;
-            } else {
-                $arrayS[] = $sale->id;
-            }
-        }
+                    DB::table('sales')->where('id', $sale->id)->update(['interest_total_value' => $interesetTotalValue]);
+                }
 
-        dd($arrayS, $count);
+            });
     }
 }

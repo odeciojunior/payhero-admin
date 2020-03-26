@@ -165,6 +165,9 @@ class SalesApiController extends Controller
 
             $partial              = boolval($request->input('partial'));
             $refundSale           = intval(strval($sale->total_paid_value * 100));
+            if(is_null($sale->interest_total_value)) {
+                $saleService->updateInterestTotalValue($sale);
+            }
             $totalWithoutInterest = $refundSale - $sale->interest_total_value;
             $refundValue          = preg_replace('/\D/', '', $request->input('refunded_value'));
             $partial              = ($totalWithoutInterest == $refundValue) ? false : $partial;
