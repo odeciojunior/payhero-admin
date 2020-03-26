@@ -62,7 +62,7 @@
 {{-- End Modal  --}}
 
 {{-- Modal config upsell --}}
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="conteudo_modal_add">
             <div class="modal-header">

@@ -464,11 +464,16 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#modal_config_upsell').modal('hide');
+                // $('#modal_config_upsell').modal('hide');
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
             }
         });
+    });
+    $(document).on('click', '.btn-return-to-config', function (event) {
+        event.preventDefault();
+        $('#modal-view-upsell-config').modal('hide');
+        $('#modal_config_upsell').modal('show');
     });
     $(document).on('click', '.btn-view-config', function (event) {
         event.preventDefault();
