@@ -49,7 +49,7 @@
         {{--            @endif--}}
         {{--        @endforeach--}}
         <div class="text-center px-3 mb-5">
-            <a id="skip-offert" class="text-success pointer">Não obrigado, vou passar essa oferta</a>
+            <a id="skip-offert" class="text-success pointer">Não, obrigado, vou passar essa oferta</a>
         </div>
     </div>
 </div>

@@ -24,7 +24,7 @@
         <div class="row my-10">
             <div class="col-6 mt-5">
                 <div class="switch-holder">
-                    <label for="token" class='mb-10'>Habilitar contagem:</label>
+                    <label for="token" class='mb-10'>Habilitar Contador</label>
                     <br>
                     <label class="switch">
                         <input type="checkbox" value='1' name="countdown_flag" id="countdown_flag" class='check' checked>
@@ -33,9 +33,9 @@
                 </div>
             </div>
             <div class='form-group col-12 div-countdown-time mt-10' style='display:none;'>
-                <label for="link">Contagem</label>
+                <label for="link">Contador</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="form-control" name="countdown_time" id="countdown_time" placeholder="Digite o tempo da contagem em minutos" maxlength='2' data-mask="0#">
+                    <input type="text" class="form-control" name="countdown_time" id="countdown_time" placeholder="Digite o tempo do contador em minutos" maxlength='2' data-mask="0#">
                 </div>
             </div>
         </div>

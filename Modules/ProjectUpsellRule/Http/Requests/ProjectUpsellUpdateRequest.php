@@ -15,7 +15,7 @@ class ProjectUpsellUpdateRequest extends FormRequest
     {
         return [
             'description'    => 'required',
-            'discount'       => 'required',
+            'discount'       => 'nullable',
             'active_flag'    => 'nullable',
             'apply_on_plans' => 'required|array',
             'offer_on_plans' => 'required|array|max:5',

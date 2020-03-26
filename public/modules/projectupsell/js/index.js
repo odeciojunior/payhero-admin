@@ -312,7 +312,7 @@ $(document).ready(function () {
             processResults: function (res) {
                 let allObject = {
                     id: 'all',
-                    name: 'Todos',
+                    name: 'Qualquer plano',
                 };
                 res.data.unshift(allObject);
                 return {
