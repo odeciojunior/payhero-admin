@@ -183,10 +183,6 @@ class SaleService
             if ($shopify_discount > 0) {
                 $total -= $shopify_discount;
             }
-            if (!empty($item->sale->automatic_discount)) {
-                $total -= $item->sale->automatic_discount;
-            }
-
             if ($item->sale->dolar_quotation != 0) {
                 $iof   = preg_replace('/[^0-9]/', '', $item->sale->iof);
                 $iof   = substr_replace($iof, '.', strlen($iof) - 2, 0);
