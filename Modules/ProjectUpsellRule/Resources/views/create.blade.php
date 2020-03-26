@@ -25,18 +25,25 @@
                 <label for="link">Oferecer o plano</label>
                 <select name="offer_on_plans[]" id="add_offer_on_plans" class="form-control" style='width:100%' data-plugin="select2" multiple="multiple"> </select>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Status:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="active_flag" id="add_active_flag" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
+            <div class='form-group col-12 mb-20'>
+                <label for="link">Status</label>
+                <select name="active_flag" id="add_active_flag" class='form-control'>
+                    <option value='1' selected='selected'>Ativo</option>
+                    <option value='0'>Desativado</option>
+                </select>
             </div>
         </div>
+{{--        <div class="row">--}}
+{{--            <div class="col-6">--}}
+{{--                <div class="switch-holder">--}}
+{{--                    <label for="token" class='mb-10'>Status:</label>--}}
+{{--                    <br>--}}
+{{--                    <label class="switch">--}}
+{{--                        <input type="checkbox" value='1' name="active_flag" id="add_active_flag" class='check' checked>--}}
+{{--                        <span class="slider round"></span>--}}
+{{--                    </label>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
 </form>

@@ -16,7 +16,7 @@ class ProjectUpsellStoreRequest extends FormRequest
         return [
             'project_id'     => 'required',
             'description'    => 'required',
-            'discount'       => 'required',
+            'discount'       => 'nullable',
             'active_flag'    => 'nullable',
             'apply_on_plans' => 'required|array',
             'offer_on_plans' => 'required|array|max:5',
