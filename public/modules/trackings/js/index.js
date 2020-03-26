@@ -258,8 +258,8 @@ $(() => {
                                             <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
                                          <td class="text-md-right" style="min-width: 100px;">
-                                            <a class='tracking-save pointer mr-10' title="Salvar" product='${tracking.product.id}'
-                                             sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
+                                            <a class='tracking-save pointer mr-10' title="Salvar" pps='${tracking.pps_id}'
+                                             style="display:none"><i class='material-icons gradient'>save</i></a>
                                              ${tracking.tracking_status_enum
                                                 ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
                                                    <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
@@ -365,13 +365,12 @@ $(() => {
         btnSave.prop('disabled', true);
 
         let tracking_code = btnSave.parent().parent().find('.input-tracking-code').val();
-        let saleId = btnSave.attr('sale');
-        let productId = btnSave.attr('product');
+        let ppsId = btnSave.attr('pps');
 
         $.ajax({
             method: "POST",
             url: '/api/tracking',
-            data: {tracking_code: tracking_code, sale_id: saleId, product_id: productId},
+            data: {tracking_code: tracking_code, product_plan_sale_id: ppsId},
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

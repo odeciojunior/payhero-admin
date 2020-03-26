@@ -204,13 +204,11 @@ class TrackingsApiController extends Controller
             $trackingModel        = new Tracking();
             $trackingService      = new TrackingService();
 
-            if (!empty($data['tracking_code']) && !empty($data['sale_id']) && !empty($data['product_id'])) {
-                $saleId    = current(Hashids::connection('sale_id')->decode($data['sale_id']));
-                $productId = current(Hashids::decode($data['product_id']));
-                if ($saleId && $productId) {
+            if (!empty($data['tracking_code']) && !empty($data['product_plan_sale_id'])) {
+                $ppsId = current(Hashids::decode($data['product_plan_sale_id']));
+                if ($ppsId) {
                     $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales', 'sale.delivery'])
-                                                            ->where([['sale_id', $saleId], ['product_id', $productId]])
-                                                            ->first();
+                                                            ->find($ppsId);
 
                     $tracking = $productPlanSale->tracking;
 
