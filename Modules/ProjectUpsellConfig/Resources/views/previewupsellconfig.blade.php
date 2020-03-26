@@ -51,6 +51,12 @@
         <div class="text-center px-3 mb-5">
             <a id="skip-offert" class="text-success pointer">Não, obrigado, vou passar essa oferta</a>
         </div>
+        <div class='mt-20'>
+            <button class='btn btn-primary btn-sm btn-return-to-config' >
+                <i class="icon wb-settings" aria-hidden="true"></i>
+                Voltar para configurações
+            </button>
+        </div>
     </div>
 </div>
 
