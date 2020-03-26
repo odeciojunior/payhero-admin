@@ -133,17 +133,7 @@
                             @include('plans::index')
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            {{-- TODO: remover if Natupro  --}}
-                            @if(explode("/", request()->getPathInfo())[2] == "kxQBPZvL6gmVqyN")
-                                @include('projectupsellrule::index')
-                            @else
-                                <div class="card shadow" style='height:300px;'>
-                                    <div class="text-center mt-100">
-                                        <h2>Em desenvolvimento!</h2>
-                                        <img style="width:60px; margin-bottom: 20px;" src="{!! asset('modules/global/img/tools.svg') !!}">
-                                    </div>
-                                </div>
-                            @endif
+                            @include('projectupsellrule::index')
                         </div>
                         <!-- Painel de Parceiros -->
                         <div class="tab-pane" id="tab_partners" role="tabpanel">
