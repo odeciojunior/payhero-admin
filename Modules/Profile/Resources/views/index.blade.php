@@ -300,7 +300,7 @@
                                         <div class='form-group col-xl-5'>
                                             <div class='form-group'>
                                                 <label for='credit-card-release'>Dias para liberação:</label>
-                                                <select id="credit-card-release" class="form-control">
+                                                <select id="credit-card-release" disabled='disabled' class="form-control">
                                                     <option value="plan-30">30 dias (taxa de 5.9%)</option>
                                                     <option value="plan-15">15 dias (taxa de 6.5%)</option>
                                                     <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)
@@ -341,7 +341,7 @@
                                         <div class='form-group col-xl-5'>
                                             <div class='form-group'>
                                                 <label for='boleto-release'>Dias para liberação:</label>
-                                                <select id="boleto-release" class="form-control">
+                                                <select id="boleto-release" disabled='disabled' class="form-control">
                                                     <option value="plan-30">30 dias (taxa de 5.9%)</option>
                                                     <option value="plan-2">2 dias (taxa de 6.5%)</option>
                                                     <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)</option>
@@ -367,11 +367,11 @@
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
                                             </p>
                                         </div>
-                                        <div class="col-lg-12 text-right" style="margin-top: 30px">
-                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">
-                                                Atualizar taxas
-                                            </button>
-                                        </div>
+{{--                                        <div class="col-lg-12 text-right" style="margin-top: 30px">--}}
+{{--                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">--}}
+{{--                                                Atualizar taxas--}}
+{{--                                            </button>--}}
+{{--                                        </div>--}}
                                     </div>
                                     {{--BOLETO--}}
                                 </div>
