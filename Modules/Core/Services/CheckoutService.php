@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Affiliate;
 use SendGrid;
 use Exception;
 use Carbon\Carbon;
@@ -42,20 +43,23 @@ class CheckoutService
      * @return mixed
      * @throws PresenterException
      */
-    public function getAbandonedCart(
-        string $projectId = null,
-        string $dateStart = null,
-        string $dateEnd = null,
-        string $client = null
-    )
+    public function getAbandonedCart(string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
-        $checkoutModel = new Checkout();
-        $domainModel   = new Domain();
+        $checkoutModel  = new Checkout();
+        $domainModel    = new Domain();
+        $affiliateModel = new Affiliate();
+
+        $affiliate = $affiliateModel->where('project_id', $projectId)
+                                    ->where('user_id', auth()->user()->account_owner_id)->first();
 
         $abandonedCarts = $checkoutModel->whereIn('status_enum', [
             $checkoutModel->present()->getStatusEnum('recovered'),
             $checkoutModel->present()->getStatusEnum('abandoned cart'),
         ])->where('project_id', $projectId);
+
+        if (!empty($affiliate)) {
+            $abandonedCarts->where('affiliate_id', $affiliate->id);
+        }
 
         if (!empty($client)) {
             $abandonedCarts->where('client_name', 'like', '%' . $client . '%');

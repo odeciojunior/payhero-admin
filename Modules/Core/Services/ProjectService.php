@@ -298,33 +298,34 @@ class ProjectService
 
     /**
      * @param string $pagination
-     * @param string|null $status
+     * @param array $status
+     * @param bool $affiliate
      * @return AnonymousResourceCollection
      */
     public function getUserProjects(string $pagination, array $status, $affiliate = false)
     {
-        $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
-        $userId = auth()->user()->account_owner_id;
+        $userId       = auth()->user()->account_owner_id;
         $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-        if($affiliate) {
-            $projects    = $this->getProjectModel()
-                                ->whereIn('status', $status)
-                                ->with(['affiliates' => function($query) use($userId) {
-                                    $query->where('user_id', $userId);
-                                }])
-                                ->where(function($query2) use($userId, $userProjects) {
-                                    $query2->whereIn('id', $userProjects)
-                                           ->orWhereHas('affiliates', function($query3) use($userId)  {
-                                                $query3->where('user_id', $userId);
-                                           });
-                                })
-                                ->orderBy('id', 'DESC');
-
+        if ($affiliate) {
+            $projects = $this->getProjectModel()
+                             ->whereIn('status', $status)
+                             ->with([
+                                        'affiliates' => function($query) use ($userId) {
+                                            $query->where('user_id', $userId);
+                                        },
+                                    ])
+                             ->where(function($query2) use ($userId, $userProjects) {
+                                 $query2->whereIn('id', $userProjects)
+                                        ->orWhereHas('affiliates', function($query3) use ($userId) {
+                                            $query3->where('user_id', $userId);
+                                        });
+                             })
+                             ->orderBy('id', 'DESC');
         } else {
-            $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
+            $projects = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
                              ->orderBy('id', 'DESC');
         }
 

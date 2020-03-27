@@ -25,22 +25,29 @@ class CheckoutApiController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse|AnonymousResourceCollection
+     * List cart abandoned
      */
     public function index(Request $request)
     {
         try {
+            $requestValidate = $request->validate([
+                                                      'project'    => 'required|string',
+                                                      'status'     => 'required',
+                                                      'date_range' => 'required',
+                                                      'client'     => 'nullable|string',
+                                                  ]);
 
             $checkoutService = new CheckoutService();
 
-            $projectId = FoxUtils::decodeHash($request->input('project'));
+            $projectId = FoxUtils::decodeHash($requestValidate['project']);
 
-            if (!empty($request->input('client'))) {
-                $clientId = $request->input('client');
+            if (!empty($requestValidate['client'])) {
+                $clientId = $requestValidate['client'];
             } else {
                 $clientId = null;
             }
 
-            $dateRange = FoxUtils::validateDateRange($request->input('date_range'));
+            $dateRange = FoxUtils::validateDateRange($requestValidate['date_range']);
             $startDate = null;
             $endDate   = null;
             if (!empty($dateRange) && $dateRange) {
