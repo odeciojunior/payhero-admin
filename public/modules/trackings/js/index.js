@@ -112,15 +112,18 @@ $(() => {
         }
     }
 
-    getProducts();
+    getProjects();
 
-    function getProducts() {
+    /**
+     * List Projects
+     */
+    function getProjects() {
 
         loadOnAny('.page-content');
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects?select=true',
+            url: '/api/projects?select=true&affiliate=false',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
