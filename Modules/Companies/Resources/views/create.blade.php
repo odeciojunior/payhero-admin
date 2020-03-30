@@ -27,6 +27,7 @@
                             <option value="spain">Espanha</option>
                             <option value="france">França</option>
                             <option value="italy">Itália</option>
+                            <option value="unitedkingdom">Reino Unido</option>
                         </select>
                     </div>
                     <div id='div-company-document' class="form-group col-xl-6" style=''>
@@ -47,7 +48,6 @@
                 </div>
             </form>
         </div>
-
         <div id='div2' class="page-content container" style='display:none;'>
             <form id='create_form' method="post" action="{{route('api.companies.store')}}">
                 @csrf
@@ -112,7 +112,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/create.js?v=5') }}"></script>
+        <script src="{{ asset('/modules/companies/js/create.js?v=6') }}"></script>
     @endpush
 
 @endsection
