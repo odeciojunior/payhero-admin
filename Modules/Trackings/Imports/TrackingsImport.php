@@ -14,7 +14,6 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
-use Modules\Core\Services\PerfectLogService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;

@@ -189,7 +189,7 @@ class TrackingService
             ->where('sale_id', $productPlanSale->sale_id)
             ->first();
 
-        $tracking = $trackingModel->create([
+        $tracking = $trackingModel->firstOrCreate([
             'sale_id' => $productPlanSale->sale_id,
             'product_id' => $productPlanSale->product_id,
             'product_plan_sale_id' => $productPlanSale->id,
