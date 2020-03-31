@@ -335,7 +335,6 @@ class PlansApiController extends Controller
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar fazer update dos dados do plano (PlansController - update)');
-            dd($e);
             report($e);
 
             return response()->json([
@@ -415,16 +414,11 @@ class PlansApiController extends Controller
                 if (!empty($data['search'])) {
 
                     if (!empty($project->shopify_id)) {
-                        $plans      = $planModel->select('shopify_id')->distinct()
-                                                ->where('name', 'like', '%' . $data['search'] . '%')
-                                                ->where('project_id', $projectId)->pluck('shopify_id');
-                        $planResult = [];
-                        foreach ($plans as $plan) {
-                            $plan         = $planModel->where('shopify_id', $plan)->first();
-                            $planResult[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
-                        }
+                        $plan        = $planModel->where('name', 'like', '%' . $data['search'] . '%')
+                                                 ->where('project_id', $projectId)->first();
+                        $dataArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
 
-                        return response()->json(['data' => $planResult]);
+                        return response()->json(['data' => $dataArray]);
                     } else {
                         $plans = $planModel->select('id', 'name', 'shopify_id')
                                            ->where('name', 'like', '%' . $data['search'] . '%')
