@@ -182,18 +182,10 @@ class TrackingService
     {
         $trackingModel = new Tracking();
 
-        $planSale = $productPlanSale
-            ->sale
-            ->plansSales
-            ->where('plan_id', $productPlanSale->plan_id)
-            ->where('sale_id', $productPlanSale->sale_id)
-            ->first();
-
         $tracking = $trackingModel->firstOrCreate([
             'sale_id' => $productPlanSale->sale_id,
             'product_id' => $productPlanSale->product_id,
             'product_plan_sale_id' => $productPlanSale->id,
-            'plans_sale_id' => $planSale->id,
             'amount' => $productPlanSale->amount,
             'delivery_id' => $productPlanSale->sale->delivery->id,
             'tracking_code' => $trackingCode,
