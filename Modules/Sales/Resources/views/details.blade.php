@@ -281,5 +281,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=6') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
 @endpush
