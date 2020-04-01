@@ -34,6 +34,7 @@ use App\Traits\LogsActivity;
  * @property string $gateway_id
  * @property int $status
  * @property string $gateway_status
+ * @property int $upsell_id
  * @property int $installments_amount
  * @property string $installments_value
  * @property string $flag
@@ -101,6 +102,7 @@ class Sale extends Model
         'gateway_id',
         'status',
         'gateway_status',
+        'upsell_id',
         'installments_amount',
         'installments_value',
         'flag',

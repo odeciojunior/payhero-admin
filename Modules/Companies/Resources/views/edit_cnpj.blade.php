@@ -111,6 +111,7 @@
                                                 <option value="france">França</option>
                                                 <option value="italy">Itália</option>
                                                 <option value="portugal">Portugal</option>
+                                                <option value="unitedkingdom">Reino Unido</option>
                                             </select>
                                         </div>
                                     </div>
@@ -338,7 +339,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=2')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=3')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

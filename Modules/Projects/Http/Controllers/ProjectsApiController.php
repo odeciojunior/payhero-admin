@@ -168,9 +168,10 @@ class ProjectsApiController extends Controller
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
-
+                        $projectService             = new ProjectService();
                         if (!empty($userProject)) {
                             $projectNotificationService->createProjectNotificationDefault($project->id);
+                            $projectService->createUpsellConfig($project->id);
 
                             return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
@@ -450,11 +451,11 @@ class ProjectsApiController extends Controller
                           ->where('type_enum', 1);
                 })->first();
 
-                $project->producer           = $producer->name ?? '';
-                $project->release_money_days = $producer->release_money_days ?? '';
-                $project->boleto_release_money_days = $producer->boleto_release_money_days ?? '';
+                $project->producer                       = $producer->name ?? '';
+                $project->release_money_days             = $producer->release_money_days ?? '';
+                $project->boleto_release_money_days      = $producer->boleto_release_money_days ?? '';
                 $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
-                $project->debit_card_release_money_days = $producer->debit_card_release_money_days ?? '';
+                $project->debit_card_release_money_days  = $producer->debit_card_release_money_days ?? '';
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';

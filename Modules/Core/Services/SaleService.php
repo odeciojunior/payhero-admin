@@ -191,6 +191,10 @@ class SaleService
                 $iof   = substr_replace($iof, '.', strlen($iof) - 2, 0);
                 $total += floatval($iof);
             }
+            if (!empty($item->sale->automatic_discount)) {
+                $total -= ($item->sale->automatic_discount / 100);
+            }
+
             $resume[$item->currency]['total'] += $total;
         }
 
@@ -235,7 +239,7 @@ class SaleService
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
         $sale->details->invoices = $invoices;
- 
+
         return $sale;
     }
 

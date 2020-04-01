@@ -365,7 +365,8 @@ $(document).ready(function () {
             germany: 'NIF',
             spain: 'CIF',
             france: 'SIRET',
-            italy: 'Partita IVA'
+            italy: 'Partita IVA',
+            unitedkingdom: 'CNPJ'
         };
         $('.label-document').text(companyDocumentName[company.country]);
         $('#company_document').attr('placeholder', companyDocumentName[company.country]);

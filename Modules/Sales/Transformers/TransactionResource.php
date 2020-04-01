@@ -28,6 +28,7 @@ class TransactionResource extends Resource
             'sale_code'        => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'               => Hashids::connection('sale_id')->encode($sale->id),
             'id_default'       => Hashids::encode($this->sale->id),
+            'upsell'           => Hashids::connection('sale_id')->encode($this->sale->upsell_id),
             'project'          => $sale->project->name,
             'product'          => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $sale->plansSales->first()->plan->name,
             'client'           => $sale->customer->name,

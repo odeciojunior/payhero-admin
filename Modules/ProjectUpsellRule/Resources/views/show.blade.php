@@ -6,6 +6,11 @@
             <td class='text-left upsell-description'></td>
         </tr>
         <tr>
+            <td class="table-title">Desconto</td>
+            <td style='width: 20px'></td>
+            <td class='text-left upsell-discount'></td>
+        </tr>
+        <tr>
             <td class="table-title">Ao comprar planos</td>
             <td style='width: 20px'></td>
             <td class='text-left upsell-apply-plans'></td>

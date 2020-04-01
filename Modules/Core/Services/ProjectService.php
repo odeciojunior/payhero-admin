@@ -11,6 +11,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\ProjectUpsellConfig;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
@@ -172,6 +173,7 @@ class ProjectService
                                        'affiliateRequests',
                                        'affiliates',
                                        'affiliates.affiliateLinks',
+                                       'upsellConfig',
                                    ])
                             ->where('id', $projectId)->first();
 
@@ -275,6 +277,11 @@ class ProjectService
                     }
                 }
 
+                if (!empty($project->upsellConfig)) {
+                    $upsellConfig = $project->upsellConfig;
+                    $upsellConfig->delete();
+                }
+
                 $projectUpdated = $project->update([
                                                        'name'   => $project->name . ' (Excluído)',
                                                        'status' => $projectModel->present()->getStatus('disabled'),
@@ -306,25 +313,26 @@ class ProjectService
         $projectModel     = new Project();
         $userProjectModel = new UserProject();
 
-        $userId = auth()->user()->account_owner_id;
+        $userId       = auth()->user()->account_owner_id;
         $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-        if($affiliate) {
-            $projects    = $this->getProjectModel()
-                                ->whereIn('status', $status)
-                                ->with(['affiliates' => function($query) use($userId) {
-                                    $query->where('user_id', $userId);
-                                }])
-                                ->where(function($query2) use($userId, $userProjects) {
-                                    $query2->whereIn('id', $userProjects)
-                                           ->orWhereHas('affiliates', function($query3) use($userId)  {
-                                                $query3->where('user_id', $userId);
-                                           });
-                                })
-                                ->orderBy('id', 'DESC');
-
+        if ($affiliate) {
+            $projects = $this->getProjectModel()
+                             ->whereIn('status', $status)
+                             ->with([
+                                        'affiliates' => function($query) use ($userId) {
+                                            $query->where('user_id', $userId);
+                                        },
+                                    ])
+                             ->where(function($query2) use ($userId, $userProjects) {
+                                 $query2->whereIn('id', $userProjects)
+                                        ->orWhereHas('affiliates', function($query3) use ($userId) {
+                                            $query3->where('user_id', $userId);
+                                        });
+                             })
+                             ->orderBy('id', 'DESC');
         } else {
-            $projects     = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
+            $projects = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
                              ->orderBy('id', 'DESC');
         }
 
@@ -332,6 +340,24 @@ class ProjectService
             return ProjectsSelectResource::collection($projects->get());
         } else {
             return ProjectsResource::collection($projects->paginate(10));
+        }
+    }
+
+    public function createUpsellConfig($projectId)
+    {
+        try {
+            $projectUpsellConfigModel = new ProjectUpsellConfig();
+
+            $projectUpsellConfigModel->create([
+                                                  'project_id'     => $projectId,
+                                                  'header'         => '(Mensagem do cabeçalho) Ex: Você não pode perder essa promoção...',
+                                                  'title'          => '(Título principal) Ex: Ganhe 30% de desconto...',
+                                                  'description'    => '(Descrição) Ex: Como você comprou esse produto, nós achamos que você poderia se interessar por...',
+                                                  'countdown_time' => null,
+                                                  'countdown_flag' => 0,
+                                              ]);
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 }

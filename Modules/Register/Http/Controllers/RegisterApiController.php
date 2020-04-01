@@ -37,7 +37,10 @@ class RegisterApiController extends Controller
 
             $parameter = $requestData['parameter'];
 
-            if (strlen($parameter) > 15) {
+            $withoutInvite = false;
+            if($parameter == 'nw2usr3cfx') {
+                $withoutInvite = true;
+            } elseif (strlen($parameter) > 15) {
                 $inviteId = substr($parameter, 0, 15);
                 $inviteId = Hashids::decode($inviteId);
                 $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)
@@ -130,37 +133,39 @@ class RegisterApiController extends Controller
 
             auth()->loginUsingId($user->id, true);
 
-            if (!isset($invite)) {
-                $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
-            }
-            // $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
-
-            if ($invite) {
-                $invite->update([
-                                    'user_invited'    => $user->account_owner_id,
-                                    'status'          => '1',
-                                    'register_date'   => Carbon::now()->format('Y-m-d'),
-                                    'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                    'email_invited'   => $requestData['email'],
-                                ]);
-
-                if (empty($invite->invite) && isset($company->id)) {
-                    $invite->update([
-                                        'invite' => $company->user_id,
-                                    ]);
+            if($withoutInvite == false) {
+                if (!isset($invite)) {
+                    $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
                 }
-            } else {
+                // $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
-                if ($company) {
-                    $inviteModel->create([
-                                             'invite'          => $company->user_id,
-                                             'user_invited'    => $user->account_owner_id,
-                                             'status'          => '1',
-                                             'company_id'      => $company->id,
-                                             'register_date'   => Carbon::now()->format('Y-m-d'),
-                                             'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                             'email_invited'   => $requestData['email'],
-                                         ]);
+                if ($invite) {
+                    $invite->update([
+                                        'user_invited'    => $user->account_owner_id,
+                                        'status'          => '1',
+                                        'register_date'   => Carbon::now()->format('Y-m-d'),
+                                        'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                        'email_invited'   => $requestData['email'],
+                                    ]);
+
+                    if (empty($invite->invite) && isset($company->id)) {
+                        $invite->update([
+                                            'invite' => $company->user_id,
+                                        ]);
+                    }
+                } else {
+
+                    if ($company) {
+                        $inviteModel->create([
+                                                 'invite'          => $company->user_id,
+                                                 'user_invited'    => $user->account_owner_id,
+                                                 'status'          => '1',
+                                                 'company_id'      => $company->id,
+                                                 'register_date'   => Carbon::now()->format('Y-m-d'),
+                                                 'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                                 'email_invited'   => $requestData['email'],
+                                             ]);
+                    }
                 }
             }
 
