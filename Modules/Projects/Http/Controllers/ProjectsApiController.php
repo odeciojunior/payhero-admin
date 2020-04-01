@@ -234,13 +234,10 @@ class ProjectsApiController extends Controller
 
                 $companies = CompaniesSelectResource::collection($user->companies);
 
-                $projectUpsell = $projectUpsellModel->where('project_id', $idProject)->get();
-                $projectUpsell = ProjectsUpsellResource::collection($projectUpsell);
-
                 if (Gate::allows('edit', [$project])) {
                     $project = new ProjectsResource($project);
 
-                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations', 'projectUpsell'));
+                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
                 } else {
                     return response()->json(['message' => 'Erro ao carregar configuraçoes do projeto'], 400);
                 }
@@ -252,7 +249,7 @@ class ProjectsApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao carregar configuracoes do projeto (ProjectsApiController - edit)');
             report($e);
-
+            dd($e);
             return response()->json([
                                         'message' => 'Erro ao carregar configuracoes do projeto',
                                     ], 400);

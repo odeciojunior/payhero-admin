@@ -28,16 +28,20 @@ class ProjectsUpsellResource extends Resource
                 $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano'];
             } else {
                 foreach ($applyPlanDecoded as $key => $value) {
-                    $plan             = $planModel->find($value);
-                    $applyPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                    $plan = $planModel->find($value);
+                    if (!empty($plan)) {
+                        $applyPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                    }
                 }
             }
         }
         if (!empty($this->offer_on_plans)) {
             $offerPlanDecoded = json_decode($this->offer_on_plans);
             foreach ($offerPlanDecoded as $key => $value) {
-                $plan             = $planModel->find($value);
-                $offerPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                $plan = $planModel->find($value);
+                if (!empty($plan)) {
+                    $offerPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                }
             }
         }
 
