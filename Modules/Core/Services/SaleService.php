@@ -425,10 +425,11 @@ class SaleService
      * @param Sale $sale
      * @param int $refundAmount
      * @param $response
+     * @param array $partialValues
      * @return bool
      * @throws Exception
      */
-    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = '')
+    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [])
     {
         try {
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
@@ -452,7 +453,7 @@ class SaleService
                                                   'gateway_status'        => $statusGateway,
                                                   'interest_total_value'  => $partialValues['interest_value'] ?? null,
                                                   'refund_value'          => $sale->refund_value + $refundAmount,
-                                                  'installment_tax_value' => $partialValues['installment_free_tax_value'],
+                                                  'installment_tax_value' => $partialValues['installment_free_tax_value'] ?? null,
                                               ]);
 
             SaleRefundHistory::create([
@@ -475,7 +476,7 @@ class SaleService
                         $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                         if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
                             $shopifyService = new ShopifyService($shopifyIntegration->url_store,
-                                                                 $shopifyIntegration->token);
+                                                                 $shopifyIntegration->token, false);
 
                             $shopifyService->refundOrder($sale);
                             $shopifyService->saveSaleShopifyRequest();
@@ -718,7 +719,7 @@ class SaleService
 
         $user = $userProject->user;
 
-        $installmentFreeTaxValue = 0; 
+        $installmentFreeTaxValue = 0;
         $interestValue           = 0;
 
         $installmentSelected = $sale->installments_amount;
@@ -733,7 +734,7 @@ class SaleService
             if($freeInstallments >= $installmentSelected) {
                 $installmentValue = intval($newTotalvalue / $installmentSelected);
             } else {
-                $installmentValue = intval($totalValueWithTax / $installmentSelected); 
+                $installmentValue = intval($totalValueWithTax / $installmentSelected);
             }
         }
 

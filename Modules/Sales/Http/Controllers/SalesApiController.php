@@ -203,7 +203,7 @@ class SalesApiController extends Controller
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
             })->log('Estorno transação: #' . $saleId);
-            $partialValues = '';
+            $partialValues = [];
             if($partial == true) {
                 $partialValues = $saleService->getValuesPartialRefund($sale, $refundAmount);
             }
@@ -212,7 +212,7 @@ class SalesApiController extends Controller
                 // Zoop e Cielo CancelPayment
                 $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues);
             } else {
-                $result = $saleService->refund($saleId); 
+                $result = $saleService->refund($saleId);
             }
             if ($result['status'] == 'success') {
                 $sale->update([
