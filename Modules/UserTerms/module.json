@@ -1,0 +1,14 @@
+{
+    "name": "UserTerms",
+    "alias": "userterms",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\UserTerms\\Providers\\UserTermsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

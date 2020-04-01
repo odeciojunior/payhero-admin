@@ -20,15 +20,13 @@
                             Empresa:
                         </div>
                         <div class=" text-lg-right">
-                            <select id="company" class="form-control new-select">
-                            </select>
+                            <select id="company" class="form-control new-select"> </select>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="page-content container" style="display:none">
-
             <!-- Saldos -->
             <div class="row">
                 <div class="col-6 col-lg-3">
@@ -96,10 +94,8 @@
                     </div>
                 </div>
             </div>
-
             <!-- Chargeback e Tracking -->
             <div class="row">
-
                 <div class="col-12 col-lg-6">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -130,7 +126,6 @@
                         <div class="card-bottom orangered"></div>
                     </div>
                 </div>
-
                 <div class="col-12 col-lg-6">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -158,7 +153,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Notícias e Releases -->
             <div class="row">
                 <div class="col-lg-8" id="news-col" style="display:none">
@@ -192,6 +186,29 @@
             </div>
         </div>
         @include('companies::empty')
+    </div>
+
+
+    <!-- Modal Termos de Uso -->
+    <div id="modal-user-term" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title text-center">Termos de Uso</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <object type="application/pdf" data="{{ asset('modules/userTerms/pdf/userTerms.pdf') }}" width="100%" height="500"></object>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id='accepted-terms' class="btn btn-info col-sm-2">
+                            Aceitar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     @push('scripts')

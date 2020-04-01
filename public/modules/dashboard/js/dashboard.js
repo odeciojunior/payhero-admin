@@ -39,6 +39,30 @@ $(document).ready(function () {
                     $(".content-error").show();
                     $('#company-select, .page-content').hide();
                 }
+
+                if (!data.userTerm) {
+                    $('#modal-user-term').modal('show');
+                }
+
+                $("#accepted-terms").unbind('click');
+                $("#accepted-terms").on('click', function () {
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/terms",
+                        dataType: "json",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        data: {},
+                        error: function error(response) {
+                            errorAjaxResponse(response);
+                        },
+                        success: function success(data) {
+                            $('#modal-user-term').modal('hide');
+                        }
+                    });
+                });
             }
         });
     }
@@ -99,21 +123,21 @@ $(document).ready(function () {
 
         $('#tracking-10-days').html(last10Days > 4 ? last10Days + '%' : '')
             .addClass(last10Days <= 66.66 ? last10Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
-            .animate({ width: last10Days + "%" });
+            .animate({width: last10Days + "%"});
 
         $('#tracking-30-days').html(last30Days > 4 ? last30Days + '%' : '')
             .addClass(last30Days <= 66.66 ? last30Days <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
-            .animate({ width: last30Days + "%" });
+            .animate({width: last30Days + "%"});
 
         $('#tracking-total').html(total > 4 ? total + '%' : '')
             .addClass(total <= 66.66 ? total <= 33.33 ? 'bg-danger' : 'bg-warning' : '')
-            .animate({ width: total + "%" });
+            .animate({width: total + "%"});
 
-        if(total > 0){
-            if(last10Days < 40 || last30Days < 90){
+        if (total > 0) {
+            if (last10Days < 40 || last30Days < 90) {
                 let icon = $('#alert-trackings');
                 icon.show();
-                setInterval(function(){
+                setInterval(function () {
                     if (icon.hasClass('text-danger')) {
                         icon.removeClass('text-danger');
                     } else {
