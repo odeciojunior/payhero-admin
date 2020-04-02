@@ -194,14 +194,14 @@
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h4 class="modal-title text-center">Termos de Uso</h4>
+                <div class="modal-header justify-content-center border-bottom py-1">
+                    <h4 class="modal-title">Termos de Uso</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-0">
                     <div class="embed-responsive embed-responsive-16by9">
-                        <object type="application/pdf" data="{{ asset('modules/userTerms/pdf/userTerms.pdf') }}" width="100%" height="500"></object>
+                        <iframe type="application/pdf" src="{{ asset('modules/userTerms/pdf/userTerms.pdf') }}#toolbar=0" width="100%" height="300"></iframe>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer border-top py-2">
                         <button type="button" id='accepted-terms' class="btn btn-info col-sm-2">
                             Aceitar
                         </button>

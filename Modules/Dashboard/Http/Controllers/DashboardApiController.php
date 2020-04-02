@@ -37,10 +37,8 @@ class DashboardApiController extends Controller
 
             $userLogged = auth()->user();
 
-            $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->account_owner_id]])
-                                       ->first();
-
-            $userTerm = $userTerm ?? false;
+            $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->id]])
+                                       ->exists();
 
             $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->get() ?? collect();
 
