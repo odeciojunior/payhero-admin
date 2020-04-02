@@ -37,7 +37,7 @@ class DashboardApiController extends Controller
 
             $userLogged = auth()->user();
 
-            $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->id]])
+            $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->account_owner_id]])
                                        ->first();
 
             $userTerm = $userTerm ?? false;
