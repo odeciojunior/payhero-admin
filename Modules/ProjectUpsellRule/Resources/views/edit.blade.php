@@ -11,6 +11,15 @@
                 </div>
             </div>
             <div class='form-group col-12 mb-20'>
+                <label for="link">Desconto</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="discount" id="edit_discount_upsell" placeholder="Digite o valor do desconto" maxlength='2' data-mask="0#">
+                    <div class="input-group-append">
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </div>
+            <div class='form-group col-12 mb-20'>
                 <label for="link">Ao comprar o plano</label>
                 <select name="apply_on_plans[]" id="edit_apply_on_plans" class="form-control" style='width:100%' data-plugin="select2" multiple='multiple'> </select>
             </div>
@@ -18,18 +27,25 @@
                 <label for="link">Oferecer o plano</label>
                 <select name="offer_on_plans[]" id="edit_offer_on_plans" class="form-control" style='width:100%' data-plugin="select2" multiple="multiple"> </select>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="switch-holder">
-                    <label for="token" class='mb-10'>Status:</label>
-                    <br>
-                    <label class="switch">
-                        <input type="checkbox" value='1' name="active_flag" id="edit_active_flag" class='check' checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
+            <div class='form-group col-12 mb-20'>
+                <label for="link">Status</label>
+                <select name="active_flag" id="edit_active_flag" class='form-control'>
+                    <option value='1'>Ativo</option>
+                    <option value='0'>Desativado</option>
+                </select>
             </div>
         </div>
+{{--        <div class="row">--}}
+{{--            <div class="col-6">--}}
+{{--                <div class="switch-holder">--}}
+{{--                    <label for="token" class='mb-10'>Status:</label>--}}
+{{--                    <br>--}}
+{{--                    <label class="switch">--}}
+{{--                        <input type="checkbox" value='1' name="active_flag" id="edit_active_flag" class='check' checked>--}}
+{{--                        <span class="slider round"></span>--}}
+{{--                    </label>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
     </div>
 </form>

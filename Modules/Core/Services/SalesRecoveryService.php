@@ -123,7 +123,7 @@ class SalesRecoveryService
     {
         $logModel    = new CheckoutLog();
         $domainModel = new Domain();
-        $log         = $logModel->where('id_log_session', $checkout->id_log_session)
+        $log         = $logModel->where('checkout_id', $checkout->id)
                                 ->orderBy('id', 'DESC')->first();
         $whatsAppMsg = 'Olá ' . explode(' ', $log->name)[0];
 
@@ -196,29 +196,27 @@ class SalesRecoveryService
      */
     public function getSalesCartOrBoletoDetails(Sale $sale)
     {
-        $checkoutModel = new checkout();
         $logModel      = new CheckoutLog();
         $domainModel   = new Domain();
         $saleService   = new SaleService();
-
-        $checkout = $checkoutModel->find($sale->checkout_id);
-        $delivery = $sale->delivery()->first();
-        $customer = $sale->customer()->first();
+        $delivery = $sale->delivery;
+        $customer = $sale->customer;
+        $checkout = $sale->checkout;
 
         if (!empty($customer->telephone)) {
             $customer->telephone       = preg_replace('/[^0-9]/', '', $customer->telephone);
             $whatsAppMsg               = 'Olá ' . $customer->present()->getFirstName();
-            $customer['whatsapp_link'] = "https://api.whatsapp.com/send?phone=" . $customer->telephone . '&text=' . $whatsAppMsg;
+            $customer->whatsapp_link   = "https://api.whatsapp.com/send?phone=" . $customer->telephone . '&text=' . $whatsAppMsg;
         } else {
-            $customer['whatsapp_link'] = '';
+            $customer->whatsapp_link   = '';
             $customer->telephone       = 'Numero Inválido';
         }
 
-        $checkout['sale_id'] = Hashids::connection('sale_id')->encode($sale->id);
+        $checkout->sale_id = Hashids::connection('sale_id')->encode($sale->id);
 
-        $checkout['hours']      = with(new Carbon($sale->created_at))->format('H:i:s');
-        $checkout['date']       = with(new Carbon($sale->created_at))->format('d/m/Y');
-        $checkout['total']      = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
+        $checkout->hours        = with(new Carbon($sale->created_at))->format('H:i:s');
+        $checkout->date         = with(new Carbon($sale->created_at))->format('d/m/Y');
+        $checkout->total        = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
         $checkout->src          = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
         $checkout->utm_source   = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
         $checkout->utm_medium   = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
@@ -234,7 +232,7 @@ class SalesRecoveryService
         if ($sale->payment_method == 2) {
             $customer->error = 'Não pago até a data do vencimento';
         } else {
-            $log = $logModel->where('id_log_session', $checkout->id_log_session)
+            $log = $logModel->where('checkout_id', $checkout->id)
                             ->where('event', '=', 'payment error')
                             ->orderBy('id', 'DESC')
                             ->first();
@@ -269,7 +267,7 @@ class SalesRecoveryService
             $link = 'Domínio removido';
         }
 
-        $products = $saleService->getProducts($checkout['sale_id']);
+        $products = $saleService->getProducts($checkout->sale_id);
 
         $customer->document = FoxUtils::getDocument($customer->document);
 

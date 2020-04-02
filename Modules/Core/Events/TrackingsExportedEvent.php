@@ -11,7 +11,7 @@ class TrackingsExportedEvent
     public $filename;
 
     /**
-     * TrackingCodeUpdatedEvent constructor.
+     * TrackingsExportedEvent constructor.
      * @param User $user
      * @param string $filename
      */

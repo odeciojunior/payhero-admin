@@ -60,7 +60,7 @@
                             <span id="desconto-value" class="text-muted ft-12"></span>
                         </div>
                         <div class="col-lg-6">
-                            <span class="text-muted ft-12 text-discount"> Desconto automático</span>
+                            <span class="text-muted ft-12 text-discount"></span>
                         </div>
                         <div class="col-lg-6 text-right">
                             <span id="automatic-discount-value" class="text-muted ft-12"></span>
@@ -281,5 +281,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=5') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
 @endpush
