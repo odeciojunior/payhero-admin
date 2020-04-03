@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+    console.log();
     getDataDashboard();
 
     $("#company").on("change", function () {
@@ -10,7 +10,7 @@ $(document).ready(function () {
         loadOnAny('.page-content');
         $.ajax({
             method: "GET",
-            url: "/api/dashboard",
+            url: `/api/dashboard${window.location.search}`,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
