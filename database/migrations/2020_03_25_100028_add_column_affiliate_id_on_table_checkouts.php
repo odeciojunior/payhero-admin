@@ -12,10 +12,10 @@ class AddColumnAffiliateIdOnTableCheckouts extends Migration
      */
     public function up()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
+        Schema::table('checkouts', function (Blueprint $table) {
             $table->unsignedBigInteger('affiliate_id')->nullable()->after('project_id');
         });
-        Schema::table('checkouts', function(Blueprint $table) {
+        Schema::table('checkouts', function (Blueprint $table) {
             $table->foreign('affiliate_id')->references('id')->on('affiliates');
         });
     }
@@ -26,7 +26,7 @@ class AddColumnAffiliateIdOnTableCheckouts extends Migration
      */
     public function down()
     {
-        Schema::table('checkouts', function(Blueprint $table) {
+        Schema::table('checkouts', function (Blueprint $table) {
             $table->dropForeign(["affiliate_id"]);
             $table->dropColumn('affiliate_id');
         });

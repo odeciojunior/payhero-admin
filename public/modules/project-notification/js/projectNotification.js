@@ -68,19 +68,19 @@ $(function () {
 
                 if (response.data.event_enum == 1) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 0).change();
-                } else if (response.data.event_enum == 2){
+                } else if (response.data.event_enum == 2) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 1).change();
-                } else if (response.data.event_enum == 3){
+                } else if (response.data.event_enum == 3) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 2).change();
-                } else if (response.data.event_enum == 4){
+                } else if (response.data.event_enum == 4) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 3).change();
-                } else if (response.data.event_enum == 5){
+                } else if (response.data.event_enum == 5) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 4).change();
-                } else if (response.data.event_enum == 6){
+                } else if (response.data.event_enum == 6) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", 5).change();
                 }
 
-                if(response.data.type_enum == 1) {
+                if (response.data.type_enum == 1) {
                     $('#modal-edit-project-notification .project-notification-field-email').show();
                     $('#modal-edit-project-notification .project-notification-message').attr('maxlength', 10000);
                 } else {
@@ -88,13 +88,13 @@ $(function () {
                     $('#modal-edit-project-notification .project-notification-field-email').hide();
                 }
 
-                if((response.data.event_enum == 1 || response.data.event_enum == 2 || response.data.event_enum == 5) && response.data.type_enum == 2) {
+                if ((response.data.event_enum == 1 || response.data.event_enum == 2 || response.data.event_enum == 5) && response.data.type_enum == 2) {
                     $('.param-billet-url').show();
                 } else {
                     $('.param-billet-url').hide();
                 }
 
-                if(response.data.event_enum == 6) {
+                if (response.data.event_enum == 6) {
                     $('.param-tracking-code').show();
                     $('.param-tracking-url').show();
                 } else {
@@ -102,7 +102,7 @@ $(function () {
                     $('.param-tracking-url').hide();
                 }
 
-                if(response.data.event_enum == 4) {
+                if (response.data.event_enum == 4) {
                     $('.param-abandoned-cart').show();
                     $('.param-sale-code').hide();
                 } else {
@@ -169,7 +169,7 @@ $(function () {
                     ? '<span class="badge badge-success text-left">Ativo</span>'
                     : '<span class="badge badge-danger">Inativo</span>');
 
-                if(response.data.type_enum == 2) {
+                if (response.data.type_enum == 2) {
                     $('.include-templates-email').hide();
                     $('.tr-project-message').show();
                 } else {
@@ -181,11 +181,11 @@ $(function () {
                     $('#modal-detail-project-notification .p_project_name').html(response.data.project_name);
                     $('#modal-detail-project-notification .p_project_contact').html(response.data.project_contact);
                     $('#modal-detail-project-notification .p_text_notification').html(response.data.title);
-                    if(response.data.project_image != '') {
-                        $('#modal-detail-project-notification .p_image_project').attr('src',response.data.project_image);
+                    if (response.data.project_image != '') {
+                        $('#modal-detail-project-notification .p_image_project').attr('src', response.data.project_image);
                     }
 
-                    if(response.data.notification_enum == 5) {
+                    if (response.data.notification_enum == 5) {
                         $('.template-billet-generated').show();
                     } else if (response.data.notification_enum == 6) {
                         $('.template-billet-next-day').show();
@@ -210,10 +210,9 @@ $(function () {
         });
     });
 
-    
     $(document).on('change', '.project_notification_status', function () {
         let status = 0;
-        if(this.checked) {
+        if (this.checked) {
             status = 1;
         } else {
             status = 0;
@@ -237,7 +236,7 @@ $(function () {
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", "Notificação atualizada com sucesso");
-                if(data.status == 1) {
+                if (data.status == 1) {
                     $('.notification-status-' + projectNotification + ' span').removeClass('badge-danger');
                     $('.notification-status-' + projectNotification + ' span').addClass('badge-success');
                     $('.notification-status-' + projectNotification + ' span').html('Ativo');
@@ -289,17 +288,25 @@ $(function () {
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
-                                <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">remove_red_eye</i> </a>
-                                <a role="button" title='Editar' class="mg-responsive edit-project-notification pointer" project-notification="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                <div class="switch-holder d-inline">
-                                   <label class="switch">
-                                       <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}>
-                                       <span class="slider round"></span>
+                                <a role="button" title='Visualizar' class="mg-responsive details-project-notification pointer" project-notification="${value.id}">
+                                    <i class="material-icons gradient">remove_red_eye</i>
+                                </a>
+                                 ${value.notification_enum != 11 ?
+                            `<a role="button" title="Editar" class="mg-responsive edit-project-notification pointer" project-notification='${value.id}'>
+                                    <i class="material-icons gradient">edit</i>
+                                 </a>` :
+                            `<button style="background-color: transparent;" role="button" class="btn pointer" disabled="">
+                                     <i class="material-icons gradient">edit</i>
+                                 </button>`}
+                                <div class="switch-holder d-inline" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style=" opacity: 0.5;"' : ''}>
+                                   <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style="cursor: not-allowed"' : ''}>
+                                       <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
+                                        ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'disabled' : ''}>
+                                       <span class="slider round" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 ? 'style="cursor: not-allowed"' : ''}></span>
                                    </label>
                                </div>
                             </td>
                         </tr>`;
-
                         $("#data-table-sms").append(data);
                     });
                     pagination(response, 'project-notification', atualizarProjectNotification);
@@ -307,5 +314,4 @@ $(function () {
             }
         });
     }
-
 });

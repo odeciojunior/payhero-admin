@@ -3,13 +3,22 @@
 namespace Modules\UserTerms\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\IpService;
 use Jenssegers\Agent\Facades\Agent;
 use Illuminate\Http\Request;
 
+/**
+ * Class UserTermsApiController
+ * @package Modules\UserTerms\Http\Controllers
+ */
 class UserTermsApiController
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         try {

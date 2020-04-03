@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class UserTerms
+ * @package Modules\Core\Entities
+ */
 class UserTerms extends Model
 {
     use SoftDeletes, LogsActivity;

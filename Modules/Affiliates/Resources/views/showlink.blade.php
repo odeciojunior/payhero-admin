@@ -30,11 +30,11 @@
         <td style='width: 16px'></td>
         <td class='text-left link-project'></td>
     </tr>
-    <tr>
-        <td class="table-title">Link plano</td>
-        <td style='width: 16px'></td>
-        <td class='text-left link-plan-link'></td>
-    </tr>
+{{--    <tr>--}}
+{{--        <td class="table-title">Link plano</td>--}}
+{{--        <td style='width: 16px'></td>--}}
+{{--        <td class='text-left link-plan-link'></td>--}}
+{{--    </tr>--}}
     <tr>
         <td class="table-title">Link afiliado</td>
         <td style='width: 16px'></td>

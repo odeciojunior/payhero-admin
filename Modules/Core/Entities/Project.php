@@ -288,4 +288,12 @@ class Project extends Model
     {
         return $this->hasMany(ProjectUpsellRule::class);
     }
+
+    /**
+     * @return HasOne
+     */
+    public function upsellConfig()
+    {
+        return $this->hasOne(ProjectUpsellConfig::class);
+    }
 }

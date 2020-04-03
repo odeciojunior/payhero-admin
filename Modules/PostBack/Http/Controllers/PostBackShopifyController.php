@@ -2,20 +2,15 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use App\Jobs\ProcessShopifyPostbackJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Services\PerfectLogService;
-use Modules\Core\Services\ProductService;
-use Modules\Core\Services\TrackingService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
@@ -29,17 +24,13 @@ class PostBackShopifyController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function postBackTracking(Request $request)
     {
         try {
 
             $postBackLogModel = new PostbackLog();
-            $salesModel = new Sale();
             $projectModel = new Project();
-            $productService = new ProductService();
-            $trackingService = new TrackingService();
 
             $requestData = $request->all();
 
@@ -50,107 +41,25 @@ class PostBackShopifyController extends Controller
             ]);
 
             $projectId = current(Hashids::decode($request->project_id));
+            $project = $projectModel->find($projectId);
 
-            if ($projectId) {
-                //projectid ok
+            if (!empty($project)) {
 
-                $project = $projectModel->find($projectId);
-                if ($project) {
-                    //projeto existe
+                ProcessShopifyPostbackJob::dispatch($projectId, $requestData)
+                    ->onQueue('high');
 
-                    $shopifyOrder = $requestData['id'];
-
-                    $sale = $salesModel->with([
-                        'productsPlansSale.tracking',
-                        'productsPlansSale.product'
-                    ])->where('shopify_order', $shopifyOrder)
-                        ->where('project_id', $project->id)
-                        ->first();
-
-                    //venda encontrada
-                    if ($sale) {
-                        //obtem os produtos da venda
-                        $saleProducts = $productService->getProductsBySale($sale);
-                        foreach ($requestData['fulfillments'] as $fulfillment) {
-                            if (!empty($fulfillment["tracking_number"])) {
-                                //percorre os produtos que vieram no postback
-                                foreach ($fulfillment["line_items"] as $line_item) {
-                                    //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
-                                    $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
-                                        ->where('amount', $line_item["quantity"]);
-                                    if ($products->count()) {
-                                        foreach ($products as &$product) {
-                                            //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
-                                            //do que esta na tabela
-                                            $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
-                                            $tracking = $productPlanSale->tracking;
-                                            if (!empty($tracking)) {
-                                                //caso seja diferente, atualiza o registro e dispara o e-mail
-                                                if ($tracking->tracking_code != $fulfillment["tracking_number"] && $fulfillment["tracking_number"] != "") {
-                                                    DB::beginTransaction();
-                                                    activity()->disableLogging();
-                                                    $trackingUpdated = $tracking->update(['tracking_code' => $fulfillment["tracking_number"]]);
-                                                    activity()->enableLogging();
-                                                    if (!empty($trackingUpdated)) {
-                                                        $apiTracking = $trackingService->sendTrackingToApi($tracking);
-                                                        if (!empty($apiTracking)) {
-                                                            DB::commit();
-                                                            //atualiza no array de produtos para enviar no email
-                                                            $product->tracking_code = $fulfillment["tracking_number"];
-                                                            event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                        } else {
-                                                            DB::rollBack();
-                                                        }
-                                                    } else {
-                                                        DB::rollBack();
-                                                    }
-                                                }
-                                            } else { //senao cria o tracking
-                                                DB::beginTransaction();
-                                                activity()->disableLogging();
-                                                $tracking = $trackingService->createTracking($fulfillment["tracking_number"], $productPlanSale);
-                                                activity()->enableLogging();
-                                                if (!empty($tracking)) {
-                                                    $apiTracking = $trackingService->sendTrackingToApi($tracking);
-                                                    if (!empty($apiTracking)) {
-                                                        DB::commit();
-                                                        //atualiza no array de produtos para enviar no email
-                                                        $product->tracking_code = $fulfillment["tracking_number"];
-                                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                    } else {
-                                                        DB::rollBack();
-                                                    }
-                                                } else {
-                                                    DB::rollBack();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        return response()->json([
-                            'message' => 'success',
-                        ], 200);
-                    }
-                    return response()->json([
-                        'message' => 'sale not found',
-                    ], 200);
-                } else {
-                    Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
-
-                    //projeto nao existe
-                    return response()->json([
-                        'message' => 'project not found',
-                    ], 200);
-                }
+                return response()->json([
+                    'message' => 'success',
+                ], 200);
             } else {
                 Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
-                //projectid errado
+
+                //projeto nao existe
                 return response()->json([
                     'message' => 'project not found',
                 ], 200);
             }
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'error processing postback',
@@ -200,7 +109,7 @@ class PostBackShopifyController extends Controller
             try {
                 $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
 
-                if(empty($shopIntegration)){
+                if (empty($shopIntegration)) {
                     return response()->json([
                         'message' => 'Integração não encontrada',
                     ], 200);

@@ -10,9 +10,10 @@ class TrackingResource extends Resource
 {
     public function toArray($request)
     {
-        if($this->tracking){
+        if ($this->tracking) {
             return [
                 'id' => Hashids::encode($this->tracking->id),
+                'pps_id' => Hashids::encode($this->id),
                 'tracking_code' => $this->tracking->tracking_code,
                 'tracking_status_enum' => $this->tracking->tracking_status_enum,
                 'tracking_status' => $this->tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->tracking->present()->getTrackingStatusEnum($this->tracking->tracking_status_enum)) : 'Não informado',
@@ -22,12 +23,13 @@ class TrackingResource extends Resource
                     'id' => Hashids::encode($this->product->id),
                     'name' => $this->product->name,
                     'description' => $this->product->description,
-                    'amount' =>  $this->tracking->amount,
+                    'amount' => $this->tracking->amount,
                 ]
             ];
-        }else{
+        } else {
             return [
                 'id' => '',
+                'pps_id' => Hashids::encode($this->id),
                 'tracking_code' => '',
                 'tracking_status_enum' => '',
                 'tracking_status' => 'Não informado',
@@ -37,7 +39,7 @@ class TrackingResource extends Resource
                     'id' => Hashids::encode($this->product->id),
                     'name' => $this->product->name,
                     'description' => $this->product->description,
-                    'amount' =>  $this->amount ?? '',
+                    'amount' => $this->amount ?? '',
                 ]
             ];
         }

@@ -22,6 +22,7 @@ class SalesResource extends Resource
         $data                = [
             //hide ids
             'id'                    => Hashids::connection('sale_id')->encode($this->id),
+            'upsell'                => Hashids::connection('sale_id')->encode($this->upsell_id),
             'delivery_id'           => Hashids::encode($this->delivery_id),
             'checkout_id'           => Hashids::encode($this->checkout_id),
             'client_id'             => Hashids::encode($this->customer_id),
