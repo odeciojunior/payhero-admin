@@ -194,8 +194,9 @@
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header justify-content-center border-bottom py-1">
-                    <h4 class="modal-title">Termos de Uso</h4>
+                <div class="modal-header flex-column-reverse align-items-center border-bottom py-1">
+                    <h5 class="modal-title">Termos de Uso</h5>
+                    <small class="py-1">Nossos termos de uso foram atualizados. Para continuar utilizando nossos serviços, é preciso que esteja de acordo com os novos termos:</small>
                 </div>
                 <div class="modal-body p-0">
                     <div class="embed-responsive embed-responsive-16by9">
