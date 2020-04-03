@@ -88,6 +88,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                 }
             }
         } catch (Exception $e) {
+            report($e);
         }
     }
 

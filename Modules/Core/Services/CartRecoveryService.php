@@ -37,9 +37,13 @@ class CartRecoveryService
             $dateStart->modify('-75 minutes');
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
-
-            $checkoutModel->where([['status_enum', '=',$checkoutModel->present()->getStatusEnum('abandoned cart')], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
-                          ->with('project', 'checkoutPlans.plan.productsPlans.product')
+            $checkoutModel->where([
+                                      [
+                                          'status_enum', '=', $checkoutModel->present()
+                                                                            ->getStatusEnum('abandoned cart'),
+                                      ], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd],
+                                  ])
+                          ->with('project', 'project.users', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
                                   foreach ($abandonedCarts as $abandonedCart) {
@@ -59,10 +63,10 @@ class CartRecoveryService
                                                                   ->orderBy('created_at', 'desc')
                                                                   ->first();
 
-                                          $project         = $abandonedCart->project;
-                                          $domain          = $domainModel->where('project_id', $project->id)
-                                                                            ->where('status', 3)
-                                                                            ->first();
+                                          $project = $abandonedCart->project;
+                                          $domain  = $domainModel->where('project_id', $project->id)
+                                                                 ->where('status', 3)
+                                                                 ->first();
 
                                           $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
 
@@ -70,6 +74,18 @@ class CartRecoveryService
 
                                           $linkCheckout       = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
                                           $clientNameExploded = explode(' ', $log->name);
+
+                                          if (empty($project->contact)) {
+                                              $projectContact = $project->users[0]->email;
+                                          } else {
+                                              $projectContact = $project->contact;
+                                          }
+
+                                          if (empty($project->support_phone)) {
+                                              $projectPhone = $project->users[0]->cellphone;
+                                          } else {
+                                              $projectPhone = $project->support_phone;
+                                          }
 
                                           //Traz a mensagem do sms formatado
                                           $projectNotificationPresenter = $projectNotificationModel->present();
@@ -97,20 +113,22 @@ class CartRecoveryService
                                                                                                    ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                                    ->first();
                                           if (!empty($projectNotificationEmail)) {
-                                              $message        = json_decode($projectNotificationEmail->message);
-                                              $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
-                                              $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
-                                              $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                              $message               = json_decode($projectNotificationEmail->message);
+                                              $subjectMessage        = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
+                                              $titleMessage          = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
+                                              $contentMessage        = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                              $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
                                               if (!empty($domain)) {
                                                   $bodyEmail = [
-                                                      'name'            => $clientNameExploded[0],
-                                                      'project_logo'    => $project['logo'],
-                                                      'checkout_link'   => $linkCheckout,
-                                                      "project_contact" => $project['contact'],
-                                                      "subject"         => $subjectMessage,
-                                                      "title"           => $titleMessage,
-                                                      "content"         => $contentMessage,
-                                                      "products"        => $products,
+                                                      'name'                    => $clientNameExploded[0],
+                                                      'project_logo'            => $project['logo'],
+                                                      'checkout_link'           => $linkCheckout,
+                                                      "project_contact"         => $project['contact'],
+                                                      "subject"                 => $subjectMessage,
+                                                      "title"                   => $titleMessage,
+                                                      "content"                 => $contentMessage,
+                                                      "products"                => $products,
+                                                      'project_message_contact' => $projectMessageContact,
                                                   ];
 
                                                   $dataEmail = [
@@ -155,8 +173,13 @@ class CartRecoveryService
 
             $date = Carbon::now()->subDay('1')->toDateString();
 
-            $checkoutModel->where([['status_enum', '=', $checkoutModel->present()->getStatusEnum('abandoned cart')], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
-                          ->with('project', 'checkoutPlans.plan.productsPlans.product')
+            $checkoutModel->where([
+                                      [
+                                          'status_enum', '=', $checkoutModel->present()
+                                                                            ->getStatusEnum('abandoned cart'),
+                                      ], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date],
+                                  ])
+                          ->with('project', 'project.users', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
                                   try {
@@ -182,11 +205,29 @@ class CartRecoveryService
                                                              ->where('status', 3)
                                                              ->first();
 
-                                      $linkCheckout = "https://checkout." . $domain->name ?? 'cloudfox.net' . "/recovery/" . $log->id_log_session;
+                                      if (empty($domain)) {
+                                          $domainName = 'cloudfox.net';
+                                      } else {
+                                          $domainName = $domain->name;
+                                      }
+
+                                      $linkCheckout = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
 
                                       $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log->telephone);
 
                                       $clientNameExploded = explode(' ', $log->name);
+
+                                      if (empty($project->contact)) {
+                                          $projectContact = $project->users[0]->email;
+                                      } else {
+                                          $projectContact = $project->contact;
+                                      }
+
+                                      if (empty($project->support_phone)) {
+                                          $projectPhone = $project->users[0]->cellphone;
+                                      } else {
+                                          $projectPhone = $project->support_phone;
+                                      }
 
                                       //Traz a mensagem do sms formatado
                                       $projectNotificationPresenter = $projectNotificationModel->present();
@@ -213,20 +254,22 @@ class CartRecoveryService
                                                                                                ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                                ->first();
                                       if (!empty($projectNotificationEmail)) {
-                                          $message        = json_decode($projectNotificationEmail->message);
-                                          $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
-                                          $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
-                                          $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                          $message               = json_decode($projectNotificationEmail->message);
+                                          $subjectMessage        = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
+                                          $titleMessage          = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
+                                          $contentMessage        = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                          $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
                                           if (!empty($domain)) {
                                               $bodyEmail = [
-                                                  'name'            => $clientNameExploded[0],
-                                                  'project_logo'    => $project['logo'],
-                                                  'checkout_link'   => $linkCheckout,
-                                                  "project_contact" => $project['contact'],
-                                                  "subject"         => $subjectMessage,
-                                                  "title"           => $titleMessage,
-                                                  "content"         => $contentMessage,
-                                                  "products"        => $products,
+                                                  'name'                    => $clientNameExploded[0],
+                                                  'project_logo'            => $project['logo'],
+                                                  'checkout_link'           => $linkCheckout,
+                                                  "project_contact"         => $project['contact'],
+                                                  "subject"                 => $subjectMessage,
+                                                  "title"                   => $titleMessage,
+                                                  "content"                 => $contentMessage,
+                                                  "products"                => $products,
+                                                  'project_message_contact' => $projectMessageContact,
                                               ];
 
                                               $dataEmail = [

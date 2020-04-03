@@ -29,6 +29,7 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#data-table-upsell').html('');
                 let projectUpsell = response.data;
+                let upsellLength = response.data.length;
                 if (projectUpsell != '') {
                     let dados = '';
                     for (let upsell of projectUpsell) {
@@ -48,6 +49,11 @@ $(document).ready(function () {
                 } else {
                     $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
                 }
+                if (upsellLength > 0) {
+                    $('.div-config').show();
+                } else {
+                    $('.div-config').hide();
+                }
                 $('#table-upsell').addClass('table-striped');
                 pagination(response, 'upsell', loadUpsell);
 
@@ -62,6 +68,7 @@ $(document).ready(function () {
         $('#form_add_upsell').show();
         $('#form_edit_upsell').hide()
         $('#add_description_upsell').val('');
+        $('#add_discount_upsell').val('');
     });
 
     $(document).on('click', '.edit-upsell', function (event) {
@@ -73,6 +80,7 @@ $(document).ready(function () {
         $("#form_add_upsell").hide();
         $("#form_edit_upsell").show();
         $('#edit_description_upsell').val('');
+        $('#edit_discount_upsell').val('');
         $('#form_edit_upsell .upsell-id').val(upsellId);
         loadingOnScreen();
 
@@ -88,6 +96,8 @@ $(document).ready(function () {
             }, success: function (response) {
                 let upsell = response.data;
                 $('#edit_description_upsell').val(`${upsell.description}`);
+                $('#edit_discount_upsell').val(`${upsell.discount}`);
+
                 if (upsell.active_flag) {
                     $('#edit_active_flag').val(1).prop('checked', true);
                 } else {
@@ -143,6 +153,9 @@ $(document).ready(function () {
                         idPlanArray.push(key);
                     }
                     $("#edit_offer_on_plans").val(idPlanArray);
+                }
+                if ($("#edit_apply_on_plans").val().includes('all')) {
+
                 }
                 loadingOnScreenRemove();
                 // END
@@ -250,10 +263,13 @@ $(document).ready(function () {
             }, success: function success(response) {
                 let upsell = response.data;
                 $('.upsell-description').html('');
+                $('.upsell-discount').html('');
                 $('.upsell-status').html('');
                 $('.upsell-apply-plans').html('');
                 $('.upsell-offer-plans').html('');
                 $('.upsell-description').html(`${upsell.description}`);
+                $('.upsell-discount').html(`${upsell.discount != 0 ? `${upsell.discount}%` : `Valor sem desconto`}`);
+
                 $('.upsell-status').html(`${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}`);
                 for (let applyPlan of upsell.apply_on_plans) {
                     $('.upsell-apply-plans').append(`<span>${applyPlan.name}</span><br>`);
@@ -265,8 +281,51 @@ $(document).ready(function () {
         });
     });
 
+    $('#add_apply_on_plans, #edit_apply_on_plans').select2({
+        placeholder: 'Nome do plano',
+        multiple: true,
+        dropdownParent: $('#modal_add_upsell'),
+        language: {
+            noResults: function () {
+                return 'Nenhum plano encontrado';
+            },
+            searching: function () {
+                return 'Procurando...';
+            }
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: 'plan',
+                    search: params.term,
+                    project_id: projectId,
+                };
+            },
+            method: "GET",
+            url: "/api/plans/user-plans",
+            delay: 300,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processResults: function (res) {
+                let allObject = {
+                    id: 'all',
+                    name: 'Qualquer plano',
+                };
+                res.data.unshift(allObject);
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {id: obj.id, text: obj.name};
+                    })
+                };
+            },
+        }
+    });
+
     //Search plan
-    $('#add_apply_on_plans, #add_offer_on_plans, #edit_apply_on_plans, #edit_offer_on_plans').select2({
+    $('#add_offer_on_plans, #edit_offer_on_plans').select2({
         placeholder: 'Nome do plano',
         multiple: true,
         dropdownParent: $('#modal_add_upsell'),
@@ -304,6 +363,216 @@ $(document).ready(function () {
         }
     });
 
+    $('#add_apply_on_plans').on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val(null).trigger("change");
+            selectPlan.val('all').trigger("change");
+        }
+    });
+
+    $('#edit_apply_on_plans').on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val(null).trigger("change");
+            selectPlan.val('all').trigger("change");
+        }
+    });
+
+    CKEDITOR.replace('description_config', {
+        language: 'br',
+        uiColor: '#F1F4F5',
+        height: 250,
+        toolbarGroups: [
+            {name: 'basicstyles', groups: ['basicstyles']},
+            {name: 'paragraph', groups: ['list', 'blocks']},
+            {name: 'links', groups: ['links']},
+            {name: 'styles', groups: ['styles']},
+        ],
+        removeButtons: 'Anchor,Superscript,Subscript',
+    });
+
+    $('#countdown_flag').on('change', function () {
+        let switchFlag = $(this);
+        if (switchFlag.is(':checked')) {
+            $('.div-countdown-time').slideDown('fast');
+        } else {
+            $('.div-countdown-time').slideUp('fast');
+        }
+    });
+    $(document).on('click', '#config-upsell', function (event) {
+        event.preventDefault();
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: "/api/projectupsellconfig/" + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+
+            }, success: function success(response) {
+                loadingOnScreenRemove();
+                let upsellConfig = response.data;
+                $('#header_config').val(`${upsellConfig.header}`);
+                $('#title_config').val(`${upsellConfig.title}`);
+                CKEDITOR.instances.description_config.setData(`${upsellConfig.description}`);
+                $('#countdown_time').val(`${upsellConfig.countdown_time}`);
+
+                if (upsellConfig.countdown_flag) {
+                    $('#countdown_flag').prop('checked', true);
+                    $('.div-countdown-time').show();
+                } else {
+                    $('#countdown_flag').prop('checked', false);
+                    $('.div-countdown-time').hide();
+                }
+                if (upsellConfig.has_upsell) {
+                    $('.btn-view-config').show();
+                }
+            }
+        });
+    });
+    $(document).on('click', '.bt-upsell-config-update', function (event) {
+        event.preventDefault();
+        if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
+            alertCustom('error', 'Preencha o campo Contagem');
+            return false;
+        }
+        loadingOnScreen();
+        var form_data = new FormData(document.getElementById('form_config_upsell'));
+        let description = CKEDITOR.instances.description_config.getData();
+        form_data.set('description', description);
+
+        $.ajax({
+            method: "POST",
+            url: "/api/projectupsellconfig/" + projectId,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                // $('#modal_config_upsell').modal('hide');
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+            }
+        });
+    });
+    $(document).on('click', '.btn-return-to-config', function (event) {
+        event.preventDefault();
+        $('#modal-view-upsell-config').modal('hide');
+        $('#modal_config_upsell').modal('show');
+    });
+    $(document).on('click', '.btn-view-config', function (event) {
+        event.preventDefault();
+        $('#modal_config_upsell').modal('hide');
+        $('#modal-view-upsell-config').modal('show');
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/projectupsellconfig/previewupsell",
+            dataType: "json",
+            data: {
+                project_id: projectId,
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+
+            }, success: function success(response) {
+                loadingOnScreenRemove();
+                let upsell = response.data;
+                $('.upsell-config-header').html('');
+                $('.upsell-config-discription').html('');
+                $('.div-upsell-products').html('');
+                $('.upsell-config-timer').html('');
+                $('.upsell-config-header').html(`${upsell.header}`);
+                $('.upsell-config-discription').html(`<h1 class='text-white'>${upsell.title}</h1><p>${upsell.description}</p>`);
+                if (upsell.countdown_flag) {
+                    $('.upsell-config-timer').html(`
+                        <div class="timer">
+                          <span class="timer-title">Por apenas um Tempo Limitado:</span>
+                          <div class="d-flex justify-content-center">
+                                <div class="d-flex flex-column">
+                                    <span class="digit" id="minutes">--</span>
+                                    <span class="timer-text">Minutos</span>
+                                </div>
+                                <span class="digit separator">:</span>
+                                <div class="d-flex flex-column">
+                                    <span class="digit" id="seconds">--</span>
+                                    <span class="timer-text">Segundos</span>
+                                </div>
+                          </div>
+                        </div>`
+                    );
+                    countdown(upsell.countdown_time);
+                }
+                for (let key in upsell.products) {
+                    let data = `
+                        <div class="product-info">
+                            <div class="d-flex flex-column">
+                                <div class="product-row">
+                                      <img src="${upsell.products[key].photo}" class="product-img">
+                                      <h3>${upsell.products[key].amount}x ${upsell.products[key].name}</h3>
+                                </div>
+                            </div>
+                        <h4 class="mb-md-4">Total R$ ${upsell.products[key].price}</h4>
+                        <div class="d-flex flex-column mt-4 mt-md-0">
+                            <button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
+                        </div>
+                       </div>
+                       ${key != upsell.products.length - 1 ? `<hr class="plan-separator">` : ''}
+                    `;
+                    $('.div-upsell-products').append(data);
+                }
+            }
+        });
+
+    });
+    function countdown(countdownTime) {
+        let countdown = localStorage.getItem('countdown');
+
+        if (countdown === null) {
+            countdown = new Date().getTime() + countdownTime * 60000; // 10 minutes
+            localStorage.setItem('countdown', countdown);
+        }
+        function setIntervalAndExecute(fn, t) {
+            fn();
+            return (setInterval(fn, t));
+        }
+
+        setIntervalAndExecute(() => {
+
+            let now = new Date().getTime();
+            let distance = countdown - now;
+
+            if (distance > 0) {
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                $('#minutes').text(minutes.toString().padStart(2, '0'));
+                $('#seconds').text(seconds.toString().padStart(2, '0'));
+            } else {
+                localStorage.removeItem('countdown');
+            }
+
+        }, 1000);
+    }
     function loadPlans() {
         $('#add_apply_on_plans').html('');
         $('#add_offer_on_plans').html('');

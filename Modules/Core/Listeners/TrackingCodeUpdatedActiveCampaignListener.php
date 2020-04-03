@@ -25,16 +25,16 @@ class TrackingCodeUpdatedActiveCampaignListener implements ShouldQueue
     {
         try {
             $activeCampaignService = new ActiveCampaignService;
-            $sale = $event->sale;
-            $customer = $event->sale->customer;
+            $sale                  = $event->sale;
+            $customer              = $event->sale->customer;
 
             $dataCustom = [
                 'url_boleto' => $sale->boleto_link,
-                'sub_total' => $sale->sub_total,
-                'frete' => $sale->shipment_value
+                'sub_total'  => $sale->sub_total,
+                'frete'      => $sale->shipment_value,
             ];
 
-            return $activeCampaignService->execute($sale->id, 6, $customer->name, $customer->telephone, $customer->email, $sale->project_id, 'sale', $dataCustom); // 6 - tracking
+            return $activeCampaignService->execute($sale->id, 6, $customer->name, $customer->telephone, $customer->email, $sale->project_id, 'sale', $dataCustom, $sale->checkout_id); // 6 - tracking
         } catch (Exception $e) {
             report($e);
 

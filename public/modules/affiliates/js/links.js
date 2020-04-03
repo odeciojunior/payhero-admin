@@ -235,12 +235,14 @@ $(function () {
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';
-                            data += '<td class="display-sm-none display-m-none copy_link_plan" title="Copiar Link" style="cursor:pointer;" link="' + value.link + '">';
-                            if (value.plan_name == null) {
-                                data += limitLink(value.link, 50) + ' <br><small>' + value.project_name + '</small> </td>';
-                            } else {
-                                data += limitLink(value.link_plan, 50) + ' <br><small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
-                            }
+                            data += '<td class="display-sm-none display-m-none" title="Copiar Link" link="' + value.link + '">';
+                            // if (value.plan_name == null) {
+                            //     data += limitLink(value.link, 50) + ' <br><small>' + value.project_name + '</small> </td>';
+                            // } else {
+                            //     data += limitLink(value.link_plan, 50) + ' <br><small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
+                            // }
+                            data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
+
                             data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link_plan" link="' + value.link + '"> file_copy</a></td>';
 
                             data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
@@ -253,7 +255,7 @@ $(function () {
                             data += '<td style="text-align:center">';
                             data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><i class="material-icons gradient">remove_red_eye</i></a>';
 
-                            if (value.plan_name == null && value.link != null) {
+                            if (value.plan_name == '' && value.link != null) {
                                 data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><i class="material-icons gradient">edit</i></a>';
                                 data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><i class="material-icons gradient">delete_outline</i></a>';
                             } else {

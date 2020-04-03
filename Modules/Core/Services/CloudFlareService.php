@@ -694,7 +694,7 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
     public function setSSLSetting(string $value, string $domain = null)
@@ -721,7 +721,7 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
     public function setHTTPSRedirectSetting(string $value, string $domain = null)
@@ -920,9 +920,6 @@ class CloudFlareService
 
             return true;
         } catch (Exception $e) {
-            Log::warning('Erro ao fazer confiuracao default do cloudflare');
-            report($e);
-
             return false;
         }
     }

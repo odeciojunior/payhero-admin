@@ -170,6 +170,8 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
 
+        \Torann\GeoIP\GeoIPServiceProvider::class,
+
     ],
 
     /*
@@ -223,6 +225,7 @@ return [
         'Javascript'   => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         'Hashids'      => Vinkla\Hashids\Facades\Hashids::class,
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
+        'GeoIP'        => \Torann\GeoIP\Facades\GeoIP::class,
     ],
 
 ];

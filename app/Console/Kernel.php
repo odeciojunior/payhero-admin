@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
         // Alterar status do boletos de pendente para cancelado
-        $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');
+        // $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');
 
         $schedule->command('command:UpdateListsFoxActiveCampaign')->cron('0 */12 * * *');
 

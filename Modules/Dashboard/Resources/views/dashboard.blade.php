@@ -20,15 +20,13 @@
                             Empresa:
                         </div>
                         <div class=" text-lg-right">
-                            <select id="company" class="form-control new-select">
-                            </select>
+                            <select id="company" class="form-control new-select"> </select>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="page-content container" style="display:none">
-
             <!-- Saldos -->
             <div class="row">
                 <div class="col-6 col-lg-3">
@@ -96,10 +94,8 @@
                     </div>
                 </div>
             </div>
-
             <!-- Chargeback e Tracking -->
             <div class="row">
-
                 <div class="col-12 col-lg-6">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -130,7 +126,6 @@
                         <div class="card-bottom orangered"></div>
                     </div>
                 </div>
-
                 <div class="col-12 col-lg-6">
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
@@ -158,7 +153,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Notícias e Releases -->
             <div class="row">
                 <div class="col-lg-8" id="news-col" style="display:none">
@@ -194,9 +188,33 @@
         @include('companies::empty')
     </div>
 
+
+    <!-- Modal Termos de Uso -->
+    <div id="modal-user-term" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header flex-column-reverse align-items-center border-bottom py-1">
+                    <h5 class="modal-title">Termos de Uso</h5>
+                    <small class="py-1">Nossos termos de uso foram atualizados. Para continuar utilizando nossos serviços, é preciso que esteja de acordo com os novos termos:</small>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe type="application/pdf" src="{{ asset('modules/userTerms/pdf/userTerms.pdf') }}#toolbar=0" width="100%" height="300"></iframe>
+                    </div>
+                    <div class="modal-footer border-top py-2">
+                        <button type="button" id='accepted-terms' class="btn btn-info col-sm-2">
+                            Aceitar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=20') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1') }}"></script>
     @endpush
 
 @endsection

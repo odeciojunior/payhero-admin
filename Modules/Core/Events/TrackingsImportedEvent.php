@@ -9,7 +9,7 @@ class TrackingsImportedEvent
     public $user;
 
     /**
-     * TrackingCodeUpdatedEvent constructor.
+     * TrackingsImportedEvent constructor.
      * @param User $user
      */
     public function __construct(User $user)

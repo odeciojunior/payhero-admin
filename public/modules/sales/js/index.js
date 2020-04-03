@@ -227,12 +227,15 @@ $(document).ready(function () {
                         }
 
                         dados = `  <tr class='` + tableClass + `'>
-                                    <td class='display-sm-none display-m-none display-lg-none'>${value.sale_code}</td>
+                                    <td class='display-sm-none display-m-none display-lg-none text-center'>
+                                        ${value.sale_code}
+                                        ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
+                                    </td>
                                     <td>${value.project}</td>
                                     <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
                                     <td class='display-sm-none display-m-none display-lg-none'>${value.client}</td>
                                     <td>
-                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'>
+                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
                                     </td>
                                     <td>
                                         <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
@@ -337,4 +340,9 @@ $(document).ready(function () {
             }
         });
     }
+    $(document).on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            atualizar();
+        }
+    });
 });

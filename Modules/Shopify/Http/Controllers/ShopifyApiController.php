@@ -15,6 +15,7 @@ use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Services\ProjectNotificationService;
+use Modules\Core\Services\ProjectService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
@@ -175,7 +176,9 @@ class ShopifyApiController extends Controller
                                                   ]);
                         if (!empty($userProjectModel)) {
                             $projectNotificationService = new ProjectNotificationService();
+                            $projectService             = new ProjectService();
                             $projectNotificationService->createProjectNotificationDefault($project->id);
+                            $projectService->createUpsellConfig($project->id);
 
                             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->account_owner_id));
                         } else {
@@ -445,19 +448,19 @@ class ShopifyApiController extends Controller
     public function synchronizeTrackings(Request $request)
     {
         try {
-            $requestData = $request->all();
-            $projectModel    = new Project();
+            $requestData  = $request->all();
+            $projectModel = new Project();
 
             $project = $projectModel->find(current(Hashids::decode($requestData['project_id'])));
 
             ImportShopifyTrackingCodesJob::dispatch($project);
 
             return response()->json([
-                'message' => 'Códigos de rastreio sendo importados...'
-            ], Response::HTTP_OK);
-
+                                        'message' => 'Códigos de rastreio sendo importados...',
+                                    ], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
+
             return response()->json(['message' => 'Problema ao sincronizar códigos de rastreio do shopify, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
         }
     }

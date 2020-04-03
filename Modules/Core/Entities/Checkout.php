@@ -14,6 +14,7 @@ use App\Traits\LogsActivity;
 /**
  * @property integer $id
  * @property int $project_id
+ * @property int $affiliate_id
  * @property string $created_at
  * @property string $status
  * @property int $status_enum
@@ -42,6 +43,7 @@ use App\Traits\LogsActivity;
  * @property int $email_sent_amount
  * @property int $sms_sent_amount
  * @property Project $project
+ * @property Affiliate $affiliate
  * @property CheckoutPlan[] $checkoutPlans
  * @property Log[] $logs
  * @property Sale[] $sales
@@ -63,6 +65,7 @@ class Checkout extends Model
      */
     protected $fillable = [
         'project_id',
+        'affiliate_id',
         'status',
         'status_enum',
         'operational_system',
@@ -119,6 +122,14 @@ class Checkout extends Model
     public function project()
     {
         return $this->belongsTo('Modules\Core\Entities\Project');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function affiliate()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
 
     /**

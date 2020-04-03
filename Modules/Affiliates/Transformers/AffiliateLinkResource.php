@@ -38,8 +38,8 @@ class AffiliateLinkResource extends Resource
 
         return [
             'id'              => Hashids::encode($this->id),
-            'plan_name'       => $this->plan->name ?? null,
-            'description'     => $this->plan->description ?? null,
+            'plan_name'       => $this->plan->name ?? '',
+            'description'     => $this->plan->description ?? '',
             'link'            => $this->link ?? null,
             'clicks'          => $this->clicks_amount ?? null,
             'link_project'    => $this->affiliate->project->url_page ?? null,

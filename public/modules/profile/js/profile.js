@@ -120,7 +120,7 @@ $(document).ready(function () {
                 } else {
                     cellphoneNotVerified();
                 }
- 
+
                 if (response.data.role.name !== 'account_owner') {
                     $("#nav_notifications").hide();
                     $("#nav_taxs").hide();
@@ -323,6 +323,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
+                loadingOnScreenRemove();
                 errorAjaxResponse(response);
 
             },
@@ -582,7 +583,7 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: '/api/profile/updatetaxes',
-            dataType: "json", 
+            dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
