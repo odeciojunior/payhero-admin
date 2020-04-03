@@ -23,9 +23,10 @@ use Vinkla\Hashids\Facades\Hashids;
 class DashboardApiController extends Controller
 {
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             activity()->tap(function(Activity $activity) {
@@ -37,8 +38,11 @@ class DashboardApiController extends Controller
 
             $userLogged = auth()->user();
 
-            $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->id]])
-                                       ->exists();
+            $userTerm = true;
+            if (!$request->has('skip')) {
+                $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->id]])
+                                           ->exists();
+            }
 
             $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->get() ?? collect();
 
