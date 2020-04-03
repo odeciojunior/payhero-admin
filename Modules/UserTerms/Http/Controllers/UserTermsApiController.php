@@ -42,7 +42,7 @@ class UserTermsApiController
             try {
                 $geoIp = geoip()->getLocation(IpService::getRealIpAddr());
             } catch (Exception $e) {
-                //
+                report($e);
             }
 
             $operationalSystem = Agent::platform();
