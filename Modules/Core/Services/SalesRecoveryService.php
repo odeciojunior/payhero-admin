@@ -61,7 +61,7 @@ class SalesRecoveryService
         $customerModel     = new Customer();
 
         $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id',
+            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
                      'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
             ->leftJoin('plans_sales as plan_sale', function($join) {
                 $join->on('plan_sale.sale_id', '=', 'sales.id');
