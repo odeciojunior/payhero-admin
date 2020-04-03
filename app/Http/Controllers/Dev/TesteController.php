@@ -313,7 +313,7 @@ class TesteController extends Controller
 
             dd($deviceData);
         } catch (Exception $e) {
-            //
+            dd($e->getMessage());
         }
     }
 
