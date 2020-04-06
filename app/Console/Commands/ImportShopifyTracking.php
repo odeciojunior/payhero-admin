@@ -10,6 +10,7 @@ use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TrackingService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class GenericCommand
