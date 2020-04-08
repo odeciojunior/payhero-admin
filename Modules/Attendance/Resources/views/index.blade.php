@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=1') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=2') }}">
     @endpush
     <div class="page">
         <div class="page-header container">

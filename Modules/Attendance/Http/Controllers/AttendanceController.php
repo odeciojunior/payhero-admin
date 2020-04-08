@@ -2,15 +2,15 @@
 
 namespace Modules\Attendance\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 
 class AttendanceController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
+     * @return View
      */
     public function index()
     {
@@ -19,7 +19,7 @@ class AttendanceController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @return Response
+     * @return View
      */
     public function create()
     {
@@ -29,7 +29,7 @@ class AttendanceController extends Controller
     /**
      * Show the specified resource.
      * @param int $id
-     * @return Response
+     * @return View
      */
     public function show($id)
     {
@@ -39,7 +39,7 @@ class AttendanceController extends Controller
     /**
      * Show the form for editing the specified resource.
      * @param int $id
-     * @return Response
+     * @return View
      */
     public function edit($id)
     {

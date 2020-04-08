@@ -54,7 +54,8 @@ class TicketsApiController extends Controller
                 $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
                 $tickets->where('id', $ticketId);
             }
-            $tickets = $tickets->paginate(5);
+            $tickets = $tickets->orderByDesc('id')
+                ->paginate(5);
 
             return TicketResource::collection($tickets);
         } catch (Exception $e) {
@@ -80,34 +81,6 @@ class TicketsApiController extends Controller
                                                   'messages',
                                                   'attachments',
                                               ])->find($ticketId);
-
-                return new TicketShowResource($ticket);
-            } else {
-                return response()->json(['message' => 'Chamado não encontrado!'], 400);
-            }
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(['message' => 'Erro ao carregar chamado'], 400);
-        }
-    }
-
-    public function update($id, Request $request)
-    {
-        try {
-            $ticketsModel = new Ticket();
-
-            $ticketId = current(Hashids::decode($id ?? ''));
-
-            $data = $request->all();
-
-            if (!empty($ticketId) && !empty($data['status'])) {
-
-                $ticket = $ticketsModel->find($ticketId);
-
-                $ticket->update([
-                                    'ticket_status_enum' => $ticket->present()->getTicketStatusEnum($data['status']),
-                                ]);
 
                 return new TicketShowResource($ticket);
             } else {

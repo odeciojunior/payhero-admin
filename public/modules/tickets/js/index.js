@@ -58,13 +58,12 @@ $(document).ready(function () {
                                 <div class="card card-shadow bg-white card-left ${cardColorByStatus[ticket.ticket_status_enum]}">
                                     <div class="card-header bg-white p-20 pb-0">
                                         <i class="material-icons mr-1">chat_bubble_outline</i>
-                                        <span id='' class='font-size-18 font-weight-bold'>${ticket.subject}</span>
+                                        <a class="not-hover" href="${locationUrl}/${ticket.id}"><span class='font-size-18 font-weight-bold'>${ticket.subject}</span></a>
                                         <div class='float-right'>
                                             <div class='dropdown'>
                                                 <i class="material-icons" id="dropdownMenuButton" title='Opções' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='cursor:pointer'>more_vert</i>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                                     <a class="dropdown-item details" href="${locationUrl}/${ticket.id}">Detalhes</a>
-                                                    ${ticket.ticket_status != 'Resolvido' ? `<a class="dropdown-item solve" href="#" data-status="closed" data-ticket="${ticket.id}">Resolver</a>` : ''}
                                                 </div>
                                             </div>
                                         </div>
@@ -81,7 +80,7 @@ $(document).ready(function () {
                                                 <div>
                                                     <span>ID</span>
                                                 </div>
-                                                <span class='font-weight-bold'>${ticket.id}</span>
+                                                <span class='font-weight-bold'>#${ticket.id}</span>
                                             </div>
                                             <div class='col-6 col-lg-2'>
                                                 <div>
@@ -150,32 +149,6 @@ $(document).ready(function () {
 
         });
     }
-
-    $(document).on('click', '.solve', function (event) {
-        event.preventDefault();
-        let status = $(this).data('status');
-        let ticketId = $(this).data('ticket');
-        $.ajax({
-            method: "PUT",
-            url: '/api/tickets/' + ticketId,
-            dataType: "json",
-            data: {
-                ticket_id: ticketId,
-                status: status,
-            },
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                getTickets();
-                alertCustom("success", "Chamado marcado como resolvido");
-            }
-        });
-    });
 
     //DatePicker
     function dateRangePicker() {

@@ -226,3 +226,8 @@ body {
 .progress-bar.bg-danger{
     background: linear-gradient(to right, #f76b1c, #ff6161);
 }
+
+.not-hover,
+.not-hover:hover{
+    color: inherit;
+}

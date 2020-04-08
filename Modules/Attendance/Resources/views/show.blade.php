@@ -7,7 +7,7 @@
     <div class="page">
         <div class="page-header container">
             <h1 class="page-title">
-                <i class="material-icons turn-back" style='color:grey;cursor:pointer;' title='Voltar'>arrow_back</i> Chamado: #490019
+                <i class="material-icons turn-back" style='color:grey;cursor:pointer;' title='Voltar'>arrow_back</i> Chamado: #<span id="ticket-id"></span>
             </h1>
             <hr class='mb-0 mt-10'>
         </div>
@@ -15,7 +15,7 @@
             <div class="card card-shadow card-top">
                 <div class="card-body bg-white p-40">
                     <div>
-                        <span class='font-size-14 font-weight-bold ticket-subject'>Título do chamado</span>
+                        <h4 class='font-weight-bold ticket-subject'></h4>
                     </div>
                     <div>
                         <span class='font-size-14 customer-name'></span>
@@ -33,7 +33,7 @@
                         <div class='col-6 col-lg-3'>
                             <span>Empresa</span>
                             <br>
-                            <span class='font-weight-bold company-name'>Health Lab</span>
+                            <span class='font-weight-bold company-name'></span>
                         </div>
                         <div class='col-6 col-lg-3'>
                             <span>Produtos</span>
@@ -43,7 +43,7 @@
                         <div class='col-6 col-lg-3'>
                             <span>Valor total</span>
                             <br>
-                            <span class='font-weight-bold total-value'>R$ 360,00</span>
+                            <span class='font-weight-bold total-value'></span>
                         </div>
                     </div>
                     <div class='my-20'>
@@ -54,7 +54,6 @@
                         {{-- js carrega... --}}
                     </div>
                     <div class='text-right mt-10 div-buttons'>
-                        <button id='btn-solve' class='btn btn-outline-danger mr-20' data-status='closed'>Resolver chamado</button>
                         <button id='btn-answer' class='btn btn-primary'>Responder</button>
                     </div>
                     <div class='row div-message' style='display:none;'>
