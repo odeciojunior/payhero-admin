@@ -10,6 +10,7 @@ use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\TrackingService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class GenericCommand
@@ -45,7 +46,7 @@ class ImportShopifyTracking extends Command
         $productService = new ProductService();
         $trackingService = new TrackingService();
 
-        $userToVerify = 147;
+        $userToVerify = 979;
 
         $count = 1;
 
@@ -55,7 +56,7 @@ class ImportShopifyTracking extends Command
             'productsPlansSale',
             'plansSales.plan.project.shopifyIntegrations'
         ])->doesntHave('tracking')
-            //->where('owner_id', $userToVerify)
+            ->where('owner_id', $userToVerify)
             ->where('status', 1)
             ->whereNotNull('shopify_order')
             ->orderByDesc('id')
@@ -74,7 +75,7 @@ class ImportShopifyTracking extends Command
                         $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
 
                         //Recria o webhook
-                        /*if(!in_array($project->id, $recreatedWebhooks)){
+                        if(!in_array($project->id, $recreatedWebhooks)){
 
                             $shopifyService->deleteShopWebhook();
 
@@ -99,7 +100,7 @@ class ImportShopifyTracking extends Command
                             $this->info('Webhook do projeto recriado');
 
                             $recreatedWebhooks[] = $project->id;
-                        }*/
+                        }
 
                         //Verifica os códigos de rastreio que não vieram nos postbacks
                         $fulfillments = $shopifyService->findFulfillments($sale->shopify_order);
