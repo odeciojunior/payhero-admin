@@ -122,7 +122,7 @@ class CheckoutService
                 $urlCancelPayment = 'https://checkout.cloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                  ->encode($sale->id);
             } else {
-                $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
+                $urlCancelPayment = 'http://' . env('CHECKOUT_URL') . '/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                 ->encode($sale->id);
             }
             $dataCancel = [

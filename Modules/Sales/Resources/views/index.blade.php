@@ -255,7 +255,7 @@
 
                     <div class="col-3">                        
                         <div class="custom-control custom-radio mb-3">
-                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" required>
+                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" disabled>
                             <label class="custom-control-label" for="radioPartialRefund">Estorno Parcial</label>
                         </div>
                     </div>
@@ -263,7 +263,7 @@
                 </div>
                 <div class="text-center pt-20" style="min-height:62px;">
                     <div class="value-partial-refund" style="display: none;">
-                        <strong class="font-size-14">Valor do estorno: </strong>
+                        <strong class="font-size-14">Valor a ser estornado: </strong>
                         R$ <input type="text" name="refundAmount" id="refundAmount" style="width: 200px;" maxlength="9">
                     </div>
                 </div>
@@ -301,7 +301,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=5') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
