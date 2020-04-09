@@ -18,7 +18,7 @@ use Modules\Core\Events\ReleasedBalanceEvent;
  */
 class TransfersService
 {
-    public function verifyTransactions()
+    public function verifyTransactions($saleId = null)
     {
 
         $companyModel     = new Company();
@@ -29,7 +29,9 @@ class TransfersService
                                                      ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                      ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                                                  ]);
-
+        if(!is_null($saleId)) {
+            $transactions = $transactions->where('sale_id', $saleId);
+        }
         $transfers = [];
 
         foreach ($transactions->cursor() as $transaction) {

@@ -66,6 +66,12 @@
                             <span id="automatic-discount-value" class="text-muted ft-12"></span>
                         </div>
                         <div class="col-lg-6">
+                            <span class="text-muted ft-12 text-partial-refund"> Estorno parcial</span>
+                        </div>
+                        <div class="col-lg-6 text-right">
+                            <span id="partial-refund-value" class="text-muted ft-12"></span>
+                        </div>
+                        <div class="col-lg-6">
                             <h4 class="table-title"> Total </h4>
                         </div>
                         <div class="col-lg-6 text-right">
