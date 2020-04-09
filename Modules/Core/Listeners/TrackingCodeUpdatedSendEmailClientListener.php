@@ -82,6 +82,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                         "content" => $contentMessage,
                         "products" => $event->products,
                         "link" => $linkBase,
+                        'sac_link' => "https://sac." . $domain->name,
                     ];
 
                     $sendGridService->sendEmail('noreply@' . $domain['name'], $projectName, $clientEmail, $clientName, 'd-347cde26384449548df47e290ad50906', $data);
