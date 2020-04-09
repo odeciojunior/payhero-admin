@@ -7,7 +7,7 @@ $(() => {
     });
 
     $(document).on('click', '.copy', function () {
-        var temp = $("<input>");
+        let temp = $("<input>");
         $("body").append(temp);
         temp.val($(this).html()).select();
         document.execCommand("copy");
@@ -112,15 +112,18 @@ $(() => {
         }
     }
 
-    getProducts();
+    getProjects();
 
-    function getProducts() {
+    /**
+     * List Projects
+     */
+    function getProjects() {
 
         loadOnAny('.page-content');
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects?select=true',
+            url: '/api/projects?select=true&affiliate=false',
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -255,17 +258,17 @@ $(() => {
                                             <span class="badge badge-${badge}">${tracking.tracking_status}</span>
                                          </td>
                                          <td>
-                                            <input maxlength="16" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
+                                            <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
                                          <td class="text-md-right" style="min-width: 100px;">
-                                            <a class='tracking-save pointer mr-10' title="Salvar" product='${tracking.product.id}'
-                                             sale='${tracking.sale}' style="display:none"><i class='material-icons gradient'>save</i></a>
-                                         ${tracking.tracking_status_enum
-                            ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
-                                               <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
-                            : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                        }
-                                           <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
+                                            <a class='tracking-save pointer mr-10' title="Salvar" pps='${tracking.pps_id}'
+                                             style="display:none"><i class='material-icons gradient'>save</i></a>
+                                             ${tracking.tracking_status_enum
+                                                ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
+                                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                                : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
+                                             }
+                                            <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
                         $('#dados_tabela').append(dados);
@@ -362,17 +365,15 @@ $(() => {
     $(document).on('click', '.tracking-save', function () {
 
         let btnSave = $(this);
-        let row = btnSave.parent().parent();
         btnSave.prop('disabled', true);
 
         let tracking_code = btnSave.parent().parent().find('.input-tracking-code').val();
-        let saleId = btnSave.attr('sale');
-        let productId = btnSave.attr('product');
+        let ppsId = btnSave.attr('pps');
 
         $.ajax({
             method: "POST",
             url: '/api/tracking',
-            data: {tracking_code: tracking_code, sale_id: saleId, product_id: productId},
+            data: {tracking_code: tracking_code, product_plan_sale_id: ppsId},
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -386,10 +387,20 @@ $(() => {
 
                 if (!isEmpty(response.data.tracking_status)) {
 
-                    row.find('.tracking-close')
+                    let tracking = response.data;
+
+                    let td = btnSave.parent();
+
+                    td.find('.tracking-add, .tracking-edit, .tracking-detail')
+                        .remove();
+
+                    td.find('.tracking-close')
                         .click();
 
-                    let tracking = response.data;
+                    let buttons = `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
+                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`;
+
+                    td.append(buttons);
 
                     let statusBadge = btnSave.parent()
                         .parent()
@@ -403,7 +414,8 @@ $(() => {
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
-                btnSave.prop('disabled', false);
+                btnSave.prop('disabled', false)
+                    .hide();
             }
         });
     });
@@ -489,10 +501,5 @@ $(() => {
             },
         });
     });
-    $(document).on('keypress', function (e) {
-        if (e.keyCode == 13) {
-            index();
-            getResume();
-        }
-    });
+
 });

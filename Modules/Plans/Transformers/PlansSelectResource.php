@@ -16,8 +16,8 @@ class PlansSelectResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'   => Hashids::encode($this->id),
-            'name' => $this->name,
+            'id'         => Hashids::encode($this->id),
+            'name'       => $this->name,
         ];
     }
 }

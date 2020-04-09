@@ -8,13 +8,6 @@ use Illuminate\Database\Eloquent\Factory;
 class AttendanceServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Boot the application events.
      *
      * @return void
@@ -35,7 +28,7 @@ class AttendanceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**
@@ -91,11 +84,12 @@ class AttendanceServiceProvider extends ServiceProvider
 
     /**
      * Register an additional directory of factories.
-     * @source https://github.com/sebastiaanluca/laravel-resource-flow/blob/develop/src/Modules/ModuleServiceProvider.php#L66
+     *
+     * @return void
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
+        if (! app()->environment('production') && $this->app->runningInConsole()) {
             app(Factory::class)->load(__DIR__ . '/../Database/factories');
         }
     }

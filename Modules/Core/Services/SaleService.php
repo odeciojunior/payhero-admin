@@ -20,6 +20,9 @@ use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\SplitPaymentPartialRefundService;
+use Modules\Core\Services\TransfersService;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Slince\Shopify\PublicAppCredential;
@@ -105,7 +108,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 20];
+                $status = [1, 2, 4, 6, 7, 8, 20];
             } else {
                 $status = [$filters["status"]];
             }
@@ -188,6 +191,10 @@ class SaleService
                 $iof   = substr_replace($iof, '.', strlen($iof) - 2, 0);
                 $total += floatval($iof);
             }
+            if (!empty($item->sale->automatic_discount)) {
+                $total -= ($item->sale->automatic_discount / 100);
+            }
+
             $resume[$item->currency]['total'] += $total;
         }
 
@@ -232,7 +239,7 @@ class SaleService
             $invoices[] = Hashids::encode($notazzInvoice->id);
         }
         $sale->details->invoices = $invoices;
- 
+
         return $sale;
     }
 
@@ -262,6 +269,7 @@ class SaleService
         }
 
         $total -= $sale->automatic_discount;
+        $total -= $sale->refund_value;
 
         //calcule fees
         $transactionConvertax = $sale->transactions
@@ -340,6 +348,7 @@ class SaleService
             'taxaReal'            => $taxaReal,
             'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
             'affiliate_comission' => $affiliateComission,
+            'refund_value'        => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
         ];
     }
 
@@ -416,10 +425,11 @@ class SaleService
      * @param Sale $sale
      * @param int $refundAmount
      * @param $response
+     * @param array $partialValues
      * @return bool
      * @throws Exception
      */
-    public function updateSaleRefunded($sale, $refundAmount, $response)
+    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [])
     {
         try {
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
@@ -428,26 +438,36 @@ class SaleService
             $responseGateway = $response->response ?? [];
             $statusGateway   = $response->status_gateway ?? '';
 
-            $newTotalPaidValue = $totalPaidValue - $refundAmount;
-            if ($newTotalPaidValue <= 0) {
-                $status = 'refunded';
+            if(!empty($partialValues)) {
+                 $status = 'partial_refunded';
+                $newTotalPaidValue = $partialValues['total_value_with_interest'];
             } else {
-                $status = 'partial_refunded';
+                $status = 'refunded';
+                $newTotalPaidValue = $totalPaidValue - $refundAmount;
             }
+
             $newTotalPaidValue = substr_replace($newTotalPaidValue, '.', strlen($newTotalPaidValue) - 2, 0);
             $updateData        = array_filter([
-                                                  'total_paid_value' => ($newTotalPaidValue ?? 0),
-                                                  'status'           => $saleModel->present()->getStatus($status),
-                                                  'gateway_status'   => $statusGateway,
+                                                  'total_paid_value'      => ($newTotalPaidValue ?? 0),
+                                                  'status'                => $saleModel->present()->getStatus($status),
+                                                  'gateway_status'        => $statusGateway,
+                                                  'interest_total_value'  => $partialValues['interest_value'] ?? null,
+                                                  'refund_value'          => $sale->refund_value + $refundAmount,
+                                                  'installment_tax_value' => $partialValues['installment_free_tax_value'] ?? null,
                                               ]);
 
             SaleRefundHistory::create([
                                           'sale_id'          => $sale->id,
-                                          'refunded_amount'  => $refundAmount,
+                                          'refunded_amount'  => (!empty($partialValues)) ? $partialValues['value_to_refund'] : $refundAmount,
                                           'date_refunded'    => Carbon::now(),
                                           'gateway_response' => json_encode($responseGateway),
+                                          'refund_value'     => $refundAmount,
                                       ]);
-            $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
+            if($status == 'refunded') {
+                $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
+            } elseif($status == 'partial_refunded') {
+                $checktRecalc = $this->recalcSaleRefundPartial($sale, $partialValues);
+            }
             if ($checktRecalc) {
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
@@ -456,7 +476,7 @@ class SaleService
                         $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                         if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
                             $shopifyService = new ShopifyService($shopifyIntegration->url_store,
-                                                                 $shopifyIntegration->token);
+                                                                 $shopifyIntegration->token, false);
 
                             $shopifyService->refundOrder($sale);
                             $shopifyService->saveSaleShopifyRequest();
@@ -633,5 +653,122 @@ class SaleService
                 'message' => $message,
             ];
         }
+    }
+
+    public function recalcSaleRefundPartial($sale, $partialValues)
+    {
+        try {
+            $companyModel     = new Company();
+            $transferModel    = new Transfer();
+            $transactionModel = new Transaction();
+
+            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+
+            $refundTransactions = $sale->transactions;
+
+            // criar tranfer de saida e apagar transacoes
+            foreach ($refundTransactions as $refundTransaction) {
+                $company = $companyModel->find($refundTransaction->company_id);
+                if ($refundTransaction->status == 'transfered') {
+                    $transferModel->create([
+                                               'transaction_id' => $refundTransaction->id,
+                                               'user_id'        => $company->user_id,
+                                               'value'          => $refundTransaction->value,
+                                               'type'           => 'out',
+                                               'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                               'reason'         => 'refunded',
+                                               'company_id'     => $company->id,
+                                           ]);
+
+                    $company->update([
+                                         'balance' => $company->balance -= $refundTransaction->value,
+                                     ]);
+                }
+                $refundTransaction->delete(); // @TODO - testar se assim está apagando
+            }
+
+            // recriar transacoes com splitPayment
+            $totalValue              = $partialValues['total_value_with_interest'];
+            $cloudfoxValue           = $partialValues['cloudfox_value'];
+            $installmentFreeTaxValue = $partialValues['installment_free_tax_value'];
+
+            SplitPaymentPartialRefundService::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue);
+
+            // verify transfers
+            $transfersSerice = new TransfersService();
+            $transfersSerice->verifyTransactions($sale->id);
+
+            return true;
+        } catch(Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getValuesPartialRefund($sale, $refundValue)
+    {
+        $totalPaidValue       = intval(strval($sale->total_paid_value * 100));
+        $totalWithoutInterest = $totalPaidValue - $sale->interest_total_value; // total sem juros
+        $newTotalvalue        = $totalWithoutInterest - $refundValue; // novo valor total sem juros
+
+        $newTotalValueWithoutInterest = $newTotalvalue;
+
+        $userProject = UserProject::where([
+                                                ['type_enum', (new UserProject)->present()->getTypeEnum('producer')],
+                                                ['project_id', $sale->project->id],
+                                         ])->first();
+
+        $user = $userProject->user;
+
+        $installmentFreeTaxValue = 0;
+        $interestValue           = 0;
+
+        $installmentSelected = $sale->installments_amount;
+        $freeInstallments    = $sale->project->installments_interest_free;
+        $installmentValueTax = intval(($newTotalvalue / 100) * $user->installment_tax);
+
+        if($installmentSelected == 1) {
+            $totalValueWithTax = intval($newTotalvalue);
+            $installmentValue  = intval($newTotalvalue);
+        } else {
+            $totalValueWithTax = $newTotalvalue + $installmentValueTax * ( $installmentSelected - 1 );
+            if($freeInstallments >= $installmentSelected) {
+                $installmentValue = intval($newTotalvalue / $installmentSelected);
+            } else {
+                $installmentValue = intval($totalValueWithTax / $installmentSelected);
+            }
+        }
+
+        if ($sale->project->installments_interest_free > 1 && $sale->installments_amount <= $sale->project->installments_interest_free) {
+            $installmentFreeTaxValue = $totalValueWithTax - $newTotalvalue;
+        } else {
+            $interestValue = $totalValueWithTax - $newTotalvalue;
+            $newTotalvalue = $totalValueWithTax;
+        }
+
+        $installmentsValue = $installmentValue;
+        $cloudfoxValue     = ((int) (($newTotalvalue - $interestValue) / 100 * $user->credit_card_tax));
+        $cloudfoxValue     += str_replace('.', '', $user->transaction_rate);
+        $cloudfoxValue     += $interestValue;
+
+        return [
+            'cloudfox_value'               => $cloudfoxValue,
+            'total_value_with_interest'    => $newTotalvalue,
+            'total_value_without_interest' => $newTotalValueWithoutInterest,
+            'installment_free_tax_value'   => $installmentFreeTaxValue,
+            'interest_value'               => $interestValue,
+            'value_to_refund'              => $totalPaidValue - $newTotalvalue,
+        ];
+    }
+
+    public function updateInterestTotalValue($sale)
+    {
+        $shopifyDiscount     = (!is_null($sale->shopify_discount)) ? intval(preg_replace("/[^0-9]/", "", $sale->shopify_discount)) : 0;
+        $subTotal            = intval(strval($sale->sub_total * 100));
+        $shipmentValue       = intval(strval($sale->shipment_value * 100));
+        $automaticDiscount   = intval($sale->automatic_discount);
+        $totalPaidValue      = intval(strval($sale->total_paid_value * 100));
+        $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
+        $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
+        $sale->update(['interest_total_value' => $interesetTotalValue]);
     }
 }

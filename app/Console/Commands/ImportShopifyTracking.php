@@ -46,7 +46,7 @@ class ImportShopifyTracking extends Command
         $productService = new ProductService();
         $trackingService = new TrackingService();
 
-        $userToVerify = 147;
+        $userToVerify = 979;
 
         $count = 1;
 
@@ -59,6 +59,7 @@ class ImportShopifyTracking extends Command
             ->where('owner_id', $userToVerify)
             ->where('status', 1)
             ->whereNotNull('shopify_order')
+            ->orderByDesc('id')
             ->chunk(100, function ($sales) use (&$count, $productService, $trackingService, &$recreatedWebhooks) {
                 foreach ($sales as $sale) {
                     try {
@@ -95,7 +96,6 @@ class ImportShopifyTracking extends Command
                                 "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($integration->project_id) . '/tracking',
                                 "format"  => "json",
                             ]);
-
 
                             $this->info('Webhook do projeto recriado');
 

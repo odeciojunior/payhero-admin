@@ -133,16 +133,7 @@
                             @include('plans::index')
                         </div>
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            @if(env('APP_ENV') == 'local')
-                                @include('projectupsellrule::index')
-                            @else
-                                <div class="card shadow" style='height:300px;'>
-                                    <div class="text-center mt-100">
-                                        <h2>Em desenvolvimento!</h2>
-                                        <img style="width:60px; margin-bottom: 20px;" src="{!! asset('modules/global/img/tools.svg') !!}">
-                                    </div>
-                                </div>
-                            @endif
+                            @include('projectupsellrule::index')
                         </div>
                         <!-- Painel de Parceiros -->
                         <div class="tab-pane" id="tab_partners" role="tabpanel">
@@ -185,12 +176,12 @@
         <script src="{{asset('modules/partners/js/partners.js?v=1')}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v=2')}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v=1')}}"></script>
-        <script src="{{asset('modules/project-notification/js/projectNotification.js?v=1')}}"></script>
+        <script src="{{asset('modules/project-notification/js/projectNotification.js?v=3')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v=2')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=2')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v=12')}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v=4')}}"></script>
-        <script src="{{asset('modules/projectupsell/js/index.js?v=1')}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v=3')}}"></script>
+        <script src="{{asset('modules/projectupsell/js/index.js?v=8')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
     @endpush

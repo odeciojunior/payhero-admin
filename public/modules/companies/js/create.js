@@ -170,7 +170,8 @@ $(document).ready(function () {
         germany: 'NIF',
         spain: 'CIF',
         france: 'SIRET',
-        italy: 'Partita IVA'
+        italy: 'Partita IVA',
+        unitedkingdom: 'CNPJ'
     };
 
     $("#country").on('change', function () {

@@ -11,7 +11,7 @@ class SalesExportedEvent
     public $filename;
 
     /**
-     * TrackingCodeUpdatedEvent constructor.
+     * SalesExportedEvent constructor.
      * @param User $user
      * @param string $filename
      */

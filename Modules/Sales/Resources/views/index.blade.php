@@ -60,6 +60,7 @@
                                 <option value="4">Chargeback</option>
                                 <option value="7">Estornado</option>
                                 <option value="6">Em análise</option>
+                                <option value="8">Parcialmente estornado</option>
                                 <option value="20">Análise Antifraude</option>
                             </select>
                         </div>
@@ -243,11 +244,34 @@
                     <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
                     <small>OBS: Taxa de R$ 1,00 por estorno</small>
                 </div>
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-3">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="radioTotalRefund" name="radio-stacked" required checked>
+                            <label class="custom-control-label" for="radioTotalRefund">Estorno total</label>
+                        </div>
+                    </div>
+
+                    <div class="col-3">                        
+                        {{-- <div class="custom-control custom-radio mb-3">
+                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" required>
+                            <label class="custom-control-label" for="radioPartialRefund">Estorno Parcial</label>
+                        </div> --}}
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="text-center pt-20" style="min-height:62px;">
+                    <div class="value-partial-refund" style="display: none;">
+                        <strong class="font-size-14">Valor a ser estornado: </strong>
+                        R$ <input type="text" name="refundAmount" id="refundAmount" style="width: 200px;" maxlength="9">
+                    </div>
+                </div>
                 <div class="modal-footer">
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
                     </a>
-                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" data-dismiss="modal">
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" total="" data-dismiss="modal">
                         Estornar
                     </button>
                 </div>
@@ -277,7 +301,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=5') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

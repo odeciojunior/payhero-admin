@@ -28,7 +28,7 @@ return [
             "refused"   => "Recusado",
 
         ],
-        "status_affiliate" => [
+        "status_affiliate"         => [
             "active"   => "Ativo",
             "disabled" => "Desativado",
         ],
@@ -48,13 +48,13 @@ return [
             ],
         ],
 
-        "discount_coupon" => [
+        "discount_coupon"       => [
             "status" => [
                 "active"   => "Ativo",
                 "disabled" => "Desativado",
             ],
         ],
-        "shipping"        => [
+        "shipping"              => [
             "status"       => [
                 "active"   => "Ativo",
                 "disabled" => "Desativado",
@@ -63,19 +63,19 @@ return [
                 "yes" => "Sim",
                 "no"  => "Não",
             ],
-            "type" => [
+            "type"         => [
                 'static' => 'Estático',
-                'sedex' => 'SEDEX - Calculado automáticamente',
-                'pac' => 'PAC - Calculado automáticamente'
-            ]
+                'sedex'  => 'SEDEX - Calculado automáticamente',
+                'pac'    => 'PAC - Calculado automáticamente',
+            ],
         ],
-        "plan"            => [
+        "plan"                  => [
             "status" => [
                 "active"   => "Ativo",
                 "disabled" => "Desativado",
             ],
         ],
-        "sale"            => [
+        "sale"                  => [
             "status" => [
                 "approved"       => "Aprovado",
                 "canceled"       => "Cancelado",
@@ -89,7 +89,7 @@ return [
                 "system_error"   => "Erro de sistema",
             ],
         ],
-        "invoices"        => [
+        "invoices"              => [
             "status" => [
                 "pending"            => "Pendente",
                 "send"               => "Enviado",
@@ -101,31 +101,32 @@ return [
                 "rejected"           => "Rejeitado",
             ],
         ],
-        "role"            => [
+        "role"                  => [
             "account_owner" => "Dono da conta",
             "admin"         => "Administrativo",
             "attendance"    => "Atendimento",
         ],
-        "user_document_type"       => [
+        "user_document_type"    => [
             "personal_document" => "Documento Pessoal",
             "address_document"  => "Comprovante de residência",
         ],
-        "company_document_type"    => [
+        "company_document_type" => [
             "bank_document_status"     => "Bancário",
             "address_document_status"  => "Comprovante de endereço empresarial",
             "contract_document_status" => "Contrato social",
         ],
-        "country"                  => [
-            "brazil"   => "Brasil",
-            "portugal" => "Portugal",
-            "usa"      => "Estados Unidos",
-            "germany"  => "Alemanha",
-            "spain"    => "Espanha",
-            "france"   => "França",
-            "italy"    => "Itália",
-            "chile"    => "Chile",
+        "country"               => [
+            "brazil"        => "Brasil",
+            "portugal"      => "Portugal",
+            "usa"           => "Estados Unidos",
+            "germany"       => "Alemanha",
+            "spain"         => "Espanha",
+            "france"        => "França",
+            "italy"         => "Itália",
+            "chile"         => "Chile",
+            "unitedkingdom" => "Reino Unido",
         ],
-        "currency" => [
+        "currency"              => [
             "real"  => "R$",
             "dolar" => "$",
             "euro"  => "€",

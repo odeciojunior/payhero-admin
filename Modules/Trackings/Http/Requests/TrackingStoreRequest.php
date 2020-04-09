@@ -22,9 +22,8 @@ class TrackingStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'tracking_code' => 'required|min:10|max:16|regex:/^[\w-]*$/',
-            'sale_id' => 'required',
-            'product_id' => 'required'
+            'tracking_code' => 'required|min:10|max:18|regex:/^[\w-]*$/',
+            'product_plan_sale_id' => 'required',
         ];
     }
 

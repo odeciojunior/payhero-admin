@@ -1,0 +1,139 @@
+body {
+    overflow-x: hidden;
+}
+
+.topbar {
+    padding: 8px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #5bb85c;
+    color: #FFFFFF;
+}
+
+.message {
+    background: #37474f;
+    color: #FFFFFF;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 1.71429em;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.timer {
+    background: #eceff1;
+    color: #262222;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.timer-title {
+    display: block;
+    font-size: 20px;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.digit {
+    font-size: 60px;
+    min-width: 22px;
+    font-weight: 700;
+    line-height: 1em;
+}
+
+.digit.separator {
+    line-height: 0.85em;
+}
+
+.timer-text {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.product-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 40px;
+}
+
+.product-row {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.product-img {
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
+    object-fit: cover
+}
+
+.plan-separator {
+    position: relative;
+}
+
+.plan-separator::before {
+    content: 'Ou você pode levar';
+    position: absolute;
+    top: -19px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 0 14px;
+    text-align: center;
+    font-size: 24px;
+    font-style: italic;
+    white-space: nowrap;
+    color: #e5e5e5;
+    background: #fafafa;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.installments {
+    min-width: 250px;
+    font-size: 24px;
+    height: 52px;
+    padding: 8px 15px;
+}
+
+.card-cvv {
+    max-width: 100px;
+}
+
+#skip-offert {
+    font-size: 30px;
+}
+
+#btn-confirm {
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .product-info {
+        flex-direction: column;
+    }
+
+    .product-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .cvv {
+        height: 80px;
+    }
+}

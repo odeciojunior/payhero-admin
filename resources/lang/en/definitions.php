@@ -39,7 +39,7 @@ return [
             "approved"  => "Aprovado",
             "refused"   => "Recusado",
         ],
-        "status_affiliate" => [
+        "status_affiliate"         => [
             "active"   => "Ativo",
             "disabled" => "Desativado",
         ],
@@ -64,11 +64,11 @@ return [
                 "yes" => "Sim",
                 "no"  => "Não",
             ],
-            "type" => [
+            "type"         => [
                 'static' => 'Estático',
-                'sedex' => 'SEDEX - Calculado automáticamente',
-                'pac' => 'PAC - Calculado automáticamente'
-            ]
+                'sedex'  => 'SEDEX - Calculado automáticamente',
+                'pac'    => 'PAC - Calculado automáticamente',
+            ],
         ],
         "plan"                     => [
             "status" => [
@@ -135,6 +135,19 @@ return [
                 "ignored"          => "Ignorado",
             ],
         ],
+        "ticket"                   => [
+            "category"             => [
+                "complaint"        => "Reclamação",
+                "doubt"            => "Dúvida",
+                "suggestion"       => "Sugestão",
+
+            ],
+            "status"               => [
+                "open"             => "Aberto",
+                "closed"           => "Resolvido",
+                "mediation"        => "Em mediação"
+            ]
+        ],
         "invoices"                 => [
             "status" => [
                 "pending"            => "Pendente",
@@ -162,16 +175,17 @@ return [
             "contract_document_status" => "Contrato social",
         ],
         "country"                  => [
-            "brazil"   => "Brasil",
-            "portugal" => "Portugal",
-            "usa"      => "Estados Unidos",
-            "germany"  => "Alemanha",
-            "spain"    => "Espanha",
-            "france"   => "França",
-            "italy"    => "Itália",
-            "chile"    => "Chile",
+            "brazil"        => "Brasil",
+            "portugal"      => "Portugal",
+            "usa"           => "Estados Unidos",
+            "germany"       => "Alemanha",
+            "spain"         => "Espanha",
+            "france"        => "França",
+            "italy"         => "Itália",
+            "chile"         => "Chile",
+            "unitedkingdom" => "Reino Unido",
         ],
-        "currency" => [
+        "currency"                 => [
             "real"  => "R$",
             "dolar" => "$",
             "euro"  => "€",

@@ -134,7 +134,6 @@ class User extends Authenticable
         'updated_at',
         'deleted_at',
     ];
-
     /**
      * @var array
      */
@@ -331,5 +330,13 @@ class User extends Authenticable
     public function userDevices()
     {
         return $this->hasMany('Modules\Core\Entities\UserDevice');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function userTerms()
+    {
+        return $this->hasMany('Modules\Core\Entities\UserTerms');
     }
 }

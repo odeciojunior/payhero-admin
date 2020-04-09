@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dev;
 
 use App\Jobs\SendNotazzInvoiceJob;
 use Exception;
+use Jenssegers\Agent\Facades\Agent;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\NotazzInvoice;
@@ -20,6 +21,7 @@ use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\IpService;
 use Modules\Core\Services\ProductService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\TrackingService;
@@ -285,85 +287,34 @@ class TesteController extends Controller
 
     public function jeanFunction(Request $request)
     {
-        /*$count = 1;
-        $productService = new ProductService();
-        $trackingService = new TrackingService();
-
         try {
+            $geoIp = geoip()->getLocation(IpService::getRealIpAddr());
 
-            $sales = Sale::with([
-                'productsPlansSale',
-                'plansSales.plan.project.shopifyIntegrations'
-            ])->doesntHave('tracking')
-                ->where('owner_id', 557)
-                ->where('status', 1)
-                ->whereNotNull('shopify_order')
-                ->chunk(100, function ($sales) use ($count, $productService, $trackingService) {
-                    foreach ($sales as $sale) {
 
-                        $this->line($count . '. Verificando venda: ' . $sale->id);
+            $operationalSystem = Agent::platform();
+            $browser = Agent::browser();
 
-                        $project = $sale->plansSales
-                            ->first()
-                            ->plan
-                            ->project;
+            $deviceData = [
+                'operational_system' => Agent::platform(),
+                'operation_system_version' => Agent::version($operationalSystem),
+                'browser' => Agent::browser(),
+                'browser_version' => Agent::version($browser),
+                'is_mobile' => Agent::isMobile(),
+                'ip' => @$geoIp['ip'],
+                'country' => @$geoIp['country'],
+                'city' => @$geoIp['city'],
+                'state' => @$geoIp['state'],
+                'state_name' => @$geoIp['state_name'],
+                'zip_code' => @$geoIp['postal_code'],
+                'currency' => @$geoIp['currency'],
+                'lat' => @$geoIp['lat'],
+                'lon' => @$geoIp['lon'],
+            ];
 
-                        $integration = $project->shopifyIntegrations->first();
-
-                        $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
-
-                        $fulfillments = $shopifyService->findFulfillments($sale->shopify_order);
-
-                        if (!empty($fulfillments)) {
-                            //obtem os produtos da venda
-                            $saleProducts = $productService->getProductsBySale($sale);
-                            foreach ($fulfillments as $fulfillment) {
-                                if (!empty($fulfillment->getTrackingNumber())) {
-                                    //percorre os produtos que vieram no postback
-                                    foreach ($fulfillment->getLineItems() as $lineItem) {
-                                        //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
-                                        $products = $saleProducts->where('shopify_variant_id', $lineItem->getVariantId())
-                                            ->where('amount', $lineItem->getQuantity());
-                                        if ($products->count()) {
-                                            foreach ($products as &$product) {
-                                                //caso exista, verifica se o codigo que de rastreio que veio no postback e diferente
-                                                //do que esta na tabela
-                                                $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
-
-                                                DB::beginTransaction();
-                                                activity()->disableLogging();
-                                                $tracking = $trackingService->createTracking($fulfillment->getTrackingNumber(), $productPlanSale);
-                                                activity()->enableLogging();
-                                                if (!empty($tracking)) {
-                                                    $apiTracking = $trackingService->sendTrackingToApi($tracking);
-                                                    if (!empty($apiTracking)) {
-                                                        DB::commit();
-                                                        //atualiza no array de produtos para enviar no email
-                                                        $product->tracking_code = $fulfillment->getTrackingNumber();
-                                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                    } else {
-                                                        DB::rollBack();
-                                                    }
-                                                } else {
-                                                    DB::rollBack();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        $count++;
-                    }
-                });
-            $this->info("ACABOOOOOOOOOOU!");
-        } catch (\Exception $e) {
-            $this->info($count . ' executaram com sucesso!');
-            $this->error($e->getMessage());
-        }*/
-
-        dd('oi');
+            dd($deviceData);
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function julioFunction()

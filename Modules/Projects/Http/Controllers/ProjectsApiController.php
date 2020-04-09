@@ -41,7 +41,7 @@ class ProjectsApiController extends Controller
 {
     /**
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -49,6 +49,11 @@ class ProjectsApiController extends Controller
             $projectModel   = new Project();
             $projectService = new ProjectService();
             $pagination     = $request->input('select') ?? false;
+            $affiliation    = true;
+
+            if (!empty($request->input('affiliate')) && $request->input('affiliate') == 'false') {
+                $affiliation = false;
+            }
 
             if (!$pagination) {
                 activity()->on($projectModel)->tap(function(Activity $activity) {
@@ -64,7 +69,7 @@ class ProjectsApiController extends Controller
                 ];
             }
 
-            return $projectService->getUserProjects($pagination, $projectStatus, true);
+            return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -168,9 +173,10 @@ class ProjectsApiController extends Controller
                                                                  ]);
 
                         $projectNotificationService = new ProjectNotificationService();
-
+                        $projectService             = new ProjectService();
                         if (!empty($userProject)) {
                             $projectNotificationService->createProjectNotificationDefault($project->id);
+                            $projectService->createUpsellConfig($project->id);
 
                             return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
@@ -233,13 +239,10 @@ class ProjectsApiController extends Controller
 
                 $companies = CompaniesSelectResource::collection($user->companies);
 
-                $projectUpsell = $projectUpsellModel->where('project_id', $idProject)->get();
-                $projectUpsell = ProjectsUpsellResource::collection($projectUpsell);
-
                 if (Gate::allows('edit', [$project])) {
                     $project = new ProjectsResource($project);
 
-                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations', 'projectUpsell'));
+                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
                 } else {
                     return response()->json(['message' => 'Erro ao carregar configuraçoes do projeto'], 400);
                 }
@@ -251,7 +254,7 @@ class ProjectsApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao carregar configuracoes do projeto (ProjectsApiController - edit)');
             report($e);
-
+            dd($e);
             return response()->json([
                                         'message' => 'Erro ao carregar configuracoes do projeto',
                                     ], 400);
@@ -450,11 +453,11 @@ class ProjectsApiController extends Controller
                           ->where('type_enum', 1);
                 })->first();
 
-                $project->producer           = $producer->name ?? '';
-                $project->release_money_days = $producer->release_money_days ?? '';
-                $project->boleto_release_money_days = $producer->boleto_release_money_days ?? '';
+                $project->producer                       = $producer->name ?? '';
+                $project->release_money_days             = $producer->release_money_days ?? '';
+                $project->boleto_release_money_days      = $producer->boleto_release_money_days ?? '';
                 $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
-                $project->debit_card_release_money_days = $producer->debit_card_release_money_days ?? '';
+                $project->debit_card_release_money_days  = $producer->debit_card_release_money_days ?? '';
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';

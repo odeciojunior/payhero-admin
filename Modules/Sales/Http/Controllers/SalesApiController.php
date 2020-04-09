@@ -19,6 +19,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\SaleRefundedEvent;
+use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
@@ -162,7 +163,18 @@ class SalesApiController extends Controller
                                               ->whereIn('company_id', $userCompanies)
                                               ->first();
 
-            $refundAmount = preg_replace('/\D/', '', $sale->total_paid_value);
+            $partial              = boolval($request->input('partial'));
+            $refundSale           = intval(strval($sale->total_paid_value * 100));
+            if(is_null($sale->interest_total_value)) {
+                $saleService->updateInterestTotalValue($sale);
+            }
+            $totalWithoutInterest = $refundSale - $sale->interest_total_value;
+            $refundValue          = preg_replace('/\D/', '', $request->input('refunded_value'));
+            $partial              = ($totalWithoutInterest == $refundValue) ? false : $partial;
+            $refundAmount         = ($partial == true) ? $refundValue : $refundSale;
+            if(($refundAmount > $refundSale) || ($partial == true && $refundValue > ($totalWithoutInterest - 500))) {
+                return response()->json(['message' => 'Valor inválido para estorno parcial.'], Response::HTTP_BAD_REQUEST);
+            }
 
             $value = $transaction->company->balance - $refundAmount;
 
@@ -178,7 +190,6 @@ class SalesApiController extends Controller
                                                         ->whereDate('release_date', '>', now()->startOfDay())
                                                         ->select(DB::raw('sum( value ) as pending_balance'))
                                                         ->first();
-
                 $pendingBalance      = intval($pendingTransactions->pending_balance);
                 $valuePendingBalance = $pendingBalance - $refundAmount;
 
@@ -192,19 +203,26 @@ class SalesApiController extends Controller
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
             })->log('Estorno transação: #' . $saleId);
+            $partialValues = [];
+            if($partial == true) {
+                $partialValues = $saleService->getValuesPartialRefund($sale, $refundAmount);
+            }
 
             if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
                 // Zoop e Cielo CancelPayment
-                $result = $checkoutService->cancelPayment($sale, $refundAmount);
+                $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues);
             } else {
-                $result = $saleService->refund($saleId); 
+                $result = $saleService->refund($saleId);
             }
             if ($result['status'] == 'success') {
                 $sale->update([
                                   'date_refunded' => Carbon::now(),
                               ]);
-
-                event(new SaleRefundedEvent($sale));
+                if($partial == true) {
+                    event(new SaleRefundedPartialEvent($sale));
+                } else {
+                    event(new SaleRefundedEvent($sale));
+                }
 
                 return response()->json(['message' => $result['message']], Response::HTTP_OK);
             } else {

@@ -159,8 +159,7 @@ class CompanyService
         }
     }
 
-    public function getCurrency(Company $company)
-    {
+    public function getCurrency(Company $company, $symbol = false){
 
         $dolar = [
             'usa',
@@ -179,15 +178,19 @@ class CompanyService
             'brasil',
         ];
 
-        if (in_array($company->country, $dolar)) {
-            return 'dolar';
-        } else if (in_array($company->country, $euro)) {
-            return 'euro';
-        } else if (in_array($company->country, $real)) {
-            return 'real';
-        } else {
+        if(in_array($company->country, $dolar)){
+            return $symbol ? '$' : 'dolar';
+        }
+        elseif(in_array($company->country, $euro)){
+            return $symbol ? '€' : 'euro';
+        }
+        elseif(in_array($company->country, $real)){
+            return $symbol ? 'R$' :'real';
+        }
+        else{
             return null;
         }
+
     }
 
     /**

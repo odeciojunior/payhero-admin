@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Affiliate;
 use SendGrid;
 use Exception;
 use Carbon\Carbon;
@@ -42,20 +43,23 @@ class CheckoutService
      * @return mixed
      * @throws PresenterException
      */
-    public function getAbandonedCart(
-        string $projectId = null,
-        string $dateStart = null,
-        string $dateEnd = null,
-        string $client = null
-    )
+    public function getAbandonedCart(string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
-        $checkoutModel = new Checkout();
-        $domainModel   = new Domain();
+        $checkoutModel  = new Checkout();
+        $domainModel    = new Domain();
+        $affiliateModel = new Affiliate();
+
+        $affiliate = $affiliateModel->where('project_id', $projectId)
+                                    ->where('user_id', auth()->user()->account_owner_id)->first();
 
         $abandonedCarts = $checkoutModel->whereIn('status_enum', [
             $checkoutModel->present()->getStatusEnum('recovered'),
             $checkoutModel->present()->getStatusEnum('abandoned cart'),
         ])->where('project_id', $projectId);
+
+        if (!empty($affiliate)) {
+            $abandonedCarts->where('affiliate_id', $affiliate->id);
+        }
 
         if (!empty($client)) {
             $abandonedCarts->where('client_name', 'like', '%' . $client . '%');
@@ -97,7 +101,7 @@ class CheckoutService
         return $total;
     }
 
-    public function cancelPayment($sale, $refundAmount)
+    public function cancelPayment($sale, $refundAmount, $partialValues = [])
     {
         try {
             $saleService      = new SaleService();
@@ -107,7 +111,8 @@ class CheckoutService
             $saleAmount       = Str::replaceFirst(',', '',
                                                   Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             // TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
-            if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
+            // if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
+            if ($refundAmount > $saleAmount ) {
                 $result = [
                     'status'  => 'error',
                     'message' => 'Valor não confere com o da Venda.',
@@ -117,15 +122,16 @@ class CheckoutService
                 $urlCancelPayment = 'https://checkout.cloudfox.net/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                  ->encode($sale->id);
             } else {
-                $urlCancelPayment = 'http://checkout.cloudfox.com/api/payment/cancel/' . Hashids::connection('sale_id')
+                $urlCancelPayment = 'http://' . env('CHECKOUT_URL') . '/api/payment/cancel/' . Hashids::connection('sale_id')
                                                                                                 ->encode($sale->id);
             }
             $dataCancel = [
-                'refundAmount' => $refundAmount,
+                'refundAmount' => (!empty($partialValues['value_to_refund'])) ? $partialValues['value_to_refund'] : $refundAmount,
+                'partial'      => (!empty($partialValues)) ? true : false,
             ];
             $response   = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if (($response->status ?? '') == 'success') {
-                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response);
+                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response, $partialValues);
                 if ($checkUpdate) {
                     $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
                     $transaction   = $transactionModel->where('sale_id', $sale->id)
