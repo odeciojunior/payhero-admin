@@ -74,4 +74,24 @@ class ProductService
 
         return $productsSale;
     }
+
+    public function getTicketProducts($sale)
+    {
+        if (!empty($sale)) {
+            $products = [];
+            $sale->load(['plansSales.plan.productsPlans.product']);
+
+            foreach ($sale->plansSales as $planSale) {
+                foreach ($planSale->plan->productsPlans as $productPlan) {
+                    $products[] = [
+                        'name' => $productPlan->product->name,
+                    ];
+                }
+            }
+
+            return $products;
+        }
+
+        return [];
+    }
 }

@@ -62,8 +62,9 @@ body {
 
 }
 
+/*bottom*/
 .card-bottom.green {
-    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
+    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ECC3);
 }
 
 .card-bottom.blue {
@@ -81,6 +82,50 @@ body {
 .card-bottom.orangered {
     background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
 }
+/*bottom*/
+
+
+/*left*/
+.card-left {
+    border-left: 10px solid transparent;
+    background-image: linear-gradient(to top, rgb(15, 4, 41), #000011);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.card-left.orange {
+    background-image: linear-gradient(to top, rgb(250, 217, 97), rgb(247, 107, 28));
+}
+.card-left.green {
+    background-image: linear-gradient(to top, rgba(63, 218, 88, 1), #51ECC3);
+}
+.card-left.purple {
+    background-image: linear-gradient(to top, #8E2DE2, #4A00E0);
+}
+.card-left.red {
+    background-image: linear-gradient(to right, rgb(247, 107, 28), rgb(255, 97, 97));
+}
+/*left*/
+
+/*top*/
+.card-top {
+    border-top: 10px solid transparent;
+    background-image: linear-gradient(to right, rgb(15, 4, 41), #000011);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.card-top.orange {
+    background-image: linear-gradient(to right, rgb(250, 217, 97), rgb(247, 107, 28));
+}
+.card-top.green {
+    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ECC3);
+}
+.card-top.purple {
+    background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
+}
+.card-top.red {
+    background-image: linear-gradient(to right, rgb(247, 107, 28), rgb(255, 97, 97));
+}
+/*top*/
 
 .orange-gradient {
     background: -webkit-linear-gradient(rgb(250, 217, 97), rgb(247, 107, 28));
@@ -89,11 +134,16 @@ body {
 }
 
 .green-gradient {
-    background: -webkit-linear-gradient(rgba(63, 218, 88, 1), #51ecc3);
+    background: -webkit-linear-gradient(rgba(63, 218, 88, 1), #51ECC3);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
+.red-gradient {
+    background: -webkit-linear-gradient(rgb(247, 107, 28), rgb(255, 97, 97));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 .drop-empresas {
     min-height: 140px;
@@ -122,11 +172,11 @@ body {
 
 .circle strong {
     width: 100%;
-    color: #000;
+    color: #000000;
     font-size: 32px;
 }
 
-.circle strong.loaded{
+.circle strong.loaded {
     position: absolute;
     top: 62px;
     left: 0;
@@ -143,25 +193,22 @@ body {
     top: 16px;
     left: 0;
     width: 100%;
-    color: #000;
+    color: #000000;
     text-align: center;
 }
 /* END - Progressbar */
 
-#releases-div::-webkit-scrollbar-track
-{
+#releases-div::-webkit-scrollbar-track {
     background-color: transparent;
 }
 
-#releases-div::-webkit-scrollbar
-{
+#releases-div::-webkit-scrollbar {
     width: 5px;
     background-color: #F5F5F5;
 }
 
-#releases-div::-webkit-scrollbar-thumb
-{
-    background-color: #ffa040;
+#releases-div::-webkit-scrollbar-thumb {
+    background-color: #FFA040;
 }
 
 .progress {
@@ -178,4 +225,9 @@ body {
 
 .progress-bar.bg-danger{
     background: linear-gradient(to right, #f76b1c, #ff6161);
+}
+
+.not-hover,
+.not-hover:hover{
+    color: inherit;
 }

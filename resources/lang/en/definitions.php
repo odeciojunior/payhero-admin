@@ -135,6 +135,19 @@ return [
                 "ignored"          => "Ignorado",
             ],
         ],
+        "ticket"                   => [
+            "category"             => [
+                "complaint"        => "Reclamação",
+                "doubt"            => "Dúvida",
+                "suggestion"       => "Sugestão",
+
+            ],
+            "status"               => [
+                "open"             => "Aberto",
+                "closed"           => "Resolvido",
+                "mediation"        => "Em mediação"
+            ]
+        ],
         "invoices"                 => [
             "status" => [
                 "pending"            => "Pendente",

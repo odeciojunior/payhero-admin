@@ -93,6 +93,9 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\SendSmsEvent' => [
             'Modules\Core\Listeners\SendSmsListener',
         ],
+        'Modules\Core\Events\TicketMessageEvent' => [
+            'Modules\Core\Listeners\TicketMessageSendEmailListener',
+        ],
         'Modules\Core\Events\AffiliateRequestEvent'           => [
             'Modules\Core\Listeners\AffiliateRequestSendEmailListener',
         ],
