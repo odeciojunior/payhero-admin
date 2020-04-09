@@ -92,18 +92,19 @@ class SalePresenter extends Presenter
                 case 8:
                     return 'partial_refunded';
                 case 10:
-                    return 'system_error';
+                    return 'black_list';
                 case 20:
                     return 'in_review';
                 case 21:
                     return 'canceled_antifraud';
                 case 99:
-                    return 'blacklist';
+                    return 'system_error';
             }
 
             return '';
         } else {
             switch ($status) {
+                case 'paid':
                 case 'approved':
                     return 1;
                 case 'pending':
@@ -120,13 +121,13 @@ class SalePresenter extends Presenter
                     return 7;
                 case 'partial_refunded':
                     return 8;
-                case 'system_error':
+                case 'black_list':
                     return 10;
                 case 'in_review':
                     return 20;
                 case 'canceled_antifraud':
                     return 21;
-                case 'blacklist':
+                case 'system_error':
                     return 99;
             }
 
