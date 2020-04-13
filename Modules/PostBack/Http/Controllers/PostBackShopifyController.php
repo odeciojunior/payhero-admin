@@ -63,7 +63,7 @@ class PostBackShopifyController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'error processing postback',
-            ], 400);
+            ], 200);
         }
     }
 
