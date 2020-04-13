@@ -13,7 +13,7 @@
         <div class='page-header container'>
             <div class='row align-items-center justify-content-between' style='min-height:50px'>
                 <div class='col-6'>
-                    <h1 class='page-title'>AntiFraud \ BlackList</h1>
+                    <h1 class='page-title'>AntiFraude \ BlackList</h1>
                 </div>
                 <div class='col-6 text-right'>
                     <div class='justify-content-end align-items-center' id='export-excel' style='display:none'>
@@ -68,14 +68,8 @@
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_type">Data</label>
-                            <select name='date_type' id="date_type" class="form-control select-pad">
-                                <option value="start_date">Data do pedido</option>
-                                <option value="end_date">Data do pagamento</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
+                            <label for="date_range">Data do pedido</label>
+                            <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-2 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
@@ -92,16 +86,13 @@
                 <div class="page-invoice-table table-responsive">
                     <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                         <thead>
-                            <tr>
+                            <tr class='text-center'>
                                 <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
                                 <td class="table-title">Projeto</td>
                                 <td class="table-title">Descrição</td>
                                 <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title">Forma</td>
-                                <td class="table-title">Status</td>
+                                <td class="table-title blacklist" style='display:none'>Motivo</td>
                                 <td class="table-title display-sm-none display-m-none">Data</td>
-                                <td class="table-title display-sm-none">Pagamento</td>
-                                <td class="table-title">Comissão</td>
                                 <td class="table-title" width="80px;"> &nbsp;</td>
                             </tr>
                         </thead>
@@ -111,7 +102,7 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-            @include('sales::details')
+            @include('salesblacklistantifraud::details')
             <!-- End Modal -->
             </div>
             <ul id="pagination-sales-atifraud-blacklist" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
@@ -122,6 +113,7 @@
 
     @push('scripts')
         <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=4') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

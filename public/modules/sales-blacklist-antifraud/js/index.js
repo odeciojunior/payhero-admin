@@ -3,13 +3,20 @@ let updateList = null;
 
 let statusArray = {
     1: 'success',
+    2: 'pendente',
+    3: 'danger',
+    4: 'danger',
     6: 'primary',
     7: 'danger',
-    4: 'danger',
-    3: 'danger',
-    2: 'pendente',
-    20: 'antifraude',
-    99: 'blacklist'
+    10: 'dark',
+    20: 'primary',
+    21: 'primary'
+
+};
+
+let statusTranslated = {
+    10: 'BlackList',
+    21: 'Cancelado Antifraude'
 };
 
 $(document).ready(function () {
@@ -67,10 +74,9 @@ $(document).ready(function () {
         let data = {
             'project': $('#projeto').val(),
             'payment_method': $('#forma').val(),
+            'date_range': $("#date_range").val(),
             'status': $('#status').val(),
             'client': $('#comprador').val(),
-            'date_type': $('#date_type').val(),
-            'date_range': $('#date_range').val(),
             'transaction': $('#transaction').val().replace('#', ''),
         };
 
@@ -136,50 +142,63 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#dados_tabela').html('');
+                $('#pagination-sales-atifraud-blacklist').hide();
                 $('#tabela_vendas').addClass('table-striped');
+                let showHideBlacklist = 'none';
 
-                if (!isEmpty(response.data)) {
-                    console.log(response.data);
+                if (statusTranslated[$('#status').val()] == 'BlackList') {
+                    $(".blacklist").show();
+                    showHideBlacklist = 'block';
+                } else {
+                    $(".blacklist").hide();
+                    showHideBlacklist = 'none';
+                }
+
+                if (isEmpty(response.data)) {
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                } else {
+
                     let data = '';
                     $.each(response.data, function (index, value) {
                         let tableClass = '';
+
+                        const objectArray = Object.entries(value.black_list);
+                        let valuesObject = ``;
+
+                        objectArray.forEach(([key, value]) => {
+                            valuesObject += `${Object.keys(value)} - ${Object.values(value)}`;
+                        });
+
                         data += `
-                        <tr class='${tableClass}'>
-                            <td class='display-sm-none display-m-none display-lg-none text-center'>
-                                ${valeu.sale_code}
-                                ${valeu.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
-                            </td>
-                            <td>${value.project}</td>
-                            <td>${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${valeu.affiliate}</small>` : ''}</td>
-                            <td class='display-sm-one display-m-none display-lg-none'>${value.client}</td>
-                            <td>
-                                <img src='/modules/global/img/cartoes/${value.brand}.png' style='width: 45px'>
-                            </td>
-                            <td>
-                                <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>7
-                                    ${value.status_translate}
-                                </span>
-                            </td>
-                            <td class='display-sm-one display-m-one'>${value.start_date}</td>
-                            <td class='display-sm-one'>${value.end_date}</td>
-                            <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
-                            <td>
-                                <a role='button' class='detalhes_venda pointer' venda='${value.id}'>
-                                    <i class='material-icons gradient'>remove_red_eye</i>
-                                </a>
-                            </td>
-                        </tr>`;
+                            <tr class='${tableClass} text-center'>
+                                <td class='display-sm-none display-m-none display-lg-none text-center'>
+                                    ${value.sale_code}
+                                </td>
+                                <td>${value.project}</td>
+                                <td>${value.product}</td>
+                                <td class='display-sm-one display-m-none display-lg-none'>${value.customer}</td>
+                                <td style='display:${showHideBlacklist}'>
+                                      ${valuesObject}
+                                </td>
+                                <td class='display-sm-one display-m-one'>${value.start_date}</td>
+                                <td>
+                                    <a role='button' class='detalhes-black-antifraud pointer' sale='${value.sale_code}'>
+                                        <i class='material-icons gradient'>remove_red_eye</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
                     });
 
                     $('#dados_tabela').append(data);
 
+                    pagination(response, 'sales-atifraud-blacklist', updateList);
+                    $('#pagination-sales-atifraud-blacklist').show();
+
                     $('#date').val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
                     $('#date').attr('min', moment(new Date()).format("YYYY-MM-DD"));
-                } else {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
 
-                pagination(response, 'sales-atifraud-blacklist', updateList);
             }
         });
     }

@@ -6,18 +6,16 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
-use Modules\Sales\Transformers\TransactionResource;
+use Modules\Sales\Transformers\SalesResource;
+use Modules\SalesBlackListAntifraud\Transformers\SalesBlackListAntiFraudDetaislResource;
+use Modules\SalesBlackListAntifraud\Transformers\SalesBlackListAntiFraudResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -38,93 +36,61 @@ class SalesBlackListAntifraudApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela BlackList e AntiFraud');
 
-            $saleService = new SaleService();
-
             $filters = $request->all();
 
-            $filters['shopify_error'] = '0';
-
-            $companyModel     = new Company();
-            $customerModel    = new Customer();
-            $transactionModel = new Transaction();
+            $companyModel  = new Company();
+            $customerModel = new Customer();
+            $saleModel     = new Sale();
 
             $userId = auth()->user()->account_owner_id;
 
             $userCompanies = $companyModel->where('user_id', $userId)
                                           ->pluck('id')
                                           ->toArray();
+            $sales         = $saleModel
+                ->with([
+                           'customer', 'plansSales', 'plansSales.plan', 'plansSales.plan.products',
+                           'plansSales.plan.project',
+                           'project',
+                           'saleWhiteBlackListResult',
+                           'transactions' => function($query) use ($userCompanies) {
+                               $query->whereIn('company_id', $userCompanies);
+                           },
+                       ]);
 
-            $transactions = $transactionModel->with([
-                                                        'sale',
-                                                        'sale.project',
-                                                        'sale.customer',
-                                                        'sale.plansSales.plan.productsPlans.product',
-                                                        'sale.shipping',
-                                                        'sale.checkout',
-                                                        'sale.delivery',
-                                                        'sale.transactions',
-                                                        'sale.affiliate.user',
-                                                    ])->whereIn('company_id', $userCompanies)
-                                             ->join('sales', 'sales.id', 'transactions.sale_id')
-                                             ->whereNull('invitation_id');
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $sales->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+
+            if (!empty($filters['status']) && in_array($filters['status'], [10, 21])) {
+                $sales->where('status', $filters['status']);
+            } else if ($filters['status'] == '') {
+                $sales->whereIn('status', [10, 21]);
+            }
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->whereHas('sale', function($querySale) use ($projectId) {
-                    $querySale->where('project_id', $projectId);
-                });
+                $sales->where('project_id', $projectId);
+            } else {
+                $userProjects = UserProject::where('user_id', $userId)->pluck('project_id');
+                $sales->whereIn('project_id', $userProjects);
             }
 
             if (!empty($filters["transaction"])) {
                 $saleId = current(Hashids::connection('sale_id')
                                          ->decode(str_replace('#', '', $filters["transaction"])));
-
-                $transactions->whereHas('sale', function($querySale) use ($saleId) {
-                    $querySale->where('id', $saleId);
-                });
+                $sales->where('id', $saleId);
             }
 
             if (!empty($filters["client"])) {
                 $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
-                $transactions->whereHas('sale', function($querySale) use ($customers) {
-                    $querySale->whereIn('customer_id', $customers);
-                });
+                $sales->whereIn('customer_id', $customers);
             }
-            /*if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
-                $transactions->whereHas('sale.project.shopifyIntegrations', function($queryShopifyIntegration) {
-                    $queryShopifyIntegration->where('status', 2);
-                });
-                $transactions->whereHas('sale', function($querySaleShopify) {
-                    $querySaleShopify->whereNull('shopify_order');
-                });
-            }*/
+
             if (!empty($filters["payment_method"])) {
-                $method = $filters["payment_method"];
-                $transactions->whereHas('sale', function($querySale) use ($method) {
-                    $querySale->where('payment_method', $method);
-                });
+                $sales->where('payment_method', $filters["payment_method"]);
             }
 
-            if (empty($filters['status'])) {
-                $status = [10, 20];
-            } else {
-                $status = [$filters["status"]];
-            }
-
-            $transactions->whereHas('sale', function($querySale) use ($status) {
-                $querySale->whereIn('status', $status);
-            });
-
-            //tipo da data e periodo obrigatorio
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $dateType  = $filters["date_type"];
-
-            $transactions->whereHas('sale', function($querySale) use ($dateRange, $dateType) {
-                $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            })->selectRaw('transactions.*, sales.start_date')
-                         ->orderByDesc('sales.start_date');
-
-            dd($transactions->paginate(10));
+            return SalesBlackListAntiFraudResource::collection($sales->orderBy('start_date', 'DESC')->paginate(10));
         } catch (Exception $e) {
             report($e);
 
@@ -132,9 +98,30 @@ class SalesBlackListAntifraudApiController extends Controller
         }
     }
 
-    public
-    function show($id)
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse|SalesBlackListAntiFraudDetaislResource
+     */
+    public function show(Request $request, $id)
     {
-        return view('salesblacklistantifraud::show');
+        try {
+            $saleModel = new Sale();
+            if (!empty($id)) {
+                $sale = $saleModel->find(current(Hashids::connection('sale_id')->decode($id)));
+
+                return new SalesBlackListAntiFraudDetaislResource($sale);
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, tente novamente!',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente!',
+                                    ], 400);
+        }
     }
 }
