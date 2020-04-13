@@ -254,10 +254,10 @@
                     </div>
 
                     <div class="col-3">                        
-                        {{-- <div class="custom-control custom-radio mb-3">
-                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" required>
+                        <div class="custom-control custom-radio mb-3">
+                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" disabled>
                             <label class="custom-control-label" for="radioPartialRefund">Estorno Parcial</label>
-                        </div> --}}
+                        </div>
                     </div>
                     <div class="col-3"></div>
                 </div>

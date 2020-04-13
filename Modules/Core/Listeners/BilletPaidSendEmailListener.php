@@ -113,6 +113,7 @@ class BilletPaidSendEmailListener implements ShouldQueue
                     "content"                 => $contentMessage,
                     'discount'                => $discount,
                     'project_message_contact' => $projectMessageContact,
+                    'sac_link'                => "https://sac." . $domain->name,
                 ];
                 if (!empty($domain['name'])) {
                     $sendGridService->sendEmail('noreply@' . $domain['name'], $project['name'], $customer['email'], $customer['name'], 'd-89821e27e40e4b1aa715b49c68a6d2e7', $data);
