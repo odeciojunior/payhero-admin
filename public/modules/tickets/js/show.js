@@ -31,6 +31,7 @@ $(document).ready(function () {
                 loadOnAny('.page', true);
                 $('.card').addClass(`${cardColorByStatus[response.data.ticket_status_enum]}`);
                 $('.ticket-subject').html(`${response.data.subject}`);
+                $('.ticket-description').html(`<b>Descrição:</b> ${response.data.description}`);
                 $('.customer-name').html(`<b>Cliente:</b> ${response.data.customer_name}`);
                 $('.ticket-informations').html(`<b>Empresa</b>: ${response.data.company_name} | <b>Motivo:</b> ${response.data.ticket_category} | <b>Aberto em:</b> ${response.data.created_at} | <b>Última resposta em:</b> ${response.data.last_message}`);
                 $('#ticket-id').html(response.data.id);
