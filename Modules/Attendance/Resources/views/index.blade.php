@@ -128,7 +128,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=1')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=2')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

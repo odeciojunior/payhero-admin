@@ -19,7 +19,7 @@ class TicketShowResource extends Resource
             : $createdAt;
         $userProject    = UserProject::with('company')->where('project_id', $this->sale->project_id)->first();
         $productService = new ProductService();
-        $products       = $productService->getTicketProducts($this->sale);
+        $products       = $productService->getTicketPlans($this->sale);
 
         return [
             'id'                   => Hashids::encode($this->id),

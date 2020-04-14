@@ -39,7 +39,7 @@
                             <span class='font-weight-bold company-name'></span>
                         </div>
                         <div class='col-6 col-lg-3'>
-                            <span>Produtos</span>
+                            <span>Planos</span>
                             <br>
                             <span class='font-weight-bold ticket-products'></span>
                         </div>

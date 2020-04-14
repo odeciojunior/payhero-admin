@@ -75,7 +75,7 @@ class ProductService
         return $productsSale;
     }
 
-    public function getTicketProducts($sale)
+    public function getTicketPlans($sale)
     {
         if (!empty($sale)) {
             $products = [];
@@ -84,7 +84,7 @@ class ProductService
             foreach ($sale->plansSales as $planSale) {
                 foreach ($planSale->plan->productsPlans as $productPlan) {
                     $products[] = [
-                        'name' => $productPlan->product->name,
+                        'name' => $productPlan->amount * $planSale->amount . 'x ' . $planSale->plan->name,
                     ];
                 }
             }
