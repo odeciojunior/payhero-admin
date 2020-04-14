@@ -21,6 +21,7 @@ class CreateProductRequest extends FormRequest
             'price'              => 'nullable',
             'height'             => 'nullable',
             'width'              => 'nullable',
+            'length'             => 'nullable',
             'weight'             => 'nullable',
             'product_photo'      => 'nullable',
             'photo_x1'           => 'nullable',

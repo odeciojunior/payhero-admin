@@ -131,10 +131,14 @@
                                             <input name="height" type="text" class="input-pad" id="height" value='' placeholder="Ex: 135cm" data-mask="0#">
                                         </div>
                                         <div class="form-group col-lg-4">
+                                            <label for="width">Comprimento (cm)</label>
+                                            <input name="length" type="text" class="input-pad" id="length" placeholder="Ex: 150cm" value="{{--{!! $product->width !!}--}}" data-mask="0#">
+                                        </div>
+                                        <div class="form-group col-lg-4">
                                             <label for="weight">Peso (g)</label>
                                             <input name="weight" type="text" class="input-pad" id="weight" value='' placeholder="Ex: 950g" data-mask="0#">
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class="form-group col-lg-4">
                                             <label for="shipping">Transportadora:</label>
                                             <select class="form-control select-pad" id="shipping">
                                                 <option value="proprio" {{--{!! 'proprio' == $product->shipping ? 'selected' : '' !!}--}}>Envio próprio</option>
@@ -146,9 +150,12 @@
                                                 <option value="null" {{--{!! 'biosupra' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Biosupra (em breve)</option>
                                             </select>
                                         </div>
-                                        <div id="div_carrier_id" class="form-group col-lg-6" style="display: none">
+                                        <div id="div_carrier_id" class="form-group col-lg-4" style="display: none">
                                             <label for="id_shipping">ID na Transportadora:</label>
                                             <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
+                                        </div>
+                                        <div class="form-group col-lg-4 mt-0 mt-md-25">
+                                            <span>Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.</span>
                                         </div>
                                         <div class="form-group col-lg-12 text-right">
                                             <button type="submit" class="btn btn-success btnSave">Salvar</button>

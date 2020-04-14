@@ -24,6 +24,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $photo
  * @property string $height
  * @property string $width
+ * @property string $length
  * @property string $weight
  * @property boolean $shopify
  * @property string $created_at
@@ -75,6 +76,7 @@ class Product extends Model
         'photo',
         'height',
         'width',
+        'length',
         'weight',
         'shopify',
         'created_at',

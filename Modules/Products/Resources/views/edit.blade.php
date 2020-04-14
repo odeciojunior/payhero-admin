@@ -138,17 +138,21 @@
                                             </div>
                                             <div class="form-group col-lg-4">
                                                 <label for="height">Altura (cm)</label>
-                                                <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 150cm" value="{{--{!! $product->height !!}--}}" data-mask="0#">
+                                                <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 80cm" value="{{--{!! $product->height !!}--}}" data-mask="0#">
                                             </div>
                                             <div class="form-group col-lg-4">
                                                 <label for="width">Largura (cm)</label>
                                                 <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 135cm" value="{{--{!! $product->width !!}--}}" data-mask="0#">
                                             </div>
                                             <div class="form-group col-lg-4">
+                                                <label for="width">Comprimento (cm)</label>
+                                                <input name="length" type="text" class="input-pad" id="length" placeholder="Ex: 150cm" value="{{--{!! $product->width !!}--}}" data-mask="0#">
+                                            </div>
+                                            <div class="form-group col-lg-4">
                                                 <label for="weight">Peso (g)</label>
                                                 <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" value="{{--{!! $product->weight !!}--}}" data-mask="0#">
                                             </div>
-                                            <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-4">
                                                 <label for="shipping">Transportadora:</label>
                                                 <select class="form-control select-pad" id="shipping">
                                                     <option value="proprio" {{--{!! 'proprio' == $product->shipping ? 'selected' : '' !!}--}}>Envio próprio</option>
@@ -160,9 +164,12 @@
                                                     <option value="null" {{--{!! 'biosupra' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Biosupra (em breve)</option>
                                                 </select>
                                             </div>
-                                            <div id="div_carrier_id" class="form-group col-lg-6" style="display: none">
+                                            <div id="div_carrier_id" class="form-group col-lg-4" style="display: none">
                                                 <label for="id_shipping">ID na Transportadora:</label>
                                                 <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
+                                            </div>
+                                            <div class="form-group col-lg-4 mt-0 mt-md-25">
+                                                <span>Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.</span>
                                             </div>
                                             <div class="form-group col-lg-12 text-right btnSave">
                                                 <button type="submit" id='btn-save' class="btn btn-success">Atualizar</button>
@@ -202,7 +209,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=4') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=5') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

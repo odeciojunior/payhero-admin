@@ -135,6 +135,11 @@
                             <span class="site-menu-title">Recuperação</span>
                         </a>
                     </li>
+                    {{--<li class="site-menu-item">
+                        <a href="{{ route('blacklistantifraud.index') }}">
+                            <span class="site-menu-title">AntiFraud/BlackList</span>
+                        </a>
+                    </li>--}}
                     <li class="site-menu-item">
                         <a href="{{ route('trackings.index') }}">
                             <span class="site-menu-title">Rastreamentos</span>
