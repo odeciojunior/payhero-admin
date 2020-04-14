@@ -129,6 +129,7 @@ $(document).ready(function () {
         } else {
             link = '/api/salesblacklistantifraud' + link + getFilters(true);
         }
+        $('#pagination-sales-atifraud-blacklist').hide();
 
         $.ajax({
             method: 'GET',
@@ -142,7 +143,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#dados_tabela').html('');
-                $('#pagination-sales-atifraud-blacklist').hide();
                 $('#tabela_vendas').addClass('table-striped');
                 let showHideBlacklist = 'none';
 

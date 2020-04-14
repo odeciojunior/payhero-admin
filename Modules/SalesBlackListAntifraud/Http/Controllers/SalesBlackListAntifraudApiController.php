@@ -59,7 +59,7 @@ class SalesBlackListAntifraudApiController extends Controller
                        ]);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $sales->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+            $sales->whereBetween('start_date', ['2020-04-10 00:00:00', $dateRange[1] . ' 23:59:59']);
 
             if (!empty($filters['status']) && in_array($filters['status'], [10, 21])) {
                 $sales->where('status', $filters['status']);

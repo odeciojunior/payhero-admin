@@ -112,8 +112,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=4') }}"></script>
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=4') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
