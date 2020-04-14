@@ -81,10 +81,11 @@ class SaleRefundedPartialSendEmailListener implements ShouldQueue
                 "installments_value"  => number_format($sale->installments_value, 2, ',', '.'),
                 "automatic_discount"  => number_format(($sale->automatic_discount / 100), 2, ',', '.'),
                 "refund_value"        => number_format(($sale->refund_value / 100), 2, ',', '.'),
+                "sac_link"            => "https://sac." . $domain->name,
             ];
             if (!empty($domain['name'])) {
                 $emailService->sendEmail('noreply@' . $domain['name'], $project['name'], $customer['email'],
-                                         $customer['name'], 'd-97d5002e189546778c0bedf4f4e540f1', $data);
+                                         $customer['name'], 'd-1ffa52918dd64219a5f6a88ee8865569', $data);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao enviar email de estorno parcial');
