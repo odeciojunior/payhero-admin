@@ -49,14 +49,13 @@ class TicketMessageSendEmailListener implements ShouldQueue
                     'project_logo'    => $project->logo,
                     "project_contact" => $project->contact,
                     'ticket_code'     => Hashids::encode($ticketMessage->ticket->id),
-                    'link'            => '',
+                    'link'            => "https://sac." . $domain->name,
                 ];
 
                 $sendGridService->sendEmail('noreply@' . $domain->name, $project->name, $customer->email, $customer->name, 'd-e44117575a044be193c2f7235bc22789', $data);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao enviar email de mensagem de chamado ao cliente');
-            dd($e);
             report($e);
         }
     }
