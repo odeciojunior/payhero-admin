@@ -143,8 +143,7 @@ $(document).ready(function () {
                         event.preventDefault();
 
                         let myForm = document.getElementById('my-form');
-                        console.log(myForm)
-                        alert(1)
+
                         let formData = new FormData(myForm);
 
                         if (verify()) {
