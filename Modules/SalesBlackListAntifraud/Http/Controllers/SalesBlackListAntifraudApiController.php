@@ -39,7 +39,6 @@ class SalesBlackListAntifraudApiController extends Controller
             $filters = $request->all();
 
             $companyModel  = new Company();
-            $customerModel = new Customer();
             $saleModel     = new Sale();
 
             $userId = auth()->user()->account_owner_id;
@@ -73,15 +72,6 @@ class SalesBlackListAntifraudApiController extends Controller
                 $saleId = current(Hashids::connection('sale_id')
                                          ->decode(str_replace('#', '', $filters["transaction"])));
                 $sales->where('id', $saleId);
-            }
-
-            if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
-                $sales->whereIn('customer_id', $customers);
-            }
-
-            if (!empty($filters["payment_method"])) {
-                $sales->where('payment_method', $filters["payment_method"]);
             }
 
             return SalesBlackListAntiFraudResource::collection($sales->orderBy('start_date', 'DESC')->paginate(10));
