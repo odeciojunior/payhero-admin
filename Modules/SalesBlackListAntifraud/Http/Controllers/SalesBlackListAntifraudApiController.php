@@ -39,7 +39,6 @@ class SalesBlackListAntifraudApiController extends Controller
             $filters = $request->all();
 
             $companyModel  = new Company();
-            $customerModel = new Customer();
             $saleModel     = new Sale();
 
             $userId = auth()->user()->account_owner_id;
@@ -56,16 +55,10 @@ class SalesBlackListAntifraudApiController extends Controller
                            'transactions' => function($query) use ($userCompanies) {
                                $query->whereIn('company_id', $userCompanies);
                            },
-                       ]);
+                       ])->whereIn('status', [10, 21]);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $sales->whereBetween('start_date', ['2020-04-10 00:00:00', $dateRange[1] . ' 23:59:59']);
-
-            if (!empty($filters['status']) && in_array($filters['status'], [10, 21])) {
-                $sales->where('status', $filters['status']);
-            } else if ($filters['status'] == '') {
-                $sales->whereIn('status', [10, 21]);
-            }
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -79,15 +72,6 @@ class SalesBlackListAntifraudApiController extends Controller
                 $saleId = current(Hashids::connection('sale_id')
                                          ->decode(str_replace('#', '', $filters["transaction"])));
                 $sales->where('id', $saleId);
-            }
-
-            if (!empty($filters["client"])) {
-                $customers = $customerModel->where('name', 'LIKE', '%' . $filters["client"] . '%')->pluck('id');
-                $sales->whereIn('customer_id', $customers);
-            }
-
-            if (!empty($filters["payment_method"])) {
-                $sales->where('payment_method', $filters["payment_method"]);
             }
 
             return SalesBlackListAntiFraudResource::collection($sales->orderBy('start_date', 'DESC')->paginate(10));
