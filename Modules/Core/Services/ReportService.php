@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
@@ -45,7 +46,6 @@ class ReportService
                     return $this->getByMonth($date, $projectId, $currency);
                 }
             } else {
-
                 return [
                     'label_list'       => ['', ''],
                     'credit_card_data' => [0, 0],
@@ -140,8 +140,9 @@ class ReportService
     private function getByDays($data, $projectId, $currency)
     {
         try {
-            $companyModel = new Company();
-            $saleModel    = new Sale();
+            $companyModel   = new Company();
+            $saleModel      = new Sale();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($data['startDate']);
@@ -152,9 +153,15 @@ class ReportService
                 $dataFormated = $dataFormated->addDays(1);
             }
 
+            $userId          = auth()->user()->account_owner_id;
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
+
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -162,13 +169,18 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->account_owner_id)
+                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 //                           ->where('sales.status', 1)
                 ->whereBetween('start_date', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
-                ->groupBy('date', 'sales.payment_method')
-                ->get()->toArray();
+                ->groupBy('date', 'sales.payment_method');
 
+            if (!empty($affiliate)) {
+                $orders->where('sales.affiliate_id', $affiliate->id);
+            } else {
+                $orders->where('sales.owner_id', $userId);
+            }
+            $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
 
@@ -211,8 +223,9 @@ class ReportService
     {
         try {
 
-            $companyModel = new Company();
-            $saleModel    = new Sale();
+            $companyModel   = new Company();
+            $saleModel      = new Sale();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(1);
@@ -228,9 +241,16 @@ class ReportService
                     break;
                 }
             }
+            $userId = auth()->user()->account_owner_id;
+
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
+
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -238,12 +258,17 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->account_owner_id)
+                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date', 'sales.payment_method')
-                ->get()->toArray();
+                ->groupBy('date', 'sales.payment_method');
 
+            if (!empty($affiliate)) {
+                $orders->where('sales.affiliate_id', $affiliate->id);
+            } else {
+                $orders->where('sales.owner_id', $userId);
+            }
+            $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
             foreach ($labelList as $label) {
@@ -287,8 +312,9 @@ class ReportService
     private function getByFortyDays($date, $projectId, $currency)
     {
         try {
-            $companyModel = new Company();
-            $saleModel    = new Sale();
+            $companyModel   = new Company();
+            $saleModel      = new Sale();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(2);
@@ -304,10 +330,15 @@ class ReportService
                     break;
                 }
             }
-
+            $userId          = auth()->user()->account_owner_id;
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
-            $userCompanies   = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')
+            $userCompanies   = $companyModel->where('user_id', $userId)->pluck('id')
                                             ->toArray();
+
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -315,12 +346,16 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->account_owner_id)
+                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date', 'sales.payment_method')
-                ->get()->toArray();
-
+                ->groupBy('date', 'sales.payment_method');
+            if (!empty($affiliate)) {
+                $orders->where('sales.affiliate_id', $affiliate->id);
+            } else {
+                $orders->where('sales.owner_id', $userId);
+            }
+            $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
             foreach ($labelList as $label) {
@@ -366,8 +401,9 @@ class ReportService
     private function getByWeek($date, $projectId, $currency)
     {
         try {
-            $saleModel    = new Sale();
-            $companyModel = new Company();
+            $saleModel      = new Sale();
+            $companyModel   = new Company();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(6);
@@ -383,9 +419,15 @@ class ReportService
                     break;
                 }
             }
+            $userId          = auth()->user()->account_owner_id;
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
+
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -393,12 +435,16 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->account_owner_id)
+                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date', 'sales.payment_method')
-                ->get()->toArray();
-
+                ->groupBy('date', 'sales.payment_method');
+            if (!empty($affiliate)) {
+                $orders->where('sales.affiliate_id', $affiliate->id);
+            } else {
+                $orders->where('sales.owner_id', $userId);
+            }
+            $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
             foreach ($labelList as $label) {
@@ -442,8 +488,9 @@ class ReportService
     private function getByMonth($date, $projectId, $currency)
     {
         try {
-            $companyModel = new Company();
-            $saleModel    = new Sale();
+            $companyModel   = new Company();
+            $saleModel      = new Sale();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate']);
@@ -454,9 +501,15 @@ class ReportService
                 $dataFormated = $dataFormated->addMonths(1);
             }
 
+            $userId          = auth()->user()->account_owner_id;
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
+
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
 
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
@@ -464,11 +517,17 @@ class ReportService
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner_id', auth()->user()->account_owner_id)
+                //                ->where('sales.owner_id', $userId)
                 ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date', 'sales.payment_method')
-                ->get()->toArray();
+                ->groupBy('date', 'sales.payment_method');
+
+            if (!empty($affiliate)) {
+                $orders->where('sales.affiliate_id', $affiliate->id);
+            } else {
+                $orders->where('sales.owner_id', $userId);
+            }
+            $orders = $orders->get()->toArray();
 
             $creditCardData = [];
             $boletoData     = [];
@@ -538,7 +597,7 @@ class ReportService
         }
     }
 
-     /**
+    /**
      * @param $date
      * @param $projectId
      * @return array
@@ -622,7 +681,7 @@ class ReportService
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date')
                 ->get()->toArray();
-                // dd($orders);
+            // dd($orders);
 
             $checkoutData = [];
             foreach ($labelList as $label) {
@@ -645,7 +704,7 @@ class ReportService
         }
     }
 
-     /**
+    /**
      * @param $date
      * @param $projectId
      * @return array
@@ -704,7 +763,7 @@ class ReportService
         }
     }
 
-     /**
+    /**
      * @param $date
      * @param $projectId
      * @return array
@@ -742,7 +801,8 @@ class ReportService
             foreach ($labelList as $label) {
                 $checkoutValue = 0;
                 foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])->format('d/m') == $label)) {
+                    if ((Carbon::parse($order['date'])->subDays(1)
+                               ->format('d/m') == $label) || (Carbon::parse($order['date'])->format('d/m') == $label)) {
                         $checkoutValue += $order['count'];
                     }
                 }
@@ -759,7 +819,7 @@ class ReportService
         }
     }
 
-     /**
+    /**
      * @param $data
      * @param $projectId
      * @return array
@@ -809,7 +869,7 @@ class ReportService
         }
     }
 
-     /**
+    /**
      * @param $data
      * @param $projectId
      * @return array
@@ -869,9 +929,9 @@ class ReportService
     {
         try {
             $transactionModel = new Transaction();
-            $labelList    = [];
-            $dataFormated = Carbon::today()->addDay();
-            $endDate      = Carbon::today()->addDays(20);
+            $labelList        = [];
+            $dataFormated     = Carbon::today()->addDay();
+            $endDate          = Carbon::today()->addDays(20);
 
             while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d-m'));
@@ -881,9 +941,11 @@ class ReportService
             $transactions = $transactionModel
                 ->select(\DB::raw('SUM(value) as value, DATE(release_date) as date'))
                 ->where('company_id', $companyId)
-                ->whereIn('type', collect([2,3,4,5]))
+                ->whereIn('type', collect([2, 3, 4, 5]))
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(20)->format('Y-m-d')])
+                ->whereBetween('release_date', [
+                    Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(20)->format('Y-m-d'),
+                ])
                 ->groupBy('date')
                 ->get()->toArray();
 
@@ -902,13 +964,12 @@ class ReportService
             return [
                 'label_list'       => $labelList,
                 'transaction_data' => $transactionData,
-                'currency'         => $currency
+                'currency'         => $currency,
             ];
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados');
             report($e);
         }
     }
-
 }
 

@@ -70,6 +70,12 @@ $(document).ready(function () {
                                     </div>
                                     <div class="card-body font-size-12 bg-white">
                                         <div class='row'>
+                                            <div class='col-12 col-lg-12'>
+                                                <div>
+                                                    <span>Descrição</span>
+                                                </div>
+                                               <p class='font-size-12 font-weight-bold mt-3'>${ticket.description}</p>
+                                            </div>
                                             <div class='col-6 col-lg-2'>
                                                 <div>
                                                     <span>Empresa</span>

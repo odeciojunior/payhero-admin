@@ -228,7 +228,7 @@ class ShopifyApiController extends Controller
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
-                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.product', 'pixels', 'discountCoupons', 'shippings'])
+                    ->with(['shopifyIntegrations'])
                     ->find($projectId);
 
                 activity()->on($projectModel)->tap(function(Activity $activity) use ($projectId) {

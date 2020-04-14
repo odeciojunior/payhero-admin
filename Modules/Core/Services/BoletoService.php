@@ -145,6 +145,7 @@ class BoletoService
                                       "title"                 => $titleMessage,
                                       "content"               => $contentMessage,
                                       "products"              => $products,
+                                      'sac_link'              => "https://sac." . $domain->name,
                                   ];
                                   if (!empty($domain) && !empty($clientEmail)) {
                                       $dataEmail = [
@@ -263,6 +264,7 @@ class BoletoService
                                           "title"                 => $titleMessage,
                                           "content"               => $contentMessage,
                                           "products"              => $products,
+                                          'sac_link'              => "https://sac." . $domain->name,
                                       ];
                                       if (!empty($domain) && !empty($clientEmail)) {
                                           $dataEmail = [
@@ -387,6 +389,7 @@ class BoletoService
                                           "title"                 => $titleMessage,
                                           "content"               => $contentMessage,
                                           "products"              => $products,
+                                          'sac_link'              => "https://sac." . $domain->name,
                                       ];
                                       if (!empty($domain) && !empty($clientEmail)) {
                                           $dataEmail = [

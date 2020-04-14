@@ -7,7 +7,8 @@
     <div class="page">
         <div class="page-header container">
             <h1 class="page-title">
-                <i class="material-icons turn-back" style='color:grey;cursor:pointer;' title='Voltar'>arrow_back</i> Chamado: #<span id="ticket-id"></span>
+                <i class="material-icons turn-back" style='color:grey;cursor:pointer;' title='Voltar'>arrow_back</i> Chamado: #
+                <span id="ticket-id"></span>
             </h1>
             <hr class='mb-0 mt-10'>
         </div>
@@ -18,11 +19,13 @@
                         <h4 class='font-weight-bold ticket-subject'></h4>
                     </div>
                     <div>
+                        <span class='font-size-14 ticket-description'></span>
+                    </div>
+                    <div>
                         <span class='font-size-14 customer-name'></span>
                     </div>
                     <div>
-                          <span class='font-size-14 ticket-informations'>
-                           </span>
+                          <span class='font-size-14 ticket-informations'></span>
                     </div>
                     <div class='row my-20 font-size-12'>
                         <div class='col-6 col-lg-3'>
@@ -73,6 +76,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/show.js')}}'></script>
+        <script src='{{asset('/modules/tickets/js/show.js?v=1')}}'></script>
     @endpush
 @endsection

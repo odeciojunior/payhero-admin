@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Illuminate\Routing\Controller;
@@ -35,6 +36,7 @@ class ReportsApiController extends Controller
             $userProjectModel = new UserProject();
             $salesModel       = new Sale();
             $planModel        = new Plan();
+            $affiliateModel   = new Affiliate();
 
             $dataSearch = $request->all();
             $projectId  = current(Hashids::decode($request->input('project')));
@@ -48,171 +50,182 @@ class ReportsApiController extends Controller
                                                             ['project_id', $projectId],
                                                         ])->first();
 
+                $affiliate = $affiliateModel->where([
+                                                        ['user_id', auth()->user()->account_owner_id],
+                                                        ['project_id', $projectId],
+                                                    ])->first();
+
                 $companies = Company::where('user_id', auth()->user()->account_owner_id)->pluck('id');
 
-                if ($userProject) {
-                    $sales = $salesModel
-                        ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
-                        ->leftJoin('transactions as transaction', function($join) use ($companies) {
-                            $join->whereIn('transaction.company_id', $companies);
-                            $join->whereIn('transaction.status', ['paid', 'transfered', 'anticipated']);
-                            $join->on('transaction.sale_id', '=', 'sales.id');
-                        })
-                        ->leftJoin('checkouts as checkout', function($join) {
-                            $join->on('sales.checkout_id', 'checkout.id');
-                        })
-                        ->where([['sales.project_id', $projectId], ['sales.owner_id', auth()->user()->account_owner_id]]);
+                $sales = $salesModel
+                    ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
+                    ->leftJoin('transactions as transaction', function($join) use ($companies, $affiliate) {
+                        $join->whereIn('transaction.company_id', $companies);
+                        $join->whereIn('transaction.status', ['paid', 'transfered', 'anticipated']);
+                        $join->on('transaction.sale_id', '=', 'sales.id');
+                    })
+                    ->leftJoin('checkouts as checkout', function($join) {
+                        $join->on('sales.checkout_id', 'checkout.id');
+                    })
+                    ->where([['sales.project_id', $projectId]]);
 
-                    if (!empty($requestStartDate) && !empty($requestEndDate)) {
-                        $sales->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
-                    } else {
-                        if (!empty($requestStartDate)) {
-                            $sales->whereDate('sales.start_date', '>=', $requestStartDate);
+                if (!empty($userProject)) {
+                    $sales->where('sales.owner_id', auth()->user()->account_owner_id);
+                }
+                if (!empty($affiliate)) {
+                    $sales->where('sales.affiliate_id', $affiliate->id);
+                }
+                if (!empty($requestStartDate) && !empty($requestEndDate)) {
+                    $sales->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
+                } else {
+                    if (!empty($requestStartDate)) {
+                        $sales->whereDate('sales.start_date', '>=', $requestStartDate);
+                    }
+
+                    if (!empty($requestEndDate)) {
+                        $sales->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                    }
+                }
+                $sales     = $sales->get();
+                $contSales = $sales->count();
+
+                $itens = $salesModel
+                    ->select(\DB::raw('count(*) as count'), 'plan_sale.plan_id')
+                    ->leftJoin('plans_sales as plan_sale', function($join) {
+                        $join->on('plan_sale.sale_id', '=', 'sales.id');
+                    })
+                    ->where('sales.status', 1)->where('project_id', $projectId);
+
+                if (!empty($requestStartDate) && !empty($requestEndDate)) {
+                    $itens->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
+                } else {
+                    if (!empty($requestStartDate)) {
+                        $itens->whereDate('sales.start_date', '>=', $requestStartDate);
+                    }
+
+                    if (!empty($requestEndDate)) {
+                        $itens->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                    }
+                }
+
+                $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
+                $plans = [];
+                foreach ($itens as $key => $iten) {
+                    $plan                      = $planModel->with('products')->find($iten['plan_id']);
+                    $plans[$key]['name']       = $plan->name . ' - ' . $plan->description;
+                    $plans[$key]['photo']      = $plan->products[0]->photo;
+                    $plans[$key]['quantidade'] = $iten['count'];
+                    unset($plan);
+                }
+
+                // calculos dashboard
+                $salesDetails = $salesModel->select([
+                                                        DB::raw('SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesAproved'),
+                                                        DB::raw('SUM(CASE WHEN sales.status = 2 THEN 1 ELSE 0 END) AS contSalesPending'),
+                                                        DB::raw('SUM(CASE WHEN sales.status = 3 THEN 1 ELSE 0 END) AS contSalesRecused'),
+                                                        DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
+                                                        DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),
+                                                        DB::raw('SUM(CASE WHEN sales.status = 7 THEN 1 ELSE 0 END) AS contSalesRefunded'),
+                                                    ])
+                    //                                           ->where('owner_id', auth()->user()->account_owner_id)
+                                           ->where('project_id', $projectId);
+                if (!empty($userProject)) {
+                    $salesDetails->where('owner_id', auth()->user()->account_owner_id);
+                }
+                if (!empty($affiliate)) {
+                    $salesDetails->where('affiliate_id', $affiliate->id);
+                }
+                if ($requestStartDate != '' && $requestEndDate != '') {
+                    $salesDetails->whereBetween('start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
+                } else {
+                    if (!empty($requestStartDate)) {
+                        $salesDetails->whereDate('start_date', '>=', $requestStartDate);
+                    }
+
+                    if (!empty($requestEndDate)) {
+                        $salesDetails->whereDate('end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                    }
+                }
+                $details               = $salesDetails->get();
+                $countSalesAproved     = $details[0]->contSalesAproved;
+                $countSalesPending     = $details[0]->contSalesPending;
+                $countSalesRecused     = $details[0]->contSalesRecused;
+                $countSalesChargeBack  = $details[0]->contSalesChargeBack;
+                $countSalesRefunded    = $details[0]->contSalesRefunded;
+                $countSalesCanceled    = $details[0]->contSalesCanceled;
+                $totalValueCreditCard  = 0;
+                $contCreditCardAproved = 0;
+                $totalValueBoleto      = 0;
+                $contBoletoAproved     = 0;
+                $contCreditCard        = 0;
+                $contBoleto            = 0;
+                $totalPaidValueAproved = 0;
+                $contMobile            = 0;
+                $contDesktop           = 0;
+                $ticketMedio           = 0;
+
+                $currency = 'R$';
+
+                if (count($sales) > 0) {
+                    foreach ($sales as $sale) {
+                        if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1 && $sale->total_paid_value != null) {
+                            $totalValueCreditCard += $sale->total_paid_value;
+                            $contCreditCardAproved++;
                         }
 
-                        if (!empty($requestEndDate)) {
-                            $sales->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
-                        }
-                    }
-                    $sales     = $sales->get();
-                    $contSales = $sales->count();
-
-                    $itens = $salesModel
-                        ->select(\DB::raw('count(*) as count'), 'plan_sale.plan_id')
-                        ->leftJoin('plans_sales as plan_sale', function($join) {
-                            $join->on('plan_sale.sale_id', '=', 'sales.id');
-                        })
-                        ->where('sales.status', 1)->where('project_id', $projectId);
-
-                    if (!empty($requestStartDate) && !empty($requestEndDate)) {
-                        $itens->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
-                    } else {
-                        if (!empty($requestStartDate)) {
-                            $itens->whereDate('sales.start_date', '>=', $requestStartDate);
+                        if ($sale->payment_method == 2 && $sale->status == 1 && $sale->total_paid_value != null) {
+                            $totalValueBoleto += $sale->total_paid_value;
+                            $contBoletoAproved++;
                         }
 
-                        if (!empty($requestEndDate)) {
-                            $itens->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                        // cartao
+                        if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+                            $contCreditCard++;
                         }
-                    }
-
-                    $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
-                    $plans = [];
-                    foreach ($itens as $key => $iten) {
-                        $plan                      = $planModel->with('products')->find($iten['plan_id']);
-                        $plans[$key]['name']       = $plan->name . ' - ' . $plan->description;
-                        $plans[$key]['photo']      = $plan->products[0]->photo;
-                        $plans[$key]['quantidade'] = $iten['count'];
-                        unset($plan);
-                    }
-
-                    // calculos dashboard
-                    $salesDetails = $salesModel->select([
-                                                            DB::raw('SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesAproved'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 2 THEN 1 ELSE 0 END) AS contSalesPending'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 3 THEN 1 ELSE 0 END) AS contSalesRecused'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),
-                                                            DB::raw('SUM(CASE WHEN sales.status = 7 THEN 1 ELSE 0 END) AS contSalesRefunded'),
-                                                        ])
-                                               ->where('owner_id', auth()->user()->account_owner_id)
-                                               ->where('project_id', $projectId);
-                    if ($requestStartDate != '' && $requestEndDate != '') {
-                        $salesDetails->whereBetween('start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
-                    } else {
-                        if (!empty($requestStartDate)) {
-                            $salesDetails->whereDate('start_date', '>=', $requestStartDate);
+                        // boleto
+                        if ($sale->payment_method == 2) {
+                            $contBoleto++;
+                        }
+                        // vendas aprovadas
+                        if ($sale->status == 1) {
+                            $totalPaidValueAproved += $sale->total_paid_value;
                         }
 
-                        if (!empty($requestEndDate)) {
-                            $salesDetails->whereDate('end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
+                        if ($sale->is_mobile) {
+                            $contMobile++;
+                        } else {
+                            $contDesktop++;
                         }
                     }
-                    $details               = $salesDetails->get();
-                    $countSalesAproved     = $details[0]->contSalesAproved;
-                    $countSalesPending     = $details[0]->contSalesPending;
-                    $countSalesRecused     = $details[0]->contSalesRecused;
-                    $countSalesChargeBack  = $details[0]->contSalesChargeBack;
-                    $countSalesRefunded    = $details[0]->contSalesRefunded;
-                    $countSalesCanceled    = $details[0]->contSalesCanceled;
-                    $totalValueCreditCard  = 0;
-                    $contCreditCardAproved = 0;
-                    $totalValueBoleto      = 0;
-                    $contBoletoAproved     = 0;
-                    $contCreditCard        = 0;
-                    $contBoleto            = 0;
-                    $totalPaidValueAproved = 0;
-                    $contMobile            = 0;
-                    $contDesktop           = 0;
-                    $ticketMedio           = 0;
+                }
 
-                    if ($userProject->company->country == 'usa') {
-                        $currency = '$';
-                    } else {
-                        $currency = 'R$';
-                    }
+                $reportService = new ReportService();
 
-                    if (count($sales) > 0) {
-                        foreach ($sales as $sale) {
-                            if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1 && $sale->value != null) {
-                                $totalValueCreditCard += $sale->value;
-                                $contCreditCardAproved++;
-                            }
+                $chartData = $reportService->getChartData($dataSearch, $projectId, $currency);
 
-                            if ($sale->payment_method == 2 && $sale->status == 1 && $sale->value != null) {
-                                $totalValueBoleto += $sale->value;
-                                $contBoletoAproved++;
-                            }
+                $cartaoConvert = $contCreditCardAproved . '/' . $contCreditCard;
+                $boletoConvert = $contBoletoAproved . '/' . $contBoleto;
 
-                            // cartao
-                            if ($sale->payment_method == 1 || $sale->payment_method == 3) {
-                                $contCreditCard++;
-                            }
-                            // boleto
-                            if ($sale->payment_method == 2) {
-                                $contBoleto++;
-                            }
-                            // vendas aprovadas
-                            if ($sale->status == 1) {
-                                $totalPaidValueAproved += $sale->value;
-                            }
+                if ($contBoleto != 0) {
+                    $convercaoBoleto = number_format((intval($contBoletoAproved) * 100) / intval($contBoleto), 2, ',', ' . ');
+                }
 
-                            if ($sale->is_mobile) {
-                                $contMobile++;
-                            } else {
-                                $contDesktop++;
-                            }
-                        }
-                    }
+                if ($contCreditCard != 0) {
+                    $convercaoCreditCard = number_format((intval($contCreditCardAproved) * 100) / intval($contCreditCard), 2, ',', ' . ');
+                }
 
-                    $reportService = new ReportService();
+                if ($contSales > 0) {
+                    $conversaoMobile  = number_format((intval($contMobile) * 100) / intval($contSales), 2, ',', ' . ');
+                    $conversaoDesktop = number_format((intval($contDesktop) * 100) / intval($contSales), 2, ',', ' . ');
+                } else {
+                    $conversaoMobile  = "0.00";
+                    $conversaoDesktop = "0.00";
+                }
 
-                    $chartData = $reportService->getChartData($dataSearch, $projectId, $currency);
-
-                    $cartaoConvert = $contCreditCardAproved . '/' . $contCreditCard;
-                    $boletoConvert = $contBoletoAproved . '/' . $contBoleto;
-
-                    if ($contBoleto != 0) {
-                        $convercaoBoleto = number_format((intval($contBoletoAproved) * 100) / intval($contBoleto), 2, ',', ' . ');
-                    }
-
-                    if ($contCreditCard != 0) {
-                        $convercaoCreditCard = number_format((intval($contCreditCardAproved) * 100) / intval($contCreditCard), 2, ',', ' . ');
-                    }
-
-                    if ($contSales > 0) {
-                        $conversaoMobile  = number_format((intval($contMobile) * 100) / intval($contSales), 2, ',', ' . ');
-                        $conversaoDesktop = number_format((intval($contDesktop) * 100) / intval($contSales), 2, ',', ' . ');
-                    } else {
-                        $conversaoMobile  = "0.00";
-                        $conversaoDesktop = "0.00";
-                    }
-
-                    if ($totalPaidValueAproved != 0) {
-                        $totalPercentPaidCredit = number_format((intval($totalValueCreditCard) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
-                        $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
-                        $ticketMedio            = number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved) / $countSalesAproved) / 100, 2, ',', '.');
-                    }
+                if ($totalPaidValueAproved != 0) {
+                    $totalPercentPaidCredit = number_format((intval($totalValueCreditCard) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
+                    $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
+                    $ticketMedio            = number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved) / $countSalesAproved) / 100, 2, ',', '.');
                 }
             }
             if (empty($chartData)) {
@@ -263,14 +276,20 @@ class ReportsApiController extends Controller
     public function getSalesByOrigin(Request $request)
     {
         try {
-            $companyModel = new Company();
-            $saleModel    = new Sale();
+            $companyModel   = new Company();
+            $saleModel      = new Sale();
+            $affiliateModel = new Affiliate();
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id')->toArray();
+            $userId        = auth()->user()->account_owner_id;
+            $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
 
-                $orders = $saleModel
+                $affiliate = $affiliateModel->where([
+                                                        ['user_id', $userId],
+                                                        ['project_id', $request->project_id],
+                                                    ])->first();
+                $orders    = $saleModel
                     ->select(\DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.' . $request->origin . ' as origin'))
                     ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
@@ -286,6 +305,9 @@ class ReportsApiController extends Controller
                     ->whereNotNull('checkout.' . $request->origin)
                     ->groupBy('checkout.' . $request->origin)
                     ->orderBy('sales_amount', 'DESC');
+                if (!empty($affiliate)) {
+                    $orders->where('sales.affiliate_id', $affiliate->id);
+                }
 
                 return SalesByOriginResource::collection($orders->paginate(6));
             }
@@ -317,8 +339,7 @@ class ReportsApiController extends Controller
                                                             ['project_id', $projectId],
                                                         ])->first();
 
-                if ($userProject)
-                {
+                if ($userProject) {
                     $itens = $checkoutsModel
                         ->select(\DB::raw('count(*) as count'), 'plan_checkout.plan_id')
                         ->leftJoin('checkout_plans as plan_checkout', function($join) {
@@ -338,7 +359,8 @@ class ReportsApiController extends Controller
                         }
                     }
 
-                    $itens = $itens->groupBy('plan_checkout.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
+                    $itens = $itens->groupBy('plan_checkout.plan_id')->orderBy('count', 'desc')->limit(3)->get()
+                                   ->toArray();
                     $plans = [];
                     foreach ($itens as $key => $iten) {
                         $plan                      = $planModel->with('products')->find($iten['plan_id']);
@@ -350,14 +372,14 @@ class ReportsApiController extends Controller
 
                     // calculos dashboard
                     $checkoutsDetails = $checkoutsModel->select([
-                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 1 THEN 1 ELSE 0 END) AS contCheckoutsAcessed'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 2 THEN 1 ELSE 0 END) AS contCheckoutsAbandoned'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 3 THEN 1 ELSE 0 END) AS contCheckoutsRecovered'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.status_enum = 4 THEN 1 ELSE 0 END) AS contCheckoutsFinalized'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.is_mobile = 0 THEN 1 ELSE 0 END) AS contCheckoutsDesktop'),
-                                                            DB::raw('SUM(CASE WHEN checkouts.is_mobile = 1 THEN 1 ELSE 0 END) AS contCheckoutsMobile'),
-                                                        ])
-                                               ->where('project_id', $projectId);
+                                                                    DB::raw('SUM(CASE WHEN checkouts.status_enum = 1 THEN 1 ELSE 0 END) AS contCheckoutsAcessed'),
+                                                                    DB::raw('SUM(CASE WHEN checkouts.status_enum = 2 THEN 1 ELSE 0 END) AS contCheckoutsAbandoned'),
+                                                                    DB::raw('SUM(CASE WHEN checkouts.status_enum = 3 THEN 1 ELSE 0 END) AS contCheckoutsRecovered'),
+                                                                    DB::raw('SUM(CASE WHEN checkouts.status_enum = 4 THEN 1 ELSE 0 END) AS contCheckoutsFinalized'),
+                                                                    DB::raw('SUM(CASE WHEN checkouts.is_mobile = 0 THEN 1 ELSE 0 END) AS contCheckoutsDesktop'),
+                                                                    DB::raw('SUM(CASE WHEN checkouts.is_mobile = 1 THEN 1 ELSE 0 END) AS contCheckoutsMobile'),
+                                                                ])
+                                                       ->where('project_id', $projectId);
                     if ($requestStartDate != '' && $requestEndDate != '') {
                         $checkoutsDetails->whereBetween('created_at', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                     } else {
@@ -369,7 +391,7 @@ class ReportsApiController extends Controller
                             $checkoutsDetails->whereDate('updated_at', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                         }
                     }
-                    $details               = $checkoutsDetails->get();
+                    $details = $checkoutsDetails->get();
 
                     $countCheckoutsAcessed   = $details[0]->contCheckoutsAcessed;
                     $countCheckoutsAbandoned = $details[0]->contCheckoutsAbandoned;
@@ -459,26 +481,30 @@ class ReportsApiController extends Controller
     {
         try {
 
-            $companyId  = current(Hashids::decode($request->input('company')));
+            $companyId = current(Hashids::decode($request->input('company')));
 
             $company = Company::where('user_id', auth()->user()->account_owner_id)
                               ->where('id', $companyId)
                               ->first();
 
-            if(!empty($company->id)) {
+            if (!empty($company->id)) {
 
                 $transactionModel = new Transaction();
 
                 $itens = $transactionModel->select([
-                                            DB::raw('SUM(transactions.value) as value'),
-                                            DB::raw('DATE(transactions.release_date) as date'),
-                                    ])
-                                    ->where('company_id', $companyId)
-                                    ->whereIn('transactions.type', collect([2,3,4,5]))
-                                    ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                    ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
-                                    ->groupBy('date')
-                                    ->get();
+                                                       DB::raw('SUM(transactions.value) as value'),
+                                                       DB::raw('DATE(transactions.release_date) as date'),
+                                                   ])
+                                          ->where('company_id', $companyId)
+                                          ->whereIn('transactions.type', collect([2, 3, 4, 5]))
+                                          ->where('transactions.status_enum', $transactionModel->present()
+                                                                                               ->getStatusEnum('paid'))
+                                          ->whereBetween('release_date', [
+                                              Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)
+                                                                                              ->format('Y-m-d'),
+                                          ])
+                                          ->groupBy('date')
+                                          ->get();
 
                 $transactions = [];
 
@@ -494,33 +520,38 @@ class ReportsApiController extends Controller
                 $total = 0;
 
                 foreach ($labelList as $label) {
-                    $dateSearch = Carbon::createFromFormat('d/m/Y', $label)->format('Y-m-d');
-                    $item = $itens->firstWhere('date', $dateSearch);
+                    $dateSearch     = Carbon::createFromFormat('d/m/Y', $label)->format('Y-m-d');
+                    $item           = $itens->firstWhere('date', $dateSearch);
                     $transactions[] = [
                         'date'  => $label,
                         'value' => (isset($item->value)) ? number_format(intval(preg_replace("/[^0-9]/", "", $item->value)) / 100, 2, ',', '.') : '0,00',
                     ];
-                    $total += $item->value ?? 0;
+                    $total          += $item->value ?? 0;
                 }
 
-                if($total > 0) {
+                if ($total > 0) {
                     $transactions[] = ['date' => 'Total', 'value' => number_format(intval(preg_replace("/[^0-9]/", "", $total)) / 100, 2, ',', '.')];
                 }
 
                 $transactionModel = new Transaction();
 
                 $transactionTotal = $transactionModel->join('sales', 'transactions.sale_id', 'sales.id')
-                                                ->select([
-                                                            DB::raw('SUM(transactions.value) as value'),
-                                                            DB::raw('SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) AS valueBillet'),
-                                                            DB::raw('SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) AS valueCard')
-                                                        ])
-                                                ->where('company_id', $companyId)
-                                                ->whereIn('transactions.type', collect([2,3,4,5]))
-                                                ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                                ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
-                                                ->groupBy('transactions.company_id')
-                                                ->first();
+                                                     ->select([
+                                                                  DB::raw('SUM(transactions.value) as value'),
+                                                                  DB::raw('SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) AS valueBillet'),
+                                                                  DB::raw('SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) AS valueCard'),
+                                                              ])
+                                                     ->where('company_id', $companyId)
+                                                     ->whereIn('transactions.type', collect([2, 3, 4, 5]))
+                                                     ->where('transactions.status_enum', $transactionModel->present()
+                                                                                                          ->getStatusEnum('paid'))
+                                                     ->whereBetween('release_date', [
+                                                         Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()
+                                                                                                         ->addDays(30)
+                                                                                                         ->format('Y-m-d'),
+                                                     ])
+                                                     ->groupBy('transactions.company_id')
+                                                     ->first();
 
                 $reportService = new ReportService();
 
@@ -535,7 +566,7 @@ class ReportsApiController extends Controller
 
             if (empty($chartData)) {
                 $chartData = [
-                    'label_list'       => ['',''],
+                    'label_list'       => ['', ''],
                     'transaction_data' => [0, 0],
                     'currency'         => '',
                 ];
@@ -548,7 +579,6 @@ class ReportsApiController extends Controller
                                         'valueBillet'  => isset($transactionTotal->valueBillet) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueBillet)) / 100, 2, ',', '.') : '0,00',
                                         'valueCard'    => isset($transactionTotal->valueCard) ? number_format(intval(preg_replace("/[^0-9]/", "", $transactionTotal->valueCard)) / 100, 2, ',', '.') : '0,00',
                                     ]);
-
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados - ReportsController - projections');
             report($e);
@@ -562,22 +592,26 @@ class ReportsApiController extends Controller
         $data      = $request->all();
         $checkData = collect();
         $header    = ['Data', 'Valor'];
-        $companyId  = current(Hashids::decode($request->input('company')));
+        $companyId = current(Hashids::decode($request->input('company')));
 
         $transactionModel = new Transaction();
 
         $itens = $transactionModel->select([
-                                        DB::raw('SUM(transactions.value) as value'),
-                                        DB::raw('DATE(transactions.release_date) as date')
-                                    ])
-                                    ->join('companies', 'transactions.company_id', 'companies.id')
-                                    ->where('companies.user_id', auth()->user()->id)
-                                    ->where('companies.id',  $companyId)
-                                    ->whereIn('transactions.type', collect([2,3,4,5]))
-                                    ->where('transactions.status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                    ->whereBetween('release_date', [Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)->format('Y-m-d')])
-                                    ->groupBy('date')
-                                    ->get();
+                                               DB::raw('SUM(transactions.value) as value'),
+                                               DB::raw('DATE(transactions.release_date) as date'),
+                                           ])
+                                  ->join('companies', 'transactions.company_id', 'companies.id')
+                                  ->where('companies.user_id', auth()->user()->id)
+                                  ->where('companies.id', $companyId)
+                                  ->whereIn('transactions.type', collect([2, 3, 4, 5]))
+                                  ->where('transactions.status_enum', $transactionModel->present()
+                                                                                       ->getStatusEnum('paid'))
+                                  ->whereBetween('release_date', [
+                                      Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)
+                                                                                      ->format('Y-m-d'),
+                                  ])
+                                  ->groupBy('date')
+                                  ->get();
 
         $labelList    = [];
         $dataFormated = Carbon::today()->addDay();
@@ -589,12 +623,12 @@ class ReportsApiController extends Controller
         }
 
         $dataArray = [];
-        $total = 0;
+        $total     = 0;
 
         foreach ($labelList as $label) {
             $dateSearch = Carbon::createFromFormat('d/m/Y', $label)->format('Y-m-d');
-            $item = $itens->firstWhere('date', $dateSearch);
-            $dataArray = [
+            $item       = $itens->firstWhere('date', $dateSearch);
+            $dataArray  = [
                 'date'  => $label,
                 'value' => (isset($item->value)) ? number_format(intval(preg_replace("/[^0-9]/", "", $item->value)) / 100, 2, ',', '.') : '0,00',
             ];
@@ -602,7 +636,7 @@ class ReportsApiController extends Controller
             $total += $item->value ?? 0;
         }
 
-        if($total > 0) {
+        if ($total > 0) {
             $checkData->push(collect(['date' => 'Total', 'value' => number_format(intval(preg_replace("/[^0-9]/", "", $total)) / 100, 2, ',', '.')]));
         }
 
