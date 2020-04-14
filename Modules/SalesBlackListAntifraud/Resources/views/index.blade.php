@@ -13,7 +13,7 @@
         <div class='page-header container'>
             <div class='row align-items-center justify-content-between' style='min-height:50px'>
                 <div class='col-12'>
-                    <h1 class='page-title'>AntiFraude</h1><br>
+                    <h1 class='page-title'>Antifraude</h1><br>
                     <p id="text-info" style="margin-top: 12px; display: block;">
                         Os dados dos usuários abaixo foram utilizados diversas vezes para tentativas de compras fraudulentas. Para proteger suas vendas, nosso sistema bloqueia automaticamente novas tentativas. Recomendamos não tentar recuperar estas vendas, pois os fraudadores se passam por clientes para enganar o suporte e o sistema.</p>
                 </div>

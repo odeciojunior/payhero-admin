@@ -137,7 +137,7 @@
                     </li>
                     <li class="site-menu-item">
                         <a href="{{ route('antifraud.index') }}">
-                            <span class="site-menu-title">AntiFraude</span>
+                            <span class="site-menu-title">Antifraude</span>
                         </a>
                     </li>
                     <li class="site-menu-item">

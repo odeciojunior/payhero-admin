@@ -38,8 +38,8 @@ class SalesBlackListAntifraudApiController extends Controller
 
             $filters = $request->all();
 
-            $companyModel  = new Company();
-            $saleModel     = new Sale();
+            $companyModel = new Company();
+            $saleModel    = new Sale();
 
             $userId = auth()->user()->account_owner_id;
 
@@ -58,7 +58,10 @@ class SalesBlackListAntifraudApiController extends Controller
                        ])->whereIn('status', [10, 21]);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $sales->whereBetween('start_date', ['2020-04-10 00:00:00', $dateRange[1] . ' 23:59:59']);
+            if ($dateRange[0] < '2020-04-10') {
+                $dateRange[0] = '2020-04-10';
+            }
+            $sales->whereBetween('start_date', [$dateRange[0], $dateRange[1] . ' 23:59:59']);
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
