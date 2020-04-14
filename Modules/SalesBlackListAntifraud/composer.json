@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/salesblacklistantifraud",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\SalesBlackListAntifraud\\Providers\\SalesBlackListAntifraudServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\SalesBlackListAntifraud\\": ""
+        }
+    }
+}

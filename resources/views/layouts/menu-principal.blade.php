@@ -136,6 +136,11 @@
                         </a>
                     </li>
                     <li class="site-menu-item">
+                        <a href="{{ route('salesblacklistantifraud.index') }}">
+                            <span class="site-menu-title">AntiFraud/BlackList</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
                         <a href="{{ route('trackings.index') }}">
                             <span class="site-menu-title">Rastreamentos</span>
                         </a>
