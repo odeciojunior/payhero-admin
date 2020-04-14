@@ -27,6 +27,7 @@ class EditProductResource extends Resource
             'width'              => $this->resource['product']->width,
             'height'             => $this->resource['product']->height,
             'weight'             => $this->resource['product']->weight,
+            'length'             => $this->resource['product']->length,
             'currency_type_enum' => $this->resource['product']->currency_type_enum,
         ];
         $categories = [];

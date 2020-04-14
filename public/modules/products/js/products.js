@@ -64,6 +64,7 @@ $(document).ready(function () {
                     $("#cost").unmask().val(response.data.product.cost).mask('000.000.000.000.000,00', {reverse: true});
                     $("#price").unmask().val(response.data.product.price).mask('000.000.000.000.000,00', {reverse: true});
                     $("#height").unmask().val(response.data.product.height);
+                    $("#length").unmask().val(response.data.product.length);
                     $("#width").unmask().val(response.data.product.width);
                     $("#weight").unmask().val(response.data.product.weight);
 
@@ -142,6 +143,8 @@ $(document).ready(function () {
                         event.preventDefault();
 
                         let myForm = document.getElementById('my-form');
+                        console.log(myForm)
+                        alert(1)
                         let formData = new FormData(myForm);
 
                         if (verify()) {
