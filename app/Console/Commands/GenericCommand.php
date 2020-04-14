@@ -2,11 +2,8 @@
 
 namespace App\Console\Commands;
 
-<<<<<<< HEAD
 use Hashids\Hashids;
-=======
 use Exception;
->>>>>>> 84fb93b9f41dac3878381f8047433994c0e3b329
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;

@@ -11,7 +11,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/salesblacklistantifraud/' + sale,
+            url: '/api/blacklistantifraud/' + sale,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
