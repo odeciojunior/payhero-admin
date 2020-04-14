@@ -125,9 +125,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/salesblacklistantifraud?' + getFilters(true).substr(1);
+            link = '/api/blacklistantifraud?' + getFilters(true).substr(1);
         } else {
-            link = '/api/salesblacklistantifraud' + link + getFilters(true);
+            link = '/api/blacklistantifraud' + link + getFilters(true);
         }
         $('#pagination-sales-atifraud-blacklist').hide();
 

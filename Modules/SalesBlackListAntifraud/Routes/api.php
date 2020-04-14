@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('salesblacklistantifraud', 'SalesBlackListAntifraudApiController')
+Route::apiResource('blacklistantifraud', 'SalesBlackListAntifraudApiController')
      ->only('index', 'show')
-    ->middleware(['auth:api', 'setUserAsLogged'])
-     ->names('api.salesblacklistantifraud');
+     ->middleware(['auth:api', 'setUserAsLogged']);
