@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
+use Hashids\Hashids;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\ProjectNotificationService;
+use Modules\Core\Services\ShopifyService;
 
 /**
  * Class GenericCommand
@@ -40,52 +43,6 @@ class GenericCommand extends Command
      */
     public function handle()
     {
-        //        $cloudflareService = new CloudFlareService();
         //
-        //        $domains = $cloudflareService->getZones();
-        //
-        //        $total = count($domains);
-        //
-        //        foreach ($domains as $key => $domain) {
-        //
-        //            $this->info($key + 1 . ' de ' . $total . '. Domínio: ' . $domain->name);
-        //
-        //            try {
-        //                $records = $cloudflareService->getRecords($domain->name);
-        //                $checkoutRecord = collect($records)->first(function ($item) {
-        //                    if (Str::contains($item->name, 'affiliate.')) {
-        //                        return $item;
-        //                    }
-        //                });
-        //
-        //                if (isset($checkoutRecord)) {
-        //                    $deleted = $cloudflareService->deleteRecord($checkoutRecord->id);
-        //                    if ($deleted) {
-        //                        $this->line('Record antigo deletado!');
-        //                        $recordId = $cloudflareService->addRecord("A", 'affiliate', $cloudflareService::affiliateIp);
-        //                        $this->line('Novo record criado: ' . $recordId);
-        //                    }
-        //                } else {
-        //                    $this->warn('Record não encontrado');
-        //                    $recordId = $cloudflareService->addRecord("A", 'affiliate', $cloudflareService::affiliateIp);
-        //                    $this->line('Novo record criado: ' . $recordId);
-        //                }
-        //            } catch (\Exception $e) {
-        //
-        //                $this->error($e->getMessage());
-        //            }
-        //        }
-        //        $this->info('ACABOOOOOOOOOOOOOU!');
-
-        try {
-            $projects                   = Project::whereHas('notifications')->get();
-            $projectNotificationService = new ProjectNotificationService();
-
-            foreach ($projects as $project) {
-                $projectNotificationService->updateSmsCreditCardPaidNotification($project->id);
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
     }
 }

@@ -662,8 +662,6 @@ class SaleService
             $transferModel    = new Transfer();
             $transactionModel = new Transaction();
 
-            $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
-
             $refundTransactions = $sale->transactions;
 
             // criar tranfer de saida e apagar transacoes
@@ -684,7 +682,6 @@ class SaleService
                                          'balance' => $company->balance -= $refundTransaction->value,
                                      ]);
                 }
-                $refundTransaction->delete(); // @TODO - testar se assim está apagando
             }
 
             // recriar transacoes com splitPayment
@@ -692,7 +689,12 @@ class SaleService
             $cloudfoxValue           = $partialValues['cloudfox_value'];
             $installmentFreeTaxValue = $partialValues['installment_free_tax_value'];
 
-            SplitPaymentPartialRefundService::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue);
+            SplitPaymentPartialRefundService::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue, $refundTransactions);
+
+            foreach($refundTransactions as $refundTransaction){
+
+                $refundTransaction->delete();
+            }
 
             // verify transfers
             $transfersSerice = new TransfersService();

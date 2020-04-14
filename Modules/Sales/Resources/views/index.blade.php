@@ -255,7 +255,7 @@
 
                     <div class="col-3">                        
                         <div class="custom-control custom-radio mb-3">
-                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" disabled>
+                            <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked">
                             <label class="custom-control-label" for="radioPartialRefund">Estorno Parcial</label>
                         </div>
                     </div>
@@ -301,7 +301,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=5') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=7') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

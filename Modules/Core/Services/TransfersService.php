@@ -25,13 +25,20 @@ class TransfersService
         $transferModel    = new Transfer();
         $transactionModel = new Transaction();
 
-        $transactions = $transactionModel->where([
-                                                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                                                     ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
-                                                 ]);
-        if(!is_null($saleId)) {
-            $transactions = $transactions->where('sale_id', $saleId);
+        if(empty($saleId)){
+            $transactions = $transactionModel->where([
+                                                         ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                                                         ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
+                                                     ]);
         }
+        else {
+            $transactions = $transactionModel->where([
+                ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
+                ['sale_id', $saleId]
+            ]);
+        }
+
         $transfers = [];
 
         foreach ($transactions->cursor() as $transaction) {

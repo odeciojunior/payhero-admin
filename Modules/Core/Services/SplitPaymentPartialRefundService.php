@@ -21,14 +21,15 @@ class SplitPaymentPartialRefundService
     public $producerValue;
     public $transactionStatus;
     public $installmentFreeTax;
+    public $refundedTransactions;
 
     /**
      * Use cases pattern -> https://laracasts.com/series/whip-monstrous-code-into-shape/episodes/2
      */
-    public static function perform(Sale $sale, $totalValue, $cloudfoxValue, $installmentFreeTax)
+    public static function perform(Sale $sale, $totalValue, $cloudfoxValue, $installmentFreeTax, $refundedTransactions)
     {
 
-        return (new static)->handle($sale, $totalValue, $cloudfoxValue, $installmentFreeTax);
+        return (new static)->handle($sale, $totalValue, $cloudfoxValue, $installmentFreeTax, $refundedTransactions);
     }
 
     /**
@@ -37,13 +38,14 @@ class SplitPaymentPartialRefundService
      * @param $cloudfoxValue
      * @param $installmentFreeTax
      */
-    private function handle(Sale $sale, $totalValue, $cloudfoxValue, $installmentFreeTax)
+    private function handle(Sale $sale, $totalValue, $cloudfoxValue, $installmentFreeTax, $refundedTransactions)
     {
 
-        $this->sale               = $sale;
-        $this->totalValue         = $totalValue;
-        $this->cloudfoxValue      = $cloudfoxValue;
-        $this->installmentFreeTax = $installmentFreeTax;
+        $this->sale                 = $sale;
+        $this->totalValue           = $totalValue;
+        $this->cloudfoxValue        = $cloudfoxValue;
+        $this->installmentFreeTax   = $installmentFreeTax;
+        $this->refundedTransactions = $refundedTransactions;
 
         $this->setTransactionsStatus()
              ->setProducerValue()
@@ -103,18 +105,21 @@ class SplitPaymentPartialRefundService
 
                 $invite = Invitation::where([
                                                 ['user_invited', $affiliate->user_id],
-                                                ['status', (new Invitation)->present()->getStatus('active')],
+                                                ['status', (new Invitation)->present()->getStatus('accepted')],
                                             ])->first();
 
                 if (!empty($invite) && !empty($invite->company_id)) {
 
                     $inviteValue = intval(($affiliateValue / 100 * 1));
 
+                    $transactionsRefunded = $this->refundedTransactions;
+                    $transactionRefundedAffiliateInvite = $transactionsRefunded->firstWhere('invitation_id' , $invite->id);
+
                     Transaction::create([
                                             'sale_id'       => $this->sale->id,
                                             'company_id'    => $invite->company_id,
                                             'value'         => $inviteValue,
-                                            'release_date'  => Carbon::now()->addDays(30)->format('Y-m-d'),
+                                            'release_date'  => $transactionRefundedAffiliateInvite->release_date,
                                             'status'        => $this->transactionStatus,
                                             'status_enum'   => (new Transaction)->present()
                                                                                 ->getStatusEnum($this->transactionStatus),
@@ -125,17 +130,12 @@ class SplitPaymentPartialRefundService
                     $this->cloudfoxValue -= $inviteValue;
                 }
 
-                $releaseDate = null;
                 if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
                     $percentageRate   = $this->sale->user->credit_card_tax;
-                    $releaseMoneyDays = $this->sale->user->credit_card_release_money_days;
-                    $releaseDate      = Carbon::now()->addDays($releaseMoneyDays)->format('Y-m-d');
                 } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
                     $percentageRate = $this->sale->user->boleto_tax;
                 } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('debito')) {
                     $percentageRate   = $this->sale->user->debit_card_tax;
-                    $releaseMoneyDays = $this->sale->user->debit_card_release_money_days;
-                    $releaseDate      = Carbon::now()->addDays($releaseMoneyDays)->format('Y-m-d');
                 }
 
                 if (preg_replace("/[^0-9]/", "", $this->sale->total_paid_value) <= 4000 && $this->sale->payment_method == (new Sale)->present()
@@ -145,12 +145,15 @@ class SplitPaymentPartialRefundService
                     $transactionRate = $this->sale->user->transaction_rate;
                 }
 
+                $transactionsRefunded = $this->refundedTransactions;
+                $transactionRefundedAffiliate = $transactionsRefunded->firstWhere('company_id',  $affiliate->company->id);
+
                 Transaction::create([
                                         'sale_id'          => $this->sale->id,
                                         'company_id'       => $affiliate->company->id,
                                         'value'            => $affiliateValue,
                                         'percentage_rate'  => $percentageRate,
-                                        'release_date'     => $releaseDate,
+                                        'release_date'     => $transactionRefundedAffiliate->release_date,
                                         'status'           => $this->transactionStatus,
                                         'status_enum'      => (new Transaction)->present()
                                                                                ->getStatusEnum($this->transactionStatus),
@@ -236,18 +239,16 @@ class SplitPaymentPartialRefundService
 
         if (!empty($invite) && !empty($invite->company_id)) {
 
-            $releaseDate = null;
-            if ($this->sale->payment_method == 1 || $this->sale->payment_method == 3) {
-                $releaseDate = Carbon::now()->addDays(30)->format('Y-m-d');
-            }
-
             $inviteValue = intval(($this->producerValue / 100 * 1));
+
+            $transactionsRefunded = $this->refundedTransactions;
+            $transactionRefundedProducerInvite = $transactionsRefunded->firstWhere('invitation_id' , $invite->id);
 
             Transaction::create([
                                     'sale_id'       => $this->sale->id,
                                     'company_id'    => $invite->company->id,
                                     'value'         => $inviteValue,
-                                    'release_date'  => $releaseDate,
+                                    'release_date'  => $transactionRefundedProducerInvite->release_date,
                                     'status'        => $this->transactionStatus,
                                     'status_enum'   => (new Transaction)->present()
                                                                         ->getStatusEnum($this->transactionStatus),
@@ -278,27 +279,22 @@ class SplitPaymentPartialRefundService
             $transactionRate = $this->sale->user->transaction_rate;
         }
 
-        $releaseDate = null;
         if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('credit_card')) {
-
             $percentageRate   = $this->sale->user->credit_card_tax;
-            $releaseMoneyDays = $this->sale->user->credit_card_release_money_days;
-            $releaseDate      = Carbon::now()->addDays($releaseMoneyDays)->format('Y-m-d');
         } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('boleto')) {
-
             $percentageRate = $this->sale->user->boleto_tax;
         } else if ($this->sale->payment_method == (new Sale)->present()->getPaymentType('debito')) {
-
             $percentageRate   = $this->sale->user->debit_card_tax;
-            $releaseMoneyDays = $this->sale->user->debit_card_release_money_days;
-            $releaseDate      = Carbon::now()->addDays($releaseMoneyDays)->format('Y-m-d');
         }
+
+        $transactionsRefunded = $this->refundedTransactions;
+        $transactionRefundedProducer = $transactionsRefunded->firstWhere('type', (new Transaction)->present()->getType('producer'));
 
         Transaction::create([
                                 'sale_id'          => $this->sale->id,
                                 'company_id'       => $producerCompany->id,
                                 'value'            => $this->producerValue,
-                                'release_date'     => $releaseDate,
+                                'release_date'     => $transactionRefundedProducer->release_date,
                                 'status'           => $this->transactionStatus,
                                 'status_enum'      => (new Transaction)->present()
                                                                        ->getStatusEnum($this->transactionStatus),

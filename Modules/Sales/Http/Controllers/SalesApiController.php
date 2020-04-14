@@ -203,6 +203,7 @@ class SalesApiController extends Controller
                 $activity->log_name   = 'visualization';
                 $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
             })->log('Estorno transação: #' . $saleId);
+
             $partialValues = [];
             if($partial == true) {
                 $partialValues = $saleService->getValuesPartialRefund($sale, $refundAmount);
