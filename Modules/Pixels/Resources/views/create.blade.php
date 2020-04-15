@@ -33,6 +33,12 @@
                     </div>
                     <input name="code" type="text" id='code-pixel' class="form-control pixel-code" placeholder="52342343245553" maxlength='30' aria-describedby="input-code-pixel">
                 </div>
+                <div class='row'>
+                    <div class='form-group col-12 my-20'>
+                        <label for="add_pixel_plans">Plano</label>
+                        <select name="add_pixel_plans[]" id="add_pixel_plans" class="form-control" style='width:100%' data-plugin="select2" multiple='multiple'> </select>
+                    </div>
+                </div>
                 <div class='mb-1'>
                     <label>Rodar Pixel:</label>
                 </div>

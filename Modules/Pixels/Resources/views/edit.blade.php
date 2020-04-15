@@ -29,6 +29,10 @@
                     <label for="code">Código</label>
                     <input value="" name="code" id='code-pixel' type="text" class="input-pad pixel-code" placeholder="52342343245553" maxlength='30'>
                 </div>
+                <div class='form-group col-12'>
+                    <label for="edit_pixel_plans">Plano</label>
+                    <select name="edit_pixel_plans[]" id="edit_pixel_plans" class="form-control" style='width:100%' data-plugin="select2" multiple='multiple'> </select>
+                </div>
             </div>
             <div class='mb-1'>
                 <label>Rodar Pixel:</label>

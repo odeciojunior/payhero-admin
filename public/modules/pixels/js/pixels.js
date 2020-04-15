@@ -47,7 +47,7 @@ $(function () {
 
     //carrega os itens na tabela
     atualizarPixel();
-
+    loadPlans();
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
@@ -364,5 +364,100 @@ $(function () {
     function clearFields() {
         $('.pixel-description').val('');
         $('.pixel-code').val('');
+    }
+    $('#add_pixel_plans').select2({
+        placeholder: 'Nome do plano',
+        multiple: true,
+        dropdownParent: $('#modal-create-pixel'),
+        language: {
+            noResults: function () {
+                return 'Nenhum plano encontrado';
+            },
+            searching: function () {
+                return 'Procurando...';
+            }
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: 'plan',
+                    search: params.term,
+                    project_id: projectId,
+                };
+            },
+            method: "GET",
+            url: "/api/plans/user-plans",
+            delay: 300,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {id: obj.id, text: obj.name};
+                    })
+                };
+            },
+        }
+    });
+    $('#edit_pixel_plans').select2({
+        placeholder: 'Nome do plano',
+        multiple: true,
+        dropdownParent: $('#modal-edit-pixel'),
+        language: {
+            noResults: function () {
+                return 'Nenhum plano encontrado';
+            },
+            searching: function () {
+                return 'Procurando...';
+            }
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: 'plan',
+                    search: params.term,
+                    project_id: projectId,
+                };
+            },
+            method: "GET",
+            url: "/api/plans/user-plans",
+            delay: 300,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {id: obj.id, text: obj.name};
+                    })
+                };
+            },
+        }
+    });
+    function loadPlans() {
+        $('#add_pixel_plans').html('');
+        $('#edit_pixel_plans').html('');
+        $.ajax({
+            method: "GET",
+            url: "/api/plans/user-plans",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {project_id: projectId},
+            error: function error(response) {
+            },
+            success: function success(response) {
+                for (let plan of response.data) {
+                    $('#add_pixel_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                    $('#edit_pixel_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
+                }
+            }
+        });
     }
 });
