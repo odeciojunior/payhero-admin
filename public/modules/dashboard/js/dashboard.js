@@ -95,6 +95,7 @@ $(document).ready(function () {
 
                 updateTrackings(data.trackings);
                 updateChargeback(data.chargeback_tax);
+                updateTickets(data.tickets);
                 updateNews(data.news);
                 updateReleases(data.releases);
                 loadOnAny('.page-content', true);
@@ -104,7 +105,7 @@ $(document).ready(function () {
 
     function updateChargeback(value) {
         $('.circle').circleProgress({
-            size: 132,
+            size: 125,
             startAngle: -Math.PI / 2,
             value: value / 100,
             fill: {
@@ -146,6 +147,14 @@ $(document).ready(function () {
                 }, 1000);
             }
         }
+    }
+
+    function updateTickets(data) {
+        console.log(data)
+        $('#open-tickets').text(data.open);
+        $('#closed-tickets').text(data.closed);
+        $('#mediation-tickets').text(data.mediation);
+        $('#total-ticketsl').text(data.total);
     }
 
     function updateNews(data) {

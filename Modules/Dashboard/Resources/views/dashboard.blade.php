@@ -96,8 +96,8 @@
             </div>
             <!-- Chargeback e Tracking -->
             <div class="row">
-                <div class="col-12 col-lg-6">
-                    <div class="card card-shadow bg-white">
+                <div class="col-12 col-lg-4 d-flex align-items-stretch">
+                    <div class="card card-shadow bg-white w-full">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/shipping.svg') }}"
@@ -126,8 +126,8 @@
                         <div class="card-bottom orangered"></div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6">
-                    <div class="card card-shadow bg-white">
+                <div class="col-12 col-lg-4 d-flex align-items-stretch">
+                    <div class="card card-shadow bg-white w-full">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}"
@@ -137,7 +137,7 @@
                             <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom" title="Taxa geral de chargeback de sua empresa">help</i>
                         </div>
                         <div class="card-body font-size-24 text-center d-flex align-items-topline align-items-center">
-                            <div class="col text-center">
+                            <div class="col text-center px-0">
                                 <div class="circle">
                                     <strong>0.00%</strong>
                                 </div>
@@ -150,6 +150,40 @@
                             </div>
                         </div>
                         <div class="card-bottom red"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 d-flex align-items-stretch">
+                    <div class="card card-shadow bg-white w-full">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/tickets.svg') }}"
+                                     width="30px">
+                                <span class="card-desc">Chamados</span>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <div class="row mb-15">
+                                <div class="col text-center">
+                                    <span id="open-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Abertos</div>
+                                </div>
+                                <div class="col text-center">
+                                    <span id="closed-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Resolvidos</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <span id="mediation-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Em mediação</div>
+                                </div>
+                                <div class="col text-center">
+                                    <span id="total-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Total</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-bottom blue"></div>
                     </div>
                 </div>
             </div>
