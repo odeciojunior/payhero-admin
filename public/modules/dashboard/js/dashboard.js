@@ -150,11 +150,10 @@ $(document).ready(function () {
     }
 
     function updateTickets(data) {
-        console.log(data)
         $('#open-tickets').text(data.open);
         $('#closed-tickets').text(data.closed);
         $('#mediation-tickets').text(data.mediation);
-        $('#total-ticketsl').text(data.total);
+        $('#total-tickets').text(data.total);
     }
 
     function updateNews(data) {
