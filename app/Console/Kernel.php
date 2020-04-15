@@ -67,7 +67,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:restart')->hourly();
 
         // verify checkout status (ON - OFF)
-        $schedule->command('verify:checkout-status')->everyTenMinutes();
+        $schedule->command('check:checkout-status')->everyTenMinutes();
 
         // verify redis status (ON - OFF)
         $schedule->command('verify:redis')->everyThirtyMinutes();

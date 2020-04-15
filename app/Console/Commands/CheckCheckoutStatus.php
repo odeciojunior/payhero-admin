@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Services\CheckoutService;
 
-class VerifyCheckoutStatus extends Command
+class CheckCheckoutStatus extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'verify:checkout-status';
+    protected $signature = 'check:checkout-status';
 
     /**
      * The console command description.
