@@ -150,9 +150,9 @@ $(document).ready(function () {
     }
 
     function updateTickets(data) {
-        $('#open-tickets').text(data.open);
-        $('#closed-tickets').text(data.closed);
-        $('#mediation-tickets').text(data.mediation);
+        $('#open-tickets').text(data.open || 0);
+        $('#closed-tickets').text(data.closed || 0);
+        $('#mediation-tickets').text(data.mediation || 0);
         $('#total-tickets').text(data.total);
     }
 
