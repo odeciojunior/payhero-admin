@@ -7,8 +7,8 @@ Route::group(
         'middleware' => ['web', 'auth', 'role:account_owner|admin|attendance', 'setUserAsLogged'],
     ],
     function() {
-        Route::resource('blacklistantifraud', 'SalesBlackListAntifraudController')->only('index')
-             ->names('blacklistantifraud');
+        Route::resource('antifraud', 'SalesBlackListAntifraudController')->only('index')
+             ->names('antifraud');
     }
 );
 

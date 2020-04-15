@@ -1,8 +1,4 @@
 $(() => {
-    let arrayBadge = {
-        10: '',
-        21: ''
-    }
 
     $(document).on('click', '.detalhes-black-antifraud', function () {
         let sale = $(this).attr('sale').replace('#', '');
@@ -11,7 +7,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/blacklistantifraud/' + sale,
+            url: '/api/antifraud/' + sale,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -43,14 +39,6 @@ $(() => {
         let status = $(".modal-body-detalhes-black-antifraud #status");
         status.html('').append(`<img style='width: 50px;' src='/modules/global/img/cartoes/${sale.flag}.png' alt='Cartao utilizado'>`);
 
-        switch (sale.status) {
-            case 10:
-                status.append("<span class='ml-2 badge badge-black'>BlackList</span>");
-                break;
-            case 21:
-                status.append("<span class='ml-2 badge badge-primary'>Cancelado Antifraude</span>");
-                break;
-        }
     }
 
     function getProducts(saleId) {

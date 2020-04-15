@@ -79,6 +79,7 @@ class SaleRefundedSendEmailListener implements ShouldQueue
                 'discount'            => $discount,
                 'installments_amount' => $sale->installments_amount,
                 'installments_value'  => number_format($sale->installments_value, 2, ',', '.'),
+                "sac_link"            => "https://sac." . $domain->name,
             ];
             if (!empty($domain['name'])) {
                 $emailService->sendEmail('noreply@' . $domain['name'], $project['name'], $customer['email'],
