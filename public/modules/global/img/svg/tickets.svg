@@ -1,0 +1,17 @@
+<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style>
+            .bg-gradient {
+            fill-rule: evenodd;
+            fill: url(#linear-gradient);
+            }
+        </style>
+        <linearGradient id="linear-gradient" y1="100%" y2="10%" x1="0%" x2="0%" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#5849e2"/>
+            <stop offset="100%" stop-color="#51c4ec"/>
+        </linearGradient>
+    </defs>
+    <g class="bg-gradient">
+        <path d="m3.622139,22.304977l-1.67498,0l1.184382,-1.172798c0.638605,-0.632359 1.037393,-1.454834 1.144605,-2.347062c-2.734759,-1.777128 -4.095825,-4.351632 -4.095825,-7.05062c0,-4.979319 4.621667,-10.039475 11.859733,-10.039475c7.667935,0 11.779624,4.656293 11.779624,9.603231c0,4.979548 -4.15512,9.632726 -11.779624,9.632726c-1.335627,0 -2.729347,-0.176559 -3.973673,-0.500501c-1.177907,1.196339 -2.773888,1.874498 -4.444243,1.874498z"/>
+    </g>
+</svg>

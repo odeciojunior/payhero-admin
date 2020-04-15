@@ -125,9 +125,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/blacklistantifraud?' + getFilters(true).substr(1);
+            link = '/api/antifraud?' + getFilters(true).substr(1);
         } else {
-            link = '/api/blacklistantifraud' + link + getFilters(true);
+            link = '/api/antifraud' + link + getFilters(true);
         }
         $('#pagination-sales-atifraud-blacklist').hide();
 
@@ -162,13 +162,16 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         let tableClass = '';
 
-                        const objectArray = Object.entries(value.black_list);
-                        let valuesObject = ``;
+                        /*  const objectArray = Object.entries(value.black_list);
+                          let valuesObject = ``;
 
-                        objectArray.forEach(([key, value]) => {
-                            valuesObject += `${Object.keys(value)} - ${Object.values(value)}`;
-                        });
-
+                          objectArray.forEach(([key, value]) => {
+                              valuesObject += `${Object.keys(value)} - ${Object.values(value)}`;
+                          });
+                          <td style='display:${showHideBlacklist}'>
+                                      ${valuesObject}
+                                </td>
+                        */
                         data += `
                             <tr class='${tableClass} text-center'>
                                 <td class='display-sm-none display-m-none display-lg-none text-center'>
@@ -177,9 +180,7 @@ $(document).ready(function () {
                                 <td>${value.project}</td>
                                 <td>${value.product}</td>
                                 <td class='display-sm-one display-m-none display-lg-none'>${value.customer}</td>
-                                <td style='display:${showHideBlacklist}'>
-                                      ${valuesObject}
-                                </td>
+
                                 <td class='display-sm-one display-m-one'>${value.start_date}</td>
                                 <td>
                                     <a role='button' class='detalhes-black-antifraud pointer' sale='${value.sale_code}'>

@@ -12,8 +12,10 @@
     <div class='page'>
         <div class='page-header container'>
             <div class='row align-items-center justify-content-between' style='min-height:50px'>
-                <div class='col-6'>
-                    <h1 class='page-title'>AntiFraude \ BlackList</h1>
+                <div class='col-12'>
+                    <h1 class='page-title'>Antifraude</h1><br>
+                    <p id="text-info" style="margin-top: 12px; display: block;">
+                        Os dados dos usuários abaixo foram utilizados diversas vezes para tentativas de compras fraudulentas. Para proteger suas vendas, nosso sistema bloqueia automaticamente novas tentativas. Recomendamos não tentar recuperar estas vendas, pois os fraudadores se passam por clientes para enganar o suporte e o sistema.</p>
                 </div>
                 <div class='col-6 text-right'>
                     <div class='justify-content-end align-items-center' id='export-excel' style='display:none'>
@@ -43,40 +45,18 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="forma">Forma de pagamento</label>
-                            <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                <option value="">Boleto e cartão de crédito</option>
-                                <option value="1">Cartão de crédito</option>
-                                <option value="2">Boleto</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="status">Status</label>
-                            <select name='sale_status' id="status" class="form-control select-pad">
-                                <option value="10">Black List</option>
-                                <option value="21">Cancelada Antifraude</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="comprador">Nome do cliente</label>
-                            <input name='client' id="comprador" class="input-pad" placeholder="cliente">
-                        </div>
-                    </div>
-                    <div class="row mt-15">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="comprador">Transação</label>
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="date_range">Data do pedido</label>
+                            <label for="date_range">Data</label>
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
-                            <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <label></label>
+                            <button id="bt_filtro" class="btn btn-primary col-sm-12">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
-                        </div>
-                        <div class="col-2">
                         </div>
                     </div>
                 </div>
@@ -91,7 +71,7 @@
                                 <td class="table-title">Projeto</td>
                                 <td class="table-title">Descrição</td>
                                 <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
-                                <td class="table-title blacklist" style='display:none'>Motivo</td>
+                                {{--                                <td class="table-title blacklist" style='display:none'>Motivo</td>--}}
                                 <td class="table-title display-sm-none display-m-none">Data</td>
                                 <td class="table-title" width="80px;"> &nbsp;</td>
                             </tr>
@@ -112,8 +92,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=2') }}"></script>
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=2') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
