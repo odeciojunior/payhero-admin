@@ -4,19 +4,19 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=3') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4') }}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
     <div class="page">
         <div class="page-header container">
             <div class="row align-items-center justify-content-between">
-                <div class="col-lg-6">
+                <div class="col-lg-6 mb-15">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
                 <div class="col-lg-6" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
-                        <div class="mr-10 text-lg-right">
+                        <div class="mr-10 mb-5 text-lg-right">
                             Empresa:
                         </div>
                         <div class=" text-lg-right">
@@ -33,7 +33,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="30px">
                                 <span class="card-desc">Hoje</span>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-laranja.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda-laranja.svg') }}" width="30px">
                                 <span class="card-desc">Pendente</span>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda.svg') }}" width="30px">
                                 <span class="card-desc">Disponível</span>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-azul.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda-azul.svg') }}" width="30px">
                                 <span class="card-desc">Total</span>
                             </div>
                         </div>
@@ -96,12 +96,12 @@
             </div>
             <!-- Chargeback e Tracking -->
             <div class="row">
-                <div class="col-12 col-lg-6">
-                    <div class="card card-shadow bg-white">
+                <div class="col-12 col-lg-4 d-flex align-items-stretch">
+                    <div class="card card-shadow bg-white w-full">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/shipping.svg') }}"
-                                     width="35px">
+                                     width="30px">
                                 <span class="card-desc">Códigos de rastreio informados</span>
                             </div>
                             <i class="material-icons gray text-danger" id="alert-trackings" data-toggle="tooltip"
@@ -109,7 +109,7 @@
                                title="Não informar os códigos de rastreio corretamente pode ocasionar bloqueio de saque"
                                style="transition: all .5s; display:none">warning</i>
                         </div>
-                        <div class="card-body pb-2">
+                        <div class="card-body py-15">
                             <label>Últimos 10 dias:</label>
                             <div class="progress">
                                 <div class="progress-bar" id="tracking-10-days"></div>
@@ -126,18 +126,18 @@
                         <div class="card-bottom orangered"></div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6">
-                    <div class="card card-shadow bg-white">
+                <div class="col-12 col-lg-4 d-flex align-items-stretch">
+                    <div class="card card-shadow bg-white w-full">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}"
-                                     width="35px">
+                                     width="30px">
                                 <span class="card-desc">Taxa de Chargebacks</span>
                             </div>
                             <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom" title="Taxa geral de chargeback de sua empresa">help</i>
                         </div>
                         <div class="card-body font-size-24 text-center d-flex align-items-topline align-items-center">
-                            <div class="col text-center">
+                            <div class="col text-center px-0">
                                 <div class="circle">
                                     <strong>0.00%</strong>
                                 </div>
@@ -150,6 +150,40 @@
                             </div>
                         </div>
                         <div class="card-bottom red"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 d-flex align-items-stretch">
+                    <div class="card card-shadow bg-white w-full">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
+                            <div class="font-size-14 gray-600 mr-auto">
+                                <img class="orange-gradient" src="{{ asset('modules/global/img/svg/tickets.svg') }}"
+                                     width="30px">
+                                <span class="card-desc">Chamados</span>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <div class="row mb-15">
+                                <div class="col text-center">
+                                    <span id="open-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Abertos</div>
+                                </div>
+                                <div class="col text-center">
+                                    <span id="closed-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Resolvidos</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <span id="mediation-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Em mediação</div>
+                                </div>
+                                <div class="col text-center">
+                                    <span id="total-tickets" class="text-money">0</span>
+                                    <div class="font-size-14">Total</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-bottom blue"></div>
                     </div>
                 </div>
             </div>
@@ -171,14 +205,14 @@
                 </div>
                 <div class="col-lg-4" id="releases-col" style="display:none">
                     <div class="card card-shadow bg-white">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-15">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white py-10 border-bottom">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/releases.svg') }}"
-                                     width="35px">
+                                     width="30px">
                                 <span class="card-desc">Atualizações da Plataforma</span>
                             </div>
                         </div>
-                        <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div" style="overflow-y: auto; height: 275px;">
+                        <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div" style="overflow-y: auto; height: 280px;">
                         </div>
                         <div class="card-bottom orange"></div>
                     </div>
@@ -214,7 +248,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=3') }}"></script>
     @endpush
 
 @endsection

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserTerms;
 use Spatie\Activitylog\Models\Activity;
@@ -102,6 +103,7 @@ class DashboardApiController extends Controller
                 $companyModel     = new Company();
                 $saleModel        = new Sale();
                 $transactionModel = new Transaction();
+                $ticketsModel     = new Ticket();
                 $companyId        = current(Hashids::decode($companyHash));
                 $company          = $companyModel->find($companyId);
                 $userId           = auth()->user()->account_owner_id;
@@ -167,6 +169,21 @@ class DashboardApiController extends Controller
                                            ->where('s.status', $saleModel->present()->getStatus('approved'))
                                            ->first();
 
+                    //Tickets
+                    $statusArray = [
+                        $ticketsModel->present()->getTicketStatusEnum('open'),
+                        $ticketsModel->present()->getTicketStatusEnum('closed'),
+                        $ticketsModel->present()->getTicketStatusEnum('mediation'),
+                    ];
+
+                    $tickets = $ticketsModel->selectRaw("count(*) as total,
+                                                         sum(case when ticket_status_enum = ? then 1 else 0 end) as open,
+                                                         sum(case when ticket_status_enum = ? then 1 else 0 end) as closed,
+                                                         sum(case when ticket_status_enum = ? then 1 else 0 end) as mediation", $statusArray)
+                        ->join('sales', 'tickets.sale_id', '=', 'sales.id')
+                        ->where('sales.owner_id', $userId)
+                        ->first();
+
                     return [
                         'available_balance'      => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                         'total_balance'          => number_format(intval($totalBalance) / 100, 2, ',', '.'),
@@ -179,6 +196,7 @@ class DashboardApiController extends Controller
                         'news'                   => $news,
                         'releases'               => $releases,
                         'trackings'              => $informedTrackings,
+                        'tickets'                => $tickets,
                     ];
                 } else {
                     return [];

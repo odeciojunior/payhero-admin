@@ -301,7 +301,7 @@ class CheckoutService
 
         $cloudFlareService = new CloudFlareService();
 
-        if (!$cloudFlareService->checkHtmlMetadata('https://checkout.natuprocaps.com/', 'checkout-cloudfox', '1')) {
+        if (!$cloudFlareService->checkHtmlMetadata('https://checkout.cloudfox.net/', 'checkout-cloudfox', '1')) {
 
             // checkout OFF
 
