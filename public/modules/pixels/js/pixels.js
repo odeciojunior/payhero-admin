@@ -394,6 +394,11 @@ $(function () {
                 'Accept': 'application/json',
             },
             processResults: function (res) {
+                let allObject = {
+                    id: 'all',
+                    name: 'Todos',
+                };
+                res.data.unshift(allObject);
                 return {
                     results: $.map(res.data, function (obj) {
                         return {id: obj.id, text: obj.name};
@@ -431,12 +436,32 @@ $(function () {
                 'Accept': 'application/json',
             },
             processResults: function (res) {
+                let allObject = {
+                    id: 'all',
+                    name: 'Todos',
+                };
+                res.data.unshift(allObject);
                 return {
                     results: $.map(res.data, function (obj) {
                         return {id: obj.id, text: obj.name};
                     })
                 };
             },
+        }
+    });
+    $('#add_pixel_plans').on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val(null).trigger("change");
+            selectPlan.val('all').trigger("change");
+        }
+    });
+
+    $('#edit_pixel_plans').on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val(null).trigger("change");
+            selectPlan.val('all').trigger("change");
         }
     });
     function loadPlans() {
