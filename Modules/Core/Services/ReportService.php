@@ -606,6 +606,7 @@ class ReportService
     {
         try {
             $checkoutModel = new Checkout();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(6);
@@ -621,14 +622,25 @@ class ReportService
                     break;
                 }
             }
+            $userId = auth()->user()->account_owner_id;
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
+
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
                 ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date')
-                ->get()->toArray();
+                ->groupBy('date');
+
+            if (!empty($affiliate)) {
+                $orders->where('affiliate_id', $affiliate->id);
+            }
+
+            $orders = $orders->get()->toArray();
 
             $checkoutData = [];
             foreach ($labelList as $label) {
@@ -663,6 +675,7 @@ class ReportService
         try {
 
             $checkoutModel = new Checkout();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate']);
@@ -673,15 +686,26 @@ class ReportService
                 $dataFormated = $dataFormated->addMonths(1);
             }
 
+            $userId = auth()->user()->account_owner_id;
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
+
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
                 ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date')
-                ->get()->toArray();
+                ->groupBy('date');
             // dd($orders);
+
+            if (!empty($affiliate)) {
+                $orders->where('affiliate_id', $affiliate->id);
+            }
+
+            $orders = $orders->get()->toArray();
 
             $checkoutData = [];
             foreach ($labelList as $label) {
@@ -714,6 +738,7 @@ class ReportService
         try {
 
             $checkoutModel = new Checkout();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(2);
@@ -730,14 +755,25 @@ class ReportService
                 }
             }
 
+            $userId = auth()->user()->account_owner_id;
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
+
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
 
             $orders = $checkoutModel
                 ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date')
-                ->get()->toArray();
+                ->groupBy('date');
+
+            if (!empty($affiliate)) {
+                $orders->where('affiliate_id', $affiliate->id);
+            }
+
+            $orders = $orders->get()->toArray();
 
             $checkoutData = [];
             foreach ($labelList as $label) {
@@ -773,6 +809,7 @@ class ReportService
         try {
 
             $checkoutModel = new Checkout();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(1);
@@ -788,14 +825,24 @@ class ReportService
                     break;
                 }
             }
+            $userId = auth()->user()->account_owner_id;
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
                 ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
-                ->groupBy('date')
-                ->get()->toArray();
+                ->groupBy('date');
+
+            if (!empty($affiliate)) {
+                $orders->where('affiliate_id', $affiliate->id);
+            }
+
+            $orders = $orders->get()->toArray();
 
             $checkoutData = [];
             foreach ($labelList as $label) {
@@ -828,6 +875,7 @@ class ReportService
     {
         try {
             $checkoutModel = new Checkout();
+            $affiliateModel = new Affiliate();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($data['startDate']);
@@ -840,12 +888,22 @@ class ReportService
 
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
+            $userId = auth()->user()->account_owner_id;
+            $affiliate = $affiliateModel->where([
+                                                    ['user_id', $userId],
+                                                    ['project_id', $projectId],
+                                                ])->first();
+
             $orders = $checkoutModel
                 ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
-                ->groupBy('date')
-                ->get()->toArray();
+                ->groupBy('date');
+
+            if (!empty($affiliate)) {
+                $orders->where('affiliate_id', $affiliate->id);
+            }
+            $orders = $orders->get()->toArray();
 
             $checkoutData = [];
 
@@ -878,7 +936,8 @@ class ReportService
     {
         date_default_timezone_set('America/Sao_Paulo');
 
-        $checkoutModel = new Checkout();
+        $checkoutModel  = new Checkout();
+        $affiliateModel = new Affiliate();
 
         if (Carbon::parse($data['startDate'])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
 
@@ -895,13 +954,23 @@ class ReportService
                 '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
             ];
         }
+        $userId = auth()->user()->account_owner_id;
+        $affiliate = $affiliateModel->where([
+                                                ['user_id', $userId],
+                                                ['project_id', $projectId],
+                                            ])->first();
 
         $orders = $checkoutModel
             ->select(\DB::raw('count(*) as count, HOUR(created_at) as hour'))
             ->where('project_id', $projectId)
             ->whereDate('created_at', $data['startDate'])
-            ->groupBy('hour')
-            ->get()->toArray();
+            ->groupBy('hour');
+
+        if (!empty($affiliate)) {
+            $orders->where('affiliate_id', $affiliate->id);
+        }
+
+        $orders = $orders->get()->toArray();
 
         $checkoutData = [];
         foreach ($labelList as $label) {

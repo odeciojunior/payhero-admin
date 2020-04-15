@@ -326,6 +326,7 @@ class ReportsApiController extends Controller
             $userProjectModel = new UserProject();
             $planModel        = new Plan();
             $checkoutsModel   = new Checkout();
+            $affiliateModel   = new Affiliate();
 
             $dataSearch = $request->all();
             $projectId  = current(Hashids::decode($request->input('project')));
@@ -333,13 +334,19 @@ class ReportsApiController extends Controller
             $requestStartDate = $request->input('startDate');
             $requestEndDate   = $request->input('endDate');
             if ($projectId) {
+                $userId      = auth()->user()->account_owner_id;
                 $userProject = $userProjectModel->where([
-                                                            ['user_id', auth()->user()->account_owner_id],
+                                                            ['user_id', $userId],
                                                             ['type', 'producer'],
                                                             ['project_id', $projectId],
                                                         ])->first();
 
-                if ($userProject) {
+                $affiliate = $affiliateModel->where([
+                                                        ['user_id', $userId],
+                                                        ['project_id', $projectId],
+                                                    ])->first();
+
+                if ($userProject || $affiliate) {
                     $itens = $checkoutsModel
                         ->select(\DB::raw('count(*) as count'), 'plan_checkout.plan_id')
                         ->leftJoin('checkout_plans as plan_checkout', function($join) {
@@ -358,9 +365,12 @@ class ReportsApiController extends Controller
                             $itens->whereDate('checkouts.start_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                         }
                     }
-
+                    if (!empty($affiliate)) {
+                        $itens->where('affiliate_id', $affiliate->id);
+                    }
                     $itens = $itens->groupBy('plan_checkout.plan_id')->orderBy('count', 'desc')->limit(3)->get()
                                    ->toArray();
+
                     $plans = [];
                     foreach ($itens as $key => $iten) {
                         $plan                      = $planModel->with('products')->find($iten['plan_id']);
@@ -390,6 +400,9 @@ class ReportsApiController extends Controller
                         if (!empty($requestEndDate)) {
                             $checkoutsDetails->whereDate('updated_at', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                         }
+                    }
+                    if (!empty($affiliate)) {
+                        $checkoutsDetails->where('affiliate_id', $affiliate->id);
                     }
                     $details = $checkoutsDetails->get();
 
@@ -454,8 +467,14 @@ class ReportsApiController extends Controller
     {
         try {
             $checkoutModel = new Checkout();
+            $affiliateModel   = new Affiliate();
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
+
+                $affiliate = $affiliateModel->where([
+                                                        ['user_id', auth()->user()->account_owner_id],
+                                                        ['project_id', $request->project_id],
+                                                    ])->first();
 
                 $orders = $checkoutModel
                     ->select(\DB::raw('count(*) as qtd_checkout, ' . $request->origin . ' as origin'))
@@ -465,6 +484,10 @@ class ReportsApiController extends Controller
                     ->whereNotNull($request->origin)
                     ->groupBy($request->origin)
                     ->orderBy('qtd_checkout', 'DESC');
+
+                if (!empty($affiliate)) {
+                    $orders->where('affiliate_id', $affiliate->id);
+                }
 
                 return CheckoutsByOriginResource::collection($orders->paginate(6));
             }
