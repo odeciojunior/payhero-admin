@@ -104,7 +104,7 @@ $(document).ready(function () {
 
     function updateChargeback(value) {
         $('.circle').circleProgress({
-            size: 176,
+            size: 125,
             startAngle: -Math.PI / 2,
             value: value / 100,
             fill: {
@@ -161,7 +161,7 @@ $(document).ready(function () {
 
                 let slide = `<div class="carousel-item ${active}">
                                  <div class="card shadow news-background">
-                                     <div class="card-body p-md-60 d-flex flex-column justify-content-center" style="height: 370px">
+                                     <div class="card-body p-md-60 d-flex flex-column justify-content-center" style="height: 354px">
                                          <h1 class="news-title">${data[i].title}</h1>
                                          <div class="news-content">${data[i].content}</div>
                                      </div>

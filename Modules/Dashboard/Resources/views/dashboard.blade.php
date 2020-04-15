@@ -4,19 +4,19 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=3') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4') }}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
     <div class="page">
         <div class="page-header container">
             <div class="row align-items-center justify-content-between">
-                <div class="col-lg-6">
+                <div class="col-lg-6 mb-15">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
                 <div class="col-lg-6" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
-                        <div class="mr-10 text-lg-right">
+                        <div class="mr-10 mb-5 text-lg-right">
                             Empresa:
                         </div>
                         <div class=" text-lg-right">
@@ -33,7 +33,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="30px">
                                 <span class="card-desc">Hoje</span>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-laranja.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda-laranja.svg') }}" width="30px">
                                 <span class="card-desc">Pendente</span>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda.svg') }}" width="30px">
                                 <span class="card-desc">Disponível</span>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                     <div class="card card-shadow bg-white">
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600">
-                                <img src="{{ asset('modules/global/img/svg/moeda-azul.svg') }}" width="35px">
+                                <img src="{{ asset('modules/global/img/svg/moeda-azul.svg') }}" width="30px">
                                 <span class="card-desc">Total</span>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/shipping.svg') }}"
-                                     width="35px">
+                                     width="30px">
                                 <span class="card-desc">Códigos de rastreio informados</span>
                             </div>
                             <i class="material-icons gray text-danger" id="alert-trackings" data-toggle="tooltip"
@@ -131,7 +131,7 @@
                         <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}"
-                                     width="35px">
+                                     width="30px">
                                 <span class="card-desc">Taxa de Chargebacks</span>
                             </div>
                             <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom" title="Taxa geral de chargeback de sua empresa">help</i>
@@ -171,14 +171,14 @@
                 </div>
                 <div class="col-lg-4" id="releases-col" style="display:none">
                     <div class="card card-shadow bg-white">
-                        <div class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-15">
+                        <div class="card-header d-flex justify-content-start align-items-center bg-white py-10 border-bottom">
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/releases.svg') }}"
-                                     width="35px">
+                                     width="30px">
                                 <span class="card-desc">Atualizações da Plataforma</span>
                             </div>
                         </div>
-                        <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div" style="overflow-y: auto; height: 275px;">
+                        <div class="card-body pt-0 d-flex flex-column justify-content-between mb-15" id="releases-div" style="overflow-y: auto; height: 280px;">
                         </div>
                         <div class="card-bottom orange"></div>
                     </div>

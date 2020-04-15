@@ -19,11 +19,11 @@ body {
 }
 
 .moeda {
-    font-size: 18px;
+    font-size: 14px;
     line-height: 1.06;
     letter-spacing: normal;
     color: black;
-    margin-right: 15px;
+    margin-right: 5px;
 }
 
 .indices {
@@ -44,7 +44,7 @@ body {
 
 .text-money {
     font-family: Muli;
-    font-size: 32px;
+    font-size: 35px;
     color: black;
     font-weight: 700;
     font-style: normal;
@@ -166,8 +166,6 @@ body {
 .circle {
     display: inline-block;
     position: relative;
-    width: 176px;
-    height: 176px;
 }
 
 .circle strong {
@@ -178,7 +176,7 @@ body {
 
 .circle strong.loaded {
     position: absolute;
-    top: 62px;
+    top: 38px;
     left: 0;
 }
 
@@ -230,4 +228,10 @@ body {
 .not-hover,
 .not-hover:hover{
     color: inherit;
+}
+
+@media (max-width: 768px) {
+    .text-money {
+        font-size: 20px;
+    }
 }
