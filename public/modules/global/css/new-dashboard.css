@@ -211,6 +211,7 @@ body {
 
 .progress {
     background-color: #e5e5e5;
+    margin-bottom: .45em;
 }
 
 .progress-bar {

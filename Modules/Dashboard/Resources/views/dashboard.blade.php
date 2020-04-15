@@ -109,7 +109,7 @@
                                title="Não informar os códigos de rastreio corretamente pode ocasionar bloqueio de saque"
                                style="transition: all .5s; display:none">warning</i>
                         </div>
-                        <div class="card-body pb-2">
+                        <div class="card-body py-15">
                             <label>Últimos 10 dias:</label>
                             <div class="progress">
                                 <div class="progress-bar" id="tracking-10-days"></div>

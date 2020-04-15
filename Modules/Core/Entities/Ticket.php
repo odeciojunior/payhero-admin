@@ -26,6 +26,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Customer $customer
  * @property Collection $attachments
  * @property Collection $messages
+ * @method TicketPresenter present()
  */
 class Ticket extends Model
 {

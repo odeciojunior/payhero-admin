@@ -104,7 +104,7 @@ $(document).ready(function () {
 
     function updateChargeback(value) {
         $('.circle').circleProgress({
-            size: 125,
+            size: 132,
             startAngle: -Math.PI / 2,
             value: value / 100,
             fill: {
