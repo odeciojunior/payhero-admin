@@ -9,10 +9,12 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Affiliate;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
+use Modules\Pixels\Transformers\PixelEditResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Pixels\Transformers\PixelsResource;
@@ -95,6 +97,8 @@ class PixelsApiController extends Controller
             if (!empty($validator['affiliate_id'])) {
                 $affiliateId               = current(Hashids::decode($validator['affiliate_id']));
                 $validator['affiliate_id'] = $affiliateId;
+            } else {
+                $validator['affiliate_id'] = null;
             }
 
             $project = $projectModel->find($validator['project_id']);
@@ -106,7 +110,30 @@ class PixelsApiController extends Controller
                     $validator['code'] = str_replace($order, '', $validator['code']);
                 }
 
-                $pixel = $pixelModel->create($validator);
+                $applyPlanArray = [];
+                if (in_array('all', $validator['add_pixel_plans'])) {
+                    $applyPlanArray[] = 'all';
+                } else {
+                    foreach ($validator['add_pixel_plans'] as $key => $value) {
+                        $applyPlanArray[] = current(Hashids::decode($value));
+                    }
+                }
+
+                $applyPlanEncoded = json_encode($applyPlanArray);
+
+                $pixel = $pixelModel->create([
+                                                 'project_id'      => $validator['project_id'],
+                                                 'name'            => $validator['name'],
+                                                 'code'            => $validator['code'],
+                                                 'platform'        => $validator['platform'],
+                                                 'status'          => $validator['status'],
+                                                 'checkout'        => $validator['checkout'],
+                                                 'purchase_boleto' => $validator['purchase_boleto'],
+                                                 'purchase_card'   => $validator['purchase_card'],
+                                                 'affiliate_id'    => $validator['affiliate_id'],
+                                                 'campaign_id'     => $validator['campaign'] ?? null,
+                                                 'apply_on_plans'  => $applyPlanEncoded,
+                                             ]);
 
                 if ($pixel) {
                     return response()->json('Pixel Configurado com sucesso!', 200);
@@ -229,7 +256,8 @@ class PixelsApiController extends Controller
 
                 if (Gate::allows('edit', [$project, $affiliateId])) {
 
-                    if ($pixel) {
+                    if (!empty($pixel)) {
+
                         $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
 
                         return response()->json($pixel);
@@ -253,7 +281,7 @@ class PixelsApiController extends Controller
     /**
      * @param $projectId
      * @param $id
-     * @return JsonResponse
+     * @return JsonResponse|PixelEditResource
      */
     public function edit($projectId, $id)
     {
@@ -274,9 +302,34 @@ class PixelsApiController extends Controller
                 if (Gate::allows('edit', [$project, $affiliateId])) {
 
                     if ($pixel) {
+                        $applyPlanArray = [];
+                        $planModel      = new Plan();
+
+                        if (!empty($pixel->apply_on_plans)) {
+                            $applyPlanDecoded = json_decode($pixel->apply_on_plans);
+                            if (in_array('all', $applyPlanDecoded)) {
+                                $applyPlanArray[] = [
+                                    'id'   => 'all',
+                                    'name' => 'Todos os Planos',
+                                ];
+                            } else {
+                                foreach ($applyPlanDecoded as $key => $value) {
+                                    $plan = $planModel->find($value);
+                                    if (!empty($plan)) {
+                                        $applyPlanArray[] = [
+                                            'id'   => Hashids::encode($plan->id),
+                                            'name' => $plan->name,
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+
+                        $pixel->apply_on_plans = $applyPlanArray;
+
                         $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
 
-                        return response()->json($pixel);
+                        return new PixelEditResource($pixel);
                     } else {
                         return response()->json('Erro ao buscar pixel', 400);
                     }

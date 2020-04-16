@@ -31,7 +31,7 @@
                 </div>
                 <div class='form-group col-12'>
                     <label for="edit_pixel_plans">Plano</label>
-                    <select name="edit_pixel_plans[]" id="edit_pixel_plans" class="form-control" style='width:100%' data-plugin="select2" multiple='multiple'> </select>
+                    <select name="edit_pixel_plans[]" id="edit_pixel_plans" class="js-states form-control" style='width:100%' data-plugin="select2" multiple='multiple'> </select>
                 </div>
             </div>
             <div class='mb-1'>

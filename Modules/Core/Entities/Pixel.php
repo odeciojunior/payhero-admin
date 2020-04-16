@@ -50,6 +50,7 @@ class Pixel extends Model
         'purchase_boleto',
         'purchase_card',
         'affiliate_id',
+        'apply_on_plans',
         'created_at',
         'updated_at',
         'deleted_at',

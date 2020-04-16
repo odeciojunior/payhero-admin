@@ -93,7 +93,41 @@ $(function () {
                 errorAjaxResponse(response);
 
             }, success: function success(response) {
-                renderEditPixel(response);
+                let pixel = response.data;
+                renderEditPixel(pixel);
+
+                let selectApplyIdsArray = [];
+                let equalApplyArray = [];
+                let differentApplyArray = [];
+                $("#edit_pixel_plans").find('option').each(function () {
+                    selectApplyIdsArray.push($(this).val());
+                    for (let plan of pixel.apply_on_plans) {
+                        if (plan.id == $(this).val()) {
+                            equalApplyArray.push(plan.id);
+                            $("#edit_pixel_plans").val(equalApplyArray);
+                            $("#edit_pixel_plans").trigger('change');
+                        } else {
+                            differentApplyArray[plan.id] = plan.name;
+                        }
+
+                    }
+                });
+
+                if (equalApplyArray.length != pixel.apply_on_plans.length) {
+                    let idPlanArray = [];
+                    for (let key in differentApplyArray) {
+                        if (!selectApplyIdsArray.includes(key)) {
+                            $("#edit_pixel_plans").append(`<option value="${key}">${differentApplyArray[key]}</option>`);
+                        }
+                        idPlanArray.push(key);
+                    }
+                    $("#edit_pixel_plans").val(idPlanArray);
+                }
+
+                if ($("#edit_apply_on_plans").val().includes('all')) {
+
+                }
+
                 $('.check').on('click', function () {
                     if ($(this).is(':checked')) {
                         $(this).val(1);
@@ -102,6 +136,7 @@ $(function () {
                     }
                 });
 
+                // troca o placeholder dos inputs
                 $("#select-platform").change(function () {
                     let value = $(this).val();
 
@@ -118,7 +153,6 @@ $(function () {
                         $("#code-pixel-edit").html('').hide();
                         $("#code-pixel").attr("placeholder", 'Código');
                     }
-
                 });
             }
         });
@@ -365,6 +399,7 @@ $(function () {
         $('.pixel-description').val('');
         $('.pixel-code').val('');
     }
+
     $('#add_pixel_plans').select2({
         placeholder: 'Nome do plano',
         multiple: true,
@@ -383,17 +418,23 @@ $(function () {
                     list: 'plan',
                     search: params.term,
                     project_id: projectId,
+                    page: params.page || 1
                 };
             },
             method: "GET",
             url: "/api/plans/user-plans",
-            delay: 300,
+            delay: 400,
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
             processResults: function (res) {
+                let allObject = {
+                    id: 'all',
+                    name: 'Todos os Planos'
+                };
+                res.data.unshift(allObject);
                 return {
                     results: $.map(res.data, function (obj) {
                         return {id: obj.id, text: obj.name};
@@ -431,6 +472,11 @@ $(function () {
                 'Accept': 'application/json',
             },
             processResults: function (res) {
+                let allObject = {
+                    id: 'all',
+                    name: 'Todos os Planos'
+                };
+                res.data.unshift(allObject);
                 return {
                     results: $.map(res.data, function (obj) {
                         return {id: obj.id, text: obj.name};
@@ -439,6 +485,23 @@ $(function () {
             },
         }
     });
+
+    $("#add_pixel_plans").on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val(null).trigger("change");
+            selectPlan.val('all').trigger("change");
+        }
+    });
+
+    $('#edit_pixel_plans').on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val(null).trigger("change");
+            selectPlan.val('all').trigger("change");
+        }
+    });
+
     function loadPlans() {
         $('#add_pixel_plans').html('');
         $('#edit_pixel_plans').html('');
@@ -460,4 +523,5 @@ $(function () {
             }
         });
     }
+
 });
