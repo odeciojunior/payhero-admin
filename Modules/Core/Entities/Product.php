@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProductPresenter;
 use App\Traits\LogsActivity;
@@ -36,8 +37,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $shopify_variant_id
  * @property Category $category
  * @property User $user
- * @property ProductPlanSale[] $productPlanSales
- * @property ProductPlan[] $productPlans
+ * @property Collection $productPlanSales
+ * @property Collection $productPlans
+ * @property Collection $variants
  */
 class Product extends Model
 {
@@ -163,5 +165,13 @@ class Product extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function variants()
+    {
+        return $this->hasMany(Product::class, 'shopify_id', 'shopify_id');
     }
 }

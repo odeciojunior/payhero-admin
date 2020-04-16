@@ -426,6 +426,8 @@ $(document).ready(function () {
                 if (upsellConfig.has_upsell) {
                     $('.btn-view-config').show();
                 }
+
+                $('#modal_config_upsell').modal('show');
             }
         });
     });
@@ -470,7 +472,6 @@ $(document).ready(function () {
     $(document).on('click', '.btn-view-config', function (event) {
         event.preventDefault();
         $('#modal_config_upsell').modal('hide');
-        $('#modal-view-upsell-config').modal('show');
         loadingOnScreen();
         $.ajax({
             method: "POST",
@@ -490,67 +491,94 @@ $(document).ready(function () {
             }, success: function success(response) {
                 loadingOnScreenRemove();
                 let upsell = response.data;
-                $('.upsell-config-header').html('');
-                $('.upsell-config-discription').html('');
-                $('.div-upsell-products').html('');
-                $('.upsell-config-timer').html('');
-                $('.upsell-config-header').html(`${upsell.header}`);
-                $('.upsell-config-discription').html(`<h1 class='text-white'>${upsell.title}</h1><p>${upsell.description}</p>`);
+
+                $('#div-upsell-products').html('');
+
+                $('#upsell-header').html(upsell.header);
+                $('#upsell-title').html(upsell.title);
+                $('#upsell-description').html(upsell.description);
+
                 if (upsell.countdown_flag) {
-                    $('.upsell-config-timer').html(`
-                        <div class="timer">
-                          <span class="timer-title">Por apenas um Tempo Limitado:</span>
-                          <div class="d-flex justify-content-center">
-                                <div class="d-flex flex-column">
-                                    <span class="digit" id="minutes">--</span>
-                                    <span class="timer-text">Minutos</span>
-                                </div>
-                                <span class="digit separator">:</span>
-                                <div class="d-flex flex-column">
-                                    <span class="digit" id="seconds">--</span>
-                                    <span class="timer-text">Segundos</span>
-                                </div>
-                          </div>
-                        </div>`
-                    );
-                    countdown(upsell.countdown_time);
+                    $('#timer').show();
+                    clearInterval(countdownInterval);
+                    startCountdown(upsell.countdown_time);
+                }else{
+                    $('#timer').hide();
                 }
-                for (let key in upsell.products) {
-                    let data = `
-                        <div class="product-info">
-                            <div class="d-flex flex-column">
-                                <div class="product-row">
-                                      <img src="${upsell.products[key].photo}" class="product-img">
-                                      <h3>${upsell.products[key].amount}x ${upsell.products[key].name}</h3>
-                                </div>
-                            </div>
-                        <h4 class="mb-md-4">Total R$ ${upsell.products[key].price}</h4>
-                        <div class="d-flex flex-column mt-4 mt-md-0">
-                            <button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
-                        </div>
-                       </div>
-                       ${key != upsell.products.length - 1 ? `<hr class="plan-separator">` : ''}
-                    `;
-                    $('.div-upsell-products').append(data);
+
+                let data = "";
+
+                for (let key in upsell.plans) {
+
+                    let plan = upsell.plans[key];
+                    data += `<div class="product-info">
+                                <div class="d-flex flex-column">`;
+                    for (let product of plan.products) {
+                        let firstVariant = Object.keys(product)[0];
+                        data += `<div class="product-row">
+                                    <img src="${product[firstVariant].photo}" class="product-img">
+                                    <div class="ml-4">
+                                        <h3>${product[firstVariant].amount}x ${product[firstVariant].name}</h3>`;
+                        if (Object.keys(product).length > 1) {
+                            data += `<select class="product-variant">`;
+                            for (let i in product) {
+                                data += `<option value="${i}">${product[i].description}</option>`;
+                            }
+                            data += `</select>`;
+                        } else {
+                            data += `<span class="text-muted">${product[firstVariant].description}</span>`;
+                        }
+                        data += `</div>
+                             </div>`;
+                    }
+                    data += `</div>
+                                <div class="d-flex flex-column mt-4 mt-md-0">`;
+                                    if(plan.discount) {
+                                        data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
+                                                 <div class="d-flex mb-2">
+                                                     <span class="price font-30 mr-1" style="line-height: .8">R$ ${plan.price}</span>
+                                                     <span class="discount text-success font-weight-bold">${plan.discount}% OFF</span>
+                                                 </div>`;
+                                    }
+
+                    if (!isEmpty(plan.installments)) {
+                        data += `<div class="form-group">
+                                    <select class="installments">`;
+                        for (let installment of plan.installments) {
+                            data += `<option value="${installment['amount']}">${installment['amount']}X DE R$ ${installment['value']}</option>`;
+                        }
+                        data += `</select>
+                             </div>`;
+                    } else {
+                        data += `<h2 class="text-primary mb-md-4"><b>R$ ${plan.price}</b></h2>`;
+                    }
+                    data += `<button class="btn btn-success btn-lg btn-buy">COMPRAR AGORA</button>
+                         </div>
+                    </div>`;
+
+                    if (parseInt(key) !== (upsell.plans.length - 1)) {
+                        data += `<hr class="plan-separator">`;
+                    }
                 }
+
+                $('#div-upsell-products').append(data);
+
+                $('#modal-view-upsell-config').modal('show');
             }
         });
 
     });
-    function countdown(countdownTime) {
-        let countdown = localStorage.getItem('countdown');
 
-        if (countdown === null) {
-            countdown = new Date().getTime() + countdownTime * 60000; // 10 minutes
-            localStorage.setItem('countdown', countdown);
-        }
-        function setIntervalAndExecute(fn, t) {
-            fn();
-            return (setInterval(fn, t));
-        }
+    function setIntervalAndExecute(fn, t) {
+        fn();
+        return (setInterval(fn, t));
+    }
+
+    function startCountdown(countdownTime) {
+
+        let countdown = new Date().getTime() + countdownTime * 60000;
 
         setIntervalAndExecute(() => {
-
             let now = new Date().getTime();
             let distance = countdown - now;
 
@@ -560,11 +588,11 @@ $(document).ready(function () {
                 $('#minutes').text(minutes.toString().padStart(2, '0'));
                 $('#seconds').text(seconds.toString().padStart(2, '0'));
             } else {
-                localStorage.removeItem('countdown');
+                countdown = new Date().getTime() + countdownTime * 60000;
             }
-
         }, 1000);
     }
+
     function loadPlans() {
         $('#add_apply_on_plans').html('');
         $('#add_offer_on_plans').html('');

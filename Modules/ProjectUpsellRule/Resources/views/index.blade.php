@@ -2,7 +2,7 @@
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
             <div class='div-config' style='display:none;'>
-                <div id="config-upsell" class="btn-holder  d-flex align-items-center pointer mr-20" data-toggle="modal" data-target="#modal_config_upsell" >
+                <div id="config-upsell" class="btn-holder  d-flex align-items-center pointer mr-20">
                     <span class="link-button-dependent red"> Configurações Upsell </span>
                     <a class="ml-10 rounded-add pointer bg-primary">
                         <i class="icon wb-settings" aria-hidden="true"></i></a>
@@ -130,16 +130,17 @@
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y:auto;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+            <div class="modal-header mb-0">
                 <h4 class="modal-title" id="modal-title">Upsell no checkout</h4>
             </div>
             <div class="pt-10 pr-20 pl-20 modal_upsell_body">
                 @include('projectupsellconfig::previewupsellconfig')
             </div>
-            <div class="modal-footer" style="margin-top: 15px">
+            <div class="modal-footer text-right mt-0">
+                <button class='btn btn-primary btn-sm btn-return-to-config' >
+                    <i class="icon wb-settings" aria-hidden="true"></i>
+                    Voltar para configurações
+                </button>
             </div>
         </div>
     </div>
