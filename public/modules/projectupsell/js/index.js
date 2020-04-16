@@ -382,7 +382,7 @@ $(document).ready(function () {
     CKEDITOR.replace('description_config', {
         language: 'br',
         uiColor: '#F1F4F5',
-        height: 250,
+        height: 70,
         toolbarGroups: [
             {name: 'basicstyles', groups: ['basicstyles']},
             {name: 'paragraph', groups: ['list', 'blocks']},
@@ -392,14 +392,6 @@ $(document).ready(function () {
         removeButtons: 'Anchor,Superscript,Subscript',
     });
 
-    $('#countdown_flag').on('change', function () {
-        let switchFlag = $(this);
-        if (switchFlag.is(':checked')) {
-            $('.div-countdown-time').slideDown('fast');
-        } else {
-            $('.div-countdown-time').slideUp('fast');
-        }
-    });
     $(document).on('click', '#config-upsell', function (event) {
         event.preventDefault();
         loadingOnScreen();

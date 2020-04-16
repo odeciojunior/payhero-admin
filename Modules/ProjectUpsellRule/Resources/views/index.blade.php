@@ -65,7 +65,7 @@
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config_upsell" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y: scroll;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="conteudo_modal_add">
-            <div class="modal-header">
+            <div class="modal-header mb-0">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -74,9 +74,9 @@
             <div class="pt-10 pr-20 pl-20 modal_upsell_body">
                 @include('projectupsellrule::config')
             </div>
-            <div class="modal-footer" style="margin-top: 15px">
-                <button type="button" class="btn btn-success bt-upsell-config-update">Atualizar</button>
+            <div class="modal-footer pt-0">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success bt-upsell-config-update">Atualizar</button>
             </div>
         </div>
     </div>
