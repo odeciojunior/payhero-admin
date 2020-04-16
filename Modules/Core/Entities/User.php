@@ -40,24 +40,19 @@ use Laravel\Passport\HasApiTokens;
  * @property string $date_birth
  * @property boolean $address_document_status
  * @property boolean $personal_document_status
- * @property string $score
- * @property int $sms_zenvia_amount
  * @property string $percentage_rate
  * @property string $transaction_rate
- * @property string $foxcoin
- * @property string $email_amount
- * @property string $call_amount
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
  * @property int $boleto_antecipation_money_days
  * @property int $credit_card_antecipation_money_days
- * @property int $release_money_days
  * @property int $percentage_antecipable
  * @property int $antecipation_tax
  * @property int $invites_amount
  * @property float $abroad_transfer_tax
  * @property string $installment_tax
+ * @property boolean $antecipation_enabled_flag
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
@@ -107,16 +102,10 @@ class User extends Authenticable
         'date_birth',
         'address_document_status',
         'personal_document_status',
-        'score',
-        'sms_zenvia_amount',
         'percentage_rate',
         'transaction_rate',
-        'foxcoin',
-        'email_amount',
-        'call_amount',
         'boleto_antecipation_money_days',
         'credit_card_antecipation_money_days',
-        'release_money_days',
         'percentage_antecipable',
         'antecipation_tax',
         'invites_amount',
@@ -130,6 +119,7 @@ class User extends Authenticable
         'last_login',
         'account_owner_id',
         'abroad_transfer_tax',
+        'antecipation_enabled_flag',
         'created_at',
         'updated_at',
         'deleted_at',

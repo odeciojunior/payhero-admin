@@ -61,16 +61,10 @@ class CollaboratorsApiController extends Controller
             $data['percentage_rate'] = '5.9';
             $data['transaction_rate'] = '1.00';
             $data['balance'] = '0';
-            $data['foxcoin'] = '0';
             $data['credit_card_antecipation_money_days'] = '30';
-            $data['release_money_days'] = '30';
             $data['boleto_antecipation_money_days'] = '2';
             $data['antecipation_tax'] = '0';
             $data['percentage_antecipable'] = '100';
-            $data['email_amount'] = '0';
-            $data['call_amount'] = '0';
-            $data['score'] = '0';
-            $data['sms_zenvia_amount'] = '0';
             $data['invites_amount'] = 1;
             $data['address_document_status'] = 3;
             $data['personal_document_status'] = 3;
