@@ -432,7 +432,7 @@ class PlansApiController extends Controller
                                                 ->limit(10)->pluck('shopify_id');
                         $planResult = [];
                         foreach ($plans as $plan) {
-                            $plan         = $planModel->where('shopify_id', $plan)->first();
+                            $plan         = $planModel->where('shopify_id', $plan)->where('project_id', $projectId)->first();
                             $planResult[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
                         }
 
