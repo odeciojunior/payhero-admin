@@ -500,7 +500,6 @@ $(document).ready(function () {
 
                 if (upsell.countdown_flag) {
                     $('#timer').show();
-                    clearInterval(countdownInterval);
                     startCountdown(upsell.countdown_time);
                 }else{
                     $('#timer').hide();
