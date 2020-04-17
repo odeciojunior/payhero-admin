@@ -130,13 +130,13 @@
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y:auto;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="">
-            <div class="modal-header mb-0">
+            <div class="modal-header border-bottom">
                 <h4 class="modal-title" id="modal-title">Upsell no checkout</h4>
             </div>
-            <div class="pt-10 pr-20 pl-20 modal_upsell_body">
+            <div class="pt-0 px-0 modal_upsell_body">
                 @include('projectupsellconfig::previewupsellconfig')
             </div>
-            <div class="modal-footer text-right mt-0">
+            <div class="modal-footer text-right pt-20 border-top">
                 <button class='btn btn-primary btn-sm btn-return-to-config' >
                     <i class="icon wb-settings" aria-hidden="true"></i>
                     Voltar para configurações
