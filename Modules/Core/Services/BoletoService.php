@@ -489,7 +489,7 @@ class BoletoService
                                              ['status', '=', '2'],
                                              [
                                                  DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', Carbon::now()
-                                                                                                                   ->subDay('1')
+                                                                                                                   ->subDay('2')
                                                                                                                    ->toDateString(),
                                              ],
                                          ]);

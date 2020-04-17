@@ -20,22 +20,6 @@ class PreviewUpsellResource extends Resource
      */
     public function toArray($request)
     {
-        $productPlanModel = new ProductPlan();
-        $offerPlanDecoded = json_decode($this->offer_on_plans);
-        $productArray     = [];
-
-        $upsellPlans = $productPlanModel->with(['product', 'plan'])
-                                        ->whereIn('plan_id', $offerPlanDecoded)
-                                        ->get();
-        foreach ($upsellPlans as $upsellPlan) {
-            $productArray[] = [
-                'name'        => $upsellPlan->product->name,
-                'description' => $upsellPlan->product->description,
-                'amount'      => $upsellPlan->amount,
-                'photo'       => $upsellPlan->product->photo,
-                'price'       => $upsellPlan->plan->price,
-            ];
-        }
 
         return [
             'id'             => Hashids::encode($this->id),
@@ -44,7 +28,7 @@ class PreviewUpsellResource extends Resource
             'description'    => $this->description,
             'countdown_time' => $this->countdown_time ?? '',
             'countdown_flag' => $this->countdown_flag,
-            'products'       => $productArray,
+            'plans'          => $this->plans,
         ];
     }
 }

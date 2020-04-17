@@ -164,7 +164,7 @@
                 </a>
             </li>
         @endif
-        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('attendance'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <i class="material-icons">chat_bubble_outline</i>

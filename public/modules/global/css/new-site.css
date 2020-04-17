@@ -651,7 +651,7 @@ font-size: 10px;
 }
 
 .mm-panels.is-enabled {
-    max-height: calc( 100% - 130px);
+    max-height: calc( 100% - 76px);
     overflow-y: visible;
 }
 
