@@ -19,10 +19,11 @@ class CompaniesSelectResource extends Resource
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
 
         return [
-            'id'                      => Hashids::encode($this->id),
-            'country'                 => $this->country,
-            'name'                    => $this->company_type == 1 ? 'Pessoa física' : $this->fantasy_name,
-            'company_document_status' => ($companyDocumentValidated) ? 'approved' : 'pending',
+            'id'                        => Hashids::encode($this->id),
+            'country'                   => $this->country,
+            'name'                      => $this->company_type == 1 ? 'Pessoa física' : $this->fantasy_name,
+            'company_document_status'   => ($companyDocumentValidated) ? 'approved' : 'pending',
+            'antecipation_enabled_flag' => $this->user->antecipation_enabled_flag,
         ];
     }
 }

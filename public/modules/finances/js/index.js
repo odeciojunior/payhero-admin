@@ -77,6 +77,12 @@ $(document).ready(function () {
                         $("#extract_company_select").append(data);
                     });
 
+                    if (response.data[0].antecipation_enabled_flag) {
+                        $('.div-antecipable-balance').show();
+                    } else {
+                        $('.div-antecipable-balance').hide();
+                    }
+
                     checkAllowed();
                     updateBalances();
                     updateTransfersTable();
@@ -151,11 +157,15 @@ $(document).ready(function () {
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
+
+                //Saldo antecipavel
+                $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">0,00</span>');
+
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
                 $(".currency").html('R$ ');
                 $(".available-balance").html(isEmpty(response.available_balance));
-                $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
+                // $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
                 $(".total-balance").html(isEmpty(response.total_balance));
@@ -178,7 +188,8 @@ $(document).ready(function () {
                 loadOnAny('.price', true);
             }
         });
-
+        $(document).on('click', '.div-antecipable-balance', function () {
+        });
         function isEmpty(value) {
             if (value.length === 0) {
                 return 0;
@@ -512,7 +523,7 @@ $(document).ready(function () {
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
-                            data +=    '<td style="vertical-align: middle; color:green;">' + value.value + ' </td>';
+                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' </td>';
                         } else {
                             data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
                         }
@@ -600,7 +611,6 @@ $(document).ready(function () {
         }
     }
 
-
     function extractExport(fileFormat) {
 
         let data = getFilters();
@@ -639,6 +649,5 @@ $(document).ready(function () {
     $("#nav-home-tab").on("click", function () {
         $('#export-excel').hide();
     });
-
 
 });
