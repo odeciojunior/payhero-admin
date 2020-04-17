@@ -1,5 +1,6 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
+    let countdownInterval = null;
     loadUpsell();
     loadPlans();
     $('#tab_upsell').on('click', function () {
@@ -577,7 +578,11 @@ $(document).ready(function () {
 
         let countdown = new Date().getTime() + countdownTime * 60000;
 
-        setIntervalAndExecute(() => {
+        if(countdownInterval !== null){
+            clearInterval(countdownInterval);
+        }
+
+        countdownInterval = setIntervalAndExecute(() => {
             let now = new Date().getTime();
             let distance = countdown - now;
 
