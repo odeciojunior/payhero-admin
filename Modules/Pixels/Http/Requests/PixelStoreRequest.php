@@ -22,7 +22,7 @@ class PixelStoreRequest extends FormRequest
             'purchase_boleto' => 'nullable',
             'purchase_card'   => 'nullable',
             'affiliate_id'    => 'nullable',
-            'add_pixel_plans'  => 'required|array',
+            'add_pixel_plans' => 'required|array',
         ];
     }
 
@@ -32,11 +32,11 @@ class PixelStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'           => 'O campo Descrição é obrigatório',
-            'name.max'                => 'O campo Descrição permite apenas 100 caracteres',
-            'code.required'           => 'O campo Código é obrigatório',
-            'platform.required'       => 'O campo Plataforma é obrigatório',
-            'apply_on_plans.required' => 'É obrigatório selecionar um ou mais planos',
+            'name.required'            => 'O campo Descrição é obrigatório',
+            'name.max'                 => 'O campo Descrição permite apenas 100 caracteres',
+            'code.required'            => 'O campo Código é obrigatório',
+            'platform.required'        => 'O campo Plataforma é obrigatório',
+            'add_pixel_plans.required' => 'É obrigatório selecionar um ou mais planos',
         ];
     }
 
