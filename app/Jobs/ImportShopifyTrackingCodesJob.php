@@ -104,10 +104,8 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                                     activity()->disableLogging();
                                                     $tracking = $trackingService->createTracking($fulfillment->getTrackingNumber(), $productPlanSale);
                                                     activity()->enableLogging();
-                                                    if(isset($tracking)) {
-                                                        $product->tracking_code = $fulfillment->getTrackingNumber();
-                                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                                    }
+                                                    $product->tracking_code = $fulfillment->getTrackingNumber();
+                                                    event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                                                 }
                                             }
                                         }

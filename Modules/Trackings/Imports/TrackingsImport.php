@@ -87,10 +87,8 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                                 $apiTracking = $trackingService->sendTrackingToApi($tracking);
                                 if (!empty($apiTracking)) {
                                     $tracking = $trackingService->createTracking($row[1], $productPlanSale);
-                                    if(isset($tracking)) {
-                                        $saleProducts = $productService->getProductsBySale($sale);
-                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                    }
+                                    $saleProducts = $productService->getProductsBySale($sale);
+                                    event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                                 }
                             }
                         }
