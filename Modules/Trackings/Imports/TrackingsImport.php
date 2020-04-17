@@ -77,6 +77,8 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                                         $tracking->update([
                                             'tracking_code' => $row[1],
                                         ]);
+                                        $saleProducts = $productService->getProductsBySale($sale);
+                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                                     }
                                 }
                             } else {
@@ -85,8 +87,10 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                                 $apiTracking = $trackingService->sendTrackingToApi($tracking);
                                 if (!empty($apiTracking)) {
                                     $tracking = $trackingService->createTracking($row[1], $productPlanSale);
-                                    $saleProducts = $productService->getProductsBySale($sale);
-                                    event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                                    if(isset($tracking)) {
+                                        $saleProducts = $productService->getProductsBySale($sale);
+                                        event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                                    }
                                 }
                             }
                         }
