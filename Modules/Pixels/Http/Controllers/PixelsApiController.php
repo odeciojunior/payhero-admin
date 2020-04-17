@@ -175,7 +175,27 @@ class PixelsApiController extends Controller
                         $validated['code'] = str_replace($order, '', $validated['code']);
                     }
 
-                    $pixelUpdated = $pixel->update($validated);
+                    $applyPlanArray = [];
+                    if (in_array('all', $validated['edit_pixel_plans'])) {
+                        $applyPlanArray[] = 'all';
+                    } else {
+                        foreach ($validated['edit_pixel_plans'] as $key => $value) {
+                            $applyPlanArray[] = current(Hashids::decode($value));
+                        }
+                    }
+
+                    $applyPlanEncoded = json_encode($applyPlanArray);
+
+                    $pixelUpdated = $pixel->update([
+                                                       'name'            => $validated['name'],
+                                                       'platform'        => $validated['platform'],
+                                                       'status'          => $validated['status'],
+                                                       'code'            => $validated['code'],
+                                                       'apply_on_plans'  => $applyPlanEncoded,
+                                                       'checkout'        => $validated['checkout'],
+                                                       'purchase_boleto' => $validated['purchase_boleto'],
+                                                       'purchase_card'   => $validated['purchase_card'],
+                                                   ]);
                     if ($pixelUpdated) {
                         return response()->json('Sucesso', 200);
                     } else {

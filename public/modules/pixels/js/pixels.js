@@ -81,6 +81,8 @@ $(function () {
     // carregar modal de edicao
     $(document).on('click', '.edit-pixel', function () {
         let pixel = $(this).attr('pixel');
+        $("#edit_pixel_plans").val(null).trigger('change');
+
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/pixels/" + pixel + "/edit",
@@ -95,38 +97,6 @@ $(function () {
             }, success: function success(response) {
                 let pixel = response.data;
                 renderEditPixel(pixel);
-
-                let selectApplyIdsArray = [];
-                let equalApplyArray = [];
-                let differentApplyArray = [];
-                $("#edit_pixel_plans").find('option').each(function () {
-                    selectApplyIdsArray.push($(this).val());
-                    for (let plan of pixel.apply_on_plans) {
-                        if (plan.id == $(this).val()) {
-                            equalApplyArray.push(plan.id);
-                            $("#edit_pixel_plans").val(equalApplyArray);
-                            $("#edit_pixel_plans").trigger('change');
-                        } else {
-                            differentApplyArray[plan.id] = plan.name;
-                        }
-
-                    }
-                });
-
-                if (equalApplyArray.length != pixel.apply_on_plans.length) {
-                    let idPlanArray = [];
-                    for (let key in differentApplyArray) {
-                        if (!selectApplyIdsArray.includes(key)) {
-                            $("#edit_pixel_plans").append(`<option value="${key}">${differentApplyArray[key]}</option>`);
-                        }
-                        idPlanArray.push(key);
-                    }
-                    $("#edit_pixel_plans").val(idPlanArray);
-                }
-
-                if ($("#edit_apply_on_plans").val().includes('all')) {
-
-                }
 
                 $('.check').on('click', function () {
                     if ($(this).is(':checked')) {
@@ -199,6 +169,39 @@ $(function () {
         } else {
             $('#modal-edit-pixel .pixel-purchase-boleto').val(0).prop('checked', false);
         }
+
+        let selectApplyIdsArray = [];
+        let equalApplyArray = [];
+        let differentApplyArray = [];
+        $("#modal-edit-pixel .apply_plans").find('option').each(function () {
+            selectApplyIdsArray.push($(this).val());
+            for (let plan of pixel.apply_on_plans) {
+                if (plan.id == $(this).val()) {
+                    equalApplyArray.push(plan.id);
+                    $("#modal-edit-pixel .apply_plans").val(equalApplyArray);
+                    $("#modal-edit-pixel .apply_plans").trigger('change');
+                } else {
+                    differentApplyArray[plan.id] = plan.name;
+                }
+
+            }
+        });
+
+        if (equalApplyArray.length != pixel.apply_on_plans.length) {
+            let idPlanArray = [];
+            for (let key in differentApplyArray) {
+                if (!selectApplyIdsArray.includes(key)) {
+                    $("#modal-edit-pixel .apply_plans").append(`<option value="${key}">${differentApplyArray[key]}</option>`);
+                }
+                idPlanArray.push(key);
+            }
+            $("#modal-edit-pixel .apply_plans").val(idPlanArray);
+        }
+
+        if ($("#modal-edit-pixel .apply_plans").val().includes('all')) {
+
+        }
+
         $('#modal-edit-pixel').modal('show');
     }
 
@@ -274,7 +277,8 @@ $(function () {
                 status: $("#modal-edit-pixel .pixel-status").val(),
                 checkout: $("#modal-edit-pixel .pixel-checkout").val(),
                 purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
-                purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val()
+                purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val(),
+                edit_pixel_plans: $("#modal-edit-pixel .apply_plans").val()
             },
             error: function (response) {
                 loadingOnScreenRemove();
