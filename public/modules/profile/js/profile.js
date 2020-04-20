@@ -574,9 +574,11 @@ $(document).ready(function () {
         $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
 
         if (data.antecipation_enabled_flag) {
-            $('.title-antecipation-tax').show();
-            $('.form-antecipation-tax').show();
-            $("#antecipation-tax").val(data.antecipation_tax + '%');
+            // $('.title-antecipation-tax').show();
+            // $('.form-antecipation-tax').show();
+            $('.info-antecipation-tax').show();
+            $('#label-antecipation-tax').text(data.antecipation_tax + '%.');
+            // $("#antecipation-tax").val(data.antecipation_tax + '%');
         } else {
             $('.title-antecipation-tax').hide();
             $('.form-antecipation-tax').hide();
