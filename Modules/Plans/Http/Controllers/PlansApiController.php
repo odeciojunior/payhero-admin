@@ -405,56 +405,36 @@ class PlansApiController extends Controller
     public function getPlans(Request $request)
     {
         try {
-            $data      = $request->all();
+            $data = $request->all();
             $planModel = new Plan();
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
-                $projectModel = new Project();
-                $project      = $projectModel->find($projectId);
                 if (!empty($data['search'])) {
-
-                    if (!empty($project->shopify_id)) {
-                        $plan        = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                                                 ->where('project_id', $projectId)->first();
-                        $dataArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
-
-                        return response()->json(['data' => $dataArray]);
-                    } else {
-                        $plans = $planModel->select('id', 'name', 'shopify_id')
-                                           ->where('name', 'like', '%' . $data['search'] . '%')
-                                           ->where('project_id', $projectId);
-
-                        return PlansSelectResource::collection($plans->get());
-                    }
+                    $plans = $planModel->select('id', 'name', 'description')
+                        ->where('project_id', $projectId)
+                        ->where(function ($query) use ($data) {
+                            $query->where('name', 'like', '%' . $data['search'] . '%')
+                                ->orWhere('description', 'like', '%' . $data['search'] . '%');
+                        })->paginate(10);
                 } else {
-                    if (!empty($project->shopify_id)) {
-                        $plans      = $planModel->select('shopify_id')->distinct()->where('project_id', $projectId)
-                                                ->limit(10)->pluck('shopify_id');
-                        $planResult = [];
-                        foreach ($plans as $plan) {
-                            $plan         = $planModel->where('shopify_id', $plan)->where('project_id', $projectId)->first();
-                            $planResult[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
-                        }
-
-                        return response()->json(['data' => $planResult]);
-                    } else {
-                        $plans = $planModel->select('id', 'name', 'shopify_id')->where('project_id', $projectId);
-
-                        return PlansSelectResource::collection($plans->limit(10)->get());
-                    }
+                    $plans = $planModel->select('id', 'name', 'description')
+                        ->where('project_id', $projectId)
+                        ->paginate(10);
                 }
+
+                return PlansSelectResource::collection($plans);
             } else {
                 return response()->json([
-                                            'message' => 'Ocorreu um erro, ao buscar dados dos planos',
-                                        ], 400);
+                    'message' => 'Ocorreu um erro, ao buscar dados dos planos',
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados dos planos (PlansApiController - getPlans)');
             report($e);
 
             return response()->json([
-                                        'message' => 'Ocorreu um erro, ao buscar dados dos planos',
-                                    ], 400);
+                'message' => 'Ocorreu um erro, ao buscar dados dos planos',
+            ], 400);
         }
     }
 

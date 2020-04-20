@@ -25,7 +25,7 @@ class ProjectsUpsellResource extends Resource
         if (!empty($this->apply_on_plans)) {
             $applyPlanDecoded = json_decode($this->apply_on_plans);
             if (in_array('all', $applyPlanDecoded)) {
-                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano'];
+                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
             } else {
                 foreach ($applyPlanDecoded as $key => $value) {
                     $plan = $planModel->find($value);

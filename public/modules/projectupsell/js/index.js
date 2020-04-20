@@ -2,7 +2,6 @@ $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
     let countdownInterval = null;
     loadUpsell();
-    loadPlans();
     $('#tab_upsell').on('click', function () {
         loadUpsell();
     })
@@ -40,7 +39,7 @@ $(document).ready(function () {
                             <td>${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${upsell.id}" data-target='#modal-detail-upsell' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
-                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${upsell.id}" data-toggle="modal" data-target="#modal_add_upsell"><i class='material-icons gradient'> edit </i></a>
+                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${upsell.id}"><i class='material-icons gradient'> edit </i></a>
                                 <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${upsell.id}" data-toggle="modal" data-target="#modal-delete-upsell"><i class='material-icons gradient'> delete_outline </i></a>
                             </td>
                         </tr>
@@ -105,60 +104,24 @@ $(document).ready(function () {
                     $('#edit_active_flag').val(0).prop('checked', false);
                 }
                 // Seleciona a opção do select de acordo com o que vem do banco
-                let equalApplyArray = [];
-                let equalOfferArray = [];
-                let differentApplyArray = [];
-                let differentOfferArray = [];
-                let selectApplyIdsArray = [];
-                let selectOfferIdsArray = [];
-                $("#edit_apply_on_plans").find('option').each(function () {
-                    selectApplyIdsArray.push($(this).val());
-                    for (let plan of upsell.apply_on_plans) {
-                        if (plan.id == $(this).val()) {
-                            equalApplyArray.push(plan.id);
-                            $("#edit_apply_on_plans").val(equalApplyArray);
-                            $("#edit_apply_on_plans").trigger('change');
-                        } else {
-                            differentApplyArray[plan.id] = plan.name;
-                        }
-                    }
-                });
-                if (equalApplyArray.length != upsell.apply_on_plans.length) {
-                    let idPlanArray = [];
-                    for (let key in differentApplyArray) {
-                        if (!selectApplyIdsArray.includes(key)) {
-                            $('#edit_apply_on_plans').append(`<option value="${key}">${differentApplyArray[key]}</option>`);
-                        }
-                        idPlanArray.push(key);
-                    }
-                    $("#edit_apply_on_plans").val(idPlanArray);
-                }
-                $("#edit_offer_on_plans").find('option').each(function () {
-                    selectOfferIdsArray.push($(this).val());
-                    for (let plan of upsell.offer_on_plans) {
-                        if (plan.id == $(this).val()) {
-                            equalOfferArray.push(plan.id);
-                            $("#edit_offer_on_plans").val(equalOfferArray);
-                            $("#edit_offer_on_plans").trigger('change');
-                        } else {
-                            differentOfferArray[plan.id] = plan.name;
-                        }
-                    }
-                });
-                if (equalOfferArray.length != upsell.offer_on_plans.length) {
-                    let idPlanArray = [];
-                    for (let key in differentOfferArray) {
-                        if (!selectOfferIdsArray.includes(key)) {
-                            $('#edit_offer_on_plans').append(`<option value="${key}">${differentOfferArray[key]}</option>`);
-                        }
-                        idPlanArray.push(key);
-                    }
-                    $("#edit_offer_on_plans").val(idPlanArray);
-                }
-                if ($("#edit_apply_on_plans").val().includes('all')) {
+                $('#edit_apply_on_plans, #edit_offer_on_plans').html('');
 
+                let applyOnPlans = [];
+                for(let plan of upsell.apply_on_plans){
+                    applyOnPlans.push(plan.id);
+                    $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
+                $('#edit_apply_on_plans').val(applyOnPlans);
+
+                let offerOnPlans = [];
+                for(let plan of upsell.offer_on_plans){
+                    offerOnPlans.push(plan.id);
+                    $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
+                }
+                $('#edit_offer_on_plans').val(offerOnPlans);
+
                 loadingOnScreenRemove();
+                $('#modal_add_upsell').modal('show');
                 // END
             }
         });
@@ -188,8 +151,7 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
                 loadUpsell();
                 alertCustom('success', response.message);
-                $("#add_apply_on_plans").val(null).trigger('change');
-                $("#add_offer_on_plans").val(null).trigger('change');
+                $("#add_apply_on_plans, #add_offer_on_plans").val(null).trigger('change');
             }
         });
     });
@@ -282,51 +244,8 @@ $(document).ready(function () {
         });
     });
 
-    $('#add_apply_on_plans, #edit_apply_on_plans').select2({
-        placeholder: 'Nome do plano',
-        multiple: true,
-        dropdownParent: $('#modal_add_upsell'),
-        language: {
-            noResults: function () {
-                return 'Nenhum plano encontrado';
-            },
-            searching: function () {
-                return 'Procurando...';
-            }
-        },
-        ajax: {
-            data: function (params) {
-                return {
-                    list: 'plan',
-                    search: params.term,
-                    project_id: projectId,
-                };
-            },
-            method: "GET",
-            url: "/api/plans/user-plans",
-            delay: 300,
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processResults: function (res) {
-                let allObject = {
-                    id: 'all',
-                    name: 'Qualquer plano',
-                };
-                res.data.unshift(allObject);
-                return {
-                    results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name};
-                    })
-                };
-            },
-        }
-    });
-
     //Search plan
-    $('#add_offer_on_plans, #edit_offer_on_plans').select2({
+    $('#add_apply_on_plans, #edit_apply_on_plans, #add_offer_on_plans, #edit_offer_on_plans').select2({
         placeholder: 'Nome do plano',
         multiple: true,
         dropdownParent: $('#modal_add_upsell'),
@@ -336,7 +255,10 @@ $(document).ready(function () {
             },
             searching: function () {
                 return 'Procurando...';
-            }
+            },
+            loadingMore: function () {
+                return 'Carregando mais planos…';
+            },
         },
         ajax: {
             data: function (params) {
@@ -344,6 +266,7 @@ $(document).ready(function () {
                     list: 'plan',
                     search: params.term,
                     project_id: projectId,
+                    page: params.page || 1
                 };
             },
             method: "GET",
@@ -355,27 +278,31 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             processResults: function (res) {
+                let elemId = this.$element.attr('id');
+                if ((elemId === 'add_apply_on_plans' || elemId === 'edit_apply_on_plans') && res.meta.current_page === 1) {
+                    let allObject = {
+                        id: 'all',
+                        name: 'Qualquer plano',
+                        description: ''
+                    };
+                    res.data.unshift(allObject);
+                }
+
                 return {
                     results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name};
-                    })
+                        return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                    }),
+                    pagination: {
+                        'more': res.meta.current_page !== res.meta.last_page
+                    }
                 };
             },
         }
     });
 
-    $('#add_apply_on_plans').on('select2:select', function () {
+    $('#add_apply_on_plans, #edit_apply_on_plans').on('select2:select', function () {
         let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
-            selectPlan.val(null).trigger("change");
-            selectPlan.val('all').trigger("change");
-        }
-    });
-
-    $('#edit_apply_on_plans').on('select2:select', function () {
-        let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
-            selectPlan.val(null).trigger("change");
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() !== 'all')) {
             selectPlan.val('all').trigger("change");
         }
     });
@@ -595,32 +522,5 @@ $(document).ready(function () {
                 countdown = new Date().getTime() + countdownTime * 60000;
             }
         }, 1000);
-    }
-
-    function loadPlans() {
-        $('#add_apply_on_plans').html('');
-        $('#add_offer_on_plans').html('');
-        $('#edit_apply_on_plans').html('');
-        $('#edit_offer_on_plans').html('');
-        $.ajax({
-            method: "GET",
-            url: "/api/plans/user-plans",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: {project_id: projectId},
-            error: function error(response) {
-            },
-            success: function success(response) {
-                for (let plan of response.data) {
-                    $('#add_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                    $('#add_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-
-                    $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                    $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                }
-            }
-        });
     }
 });
