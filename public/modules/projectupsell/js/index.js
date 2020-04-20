@@ -257,7 +257,7 @@ $(document).ready(function () {
                 return 'Procurando...';
             },
             loadingMore: function () {
-                return 'Carregando mais planos…';
+                return 'Carregando mais planos...';
             },
         },
         ajax: {

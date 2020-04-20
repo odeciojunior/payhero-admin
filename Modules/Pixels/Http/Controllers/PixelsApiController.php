@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Pixel;
@@ -331,14 +332,17 @@ class PixelsApiController extends Controller
                                 $applyPlanArray[] = [
                                     'id'   => 'all',
                                     'name' => 'Todos os Planos',
+                                    'description' => '',
                                 ];
                             } else {
                                 foreach ($applyPlanDecoded as $key => $value) {
-                                    $plan = $planModel->find($value);
+                                    $plan = $planModel->select('plans.*', DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants'))
+                                    ->find($value);
                                     if (!empty($plan)) {
                                         $applyPlanArray[] = [
                                             'id'   => Hashids::encode($plan->id),
                                             'name' => $plan->name,
+                                            'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
                                         ];
                                     }
                                 }

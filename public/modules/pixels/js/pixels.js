@@ -47,7 +47,6 @@ $(function () {
 
     //carrega os itens na tabela
     atualizarPixel();
-    loadPlans();
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
@@ -170,37 +169,13 @@ $(function () {
             $('#modal-edit-pixel .pixel-purchase-boleto').val(0).prop('checked', false);
         }
 
-        let selectApplyIdsArray = [];
-        let equalApplyArray = [];
-        let differentApplyArray = [];
-        $("#modal-edit-pixel .apply_plans").find('option').each(function () {
-            selectApplyIdsArray.push($(this).val());
-            for (let plan of pixel.apply_on_plans) {
-                if (plan.id == $(this).val()) {
-                    equalApplyArray.push(plan.id);
-                    $("#modal-edit-pixel .apply_plans").val(equalApplyArray);
-                    $("#modal-edit-pixel .apply_plans").trigger('change');
-                } else {
-                    differentApplyArray[plan.id] = plan.name;
-                }
-
-            }
-        });
-
-        if (equalApplyArray.length != pixel.apply_on_plans.length) {
-            let idPlanArray = [];
-            for (let key in differentApplyArray) {
-                if (!selectApplyIdsArray.includes(key)) {
-                    $("#modal-edit-pixel .apply_plans").append(`<option value="${key}">${differentApplyArray[key]}</option>`);
-                }
-                idPlanArray.push(key);
-            }
-            $("#modal-edit-pixel .apply_plans").val(idPlanArray);
+        $("#modal-edit-pixel .apply_plans").html('');
+        let applyOnPlans = [];
+        for(let plan of pixel.apply_on_plans){
+            applyOnPlans.push(plan.id);
+            $("#modal-edit-pixel .apply_plans").append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
         }
-
-        if ($("#modal-edit-pixel .apply_plans").val().includes('all')) {
-
-        }
+        $("#modal-edit-pixel .apply_plans").val(applyOnPlans);
 
         $('#modal-edit-pixel').modal('show');
     }
@@ -404,128 +379,68 @@ $(function () {
         $('.pixel-code').val('');
     }
 
-    $('#add_pixel_plans').select2({
-        placeholder: 'Nome do plano',
-        multiple: true,
-        dropdownParent: $('#modal-create-pixel'),
-        language: {
-            noResults: function () {
-                return 'Nenhum plano encontrado';
-            },
-            searching: function () {
-                return 'Procurando...';
-            }
-        },
-        ajax: {
-            data: function (params) {
-                return {
-                    list: 'plan',
-                    search: params.term,
-                    project_id: projectId,
-                    page: params.page || 1
-                };
-            },
-            method: "GET",
-            url: "/api/plans/user-plans",
-            delay: 400,
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processResults: function (res) {
-                let allObject = {
-                    id: 'all',
-                    name: 'Todos os Planos'
-                };
-                res.data.unshift(allObject);
-                return {
-                    results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name};
-                    })
-                };
-            },
-        }
-    });
-    $('#edit_pixel_plans').select2({
-        placeholder: 'Nome do plano',
-        multiple: true,
-        dropdownParent: $('#modal-edit-pixel'),
-        language: {
-            noResults: function () {
-                return 'Nenhum plano encontrado';
-            },
-            searching: function () {
-                return 'Procurando...';
-            }
-        },
-        ajax: {
-            data: function (params) {
-                return {
-                    list: 'plan',
-                    search: params.term,
-                    project_id: projectId,
-                };
-            },
-            method: "GET",
-            url: "/api/plans/user-plans",
-            delay: 300,
-            dataType: 'json',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            processResults: function (res) {
-                let allObject = {
-                    id: 'all',
-                    name: 'Todos os Planos'
-                };
-                res.data.unshift(allObject);
-                return {
-                    results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name};
-                    })
-                };
-            },
-        }
-    });
+    $('#add_pixel_plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-create-pixel')}));
+    $('#edit_pixel_plans').select2(Object.assign(selectPlan(), {dropdownParent: $('#modal-edit-pixel')}));
 
-    $("#add_pixel_plans").on('select2:select', function () {
-        let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
-            selectPlan.val(null).trigger("change");
-            selectPlan.val('all').trigger("change");
-        }
-    });
-
-    $('#edit_pixel_plans').on('select2:select', function () {
-        let selectPlan = $(this);
-        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
-            selectPlan.val(null).trigger("change");
-            selectPlan.val('all').trigger("change");
-        }
-    });
-
-    function loadPlans() {
-        $('#add_pixel_plans').html('');
-        $('#edit_pixel_plans').html('');
-        $.ajax({
-            method: "GET",
-            url: "/api/plans/user-plans",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+    function selectPlan() {
+        return {
+            placeholder: 'Nome do plano',
+            multiple: true,
+            language: {
+                noResults: function () {
+                    return 'Nenhum plano encontrado';
+                },
+                searching: function () {
+                    return 'Procurando...';
+                },
+                loadingMore: function () {
+                    return 'Carregando mais planos...';
+                },
             },
-            data: {project_id: projectId},
-            error: function error(response) {
-            },
-            success: function success(response) {
-                for (let plan of response.data) {
-                    $('#add_pixel_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                    $('#edit_pixel_plans').append(`<option value="${plan.id}">${plan.name}</option>`);
-                }
+            ajax: {
+                data: function (params) {
+                    return {
+                        list: 'plan',
+                        search: params.term,
+                        project_id: projectId,
+                        page: params.page || 1
+                    };
+                },
+                method: "GET",
+                url: "/api/plans/user-plans",
+                delay: 300,
+                dataType: 'json',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                processResults: function (res) {
+                    if (res.meta.current_page === 1) {
+                        let allObject = {
+                            id: 'all',
+                            name: 'Qualquer plano',
+                            description: ''
+                        };
+                        res.data.unshift(allObject);
+                    }
+
+                    return {
+                        results: $.map(res.data, function (obj) {
+                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
+                        }),
+                        pagination: {
+                            'more': res.meta.current_page !== res.meta.last_page
+                        }
+                    };
+                },
             }
-        });
+        }
     }
 
+    $("#add_pixel_plans, #edit_pixel_plans").on('select2:select', function () {
+        let selectPlan = $(this);
+        if ((selectPlan.val().length > 1 && selectPlan.val().includes('all')) || (selectPlan.val().includes('all') && selectPlan.val() != 'all')) {
+            selectPlan.val('all').trigger("change");
+        }
+    });
 });
