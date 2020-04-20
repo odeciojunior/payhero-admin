@@ -19,7 +19,7 @@ class UserTerms extends Model
      * @var array
      */
     protected $dates = [
-        'accepted_at_terms',
+        'accepted_at',
         'created_at',
         'update_at',
         'deleted_at',
@@ -32,7 +32,6 @@ class UserTerms extends Model
         'term_version',
         'device_data',
         'accepted_at',
-        'accepted_at_terms',
     ];
     /**
      * @var bool

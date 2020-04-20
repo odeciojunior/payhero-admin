@@ -2,6 +2,7 @@
 
 namespace Modules\UserTerms\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Modules\Core\Entities\UserTerms;
@@ -26,11 +27,10 @@ class UserTermsApiController
 
             $userLogged = auth()->user();
 
-            $userTerm = $userTermsModel->where([
-                                                   ['user_id', $userLogged->account_owner_id],
-                                                   ['term_version', 'v1'],
-                                                   ['accepted_at', true],
-                                               ])->first();
+            $userTerm = $userTermsModel->whereNotNull('accepted_at')->where([
+                                                                                ['user_id', $userLogged->account_owner_id],
+                                                                                ['term_version', 'v1'],
+                                                                            ])->first();
 
             if (!empty($userTerm)) {
                 return response()->json([
@@ -69,7 +69,7 @@ class UserTermsApiController
                                                             'user_id'      => $userLogged->account_owner_id,
                                                             'term_version' => 'v1',
                                                             'device_data'  => json_encode($deviceData, true),
-                                                            'accepted_at'  => true,
+                                                            'accepted_at'  => Carbon::now(),
                                                         ]);
 
             if ($userTermsCreated) {
