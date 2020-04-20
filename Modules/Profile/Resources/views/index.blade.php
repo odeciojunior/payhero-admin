@@ -348,54 +348,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        {{--                                        <div class="col-12">--}}
-                                        {{--                                            <p class='info' style='font-size: 10px; margin-top: -10px'>--}}
-                                        {{--                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de--}}
-                                        {{--                                                <label id="installment-tax" style="color: gray"></label>--}}
-                                        {{--                                                % ao mês.--}}
-                                        {{--                                            </p>--}}
-                                        {{--                                            <p class='info' style='font-size: 10px; margin-top: -13px'>--}}
-                                        {{--                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa fixa de R$--}}
-                                        {{--                                                <label style="color: gray" id="transaction-tax"></label>--}}
-                                        {{--                                                por transação.--}}
-                                        {{--                                            </p>--}}
-                                        {{--                                            <p class='info' style='font-size: 10px; margin-top: -13px'>--}}
-                                        {{--                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de transferência para empresas do exterior de--}}
-                                        {{--                                                <label style="color: gray" id="transaction-tax-abroad"></label>--}}
-                                        {{--                                            </p>--}}
-                                        {{--                                            <p class='info' style='font-size: 10px; margin-top: -13px'>--}}
-                                        {{--                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.--}}
-                                        {{--                                            </p>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                        <div class="col-lg-12 text-right" style="margin-top: 30px">--}}
-                                        {{--                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">--}}
-                                        {{--                                                Atualizar taxas--}}
-                                        {{--                                            </button>--}}
-                                        {{--                                        </div>--}}
-                                    </div>
-                                    {{--BOLETO--}}
-
-                                    {{--ANTECIPAÇÃO--}}
-                                    <div class='col-lg-12 mt-10'>
-                                        <h6 class='title-pad title-antecipation-tax' style='display:none;'>Antecipação:</h6>
-                                    </div>
-                                    <div class='col'></div>
-                                    <div class='row mt-15 col-xl-12'>
-                                        <div class='form-group col-xl-5 form-antecipation-tax' style='display:none;'>
-                                            <label for='antecipation-tax'>Taxa de antecipação (porcentagem):</label>
-                                            <input id='antecipation-tax' disabled='disabled' class="form-control">
-                                        </div>
-                                        {{--                                        <div class='form-group col-xl-5'>--}}
-                                        {{--                                            <div class='form-group'>--}}
-                                        {{--                                                <label for='boleto-release'>Dias para liberação:</label>--}}
-                                        {{--                                                <select id="boleto-release" disabled='disabled' class="form-control">--}}
-                                        {{--                                                    <option value="plan-30">30 dias (taxa de 5.9%)</option>--}}
-                                        {{--                                                    <option value="plan-2">2 dias (taxa de 6.5%)</option>--}}
-                                        {{--                                                    <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)</option>--}}
-                                        {{--                                                </select>--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        <div class="col-12 mt-10">
+                                        <div class="col-12">
                                             <p class='info' style='font-size: 10px; margin-top: -10px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de parcelamento no cartão de crédito de
                                                 <label id="installment-tax" style="color: gray"></label>
@@ -413,8 +366,30 @@
                                             <p class='info' style='font-size: 10px; margin-top: -13px'>
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Em boletos com o valor menor de R$ 40,00 a taxa cobrada será de R$ 3,00.
                                             </p>
+                                            <p class='info info-antecipation-tax' style='font-size: 10px; margin-top: -8px;display:none;'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Taxa de antecipação de
+                                                <label style="color: gray" id="label-antecipation-tax"></label>
+                                            </p>
                                         </div>
+                                        {{--                                        <div class="col-lg-12 text-right" style="margin-top: 30px">--}}
+                                        {{--                                            <button id="update_taxes" type="button" class="btn btn-success mr-100">--}}
+                                        {{--                                                Atualizar taxas--}}
+                                        {{--                                            </button>--}}
+                                        {{--                                        </div>--}}
                                     </div>
+                                    {{--BOLETO--}}
+
+                                    {{--ANTECIPAÇÃO--}}
+                                    {{--                                    <div class='col-lg-12 mt-10'>--}}
+                                    {{--                                        <h6 class='title-pad title-antecipation-tax' style='display:none;'>Antecipação:</h6>--}}
+                                    {{--                                    </div>--}}
+                                    {{--                                    <div class='col'></div>--}}
+                                    {{--                                    <div class='row mt-15 col-xl-12'>--}}
+                                    {{--                                        <div class='form-group col-xl-5 form-antecipation-tax' style='display:none;'>--}}
+                                    {{--                                            <label for='antecipation-tax'>Taxa de antecipação (porcentagem):</label>--}}
+                                    {{--                                            <input id='antecipation-tax' disabled='disabled' class="form-control">--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                    </div>--}}
                                     {{--ANTECIPAÇÃO--}}
                                 </div>
                             </div>
@@ -690,7 +665,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=5')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=6')}}"></script>
     @endpush
 
 @endsection

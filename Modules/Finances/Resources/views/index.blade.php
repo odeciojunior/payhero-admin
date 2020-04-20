@@ -3,6 +3,11 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=1') }}">
+    <style>
+        .popover{
+            left: -50px !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -99,8 +104,7 @@
                                                 <div class="grad-border blue"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;'
-                                             data-container="body" data-toggle="popover" data-placement="top" data-title="Dados" data-content="Saldo Antecipavel">
+                                        <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;' data-container="body" data-toggle="popover" data-placement="top" data-title="Dados" data-content="Saldo Antecipavel">
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo Antecipavel </h6>
                                                 <h4 class="price saldoAntecipavel">
