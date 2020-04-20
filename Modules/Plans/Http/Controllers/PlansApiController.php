@@ -412,10 +412,7 @@ class PlansApiController extends Controller
                     ->where('project_id', $projectId);
 
                 if (!empty($data['search'])) {
-                    $plans->where(function ($query) use ($data) {
-                        $query->where('name', 'like', '%' . $data['search'] . '%')
-                            ->orWhere('description', 'like', '%' . $data['search'] . '%');
-                    });
+                    $plans->where('name', 'like', '%' . $data['search'] . '%');
                 }
 
                 $plans = $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'))
