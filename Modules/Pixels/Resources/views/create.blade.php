@@ -35,7 +35,7 @@
                 </div>
                 <div class='row'>
                     <div class='form-group col-12 my-20'>
-                        <label for="add_pixel_plans">Plano</label>
+                        <label for="add_pixel_plans">Executar no(s) plano(s)</label>
                         <select name="add_pixel_plans[]" id="add_pixel_plans" class="js-states form-control" style='width:100%' data-plugin="select2" multiple='multiple'>
                             <option value='all'>Todos</option>
                         </select>
