@@ -85,7 +85,6 @@ class ProjectsResource extends Resource
             "commission_affiliate"           => $affiliate->percentage ?? '',
             "status_affiliate"               => $affiliate->status_enum ?? '',
             "producer"                       => $this->producer ?? '',
-            "release_money_days"             => $this->release_money_days ?? '',
             "credit_card_release_money_days" => $this->credit_card_release_money_days ?? '',
             "debit_card_release_money_days"  => $this->debit_card_release_money_days ?? '',
             "boleto_release_money_days"      => $this->boleto_release_money_days ?? '',

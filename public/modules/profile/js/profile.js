@@ -573,6 +573,17 @@ $(document).ready(function () {
         $("#debit-card-release").val(data.debit_card_release_money);
         $("#transaction-tax-abroad").html(data.abroad_transfer_tax + '%.');
 
+        if (data.antecipation_enabled_flag) {
+            // $('.title-antecipation-tax').show();
+            // $('.form-antecipation-tax').show();
+            $('.info-antecipation-tax').show();
+            $('#label-antecipation-tax').text(data.antecipation_tax + '%.');
+            // $("#antecipation-tax").val(data.antecipation_tax + '%');
+        } else {
+            $('.title-antecipation-tax').hide();
+            $('.form-antecipation-tax').hide();
+        }
+
         $("#boleto-release").val('plan-' + data.boleto_release_money);
         $("#transaction-tax").html(data.transaction_rate).attr('disabled', 'disabled');
         $("#installment-tax").html(data.installment_tax).attr('disabled', 'disabled');
@@ -590,7 +601,7 @@ $(document).ready(function () {
             },
             data: {
                 credit_card_plan: $("#credit-card-release").val(),
-                boleto_plan     : $("#boleto-release").val()
+                boleto_plan: $("#boleto-release").val()
             },
             error: function (response) {
                 errorAjaxResponse(response);
@@ -673,7 +684,7 @@ $(document).ready(function () {
     }
 
     function verifyUserAddress(user) {
-        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null ) {
+        if (user.zip_code == null || user.street == null || user.number == null || user.neighborhood == null || user.city == null) {
             $('#row_dropzone_documents').hide();
             $('#div_address_pending').show();
         } else {
