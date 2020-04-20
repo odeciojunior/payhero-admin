@@ -454,7 +454,6 @@ class ProjectsApiController extends Controller
                 })->first();
 
                 $project->producer                       = $producer->name ?? '';
-                $project->release_money_days             = $producer->release_money_days ?? '';
                 $project->boleto_release_money_days      = $producer->boleto_release_money_days ?? '';
                 $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
                 $project->debit_card_release_money_days  = $producer->debit_card_release_money_days ?? '';

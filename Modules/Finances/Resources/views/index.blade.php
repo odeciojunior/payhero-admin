@@ -28,7 +28,6 @@
                 </div>
             </div>
         </div>
-
         <div class="page-content container" style="display:none">
             <!-- Aviso de Exportação -->
             <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
@@ -36,7 +35,9 @@
                     <i class="material-icons mr-10">info</i>
                     <div class="w-full">
                         <strong class="font-size-16">Exportando seu relatório</strong>
-                        <p class="font-size-14 pr-md-100 mb-0" >Sua exportação será entregue por e-mail para: <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.</p>
+                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
+                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                        </p>
                     </div>
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
                 </div>
@@ -72,7 +73,6 @@
                                     <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                     </p>
                                 </div>
-
                                 <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
@@ -83,7 +83,6 @@
                                                 <div class="grad-border red"></div>
                                             </div>
                                         </div>
-
                                         <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                             <div id="div-available-money" class="price-holder pointer">
                                                 <h6 class="label-price"> Saldo Disponível </h6>
@@ -100,9 +99,19 @@
                                                 <div class="grad-border blue"></div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;'
+                                             data-container="body" data-toggle="popover" data-placement="top" data-title="Dados" data-content="Saldo Antecipavel">
+                                            <div class="price-holder">
+                                                <h6 class="label-price"> Saldo Antecipavel </h6>
+                                                <h4 class="price saldoAntecipavel">
+                                                </h4>
+                                                <div class="grad-border purple"></div>
+                                            </div>
+                                        </div>
+
                                         <div class="col-sm-12 col-md-12 col-lg-6" id="quotation_information" style="display: none">
                                             <div class="price-holder">
-                                                <h6 class="label-price" id="label_quotation"> </h6>
+                                                <h6 class="label-price" id="label_quotation"></h6>
                                                 <h4 class="price" id="current_quotation">
                                                 </h4>
                                                 <div class="grad-border purple"></div>
@@ -229,7 +238,7 @@
                                                 <label for="date_type">Data</label>
                                                 <select class="form-control select-pad" id="date_type">
                                                     <option value="transfer_date">Data da transferência</option>
-{{--                                                    <option value="transaction_date">Data da transação</option>--}}
+                                                    {{--                                                    <option value="transaction_date">Data da transação</option>--}}
                                                     <option value="sale_start_date">Data da venda</option>
                                                 </select>
                                             </div>
@@ -320,7 +329,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=9') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=10') }}"></script>
     @endpush
 
 @endsection

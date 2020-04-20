@@ -70,16 +70,10 @@ class RegisterApiController extends Controller
             $requestData['percentage_rate']                     = '5.9';
             $requestData['transaction_rate']                    = '1.00';
             $requestData['balance']                             = '0';
-            $requestData['foxcoin']                             = '0';
             $requestData['credit_card_antecipation_money_days'] = '30';
-            $requestData['release_money_days']                  = '30';
             $requestData['boleto_antecipation_money_days']      = '2';
             $requestData['antecipation_tax']                    = '0';
             $requestData['percentage_antecipable']              = '100';
-            $requestData['email_amount']                        = '0';
-            $requestData['call_amount']                         = '0';
-            $requestData['score']                               = '0';
-            $requestData['sms_zenvia_amount']                   = '0';
             $requestData['invites_amount']                      = 1;
 
             $user = $userModel->create($requestData);
