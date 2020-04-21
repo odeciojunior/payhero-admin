@@ -144,9 +144,9 @@ class Transaction extends Model
     /**
      * @return HasMany
      */
-    public function antecipatedTransactions()
+    public function anticipatedTransactions()
     {
-        return $this->hasMany('Modules\Core\Entities\AntecipatedTransaction');
+        return $this->hasMany('Modules\Core\Entities\AnticipatedTransaction');
     }
 
     /**

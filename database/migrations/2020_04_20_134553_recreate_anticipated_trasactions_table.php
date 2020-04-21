@@ -14,8 +14,9 @@ class RecreateAnticipatedTrasactionsTable extends Migration
     {
         Schema::create('anticipated_transactions', function(Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('value');
             $table->string('tax');
-            $table->string('tax_value');
+            $table->integer('tax_value');
             $table->string('days_to_release');
             $table->bigInteger('anticipation_id')->unsigned();
             $table->bigInteger('transaction_id')->unsigned();
@@ -32,12 +33,12 @@ class RecreateAnticipatedTrasactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('antecipated_transactions', function(Blueprint $table) {
+        Schema::table('anticipated_transactions', function(Blueprint $table) {
             $table->dropForeign(['transaction_id']);
             $table->dropForeign(['anticipation_id']);
         });
 
-        Schema::dropIfExists('antecipated_transactions');
+        Schema::dropIfExists('anticipated_transactions');
     }
 
 }

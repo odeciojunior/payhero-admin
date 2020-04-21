@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $anticipation_id
  * @property integer $transaction_id
+ * @property integer $value
  * @property string $tax
  * @property string $tax_value
  * @property string $days_to_release
@@ -28,7 +29,7 @@ class AnticipatedTransaction extends Model
     /**
      * @var array
      */
-    protected $fillable = ['anticipation_id', 'transaction_id', 'tax', 'tax_value', 'days_to_release', 'created_at', 'updated_at'];
+    protected $fillable = ['anticipation_id', 'transaction_id', 'value', 'tax', 'tax_value', 'days_to_release', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

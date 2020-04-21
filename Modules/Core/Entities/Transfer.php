@@ -15,12 +15,14 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $transaction_id
  * @property int $user_id
  * @property int $company_id
+ * @property int $anticipation_id
  * @property string $value
  * @property string $type
  * @property int $type_enum
  * @property string $reason
  * @property string $created_at
  * @property string $updated_at
+ * @property Anticipation $anticipation
  * @property Transaction $transaction
  * @property User $user
  * @property Company $company
@@ -51,6 +53,7 @@ class Transfer extends Model
         'transaction_id',
         'user_id',
         'company_id',
+        'anticipation_id',
         'value',
         'type',
         'type_enum',

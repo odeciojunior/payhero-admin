@@ -3,15 +3,17 @@
 namespace Modules\Anticipations\Http\Controllers;
 
 use Carbon\Carbon;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Anticipation;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\AnticipationService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AnticipationsApiController extends Controller
 {
@@ -23,114 +25,33 @@ class AnticipationsApiController extends Controller
     public function store(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->has('company'))) {
-                $companyModel                 = new Company();
-                $transactionModel             = new Transaction();
-                $anticipationModel            = new Anticipation();
-                $anticipationTransactionModel = new AnticipatedTransaction();
-                $transferModel                = new Transfer();
-                $company                      = $companyModel->find(current(Hashids::decode($request->input('company'))));
+            $companyModel        = new Company();
+            $company             = $companyModel->find(current(Hashids::decode($request->input('company_id'))));
+            $anticipationService = new AnticipationService();
 
-                if (!empty($company)) {
-
-                    $antecipableTransactions = $transactionModel->where('company', $company->id)
-                                                                ->where('status', 'paid')
-                                                                ->whereDate('release_date', '>', Carbon::today())
-                                                                ->whereDate('antecipation_date', '<=', Carbon::today())
-                                                                ->get();
-
-                    $user     = auth()->user();
-                    $dailyTax = number_format(($user->antecipation_tax / $user->release_money_days), 4, '.', ',');
-
-                    $taxValue          = 0;
-                    $pendingBalance    = 0;
-                    $percentageTax     = 0;
-                    $anticipationArray = [];
-
-                    if (count($antecipableTransactions) > 0) {
-                        foreach ($antecipableTransactions as $anticipableTransaction) {
-                            $diffInDays = Carbon::now()->diffInDays($anticipableTransaction->release_date);
-                            $diffInDays += 1;
-
-                            $percentageTax = $diffInDays * $dailyTax;
-
-                            $taxValue += number_format(intval(($anticipableTransaction->value * $percentageTax)) / 10000, 2, '.', ',');
-
-                            $anticipationArray[] = [
-                                'tax_value'     => preg_replace('/\D/', '', $taxValue),
-                                'tax'           => preg_replace('/\D/', '', $percentageTax),
-                                'daysToRelease' => preg_replace('/\D/', '', $diffInDays),
-                                'transactionId' => preg_replace('/\D/', '', $anticipableTransaction->id),
-                            ];
-
-                            $pendingBalance += preg_replace('/\D/', '', $anticipableTransaction->antecipable_value);
-
-                            $anticipableTransaction->update([
-                                                                'status' => 'anticipated',
-                                                            ]);
-                        }
-
-                        $anticipation = $anticipationModel->create([
-                                                                       'value'              => $pendingBalance,
-                                                                       'tax'                => preg_replace('/\D/', '', number_format($taxValue, 2, '.', ',')),
-                                                                       'percentage_tax'     => $user->antecipation_tax,
-                                                                       'release_money_days' => $user->release_money_days,
-                                                                       'company_id'         => $company->id,
-                                                                   ]);
-
-                        if (!empty($anticipation)) {
-                            foreach ($anticipationArray as $item) {
-                                $anticipationTransactionModel->create([
-                                                                          'tax'             => preg_replace('/\D/', '', $item['tax']),
-                                                                          'tax_value'       => preg_replace('/\D/', '', $item['tax_value']),
-                                                                          'days_to_release' => preg_replace('/\D/', '', $item['daysToRelease']),
-                                                                          'anticipation_id' => preg_replace('/\D/', '', $anticipation->id),
-                                                                          'transaction_id'  => preg_replace('/\D/', '', $item['transactionId']),
-
-                                                                      ]);
-                            }
-
-                            $company->update([
-                                                 'balance' => preg_replace('/\D/', '', number_format(intval(($company->balance + $pendingBalance) - preg_replace('/\D/', '', $taxValue)) / 100, 2, '.', ',')),
-                                             ]);
-
-                            $transferModel->create([
-                                                       'user'       => $user->id,
-                                                       'company_id' => $company->id,
-                                                       'value'      => preg_replace('/\D/', '', intval($pendingBalance - preg_replace('/\D/', '', $taxValue))),
-                                                       'type'       => 'in',
-                                                       'type_enum'  => 1,
-                                                       'reason'     => 'Antecipação',
-                                                   ]);
-
-                            return response()->json([
-                                                        'message' => 'Saldo antecipado com successo!',
-
-                                                    ], 200);
-                        } else {
-                            return response()->json([
-                                                        'message' => 'Erro ao tentar antecipar valor',
-                                                    ], 400);
-                        }
-                    } else {
-
-                        return response()->json([
-                                                    'message' => 'Você não tem saldo disponivel para antecipar!',
-                                                    'data'    => [
-                                                        'valueAntecipable' => '0,00',
-                                                        'taxValue'         => '0,00',
-                                                    ],
-                                                ], 400);
-                    }
-                } else {
-
-                    return response()->json([
-                                                'message' => 'Erro ao buscar dados da empresa',
-                                            ], 400);
-                }
+            if(!$company->user->antecipation_enabled_flag) {
+                return response()->json([
+                    'data' => [
+                                'message' => 'Antecipação não está disponível'
+                              ]
+                ], 200);
             }
+
+            $anticipationResult = $anticipationService->performAnticipation($company);
+
+            return response()->json([
+                'data' => [
+                            'message' => $anticipationResult['message']
+                          ]
+                ], 200);
+
         } catch (\Exception $e) {
             report($e);
+            return response()->json([
+                'data' => [
+                            'message' => 'Ocorreu algum erro'
+                          ]
+                ], 400);
         }
     }
 
@@ -139,71 +60,24 @@ class AnticipationsApiController extends Controller
      * @param $company
      * @return JsonResponse
      */
-    public function show(Request $request, $company)
+    public function show($companyId)
     {
+
         try {
+            $companyId = current(Hashids::decode($companyId));
 
-            $companyModel     = new Company();
-            $transactionModel = new Transaction();
+            $anticipationService = new AnticipationService();
 
-            if (!empty($company)) {
-                $companyId = current(Hashids::decode($company));
+            return response()->json([
+                                        'message' => 'success',
+                                        'data'    => $anticipationService->getAntecipationData(Company::find($companyId))
+                                    ], 200);
 
-                $company = $companyModel->find($companyId);
-
-                if (!empty($company)) {
-                    $antecipableTransactions = $transactionModel->where('company', $company->id)
-                                                                ->where('status', 'paid')
-                                                                ->whereDate('release_date', '>', Carbon::today())
-                                                                ->get();
-
-                    $user     = auth()->user();
-                    $dailyTax = number_format(($user->antecipation_tax / $user->release_money_days), 4, '.', ',');
-
-                    $taxValue       = 0;
-                    $pendingBalance = 0;
-                    $percentageTax  = 0;
-                    if (count($antecipableTransactions) > 0) {
-                        foreach ($antecipableTransactions as $anticipableTransaction) {
-                            $diffInDays = Carbon::now()->diffInDays($anticipableTransaction->release_date);
-
-                            $percentageTax = $diffInDays * $dailyTax;
-
-                            $taxValue += number_format(intval(($anticipableTransaction->value * $percentageTax)) / 10000, 2, '.', ',');
-
-                            $pendingBalance += preg_replace('/\D/', '', $anticipableTransaction->antecipable_value);
-                        }
-
-                        return response()->json([
-                                                    'message' => 'success',
-                                                    'data'    => [
-                                                        'valueAntecipable' => number_format(intval(($company->balance + $pendingBalance) - preg_replace('/\D/', '', $taxValue)) / 100, 2, '.', ','),
-                                                        'taxValue'         => number_format($taxValue, 2, '.', ','),
-                                                    ],
-                                                ], 200);
-                    } else {
-
-                        return response()->json([
-                                                    'message' => 'Você não tem saldo disponivel para antecipar!',
-                                                    'data'    => [
-                                                        'valueAntecipable' => 0, 00,
-                                                        'taxValue'         => 0, 00,
-                                                    ],
-                                                ], 400);
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'Erro ao buscar dados da empresa',
-                                            ], 400);
-                }
-            } else {
-
-                return response()->json([
-                                            'message' => 'Erro ao buscar dados da empresa',
-                                        ], 400);
-            }
         } catch (\Exception $e) {
-
+            report($e);
+            return response()->json([
+                'message' => 'error',
+            ], 400);
         }
     }
 

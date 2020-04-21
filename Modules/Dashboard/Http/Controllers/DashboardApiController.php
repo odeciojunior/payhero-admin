@@ -41,7 +41,7 @@ class DashboardApiController extends Controller
 
             $userTerm = true;
             if (!$request->has('skip')) {
-                $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->id]])
+                $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->account_owner_id]])
                                            ->exists();
             }
 
@@ -116,6 +116,16 @@ class DashboardApiController extends Controller
                                                        ->whereDate('release_date', '>', Carbon::today()
                                                                                               ->toDateString())
                                                        ->sum('value');
+
+                    $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
+                                                                ->where('company_id', $company->id)
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
+                                                                ->get();
+
+                    foreach($transactionsAnticipated as $transactionAnticipated){
+                        $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                    }
+                                            
 
                     $todayBalance = $saleModel
                         ->join('transactions as t', 't.sale_id', '=', 'sales.id')

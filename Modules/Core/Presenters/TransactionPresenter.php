@@ -70,7 +70,9 @@ class TransactionPresenter extends Presenter
                     return 'pending_antifraud';
                 case 9:
                     return 'canceled_antifraud';
-            }
+                case 10:
+                    return 'anticipated';
+                }
             return '';
         } else {
             switch ($status) {
@@ -92,7 +94,9 @@ class TransactionPresenter extends Presenter
                     return 8;
                 case 'canceled_antifraud':
                     return 9;
-            }
+                case 'anticipated':
+                    return 10;
+                }
             return '';
         }
     }
