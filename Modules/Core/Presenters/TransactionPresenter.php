@@ -70,7 +70,7 @@ class TransactionPresenter extends Presenter
                     return 'pending_antifraud';
                 case 9:
                     return 'canceled_antifraud';
-                case 10:
+                case 12:
                     return 'anticipated';
                 }
             return '';
@@ -95,7 +95,7 @@ class TransactionPresenter extends Presenter
                 case 'canceled_antifraud':
                     return 9;
                 case 'anticipated':
-                    return 10;
+                    return 12;
                 }
             return '';
         }
