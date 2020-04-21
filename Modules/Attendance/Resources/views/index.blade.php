@@ -53,6 +53,16 @@
                                     <input id='ticker-code-filter' class='form-control' type='text' placeholder='Código do chamado'>
                                 </div>
                             </div>
+                            <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='form-group'>
+                                    <label>Respostas</label>
+                                    <select id='answered' class='form-control'>
+                                        <option value="">Todos</option>
+                                        <option value="answered">Já Respondidos</option>
+                                        <option value="not-answered">Não respondidos</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-12 col-md-3 col-lg-3 mt-25">
                                 <button id="btn-filter" class="btn btn-primary w-full">
                                     <i class="icon wb-check" aria-hidden="true"></i>Aplicar
@@ -128,7 +138,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=2')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=3')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
