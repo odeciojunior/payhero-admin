@@ -59,12 +59,12 @@ class TicketsApiController extends Controller
                 if ($data['answered'] == 'answered') {
                     $tickets->whereHas('lastMessage', function ($query) {
                         $query->where('from_admin', 1)
-                            ->orWhere('from_system', 0);
+                              ->where('from_system', 0);
                     });
                 } else {
                     $tickets->whereHas('lastMessage', function ($query) {
                         $query->where('from_admin', 0)
-                            ->orWhere('from_system', 0);
+                            ->where('from_system', 0);
                     })->orDoesntHave('messages');
                 }
             }
