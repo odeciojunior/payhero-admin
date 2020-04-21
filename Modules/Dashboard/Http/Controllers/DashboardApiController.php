@@ -122,10 +122,11 @@ class DashboardApiController extends Controller
                                                                 ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
                                                                 ->get();
 
-                    foreach($transactionsAnticipated as $transactionAnticipated){
-                        $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                    if(count($transactionsAnticipated) > 0){
+                        foreach($transactionsAnticipated as $transactionAnticipated){
+                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                        }
                     }
-                                            
 
                     $todayBalance = $saleModel
                         ->join('transactions as t', 't.sale_id', '=', 'sales.id')

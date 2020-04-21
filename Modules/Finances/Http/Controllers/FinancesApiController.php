@@ -71,8 +71,10 @@ class FinancesApiController extends Controller
 
                     $pendingBalance          += $pendingTransactions->pending_balance;
 
-                    foreach($transactionsAnticipated as $transactionAnticipated){
-                        $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                    if(count($transactionsAnticipated) > 0){
+                        foreach($transactionsAnticipated as $transactionAnticipated){
+                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                        }
                     }
 
                     $availableBalance   = $company->balance;
