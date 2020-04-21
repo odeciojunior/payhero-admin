@@ -104,9 +104,10 @@
                                                 <div class="grad-border blue"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;' data-container="body" data-toggle="popover" data-placement="top" data-title="Dados" data-content="Saldo Antecipavel">
+                                        {{-- <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;' data-container="body" data-toggle="popover" data-placement="top" data-title="Antecipação de vendas" data-content="Antecipavel"> --}}
+                                        <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;'>
                                             <div class="price-holder">
-                                                <h6 class="label-price"> Saldo Antecipavel </h6>
+                                                <h6 class="label-price"> Saldo Antecipável </h6>
                                                 <h4 class="price saldoAntecipavel">
                                                 </h4>
                                                 <div class="grad-border purple"></div>
@@ -333,7 +334,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=10') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=12') }}"></script>
     @endpush
 
 @endsection
