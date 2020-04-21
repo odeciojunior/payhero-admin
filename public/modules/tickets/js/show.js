@@ -46,12 +46,30 @@ $(document).ready(function () {
                     $('.ticket-products').append(`${product.name}<br>`);
                 }
 
+                //Monta a div de anexos
+                if (!isEmpty(response.data.attachments)) {
+                    $("#div-ticket-attachments").html('');
+                    for (let attachment of response.data.attachments) {
+                        let data = `<div class="mini-card mr-10 my-5 d-inline-block">
+                                        <a class="not-hover" target="_blank" href="${attachment.file}">
+                                            <i class="material-icons">attach_file</i>
+                                            <span>${attachment.id}</span>
+                                        </a>
+                                    </div>`;
+
+                        $('#div-ticket-attachments').append(data);
+                    }
+                    $("#div-ticket-attachments").parent().show();
+                } else {
+                    $("#div-ticket-attachments").parent().hide();
+                }
+
                 //Monta a div de comentários
                 $("#div-ticket-comments").html('');
                 if (!isEmpty(response.data.messages)) {
                     let customerNameSplit = response.data.customer_name.split(' ');
                     let adminSrcImage = $('.img-user-menu-principal').attr('src');
-                    let foxSrcImage = $('.navbar-brand-logo').attr('src')
+                    let foxSrcImage = $('.navbar-brand-logo').attr('src');
 
                     for (let ticketMessage of response.data.messages) {
                         let data = '';
