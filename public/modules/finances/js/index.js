@@ -224,10 +224,9 @@ $(document).ready(function () {
                 success: (response) => {
                     loadingOnScreenRemove();
                     var tooltipData = `
-                        Porcentagem antecipável : ${response.data.percetage_antecipable}% <br>
-                        Disponível para antecipação : R$ ${response.data.antecipable_value} <br>
-                        Taxa de antecipação : R$ ${response.data.tax_value} <br>
-                        Antecipação sem a taxa : <b>R$ ${response.data.value_minus_tax}</b> <br>
+                        Disponível para antecipação: R$ ${response.data.antecipable_value} <br>
+                        Taxa de antecipação: R$ ${response.data.tax_value} <br>
+                        Saldo final antecipável: <b>R$ ${response.data.value_minus_tax}</b> <br>
                         <button id='confirm-anticipation' class='btn btn-success text-center mt-20 mb-20'>Confirmar antecipação</button>
                     `;
                     $('.div-antecipable-balance').attr('data-content', tooltipData);
