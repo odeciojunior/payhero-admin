@@ -239,7 +239,7 @@ $(document).ready(function () {
                         loadingOnScreen();
 
                         $.ajax({
-                            url: "api/anticipations/",
+                            url: "api/anticipations",
                             type: "POST",
                             data: { company_id: $("#transfers_company_select option:selected").val() },
                             dataType: "json",
