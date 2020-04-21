@@ -5,6 +5,7 @@ namespace Modules\ProjectUpsellRule\Transformers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Plan;
 use Vinkla\Hashids\Facades\Hashids;
@@ -22,15 +23,21 @@ class ProjectsUpsellResource extends Resource
         $applyPlanArray = [];
         $offerPlanArray = [];
         $planModel      = new Plan();
+        $rawVariants = DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants');
+
         if (!empty($this->apply_on_plans)) {
             $applyPlanDecoded = json_decode($this->apply_on_plans);
             if (in_array('all', $applyPlanDecoded)) {
-                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano'];
+                $applyPlanArray[] = ['id' => 'all', 'name' => 'Qualquer plano', 'description' => ''];
             } else {
                 foreach ($applyPlanDecoded as $key => $value) {
-                    $plan = $planModel->find($value);
+                    $plan = $planModel->select('plans.*', $rawVariants)->find($value);
                     if (!empty($plan)) {
-                        $applyPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                        $applyPlanArray[] = [
+                            'id' => Hashids::encode($plan->id),
+                            'name' => $plan->name,
+                            'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                        ];
                     }
                 }
             }
@@ -38,9 +45,13 @@ class ProjectsUpsellResource extends Resource
         if (!empty($this->offer_on_plans)) {
             $offerPlanDecoded = json_decode($this->offer_on_plans);
             foreach ($offerPlanDecoded as $key => $value) {
-                $plan = $planModel->find($value);
+                $plan = $planModel->select('plans.*', $rawVariants)->find($value);
                 if (!empty($plan)) {
-                    $offerPlanArray[] = ['id' => Hashids::encode($plan->id), 'name' => $plan->name];
+                    $offerPlanArray[] = [
+                        'id' => Hashids::encode($plan->id),
+                        'name' => $plan->name,
+                        'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
+                    ];
                 }
             }
         }
