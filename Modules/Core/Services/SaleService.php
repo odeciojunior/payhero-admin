@@ -108,7 +108,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 20];
+                $status = [1, 2, 4, 6, 7, 8, 12];
             } else {
                 $status = [$filters["status"]];
             }
