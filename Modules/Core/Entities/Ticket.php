@@ -121,4 +121,13 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketMessage::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function lastMessage()
+    {
+        return $this->hasMany(TicketMessage::class)
+            ->latest();
+    }
 }
