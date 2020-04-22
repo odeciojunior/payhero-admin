@@ -108,9 +108,9 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 12];
+                $status = [1, 2, 4, 6, 7, 8, 12,20,22];
             } else {
-                $status = [$filters["status"]];
+                $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
 
             $transactions->whereHas('sale', function($querySale) use ($status) {

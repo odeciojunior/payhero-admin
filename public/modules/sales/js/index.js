@@ -215,8 +215,10 @@ $(document).ready(function () {
                     4: 'danger',
                     3: 'danger',
                     2: 'pendente',
+                    20: 'antifraude',
                     12: 'success',
-                    20: 'antifraude'
+                    20: 'antifraude',
+                    22: 'danger',
                 };
 
                 if (!isEmpty(response.data)) {

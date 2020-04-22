@@ -101,19 +101,19 @@
                     </div>
                 </div>
             </form>
-
             <!-- Aviso de Exportação -->
             <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
                 <div class="d-flex">
                     <i class="material-icons mr-10">info</i>
                     <div class="w-full">
                         <strong class="font-size-16">Exportando seu relatório</strong>
-                        <p class="font-size-14 pr-md-100 mb-0" >Sua exportação será entregue por e-mail para: <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.</p>
+                        <p class="font-size-14 pr-md-100 mb-0">Sua exportação será entregue por e-mail para:
+                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                        </p>
                     </div>
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
                 </div>
             </div>
-
             <!-- Resumo -->
             <div class="fixhalf"></div>
             @if(!auth()->user()->hasRole('attendance'))
@@ -139,8 +139,8 @@
                         </div>
                     </div>
                 </div>
-            @endif
-            <!-- Tabela -->
+        @endif
+        <!-- Tabela -->
             <div class="fixhalf"></div>
             <div class="card shadow " style="min-height: 300px">
                 <div class="page-invoice-table table-responsive">
@@ -165,8 +165,8 @@
                     </table>
                 </div>
                 <!-- Modal detalhes da venda-->
-                @include('sales::details')
-                <!-- End Modal -->
+            @include('sales::details')
+            <!-- End Modal -->
             </div>
             <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
@@ -252,8 +252,7 @@
                             <label class="custom-control-label" for="radioTotalRefund">Estorno total</label>
                         </div>
                     </div>
-
-                    <div class="col-3">                        
+                    <div class="col-3">
                         <div class="custom-control custom-radio mb-3">
                             <input type="radio" class="custom-control-input" id="radioPartialRefund" name="radio-stacked" disabled>
                             <label class="custom-control-label" for="radioPartialRefund">Estorno Parcial</label>
@@ -263,8 +262,8 @@
                 </div>
                 <div class="text-center pt-20" style="min-height:62px;">
                     <div class="value-partial-refund" style="display: none;">
-                        <strong class="font-size-14">Valor a ser estornado: </strong>
-                        R$ <input type="text" name="refundAmount" id="refundAmount" style="width: 200px;" maxlength="9">
+                        <strong class="font-size-14">Valor a ser estornado: </strong> R$
+                        <input type="text" name="refundAmount" id="refundAmount" style="width: 200px;" maxlength="9">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -272,6 +271,44 @@
                         Fechar
                     </a>
                     <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-transaction" total="" data-dismiss="modal">
+                        Estornar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
+
+    <!-- Modal estonar boleto-->
+    <div id="modal-refund-billet" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-simple">
+            <div class="modal-content p-10">
+                <div class="modal-header simple-border-bottom mb-10">
+                    <h4 class="modal-title" id="modal-title">Estornar boleto</h4>
+                    <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div class='my-20 mx-20 text-center'>
+                    <h3 class="black"> Você tem certeza? </h3>
+                    <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
+                    <small>OBS: Taxa de
+                        <label class='billet-refunded-tax-value'></label>
+                        pelo estorno
+                    </small>
+                </div>
+                <div class="text-center">
+                    <strong class="font-size-14">Valor a ser estornado:
+                        <label id="refundBilletAmount"></label>
+                    </strong>
+                    {{--                        R$ <input type="text" name="refundBilletAmount" id="refundBilletAmount" style="width: 200px;" maxlength="9">--}}
+                </div>
+                <div class="modal-footer">
+                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                        Fechar
+                    </a>
+                    <button type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success btn-confirm-refund-billet" total="" data-dismiss="modal">
                         Estornar
                     </button>
                 </div>
@@ -301,7 +338,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=7') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=9') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

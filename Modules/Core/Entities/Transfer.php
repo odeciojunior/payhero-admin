@@ -53,6 +53,7 @@ class Transfer extends Model
         'transaction_id',
         'user_id',
         'company_id',
+        'customer_id',
         'anticipation_id',
         'value',
         'type',
@@ -119,5 +120,13 @@ class Transfer extends Model
     public function company()
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function customer()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Customer');
     }
 }

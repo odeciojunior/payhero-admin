@@ -114,6 +114,7 @@ return [
                 "partial_refunded" => "Estorno Parcial",
                 "in_review"        => "Revisão Antifraude",
                 "system_error"     => "Erro de sistema",
+                "billet_refunded"  => "Estornado",
             ],
         ],
         "product_plan_sale"        => [
@@ -136,17 +137,17 @@ return [
             ],
         ],
         "ticket"                   => [
-            "category"             => [
-                "complaint"        => "Reclamação",
-                "doubt"            => "Dúvida",
-                "suggestion"       => "Sugestão",
+            "category" => [
+                "complaint"  => "Reclamação",
+                "doubt"      => "Dúvida",
+                "suggestion" => "Sugestão",
 
             ],
-            "status"               => [
-                "open"             => "Aberto",
-                "closed"           => "Resolvido",
-                "mediation"        => "Em mediação"
-            ]
+            "status"   => [
+                "open"      => "Aberto",
+                "closed"    => "Resolvido",
+                "mediation" => "Em mediação",
+            ],
         ],
         "invoices"                 => [
             "status" => [
