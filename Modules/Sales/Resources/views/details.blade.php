@@ -279,6 +279,7 @@
                             </div>
                         </div>
                         <div id='div_refund_transaction' class='mt-20'></div>
+                        <div id='div_refund_billet' class='mt-20'></div>
                     </div>
                 </div>
             </div>
@@ -287,5 +288,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=7') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=9') }}"></script>
 @endpush

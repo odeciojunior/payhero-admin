@@ -17,7 +17,10 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletPaidEvent;
+use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Services\CheckoutService;
@@ -163,16 +166,16 @@ class SalesApiController extends Controller
                                               ->whereIn('company_id', $userCompanies)
                                               ->first();
 
-            $partial              = boolval($request->input('partial'));
-            $refundSale           = intval(strval($sale->total_paid_value * 100));
-            if(is_null($sale->interest_total_value)) {
+            $partial    = boolval($request->input('partial'));
+            $refundSale = intval(strval($sale->total_paid_value * 100));
+            if (is_null($sale->interest_total_value)) {
                 $saleService->updateInterestTotalValue($sale);
             }
             $totalWithoutInterest = $refundSale - $sale->interest_total_value;
             $refundValue          = preg_replace('/\D/', '', $request->input('refunded_value'));
             $partial              = ($totalWithoutInterest == $refundValue) ? false : $partial;
             $refundAmount         = ($partial == true) ? $refundValue : $refundSale;
-            if(($refundAmount > $refundSale) || ($partial == true && $refundValue > ($totalWithoutInterest - 500))) {
+            if (($refundAmount > $refundSale) || ($partial == true && $refundValue > ($totalWithoutInterest - 500))) {
                 return response()->json(['message' => 'Valor inválido para estorno parcial.'], Response::HTTP_BAD_REQUEST);
             }
 
@@ -205,7 +208,7 @@ class SalesApiController extends Controller
             })->log('Estorno transação: #' . $saleId);
 
             $partialValues = [];
-            if($partial == true) {
+            if ($partial == true) {
                 $partialValues = $saleService->getValuesPartialRefund($sale, $refundAmount);
             }
 
@@ -219,7 +222,7 @@ class SalesApiController extends Controller
                 $sale->update([
                                   'date_refunded' => Carbon::now(),
                               ]);
-                if($partial == true) {
+                if ($partial == true) {
                     event(new SaleRefundedPartialEvent($sale));
                 } else {
                     event(new SaleRefundedEvent($sale));
@@ -234,6 +237,86 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function refundBillet(Request $request, $saleId)
+    {
+        try {
+            $saleModel        = new Sale();
+            $userProjectModel = new UserProject();
+            $transferModel    = new Transfer();
+            $transactionModel = new Transaction();
+            $saleId           = Hashids::connection('sale_id')->decode($saleId);
+            if ($saleId) {
+                $sale        = $saleModel->with('customer')->where('id', $saleId)->first();
+                $userProject = $userProjectModel->with('company')->where('project_id', $sale->project_id)->first();
+                if ($userProject->company->balance < $sale->total_paid_value) {
+
+                    return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
+                }
+                $transactionCompany = $transactionModel->where('sale_id', $sale->id)
+                                                       ->where('company_id', $userProject->company_id)
+                                                       ->first();
+
+                $transactionCloudFox = $transactionModel->where('sale_id', $sale->id)
+                                                        ->whereNull('company_id')
+                                                        ->first();
+                //Transferencia de saída do usuário
+                $transferModel->create([
+                                           'transaction_id' => null,
+                                           'user_id'        => auth()->user()->account_owner_id,
+                                           'company_id'     => $userProject->company_id,
+                                           'customer_id'    => null,
+                                           'value'          => $transactionCompany->value,
+                                           'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                           'type'           => 'out',
+                                           'reason'         => 'Estorno',
+                                       ]);
+                //Taxa de estorno
+                $transferModel->create([
+                                           'transaction_id' => null,
+                                           'user_id'        => auth()->user()->account_owner_id,
+                                           'company_id'     => $userProject->company_id,
+                                           'customer_id'    => null,
+                                           'value'          => $transactionCloudFox->value,
+                                           'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                           'type'           => 'out',
+                                           'reason'         => 'Taxa de estorno',
+                                       ]);
+
+                $refundValue = $transactionCompany->value + $transactionCloudFox->value;
+                $userProject->company->update([
+                                                  'balance' => $userProject->company->balance -= $refundValue,
+                                              ]);
+
+                //Transferencia de entrada do cliente
+                $transferModel->create([
+                                           'transaction_id' => null,
+                                           'user_id'        => auth()->user()->account_owner_id,
+                                           'customer_id'    => $sale->customer_id,
+                                           'company_id'     => null,
+                                           'value'          => $refundValue,
+                                           'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+                                           'type'           => 'in',
+                                           'reason'         => 'Estorno de boleto',
+                                       ]);
+                $sale->customer->update([
+                                            'balance' => $sale->customer->balance += $refundValue,
+                                        ]);
+                $sale->update([
+                                  'status' => $sale->present()->getStatus('billet_refunded'),
+                              ]);
+                event(new BilletRefundedEvent($sale));
+
+                return response()->json(['message' => 'Boleto estornado com sucesso'], Response::HTTP_OK);
+            } else {
+                return response()->json(['message' => 'Erro ao tentar estornar boleto'], Response::HTTP_BAD_REQUEST);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar estornar boleto  SalesApiController - refundBillet');
+            report($e);
+            return response()->json(['error' => 'Erro ao tentar estornar boleto'], 400);
         }
     }
 

@@ -28,6 +28,7 @@ use Spatie\Activitylog\Models\Activity;
 class Transfer extends Model
 {
     use FoxModelTrait, PresentableTrait, LogsActivity;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -51,6 +52,7 @@ class Transfer extends Model
         'transaction_id',
         'user_id',
         'company_id',
+        'customer_id',
         'value',
         'type',
         'type_enum',
@@ -116,5 +118,13 @@ class Transfer extends Model
     public function company()
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function customer()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Customer');
     }
 }

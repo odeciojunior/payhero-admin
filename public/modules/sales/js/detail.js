@@ -105,6 +105,7 @@ $(() => {
         loadOnAny('#modal-saleDetails');
         $('#modal_detalhes').modal('show');
         $("#refundAmount").mask('##.###,#0', {reverse: true});
+        $("#refundBilletAmount").mask('##.###,#0', {reverse: true});
 
         $.ajax({
             method: "GET",
@@ -121,6 +122,7 @@ $(() => {
                 getSale(response.data);
 
                 $("#refundAmount").val(response.data.total);
+                $("#refundBilletAmount").text('R$' + response.data.total);
                 $(".btn_refund_transaction").unbind('click');
                 $(".btn_refund_transaction").on('click', function () {
                     var sale = $(this).attr('sale');
@@ -136,11 +138,26 @@ $(() => {
                     $(".btn-confirm-refund-transaction").unbind('click');
                     $(".btn-confirm-refund-transaction").on('click', function () {
                         var partial = 0;
-                        if(document.getElementById('radioPartialRefund').checked) {
+                        if (document.getElementById('radioPartialRefund').checked) {
                             var partial = 1;
                         }
                         var refunded_value = $('#refundAmount').val();
                         refundedClick(sale, refunded_value, partial);
+                    })
+                });
+
+                $(".btn_refund_billet").unbind('click');
+                $(".btn_refund_billet").on('click', function () {
+                    var sale = $(this).attr('sale');
+                    var refunded_value = response.data.total;
+                    $('.billet-refunded-tax-value').text(response.data.taxaReal ? response.data.taxaReal : '');
+                    $('#modal-refund-billet').modal('show');
+                    $('#modal_detalhes').modal('hide');
+                    // var refunded_value = $('#refundBilletAmount').val();
+                    $(".btn-confirm-refund-billet").unbind('click');
+                    $(".btn-confirm-refund-billet").on('click', function () {
+
+                        refundedBilletClick(sale, refunded_value);
                     })
                 });
             }
@@ -165,7 +182,7 @@ $(() => {
     function renderSale(sale) {
         //Dados da venda
         $('#sale-code').text(sale.id);
-        if(!!sale.upsell) {
+        if (!!sale.upsell) {
             $('#sale-code').append(`<span class="text-muted font-size-16 d-block mt-1"> Upsell → ${sale.upsell}</span>`)
         }
         $('#payment-type').text('Pagamento via ' + (sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + sale.flag) + ' em ' + sale.start_date + ' às ' + sale.hours);
@@ -205,6 +222,9 @@ $(() => {
             case 20:
                 status.append("<span class='ml-2 badge badge-antifraude'>Revisão Antifraude</span>");
                 break;
+            case 22:
+                status.append("<span class='ml-2 badge badge-danger'>Boleto estornado</span>");
+                break;
             default:
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
@@ -240,7 +260,7 @@ $(() => {
         }
         $("#total-value").html("R$ " + sale.total);
 
-        if(sale.refund_value == '0,00') {
+        if (sale.refund_value == '0,00') {
             $('.text-partial-refund').hide();
             $("#partial-refund-value").hide();
         } else {
@@ -356,6 +376,11 @@ $(() => {
             $('#saleReSendEmail').show();
         } else {
             $('#saleReSendEmail').hide();
+        }
+        if (sale.payment_method == 2 && sale.status == 1) {
+            $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet" sale=' + sale.id + '>Estornar boleto</button>');
+        } else {
+            $('#div_refund_billet').html('');
         }
     }
 
@@ -682,7 +707,7 @@ $(() => {
         $.ajax({
             method: "POST",
             url: '/api/sales/refund/' + sale,
-            data: { refunded_value: refunded_value, partial: partial },
+            data: {refunded_value: refunded_value, partial: partial},
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -700,7 +725,31 @@ $(() => {
             }
         });
     }
+    //Estornar boleto
 
+    function refundedBilletClick(sale, refunded_value) {
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/sales/refund/billet/' + sale,
+            data: {refunded_value: refunded_value},
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+                atualizar(currentPage);
+            },
+            success: (response) => {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                atualizar(currentPage);
+            }
+        });
+    }
     //Gera ordem shopify
     function newOrderClick(sale) {
         loadingOnScreen();

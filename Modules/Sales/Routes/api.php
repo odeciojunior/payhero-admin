@@ -23,6 +23,7 @@ Route::group(
             'uses' => 'SalesApiController@resume',
         ]);
         Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
+        Route::post('/refund/billet/{transaction_id}', 'SalesApiController@refundBillet');
         Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify');
         Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail');
     }
