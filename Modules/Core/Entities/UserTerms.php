@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UserTerms extends Model
 {
     use SoftDeletes, LogsActivity;
+
     /**
      * @var array
      */
     protected $dates = [
+        'accepted_at_terms',
         'created_at',
         'update_at',
         'deleted_at',
@@ -30,6 +32,7 @@ class UserTerms extends Model
         'term_version',
         'device_data',
         'accepted_at',
+        'accepted_at_terms',
     ];
     /**
      * @var bool
