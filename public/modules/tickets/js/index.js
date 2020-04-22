@@ -10,11 +10,13 @@ $(document).ready(function () {
         2: 'green-gradient',
         3: 'red-gradient',
     };
+
     let pageCurrent = JSON.parse(getCookie('filterTickets')).page || null;
     if(!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)){
         deleteCookie('filterTickets');
     }
 
+    $('#cpf-filter').mask('000.000.000-00');
 
     dateRangePicker();
     getTickets();
@@ -36,6 +38,7 @@ $(document).ready(function () {
         let data = {
             status: $("#status-filter").val(),
             customer: $("#customer-filter").val(),
+            cpf: $("#cpf-filter").val(),
             ticket_id: $("#ticker-code-filter").val().replace("#", ""),
             date: $("#date_range").val(),
             category: $("#category-filter").val(),

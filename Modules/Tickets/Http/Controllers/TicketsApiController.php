@@ -50,6 +50,12 @@ class TicketsApiController extends Controller
                     $query->where('name', 'LIKE', '%' . $customerName . '%');
                 });
             }
+            if (!empty($data['cpf'])) {
+                $document = preg_replace("/[^0-9]/","", $data['cpf']);
+                $tickets->whereHas('customer', function($query) use ($document) {
+                    $query->where('document', $document);
+                });
+            }
             if (!empty($data['ticket_id'])) {
                 $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
                 $tickets->where('id', $ticketId);
