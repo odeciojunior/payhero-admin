@@ -50,83 +50,109 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $pl  = [];
-        $pls = [];
-        //        $plans = Plan::doesnthave('productsPlans');
-        $products = Product::where('project_id', 203);
+        $project = Project::find(203);
 
-        $shopifyIntegration = ShopifyIntegration::where('project_id', 203)->first();
+        $shopifyIntegration = ShopifyIntegration::where('project_id', $project->id)->first();
         try {
             $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
             $storeProducts  = $shopifyService->getShopProducts();
+            if (!empty($storeProducts)) {
+                foreach ($storeProducts as $storeProduct) {
+                    foreach ($storeProduct->getVariants() as $variant) {
+                        $title       = '';
+                        $description = '';
 
-            foreach ($storeProducts as $storeProduct) {
+                        try {
+                            $description = $variant->getOption1();
+                            if ($description == 'Default Title') {
+                                $description = '';
+                            }
+                            if ($variant->getOption2() != '') {
+                                $description .= ' - ' . $variant->getOption2();
+                            }
+                            if ($variant->getOption3() != '') {
+                                $description .= ' - ' . $variant->getOption3();
+                            }
+                            if (empty($storeProduct->getTitle())) {
+                                $title = 'Produto sem nome';
+                            } else {
+                                $title = mb_substr($storeProduct->getTitle(), 0, 100);
+                            }
+                        } catch (Exception $e) {
+                            //
+                        }
 
-                $product = Product::where('shopify_variant_id', $storeProduct->getId())
-                                  ->orderBy('id', 'DESC')->first();
+                        $product = Product::with('productsPlans')
+                                          ->where('shopify_id', $storeProduct->getId())
+                                          ->where('shopify_variant_id', $variant->getId())
+                                          ->where('project_id', $project->id)
+                                          ->first();
+                        if (!$product) {
+                            $product = Product::create([
+                                                           'user_id'            => 133,
+                                                           'name'               => $title,
+                                                           'description'        => mb_substr($description, 0, 100),
+                                                           'guarantee'          => '0',
+                                                           'format'             => 1,
+                                                           'category_id'        => '11',
+                                                           'cost'               => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())
+                                                                                                  ->getCost(),
+                                                           'shopify'            => true,
+                                                           'price'              => '',
+                                                           'shopify_id'         => $storeProduct->getId(),
+                                                           'shopify_variant_id' => $variant->getId(),
+                                                           'sku'                => $variant->getSku(),
+                                                           'project_id'         => $project->id,
+                                                       ]);
+                            $plan    = Plan::create([
+                                                        'shopify_id'         => $storeProduct->getId(),
+                                                        'shopify_variant_id' => $variant->getId(),
+                                                        'project_id'         => $project->id,
+                                                        'name'               => $title,
+                                                        'description'        => mb_substr($description, 0, 100),
+                                                        'code'               => '',
+                                                        'price'              => $variant->getPrice(),
+                                                        'status'             => '1',
+                                                    ]);
+                            $plan->update(['code' => \Vinkla\Hashids\Facades\Hashids::encode($plan->id)]);
+                            ProductPlan::create([
+                                                    'product_id' => $product->id,
+                                                    'plan_id'    => $plan->id,
+                                                    'amount'     => '1',
+                                                ]);
 
-                if (empty($product)) {
-                    $pls[] = $storeProduct->getId();
-                } else {
+                            $photo = '';
+                            if (count($storeProduct->getVariants()) > 1) {
+                                foreach ($storeProduct->getImages() as $image) {
+                                    $variantIds = $image->getVariantIds();
+                                    foreach ($variantIds as $variantId) {
+                                        if ($variantId == $variant->getId()) {
+                                            if ($image->getSrc() != '') {
+                                                $photo = $image->getSrc();
+                                            } else {
+                                                $photo = $storeProduct->getImage()->getSrc();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
-                    /*$productPlan = ProductPlan::where('product_id', $product->id)
-                                              ->where('amount', 1)
-                                              ->orderBy('id', 'ASC')
-                                              ->first();
-
-                    try {
-                        $plan = Plan::find($productPlan->plan_id)->toArray();
-                    } catch (Exception $e) {
-                        $pl[] = $product->id;
-                    }*/
+                            if (empty($photo)) {
+                                $image = $storeProduct->getImage();
+                                if (!empty($image)) {
+                                    try {
+                                        $photo = $image->getSrc();
+                                    } catch (Exception $e) {
+                                        report($e);
+                                    }
+                                }
+                            }
+                            $product->update(['photo' => $photo]);
+                        }
+                    }
                 }
             }
-            dd($pls);
-
-            /*$storeProduct   = $shopifyService->getShopProduct($plan->shopify_id);*/
-            /* if (empty($storeProduct)) {
-                 continue;
-             } else {
-                 foreach ($storeProduct->getVariants() as $variant) {
-                     $title       = '';
-                     $description = '';
-
-                     $description = $variant->getOption1();
-                     if ($description == 'Default Title') {
-                         $description = '';
-                     }
-                     if ($variant->getOption2() != '') {
-                         $description .= ' - ' . $variant->getOption2();
-                     }
-                     if ($variant->getOption3() != '') {
-                         $description .= ' - ' . $variant->getOption3();
-                     }
-                     if (empty($storeProduct->getTitle())) {
-                         $title = 'Produto sem nome';
-                     } else {
-                         $title = mb_substr($storeProduct->getTitle(), 0, 100);
-                     }
-
-                     $product = Product::with('productsPlans')
-                                       ->where('shopify_id', $storeProduct->getId())
-                                       ->where('shopify_variant_id', $variant->getId())
-                                       ->where('project_id', $plan->project_id)->first();
-                     if (!empty($product)) {
-
-                         $productPlan = ProductPlan::where('product_id', $product->id)
-                                                   ->where('amount', 1)
-                                                   ->orderBy('id', 'ASC')->first();
-
-                         if (empty($productPlan)) {
-                             ProductPlan::create([
-                                                     'product_id' => $product->id,
-                                                     'plan_id'    => $plan->id,
-                                                     'amount'     => 1,
-                                                 ]);
-                         }
-                     }
-                 }
-             }*/
+            dd('Acabou');
         } catch (Exception $e) {
             //
         }
