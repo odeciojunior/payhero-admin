@@ -25,6 +25,7 @@ class TransfersService
         $transferModel    = new Transfer();
         $transactionModel = new Transaction();
 
+        // Transações pagas
         if(empty($saleId)){
             $transactions = $transactionModel->where([
                                                          ['release_date', '<=', Carbon::now()->format('Y-m-d')],
@@ -69,7 +70,51 @@ class TransfersService
             }
         }
 
-        //event(new ReleasedBalanceEvent(collect($transfers)));
+
+        // Trasações antecipadas
+        if(empty($saleId)){
+            $transactions = $transactionModel->with('anticipatedTransactions')
+                                             ->where([
+                                                        ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                                                        ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
+                                                    ]);
+        }
+        else {
+            $transactions = $transactionModel->with('anticipatedTransactions')
+                                             ->where([
+                                                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                                                 ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
+                                                 ['sale_id', $saleId]
+                                             ]);
+        }
+
+        foreach ($transactions->cursor() as $transaction) {
+            try {
+                $company = $companyModel->find($transaction->company_id);
+
+                $transfer = $transferModel->create([
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'company_id'     => $company->id,
+                                                       'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+                                                       'value'          => $transaction->value - $transaction->anticipatedTransactions()->first()->value,
+                                                       'type'           => 'in',
+                                                   ]);
+
+                $transaction->update([
+                                         'status'      => 'transfered',
+                                         'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                                    ]);
+
+                $company->update([
+                                     'balance' => intval($company->balance) + intval($transaction->value - $transaction->anticipatedTransactions()->first()->value),
+                                 ]);
+
+                $transfers[] = $transfer->toArray();
+            } catch (Exception $e) {
+                report($e);
+            }
+        }
 
         Log::info('transferencias criadas ' . print_r($transfers, true));
     }
