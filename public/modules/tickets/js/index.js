@@ -10,10 +10,11 @@ $(document).ready(function () {
         2: 'green-gradient',
         3: 'red-gradient',
     };
-    let pageCurrent = null;
+    let pageCurrent = JSON.parse(getCookie('filterTickets')).page || null;
     if(!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)){
         deleteCookie('filterTickets');
     }
+
 
     dateRangePicker();
     getTickets();
