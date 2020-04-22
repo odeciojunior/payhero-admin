@@ -251,7 +251,7 @@ class SalesApiController extends Controller
             if ($saleId) {
                 $sale        = $saleModel->with('customer')->where('id', $saleId)->first();
                 $userProject = $userProjectModel->with('company')->where('project_id', $sale->project_id)->first();
-                if ($userProject->company->balance < $sale->total_paid_value) {
+                if ($userProject->company->balance - preg_replace("/[^0-9]/", "", $sale->total_paid_value)  < -1000) {
 
                     return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
                 }
@@ -302,7 +302,7 @@ class SalesApiController extends Controller
                                            'reason'         => 'Estorno de boleto',
                                        ]);
                 $sale->customer->update([
-                                            'balance' => $sale->customer->balance += $refundValue,
+                                            'balance' => $sale->customer->balance + $refundValue,
                                         ]);
                 $sale->update([
                                   'status' => $sale->present()->getStatus('billet_refunded'),
