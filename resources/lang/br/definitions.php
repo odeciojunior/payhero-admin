@@ -87,7 +87,7 @@ return [
                 "partial_refund"  => "Estorno Parcial",
                 "in_review"       => "Revisão Antifraude",
                 "system_error"    => "Erro de sistema",
-                "billet_refunded" => "Boleto estornado",
+                "billet_refunded" => "Estornado",
             ],
         ],
         "invoices"              => [

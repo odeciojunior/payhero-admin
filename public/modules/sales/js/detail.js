@@ -223,7 +223,7 @@ $(() => {
                 status.append("<span class='ml-2 badge badge-antifraude'>Revisão Antifraude</span>");
                 break;
             case 22:
-                status.append("<span class='ml-2 badge badge-danger'>Boleto estornado</span>");
+                status.append("<span class='ml-2 badge badge-danger'>Estornado</span>");
                 break;
             default:
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");

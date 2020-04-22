@@ -114,7 +114,7 @@ return [
                 "partial_refunded" => "Estorno Parcial",
                 "in_review"        => "Revisão Antifraude",
                 "system_error"     => "Erro de sistema",
-                "billet_refunded"  => "Boleto estornado",
+                "billet_refunded"  => "Estornado",
             ],
         ],
         "product_plan_sale"        => [
