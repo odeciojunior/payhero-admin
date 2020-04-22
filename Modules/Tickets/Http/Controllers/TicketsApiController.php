@@ -54,6 +54,20 @@ class TicketsApiController extends Controller
                 $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
                 $tickets->where('id', $ticketId);
             }
+            if (!empty($data['answered'])) {
+                if ($data['answered'] == 'answered') {
+                    $tickets->whereHas('lastMessage', function ($query) {
+                        $query->where('from_admin', 1)
+                              ->where('from_system', 0);
+                    });
+                } else {
+                    $tickets->whereDoesntHave('lastMessage', function ($query) {
+                        $query->where('from_admin', 1)
+                            ->where('from_system', 0);
+                    });
+                }
+            }
+
             $tickets = $tickets->orderByDesc('id')
                 ->paginate(5);
 

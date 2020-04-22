@@ -159,7 +159,7 @@ $(document).ready(function () {
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
 
                 //Saldo antecipavel
-                $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">0,00</span>');
+                $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">' + response.anticipable_balance + '</span>');
 
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
@@ -188,8 +188,82 @@ $(document).ready(function () {
                 loadOnAny('.price', true);
             }
         });
-        $(document).on('click', '.div-antecipable-balance', function () {
+
+        $('.div-antecipable-balance').popover({
+            animation: true,
+            placement: 'top',
+            title: 'Antecipação de saldo pendente',
+            content: '',
+            html: true,
+            template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header">Teste</h3><div class="popover-body"></div></div>'
         });
+
+        // se clicar fora do popover ele fecha
+        $('html').on('click', function(e) {
+            if (typeof $(e.target).data('original-title') == 'undefined') {
+                $('.div-antecipable-balance').popover('hide');
+            }
+        });
+
+        $('.div-antecipable-balance').on('click', function () {
+
+            loadingOnScreen();
+
+            $.ajax({
+                url: "api/anticipations/" + $("#transfers_company_select option:selected").val(),
+                type: "GET",
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    loadingOnScreenRemove();
+                    var tooltipData = `
+                        Disponível para antecipação: R$ ${response.data.antecipable_value} <br>
+                        Taxa de antecipação: R$ ${response.data.tax_value} <br>
+                        Saldo final antecipável: <b>R$ ${response.data.value_minus_tax}</b> <br>
+                        <button id='confirm-anticipation' class='btn btn-success text-center mt-20 mb-20'>Confirmar antecipação</button>
+                    `;
+                    $('.div-antecipable-balance').attr('data-content', tooltipData);
+                    $('.div-antecipable-balance').popover('show');
+
+                    $("#confirm-anticipation").unbind("click");
+                    $("#confirm-anticipation").on("click", function(){
+
+                        loadingOnScreen();
+
+                        $.ajax({
+                            url: "api/anticipations",
+                            type: "POST",
+                            data: { company_id: $("#transfers_company_select option:selected").val() },
+                            dataType: "json",
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: (response) => {
+                                loadingOnScreenRemove();
+                                alertCustom('error', 'Ocorreu algum erro');
+                            },
+                            success: (response) => {
+                                loadingOnScreenRemove();
+                                alertCustom('success', response.data.message);
+                                updateBalances();
+                                updateTransfersTable();
+                            }
+                        });
+
+                    });
+                }
+            });
+    
+        });
+
         function isEmpty(value) {
             if (value.length === 0) {
                 return 0;

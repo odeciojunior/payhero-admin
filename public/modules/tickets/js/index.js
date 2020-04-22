@@ -27,10 +27,10 @@ $(document).ready(function () {
 
         if (link == null) {
             link = '/api/tickets?' + 'status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val().replace("#", "") + '&date=' + $("#date_range").val()
-                + '&category=' + $("#category-filter").val();
+                + '&category=' + $("#category-filter").val() + '&answered=' + $("#answered").val();
         } else {
             link = '/api/tickets/' + link + '&status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val().replace("#", "") + '&date=' + $("#date_range").val()
-                + '&category=' + $("#category-filter").val();
+                + '&category=' + $("#category-filter").val() + '&answered=' + $("#answered").val();
         }
         $.ajax({
             method: "GET",

@@ -15,12 +15,14 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $transaction_id
  * @property int $user_id
  * @property int $company_id
+ * @property int $anticipation_id
  * @property string $value
  * @property string $type
  * @property int $type_enum
  * @property string $reason
  * @property string $created_at
  * @property string $updated_at
+ * @property Anticipation $anticipation
  * @property Transaction $transaction
  * @property User $user
  * @property Company $company
@@ -28,7 +30,6 @@ use Spatie\Activitylog\Models\Activity;
 class Transfer extends Model
 {
     use FoxModelTrait, PresentableTrait, LogsActivity;
-
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -53,6 +54,7 @@ class Transfer extends Model
         'user_id',
         'company_id',
         'customer_id',
+        'anticipation_id',
         'value',
         'type',
         'type_enum',

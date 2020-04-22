@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=1') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=2') }}">
     @endpush
     <div class="page">
         <div class="page-header container">
@@ -53,6 +53,13 @@
                         <span class='font-size-16 mt-20 ticket-status'></span>
                         <hr class='mb-0 mt-10'>
                     </div>
+                    <div style="display:none">
+                        <span class="font-weight-bold d-block mb-10">Anexos:</span>
+                        <div id='div-ticket-attachments'>
+                            {{-- js carrega... --}}
+                        </div>
+                        <hr class="mt-30">
+                    </div>
                     <div id='div-ticket-comments'>
                         {{-- js carrega... --}}
                     </div>
@@ -76,6 +83,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/show.js?v=1')}}'></script>
+        <script src='{{asset('/modules/tickets/js/show.js?v=2')}}'></script>
     @endpush
 @endsection

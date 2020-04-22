@@ -12,7 +12,9 @@ use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\AnticipationService;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\CompanyService;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,9 +36,10 @@ class FinancesApiController extends Controller
         try {
             $companyModel = new Company();
 
-            $transactionModel     = new Transaction();
-            $companyService       = new CompanyService();
-            $remessaOnlineService = new RemessaOnlineService();
+            $transactionModel             = new Transaction();
+            $companyService               = new CompanyService();
+            $remessaOnlineService         = new RemessaOnlineService();
+            $anticipationService          = new AnticipationService();
 
             $antecipableBalance = 0;
             $pendingBalance     = 0;
@@ -55,20 +58,25 @@ class FinancesApiController extends Controller
 
                 if (!empty($company)) {
 
-                    $pendingTransactions     = $transactionModel->newQuery()->where('company_id', $company->id)
+                    $pendingTransactions     = $transactionModel->where('company_id', $company->id)
                                                                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                                                 ->whereDate('release_date', '>', now()->startOfDay())
                                                                 ->select(DB::raw('sum( value ) as pending_balance'))
                                                                 ->first();
-                    $pendingBalance          += $pendingTransactions->pending_balance;
-                    $antecipableTransactions = $transactionModel->newQuery()->where('company_id', $company->id)
-                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                                                ->whereDate('release_date', '>', Carbon::today())
-                                                                ->whereDate('antecipation_date', '<=', Carbon::today())
-                                                                ->select(DB::raw('sum( antecipable_value ) as antecipable_balance'))
-                                                                ->first();
 
-                    $antecipableBalance += $antecipableTransactions->antecipable_balance;
+                    $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
+                                                                ->where('company_id', $company->id)
+                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
+                                                                ->get();
+
+                    $pendingBalance          += $pendingTransactions->pending_balance;
+
+                    if(count($transactionsAnticipated) > 0){
+                        foreach($transactionsAnticipated as $transactionAnticipated){
+                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                        }
+                    }
+
                     $availableBalance   = $company->balance;
                     $totalBalance       = $availableBalance + $pendingBalance;
 
@@ -81,12 +89,15 @@ class FinancesApiController extends Controller
                         $currencyQuotation = number_format((float)$currencyQuotation, 2, ',', '');
                     }
 
+                    $antecipableBalance = $company->user->antecipation_enabled_flag ? $anticipationService->getAntecipableValue($company) : '000';
+
                     return response()->json(
                         [
                             'available_balance'   => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                             'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                             'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                            'anticipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
                         ]
