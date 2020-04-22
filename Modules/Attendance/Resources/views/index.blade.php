@@ -43,6 +43,12 @@
                             </div>
                             <div class='col-12 col-md-3 col-lg-3'>
                                 <div class='form-group'>
+                                    <label>CPF do Cliente</label>
+                                    <input id='cpf-filter' class='form-control' type='text' placeholder='CPF do cliente'>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='form-group'>
                                     <label>Data</label>
                                     <input name='date_range' id="date_range" class="form-control" placeholder="Clique para editar..." readonly>
                                 </div>
@@ -138,7 +144,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=3')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=5')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
