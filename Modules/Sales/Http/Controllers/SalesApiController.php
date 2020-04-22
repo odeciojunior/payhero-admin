@@ -251,63 +251,69 @@ class SalesApiController extends Controller
             if ($saleId) {
                 $sale        = $saleModel->with('customer')->where('id', $saleId)->first();
                 $userProject = $userProjectModel->with('company')->where('project_id', $sale->project_id)->first();
-                if ($userProject->company->balance - preg_replace("/[^0-9]/", "", $sale->total_paid_value)  < -1000) {
+                if ($userProject->company->balance - preg_replace("/[^0-9]/", "", $sale->total_paid_value) < -1000) {
 
                     return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
                 }
                 $transactionCompany = $transactionModel->where('sale_id', $sale->id)
                                                        ->where('company_id', $userProject->company_id)
                                                        ->first();
+                if ($transactionCompany->status_enum == $transactionModel->present()->getStatusEnum('transfered')) {
+                    $transactionCloudFox = $transactionModel->where('sale_id', $sale->id)
+                                                            ->whereNull('company_id')
+                                                            ->first();
+                    //Transferencia de saída do usuário
+                    $transferModel->create([
+                                               'transaction_id' => null,
+                                               'user_id'        => auth()->user()->account_owner_id,
+                                               'company_id'     => $userProject->company_id,
+                                               'customer_id'    => null,
+                                               'value'          => $transactionCompany->value,
+                                               'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                               'type'           => 'out',
+                                               'reason'         => 'Estorno',
+                                           ]);
+                    //Taxa de estorno
+                    $transferModel->create([
+                                               'transaction_id' => null,
+                                               'user_id'        => auth()->user()->account_owner_id,
+                                               'company_id'     => $userProject->company_id,
+                                               'customer_id'    => null,
+                                               'value'          => $transactionCloudFox->value,
+                                               'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                               'type'           => 'out',
+                                               'reason'         => 'Taxa de estorno',
+                                           ]);
 
-                $transactionCloudFox = $transactionModel->where('sale_id', $sale->id)
-                                                        ->whereNull('company_id')
-                                                        ->first();
-                //Transferencia de saída do usuário
-                $transferModel->create([
-                                           'transaction_id' => null,
-                                           'user_id'        => auth()->user()->account_owner_id,
-                                           'company_id'     => $userProject->company_id,
-                                           'customer_id'    => null,
-                                           'value'          => $transactionCompany->value,
-                                           'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                                           'type'           => 'out',
-                                           'reason'         => 'Estorno',
-                                       ]);
-                //Taxa de estorno
-                $transferModel->create([
-                                           'transaction_id' => null,
-                                           'user_id'        => auth()->user()->account_owner_id,
-                                           'company_id'     => $userProject->company_id,
-                                           'customer_id'    => null,
-                                           'value'          => $transactionCloudFox->value,
-                                           'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                                           'type'           => 'out',
-                                           'reason'         => 'Taxa de estorno',
-                                       ]);
+                    $refundValue = $transactionCompany->value + $transactionCloudFox->value;
+                    $userProject->company->update([
+                                                      'balance' => $userProject->company->balance -= $refundValue,
+                                                  ]);
 
-                $refundValue = $transactionCompany->value + $transactionCloudFox->value;
-                $userProject->company->update([
-                                                  'balance' => $userProject->company->balance -= $refundValue,
-                                              ]);
-
-                //Transferencia de entrada do cliente
-                $transferModel->create([
-                                           'transaction_id' => null,
-                                           'user_id'        => auth()->user()->account_owner_id,
-                                           'customer_id'    => $sale->customer_id,
-                                           'company_id'     => null,
-                                           'value'          => $refundValue,
-                                           'type_enum'      => $transferModel->present()->getTypeEnum('in'),
-                                           'type'           => 'in',
-                                           'reason'         => 'Estorno de boleto',
-                                       ]);
-                $sale->customer->update([
-                                            'balance' => $sale->customer->balance + $refundValue,
-                                        ]);
-                $sale->update([
-                                  'status' => $sale->present()->getStatus('billet_refunded'),
-                              ]);
-                event(new BilletRefundedEvent($sale));
+                    //Transferencia de entrada do cliente
+                    $transferModel->create([
+                                               'transaction_id' => null,
+                                               'user_id'        => auth()->user()->account_owner_id,
+                                               'customer_id'    => $sale->customer_id,
+                                               'company_id'     => null,
+                                               'value'          => $refundValue,
+                                               'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+                                               'type'           => 'in',
+                                               'reason'         => 'Estorno de boleto',
+                                           ]);
+                    $sale->customer->update([
+                                                'balance' => $sale->customer->balance + $refundValue,
+                                            ]);
+                    $sale->update([
+                                      'status' => $sale->present()->getStatus('billet_refunded'),
+                                  ]);
+                    event(new BilletRefundedEvent($sale));
+                } else if ($transactionCompany->status_enum == $transactionModel->present()->getStatusEnum('paid')) {
+                    $transactionCompany->update([
+                                                    'status_enum' => $transactionModel->present()->getStatusEnum('billet_refunded'),
+                                                    'status'      => 'billet_refunded',
+                                                ]);
+                }
 
                 return response()->json(['message' => 'Boleto estornado com sucesso'], Response::HTTP_OK);
             } else {
@@ -316,6 +322,7 @@ class SalesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar estornar boleto  SalesApiController - refundBillet');
             report($e);
+
             return response()->json(['error' => 'Erro ao tentar estornar boleto'], 400);
         }
     }

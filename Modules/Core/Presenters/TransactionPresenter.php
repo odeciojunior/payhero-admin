@@ -26,6 +26,7 @@ class TransactionPresenter extends Presenter
                 case 7:
                     return 'refunded';
             }
+
             return '';
         } else {
             switch ($type) {
@@ -44,6 +45,7 @@ class TransactionPresenter extends Presenter
                 case 'refunded':
                     return 7;
             }
+
             return '';
         }
     }
@@ -72,7 +74,10 @@ class TransactionPresenter extends Presenter
                     return 'canceled_antifraud';
                 case 12:
                     return 'anticipated';
-                }
+                case 13:
+                    return 'billet_refunded';
+            }
+
             return '';
         } else {
             switch ($status) {
@@ -96,7 +101,10 @@ class TransactionPresenter extends Presenter
                     return 9;
                 case 'anticipated':
                     return 12;
-                }
+                case 'billet_refunded':
+                    return 13;
+            }
+
             return '';
         }
     }
