@@ -41,7 +41,8 @@ class DashboardApiController extends Controller
 
             $userTerm = true;
             if (!$request->has('skip')) {
-                $userTerm = $userTermsModel->where([['accepted_at', true], ['term_version', 'v1'], ['user_id', $userLogged->account_owner_id]])
+                $userTerm = $userTermsModel->whereNotNull('accepted_at')
+                                           ->where([['term_version', 'v1'], ['user_id', $userLogged->id]])
                                            ->exists();
             }
 
