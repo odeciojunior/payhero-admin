@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
@@ -48,7 +49,7 @@ class TrackingService
 
             $trackingmoreService = new TrackingmoreService();
 
-            $response = $trackingmoreService->getAllTrackings(['numbers' => $tracking->tracking_code]);
+            $response = $trackingmoreService->getAllTrackings(['numbers' => $tracking->tracking_code, 'lang' => 'cn']);
 
             $apiTracking = $response->data->items[0] ?? null;
 
@@ -115,7 +116,8 @@ class TrackingService
         //da perfectlog/aftership
         if($tracking->created_at->gte($this->migrationDate)) {
 
-            $apiCheckpoints = array_reverse($apiTracking->destination_info->trackinfo ?? []);
+            $apiCheckpoints = array_reverse($apiTracking->origin_info->trackinfo ?? []);
+            $apiCheckpoints += array_reverse($apiTracking->destination_info->trackinfo ?? []);
 
             if (!empty($apiCheckpoints)) {
                 foreach ($apiCheckpoints as $log) {
@@ -128,13 +130,48 @@ class TrackingService
                         $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                         //remove caracteres chineses e informações indesejadas
-                        preg_match('/[^\p{Common}\p{Latin}]+/u', $event, $nonLatinChars);
+                        $blacklistWords = [
+                            'asendia',
+                            'beijing',
+                            'chaozhou',
+                            'china',
+                            'dianhua',
+                            'dongguan',
+                            'fuyang',
+                            'guangdongshengguangzhoushi',
+                            'hang kong',
+                            'hong kong',
+                            'hongkong',
+                            'jangxi',
+                            'jinhua',
+                            'jiangxi',
+                            'jingwaijinkou',
+                            'kulitiba',
+                            'nanchang',
+                            'shanghai',
+                            'shantou',
+                            'shanzhao',
+                            'sheng',
+                            'shenzhen',
+                            'singapore',
+                            'sunyou',
+                            'xinyu',
+                            'yanwen',
+                            'yingshangxian',
+                            'yiwu',
+                            'zhongxin',
+                        ];
+
+                        if(Str::contains(strtolower($event), $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event))
+                        {
+                            $event = 'Encomenda em movimentação no exterior';
+                        }
 
                         $checkpoints->add([
                             'tracking_status_enum' => $status_enum,
                             'tracking_status' => $status,
                             'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
-                            'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' : $event,
+                            'event' => $event,
                         ]);
                     }
                 }
