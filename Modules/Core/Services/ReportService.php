@@ -1008,10 +1008,11 @@ class ReportService
             }
 
             $transactions = $transactionModel
-                ->select(\DB::raw('SUM(value) as value, DATE(release_date) as date'))
+                ->select(\DB::raw('(SUM(transactions.value) - SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END)) as value, DATE(release_date) as date'))
+                ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
                 ->where('company_id', $companyId)
                 ->whereIn('type', collect([2, 3, 4, 5]))
-                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
+                ->whereIn('status_enum', collect([$transactionModel->present()->getStatusEnum('paid'), $transactionModel->present()->getStatusEnum('anticipated')]))
                 ->whereBetween('release_date', [
                     Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(20)->format('Y-m-d'),
                 ])
