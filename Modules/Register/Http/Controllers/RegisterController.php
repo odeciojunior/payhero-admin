@@ -19,13 +19,13 @@ class RegisterController extends Controller
 {
     public function create(Request $request)
     {
-        if($request->segment(2) == 'nw2usr3cfx') {
+        if ($request->segment(2) == 'nw2usr3cfx') {
             return view('register::create');
         }
         $companyId = current(Hashids::decode($request->segment(2)));
         if (!empty($companyId)) {
             $invitation = Invitation::where(['company_id' => $companyId])->first();
-            if (!empty($invitation) && $invitation->company_id == 22) {
+            if (!empty($invitation) && ($invitation->company_id == 22 || $invitation->company_id == 156)) {
                 return view('register::create');
             } else {
                 return view('register::notInvite');
@@ -33,7 +33,6 @@ class RegisterController extends Controller
         } else {
             return view('register::notInvite');
         }
-
     }
 
     public function loginAsSomeUser($userId)
