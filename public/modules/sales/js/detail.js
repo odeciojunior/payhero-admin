@@ -260,13 +260,13 @@ $(() => {
         }
         $("#total-value").html("R$ " + sale.total);
 
-        if (sale.refund_value == '0,00') {
-            $('.text-partial-refund').hide();
-            $("#partial-refund-value").hide();
-        } else {
+        if (sale.refund_value != '0,00' && sale.status == 8) {
             $('.text-partial-refund').show();
             $("#partial-refund-value").html("R$ " + sale.refund_value);
             $("#partial-refund-value").show();
+        } else {
+            $('.text-partial-refund').hide();
+            $("#partial-refund-value").hide();
         }
 
         $('#taxas-label').text(sale.percentage_rate ? 'Taxas (' + sale.percentage_rate + '% + ' + sale.transaction_rate + '): ' : 'Taxas');
