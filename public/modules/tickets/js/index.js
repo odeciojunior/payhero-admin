@@ -11,7 +11,7 @@ $(document).ready(function () {
         3: 'red-gradient',
     };
 
-    let pageCurrent = JSON.parse(getCookie('filterTickets')).page || null;
+    let pageCurrent = JSON.parse(getCookie('filterTickets') || '{}').page;
     if(!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)){
         deleteCookie('filterTickets');
     }
