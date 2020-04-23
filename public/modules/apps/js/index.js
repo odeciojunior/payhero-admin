@@ -43,6 +43,10 @@ $(document).ready(function(){
                     $('#whatsapp2-bt').addClass('added');
                     $('#whatsapp2-icon').removeClass('wb-plus').addClass('wb-check');
                 }
+                if(response.hotsacIntegrations > 0){
+                    $('#hotsac-bt').addClass('added');
+                    $('#hotsac-icon').removeClass('wb-plus').addClass('wb-check');
+                }
             }
         });
     }
