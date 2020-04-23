@@ -17,8 +17,7 @@
                         </div>
                     </div>
                 </div>
-
-                {{--<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                     <div class="card" onclick="window.location.href='/integrations'" style='width:300px;'>
                         <a id="tool_integrations-bt" href="/integrations" class="add-btn">
                             <i id="tool_integrations-icon" class="icon wb-plus" aria-hidden="true"></i></a>
@@ -28,7 +27,7 @@
                             <p class="card-text sm">Cadastre suas integrações</p>
                         </div>
                     </div>
-                </div>--}}
+                </div>
             </div>
         </div>
     </div>
