@@ -15,12 +15,12 @@ $(document).ready(function () {
     });
 
     $('#btn-filtro').on('click', function () {
-        deleteCookie();
+        deleteCookie('filterProduct');
         updateProducts();
     });
 
     $("#pagination-products").on('click', function () {
-        deleteCookie();
+        deleteCookie('filterProduct');
     });
 
     getTypeProducts();
@@ -61,7 +61,7 @@ $(document).ready(function () {
     function updateProducts(link = null) {
         if (link !== null) {
             pageCurrent = link;
-            deleteCookie();
+            deleteCookie('filterProduct');
 
         }
 
@@ -71,7 +71,7 @@ $(document).ready(function () {
         let project = '';
         let name = '';
 
-        var cookie = getCookie();
+        var cookie = getCookie('filterProduct');
         if (cookie == '') {
             type = $("#type-products").val();
             project = $("#select-projects").val();
@@ -159,41 +159,9 @@ $(document).ready(function () {
 
     }
 
-    function setCookie(name, exdays, object) {
-
-        var expires;
-        var date;
-        var value;
-        date = new Date(); // criando cookie com a data atual
-        date.setTime(date.getTime() + (exdays * 3600 * 1000));
-        expires = date.toUTCString();
-        value = JSON.stringify(object);
-
-        document.cookie = name + "=" + value + "; expires=" + expires + ";path=/";
-    }
-
-    function getCookie() {
-        var name = 'filterProduct' + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    function deleteCookie() {
-        setCookie('filterProduct', -1);
-    }
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
-            deleteCookie();
+            deleteCookie('filterProduct');
             updateProducts();
         }
     });

@@ -10,28 +10,78 @@ $(document).ready(function () {
         2: 'green-gradient',
         3: 'red-gradient',
     };
+
+    let pageCurrent = JSON.parse(getCookie('filterTickets') || '{}').page;
+    if(!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)){
+        deleteCookie('filterTickets');
+    }
+
+    $('#cpf-filter').mask('000.000.000-00');
+
     dateRangePicker();
     getTickets();
     getTotalValues();
 
     $("#btn-filter").on("click", function (event) {
         event.preventDefault();
+        deleteCookie('filterTickets');
         getTickets();
         getTotalValues();
     });
 
-    function getTickets() {
+    $("#pagination-tickets").on('click', function () {
+        deleteCookie('filterTickets');
+    });
+
+    function getFilters(urlParams = false) {
+
+        let data = {
+            status: $("#status-filter").val(),
+            customer: $("#customer-filter").val(),
+            cpf: $("#cpf-filter").val(),
+            ticket_id: $("#ticker-code-filter").val().replace("#", ""),
+            date: $("#date_range").val(),
+            category: $("#category-filter").val(),
+            answered: $("#answered").val(),
+        };
+
+        if (urlParams) {
+            let params = "";
+            for (let param in data) {
+                params += '&' + param + '=' + data[param];
+            }
+            return encodeURI(params);
+        } else {
+            return data;
+        }
+    }
+
+    function getTickets(link = null) {
         loadOnAny('.page-content');
 
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        if (link !== null) {
+            pageCurrent = link;
+            deleteCookie('filterTickets');
+        }
+
+        let cookie = getCookie('filterTickets');
+        if(!!cookie){
+            cookie = JSON.parse(cookie);
+            $("#status-filter").val(cookie.status);
+            $("#customer-filter").val(cookie.customer);
+            $("#ticker-code-filter").val(cookie.ticket_id);
+            $("#date_range").val(cookie.date);
+            $("#category-filter").val(cookie.category);
+            $("#answered").val(cookie.answered);
+            link = cookie.page;
+        }
 
         if (link == null) {
-            link = '/api/tickets?' + 'status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val().replace("#", "") + '&date=' + $("#date_range").val()
-                + '&category=' + $("#category-filter").val() + '&answered=' + $("#answered").val();
+            link = '/api/tickets?' + getFilters(true).substr(1);
         } else {
-            link = '/api/tickets/' + link + '&status=' + $("#status-filter").val() + '&customer=' + $("#customer-filter").val() + '&ticket_id=' + $("#ticker-code-filter").val().replace("#", "") + '&date=' + $("#date_range").val()
-                + '&category=' + $("#category-filter").val() + '&answered=' + $("#answered").val();
+            link = '/api/tickets/' + link + getFilters(true);
         }
+
         $.ajax({
             method: "GET",
             url: link,
@@ -121,12 +171,13 @@ $(document).ready(function () {
                             </div>`;
                         $("#div-tickets").append(data);
                     }
-                    pagination(response, 'tickets', getTickets);
-
                 } else {
                     $("#div-tickets").hide();
                     $("#div-ticket-empty").show();
                 }
+                let filter = {...getFilters(), page : pageCurrent || null};
+                setCookie('filterTickets', 1, filter);
+                pagination(response, 'tickets', getTickets);
             }
         });
     }

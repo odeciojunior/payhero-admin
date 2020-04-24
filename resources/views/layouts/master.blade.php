@@ -104,7 +104,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=10') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=11') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

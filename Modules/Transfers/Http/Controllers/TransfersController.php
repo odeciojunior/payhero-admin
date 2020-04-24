@@ -62,27 +62,27 @@ class TransfersController extends Controller
                 $transfers->where('transaction.sale_id', $saleId);
             }
 
-            if(!empty($data['type'])){
+            if (!empty($data['type'])) {
                 $transfers->where('transfers.type_enum', $transfersModel->present()->getTypeEnum($data['type']));
             }
 
-            if(!empty($data['reason'])){
+            if (!empty($data['reason'])) {
                 $transfers->where('transfers.reason', 'like', '%' . $data['reason'] . '%');
             }
 
-            if(!empty($data['value'])){
+            if (!empty($data['value'])) {
                 $value = intval(preg_replace('/[^0-9]/', '', $data['value']));
                 $transfers->where('transfers.value', $value);
             }
 
             $balanceInPeriod = $transfers->selectRaw("sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod")
-                ->first();
+                                         ->first();
 
-            if(!empty($balanceInPeriod)){
+            if (!empty($balanceInPeriod)) {
                 $balanceInPeriod = $balanceInPeriod->balanceInPeriod / 100;
                 $balanceInPeriod = number_format($balanceInPeriod, 2, ',', '.');
             }
-
+            $transfers = $transfers->whereNull('transfers.customer_id');
             $transfers = $transfers->select(
                 'transfers.*',
                 'transaction.sale_id',
@@ -92,16 +92,16 @@ class TransfersController extends Controller
                 'transaction.type as transaction_type',
                 'transaction.antecipable_value'
             )->orderBy('id', 'DESC')
-            ->paginate(10);
+                                   ->paginate(10);
+            $return    = TransfersResource::collection($transfers);
 
-            $return = TransfersResource::collection($transfers);
-
-            $return->additional(['meta' => [
-                'balance_in_period' => $balanceInPeriod,
-            ]]);
+            $return->additional([
+                                    'meta' => [
+                                        'balance_in_period' => $balanceInPeriod,
+                                    ],
+                                ]);
 
             return $return;
-
         } catch (Exception $e) {
             Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
             report($e);

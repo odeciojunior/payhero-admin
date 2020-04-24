@@ -395,6 +395,41 @@ function verifyDocumentPending() {
 
 /* End - Document Pending Alert */
 
+/* Cookies */
+function setCookie(name, exdays, object) {
+
+    var expires;
+    var date;
+    var value;
+    date = new Date(); // criando cookie com a data atual
+    date.setTime(date.getTime() + (exdays * 3600 * 1000));
+    expires = date.toUTCString();
+    value = JSON.stringify(object);
+
+    document.cookie = name + "=" + value + "; expires=" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    name += "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function deleteCookie(name) {
+    setCookie(name, -1);
+}
+/* Cookies */
+
 $.fn.shake = function () {
     let distance = 5;
     let speed = 50;
@@ -408,4 +443,5 @@ $.fn.shake = function () {
             .animate(animation1, speed);
     }
 };
+
 

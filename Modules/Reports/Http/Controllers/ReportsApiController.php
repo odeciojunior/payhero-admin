@@ -515,13 +515,16 @@ class ReportsApiController extends Controller
                 $transactionModel = new Transaction();
 
                 $itens = $transactionModel->select([
-                                                       DB::raw('SUM(transactions.value) as value'),
-                                                       DB::raw('DATE(transactions.release_date) as date'),
+                                                       DB::raw('(SUM(transactions.value) - (SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END))) as value'),
+                                                       DB::raw('DATE(transactions.release_date) as date')
                                                    ])
                                           ->where('company_id', $companyId)
+                                          ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
                                           ->whereIn('transactions.type', collect([2, 3, 4, 5]))
-                                          ->where('transactions.status_enum', $transactionModel->present()
-                                                                                               ->getStatusEnum('paid'))
+                                          ->whereIn('transactions.status_enum', collect([
+                                                        $transactionModel->present()->getStatusEnum('paid'),
+                                                        $transactionModel->present()->getStatusEnum('anticipated')
+                                                    ]))
                                           ->whereBetween('release_date', [
                                               Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)
                                                                                               ->format('Y-m-d'),
@@ -559,15 +562,20 @@ class ReportsApiController extends Controller
                 $transactionModel = new Transaction();
 
                 $transactionTotal = $transactionModel->join('sales', 'transactions.sale_id', 'sales.id')
+                                                     ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
                                                      ->select([
-                                                                  DB::raw('SUM(transactions.value) as value'),
-                                                                  DB::raw('SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) AS valueBillet'),
-                                                                  DB::raw('SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) AS valueCard'),
+                                                                  DB::raw('(SUM(transactions.value) - SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END)) as value'),
+                                                                  DB::raw('(SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) -
+                                                                            SUM(CASE WHEN transactions.status_enum = 12 AND sales.payment_method = 2 THEN anticipated_transactions.value ELSE 0 END)) AS valueBillet'),
+                                                                  DB::raw('(SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) - 
+                                                                            SUM(CASE WHEN transactions.status_enum = 12 AND sales.payment_method IN(1,3) THEN anticipated_transactions.value ELSE 0 END)) AS valueCard'),
                                                               ])
                                                      ->where('company_id', $companyId)
                                                      ->whereIn('transactions.type', collect([2, 3, 4, 5]))
-                                                     ->where('transactions.status_enum', $transactionModel->present()
-                                                                                                          ->getStatusEnum('paid'))
+                                                     ->whereIn('transactions.status_enum', collect([
+                                                        $transactionModel->present()->getStatusEnum('paid'),
+                                                        $transactionModel->present()->getStatusEnum('anticipated')
+                                                    ]))
                                                      ->whereBetween('release_date', [
                                                          Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()
                                                                                                          ->addDays(30)
@@ -620,15 +628,18 @@ class ReportsApiController extends Controller
         $transactionModel = new Transaction();
 
         $itens = $transactionModel->select([
-                                               DB::raw('SUM(transactions.value) as value'),
-                                               DB::raw('DATE(transactions.release_date) as date'),
+                                               DB::raw('(SUM(transactions.value) - (SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END))) as value'),
+                                               DB::raw('DATE(transactions.release_date) as date')
                                            ])
                                   ->join('companies', 'transactions.company_id', 'companies.id')
+                                  ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
                                   ->where('companies.user_id', auth()->user()->id)
                                   ->where('companies.id', $companyId)
                                   ->whereIn('transactions.type', collect([2, 3, 4, 5]))
-                                  ->where('transactions.status_enum', $transactionModel->present()
-                                                                                       ->getStatusEnum('paid'))
+                                  ->whereIn('transactions.status_enum', collect([
+                                                $transactionModel->present()->getStatusEnum('paid'),
+                                                $transactionModel->present()->getStatusEnum('anticipated')
+                                            ]))
                                   ->whereBetween('release_date', [
                                       Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)
                                                                                       ->format('Y-m-d'),
