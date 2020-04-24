@@ -163,7 +163,7 @@ class SaleService
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
-        $transactions     = $this->getSalesQueryBuilder($filters);
+        $transactions = $this->getSalesQueryBuilder($filters);
 
         $resume = ['total_sales' => 0];
 
@@ -173,12 +173,19 @@ class SaleService
             //cria um item no array pra cada moeda inclusa nas vendas
             $item->currency          = $item->currency ?? 'real';
             $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
+
             //comissao
-            $resume[$item->currency]['comission'] += in_array($item->status_enum,
-                                                              [
-                                                                  $transactionModel->present()->getStatusEnum('paid'),
-                                                                  $transactionModel->present()->getStatusEnum('transfered'),
-                                                              ]) ? (floatval($item->value) / 100) : 0;
+            $sale = $item->sale;
+            $isBoleto = $item->sale->payment_method == $sale->present()->getPaymentType('boleto');
+            $statusArray = [
+                $transactionModel->present()->getStatusEnum('paid'),
+                $transactionModel->present()->getStatusEnum('transfered'),
+            ];
+            if (in_array($item->status_enum, $statusArray)
+                || ($isBoleto && $item->status == 'paid')) {
+                $resume[$item->currency]['comission'] += (floatval($item->value) / 100);
+            }
+
             //calcula o total
             $total            = $item->sale->sub_total;
             $total            += $item->sale->shipment_value;
