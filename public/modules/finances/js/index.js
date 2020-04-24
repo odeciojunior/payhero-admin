@@ -598,8 +598,9 @@ $(document).ready(function () {
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
                             data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
+                            console.log(value.value_anticipable);
                             if (value.value_anticipable != '0,00') {
-                                data += `<br><small>${value.value_anticipable} antecipados - #codigoantecipação</small> </td>`;
+                                data += `<br><small>${value.value_anticipable} antecipados </small> </td>`;
                             } else {
                                 data += `</td>`;
                             }

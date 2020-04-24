@@ -22,9 +22,14 @@ class TransfersResource extends Resource
     {
         $transactionPresenter = (new Transaction())->present();
 
-        $valueAnticipable = '';
+        $codeAnticipation = '';
         if (!empty($this->transaction) && !empty($this->transaction->anticipatedTransactions()->first())) {
-            $valueAnticipable = $this->transaction->anticipatedTransactions()->first()->value;
+            $anticipation     = $this->transaction->anticipatedTransactions()
+                                                  ->first();
+            $valueAnticipable = number_format(intval($anticipation->value) / 100, 2, ',', '.');
+            $codeAnticipation = '#' . Hashids::encode($anticipation->id);
+        } else {
+            $valueAnticipable = '0,00';
         }
 
         if (!empty($this->transaction) && empty($this->reason)) {
@@ -36,14 +41,17 @@ class TransfersResource extends Resource
             // } else if (!empty($this->transaction->withTrashed()) && $this->reason == 'refunded') {
         } else if ($this->reason == 'refunded') {
             $reason = 'Estorno da transação';
+        } else if ($this->reason == 'Antecipação') {
+            $reason = 'Antecipação';
         } else {
             $reason = $this->reason;
         }
 
-        $type     = $this->type_enum == 2 ? '-' : '';
-        $value    = number_format(intval($type . $this->value) / 100, 2, ',', '.');
-        $currency = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
-        $value    = $currency . $value;
+        $type             = $this->type_enum == 2 ? '-' : '';
+        $value            = number_format(intval($type . $this->value) / 100, 2, ',', '.');
+        $currency         = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
+        $value            = $currency . $value;
+        $valueAnticipable = $valueAnticipable != '0,00' ? $currency . $valueAnticipable : '0,00';
 
         $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null($this->transaction_type);
 
@@ -60,7 +68,7 @@ class TransfersResource extends Resource
             'date'              => $this->created_at->format('d/m/Y'),
             'is_owner'          => $isOwner,
             'sale_date'         => $saleDate,
-            'value_anticipable' => number_format(intval($currency . $type . $valueAnticipable) / 100, 2, ',', '.'),
+            'value_anticipable' => $valueAnticipable,
         ];
     }
 }
