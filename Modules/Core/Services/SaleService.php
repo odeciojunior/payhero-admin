@@ -175,16 +175,11 @@ class SaleService
             $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
 
             //comissao
-            $sale = $item->sale;
-            $isBoleto = $item->sale->payment_method == $sale->present()->getPaymentType('boleto');
-            $statusArray = [
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()->getStatusEnum('transfered'),
-            ];
-            if (in_array($item->status_enum, $statusArray)
-                || ($isBoleto && $item->status == 'paid')) {
-                $resume[$item->currency]['comission'] += (floatval($item->value) / 100);
-            }
+            $resume[$item->currency]['comission'] += in_array($item->status_enum,
+                [
+                    $transactionModel->present()->getStatusEnum('paid'),
+                    $transactionModel->present()->getStatusEnum('transfered'),
+                ]) ? (floatval($item->value) / 100) : 0;
 
             //calcula o total
             $total            = $item->sale->sub_total;
