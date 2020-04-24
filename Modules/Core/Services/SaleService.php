@@ -108,7 +108,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 12,20,22];
+                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             } else {
                 $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
@@ -177,7 +177,8 @@ class SaleService
             $resume[$item->currency]['comission'] += in_array($item->status_enum,
                                                               [
                                                                   $transactionModel->present()->getStatusEnum('paid'),
-                                                                  $transactionModel->present()->getStatusEnum('transfered'),
+                                                                  $transactionModel->present()
+                                                                                   ->getStatusEnum('transfered'),
                                                               ]) ? (floatval($item->value) / 100) : 0;
             //calcula o total
             $total            = $item->sale->sub_total;
@@ -250,7 +251,12 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)->first();
+        $userTransaction  = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
+                                               ->first();
+        $valueAnticipable = null;
+        if (!empty($userTransaction->anticipatedTransactions()->first())) {
+            $valueAnticipable = $userTransaction->anticipatedTransactions()->first()->value;
+        }
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -292,7 +298,7 @@ class SaleService
         $affiliateComission = '';
         $affiliateValue     = 0;
         if (!empty($sale->affiliate_id)) {
-            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $affiliate            = Affiliate::withTrashed()->find($sale->affiliate_id);
             $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue     = $affiliateTransaction->value;
@@ -349,6 +355,7 @@ class SaleService
             'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
             'affiliate_comission' => $affiliateComission,
             'refund_value'        => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
+            'value_anticipable'   => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
         ];
     }
 
@@ -438,11 +445,11 @@ class SaleService
             $responseGateway = $response->response ?? [];
             $statusGateway   = $response->status_gateway ?? '';
 
-            if(!empty($partialValues)) {
-                 $status = 'partial_refunded';
+            if (!empty($partialValues)) {
+                $status            = 'partial_refunded';
                 $newTotalPaidValue = $partialValues['total_value_with_interest'];
             } else {
-                $status = 'refunded';
+                $status            = 'refunded';
                 $newTotalPaidValue = $totalPaidValue - $refundAmount;
             }
 
@@ -463,9 +470,9 @@ class SaleService
                                           'gateway_response' => json_encode($responseGateway),
                                           'refund_value'     => $refundAmount,
                                       ]);
-            if($status == 'refunded') {
+            if ($status == 'refunded') {
                 $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
-            } elseif($status == 'partial_refunded') {
+            } else if ($status == 'partial_refunded') {
                 $checktRecalc = $this->recalcSaleRefundPartial($sale, $partialValues);
             }
             if ($checktRecalc) {
@@ -562,7 +569,7 @@ class SaleService
                     }
                 }
                 if ($transactionRefundAmount == $transactionValue) {
-                    $refundTransaction->status = 'refunded';
+                    $refundTransaction->status      = 'refunded';
                     $refundTransaction->status_enum = $transactionModel->present()->getStatusEnum('refunded');
                 }
                 $refundTransaction->save();
@@ -691,7 +698,7 @@ class SaleService
 
             SplitPaymentPartialRefundService::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue, $refundTransactions);
 
-            foreach($refundTransactions as $refundTransaction){
+            foreach ($refundTransactions as $refundTransaction) {
 
                 $refundTransaction->delete();
             }
@@ -701,7 +708,7 @@ class SaleService
             $transfersSerice->verifyTransactions($sale->id);
 
             return true;
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
@@ -715,9 +722,9 @@ class SaleService
         $newTotalValueWithoutInterest = $newTotalvalue;
 
         $userProject = UserProject::where([
-                                                ['type_enum', (new UserProject)->present()->getTypeEnum('producer')],
-                                                ['project_id', $sale->project->id],
-                                         ])->first();
+                                              ['type_enum', (new UserProject)->present()->getTypeEnum('producer')],
+                                              ['project_id', $sale->project->id],
+                                          ])->first();
 
         $user = $userProject->user;
 
@@ -728,12 +735,12 @@ class SaleService
         $freeInstallments    = $sale->project->installments_interest_free;
         $installmentValueTax = intval(($newTotalvalue / 100) * $user->installment_tax);
 
-        if($installmentSelected == 1) {
+        if ($installmentSelected == 1) {
             $totalValueWithTax = intval($newTotalvalue);
             $installmentValue  = intval($newTotalvalue);
         } else {
-            $totalValueWithTax = $newTotalvalue + $installmentValueTax * ( $installmentSelected - 1 );
-            if($freeInstallments >= $installmentSelected) {
+            $totalValueWithTax = $newTotalvalue + $installmentValueTax * ($installmentSelected - 1);
+            if ($freeInstallments >= $installmentSelected) {
                 $installmentValue = intval($newTotalvalue / $installmentSelected);
             } else {
                 $installmentValue = intval($totalValueWithTax / $installmentSelected);

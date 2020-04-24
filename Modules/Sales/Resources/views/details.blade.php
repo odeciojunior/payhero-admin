@@ -103,26 +103,32 @@
                         <div id="convertax-value" class='col-lg-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-{{--                        <div class='col-lg-6 div-producer-comission'>--}}
-{{--                            --}}{{--                            <h4 class='table-title'>Comissão: </h4>--}}
-{{--                        </div>--}}
-{{--                        <div class='col-lg-6 text-right div-producer-comission-value'>--}}
-{{--                            --}}{{--                            <h4 id="comission-value" class='table-title'></h4>--}}
-{{--                        </div>--}}
+                        {{--                        <div class='col-lg-6 div-producer-comission'>--}}
+                        {{--                            --}}{{--                            <h4 class='table-title'>Comissão: </h4>--}}
+                        {{--                        </div>--}}
+                        {{--                        <div class='col-lg-6 text-right div-producer-comission-value'>--}}
+                        {{--                            --}}{{--                            <h4 id="comission-value" class='table-title'></h4>--}}
+                        {{--                        </div>--}}
                         <div class='col-lg-6 div-user-type-comission' style='display:none;'>
                             <h4 class='table-title'>Comissão do afiliado: </h4>
                         </div>
                         <div class='col-lg-6 text-right div-user-type-comission-value' style='display:none;'>
                             {{--                            <h4 id="affiliate-comission-value" class='table-title'></h4>--}}
                         </div>
-
+                        <div class='col-lg-6 div-anticipated' style='display:none;'>
+                            <span id="anticipated-label" class='text-muted ft-12'>
+                                Valor Antecipado:
+                            </span>
+                        </div>
+                        <div class='col-lg-6 text-right div-value-anticipated' style='display:none;'>
+                            {{--                            <h4 id="affiliate-comission-value" class='table-title'></h4>--}}
+                        </div>
                         <div class='col-lg-6 div-main-comission'>
                             {{--                            <h4 class='table-title'>Comissão: </h4>--}}
                         </div>
                         <div class='col-lg-6 text-right div-main-comission-value'>
                             {{--                            <h4 id="comission-value" class='table-title'></h4>--}}
                         </div>
-
                     </div>
                 </div>
                 {{--resend shopfy order--}}

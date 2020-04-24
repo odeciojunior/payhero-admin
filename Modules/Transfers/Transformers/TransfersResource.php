@@ -22,13 +22,18 @@ class TransfersResource extends Resource
     {
         $transactionPresenter = (new Transaction())->present();
 
+        $valueAnticipable = '';
+        if (!empty($this->transaction) && !empty($this->transaction->anticipatedTransactions()->first())) {
+            $valueAnticipable = $this->transaction->anticipatedTransactions()->first()->value;
+        }
+
         if (!empty($this->transaction) && empty($this->reason)) {
             $reason = 'Transação';
         } else if (!empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
         } else if (empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
-        // } else if (!empty($this->transaction->withTrashed()) && $this->reason == 'refunded') {
+            // } else if (!empty($this->transaction->withTrashed()) && $this->reason == 'refunded') {
         } else if ($this->reason == 'refunded') {
             $reason = 'Estorno da transação';
         } else {
@@ -55,6 +60,7 @@ class TransfersResource extends Resource
             'date'              => $this->created_at->format('d/m/Y'),
             'is_owner'          => $isOwner,
             'sale_date'         => $saleDate,
+            'value_anticipable' => number_format(intval($currency . $type . $valueAnticipable) / 100, 2, ',', '.'),
         ];
     }
 }
