@@ -553,10 +553,12 @@ class SaleService
 
                         $company = $companyModel->find($refundTransaction->company_id);
 
+                        $transactionAnticipatedValue = $refundTransaction->value - $refundTransaction->anticipatedTransactions()->first()->value;
+
                         $transferModel->create([
                                                    'transaction_id' => $refundTransaction->id,
                                                    'user_id'        => $company->user_id,
-                                                   'value'          => $refundTransaction->antecipable_value,
+                                                   'value'          => $transactionAnticipatedValue,
                                                    'type'           => 'out',
                                                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
                                                    'reason'         => 'refunded',
@@ -564,7 +566,7 @@ class SaleService
                                                ]);
 
                         $company->update([
-                                             'balance' => $company->balance -= $refundTransaction->antecipable_value,
+                                             'balance' => $company->balance -= $transactionAnticipatedValue,
                                          ]);
                     }
                 }
