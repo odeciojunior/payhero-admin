@@ -115,11 +115,16 @@ class DashboardApiController extends Controller
                     //Balance
                     $pendingBalance = $companyService->getPendingBalance($company);
 
+                    $statusArray = [
+                        $transactionModel->present()->getStatusEnum('paid'),
+                        $transactionModel->present()->getStatusEnum('transfered'),
+                    ];
+
                     $todayBalance = $saleModel
                         ->join('transactions as t', 't.sale_id', '=', 'sales.id')
                         ->where('t.company_id', $companyId)
-                        ->where('sales.status', $saleModel->present()->getStatus('approved'))
                         ->whereDate('sales.end_date', Carbon::today()->toDateString())
+                        ->whereIn('t.status_enum', $statusArray)
                         ->sum('t.value');
 
                     $availableBalance = $company->balance;

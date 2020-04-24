@@ -81,7 +81,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'total_paid' => $sale->total_paid_value ?? '',
                 'subtotal' => $sale->sub_total,
                 'shipping' => $sale->shipping->name ?? '',
-                'shipping_value' => $sale->shipping->value ?? '',
+                'shipping_value' => 'R$' . ($sale->shipment_value ?? 0),
                 'fee' => $sale->details->taxaReal,
                 'comission' => $sale->details->comission,
                 //plan

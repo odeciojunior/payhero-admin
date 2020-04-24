@@ -163,7 +163,7 @@ class SaleService
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
-        $transactions     = $this->getSalesQueryBuilder($filters);
+        $transactions = $this->getSalesQueryBuilder($filters);
 
         $resume = ['total_sales' => 0];
 
@@ -173,13 +173,14 @@ class SaleService
             //cria um item no array pra cada moeda inclusa nas vendas
             $item->currency          = $item->currency ?? 'real';
             $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
+
             //comissao
             $resume[$item->currency]['comission'] += in_array($item->status_enum,
-                                                              [
-                                                                  $transactionModel->present()->getStatusEnum('paid'),
-                                                                  $transactionModel->present()
-                                                                                   ->getStatusEnum('transfered'),
-                                                              ]) ? (floatval($item->value) / 100) : 0;
+                [
+                    $transactionModel->present()->getStatusEnum('paid'),
+                    $transactionModel->present()->getStatusEnum('transfered'),
+                ]) ? (floatval($item->value) / 100) : 0;
+
             //calcula o total
             $total            = $item->sale->sub_total;
             $total            += $item->sale->shipment_value;
@@ -298,7 +299,7 @@ class SaleService
         $affiliateComission = '';
         $affiliateValue     = 0;
         if (!empty($sale->affiliate_id)) {
-            $affiliate            = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
             $affiliateTransaction = $sale->transactions->where('company_id', $affiliate->company_id)->first();
             if (!empty($affiliateTransaction)) {
                 $affiliateValue     = $affiliateTransaction->value;
@@ -445,11 +446,11 @@ class SaleService
             $responseGateway = $response->response ?? [];
             $statusGateway   = $response->status_gateway ?? '';
 
-            if (!empty($partialValues)) {
-                $status            = 'partial_refunded';
+            if(!empty($partialValues)) {
+                 $status = 'partial_refunded';
                 $newTotalPaidValue = $partialValues['total_value_with_interest'];
             } else {
-                $status            = 'refunded';
+                $status = 'refunded';
                 $newTotalPaidValue = $totalPaidValue - $refundAmount;
             }
 
@@ -470,9 +471,9 @@ class SaleService
                                           'gateway_response' => json_encode($responseGateway),
                                           'refund_value'     => $refundAmount,
                                       ]);
-            if ($status == 'refunded') {
+            if($status == 'refunded') {
                 $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
-            } else if ($status == 'partial_refunded') {
+            } elseif($status == 'partial_refunded') {
                 $checktRecalc = $this->recalcSaleRefundPartial($sale, $partialValues);
             }
             if ($checktRecalc) {
@@ -553,10 +554,12 @@ class SaleService
 
                         $company = $companyModel->find($refundTransaction->company_id);
 
+                        $transactionAnticipatedValue = $refundTransaction->value - $refundTransaction->anticipatedTransactions()->first()->value;
+
                         $transferModel->create([
                                                    'transaction_id' => $refundTransaction->id,
                                                    'user_id'        => $company->user_id,
-                                                   'value'          => $refundTransaction->antecipable_value,
+                                                   'value'          => $transactionAnticipatedValue,
                                                    'type'           => 'out',
                                                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
                                                    'reason'         => 'refunded',
@@ -564,12 +567,12 @@ class SaleService
                                                ]);
 
                         $company->update([
-                                             'balance' => $company->balance -= $refundTransaction->antecipable_value,
+                                             'balance' => $company->balance -= $transactionAnticipatedValue,
                                          ]);
                     }
                 }
                 if ($transactionRefundAmount == $transactionValue) {
-                    $refundTransaction->status      = 'refunded';
+                    $refundTransaction->status = 'refunded';
                     $refundTransaction->status_enum = $transactionModel->present()->getStatusEnum('refunded');
                 }
                 $refundTransaction->save();
@@ -698,7 +701,7 @@ class SaleService
 
             SplitPaymentPartialRefundService::perform($sale, $totalValue, $cloudfoxValue, $installmentFreeTaxValue, $refundTransactions);
 
-            foreach ($refundTransactions as $refundTransaction) {
+            foreach($refundTransactions as $refundTransaction){
 
                 $refundTransaction->delete();
             }
@@ -708,7 +711,7 @@ class SaleService
             $transfersSerice->verifyTransactions($sale->id);
 
             return true;
-        } catch (Exception $ex) {
+        } catch(Exception $ex) {
             throw $ex;
         }
     }
@@ -722,9 +725,9 @@ class SaleService
         $newTotalValueWithoutInterest = $newTotalvalue;
 
         $userProject = UserProject::where([
-                                              ['type_enum', (new UserProject)->present()->getTypeEnum('producer')],
-                                              ['project_id', $sale->project->id],
-                                          ])->first();
+                                                ['type_enum', (new UserProject)->present()->getTypeEnum('producer')],
+                                                ['project_id', $sale->project->id],
+                                         ])->first();
 
         $user = $userProject->user;
 
@@ -735,12 +738,12 @@ class SaleService
         $freeInstallments    = $sale->project->installments_interest_free;
         $installmentValueTax = intval(($newTotalvalue / 100) * $user->installment_tax);
 
-        if ($installmentSelected == 1) {
+        if($installmentSelected == 1) {
             $totalValueWithTax = intval($newTotalvalue);
             $installmentValue  = intval($newTotalvalue);
         } else {
-            $totalValueWithTax = $newTotalvalue + $installmentValueTax * ($installmentSelected - 1);
-            if ($freeInstallments >= $installmentSelected) {
+            $totalValueWithTax = $newTotalvalue + $installmentValueTax * ( $installmentSelected - 1 );
+            if($freeInstallments >= $installmentSelected) {
                 $installmentValue = intval($newTotalvalue / $installmentSelected);
             } else {
                 $installmentValue = intval($totalValueWithTax / $installmentSelected);
