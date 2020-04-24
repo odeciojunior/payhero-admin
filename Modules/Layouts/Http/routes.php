@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'layouts', 'namespace' => 'Modules\Layouts\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth', 'scopes:admin'], 'prefix' => 'layouts', 'namespace' => 'Modules\Layouts\Http\Controllers'], function()
 {
     Route::post('/data-source',[
         'as' => 'layouts.index',

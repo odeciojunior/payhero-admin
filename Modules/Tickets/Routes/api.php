@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged']], function() {
     Route::post('tickets/sendmessage', 'TicketsApiController@sendMessage')->name('api.tickets.sendmessage');
     Route::get('tickets/getvalues', 'TicketsApiController@getTotalValues')->name('api.tickets.getvalues');
     Route::apiResource('tickets', 'TicketsApiController')->only('index', 'show', 'update')->names('api.tickets');

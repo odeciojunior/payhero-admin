@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['auth:api']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
     Route::apiResource('integrations', 'IntegrationsApiController')->only('index', 'store', 'destroy')
          ->names('api.integrations');
     Route::post('/integrations/{integration}/refreshtoken', 'IntegrationsApiController@refreshToken')

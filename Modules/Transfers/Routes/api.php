@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:api', 'setUserAsLogged'])->get('/transfers', function (Request $request) {
+Route::middleware(['auth:api', 'scopes:admin', 'setUserAsLogged'])->get('/transfers', function (Request $request) {
     return $request->user();
 });

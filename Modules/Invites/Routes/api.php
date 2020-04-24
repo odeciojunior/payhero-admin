@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged']], function() {
     Route::apiResource('invitations', 'InvitesApiController')->only('index', 'store','destroy')->names('api.invites')->middleware('role:account_owner');
 
     Route::get('/invitations/getinvitationdata', 'InvitesApiController@getInvitationData')

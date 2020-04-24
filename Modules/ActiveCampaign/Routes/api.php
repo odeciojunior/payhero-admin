@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged']], function() {
 
     Route::apiResource('apps/activecampaign', 'ActiveCampaignApiController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');

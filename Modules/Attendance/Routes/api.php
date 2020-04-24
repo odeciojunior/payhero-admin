@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/attendance', function (Request $request) {
+Route::middleware(['auth:api', 'scopes:admin'])->get('/attendance', function (Request $request) {
     return $request->user();
 });

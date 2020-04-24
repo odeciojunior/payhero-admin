@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/anticipations/{company_id}', 'AnticipationsApiController@show');
-Route::middleware('auth:api')->post('/anticipations', 'AnticipationsApiController@store');
+Route::middleware(['auth:api', 'scopes:admin'])->get('/anticipations/{company_id}', 'AnticipationsApiController@show');
+Route::middleware(['auth:api', 'scopes:admin'])->post('/anticipations', 'AnticipationsApiController@store');
 

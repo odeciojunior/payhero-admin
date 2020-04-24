@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth', 'scopes:admin'], 'prefix' => '', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
     Route::Resource('/partners', 'PartnersController')
          ->only('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 

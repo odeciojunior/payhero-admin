@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web','auth'], 'prefix' => 'vitrine', 'namespace' => 'Modules\Showcase\Http\Controllers'], function()
+Route::group(['middleware' => ['web','auth', 'scopes:admin'], 'prefix' => 'vitrine', 'namespace' => 'Modules\Showcase\Http\Controllers'], function()
 {
     Route::get('/',[
         'uses' => 'ShowcaseController@index',
@@ -9,7 +9,7 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'vitrine', 'namespace'
 });
 
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vitrine', 'namespace' => 'Modules\Showcase\Http\Controllers'], function()
+Route::group(['middleware' => ['auth:api', 'scopes:admin'], 'prefix' => 'api/vitrine', 'namespace' => 'Modules\Showcase\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ShowcaseApiController@index',
