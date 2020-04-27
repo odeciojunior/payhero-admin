@@ -81,7 +81,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'total_paid' => $sale->total_paid_value ?? '',
                 'subtotal' => $sale->sub_total,
                 'shipping' => $sale->shipping->name ?? '',
-                'shipping_value' => $sale->shipping->value ?? '',
+                'shipping_value' => 'R$' . ($sale->shipment_value ?? 0),
                 'fee' => $sale->details->taxaReal,
                 'comission' => $sale->details->comission,
                 //plan
@@ -95,7 +95,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'amount' => $product->amount,
                 'sku' => $product->sku,
                 //client
-                'client_name' => $sale->customer->name ?? '',
+                'client_name' => iconv("UTF-8", "ISO-8859-1//IGNORE", $sale->customer->name ?? ''),
                 'client_telephone' => $sale->customer->telephone ?? '',
                 'client_email' => $sale->customer->email ?? '',
                 'client_document' => $sale->customer->document ?? '',

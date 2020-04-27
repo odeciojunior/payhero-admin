@@ -59,6 +59,7 @@ class SalesResource extends Resource
             'shopify_order'         => $this->shopify_order ?? null,
             'automatic_discount'    => $this->details->automatic_discount ?? 0,
             'refund_value'          => $this->details->refund_value ?? '0,00',
+            'value_anticipable'     => $this->details->value_anticipable ?? null,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
 
@@ -75,7 +76,7 @@ class SalesResource extends Resource
         }
 
         if (!empty($this->affiliate_id)) {
-            $affiliate = Affiliate::withTrashed()->find($this->affiliate_id);
+            $affiliate         = Affiliate::withTrashed()->find($this->affiliate_id);
             $data['affiliate'] = $affiliate->user->name;
         } else {
             $data['affiliate'] = null;

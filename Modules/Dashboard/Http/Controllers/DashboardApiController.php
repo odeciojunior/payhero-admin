@@ -124,11 +124,7 @@ class DashboardApiController extends Controller
                         ->join('transactions as t', 't.sale_id', '=', 'sales.id')
                         ->where('t.company_id', $companyId)
                         ->whereDate('sales.end_date', Carbon::today()->toDateString())
-                        ->where(function ($query) use ($statusArray, $saleModel) {
-                            $query->whereIn('t.status_enum', $statusArray)
-                                ->orWhere('sales.payment_method', $saleModel->present()->getPaymentType('boleto'))
-                                ->where('t.status', 'paid');
-                        })
+                        ->whereIn('t.status_enum', $statusArray)
                         ->sum('t.value');
 
                     $availableBalance = $company->balance;

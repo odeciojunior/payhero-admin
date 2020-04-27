@@ -108,7 +108,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 12,20,22];
+                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             } else {
                 $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
@@ -175,17 +175,12 @@ class SaleService
             $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
 
             //comissao
-            $sale = $item->sale;
-            $isBoleto = $item->sale->payment_method == $sale->present()->getPaymentType('boleto');
-            $statusArray = [
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('anticipated'),
-            ];
-            if (in_array($item->status_enum, $statusArray)
-                || ($isBoleto && $item->status == 'paid')) {
-                $resume[$item->currency]['comission'] += (floatval($item->value) / 100);
-            }
+            $resume[$item->currency]['comission'] += in_array($item->status_enum,
+                [
+                    $transactionModel->present()->getStatusEnum('paid'),
+                    $transactionModel->present()->getStatusEnum('transfered'),
+                    $transactionModel->present()->getStatusEnum('anticipated'),
+                ]) ? (floatval($item->value) / 100) : 0;
 
             //calcula o total
             $total            = $item->sale->sub_total;
@@ -258,7 +253,12 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)->first();
+        $userTransaction  = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
+                                               ->first();
+        $valueAnticipable = null;
+        if (!empty($userTransaction->anticipatedTransactions()->first())) {
+            $valueAnticipable = $userTransaction->anticipatedTransactions()->first()->value;
+        }
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -357,6 +357,7 @@ class SaleService
             'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
             'affiliate_comission' => $affiliateComission,
             'refund_value'        => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
+            'value_anticipable'   => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
         ];
     }
 

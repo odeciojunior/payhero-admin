@@ -30,6 +30,7 @@ use Spatie\Activitylog\Models\Activity;
 class Transfer extends Model
 {
     use FoxModelTrait, PresentableTrait, LogsActivity;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -96,6 +97,14 @@ class Transfer extends Model
         } else {
             $activity->description = $eventName;
         }
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function anticipation()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Anticipation');
     }
 
     /**

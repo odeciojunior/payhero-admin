@@ -278,6 +278,13 @@ $(() => {
             $('#convertax-label, #convertax-value').show();
         }
 
+        // valor antecipavel
+        if (sale.value_anticipable != '0,00') {
+
+            $(".div-anticipated").show();
+            $(".div-value-anticipated").html('').append(`<span id="taxareal-value" class='text-muted ft-12'>R$ ${sale.value_anticipable}</span>`).show();
+        }
+
         //comissao afiliado
         if (sale.user_sale_type == 'affiliate') {
 
