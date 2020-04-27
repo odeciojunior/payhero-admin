@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth', 'scopes:admin'], 'prefix' => '', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
     Route::Resource('/partners', 'PartnersController')
          ->only('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 
@@ -39,7 +39,7 @@ Route::group(['middleware' => ['web', 'auth', 'scopes:admin'], 'prefix' => '', '
     ]);*/
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin'], 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
 
     Route::get('/', [
         'uses' => 'PartnersApiController@index',

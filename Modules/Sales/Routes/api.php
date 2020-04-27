@@ -31,7 +31,7 @@ Route::group(
 
 Route::apiResource('sales', 'SalesApiController')
      ->only('index', 'show')
-     ->middleware(['auth:api', 'setUserAsLogged']);
+     ->middleware(['auth:api', 'scopes:admin', 'setUserAsLogged']);
 
 
 Route::group(
