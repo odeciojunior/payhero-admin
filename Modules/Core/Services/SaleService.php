@@ -179,6 +179,7 @@ class SaleService
                 [
                     $transactionModel->present()->getStatusEnum('paid'),
                     $transactionModel->present()->getStatusEnum('transfered'),
+                    $transactionModel->present()->getStatusEnum('anticipated'),
                 ]) ? (floatval($item->value) / 100) : 0;
 
             //calcula o total
