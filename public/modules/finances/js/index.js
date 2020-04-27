@@ -593,14 +593,19 @@ $(document).ready(function () {
                                         <small>(Data da venda: ${value.sale_date})</small>
                                      </td>`;
                         } else {
-                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
+                            if (value.reason === 'Antecipação') {
+                                data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
+                            } else {
+                                data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
+                            }
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
                             data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
-                            console.log(value.value_anticipable);
-                            if (value.value_anticipable != '0,00') {
-                                data += `<br><small>${value.value_anticipable} antecipados </small> </td>`;
+                            if (value.reason === 'Antecipação') {
+                                data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
+                            } else if (value.value_anticipable != '0,00') {
+                                data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
                             } else {
                                 data += `</td>`;
                             }

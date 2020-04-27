@@ -22,14 +22,19 @@ class TransfersResource extends Resource
     {
         $transactionPresenter = (new Transaction())->present();
 
-        $codeAnticipation = '';
-        if (!empty($this->transaction) && !empty($this->transaction->anticipatedTransactions()->first())) {
-            $anticipation     = $this->transaction->anticipatedTransactions()
-                                                  ->first();
-            $valueAnticipable = number_format(intval($anticipation->value) / 100, 2, ',', '.');
-            $codeAnticipation = '#' . Hashids::encode($anticipation->id);
+        $codeAnticipation = null;
+
+        if (!empty($this->anticipation_id)) {
+            $anticipation     = $this->anticipation->first();
+            $valueAnticipated = number_format(intval($anticipation->value) / 100, 2, ',', '.');
+            $codeAnticipation = Hashids::connection('anticipation_id')->encode($anticipation->id);
+        } else if (!empty($this->transaction_id) && !empty($this->transaction->anticipatedTransactions()->first())) {
+            $anticipatedTransaction     = $this->transaction->anticipatedTransactions()->first();
+            $valueAnticipated = number_format(intval($anticipatedTransaction->value) / 100, 2, ',', '.');
+
+            $codeAnticipation = Hashids::connection('anticipation_id')->encode($anticipatedTransaction->anticipation_id);
         } else {
-            $valueAnticipable = '0,00';
+            $valueAnticipated = '0,00';
         }
 
         if (!empty($this->transaction) && empty($this->reason)) {
@@ -38,7 +43,6 @@ class TransfersResource extends Resource
             $reason = 'Chargeback';
         } else if (empty($this->transaction) && $this->reason == 'chargedback') {
             $reason = 'Chargeback';
-            // } else if (!empty($this->transaction->withTrashed()) && $this->reason == 'refunded') {
         } else if ($this->reason == 'refunded') {
             $reason = 'Estorno da transação';
         } else if ($this->reason == 'Antecipação') {
@@ -51,7 +55,12 @@ class TransfersResource extends Resource
         $value            = number_format(intval($type . $this->value) / 100, 2, ',', '.');
         $currency         = $this->currency == 'dolar' ? '$ ' . $value : 'R$ ';
         $value            = $currency . $value;
-        $valueAnticipable = $valueAnticipable != '0,00' ? $currency . $valueAnticipable : '0,00';
+        $valueAnticipated = $valueAnticipated != '0,00' ? $currency . $valueAnticipated : '0,00';
+
+        $tax = '';
+        if (!empty($this->anticipation_id)) {
+            $tax = $currency . number_format(intval($this->anticipation->tax) / 100, 2, ',', '.');
+        }
 
         $isOwner = $this->transaction_type == $transactionPresenter->getType('producer') || is_null($this->transaction_type);
 
@@ -65,10 +74,12 @@ class TransfersResource extends Resource
             'value'             => $value,
             'reason'            => $reason,
             'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
+            'anticipation_id'   => $codeAnticipation,
             'date'              => $this->created_at->format('d/m/Y'),
             'is_owner'          => $isOwner,
             'sale_date'         => $saleDate,
-            'value_anticipable' => $valueAnticipable,
+            'value_anticipable' => $valueAnticipated,
+            'tax'               => $tax,
         ];
     }
 }
