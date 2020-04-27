@@ -332,6 +332,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=3')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=4')}}'></script>
 @endpush
 
