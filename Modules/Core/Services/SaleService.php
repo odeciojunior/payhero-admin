@@ -108,7 +108,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 12,20,22];
+                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             } else {
                 $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
@@ -163,7 +163,7 @@ class SaleService
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
-        $transactions     = $this->getSalesQueryBuilder($filters);
+        $transactions = $this->getSalesQueryBuilder($filters);
 
         $resume = ['total_sales' => 0];
 
@@ -173,12 +173,14 @@ class SaleService
             //cria um item no array pra cada moeda inclusa nas vendas
             $item->currency          = $item->currency ?? 'real';
             $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
+
             //comissao
             $resume[$item->currency]['comission'] += in_array($item->status_enum,
-                                                              [
-                                                                  $transactionModel->present()->getStatusEnum('paid'),
-                                                                  $transactionModel->present()->getStatusEnum('transfered'),
-                                                              ]) ? (floatval($item->value) / 100) : 0;
+                [
+                    $transactionModel->present()->getStatusEnum('paid'),
+                    $transactionModel->present()->getStatusEnum('transfered'),
+                ]) ? (floatval($item->value) / 100) : 0;
+
             //calcula o total
             $total            = $item->sale->sub_total;
             $total            += $item->sale->shipment_value;
@@ -250,7 +252,12 @@ class SaleService
      */
     public function getDetails($sale, $userCompanies)
     {
-        $userTransaction = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)->first();
+        $userTransaction  = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
+                                               ->first();
+        $valueAnticipable = null;
+        if (!empty($userTransaction->anticipatedTransactions()->first())) {
+            $valueAnticipable = $userTransaction->anticipatedTransactions()->first()->value;
+        }
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
@@ -349,6 +356,7 @@ class SaleService
             'release_date'        => $userTransaction->release_date != null ? $userTransaction->release_date->format('d/m/Y') : '',
             'affiliate_comission' => $affiliateComission,
             'refund_value'        => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
+            'value_anticipable'   => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
         ];
     }
 
@@ -546,10 +554,12 @@ class SaleService
 
                         $company = $companyModel->find($refundTransaction->company_id);
 
+                        $transactionAnticipatedValue = $refundTransaction->value - $refundTransaction->anticipatedTransactions()->first()->value;
+
                         $transferModel->create([
                                                    'transaction_id' => $refundTransaction->id,
                                                    'user_id'        => $company->user_id,
-                                                   'value'          => $refundTransaction->antecipable_value,
+                                                   'value'          => $transactionAnticipatedValue,
                                                    'type'           => 'out',
                                                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
                                                    'reason'         => 'refunded',
@@ -557,7 +567,7 @@ class SaleService
                                                ]);
 
                         $company->update([
-                                             'balance' => $company->balance -= $refundTransaction->antecipable_value,
+                                             'balance' => $company->balance -= $transactionAnticipatedValue,
                                          ]);
                     }
                 }

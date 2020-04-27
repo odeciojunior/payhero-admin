@@ -199,7 +199,7 @@ $(document).ready(function () {
         });
 
         // se clicar fora do popover ele fecha
-        $('html').on('click', function(e) {
+        $('html').on('click', function (e) {
             if (typeof $(e.target).data('original-title') == 'undefined') {
                 $('.div-antecipable-balance').popover('hide');
             }
@@ -233,14 +233,14 @@ $(document).ready(function () {
                     $('.div-antecipable-balance').popover('show');
 
                     $("#confirm-anticipation").unbind("click");
-                    $("#confirm-anticipation").on("click", function(){
+                    $("#confirm-anticipation").on("click", function () {
 
                         loadingOnScreen();
 
                         $.ajax({
                             url: "api/anticipations",
                             type: "POST",
-                            data: { company_id: $("#transfers_company_select option:selected").val() },
+                            data: {company_id: $("#transfers_company_select option:selected").val()},
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -261,7 +261,7 @@ $(document).ready(function () {
                     });
                 }
             });
-    
+
         });
 
         function isEmpty(value) {
@@ -593,13 +593,24 @@ $(document).ready(function () {
                                         <small>(Data da venda: ${value.sale_date})</small>
                                      </td>`;
                         } else {
-                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
+                            if (value.reason === 'Antecipação') {
+                                data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
+                            } else {
+                                data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
+                            }
                         }
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         if (value.type_enum === 1) {
-                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' </td>';
+                            data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
+                            if (value.reason === 'Antecipação') {
+                                data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
+                            } else if (value.value_anticipable != '0,00') {
+                                data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
+                            } else {
+                                data += `</td>`;
+                            }
                         } else {
-                            data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
+                            data += `<td style="vertical-align: middle; color:red;"> ${value.value}</td> `;
                         }
                         data += '</tr>';
                     });

@@ -48,12 +48,13 @@ class TransfersController extends Controller
             }
 
             $transfers = $transfersModel->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
-                                        ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
-                                        ->where(function($query) use ($companyId) {
-                                            $query->where('transfers.company_id', $companyId)
-                                                  ->orWhere('transaction.company_id', $companyId);
-                                        })
-                                        ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                ->leftJoin('sales', 'sales.id', '=', 'transaction.sale_id')
+                ->where(function ($query) use ($companyId) {
+                    $query->where('transfers.company_id', $companyId)
+                        ->orWhere('transaction.company_id', $companyId);
+                })
+                ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                ->whereNull('transfers.customer_id');
 
             $saleId = str_replace('#', '', $data['transaction']);
             $saleId = current(Hashids::connection('sale_id')->decode($saleId));

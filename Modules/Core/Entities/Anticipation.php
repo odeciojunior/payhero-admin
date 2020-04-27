@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property integer $id
@@ -19,18 +21,16 @@ class Anticipation extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = ['company_id', 'value', 'tax', 'percentage_tax', 'created_at', 'updated_at'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {
@@ -38,10 +38,18 @@ class Anticipation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function anticipatedTransactions()
     {
         return $this->hasMany('Modules\Core\Entities\AnticipatedTransaction');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transfers()
+    {
+        return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 }

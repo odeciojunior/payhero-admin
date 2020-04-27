@@ -278,6 +278,13 @@ $(() => {
             $('#convertax-label, #convertax-value').show();
         }
 
+        // valor antecipavel
+        if (sale.value_anticipable != '0,00') {
+
+            $(".div-anticipated").show();
+            $(".div-value-anticipated").html('').append(`<span id="taxareal-value" class='text-muted ft-12'>R$ ${sale.value_anticipable}</span>`).show();
+        }
+
         //comissao afiliado
         if (sale.user_sale_type == 'affiliate') {
 
@@ -378,7 +385,8 @@ $(() => {
             $('#saleReSendEmail').hide();
         }
         if (sale.payment_method == 2 && sale.status == 1) {
-            $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet" sale=' + sale.id + '>Estornar boleto</button>');
+            // $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet" sale=' + sale.id + '>Estornar boleto</button>');
+            $('#div_refund_billet').html('');
         } else {
             $('#div_refund_billet').html('');
         }

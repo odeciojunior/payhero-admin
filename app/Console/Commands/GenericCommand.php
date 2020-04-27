@@ -50,7 +50,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $project = Project::find(203);
+        /*$project = Project::find(203);
 
         $shopifyIntegration = ShopifyIntegration::where('project_id', $project->id)->first();
         try {
@@ -155,6 +155,8 @@ class GenericCommand extends Command
             dd('Acabou');
         } catch (Exception $e) {
             //
-        }
+        }*/
+
+        dd(getenv('DB_HOST'));
     }
 }

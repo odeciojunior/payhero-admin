@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
@@ -9,6 +10,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Transaction;
 
 /**
  * Class CompaniesService
@@ -211,5 +213,33 @@ class CompanyService
         } catch (Exception $e) {
             return;
         }
+    }
+
+    /**
+     * @param Company $company
+     * @return int
+     */
+    public function getPendingBalance(Company $company){
+
+        $transactionModel = new Transaction();
+
+        $pendingBalance = $transactionModel->where('company_id', $company->id)
+                                            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
+                                            ->whereDate('release_date', '>', Carbon::today()->toDateString())
+                                            ->sum('value');
+
+        $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
+                                                    ->where('company_id', $company->id)
+                                                    ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
+                                                    ->get();
+
+        if(count($transactionsAnticipated) > 0){
+            foreach($transactionsAnticipated as $transactionAnticipated){
+                $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+            }
+        }
+
+        return $pendingBalance;
+
     }
 }
