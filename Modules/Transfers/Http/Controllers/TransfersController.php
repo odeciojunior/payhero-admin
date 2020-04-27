@@ -53,12 +53,15 @@ class TransfersController extends Controller
                                             $query->where('transfers.company_id', $companyId)
                                                   ->orWhere('transaction.company_id', $companyId);
                                         })
-                                        ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                                        ->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                                        ->whereNull('transfers.customer_id');
 
             $saleId = str_replace('#', '', $data['transaction']);
             $saleId = current(Hashids::connection('sale_id')->decode($saleId));
+
             if ($saleId) {
-                $transfers->where('transaction.sale_id', $saleId);
+                $transfers = $transfers->where('transaction.sale_id', $saleId)
+                                       ->orWhere('transfers.anticipation_id', $saleId);
             }
 
             if (!empty($data['type'])) {

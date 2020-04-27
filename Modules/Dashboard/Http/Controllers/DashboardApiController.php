@@ -14,6 +14,7 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserTerms;
+use Modules\Core\Services\CompanyService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -108,32 +109,22 @@ class DashboardApiController extends Controller
                 $companyId        = current(Hashids::decode($companyHash));
                 $company          = $companyModel->find($companyId);
                 $userId           = auth()->user()->account_owner_id;
+                $companyService   = new CompanyService();
 
                 if (!empty($company)) {
                     //Balance
-                    $pendingBalance = $transactionModel->where('company_id', $company->id)
-                                                       ->where('status_enum', $transactionModel->present()
-                                                                                               ->getStatusEnum('paid'))
-                                                       ->whereDate('release_date', '>', Carbon::today()
-                                                                                              ->toDateString())
-                                                       ->sum('value');
+                    $pendingBalance = $companyService->getPendingBalance($company);
 
-                    $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
-                                                                ->where('company_id', $company->id)
-                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
-                                                                ->get();
-
-                    if(count($transactionsAnticipated) > 0){
-                        foreach($transactionsAnticipated as $transactionAnticipated){
-                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
-                        }
-                    }
+                    $statusArray = [
+                        $transactionModel->present()->getStatusEnum('paid'),
+                        $transactionModel->present()->getStatusEnum('transfered'),
+                    ];
 
                     $todayBalance = $saleModel
                         ->join('transactions as t', 't.sale_id', '=', 'sales.id')
                         ->where('t.company_id', $companyId)
-                        ->where('sales.status', $saleModel->present()->getStatus('approved'))
                         ->whereDate('sales.end_date', Carbon::today()->toDateString())
+                        ->whereIn('t.status_enum', $statusArray)
                         ->sum('t.value');
 
                     $availableBalance = $company->balance;

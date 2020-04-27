@@ -219,8 +219,8 @@
                                             <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="transaction">Transação</label>
-                                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código da transação">
+                                            <label for="transaction">Transação/Antecipação</label>
+                                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código">
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3">
                                             <div class="input-holder">
@@ -334,7 +334,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/finances/js/index.js?v=12') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js?v=2') }}"></script>
     @endpush
 
 @endsection

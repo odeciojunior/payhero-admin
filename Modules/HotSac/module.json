@@ -1,0 +1,14 @@
+{
+    "name": "HotSac",
+    "alias": "hotsac",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\HotSac\\Providers\\HotSacServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
