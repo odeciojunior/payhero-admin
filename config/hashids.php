@@ -49,6 +49,11 @@ return [
             'length' => '8',
         ],
 
+        'anticipation_id' => [
+            'salt'   => '7d124336feb18d280c0f32d7fc5e57a1',
+            'length' => '8',
+        ],
+
         'pusher_connection' => [
             'salt'   => '7d124336feb18d280c0f32d7fc5e57a1',
             'length' => '50',

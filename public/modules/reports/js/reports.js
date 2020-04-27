@@ -175,7 +175,8 @@ $(function () {
                     },
                     axisY: {
                         labelInterpolationFnc: function labelInterpolationFnc(value) {
-                            value = Math.round(value,1);
+                            value = value * 100;
+                            // value = Math.round(value,1);
                             var str = value.toString();
                             str = str.replace('.','');
                             let complete = 3 - str.length;
