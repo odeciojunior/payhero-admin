@@ -346,10 +346,8 @@ $(document).ready(function () {
 
                 if (upsellConfig.countdown_flag) {
                     $('#countdown_flag').prop('checked', true);
-                    $('.div-countdown-time').show();
                 } else {
                     $('#countdown_flag').prop('checked', false);
-                    $('.div-countdown-time').hide();
                 }
                 if (upsellConfig.has_upsell) {
                     $('.btn-view-config').show();
