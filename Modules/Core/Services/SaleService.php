@@ -180,6 +180,7 @@ class SaleService
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),
                 $transactionModel->present()->getStatusEnum('transfered'),
+                $transactionModel->present()->getStatusEnum('anticipated'),
             ];
             if (in_array($item->status_enum, $statusArray)
                 || ($isBoleto && $item->status == 'paid')) {
