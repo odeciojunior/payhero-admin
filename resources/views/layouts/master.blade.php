@@ -13,7 +13,7 @@
     @endif
 
     <!-- access token used for api ajax requests -->
-    <meta name="access-token" content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
+    <meta name="access-token" content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
@@ -104,7 +104,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=11') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=12') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

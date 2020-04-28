@@ -66,19 +66,20 @@ $(document).ready(function () {
             let disabled = ('active' !== value.status) ? ' disabled' : '';
             dados = '';
             dados += '<tr>';
-            dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (index += 1) + '</button></td>';
             dados += '<td class="" style="vertical-align: middle;">';
             dados += '<strong class="mr-1">' + value.description + '</strong>';
             dados += '<br><small class="text-muted">Criada em: ' + value.register_date + '</small>';
             dados += '<br><small class="text-muted">Expira em: ' + expirationDate + '</small>';
             dados += '</td>';
-            dados += '<td class="text-center" style="vertical-align: middle;">';
+            dados += '<td>';
             dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
-            dados += '<br><span class="badge badge-' + statusBadge[value.status] + ' text-center mt-1">' + status[value.status] + '</span>';
+            dados += '</td>';
+            dados += '<td>';
+            dados += '<span class="badge badge-' + statusBadge[value.status] + ' text-center mt-1">' + status[value.status] + '</span>';
             dados += '</td>';
             //-----------------------------------
             //Access Token
-            dados += '<td class="text-center" style="vertical-align: middle;">';
+            dados += '<td style="vertical-align: middle;">';
             dados += '<div class="input-group mb-2 mr-sm-2 mt-2">';
             dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
             dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
@@ -88,9 +89,8 @@ $(document).ready(function () {
             dados += '</div>';
             //-----------------------------------
             dados += '</td>';
-            // dados += '<td class="text-center" style="vertical-align: middle;">' + expirationDate + '</td>';
-            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><i class="material-icons gray gradient"> sync </i></button></td>';
-            dados += '<td class="text-center"><button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><i class="material-icons gradient">delete</i></button></td>';
+            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><i class="material-icons gray gradient"> sync </i></button>';
+            dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><i class="material-icons gradient">delete</i></button></td>';
             dados += '</tr>';
             $("#table-body-integrates").append(dados);
         });

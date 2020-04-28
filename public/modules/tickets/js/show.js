@@ -68,17 +68,17 @@ $(document).ready(function () {
                 $("#div-ticket-comments").html('');
                 if (!isEmpty(response.data.messages)) {
                     let customerNameSplit = response.data.customer_name.split(' ');
-                    let adminSrcImage = $('.img-user-menu-principal').attr('src');
+                    // let adminSrcImage = $('.img-user-menu-principal').attr('src');
                     let foxSrcImage = $('.navbar-brand-logo').attr('src');
 
                     for (let ticketMessage of response.data.messages) {
                         let data = '';
                         data = `
                         <div class="d-flex flex-row mb-10">
-                                <img ${ticketMessage.from_admin == 1 ? `src="${adminSrcImage}"` : ticketMessage.from_system ? `src="${foxSrcImage}"`: `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
+                                <img ${ticketMessage.from_admin == 1 ? `src="${response.data.project_logo}"` : ticketMessage.from_system ? `src="${foxSrcImage}"`: `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
                                 style='height:50px;width:50px;' class="img-fluid rounded-circle ${ticketMessage.from_system ? 'bg-dark' : ''}">
                             <div class="ml-15">
-                                <span class='font-weight-bold'>${ticketMessage.from_admin == 1 ? ticketMessage.admin_name : ticketMessage.from_system ? 'CloudFox': response.data.customer_name}</span>
+                                <span class='font-weight-bold'>${ticketMessage.from_admin == 1 ? response.data.project_name : ticketMessage.from_system ? 'CloudFox': response.data.customer_name}</span>
                                 <br>
                                 <small>${ticketMessage.created_at}</small>
                                 <p>${ticketMessage.message}</p>

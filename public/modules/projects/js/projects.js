@@ -372,6 +372,7 @@ $(() => {
         } else {
             $('#whatsapp_button .whatsapp_button_no').attr('selected', true);
         }
+        $('#pre_selected_installment').val(project.pre_selected_installment);
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);

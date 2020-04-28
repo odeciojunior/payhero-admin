@@ -261,7 +261,7 @@ function errorAjaxResponse(response) {
     if (response.responseJSON) {
         let errors = response.responseJSON.errors ? response.responseJSON.errors : {};
         errors = Object.values(errors).join('\n');
-        if (response.status === 422 || response.status === 404 || response.status === 403) {
+        if (response.status === 422 || response.status === 404 || (response.status === 403 && !isEmpty(errors))) {
             alertCustom('error', errors);
         } else if (response.status === 401) { // Não esta autenticado
             window.location.href = window.location.origin + '/';

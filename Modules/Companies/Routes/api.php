@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:api', 'setUserAsLogged']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged']], function() {
 
     Route::post('/companies/uploaddocuments', 'CompaniesApiController@uploadDocuments')
          ->name('api.companies.uploaddocuments')->middleware('role:account_owner|admin');

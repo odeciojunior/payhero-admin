@@ -8,6 +8,7 @@ use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use NumberFormatter;
 use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
@@ -301,6 +302,21 @@ class FoxUtils
         }
 
         return $maskared;
+    }
+
+    /**
+     * @param $value
+     * @param string $locale
+     * @param string $currency
+     * @return string
+     * https://www.php.net/manual/pt_BR/class.numberformatter.php
+     */
+    public static function formatMoney($value, $locale = 'pt_BR', $currency = 'BRL')
+    {
+
+        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+
+        return $formatter->formatCurrency($value, $currency);
     }
 }
 

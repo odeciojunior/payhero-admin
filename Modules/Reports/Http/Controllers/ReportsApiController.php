@@ -2,6 +2,7 @@
 
 namespace Modules\Reports\Http\Controllers;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\FoxUtils;
+use NumberFormatter;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\UserProject;
@@ -238,7 +241,7 @@ class ReportsApiController extends Controller
             }
 
             return response()->json([
-                                        'totalPaidValueAproved'  => isset($totalPaidValueAproved) ? number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved)) / 100, 2, ',', '.') : 00,
+                                        'totalPaidValueAproved'  => isset($totalPaidValueAproved) ? FoxUtils::formatMoney($totalPaidValueAproved) : 00,
                                         'contAproved'            => $countSalesAproved ?? 0,
                                         'contBoleto'             => $contBoleto ?? 0,
                                         'contRecused'            => $countSalesRecused ?? 0,
@@ -248,8 +251,8 @@ class ReportsApiController extends Controller
                                         'contCanceled'           => $countSalesCanceled ?? 0,
                                         'totalPercentCartao'     => $totalPercentPaidCredit ?? 0,
                                         'totalPercentPaidBoleto' => $totalPercentPaidBoleto ?? 0,
-                                        'totalValueBoleto'       => isset($totalValueBoleto) ? number_format(intval(preg_replace("/[^0-9]/", "", $totalValueBoleto)) / 100, 2, ',', '.') : 00,
-                                        'totalValueCreditCard'   => isset($totalValueCreditCard) ? number_format(intval(preg_replace("/[^0-9]/", "", $totalValueCreditCard)) / 100, 2, ',', '.') : 00,
+                                        'totalValueBoleto'       => isset($totalValueBoleto) ? FoxUtils::formatMoney($totalValueBoleto) : 00,
+                                        'totalValueCreditCard'   => isset($totalValueCreditCard) ? FoxUtils::formatMoney($totalValueCreditCard) : 00,
                                         'chartData'              => $chartData,
                                         'currency'               => $currency ?? 0,
                                         'convercaoBoleto'        => $convercaoBoleto ?? 0,
@@ -262,7 +265,6 @@ class ReportsApiController extends Controller
                                         'ticketMedio'            => isset($ticketMedio) ? number_format(intval(preg_replace("/[^0-9]/", "", $ticketMedio)) / 100, 2, ',', '.') : 0,
                                     ]);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados - ReportsController - index');
             report($e);
 
             return response()->json(null);
@@ -466,8 +468,8 @@ class ReportsApiController extends Controller
     public function getCheckoutsByOrigin(Request $request)
     {
         try {
-            $checkoutModel = new Checkout();
-            $affiliateModel   = new Affiliate();
+            $checkoutModel  = new Checkout();
+            $affiliateModel = new Affiliate();
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
 
@@ -516,15 +518,17 @@ class ReportsApiController extends Controller
 
                 $itens = $transactionModel->select([
                                                        DB::raw('(SUM(transactions.value) - (SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END))) as value'),
-                                                       DB::raw('DATE(transactions.release_date) as date')
+                                                       DB::raw('DATE(transactions.release_date) as date'),
                                                    ])
                                           ->where('company_id', $companyId)
                                           ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
                                           ->whereIn('transactions.type', collect([2, 3, 4, 5]))
                                           ->whereIn('transactions.status_enum', collect([
-                                                        $transactionModel->present()->getStatusEnum('paid'),
-                                                        $transactionModel->present()->getStatusEnum('anticipated')
-                                                    ]))
+                                                                                            $transactionModel->present()
+                                                                                                             ->getStatusEnum('paid'),
+                                                                                            $transactionModel->present()
+                                                                                                             ->getStatusEnum('anticipated'),
+                                                                                        ]))
                                           ->whereBetween('release_date', [
                                               Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)
                                                                                               ->format('Y-m-d'),
@@ -567,15 +571,17 @@ class ReportsApiController extends Controller
                                                                   DB::raw('(SUM(transactions.value) - SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END)) as value'),
                                                                   DB::raw('(SUM(CASE WHEN sales.payment_method = 2 THEN transactions.value ELSE 0 END) -
                                                                             SUM(CASE WHEN transactions.status_enum = 12 AND sales.payment_method = 2 THEN anticipated_transactions.value ELSE 0 END)) AS valueBillet'),
-                                                                  DB::raw('(SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) - 
+                                                                  DB::raw('(SUM(CASE WHEN sales.payment_method IN (1,3) THEN transactions.value ELSE 0 END) -
                                                                             SUM(CASE WHEN transactions.status_enum = 12 AND sales.payment_method IN(1,3) THEN anticipated_transactions.value ELSE 0 END)) AS valueCard'),
                                                               ])
                                                      ->where('company_id', $companyId)
                                                      ->whereIn('transactions.type', collect([2, 3, 4, 5]))
                                                      ->whereIn('transactions.status_enum', collect([
-                                                        $transactionModel->present()->getStatusEnum('paid'),
-                                                        $transactionModel->present()->getStatusEnum('anticipated')
-                                                    ]))
+                                                                                                       $transactionModel->present()
+                                                                                                                        ->getStatusEnum('paid'),
+                                                                                                       $transactionModel->present()
+                                                                                                                        ->getStatusEnum('anticipated'),
+                                                                                                   ]))
                                                      ->whereBetween('release_date', [
                                                          Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()
                                                                                                          ->addDays(30)
@@ -629,7 +635,7 @@ class ReportsApiController extends Controller
 
         $itens = $transactionModel->select([
                                                DB::raw('(SUM(transactions.value) - (SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END))) as value'),
-                                               DB::raw('DATE(transactions.release_date) as date')
+                                               DB::raw('DATE(transactions.release_date) as date'),
                                            ])
                                   ->join('companies', 'transactions.company_id', 'companies.id')
                                   ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
@@ -637,9 +643,11 @@ class ReportsApiController extends Controller
                                   ->where('companies.id', $companyId)
                                   ->whereIn('transactions.type', collect([2, 3, 4, 5]))
                                   ->whereIn('transactions.status_enum', collect([
-                                                $transactionModel->present()->getStatusEnum('paid'),
-                                                $transactionModel->present()->getStatusEnum('anticipated')
-                                            ]))
+                                                                                    $transactionModel->present()
+                                                                                                     ->getStatusEnum('paid'),
+                                                                                    $transactionModel->present()
+                                                                                                     ->getStatusEnum('anticipated'),
+                                                                                ]))
                                   ->whereBetween('release_date', [
                                       Carbon::now()->addDay()->format('Y-m-d'), Carbon::now()->addDays(30)
                                                                                       ->format('Y-m-d'),

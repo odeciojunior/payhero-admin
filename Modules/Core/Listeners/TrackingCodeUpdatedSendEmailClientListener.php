@@ -72,6 +72,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                     $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
                     $titleMessage = $projectNotificationService->formatNotificationData($message->title, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
                     $contentMessage = $projectNotificationService->formatNotificationData($message->content, $event->sale, $event->sale->project, null, null, null, $event->tracking->tracking_code);
+                    $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                     $data = [
                         'name' => $clientName,
                         'project_logo' => $event->sale->project->logo,

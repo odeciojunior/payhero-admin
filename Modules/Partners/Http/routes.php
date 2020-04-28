@@ -39,7 +39,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'M
     ]);*/
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin'], 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
 
     Route::get('/', [
         'uses' => 'PartnersApiController@index',

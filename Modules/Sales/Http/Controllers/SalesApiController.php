@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
@@ -31,6 +30,7 @@ use Modules\Core\Services\EmailService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
+use Modules\Sales\Transformers\SalesExternalResource;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
@@ -436,6 +436,45 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function showExternal($checkoutId)
+    {
+        try {
+            $salesModel = new Sale();
+            $saleService = new SaleService();
+            $companiesModel = new Company();
+
+            $user = auth()->user();
+
+            if(!empty($user)) {
+
+                $checkoutId = current(Hashids::decode($checkoutId));
+
+                $sale = $salesModel->with('transactions')
+                    ->where('checkout_id', $checkoutId)
+                    ->where('owner_id', $user->account_owner_id)
+                    ->first();
+
+                if (!empty($sale)) {
+
+                    $userCompanies = $companiesModel->where('user_id', $sale->owner_id)->pluck('id');
+
+                    $saleService->getDetails($sale, $userCompanies);
+
+                    return new SalesExternalResource($sale);
+                } else {
+                    return response()->json(['error' => 'A venda não foi encontrada'], 404);
+                }
+            } else {
+                return response()->json(['error' => 'Usuário não autenticado'], 401);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao obter venda - SalesApiController - showExternal');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao obter venda'], 400);
         }
     }
 }

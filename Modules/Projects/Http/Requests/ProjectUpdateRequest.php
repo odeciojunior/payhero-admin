@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Projects\Http\Requests; 
+namespace Modules\Projects\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -53,7 +53,7 @@ class ProjectUpdateRequest extends FormRequest
             "whatsapp_button"            => 'nullable',
             "credit_card_discount"       => 'int|max:100',
             "billet_discount"            => 'int|max:100',
-
+            "pre_selected_installment"   => 'nullable',
         ];
     }
 

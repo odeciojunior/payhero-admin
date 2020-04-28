@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
+use Laravel\Passport\Exceptions\MissingScopeException;
 
 class Handler extends ExceptionHandler
 {
@@ -28,6 +29,7 @@ class Handler extends ExceptionHandler
      * Report or log an exception.
      * @param \Exception $exception
      * @return void
+     * @throws Exception
      */
     public function report(Exception $exception)
     {
@@ -42,12 +44,16 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      * @param \Illuminate\Http\Request $request
      * @param \Exception $exception
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
         if ($exception instanceof MaintenanceModeException) {
             return response()->view('errors.maintenance');
+        }
+
+        if ($exception instanceof MissingScopeException) {
+            return response()->json(['message' => 'Acesso não autorizado'], 403);
         }
 
         return parent::render($request, $exception);

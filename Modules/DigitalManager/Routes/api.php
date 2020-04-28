@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['middleware' => ['auth:api']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
 
     Route::apiResource('apps/digitalmanager', 'DigitalManagerApiController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
