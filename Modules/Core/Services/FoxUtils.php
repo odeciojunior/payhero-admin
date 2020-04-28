@@ -313,6 +313,7 @@ class FoxUtils
      */
     public static function formatMoney($value, $locale = 'pt_BR', $currency = 'BRL')
     {
+
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
         return $formatter->formatCurrency($value, $currency);

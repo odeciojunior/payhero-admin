@@ -246,7 +246,7 @@
                                 <table class="table-vendas-itens table table-striped"
                                        style="width:100%;margin: auto; margin-top:15px">
                                     <tbody id="origins-table-itens">
-                                    {{-- js carrega... --}}
+                                        {{-- js carrega... --}}
                                     </tbody>
                                 </table>
                                 <br/>
@@ -301,7 +301,7 @@
                                     <table class="table-vendas table table-striped "
                                            style="width:100%;margin: auto; margin-top:15px">
                                         <tbody id="origins-table">
-                                        {{-- js carrega... --}}
+                                            {{-- js carrega... --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -332,6 +332,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=1')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=2')}}'></script>
 @endpush
 
