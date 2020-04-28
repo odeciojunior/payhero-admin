@@ -63,7 +63,7 @@ $(function () {
             success: function success(response) {
 
                 current_currency = response.currency;
-                $("#revenue-generated").html(response.currency + ' ' + response.totalPaidValueAproved);
+                $("#revenue-generated").html(response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
                 $("#qtd-recusadas").html(response.contRecused);
