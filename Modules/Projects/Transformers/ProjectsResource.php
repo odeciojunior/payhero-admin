@@ -91,6 +91,7 @@ class ProjectsResource extends Resource
             'whatsapp_button'                => $this->whatsapp_button,
             'credit_card_discount'           => $this->credit_card_discount,
             'billet_discount'                => $this->billet_discount,
+            'pre_selected_installment'       => $this->pre_selected_installment,
         ];
     }
 }

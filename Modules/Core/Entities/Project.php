@@ -3,7 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
-use Illuminate\Database\Eloquent\Model; 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -113,6 +113,7 @@ class Project extends Model
         'whatsapp_button',
         'credit_card_discount',
         'billet_discount',
+        'pre_selected_installment',
         'created_at',
         'updated_at',
         'deleted_at',
