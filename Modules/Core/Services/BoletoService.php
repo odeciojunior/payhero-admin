@@ -129,6 +129,7 @@ class BoletoService
                                   $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
                                   $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
                                   $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                  $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                                   $data           = [
                                       "name"                  => $clientNameExploded[0],
                                       "boleto_link"           => $boleto->boleto_link,
@@ -248,6 +249,7 @@ class BoletoService
                                       $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
                                       $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
                                       $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                      $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                                       $data           = [
                                           "name"                  => $clientNameExploded[0],
                                           "boleto_link"           => $boleto->boleto_link,
@@ -373,6 +375,7 @@ class BoletoService
                                       $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
                                       $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
                                       $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                      $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                                       $data           = [
                                           "name"                  => $clientNameExploded[0],
                                           "boleto_link"           => $boleto->boleto_link,

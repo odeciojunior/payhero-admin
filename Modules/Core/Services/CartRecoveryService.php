@@ -117,6 +117,7 @@ class CartRecoveryService
                                               $subjectMessage        = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
                                               $titleMessage          = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
                                               $contentMessage        = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                              $contentMessage        = preg_replace("/\r\n/", "<br/>", $contentMessage);
                                               $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
                                               if (!empty($domain)) {
                                                   $bodyEmail = [
@@ -258,6 +259,7 @@ class CartRecoveryService
                                           $subjectMessage        = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
                                           $titleMessage          = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
                                           $contentMessage        = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                          $contentMessage        = preg_replace("/\r\n/", "<br/>", $contentMessage);
                                           $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
                                           if (!empty($domain)) {
                                               $bodyEmail = [
