@@ -83,6 +83,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/show.js?v=2')}}'></script>
+        <script src='{{asset('/modules/tickets/js/show.js?v=3')}}'></script>
     @endpush
 @endsection

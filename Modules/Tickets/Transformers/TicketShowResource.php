@@ -40,6 +40,8 @@ class TicketShowResource extends Resource
             'products'             => $products,
             'attachments'          => TicketAttachmentResource::collection($this->attachments),
             'messages'             => TicketMessageResource::collection($this->messages),
+            'project_name'         => $this->sale->project->name,
+            'project_logo'         => $this->sale->project->logo,
         ];
     }
 }
