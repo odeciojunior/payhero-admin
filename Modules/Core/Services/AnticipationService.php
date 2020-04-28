@@ -103,7 +103,7 @@ class AnticipationService
 
             $anticipationArray[] = [
                 'value'           => intval($anticipableTransaction->value / 100 * $company->user->percentage_antecipable),
-                'tax_value'       => number_format(intval(intval($anticipableTransaction->value / 100 * $company->user->percentage_antecipable) / 100 * $percentageTax), 4, '.', ','),
+                'tax_value'       => intval(intval($anticipableTransaction->value / 100 * $company->user->percentage_antecipable) / 100 * $percentageTax),
                 'tax'             => $percentageTax,
                 'days_to_release' => $diffInDays,
                 'transaction_id'  => $anticipableTransaction->id,
