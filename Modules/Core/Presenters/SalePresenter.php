@@ -175,6 +175,8 @@ class SalePresenter extends Presenter
      */
     public function getPaymentType($paymentType = null)
     {
+        $paymentType = $paymentType ?? $this->payment_method;
+
         if (is_numeric($paymentType)) {
             switch ($paymentType) {
                 case 1:

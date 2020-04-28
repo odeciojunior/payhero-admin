@@ -64,6 +64,8 @@ class Kernel extends HttpKernel
         'VerifyShopifyPostback' => \App\Http\Middleware\VerifyShopifyPostback::class,
         'broadcast'             => \App\Http\Middleware\Broadcast::class,
         'role'                  => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'scopes'                => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+        'scope'                 => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
         'InternalApiAuth'       => \App\Http\Middleware\InternalApiAuth::class,
         'setUserAsLogged'       => \App\Http\Middleware\SetUserAsLogged::class,
     ];
