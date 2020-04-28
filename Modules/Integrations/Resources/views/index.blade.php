@@ -10,8 +10,9 @@
             <button id="store-integrate" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Integrações</h2>
-            <p id='text-info' style="margin-top: 12px;">Cadastre seus tokens para integrar com a CloudFox.</p>
-            <div class="card shadow p-20" id='card-integration-data' style='display:none;'>
+            <p id='text-info' style="margin-top: 12px;">Crie chaves de acesso para que apps de terceiros se conectem a CloudFox</p>
+            <br>
+            <div class="card shadow p-20 mb-0" id='card-integration-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div class="col-md-3 col-sm-12">
                         <h6 class="text-center orange-gradient">
@@ -53,14 +54,12 @@
             <div class="card shadow" id='card-table-integrate' data-plugin="matchHeight" style='display:none;'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
-                        <thead class="text-center">
-                            <th class="text-center">#</th>
-                            <th class="text-center">Descrição</th>
-                            <th class="text-center">Integração</th>
-                            <th class="text-center">Token</th>
-                            <th class="text-center"></th>
-                            <th class="text-center"></th>
-                            {{--                            <th class="text-center">Data expiração</th>--}}
+                        <thead>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Token</th>
+                            <th></th>
                         </thead>
                         <tbody id='table-body-integrates'>
                             {{-- js integrates carrega  --}}
@@ -148,7 +147,6 @@
                         <i class="material-icons" style="font-size: 80px;color:#16b248;"> loop </i>
                     </div>
                     <h4 class="black"> Você realmente deseja regerar o token? </h4>
-                    {{--                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>--}}
                 </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button id='btn-cancel' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
@@ -158,7 +156,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js?v=1') }}"></script>
+        <script src="{{asset('modules/integrations/js/index.js?v=2') }}"></script>
     @endpush
 
 @endsection
