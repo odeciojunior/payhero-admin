@@ -100,6 +100,7 @@ class TicketsApiController extends Controller
                                                   'customer',
                                                   'messages',
                                                   'attachments',
+                                                  'sale.project',
                                               ])->find($ticketId);
 
                 return new TicketShowResource($ticket);
