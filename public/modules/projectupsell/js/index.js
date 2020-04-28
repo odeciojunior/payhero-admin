@@ -25,37 +25,35 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
+                errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#data-table-upsell').html('');
-                let projectUpsell = response.data;
-                let upsellLength = response.data.length;
-                if (projectUpsell != '') {
-                    let dados = '';
-                    for (let upsell of projectUpsell) {
-                        dados = `
+                let dataTable = $('#data-table-upsell');
+                dataTable.html('');
+                if (response.data == '') {
+                    $('.div-config').hide();
+                    $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
+                } else {
+                    $('#table-upsell').addClass('table-striped');
+                    let data = '';
+                    $.each(response.data, function (index, value) {
+                        data += `
                         <tr>
-                            <td>${upsell.description}</td>
-                            <td>${upsell.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td>${value.description}</td>
+                            <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${upsell.id}" data-target='#modal-detail-upsell' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
-                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${upsell.id}"><i class='material-icons gradient'> edit </i></a>
-                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${upsell.id}" data-toggle="modal" data-target="#modal-delete-upsell"><i class='material-icons gradient'> delete_outline </i></a>
+                                <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
+                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><i class='material-icons gradient'> edit </i></a>
+                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell"><i class='material-icons gradient'> delete_outline </i></a>
                             </td>
                         </tr>
                         `;
-                        $('#data-table-upsell').append(dados);
-                    }
-                } else {
-                    $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
-                }
-                if (upsellLength > 0) {
+                    });
+                    dataTable.append(data);
                     $('.div-config').show();
-                } else {
-                    $('.div-config').hide();
+
+                    pagination(response, 'upsell', loadUpsell);
                 }
-                $('#table-upsell').addClass('table-striped');
-                pagination(response, 'upsell', loadUpsell);
 
             }
         });
@@ -107,14 +105,14 @@ $(document).ready(function () {
                 $('#edit_apply_on_plans, #edit_offer_on_plans').html('');
 
                 let applyOnPlans = [];
-                for(let plan of upsell.apply_on_plans){
+                for (let plan of upsell.apply_on_plans) {
                     applyOnPlans.push(plan.id);
                     $('#edit_apply_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
                 $('#edit_apply_on_plans').val(applyOnPlans);
 
                 let offerOnPlans = [];
-                for(let plan of upsell.offer_on_plans){
+                for (let plan of upsell.offer_on_plans) {
                     offerOnPlans.push(plan.id);
                     $('#edit_offer_on_plans').append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
                 }
@@ -159,6 +157,7 @@ $(document).ready(function () {
     $(document).on('click', '.delete-upsell', function (event) {
         event.preventDefault();
         let upsellId = $(this).data('upsell');
+        $('.btn-delete-upsell').unbind('click');
         $('.btn-delete-upsell').on('click', function () {
             loadingOnScreen();
             $.ajax({
@@ -427,7 +426,7 @@ $(document).ready(function () {
                 if (upsell.countdown_flag) {
                     $('#timer').show();
                     startCountdown(upsell.countdown_time);
-                }else{
+                } else {
                     $('#timer').hide();
                 }
 
@@ -458,13 +457,13 @@ $(document).ready(function () {
                     }
                     data += `</div>
                                 <div class="d-flex flex-column mt-4 mt-md-0">`;
-                                    if(plan.discount) {
-                                        data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
+                    if (plan.discount) {
+                        data += `<span class="original-price line-through">R$ ${plan.original_price}</span>
                                                  <div class="d-flex mb-2">
                                                      <span class="price font-30 mr-1" style="line-height: .8">R$ ${plan.price}</span>
                                                      <span class="discount text-success font-weight-bold">${plan.discount}% OFF</span>
                                                  </div>`;
-                                    }
+                    }
 
                     if (!isEmpty(plan.installments)) {
                         data += `<div class="form-group">
@@ -503,7 +502,7 @@ $(document).ready(function () {
 
         let countdown = new Date().getTime() + countdownTime * 60000;
 
-        if(countdownInterval !== null){
+        if (countdownInterval !== null) {
             clearInterval(countdownInterval);
         }
 
