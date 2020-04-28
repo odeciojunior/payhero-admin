@@ -471,10 +471,10 @@ class SalesApiController extends Controller
                 return response()->json(['error' => 'Usuário não autenticado'], 401);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao mostrar obter venda - SalesApiController - showExternal');
+            Log::warning('Erro ao obter venda - SalesApiController - showExternal');
             report($e);
 
-            return response()->json(['error' => 'Erro ao mostrar obter venda'], 400);
+            return response()->json(['error' => 'Erro ao obter venda'], 400);
         }
     }
 }

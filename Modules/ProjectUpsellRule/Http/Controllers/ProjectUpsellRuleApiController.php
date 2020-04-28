@@ -182,19 +182,30 @@ class ProjectUpsellRuleApiController extends Controller
      */
     public function destroy($id)
     {
-        $projectUpsellModel = new ProjectUpsellRule();
-        $upsellId           = current(Hashids::decode($id));
-        if ($upsellId) {
-            $upsell        = $projectUpsellModel->find($upsellId);
-            $upsellDeleted = $upsell->delete();
-            if ($upsellDeleted) {
-                return response()->json(['message' => 'Upsell deletado com sucesso!'], 200);
-            } else {
+        try {
+
+            if (empty($id)) {
                 return response()->json([
                                             'message' => 'Erro ao deletar upsell',
                                         ], 400);
             }
-        } else {
+
+            $projectUpsellModel = new ProjectUpsellRule();
+            $upsell             = $projectUpsellModel->find(current(Hashids::decode($id)));
+
+            if (!empty($upsell)) {
+                $upsellDeleted = $upsell->delete();
+                if ($upsellDeleted) {
+                    return response()->json(['message' => 'Upsell deletado com sucesso!'], 200);
+                }
+            }
+
+            return response()->json([
+                                        'message' => 'Erro ao deletar upsell',
+                                    ], 400);
+        } catch (Exception $e) {
+            report($e);
+
             return response()->json([
                                         'message' => 'Erro ao deletar upsell',
                                     ], 400);

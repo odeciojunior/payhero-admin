@@ -288,30 +288,21 @@ class TesteController extends Controller
     public function jeanFunction(Request $request)
     {
         try {
-            $geoIp = geoip()->getLocation(IpService::getRealIpAddr());
+            $data = $request->all();
+            if (!empty($data['id'])) {
 
-
-            $operationalSystem = Agent::platform();
-            $browser = Agent::browser();
-
-            $deviceData = [
-                'operational_system' => Agent::platform(),
-                'operation_system_version' => Agent::version($operationalSystem),
-                'browser' => Agent::browser(),
-                'browser_version' => Agent::version($browser),
-                'is_mobile' => Agent::isMobile(),
-                'ip' => @$geoIp['ip'],
-                'country' => @$geoIp['country'],
-                'city' => @$geoIp['city'],
-                'state' => @$geoIp['state'],
-                'state_name' => @$geoIp['state_name'],
-                'zip_code' => @$geoIp['postal_code'],
-                'currency' => @$geoIp['currency'],
-                'lat' => @$geoIp['lat'],
-                'lon' => @$geoIp['lon'],
-            ];
-
-            dd($deviceData);
+                if (is_numeric($data['id'])) {
+                    strlen($data['id'] > 8)
+                        ? dd(Hashids::encode($data['id']))
+                        : dd(Hashids::connection('sale_id')->encode($data['id']));
+                } else {
+                    strlen($data['id'] > 8)
+                        ? dd(current(Hashids::decode($data['id'])))
+                        : dd(current(Hashids::connection('sale_id')->decode($data['id'])));
+                }
+            } else {
+                dd('Não rolou!');
+            }
         } catch (Exception $e) {
             dd($e->getMessage());
         }

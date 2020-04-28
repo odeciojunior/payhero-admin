@@ -100,8 +100,9 @@ class ProjectNotificationApiController extends Controller
     }
 
     /**
-     * @param $id
-     * @return JsonResponse
+     * @param $projectId
+     * @param $notificationId
+     * @return JsonResponse|ProjectNotificationResource
      */
     public function edit($projectId, $notificationId)
     {
@@ -152,6 +153,7 @@ class ProjectNotificationApiController extends Controller
 
     /**
      * @param Request $request
+     * @param $projectId
      * @param $id
      * @return JsonResponse
      */
@@ -159,12 +161,14 @@ class ProjectNotificationApiController extends Controller
     {
         try {
             if (isset($projectId) && isset($id)) {
-                $projectNotificationModel = new ProjectNotification();
-                $projectModel             = new Project();
-                $projectNotificationId    = current(Hashids::decode($id));
-                $projectNotification      = $projectNotificationModel->find($projectNotificationId);
+                $projectNotificationModel   = new ProjectNotification();
+                $projectModel               = new Project();
+                $projectNotificationPresent = $projectNotificationModel->present();
 
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
+                $projectNotificationId = current(Hashids::decode($id));
+
+                $projectNotification = $projectNotificationModel->find($projectNotificationId);
+                $project             = $projectModel->find(current(Hashids::decode($projectId)));
 
                 activity()->on($projectNotificationModel)
                           ->tap(function(Activity $activity) use ($projectNotificationId) {
@@ -175,16 +179,19 @@ class ProjectNotificationApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     $data = [];
                     if (!empty($request->input('message'))) {
-                        if ($projectNotification->type_enum == 1) {
-                            $data['message'] = json_encode([
-                                                               'subject' => $request->input('subject'),
-                                                               'title'   => $request->input('title'),
-                                                               'content' => $request->input('message'),
-                                                           ]);
+                        if ($projectNotification->type_enum == $projectNotificationPresent->getTypeEnum('email')) {
+                            if (!empty($request->input('title')) && !empty($request->input('subject'))) {
+                                $data['message'] = json_encode([
+                                                                   'subject' => $request->input('subject'),
+                                                                   'title'   => $request->input('title'),
+                                                                   'content' => $request->input('message'),
+                                                               ]);
+                            }
                         } else {
                             $data['message'] = $request->input('message');
                         }
                     }
+
                     if (!is_null($request->input('status'))) {
                         $data['status'] = $request->input('status');
                     }
