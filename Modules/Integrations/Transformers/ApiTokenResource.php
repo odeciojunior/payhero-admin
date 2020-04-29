@@ -20,10 +20,6 @@ use Vinkla\Hashids\Facades\Hashids;
 class ApiTokenResource extends Resource
 {
     /**
-     * @var String
-     */
-    private $timezone;
-    /**
      * @var string
      */
     private $format = 'd/m/Y H:i:s';
@@ -78,6 +74,6 @@ class ApiTokenResource extends Resource
             return null;
         }
 
-        return Carbon::parse($date)->timezone($this->timezone)->format($this->format);
+        return Carbon::parse($date)->format($this->format);
     }
 }
