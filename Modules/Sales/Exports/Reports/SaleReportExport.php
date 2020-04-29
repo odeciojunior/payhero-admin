@@ -95,7 +95,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'amount' => $product->amount,
                 'sku' => $product->sku,
                 //client
-                'client_name' => iconv("UTF-8", "ISO-8859-1//IGNORE", $sale->customer->name ?? ''),
+                'client_name' => utf8_encode(iconv("UTF-8", "ISO-8859-1//IGNORE", $sale->customer->name ?? '')),
                 'client_telephone' => $sale->customer->telephone ?? '',
                 'client_email' => $sale->customer->email ?? '',
                 'client_document' => $sale->customer->document ?? '',
