@@ -33,7 +33,7 @@ class BankService
      */
     public function getBankName($bankCode, $country = null)
     {
-        if($country == 'BR' || is_null($country)) {
+        if ($country == 'BR' || is_null($country)) {
             foreach ($this->brazilianBanks() as $bank) {
                 if ($bank['code'] == $bankCode) {
                     return $bank['name'];
@@ -41,7 +41,7 @@ class BankService
             }
         }
 
-        if($country == 'US' || is_null($country)) {
+        if ($country == 'US' || is_null($country)) {
             foreach ($this->usaBanks() as $bank) {
                 if ($bank['code'] == $bankCode) {
                     return $bank['name'];
@@ -49,7 +49,7 @@ class BankService
             }
         }
 
-        if($country == 'PT' || is_null($country)) {
+        if ($country == 'PT' || is_null($country)) {
             foreach ($this->portugueseBanks() as $bank) {
                 if ($bank['code'] == $bankCode) {
                     return $bank['name'];
@@ -188,6 +188,7 @@ class BankService
             ['code' => '719', 'name' => 'Banif'],
             ['code' => '721', 'name' => 'Banco Credibel'],
             ['code' => '734', 'name' => 'Banco Gerdau'],
+            ['code' => '735', 'name' => 'Neon'],
             ['code' => '738', 'name' => 'Banco Morada'],
             ['code' => '739', 'name' => 'Banco Galvão de Negócios'],
             ['code' => '740', 'name' => 'Banco Barclays'],
@@ -211,7 +212,6 @@ class BankService
 
     /**
      * @return array
-     *
      * @see: https://transferwise.com/br/swift-codes/
      */
     private function usaBanks()
@@ -2369,7 +2369,8 @@ class BankService
     /**
      * @return array
      */
-    private function portugueseBanks(){
+    private function portugueseBanks()
+    {
         return [
             ['code' => '0001', 'name' => 'BANCO DE PORTUGAL, EP'],
             ['code' => '0005', 'name' => 'ABANCA SERVICIOS FINANCIEROS, E.F.C., S.A.- SUCURSAL EM PORTUGAL'],
