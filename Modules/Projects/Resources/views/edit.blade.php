@@ -189,7 +189,7 @@
                             </div>
                         </div>
                         <div class='row'>
-                            <div class='form-group col-md-6 col-sm-12'>
+                            <div class='form-group col-md-4 col-sm-12'>
                                 <label for='quantity-installment_amount'>Quantidade de parcelas (cartão de crédito)</label>
                                 <select class='installment_amount form-control select-pad' name='installments_amount'
                                         class='form-control select-pad'>
@@ -210,7 +210,27 @@
                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade máxima de parcelas oferecidas no checkout
                                 </p>
                             </div>
-                            <div class='form-group col-md-6 col-sm-12'>
+                            <div class='form-group col-md-4 col-sm-12'>
+                                <label for='pre_selected_installment'>Parcela pré selecionada (cartão de crédito)</label>
+                                <select id='pre_selected_installment' class='pre_selected_installment form-control select-pad' name='pre_selected_installment'>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Parcela pré selecionada no checkout
+                                </p>
+                            </div>
+                            <div class='form-group col-md-4 col-sm-12'>
                                 <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                                 <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                                     <option value="1">1</option>
@@ -348,28 +368,6 @@
                             <p class="info mt-5 col-12" style="font-size: 10px;">
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar está função, tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor maximo que poderá ser aplicado.
                             </p>
-                        </div>
-                        <div class='row mt-10'>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for='pre_selected_installment'>Parcela pré selecionada (cartão de crédito)</label>
-                                <select id='pre_selected_installment' class='pre_selected_installment form-control select-pad' name='pre_selected_installment'>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Parcela pré selecionada no checkout
-                                </p>
-                            </div>
                         </div>
                     </div>
                 </div>
