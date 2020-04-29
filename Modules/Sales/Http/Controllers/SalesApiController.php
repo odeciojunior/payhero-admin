@@ -19,7 +19,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletPaidEvent;
-use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Services\CheckoutService;
@@ -445,6 +444,10 @@ class SalesApiController extends Controller
             $salesModel = new Sale();
             $saleService = new SaleService();
             $companiesModel = new Company();
+
+            //Conta as  requisições diárias da Profitfy
+            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'));
+            settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
 
             $user = auth()->user();
 
