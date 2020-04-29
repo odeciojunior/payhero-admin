@@ -21,7 +21,7 @@ class SalesExternalResource extends Resource
     public function toArray($request)
     {
         $fee = preg_replace("/[^0-9]/", "", $this->details->taxaReal)/100;
-        $fee += preg_replace("/[^0-9]/", "", $this->installment_tax_value)/100;
+        $fee += preg_replace("/[^0-9]/", "", $this->installment_tax_value ?? 0)/100;
 
         return [
             'id' => Hashids::connection('sale_id')->encode($this->id),
