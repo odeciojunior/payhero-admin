@@ -38,7 +38,7 @@ class ApiTokenResource extends Resource
     public function toArray($request)
     {
         $this->defineTimezone();
-        $token     = $this->resource->getValidToken();
+        $token     = $this->resource->token;
         $revoked   = $token->revoked ?? null;
         $expiresAt = $this->getFormatDate($token->expires_at ?? null);
 
