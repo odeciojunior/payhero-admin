@@ -106,21 +106,25 @@ class ReportanaService
                 }
 
                 $totalValue = number_format(($sale->sub_total + $sale->shipment_value), 2, '.', '');
+                $subtotal   = number_format($sale->sub_total, 2, '.', '');
 
                 $data = [
                     'type'         => 'order',
                     'event_type'   => $eventSale,
                     'payment_type' => (new Sale())->present()->getPaymentType($sale->payment_method),
                     'order'        => [
-                        'financial_status' => $status,
-                        'billet_url'       => $sale->boleto_link,
-                        'gateway'          => 'cloudfox',
-                        'checkout_url'     => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
-                        'id'               => $sale->checkout_id,
-                        'status'           => $status,
-                        "codigo_barras"    => $sale->boleto_digitable_line,
-                        'values'           => [
-                            'total' => $totalValue,
+                        'financial_status'  => $status,
+                        'billet_url'        => $sale->boleto_link,
+                        'gateway'           => 'cloudfox',
+                        'checkout_url'      => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
+                        'id'                => $sale->checkout_id,
+                        'status'            => $status,
+                        "codigo_barras"     => $sale->boleto_digitable_line,
+                        "boleto_due_date"   => $sale->boleto_due_date,
+                        "shopify_reference" => $sale->shopify_order,
+                        'values'            => [
+                            'subtotal' => $subtotal,
+                            'total'    => $totalValue,
                         ],
                         'costumer'         => [
                             'name'             => $sale->customer->name,
