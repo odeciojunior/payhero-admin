@@ -330,18 +330,18 @@ class PixelsApiController extends Controller
                             $applyPlanDecoded = json_decode($pixel->apply_on_plans);
                             if (in_array('all', $applyPlanDecoded)) {
                                 $applyPlanArray[] = [
-                                    'id'   => 'all',
-                                    'name' => 'Todos os Planos',
+                                    'id'          => 'all',
+                                    'name'        => 'Todos os Planos',
                                     'description' => '',
                                 ];
                             } else {
                                 foreach ($applyPlanDecoded as $key => $value) {
-                                    $plan = $planModel->select('plans.*', DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p) as variants'))
-                                    ->find($value);
+                                    $plan = $planModel->select('plans.*', DB::raw('(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'))
+                                                      ->find($value);
                                     if (!empty($plan)) {
                                         $applyPlanArray[] = [
-                                            'id'   => Hashids::encode($plan->id),
-                                            'name' => $plan->name,
+                                            'id'          => Hashids::encode($plan->id),
+                                            'name'        => $plan->name,
                                             'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
                                         ];
                                     }
