@@ -61,6 +61,7 @@ use Spatie\Activitylog\Models\Activity;
 class Project extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+
     /**
      * @var string
      */
@@ -114,6 +115,7 @@ class Project extends Model
         'credit_card_discount',
         'billet_discount',
         'pre_selected_installment',
+        'required_email_checkout',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -274,7 +276,6 @@ class Project extends Model
         return $this->hasOne(NotazzIntegration::class);
     }
 
-
     /**
      * @return HasMany
      */
@@ -282,6 +283,7 @@ class Project extends Model
     {
         return $this->hasMany(ProjectNotification::class);
     }
+
     /**
      * @return HasMany
      */

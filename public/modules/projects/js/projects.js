@@ -373,6 +373,7 @@ $(() => {
             $('#whatsapp_button .whatsapp_button_no').attr('selected', true);
         }
         $('#pre_selected_installment').val(project.pre_selected_installment);
+        $('#required_email_checkout').val(project.required_email_checkout);
         //select cartão de credito no checkout
         // if (project.credit_card == 1) {
         //     $('#credit_card .credit_card_yes').attr('selected', true);
@@ -507,7 +508,7 @@ $(() => {
 
     $('#credit_card_discount').mask('000', {
         reverse: true,
-        onKeyPress: function(val, e, field, options) {
+        onKeyPress: function (val, e, field, options) {
             if (val > 100) {
                 $('#credit_card_discount').val('')
             }
@@ -516,7 +517,7 @@ $(() => {
 
     $('#billet_discount').mask('000', {
         reverse: true,
-        onKeyPress: function(val, e, field, options) {
+        onKeyPress: function (val, e, field, options) {
             if (val > 100) {
                 $('#billet_discount').val('')
             }
@@ -630,8 +631,8 @@ $(() => {
         }
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
-        let discountCard = $('#credit_card_discount').val().replace('%','');
-        let discountBillet = $('#billet_discount').val().replace('%','');
+        let discountCard = $('#credit_card_discount').val().replace('%', '');
+        let discountBillet = $('#billet_discount').val().replace('%', '');
         discountBillet = (discountBillet == '') ? 0 : discountBillet;
         discountCard = (discountCard == '') ? 0 : discountCard;
         formData.append('credit_card_discount', discountCard);
@@ -913,7 +914,7 @@ $(() => {
         });
     });
 
-    $("#bt-shopify-sync-trackings").on("click", function(){
+    $("#bt-shopify-sync-trackings").on("click", function () {
 
         $.ajax({
             method: 'POST',

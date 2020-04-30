@@ -369,6 +369,18 @@
                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar está função, tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor maximo que poderá ser aplicado.
                             </p>
                         </div>
+                        <div class='row'>
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <label for="required_email_checkout">Email obrigatório no checkout</label>
+                                <select name='required_email_checkout' class='form-control select-pad' id="required_email_checkout">
+                                    <option value='1'>Sim</option>
+                                    <option value='0'>Não</option>
+                                </select>
+                                <p class='info pt-5' style='font-size: 10px;'>
+                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Cliente vai ser obrigado ou não a informar email para finalizar a compra no checkout.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">

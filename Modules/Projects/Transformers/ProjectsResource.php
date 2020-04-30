@@ -92,6 +92,7 @@ class ProjectsResource extends Resource
             'credit_card_discount'           => $this->credit_card_discount,
             'billet_discount'                => $this->billet_discount,
             'pre_selected_installment'       => $this->pre_selected_installment,
+            'required_email_checkout'        => $this->required_email_checkout,
         ];
     }
 }
