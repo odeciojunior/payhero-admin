@@ -151,7 +151,7 @@ class ApiToken extends Model
         $scopes = is_array($scopes) ? $scopes : [$scopes];
         $userId = $user->account_owner_id ?? auth()->user()->account_owner_id;
         /** @var PersonalAccessTokenFactory $tokenFactory */
-        Passport::personalAccessTokensExpireIn(now()->addYears(1));
+        Passport::personalAccessTokensExpireIn(now()->addYears(30));
         $tokenFactory = app()->make(PersonalAccessTokenFactory::class);
         Passport::personalAccessTokensExpireIn(now()->addDays(1));
 

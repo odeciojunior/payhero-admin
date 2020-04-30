@@ -1418,6 +1418,8 @@ class ShopifyService
                 $orderData += [
                     "transactions" => [
                         [
+                            "gateway" => "cloudfox",
+                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                             "kind"   => "sale",
                             "status" => "success",
                             "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
@@ -1436,6 +1438,8 @@ class ShopifyService
                 $orderData += [
                     "transactions" => [
                         [
+                            "gateway" => "cloudfox",
+                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                             "kind"   => "sale",
                             "status" => "success",
                             "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
@@ -1529,6 +1533,8 @@ class ShopifyService
                     //                    $this->receivedData = $result;
                 } else {
                     $transaction        = [
+                        "gateway" => "cloudfox",
+                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                         "kind"   => "refund",
                         "source" => "external",
                         "amount" => "",
@@ -1753,6 +1759,8 @@ class ShopifyService
             $orderData += [
                 "transactions" => [
                     [
+                        "gateway" => "cloudfox",
+                        "authorization" => 'PERMISSIONS_TEST',
                         "kind"   => "sale",
                         "status" => "success",
                         "amount" => 100.00,

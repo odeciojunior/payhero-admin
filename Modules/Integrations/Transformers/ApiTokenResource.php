@@ -36,7 +36,6 @@ class ApiTokenResource extends Resource
         $this->defineTimezone();
         $token     = $this->resource->token;
         $revoked   = $token->revoked ?? null;
-        $expiresAt = $this->getFormatDate($token->expires_at ?? null);
 
         return [
             'id_code'          => Hashids::encode($this->resource->id),
@@ -44,7 +43,6 @@ class ApiTokenResource extends Resource
             'status'           => $this->resource->present()->status(),
             'revoked'          => $revoked,
             'register_date'    => $this->getFormatDate($this->resource->created_at),
-            'expiration_date'  => $expiresAt,
             'description'      => $this->resource->description,
             'integration_type' => $this->resource->present()->getIntegrationType(),
             'scopes'           => $this->resource->scopes,
