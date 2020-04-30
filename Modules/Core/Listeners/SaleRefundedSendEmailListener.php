@@ -66,22 +66,23 @@ class SaleRefundedSendEmailListener implements ShouldQueue
             if ($discount != '') {
                 $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
             }
-            $data = [
-                'first_name'          => $customer->present()->getFirstName(),
-                "store_logo"          => $project->logo,
-                "project_contact"     => $project->contact,
-                'sale_code'           => $saleCode,
-                "products"            => $products,
-                "total_paid_value"    => $sale->total_paid_value,
-                "shipment_value"      => $sale->shipment_value,
-                "subtotal"            => strval($subTotal),
-                "iof"                 => $iof,
-                'discount'            => $discount,
-                'installments_amount' => $sale->installments_amount,
-                'installments_value'  => number_format($sale->installments_value, 2, ',', '.'),
-                "sac_link"            => "https://sac." . $domain->name,
-            ];
-            if (!empty($domain['name'])) {
+            if (!empty($domain->name)) {
+
+                $data = [
+                    'first_name'          => $customer->present()->getFirstName(),
+                    "store_logo"          => $project->logo,
+                    "project_contact"     => $project->contact,
+                    'sale_code'           => $saleCode,
+                    "products"            => $products,
+                    "total_paid_value"    => $sale->total_paid_value,
+                    "shipment_value"      => $sale->shipment_value,
+                    "subtotal"            => strval($subTotal),
+                    "iof"                 => $iof,
+                    'discount'            => $discount,
+                    'installments_amount' => $sale->installments_amount,
+                    'installments_value'  => number_format($sale->installments_value, 2, ',', '.'),
+                    "sac_link"            => "https://sac." . $domain->name,
+                ];
                 $emailService->sendEmail('noreply@' . $domain['name'], $project['name'], $customer['email'],
                                          $customer['name'], 'd-97d5002e189546778c0bedf4f4e540f1', $data);
             }
