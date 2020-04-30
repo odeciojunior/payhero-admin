@@ -83,7 +83,7 @@ class ApiTokenPresenter extends Presenter
     public function getTokenScope($integrationTypeEnum = null)
     {
         $integrationType = $integrationTypeEnum ?? $this->entity->integration_type_enum;
-        if (empty($integrationTypeEnum) || !isset($this->integrationTypeEnumScope[$integrationType])) {
+        if (empty($integrationType) || !isset($this->integrationTypeEnumScope[$integrationType])) {
             return null;
         }
 

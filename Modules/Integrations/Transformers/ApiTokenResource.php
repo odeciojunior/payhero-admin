@@ -20,10 +20,6 @@ use Vinkla\Hashids\Facades\Hashids;
 class ApiTokenResource extends Resource
 {
     /**
-     * @var String
-     */
-    private $timezone;
-    /**
      * @var string
      */
     private $format = 'd/m/Y H:i:s';
@@ -38,9 +34,8 @@ class ApiTokenResource extends Resource
     public function toArray($request)
     {
         $this->defineTimezone();
-        $token     = $this->resource->getValidToken();
+        $token     = $this->resource->token;
         $revoked   = $token->revoked ?? null;
-        $expiresAt = $this->getFormatDate($token->expires_at ?? null);
 
         return [
             'id_code'          => Hashids::encode($this->resource->id),
@@ -48,7 +43,6 @@ class ApiTokenResource extends Resource
             'status'           => $this->resource->present()->status(),
             'revoked'          => $revoked,
             'register_date'    => $this->getFormatDate($this->resource->created_at),
-            'expiration_date'  => $expiresAt,
             'description'      => $this->resource->description,
             'integration_type' => $this->resource->present()->getIntegrationType(),
             'scopes'           => $this->resource->scopes,
@@ -78,6 +72,6 @@ class ApiTokenResource extends Resource
             return null;
         }
 
-        return Carbon::parse($date)->timezone($this->timezone)->format($this->format);
+        return Carbon::parse($date)->format($this->format);
     }
 }

@@ -62,14 +62,12 @@ $(document).ready(function () {
         $("#table-body-integrates").html('');
 
         $.each(response.data, function (index, value) {
-            let expirationDate = (value.expiration_date == null) ? '-' : value.expiration_date;
             let disabled = ('active' !== value.status) ? ' disabled' : '';
             dados = '';
             dados += '<tr>';
             dados += '<td class="" style="vertical-align: middle;">';
             dados += '<strong class="mr-1">' + value.description + '</strong>';
             dados += '<br><small class="text-muted">Criada em: ' + value.register_date + '</small>';
-            dados += '<br><small class="text-muted">Expira em: ' + expirationDate + '</small>';
             dados += '</td>';
             dados += '<td>';
             dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
