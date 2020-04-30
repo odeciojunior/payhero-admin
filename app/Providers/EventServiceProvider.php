@@ -17,6 +17,7 @@ use Modules\Core\Listeners\BilletExpiredWhatsapp2Listener;
 use Modules\Core\Listeners\BilletPaidActiveCampaignListener;
 use Modules\Core\Listeners\SaleRefundedPartialSendEmailListener;
 use Modules\Core\Listeners\BilletPaidHotsacListener;
+use Modules\Core\Listeners\BilletPaidReportanaListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -32,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
             BilletPaidSendEmailListener::class,
             BilletPaidWhatsapp2Listener::class,
             BilletPaidHotsacListener::class,
+            BilletPaidReportanaListener::class,
         ],
         BilletExpiredEvent::class => [
             BilletExpiredWhatsapp2Listener::class,
