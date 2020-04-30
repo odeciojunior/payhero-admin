@@ -417,8 +417,6 @@ class PlansApiController extends Controller
 
                 $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
 
-                $sql = str_replace_array('?', $plans->getBindings(), $plans->toSql());
-
                 $plans = $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'))
                     ->paginate(10);
 
