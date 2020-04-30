@@ -59,11 +59,12 @@ class GenericCommand extends Command
             ->where('payment_method', 2)
             ->orderBy('id', 'desc')
             ->get();
+        $total = $sales->count();
         $x = 1;
         foreach ($sales as $sale) {
             $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $sale->project_id)->first();
             try {
-                $this->line($x++ . "-> Atualizando pedido no shopify " . $sale->id);
+                $this->line($x++ . " de " . $total. " -> Atualizando pedido no shopify " . $sale->id);
                 $credential = new PublicAppCredential($shopifyIntegration->token);
                 $client = new Client($credential, $shopifyIntegration->url_store, [
                     'metaCacheDir' => '/var/tmp',
