@@ -105,7 +105,7 @@ class ReportanaService
                         break;
                 }
 
-                $totalValue = number_format(($sale->sub_total + $sale->shipment_value), 2, '.', '');
+                $totalValue = number_format(($sale->original_total_paid_value - $sale->interest_total_value) / 100, 2, '.', '');
                 $subtotal   = number_format($sale->sub_total, 2, '.', '');
 
                 $data = [
