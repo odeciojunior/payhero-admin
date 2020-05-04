@@ -46,9 +46,9 @@
                                     <label for="date_type" >Data</label>
                                     <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly >
                                 </div>
-                                <div class="col-sm-6 col-md-6 col-xl-2 col-12">
+                                <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                     <label> </label>
-                                    <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 0">
+                                    <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: .5rem">
                                         <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                     </button>
                                 </div>
