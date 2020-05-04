@@ -20,6 +20,8 @@ Route::middleware(['web', 'auth', 'setUserAsLogged'])->prefix('reports')->group(
     Route::get('/getsalesbyorigin', 'ReportsController@getSalesByOrigin')->name('reports.salesbyorigin')->middleware('role:account_owner|admin');
 
     Route::get('/projections', 'ReportsController@projections')->name('reports.projections')->middleware('role:account_owner|admin');
+
+    Route::get('/coupons', 'ReportsController@coupons')->name('reports.coupons')->middleware('role:account_owner|admin');
 });
 
 

@@ -206,6 +206,11 @@
                             <span class="site-menu-title">Projeções</span>
                         </a>
                     </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('reports.coupons') }}">
+                            <span class="site-menu-title">Utilização Cupons</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif
