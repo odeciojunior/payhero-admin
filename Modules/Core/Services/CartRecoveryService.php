@@ -113,23 +113,22 @@ class CartRecoveryService
                                                                                                    ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                                    ->first();
                                           if (!empty($projectNotificationEmail)) {
-                                              $message               = json_decode($projectNotificationEmail->message);
-                                              $subjectMessage        = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
-                                              $titleMessage          = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
-                                              $contentMessage        = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
-                                              $contentMessage        = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                              $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
+                                              $message        = json_decode($projectNotificationEmail->message);
+                                              $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
+                                              $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
+                                              $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                              $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                              //                                              $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
                                               if (!empty($domain)) {
                                                   $bodyEmail = [
-                                                      'name'                    => $clientNameExploded[0],
-                                                      'project_logo'            => $project['logo'],
-                                                      'checkout_link'           => $linkCheckout,
-                                                      "project_contact"         => $project['contact'],
-                                                      "subject"                 => $subjectMessage,
-                                                      "title"                   => $titleMessage,
-                                                      "content"                 => $contentMessage,
-                                                      "products"                => $products,
-                                                      'project_message_contact' => $projectMessageContact,
+                                                      'name'            => $clientNameExploded[0],
+                                                      'project_logo'    => $project['logo'],
+                                                      'checkout_link'   => $linkCheckout,
+                                                      "project_contact" => $project['contact'],
+                                                      "subject"         => $subjectMessage,
+                                                      "title"           => $titleMessage,
+                                                      "content"         => $contentMessage,
+                                                      "products"        => $products,
                                                   ];
 
                                                   $dataEmail = [
@@ -255,23 +254,22 @@ class CartRecoveryService
                                                                                                ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                                ->first();
                                       if (!empty($projectNotificationEmail)) {
-                                          $message               = json_decode($projectNotificationEmail->message);
-                                          $subjectMessage        = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
-                                          $titleMessage          = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
-                                          $contentMessage        = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
-                                          $contentMessage        = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                          $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
+                                          $message        = json_decode($projectNotificationEmail->message);
+                                          $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
+                                          $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
+                                          $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
+                                          $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                          //                                          $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
                                           if (!empty($domain)) {
                                               $bodyEmail = [
-                                                  'name'                    => $clientNameExploded[0],
-                                                  'project_logo'            => $project['logo'],
-                                                  'checkout_link'           => $linkCheckout,
-                                                  "project_contact"         => $project['contact'],
-                                                  "subject"                 => $subjectMessage,
-                                                  "title"                   => $titleMessage,
-                                                  "content"                 => $contentMessage,
-                                                  "products"                => $products,
-                                                  'project_message_contact' => $projectMessageContact,
+                                                  'name'            => $clientNameExploded[0],
+                                                  'project_logo'    => $project['logo'],
+                                                  'checkout_link'   => $linkCheckout,
+                                                  "project_contact" => $project['contact'],
+                                                  "subject"         => $subjectMessage,
+                                                  "title"           => $titleMessage,
+                                                  "content"         => $contentMessage,
+                                                  "products"        => $products,
                                               ];
 
                                               $dataEmail = [

@@ -97,7 +97,6 @@ class BilletPaidSendEmailListener implements ShouldQueue
                 $titleMessage          = $projectNotificationService->formatNotificationData($message->title, $sale, $project);
                 $contentMessage        = $projectNotificationService->formatNotificationData($message->content, $sale, $project);
                 $contentMessage        = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
 
                 $data = [
                     'first_name'              => $customer->present()->getFirstName(),
@@ -113,7 +112,6 @@ class BilletPaidSendEmailListener implements ShouldQueue
                     "title"                   => $titleMessage,
                     "content"                 => $contentMessage,
                     'discount'                => $discount,
-                    'project_message_contact' => $projectMessageContact,
                     'sac_link'                => "https://sac." . $domain->name,
                 ];
                 if (!empty($domain['name'])) {
