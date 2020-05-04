@@ -16,6 +16,7 @@ use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Events\SaleApprovedEvent;
 use Slince\Shopify\Client as ShopifyClient;
 use Modules\Core\Entities\ShopifyIntegration;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SetApprovedShopifyOrderListener
@@ -170,6 +171,8 @@ class SetApprovedShopifyOrderListener implements ShouldQueue
 
                     $client->getTransactionManager()->create($event->sale->shopify_order, [
                         "kind" => "capture",
+                        "gateway" => "cloudfox",
+                        "authorization" => Hashids::connection('sale_id')->encode($event->sale->id),
                     ]);
                 } catch (Exception $e) {
                     Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $event->sale->id);

@@ -135,10 +135,12 @@ class PostBackPagarmeController extends Controller
                         $transactionUpdate = [
                             "kind" => "sale",
                             "source" => "external",
+                            "gateway" => "cloudfox",
+                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                         ];
-                        if ($sale->payment_method == 2) {
-                            $transactionUpdate['gateway'] = 'Boleto';
-                        }
+//                        if ($sale->payment_method == 2) {
+//                            $transactionUpdate['gateway'] = 'Boleto';
+//                        }
                         $client->getTransactionManager()->create($sale->shopify_order, $transactionUpdate);
                     } catch (Exception $e) {
                         Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale->id);

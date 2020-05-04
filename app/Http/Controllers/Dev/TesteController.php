@@ -189,6 +189,8 @@ class TesteController extends Controller
 
                         $client->getTransactionManager()->create($sale->shopify_order, [
                             "kind" => "capture",
+                            "gateway" => "cloudfox",
+                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                         ]);
                     } catch (Exception $e) {
                         Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale->id);
