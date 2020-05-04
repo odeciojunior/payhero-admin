@@ -177,7 +177,7 @@ $(function () {
                     $('.include-templates-email').show();
                     $('.templates-email').hide();
 
-                    $('#modal-detail-project-notification .p_text_message').html(response.data.message);
+                    $('#modal-detail-project-notification .p_text_message').html(response.data.message_html);
                     $('#modal-detail-project-notification .p_project_name').html(response.data.project_name);
                     $('#modal-detail-project-notification .p_project_contact').html(response.data.project_contact);
                     $('#modal-detail-project-notification .p_text_notification').html(response.data.title);
