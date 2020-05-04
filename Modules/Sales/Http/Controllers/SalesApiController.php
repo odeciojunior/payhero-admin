@@ -455,16 +455,28 @@ class SalesApiController extends Controller
 
                 $saleId = current(Hashids::decode($saleId));
 
-                $sale = $salesModel->with('transactions')
-                    ->where('id', $saleId)
+                $sale = $salesModel->with([
+                    'transactions',
+                    'productsPlansSale.product',
+                ])->where('id', $saleId)
                     ->where('owner_id', $user->account_owner_id)
                     ->first();
 
                 if (!empty($sale)) {
 
                     $userCompanies = $companiesModel->where('user_id', $sale->owner_id)->pluck('id');
-
                     $saleService->getDetails($sale, $userCompanies);
+
+                    $products = [];
+                    foreach ($sale->productsPlansSale as $productPlanSale){
+                        $product = $productPlanSale->product;
+                        $products[] = [
+                            'id' => $product->shopify_id,
+                            'variant_id' => $product->shopify_variant_id,
+                            'quantity' => $productPlanSale->amount,
+                        ];
+                    }
+                    $sale->products = $products;
 
                     return new SalesExternalResource($sale);
                 } else {

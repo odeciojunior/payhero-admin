@@ -32,6 +32,7 @@ class SalesExternalResource extends Resource
             'payment_method' => $this->present()->getPaymentType(),
             'status' => $this->present()->getStatus(),
             'approved_at' => $this->end_date,
+            'products' => $sale->products ?? [],
         ];
     }
 }
