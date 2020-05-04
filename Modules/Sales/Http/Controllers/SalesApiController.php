@@ -453,7 +453,7 @@ class SalesApiController extends Controller
 
             if(!empty($user)) {
 
-                $saleId = current(Hashids::decode($saleId));
+                $saleId = current(Hashids::connection('sale_id')->decode($saleId));
 
                 $sale = $salesModel->with([
                     'transactions',
