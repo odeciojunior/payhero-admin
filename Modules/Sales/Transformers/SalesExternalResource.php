@@ -25,7 +25,6 @@ class SalesExternalResource extends Resource
 
         return [
             'id' => Hashids::connection('sale_id')->encode($this->id),
-            'token' => Hashids::encode($this->checkout_id),
             'amount' => (float) number_format(preg_replace("/[^0-9]/", "", $this->details->total)/100, 2),
             'fee' => (float) number_format($fee, 2),
             'net_amount' => (float) number_format(preg_replace("/[^0-9]/", "", $this->details->comission)/100, 2),
