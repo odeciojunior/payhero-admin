@@ -438,7 +438,7 @@ class SalesApiController extends Controller
         }
     }
 
-    public function showExternal($checkoutId)
+    public function showExternal($saleId)
     {
         try {
             $salesModel = new Sale();
@@ -453,10 +453,10 @@ class SalesApiController extends Controller
 
             if(!empty($user)) {
 
-                $checkoutId = current(Hashids::decode($checkoutId));
+                $saleId = current(Hashids::decode($saleId));
 
                 $sale = $salesModel->with('transactions')
-                    ->where('checkout_id', $checkoutId)
+                    ->where('id', $saleId)
                     ->where('owner_id', $user->account_owner_id)
                     ->first();
 

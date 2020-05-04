@@ -34,7 +34,7 @@ Route::apiResource('sales', 'SalesApiController')
      ->middleware(['auth:api', 'scopes:admin', 'setUserAsLogged']);
 
 Route::group(['middleware' => ['auth:api', 'scopes:sale'], 'prefix' => 'profitfy',], function () {
-    Route::get('/{checkoutId}', 'SalesApiController@showExternal');
+    Route::get('/{saleId}', 'SalesApiController@showExternal');
 });
 
 Route::group(
