@@ -18,5 +18,8 @@ Route::group(
         Route::get('/reports/projections', 'ReportsApiController@projections')->middleware('role:account_owner|admin');
 
         Route::post('/reports/projectionsexport', 'ReportsApiController@projectionsExport')->middleware('role:account_owner|admin');
+
+        Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('role:account_owner|admin');
+
     }
 );

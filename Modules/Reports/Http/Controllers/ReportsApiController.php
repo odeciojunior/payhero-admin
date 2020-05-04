@@ -26,6 +26,7 @@ use Modules\Core\Entities\Transaction;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Reports\Exports\Reports\ReportExport;
+use Modules\Reports\Transformers\ReportCouponResource;
 
 class ReportsApiController extends Controller
 {
@@ -683,5 +684,52 @@ class ReportsApiController extends Controller
         }
 
         return Excel::download(new ReportExport($checkData, $header, 11), 'cloudfox-transacoes.' . $data['format']);
+    }
+
+    public function coupons(Request $request)
+    {
+        try {
+
+            $projectId = $request->input('project');
+            $projects = UserProject::where('user_id', auth()->user()->account_owner_id)
+                                   ->with('project')
+                                   ->where('type', 'producer');
+
+            if(!empty($projectId)) {
+                $projects = $projects->where('project_id', Hashids::decode($projectId));
+            }
+            $projects = $projects->get();
+
+            if (empty($request->input('status'))) {
+                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
+            } else {
+                $status = $request->input("status") == 7 ? [7, 22] : [$request->input("status")];
+            }
+
+            $dateRange = FoxUtils::validateDateRange($request->input("date_range"));
+
+            $coupons = Sale::select([
+                                        DB::raw('COUNT(id) as amount'),
+                                        'project_id',
+                                        'cupom_code'
+                                    ])
+                            ->whereIn('project_id', $projects->pluck('project_id'))
+                            ->whereIn('status', $status)
+                            ->whereNotNull('cupom_code')
+                            ->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                            ->groupBy('cupom_code', 'project_id')
+                            ->orderByRaw('amount DESC')
+                            ->paginate(10);
+
+            foreach ($coupons as $key => $coupon) {
+                $coupons[$key]->project_name = $projects->firstWhere('project_id', $coupon->project_id)->project->name ?? '';
+            }
+
+            return ReportCouponResource::collection($coupons);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(null);
+        }
     }
 }

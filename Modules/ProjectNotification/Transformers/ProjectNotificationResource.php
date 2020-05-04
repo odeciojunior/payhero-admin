@@ -42,6 +42,7 @@ class ProjectNotificationResource extends Resource
             'event_enum'        => $this->event_enum,
             'time' 		        => $this->time,
             'message'           => $message,
+            'message_html'      => preg_replace("/\r\n/", "<br/>", $message),
             'subject'           => $subject,
             'title'             => $title,
             'type'   	        => $arrayType[$this->type_enum],
