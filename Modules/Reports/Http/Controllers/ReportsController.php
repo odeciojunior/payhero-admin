@@ -40,4 +40,8 @@ class ReportsController extends Controller
         return view('reports::projections');
     }
 
+    public function coupons()
+    {
+        return view('reports::coupons');
+    }
 }
