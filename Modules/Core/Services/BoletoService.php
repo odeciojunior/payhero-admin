@@ -125,40 +125,43 @@ class BoletoService
                                                                                        ->first();
 
                               if (!empty($projectNotificationEmail) && !empty($domain) && !empty($clientEmail)) {
-                                  $message        = json_decode($projectNotificationEmail->message);
-                                  $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
-                                  $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
-                                  $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
-                                  $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                  $data           = [
-                                      "name"                  => $clientNameExploded[0],
-                                      "boleto_link"           => $boleto->boleto_link,
-                                      "boleto_digitable_line" => $boletoDigitableLine,
-                                      "boleto_due_date"       => $boleto->boleto_due_date,
-                                      "total_paid_value"      => $boleto->total_paid_value,
-                                      "shipment_value"        => $boleto->shipment_value,
-                                      "subtotal"              => strval($subTotal),
-                                      "iof"                   => $iof,
-                                      'discount'              => $discount,
-                                      "project_logo"          => $project->logo,
-                                      "project_contact"       => $project->contact,
-                                      "subject"               => $subjectMessage,
-                                      "title"                 => $titleMessage,
-                                      "content"               => $contentMessage,
-                                      "products"              => $products,
-                                      'sac_link'              => "https://sac." . $domain->name,
-                                  ];
-                                  $dataEmail      = [
-                                      'domainName'  => $domain['name'],
-                                      'projectName' => $project['name'] ?? '',
-                                      'clientEmail' => $clientEmail,
-                                      'clientName'  => $clientNameExploded[0] ?? '',
-                                      //'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
-                                      'templateId'  => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
-                                      'bodyEmail'   => $data,
-                                      'checkout'    => $checkout,
-                                  ];
-                                  event(new SendEmailEvent($dataEmail));
+                                  $message = json_decode($projectNotificationEmail->message);
+                                  if (!empty($message->title)) {
+
+                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                      $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                      $data           = [
+                                          "name"                  => $clientNameExploded[0],
+                                          "boleto_link"           => $boleto->boleto_link,
+                                          "boleto_digitable_line" => $boletoDigitableLine,
+                                          "boleto_due_date"       => $boleto->boleto_due_date,
+                                          "total_paid_value"      => $boleto->total_paid_value,
+                                          "shipment_value"        => $boleto->shipment_value,
+                                          "subtotal"              => strval($subTotal),
+                                          "iof"                   => $iof,
+                                          'discount'              => $discount,
+                                          "project_logo"          => $project->logo,
+                                          "project_contact"       => $project->contact,
+                                          "subject"               => $subjectMessage,
+                                          "title"                 => $titleMessage,
+                                          "content"               => $contentMessage,
+                                          "products"              => $products,
+                                          'sac_link'              => "https://sac." . $domain->name,
+                                      ];
+                                      $dataEmail      = [
+                                          'domainName'  => $domain['name'],
+                                          'projectName' => $project['name'] ?? '',
+                                          'clientEmail' => $clientEmail,
+                                          'clientName'  => $clientNameExploded[0] ?? '',
+                                          //'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
+                                          'templateId'  => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
+                                          'bodyEmail'   => $data,
+                                          'checkout'    => $checkout,
+                                      ];
+                                      event(new SendEmailEvent($dataEmail));
+                                  }
                               }
                           }
                       });
