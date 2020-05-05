@@ -349,7 +349,10 @@ class ProjectsApiController extends Controller
                             if ($projectPhoto != null) {
                                 $digitalOceanService->deleteFile($project->photo);
                                 $img = Image::make($projectPhoto->getPathname());
-                                $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                                if (!empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
+                                    && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])) {
+                                    $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                                }
                                 $img->resize(300, 300);
                                 $img->save($projectPhoto->getPathname());
 
