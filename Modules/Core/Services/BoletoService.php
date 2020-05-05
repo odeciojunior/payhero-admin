@@ -124,32 +124,33 @@ class BoletoService
                                                                                        ->where('status', $projectNotificationPresenter->getStatus('active'))
                                                                                        ->first();
 
-                              if (!empty($projectNotificationEmail)) {
-                                  $message        = json_decode($projectNotificationEmail->message);
-                                  $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
-                                  $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
-                                  $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
-                                  $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                  $data           = [
-                                      "name"                  => $clientNameExploded[0],
-                                      "boleto_link"           => $boleto->boleto_link,
-                                      "boleto_digitable_line" => $boletoDigitableLine,
-                                      "boleto_due_date"       => $boleto->boleto_due_date,
-                                      "total_paid_value"      => $boleto->total_paid_value,
-                                      "shipment_value"        => $boleto->shipment_value,
-                                      "subtotal"              => strval($subTotal),
-                                      "iof"                   => $iof,
-                                      'discount'              => $discount,
-                                      "project_logo"          => $project->logo,
-                                      "project_contact"       => $project->contact,
-                                      "subject"               => $subjectMessage,
-                                      "title"                 => $titleMessage,
-                                      "content"               => $contentMessage,
-                                      "products"              => $products,
-                                      'sac_link'              => "https://sac." . $domain->name,
-                                  ];
-                                  if (!empty($domain) && !empty($clientEmail)) {
-                                      $dataEmail = [
+                              if (!empty($projectNotificationEmail) && !empty($domain) && !empty($clientEmail)) {
+                                  $message = json_decode($projectNotificationEmail->message);
+                                  if (!empty($message->title)) {
+
+                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                      $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                      $data           = [
+                                          "name"                  => $clientNameExploded[0],
+                                          "boleto_link"           => $boleto->boleto_link,
+                                          "boleto_digitable_line" => $boletoDigitableLine,
+                                          "boleto_due_date"       => $boleto->boleto_due_date,
+                                          "total_paid_value"      => $boleto->total_paid_value,
+                                          "shipment_value"        => $boleto->shipment_value,
+                                          "subtotal"              => strval($subTotal),
+                                          "iof"                   => $iof,
+                                          'discount'              => $discount,
+                                          "project_logo"          => $project->logo,
+                                          "project_contact"       => $project->contact,
+                                          "subject"               => $subjectMessage,
+                                          "title"                 => $titleMessage,
+                                          "content"               => $contentMessage,
+                                          "products"              => $products,
+                                          'sac_link'              => "https://sac." . $domain->name,
+                                      ];
+                                      $dataEmail      = [
                                           'domainName'  => $domain['name'],
                                           'projectName' => $project['name'] ?? '',
                                           'clientEmail' => $clientEmail,
@@ -230,46 +231,47 @@ class BoletoService
                                   $domain                   = $domainModel->where('project_id', $project->id)
                                                                           ->where('status', 3)
                                                                           ->first();
-                                  $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                                  $boleto->shipment_value   = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                                  $boleto->shipment_value   = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                                  $boletoDigitableLine      = [];
-                                  $boletoDigitableLine[0]   = substr($boleto->boleto_digitable_line, 0, 24);
-                                  $boletoDigitableLine[1]   = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                                  $boleto->boleto_due_date  = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
+                                  if (!empty($domain) && !empty($clientEmail)) {
+                                      $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                                      $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                                      $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                                      $boletoDigitableLine     = [];
+                                      $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
+                                      $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                                      $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
+                                                                       ->format('d/m/y');
 
-                                  //Traz o assunto, titulo e texto do email formatados
-                                  $projectNotificationPresenter = $projectNotificationModel->present();
-                                  $projectNotification          = $projectNotificationModel->where('project_id', $project->id)
-                                                                                           ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_generated_next_day'))
-                                                                                           ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                                           ->first();
-                                  if (!empty($projectNotification)) {
-                                      $message        = json_decode($projectNotification->message);
-                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
-                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
-                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
-                                      $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                      $data           = [
-                                          "name"                  => $clientNameExploded[0],
-                                          "boleto_link"           => $boleto->boleto_link,
-                                          "boleto_digitable_line" => $boletoDigitableLine,
-                                          "boleto_due_date"       => $boleto->boleto_due_date,
-                                          "total_paid_value"      => $boleto->total_paid_value,
-                                          "shipment_value"        => $boleto->shipment_value,
-                                          "subtotal"              => strval($subTotal),
-                                          "iof"                   => $iof,
-                                          'discount'              => $discount,
-                                          "project_logo"          => $project->logo,
-                                          "project_contact"       => $project->contact,
-                                          "subject"               => $subjectMessage,
-                                          "title"                 => $titleMessage,
-                                          "content"               => $contentMessage,
-                                          "products"              => $products,
-                                          'sac_link'              => "https://sac." . $domain->name,
-                                      ];
-                                      if (!empty($domain) && !empty($clientEmail)) {
-                                          $dataEmail = [
+                                      //Traz o assunto, titulo e texto do email formatados
+                                      $projectNotificationPresenter = $projectNotificationModel->present();
+                                      $projectNotification          = $projectNotificationModel->where('project_id', $project->id)
+                                                                                               ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_generated_next_day'))
+                                                                                               ->where('status', $projectNotificationPresenter->getStatus('active'))
+                                                                                               ->first();
+                                      if (!empty($projectNotification)) {
+                                          $message        = json_decode($projectNotification->message);
+                                          $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                          $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                          $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                          $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                          $data           = [
+                                              "name"                  => $clientNameExploded[0],
+                                              "boleto_link"           => $boleto->boleto_link,
+                                              "boleto_digitable_line" => $boletoDigitableLine,
+                                              "boleto_due_date"       => $boleto->boleto_due_date,
+                                              "total_paid_value"      => $boleto->total_paid_value,
+                                              "shipment_value"        => $boleto->shipment_value,
+                                              "subtotal"              => strval($subTotal),
+                                              "iof"                   => $iof,
+                                              'discount'              => $discount,
+                                              "project_logo"          => $project->logo,
+                                              "project_contact"       => $project->contact,
+                                              "subject"               => $subjectMessage,
+                                              "title"                 => $titleMessage,
+                                              "content"               => $contentMessage,
+                                              "products"              => $products,
+                                              'sac_link'              => "https://sac." . $domain->name,
+                                          ];
+                                          $dataEmail      = [
                                               'domainName'  => $domain['name'],
                                               'projectName' => $project['name'] ?? '',
                                               'clientEmail' => $clientEmail,
@@ -353,49 +355,48 @@ class BoletoService
                                   $domain                   = $domainModel->where('project_id', $project->id)
                                                                           ->where('status', 3)
                                                                           ->first();
+                                  if (!empty($domain) && !empty($clientEmail)) {
+                                      $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                                      $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                                      $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                                      $boletoDigitableLine     = [];
+                                      $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
+                                      $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                                      $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
+                                                                       ->format('d/m/y');
 
-                                  $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                                  $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                                  $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                                  $boletoDigitableLine     = [];
-                                  $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-                                  $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                                  $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)
-                                                                   ->format('d/m/y');
+                                      //Traz o assunto, titulo e texto do email formatados
+                                      $projectNotificationPresenter = $projectNotificationModel->present();
+                                      $projectNotification          = $projectNotificationModel->where('project_id', $project->id)
+                                                                                               ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_generated_two_days_later'))
+                                                                                               ->where('status', $projectNotificationPresenter->getStatus('active'))
+                                                                                               ->first();
 
-                                  //Traz o assunto, titulo e texto do email formatados
-                                  $projectNotificationPresenter = $projectNotificationModel->present();
-                                  $projectNotification          = $projectNotificationModel->where('project_id', $project->id)
-                                                                                           ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_billet_generated_two_days_later'))
-                                                                                           ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                                           ->first();
-
-                                  if (!empty($projectNotification)) {
-                                      $message        = json_decode($projectNotification->message);
-                                      $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
-                                      $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
-                                      $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
-                                      $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                      $data           = [
-                                          "name"                  => $clientNameExploded[0],
-                                          "boleto_link"           => $boleto->boleto_link,
-                                          "boleto_digitable_line" => $boletoDigitableLine,
-                                          "boleto_due_date"       => $boleto->boleto_due_date,
-                                          "total_paid_value"      => $boleto->total_paid_value,
-                                          "shipment_value"        => $boleto->shipment_value,
-                                          "subtotal"              => strval($subTotal),
-                                          "iof"                   => $iof,
-                                          'discount'              => $discount,
-                                          "project_logo"          => $project->logo,
-                                          "project_contact"       => $project->contact,
-                                          "subject"               => $subjectMessage,
-                                          "title"                 => $titleMessage,
-                                          "content"               => $contentMessage,
-                                          "products"              => $products,
-                                          'sac_link'              => "https://sac." . $domain->name,
-                                      ];
-                                      if (!empty($domain) && !empty($clientEmail)) {
-                                          $dataEmail = [
+                                      if (!empty($projectNotification)) {
+                                          $message        = json_decode($projectNotification->message);
+                                          $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, $boleto, $project);
+                                          $titleMessage   = $projectNotificationService->formatNotificationData($message->title, $boleto, $project);
+                                          $contentMessage = $projectNotificationService->formatNotificationData($message->content, $boleto, $project);
+                                          $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                          $data           = [
+                                              "name"                  => $clientNameExploded[0],
+                                              "boleto_link"           => $boleto->boleto_link,
+                                              "boleto_digitable_line" => $boletoDigitableLine,
+                                              "boleto_due_date"       => $boleto->boleto_due_date,
+                                              "total_paid_value"      => $boleto->total_paid_value,
+                                              "shipment_value"        => $boleto->shipment_value,
+                                              "subtotal"              => strval($subTotal),
+                                              "iof"                   => $iof,
+                                              'discount'              => $discount,
+                                              "project_logo"          => $project->logo,
+                                              "project_contact"       => $project->contact,
+                                              "subject"               => $subjectMessage,
+                                              "title"                 => $titleMessage,
+                                              "content"               => $contentMessage,
+                                              "products"              => $products,
+                                              'sac_link'              => "https://sac." . $domain->name,
+                                          ];
+                                          $dataEmail      = [
                                               'domainName'  => $domain['name'],
                                               'projectName' => $project['name'] ?? '',
                                               'clientEmail' => $clientEmail,

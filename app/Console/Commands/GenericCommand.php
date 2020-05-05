@@ -50,42 +50,52 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $shopifyIntegrationModel = new ShopifyIntegration();
-        $sales = Sale::whereHas('project.shopifyIntegrations', function ($query) {
-            $query->where('status', 2);
-        })
-            ->whereBetween('end_date', ['2020-04-21 00:00:00', '2020-04-30 23:59:59'])
-            ->where('status', 1)
-            ->where('payment_method', 2)
-            ->orderBy('id', 'desc')
-            ->get();
-        $total = $sales->count();
-        $x = 1;
-        foreach ($sales as $sale) {
-            $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $sale->project_id)->first();
-            try {
-                $this->line($x++ . " de " . $total. " -> Atualizando pedido no shopify " . $sale->id);
-                $credential = new PublicAppCredential($shopifyIntegration->token);
-                $client = new Client($credential, $shopifyIntegration->url_store, [
-                    'metaCacheDir' => '/var/tmp',
-                ]);
-                $client->getTransactionManager()->create($sale->shopify_order, [
-                    "kind" => "sale",
-                    "source" => "external",
-                    "gateway" => "cloudfox",
-                    "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                ]);
-            } catch (Exception $e) {
-                $this->line("Erro ao atualizar pedido no shopify " . $sale->id . ' erro ' . $e->getMessage());
+//        $shopifyIntegrationModel = new ShopifyIntegration();
+//        $sales = Sale::whereHas('project.shopifyIntegrations', function ($query) {
+//            $query->where('status', 2);
+//        })
+//            ->whereBetween('end_date', ['2020-04-21 00:00:00', '2020-04-30 23:59:59'])
+//            ->where('status', 1)
+//            ->where('payment_method', 2)
+//            ->orderBy('id', 'desc')
+//            ->get();
+//        $total = $sales->count();
+//        $x = 1;
+//        foreach ($sales as $sale) {
+//            $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $sale->project_id)->first();
+//            try {
+//                $this->line($x++ . " de " . $total. " -> Atualizando pedido no shopify " . $sale->id);
+//                $credential = new PublicAppCredential($shopifyIntegration->token);
+//                $client = new Client($credential, $shopifyIntegration->url_store, [
+//                    'metaCacheDir' => '/var/tmp',
+//                ]);
+//                $client->getTransactionManager()->create($sale->shopify_order, [
+//                    "kind" => "sale",
+//                    "source" => "external",
+//                    "gateway" => "cloudfox",
+//                    "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+//                ]);
+//            } catch (Exception $e) {
+//                $this->line("Erro ao atualizar pedido no shopify " . $sale->id . ' erro ' . $e->getMessage());
+//            }
+//            try {
+//                $this->line('Gerando pedido na venda ' . $sale->id);
+//                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
+//                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+//                $shopifyService->newOrder($sale);
+//            } catch (Exception $e) {
+//                $this->line('Erro ao gerar pedido na venda ' . $sale->id . ' Erro: ' . $e->getMessage());
+//            }
+//        }
+        try {
+            $projects                   = Project::whereHas('notifications')->get();
+            $projectNotificationService = new ProjectNotificationService();
+
+            foreach ($projects as $project) {
+                $projectNotificationService->updateSmsCreditCardPaidNotification($project->id);
             }
-            try {
-                $this->line('Gerando pedido na venda ' . $sale->id);
-                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
-                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                $shopifyService->newOrder($sale);
-            } catch (Exception $e) {
-                $this->line('Erro ao gerar pedido na venda ' . $sale->id . ' Erro: ' . $e->getMessage());
-            }
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 }
