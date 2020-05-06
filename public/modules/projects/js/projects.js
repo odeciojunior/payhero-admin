@@ -698,7 +698,7 @@ $(() => {
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);
 
-                    window.location.reload();
+                    // window.location.reload();
                 },
                 success: function (response) {
                     loadingOnScreenRemove();
