@@ -250,6 +250,8 @@ $(() => {
         }
 
         $("#desconto-value").html("R$ " + sale.discount);
+        $('.text-discount').html('');
+        $("#automatic-discount-value").html('');
         if (sale.automatic_discount !== '0,00') {
             if (sale.payment_method == 2) {
                 $('.text-discount').html('Desconto automático boleto');

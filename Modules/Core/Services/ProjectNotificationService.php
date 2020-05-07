@@ -137,7 +137,7 @@ class ProjectNotificationService
                                                 'type_enum'         => self::SMS_TYPE,
                                                 'event_enum'        => 3,
                                                 'time'              => 'Imediato',
-                                                'message'           => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato por email {projeto_email} ou telefone {projeto_telefone}. Em breve enviaremos o código de rastreio.',
+                                                'message'           => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato com o suporte através do link: {sac_link} . Em breve enviaremos o código de rastreio.',
                                                 'notification_enum' => 11,
                                                 'project_id'        => $projectId,
                                             ],
@@ -279,8 +279,9 @@ class ProjectNotificationService
     {
         $projectNotification = ProjectNotification::where('project_id', $projectId)->where('notification_enum', 11)
                                                   ->first();
+        //'message' => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato por email {projeto_email} ou telefone {projeto_telefone}. Em breve enviaremos o código de rastreio.',
         $projectNotification->update([
-                                         'message' => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato por email {projeto_email} ou telefone {projeto_telefone}. Em breve enviaremos o código de rastreio.',
+                                         'message' => 'Olá {primeiro_nome}, sua compra foi aprovada na loja {projeto_nome}. Qualquer dúvida entre em contato com o suporte através do link: {sac_link} . Em breve enviaremos o código de rastreio.',
                                      ]);
     }
 }

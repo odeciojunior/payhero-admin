@@ -7,6 +7,32 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <style>
+            .select2-selection--single {
+                border: 1px solid #dddddd !important;
+                border-radius: .215rem !important;
+                height: 43px !important;
+            }
+            .select2-selection__rendered {
+                color: #707070 !important;
+                font-size: 16px !important;
+                font-family: 'Muli', sans-serif;
+                line-height: 43px !important;
+                padding-left: 14px !important;
+                padding-right: 38px !important;
+            }
+            .select2-selection__arrow {
+                height: 43px !important;
+                right: 10px !important;
+            }
+            .select2-selection__arrow b {
+                border-color: #8f9ca2 transparent transparent transparent !important;
+            }
+            .select2-container--open .select2-selection__arrow b {
+                border-color: transparent transparent #8f9ca2 transparent !important;
+            }
+        </style>
     @endpush
 
     <!-- Page -->
@@ -37,13 +63,19 @@
             <form id='filter_form'>
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-3">
                             <label for="projeto">Projeto</label>
                             <select name='select_project' id="projeto" class="form-control select-pad">
                                 <option value="">Todos projetos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-3">
+                            <label for="plan">Plano</label>
+                            <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                                <option value="">Todos planos</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 col-md-2">
                             <label for="forma">Forma de pagamento</label>
                             <select name='select_payment_method' id="forma" class="form-control select-pad">
                                 <option value="">Boleto e cartão de crédito</option>
@@ -51,7 +83,7 @@
                                 <option value="2">Boleto</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-2">
                             <label for="status">Status</label>
                             <select name='sale_status' id="status" class="form-control select-pad">
                                 <option value="">Todos status</option>
@@ -64,39 +96,38 @@
                                 <option value="20">Análise Antifraude</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                            <label for="comprador">Nome do cliente</label>
-                            <input name='client' id="comprador" class="input-pad" placeholder="cliente">
-                        </div>
-                    </div>
-                    <div class="row mt-15">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-2">
                             <label for="comprador">Transação</label>
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                    </div>
+                    <div class="row mt-15">
+                        <div class="col-sm-6 col-md-3 col-12">
+                            <label for="comprador">Nome do cliente</label>
+                            <input name='client' id="comprador" class="input-pad" placeholder="cliente">
+                        </div>
+                        <div class="col-sm-6 col-md-3 col-12">
                             <label for="date_type">Data</label>
                             <select name='date_type' id="date_type" class="form-control select-pad">
                                 <option value="start_date">Data do pedido</option>
                                 <option value="end_date">Data do pagamento</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-2 col-12">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-1 col-12" style='text-align:center'>
-                            <label for="token" class='mb-10'>Shopify Erros</label>
+                            <label for="token" class='mb-10 mr-5'>Shopify Erros</label>
                             <label class="switch m-0">
                                 <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
                                 <span class="slider round"></span>
                             </label>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-2 col-12">
+                        <div class='col-md-1'></div>
+                        <div class="col-sm-6 col-md-2 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
-                        </div>
-                        <div class="col-2">
                         </div>
                     </div>
                 </div>
@@ -338,9 +369,10 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=9') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=11') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
 @endsection

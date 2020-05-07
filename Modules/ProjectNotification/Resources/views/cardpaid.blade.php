@@ -2,7 +2,7 @@
     <div class="col-12 pt-25 bg-white">
         <div align="center" class="mr-2 px-15" >
             <div style="font-size:1px;line-height:15px"></div>
-            <img align="center" alt="Image" border="0" class="" src="https://checkout.todabolsa.com/assets/img/success.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 50px; width: 100%; max-width: 50px; display: block;" title="Image" width="125"/>
+            <img align="center" alt="Image" border="0" class="" src="https://cloudfox.nyc3.digitaloceanspaces.com/cloudfox/defaults/success.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 50px; width: 100%; max-width: 50px; display: block;" title="Image" width="125"/>
             <div style="font-size:1px;line-height:15px"></div>
         </div>
         <div class="font-padrao m-0 text-center px-10 pb-5 pt-15 color-333" style="font-size: 28px;">
@@ -52,10 +52,10 @@
             <div class="col-9 font-padrao item-text-padrao">Outros (taxas, IOF)</div>
             <div class="col-3 font-padrao item-text-padrao text-right">R$ 0,00</div>
         </div>
-        <div class="row">
+{{--         <div class="row">
             <div class="col-9 font-padrao item-text-padrao">Desconto</div>
             <div class="col-3 font-padrao item-text-padrao text-right">R$ 0,00</div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-12">
                 <hr>
@@ -69,9 +69,19 @@
                 <strong> 12 x R$ 15,00</strong>
             </div>
         </div>
+        <div style="border-collapse:collapse;display:table;width:100%;background-color:#ffffff">
+            <div align="center" style="padding:10px">
+                <p dir="ltr" style="line-height:22px;font-size:10px">
+                    <span style="font-size:13px">Qualquer dúvida, reclamação ou sugestão entre em contato com o suporte clicando no link abaixo:</span>
+                </p>
+                <a href="" onclick="event.preventDefault();" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3a99e0;border-radius:4px;width:auto;width:auto;border-top:1px solid #3a99e0;border-right:1px solid #3a99e0;border-bottom:1px solid #3a99e0;border-left:1px solid #3a99e0;padding-top:5px;padding-bottom:5px;text-align:center;word-break:keep-all"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block">
+                    <span style="font-size:14px;line-height:25px"><strong>Ir para o atendimento</strong></span></span>
+                </a>
+            </div>
+        </div>
     </div>
     <div class="mt-2 text-center" style="color: #757575; font-size: 10px;">
-         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte, envie um e-mail para:
-         <strong style="color: black;" class="p_project_contact"> contao@projeto.com </strong>
+        Esse é um e-mail automático, por favor não responda. Para entrar em contato com o suporte <a href="">clique aqui</a>
+         {{-- <strong style="color: black;" class="p_project_contact"> contao@projeto.com </strong> --}}
     </div>
 </div>

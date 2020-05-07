@@ -77,6 +77,16 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                <div class="card" onclick="window.location.href='/apps/reportana'" style='width:300px;'>
+                    <a id="reportana-bt" href="/apps/reportana" class="add-btn"><i id="reportana-icon" class="icon wb-plus" aria-hidden="true"></i></a>
+                    <img class="card-img-top" src="{!! asset('modules/global/img/reportana.jpeg') !!}" alt="" align="middle">
+                    <div class="card-body">
+                        <h5 class="card-title">Reportana</h5>
+                        <p class="card-text sm">Integre seus projetos com Reportana </p>
+                    </div>
+                </div>
+            </div>
             {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                 <div class="card" onclick="window.location.href='/apps/digitalmanager'" style='width:300px;'>
                     <a id="digitalmanager-bt" href="/apps/digitalmanager" class="add-btn"><i id="digitalmanager-icon" class="icon wb-plus" aria-hidden="true"></i></a>
@@ -92,5 +102,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('modules/apps/js/index.js?v=3') }}"></script>
+    <script src="{{ asset('modules/apps/js/index.js?v=4') }}"></script>
 @endpush

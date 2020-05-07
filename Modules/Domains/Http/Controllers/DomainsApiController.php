@@ -202,7 +202,6 @@ class DomainsApiController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
             report($e);
 
             return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
