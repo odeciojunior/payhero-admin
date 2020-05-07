@@ -289,6 +289,7 @@ class TesteController extends Controller
 
     public function jeanFunction(Request $request)
     {
+        settings()->flushCache();
         try {
             $data = $request->all();
             if (!empty($data['id'])) {

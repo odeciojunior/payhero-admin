@@ -449,7 +449,7 @@ class SalesApiController extends Controller
             $companiesModel = new Company();
 
             //Conta as  requisições diárias da Profitfy
-            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'));
+            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'), true);
             settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
 
             $user = auth()->user();
