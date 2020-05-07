@@ -188,6 +188,11 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
+            error: (response) => {
+                window.location.replace(`${location.origin}/projects`);
+                /* errorAjaxResponse(response);
+                 loadOnAny('#tab_info_geral .card', true);*/
+            },
             success: (response) => {
 
                 let project = response.data;
@@ -206,10 +211,6 @@ $(() => {
                 }
                 $('#show-description').text(project.description);
 
-                loadOnAny('#tab_info_geral .card', true);
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
                 loadOnAny('#tab_info_geral .card', true);
             }
         });

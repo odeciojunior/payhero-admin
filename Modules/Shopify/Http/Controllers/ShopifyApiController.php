@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\ShopifyErrors;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
@@ -555,8 +556,9 @@ class ShopifyApiController extends Controller
 
                             return response()->json(['message' => 'Sincronização do template com o shopify concluida com sucesso!'], Response::HTTP_OK);
                         } catch (Exception $e) {
+                            $message = ShopifyErrors::FormatErrors($e->getMessage());
 
-                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);
+                            return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
                         }
                     } else {
                         return response()->json(['message' => 'Este projeto não tem integração com o shopify'], Response::HTTP_BAD_REQUEST);

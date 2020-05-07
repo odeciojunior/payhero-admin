@@ -24,22 +24,16 @@ class ImportShopifyStoreListener implements ShouldQueue
     public function handle($event)
     {
         try {
-            /** @var ShopifyService $shopifyService */
             $shopifyService = new ShopifyService($event->shopifyIntegration->url_store, $event->shopifyIntegration->token);
             $shopifyService->importShopifyStore($event->shopifyIntegration->project->id, $event->userId);
         } catch (Exception $e) {
-            Log::warning('Erro ao importar loja do shopify');
             report($e);
         }
     }
 
-
     /**
-     * Handle a job failure.
-     *
-     * @param  \App\Events\OrderShipped  $event
-     * @param  \Exception  $exception
-     * @return void
+     * @param $event
+     * @param $exception
      */
     public function failed($event, $exception)
     {
