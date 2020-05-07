@@ -523,6 +523,10 @@ class ShopifyApiController extends Controller
 
                                     $htmlCart = $shopify->getTemplateHtml('snippets/ajax-cart-template.liquid');
 
+                                    if (empty($htmlCart)) {
+                                        return response()->json(['message' => 'Problema ao refazer integração, template \'ajax-cart-template.liquid\' não encontrado'], Response::HTTP_BAD_REQUEST);
+                                    }
+
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $shopifyIntegrationModel->present()
                                                                                                             ->getThemeType('ajax_theme'),
@@ -564,7 +568,6 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
-            Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
             report($e);
 
             return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], Response::HTTP_BAD_REQUEST);

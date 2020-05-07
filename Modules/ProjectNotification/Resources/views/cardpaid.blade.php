@@ -2,7 +2,7 @@
     <div class="col-12 pt-25 bg-white">
         <div align="center" class="mr-2 px-15" >
             <div style="font-size:1px;line-height:15px"></div>
-            <img align="center" alt="Image" border="0" class="" src="https://checkout.todabolsa.com/assets/img/success.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 50px; width: 100%; max-width: 50px; display: block;" title="Image" width="125"/>
+            <img align="center" alt="Image" border="0" class="" src="https://cloudfox.nyc3.digitaloceanspaces.com/cloudfox/defaults/success.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: 50px; width: 100%; max-width: 50px; display: block;" title="Image" width="125"/>
             <div style="font-size:1px;line-height:15px"></div>
         </div>
         <div class="font-padrao m-0 text-center px-10 pb-5 pt-15 color-333" style="font-size: 28px;">

@@ -30,7 +30,6 @@ class NotificationsApiController extends Controller
 
             return response()->json(['message' => 'sucesso'], 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao setar notificações como lidas');
             report($e);
         }
     }
@@ -49,7 +48,6 @@ class NotificationsApiController extends Controller
                                         ]);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao obter o count de notificações');
             report($e);
         }
     }
@@ -73,7 +71,6 @@ class NotificationsApiController extends Controller
 
             return NotificationResource::collection($notifications);
         } catch (Exception $e) {
-            Log::warning('Erro ao obter notificações');
             report($e);
         }
     }

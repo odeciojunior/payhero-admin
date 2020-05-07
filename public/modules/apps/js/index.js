@@ -47,6 +47,10 @@ $(document).ready(function(){
                     $('#hotsac-bt').addClass('added');
                     $('#hotsac-icon').removeClass('wb-plus').addClass('wb-check');
                 }
+                if(response.reportanaIntegrations > 0){
+                    $('#reportana-bt').addClass('added');
+                    $('#reportana-icon').removeClass('wb-plus').addClass('wb-check');
+                }
             }
         });
     }

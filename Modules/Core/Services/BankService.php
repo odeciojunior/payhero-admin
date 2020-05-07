@@ -188,7 +188,6 @@ class BankService
             ['code' => '719', 'name' => 'Banif'],
             ['code' => '721', 'name' => 'Banco Credibel'],
             ['code' => '734', 'name' => 'Banco Gerdau'],
-            ['code' => '735', 'name' => 'Neon'],
             ['code' => '738', 'name' => 'Banco Morada'],
             ['code' => '739', 'name' => 'Banco Galvão de Negócios'],
             ['code' => '740', 'name' => 'Banco Barclays'],

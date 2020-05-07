@@ -816,6 +816,7 @@ class ShopifyService
             return false;
         }
 
+        $productsArray = [];
         foreach ($storeProduct->getVariants() as $variant) {
             $title       = '';
             $description = '';
@@ -846,6 +847,7 @@ class ShopifyService
                                     ->first();
             if ($product) {
 
+                $productsArray[] = $product->id;
                 $product->update(
                     [
                         'name'               => $title,
@@ -946,6 +948,7 @@ class ShopifyService
                     ]
                 );
 
+                $productsArray[] = $product->id;
                 $plan = $planModel->create(
                     [
                         'shopify_id'         => $storeProduct->getId(),
@@ -994,6 +997,51 @@ class ShopifyService
                     //$photo = $storeProduct->getImage()->getSrc();
                 }
                 $product->update(['photo' => $photo]);
+            }
+        }
+
+        $products = Product::where('project_id', $projectId)
+                           ->where('shopify_id', $shopifyProductId)
+                           ->whereNotIn('id', collect($productsArray))
+                           ->get();
+
+        if(count($products) > 0) {
+            $productIds = $products->pluck('id');
+
+            $plans = Plan::with(['productsPlans', 'plansSales', 'affiliateLinks'])
+                         ->whereHas('productsPlans', function($query) use($productIds) {
+                            $query->whereIn('product_id', $productIds);
+                         })
+                         ->get();
+            $arrayDelete = [];
+            foreach ($plans as $plan ) {
+
+                if (count($plan->plansSales) == 0) {
+                    $productPlans = $plan->productsPlans;
+                    $othersProducts = $productPlans->whereNotIn('product_id', $productIds);
+
+                    if(count($othersProducts) == 0) {
+                        foreach ($plan->productsPlans as $productPlan) {
+                            $arrayDelete[] = $productPlan->product_id;
+                            $productPlan->delete();
+                        }
+
+                        if (count($plan->affiliateLinks) > 0) {
+                            foreach ($plan->affiliateLinks as $affiliateLink) {
+                                $affiliateLink->delete();
+                            }
+                        }
+                        $planDeleted = $plan->delete();
+                    }
+                }
+            }
+
+            $productsDelete = Product::whereIn('id', collect($arrayDelete))
+                                     ->doesntHave('productsPlans')
+                                     ->get();
+
+            foreach ($productsDelete as $productDelete) {
+                $productDelete->delete();
             }
         }
 

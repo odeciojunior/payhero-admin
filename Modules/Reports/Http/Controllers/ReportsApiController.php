@@ -184,7 +184,9 @@ class ReportsApiController extends Controller
 
                         // cartao
                         if ($sale->payment_method == 1 || $sale->payment_method == 3) {
-                            $contCreditCard++;
+                            if(in_array($sale->status, [1, 3])){
+                                $contCreditCard++;
+                            }
                         }
                         // boleto
                         if ($sale->payment_method == 2) {

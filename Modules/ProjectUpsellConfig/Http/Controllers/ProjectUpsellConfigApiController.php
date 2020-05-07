@@ -2,6 +2,8 @@
 
 namespace Modules\ProjectUpsellConfig\Http\Controllers;
 
+use App\Http\Requests\ProjectUpsellConfigUpdate;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,6 +17,10 @@ use Modules\ProjectUpsellConfig\Transformers\PreviewUpsellResource;
 use Modules\ProjectUpsellConfig\Transformers\ProjectUpsellConfigResource;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class ProjectUpsellConfigApiController
+ * @package Modules\ProjectUpsellConfig\Http\Controllers
+ */
 class ProjectUpsellConfigApiController extends Controller
 {
     /**
@@ -23,51 +29,64 @@ class ProjectUpsellConfigApiController extends Controller
      */
     public function show($projectId)
     {
-        $projectId = current(Hashids::decode($projectId));
-        $projectUpsellConfig = new ProjectUpsellConfig();
-        if ($projectId) {
-            $upsellConfig = $projectUpsellConfig->where('project_id', $projectId)->first();
+        try {
+            $projectId = current(Hashids::decode($projectId));
+            if ($projectId) {
+                $projectUpsellConfig = new ProjectUpsellConfig();
+                $upsellConfig        = $projectUpsellConfig->where('project_id', $projectId)->first();
 
-            return new ProjectUpsellConfigResource($upsellConfig);
-        } else {
+                return new ProjectUpsellConfigResource($upsellConfig);
+            } else {
+                return response()->json([
+                                            'message' => 'Projeto não encontrado',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
             return response()->json([
-                'message' => 'Projeto não encontrado',
-            ], 400);
+                                        'message' => 'Projeto não encontrado',
+                                    ], 400);
         }
     }
 
     /**
-     * Update the specified resource in storage.
-     * @param Request $request
+     * @param ProjectUpsellConfigUpdate $request
      * @param $projectId
-     * @return JsonResponse|Response
+     * @return JsonResponse
      */
-    public function update(Request $request, $projectId)
+    public function update(ProjectUpsellConfigUpdate $request, $projectId)
     {
-        $projectId = current(Hashids::decode($projectId));
-        $projectUpsellConfig = new ProjectUpsellConfig();
-        $data = $request->all();
-        if ($projectId) {
+        try {
+            $projectId           = current(Hashids::decode($projectId));
+            $projectUpsellConfig = new ProjectUpsellConfig();
+            $data                = $request->validated();
+            if (empty($projectId)) {
+                return response()->json([
+                                            'message' => 'Erro ao atualizar configurações do upsell',
+                                        ], 400);
+            }
+
             $upsellConfig = $projectUpsellConfig->where('project_id', $projectId)->first();
 
             $upsellConfigUpdated = $upsellConfig->update([
-                'header' => $data['header'],
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'countdown_time' => $data['countdown_time'],
-                'countdown_flag' => !empty($data['countdown_flag']) ? true : false,
-            ]);
+                                                             'header'         => $data['header'],
+                                                             'title'          => $data['title'],
+                                                             'description'    => $data['description'],
+                                                             'countdown_time' => $data['countdown_time'],
+                                                             'countdown_flag' => !empty($data['countdown_flag']) ? true : false,
+                                                         ]);
             if ($upsellConfigUpdated) {
                 return response()->json(['message' => 'Configuração do upsell atualizado com sucesso!'], 200);
             } else {
                 return response()->json([
-                    'message' => 'Erro ao atualizar configurações do upsell',
-                ], 400);
+                                            'message' => 'Erro ao atualizar configurações do upsell',
+                                        ], 400);
             }
-        } else {
+        } catch (Exception $e) {
+            report($e);
+
             return response()->json([
-                'message' => 'Erro ao atualizar configurações do upsell',
-            ], 400);
+                                        'message' => 'Erro ao atualizar configurações do upsell',
+                                    ], 400);
         }
     }
 
@@ -79,26 +98,26 @@ class ProjectUpsellConfigApiController extends Controller
     public function previewUpsell(Request $request)
     {
         try {
-            $projectModel = new Project();
+            $projectModel             = new Project();
             $projectUpsellConfigModel = new ProjectUpsellConfig();
-            $projectUpsellRuleModel = new ProjectUpsellRule();
-            $planModel = new Plan();
+            $projectUpsellRuleModel   = new ProjectUpsellRule();
+            $planModel                = new Plan();
 
-            $data = $request->all();
+            $data      = $request->all();
             $projectId = current(Hashids::decode($data['project_id']));
 
             if ($projectId) {
-                $project = $projectModel->find($projectId);
+                $project      = $projectModel->find($projectId);
                 $upsellConfig = $projectUpsellConfigModel->where('project_id', $projectId)->first();
-                $upsellRule = $projectUpsellRuleModel->where('project_id', $projectId)->first();
+                $upsellRule   = $projectUpsellRuleModel->where('project_id', $projectId)->first();
 
                 $offerOnPlans = json_decode($upsellRule->offer_on_plans);
 
                 $upsellPlansArray = [];
 
                 $upsellPlans = $planModel::with(['productsPlans.product'])
-                    ->whereIn('id', $offerOnPlans)
-                    ->get();
+                                         ->whereIn('id', $offerOnPlans)
+                                         ->get();
 
                 foreach ($upsellPlans as $plan) {
 
@@ -111,11 +130,11 @@ class ProjectUpsellConfigApiController extends Controller
                         if ($productsPlans->count() == 1 && $productPlan->product->variants->count()) {
                             $products = $productPlan->product->variants;
                             foreach ($products as $product) {
-                                $variant = (object)[
-                                    'name' => $product->name,
+                                $variant = (object) [
+                                    'name'        => $product->name,
                                     'description' => $product->description,
-                                    'amount' => $productPlan->amount,
-                                    'photo' => $product->photo
+                                    'amount'      => $productPlan->amount,
+                                    'photo'       => $product->photo,
                                 ];
                                 if ($product->shopify_variant_id) {
                                     $productArray[$product->shopify_variant_id] = $variant;
@@ -124,14 +143,14 @@ class ProjectUpsellConfigApiController extends Controller
                                 }
                             }
                         } else {
-                            $product = $productPlan->product;
+                            $product      = $productPlan->product;
                             $productArray = [
-                                (object)[
-                                    'name' => $product->name,
+                                (object) [
+                                    'name'        => $product->name,
                                     'description' => $product->description,
-                                    'amount' => $productPlan->amount,
-                                    'photo' => $product->photo
-                                ]
+                                    'amount'      => $productPlan->amount,
+                                    'photo'       => $product->photo,
+                                ],
                             ];
                         }
 
@@ -141,7 +160,7 @@ class ProjectUpsellConfigApiController extends Controller
 
                             //discount
                             $originalPrice = preg_replace("/[^0-9]/", "", $plan->price);
-                            $discount = is_numeric($upsellRule->discount) && $upsellRule->discount <= 100 ? $upsellRule->discount : 0;
+                            $discount      = is_numeric($upsellRule->discount) && $upsellRule->discount <= 100 ? $upsellRule->discount : 0;
                             if ($discount) {
                                 $price = $originalPrice - intval($originalPrice * $discount / 100);
                             } else {
@@ -150,15 +169,15 @@ class ProjectUpsellConfigApiController extends Controller
 
                             $installments = array_reverse(InstallmentsService::getInstallments($project, $price) ?? []);
 
-                            $upsellPlansArray[$plan->id] = (object)[
-                                'rule' => Hashids::encode($upsellRule->id),
-                                'name' => $plan->name,
-                                'code' => $plan->code,
-                                'price' => number_format($price / 100, 2, ',', '.'),
+                            $upsellPlansArray[$plan->id] = (object) [
+                                'rule'           => Hashids::encode($upsellRule->id),
+                                'name'           => $plan->name,
+                                'code'           => $plan->code,
+                                'price'          => number_format($price / 100, 2, ',', '.'),
                                 'original_price' => number_format($originalPrice / 100, 2, ',', '.'),
-                                'discount' => $discount,
-                                'installments' => $installments,
-                                'products' => [$productArray],
+                                'discount'       => $discount,
+                                'installments'   => $installments,
+                                'products'       => [$productArray],
                             ];
                         }
                     }
@@ -169,13 +188,13 @@ class ProjectUpsellConfigApiController extends Controller
                 return new PreviewUpsellResource($upsellConfig);
             } else {
                 return response()->json([
-                    'message' => 'Projeto não encontrado',
-                ], 400);
+                                            'message' => 'Projeto não encontrado',
+                                        ], 400);
             }
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Erro ao exibir visualização',
-            ], 400);
+                                        'message' => 'Erro ao exibir visualização',
+                                    ], 400);
         }
     }
 }

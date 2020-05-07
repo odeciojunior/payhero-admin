@@ -252,9 +252,8 @@ class ProjectsApiController extends Controller
                                         'message' => 'Erro ao carregar configuracoes do projeto',
                                     ], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao carregar configuracoes do projeto (ProjectsApiController - edit)');
             report($e);
-            dd($e);
+
             return response()->json([
                                         'message' => 'Erro ao carregar configuracoes do projeto',
                                     ], 400);
@@ -350,7 +349,10 @@ class ProjectsApiController extends Controller
                             if ($projectPhoto != null) {
                                 $digitalOceanService->deleteFile($project->photo);
                                 $img = Image::make($projectPhoto->getPathname());
-                                $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                                if (!empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
+                                    && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])) {
+                                    $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                                }
                                 $img->resize(300, 300);
                                 $img->save($projectPhoto->getPathname());
 
@@ -430,49 +432,56 @@ class ProjectsApiController extends Controller
 
     /**
      * @param $id
-     * @return JsonResponse|ProjectsUpsellResource
+     * @return JsonResponse|ProjectsResource|ProjectsUpsellResource
      */
     public function show($id)
     {
         try {
-            $projectModel = new Project();
-            $userId       = auth()->user()->account_owner_id;
-            if ($id) {
 
-                $project = $projectModel->where('id', current(Hashids::decode($id)))
-                                        ->where('status', $projectModel->present()->getStatus('active'))
-                                        ->with([
-                                                   'affiliates' => function($query) use ($userId) {
-                                                       $query->where('user_id', $userId);
-                                                   },
-                                               ])
-                                        ->first();
+            if (empty($id)) {
+                return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+            }
 
-                $producer = User::whereHas('usersProjects', function($query) use ($project) {
-                    $query->where('project_id', $project->id)
-                          ->where('type_enum', 1);
-                })->first();
+            $projectModel         = new Project();
+            $usersProjects        = new UserProject();
+            $usersProjectsPresent = $usersProjects->present();
+            $userId               = auth()->user()->account_owner_id;
+            $id                   = current(Hashids::decode($id));
 
-                $project->producer                       = $producer->name ?? '';
-                $project->boleto_release_money_days      = $producer->boleto_release_money_days ?? '';
-                $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
-                $project->debit_card_release_money_days  = $producer->debit_card_release_money_days ?? '';
+            $project = $projectModel->where('id', $id)
+                                    ->where('status', $projectModel->present()->getStatus('active'))
+                                    ->with([
+                                               'affiliates' => function($query) use ($userId) {
+                                                   $query->where('user_id', $userId);
+                                               },
+                                           ])
+                                    ->first();
 
-                activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
-                    $activity->log_name   = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($id));
-                })->log('Visualizou o projeto ' . $project->name);
+            if (empty($project)) {
+                return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+            }
 
-                if (Gate::allows('show', [$project])) {
-                    return new ProjectsResource($project);
-                } else {
-                    return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
-                }
+            $producer = User::whereHas('usersProjects', function($query) use ($project, $usersProjectsPresent) {
+                $query->where('project_id', $project->id)
+                      ->where('type_enum', $usersProjectsPresent->getTypeEnum('producer'));
+            })->first();
+
+            $project->producer                       = $producer->name ?? '';
+            $project->boleto_release_money_days      = $producer->boleto_release_money_days ?? '';
+            $project->credit_card_release_money_days = $producer->credit_card_release_money_days ?? '';
+            $project->debit_card_release_money_days  = $producer->debit_card_release_money_days ?? '';
+
+            activity()->on($projectModel)->tap(function(Activity $activity) use ($id) {
+                $activity->log_name   = 'visualization';
+                $activity->subject_id = $id;
+            })->log('Visualizou o projeto ' . $project->name);
+
+            if (Gate::allows('show', [$project])) {
+                return new ProjectsResource($project);
             } else {
                 return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');
             report($e);
 
             return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
