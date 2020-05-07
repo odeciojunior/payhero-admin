@@ -27,6 +27,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\ShopifyService;
+use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
 use Modules\Sales\Transformers\SalesExternalResource;
@@ -250,11 +251,12 @@ class SalesApiController extends Controller
             $companyService   = new CompanyService();
             $saleId           = Hashids::connection('sale_id')->decode($saleId);
 
-            $sale        = $saleModel->with('customer')->where('id', $saleId)->first();
+            $sale = $saleModel->with('customer')->where('id', $saleId)->first();
 
-            $transactionUser  = $transactionModel->where('sale_id', $sale->id)
-                                                    ->whereIn('company_id', $companyService->getCompaniesUser()->pluck('id'))
-                                                    ->first();
+            $transactionUser = $transactionModel->where('sale_id', $sale->id)
+                                                ->whereIn('company_id', $companyService->getCompaniesUser()
+                                                                                       ->pluck('id'))
+                                                ->first();
 
             $pendingBalance = $companyService->getPendingBalance($transactionUser->company);
 
@@ -263,55 +265,53 @@ class SalesApiController extends Controller
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
             }
 
-            foreach($sale->transactions as $transaction){
+            foreach ($sale->transactions as $transaction) {
 
-                if(empty($transaction->company_id)){
+                if (empty($transaction->company_id)) {
                     //Taxa de estorno
                     $transferModel->create([
-                        'transaction_id' => $transactionUser->id,
-                        'user_id'        => $transactionUser->company->user->account_owner_id,
-                        'company_id'     => $transactionUser->company_id,
-                        'value'          => $transaction->value,
-                        'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                        'type'           => 'out',
-                        'reason'         => 'Taxa de estorno',
-                    ]);
+                                               'transaction_id' => $transactionUser->id,
+                                               'user_id'        => $transactionUser->company->user->account_owner_id,
+                                               'company_id'     => $transactionUser->company_id,
+                                               'value'          => $transaction->value,
+                                               'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                               'type'           => 'out',
+                                               'reason'         => 'Taxa de estorno',
+                                           ]);
 
                     $transactionUser->company->update([
-                        'balance' => $transactionUser->company->balance - $transaction->value,
-                    ]);
-
-                }
-                else{
+                                                          'balance' => $transactionUser->company->balance - $transaction->value,
+                                                      ]);
+                } else {
                     if ($transaction->status_enum == $transactionModel->present()->getStatusEnum('transfered')) {
 
                         $transferModel->create([
-                                                    'transaction_id' => $transaction->id,
-                                                    'user_id'        => $transaction->company->user->account_owner_id,
-                                                    'company_id'     => $transaction->company_id,
-                                                    'value'          => $transaction->value,
-                                                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                                                    'type'           => 'out',
-                                                    'reason'         => 'Estorno',
-                                                ]);
+                                                   'transaction_id' => $transaction->id,
+                                                   'user_id'        => $transaction->company->user->account_owner_id,
+                                                   'company_id'     => $transaction->company_id,
+                                                   'value'          => $transaction->value,
+                                                   'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                                   'type'           => 'out',
+                                                   'reason'         => 'Estorno',
+                                               ]);
 
                         $transaction->company->update([
-                                                        'balance' => $transaction->company->balance - $transaction->value,
-                                                    ]);
+                                                          'balance' => $transaction->company->balance - $transaction->value,
+                                                      ]);
                     }
                 }
 
                 $transaction->update([
-                    'status_enum' => $transactionModel->present()->getStatusEnum('billet_refunded'),
-                    'status'      => 'billet_refunded',
-                ]);
-
+                                         'status_enum' => $transactionModel->present()
+                                                                           ->getStatusEnum('billet_refunded'),
+                                         'status'      => 'billet_refunded',
+                                     ]);
             }
 
             $sale->update([
-                'status'         => $sale->present()->getStatus('billet_refunded'),
-                'gateway_status' => 'refunded'
-            ]);
+                              'status'         => $sale->present()->getStatus('billet_refunded'),
+                              'gateway_status' => 'refunded',
+                          ]);
 
             $sale->customer->update([
                                         'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
@@ -319,20 +319,19 @@ class SalesApiController extends Controller
 
             //Transferencia de entrada do cliente
             $transferModel->create([
-                'transaction_id' => $transactionUser->id,
-                'user_id'        => auth()->user()->account_owner_id,
-                'customer_id'    => $sale->customer_id,
-                'company_id'     => $transactionUser->company_id,
-                'value'          => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-                'type_enum'      => $transferModel->present()->getTypeEnum('in'),
-                'type'           => 'in',
-                'reason'         => 'Estorno de boleto',
-            ]);
+                                       'transaction_id' => $transactionUser->id,
+                                       'user_id'        => auth()->user()->account_owner_id,
+                                       'customer_id'    => $sale->customer_id,
+                                       'company_id'     => $transactionUser->company_id,
+                                       'value'          => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+                                       'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+                                       'type'           => 'in',
+                                       'reason'         => 'Estorno de boleto',
+                                   ]);
 
             // event(new BilletRefundedEvent($sale));
 
             return response()->json(['message' => 'Boleto estornado com sucesso'], Response::HTTP_OK);
-
         } catch (Exception $e) {
             Log::warning('Erro ao tentar estornar boleto  SalesApiController - refundBillet');
             report($e);
@@ -441,8 +440,8 @@ class SalesApiController extends Controller
     public function showExternal($saleId)
     {
         try {
-            $salesModel = new Sale();
-            $saleService = new SaleService();
+            $salesModel     = new Sale();
+            $saleService    = new SaleService();
             $companiesModel = new Company();
 
             //Conta as  requisições diárias da Profitfy
@@ -451,16 +450,16 @@ class SalesApiController extends Controller
 
             $user = auth()->user();
 
-            if(!empty($user)) {
+            if (!empty($user)) {
 
                 $saleId = current(Hashids::connection('sale_id')->decode($saleId));
 
                 $sale = $salesModel->with([
-                    'transactions',
-                    'productsPlansSale.product',
-                ])->where('id', $saleId)
-                    ->where('owner_id', $user->account_owner_id)
-                    ->first();
+                                              'transactions',
+                                              'productsPlansSale.product',
+                                          ])->where('id', $saleId)
+                                   ->where('owner_id', $user->account_owner_id)
+                                   ->first();
 
                 if (!empty($sale)) {
 
@@ -468,12 +467,12 @@ class SalesApiController extends Controller
                     $saleService->getDetails($sale, $userCompanies);
 
                     $products = [];
-                    foreach ($sale->productsPlansSale as $productPlanSale){
-                        $product = $productPlanSale->product;
+                    foreach ($sale->productsPlansSale as $productPlanSale) {
+                        $product    = $productPlanSale->product;
                         $products[] = [
-                            'id' => $product->shopify_id,
+                            'id'         => $product->shopify_id,
                             'variant_id' => $product->shopify_variant_id,
-                            'quantity' => $productPlanSale->amount,
+                            'quantity'   => $productPlanSale->amount,
                         ];
                     }
                     $sale->products = $products;
@@ -490,6 +489,57 @@ class SalesApiController extends Controller
             report($e);
 
             return response()->json(['error' => 'Erro ao obter venda'], 400);
+        }
+    }
+
+    public function getPlans(Request $request)
+    {
+        try {
+            $data      = $request->all();
+            $planModel = new Plan();
+            $userProjectModel = new UserProject();
+            $projectId = current(Hashids::decode($data['project_id']));
+            if ($projectId) {
+
+                $plans = $planModel->select('name',
+                                            DB::raw("if(shopify_id is not null,(select p.id from plans p where p.shopify_id = plans.shopify_id and p.deleted_at is null limit 1), group_concat(id)) as id"),
+                                            DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                                   ->where('project_id', $projectId);
+
+                if (!empty($data['search'])) {
+                    $plans->where('name', 'like', '%' . $data['search'] . '%');
+                }
+
+                $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+
+                $plans = $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'))
+                               ->paginate(10);
+
+                return PlansSelectResource::collection($plans);
+            } else {
+                $userId       = auth()->user()->account_owner_id;
+                $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
+                $plans = $planModel->select('name',
+                                            DB::raw("if(shopify_id is not null,(select p.id from plans p where p.shopify_id = plans.shopify_id and p.deleted_at is null limit 1), group_concat(id)) as id"),
+                                            DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                                   ->whereIn('project_id', $userProjects);
+                if (!empty($data['search'])) {
+                    $plans->where('name', 'like', '%' . $data['search'] . '%');
+                }
+                $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+
+                $plans = $plans->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'))
+                               ->paginate(10);
+                return PlansSelectResource::collection($plans);
+
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados dos planos (PlansApiController - getPlans)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, ao buscar dados dos planos',
+                                    ], 400);
         }
     }
 }

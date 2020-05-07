@@ -93,6 +93,7 @@ $(document).ready(function () {
             'date_range': $("#date_range").val(),
             'transaction': $("#transaction").val().replace('#', ''),
             'shopify_error': $("#shopify_error").val(),
+            'plan': $('#plan').val(),
         };
 
         if (urlParams) {
@@ -344,6 +345,48 @@ $(document).ready(function () {
             }
         });
     }
+    $("#projeto").on('change', function () {
+        let value = $(this).val();
+        $("#plan").val(null).trigger('change');
+    });
+    //Search plan
+    $('#plan').select2({
+        placeholder: 'Nome do plano',
+        // multiple: true,
+        allowClear: true,
+        language: {
+            noResults: function () {
+                return 'Nenhum plano encontrado';
+            },
+            searching: function () {
+                return 'Procurando...';
+            },
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: 'plan',
+                    search: params.term,
+                    project_id: $("#projeto").val(),
+                };
+            },
+            method: "GET",
+            url: "/api/sales/user-plans",
+            delay: 300,
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {id: obj.id, text: obj.name};
+                    })
+                };
+            },
+        }
+    });
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             atualizar();
