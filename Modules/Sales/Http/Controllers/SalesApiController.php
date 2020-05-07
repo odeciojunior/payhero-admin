@@ -26,6 +26,7 @@ use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\EmailService;
+use Modules\Core\Services\ShopifyErrors;
 use Modules\Core\Services\ShopifyService;
 use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\SaleReportExport;
@@ -234,7 +235,6 @@ class SalesApiController extends Controller
                 return response()->json(['message' => $result['message']], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar estornar venda  SalesApiController - cancelPayment');
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar estornar venda.'], Response::HTTP_BAD_REQUEST);
@@ -374,10 +374,14 @@ class SalesApiController extends Controller
                 return response()->json(['message' => 'Funcionalidade habilitada somente em produção =)'], Response::HTTP_OK);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar gerar ordem no Shopify SalesApiController - newOrderShopify');
-            report($e);
+            $message = ShopifyErrors::FormatErrors($e->getMessage());
 
-            return response()->json(['message' => 'Erro ao tentar gerar ordem no Shopify.'], Response::HTTP_BAD_REQUEST);
+            if (empty($message)) {
+                report($e);
+                $message = 'Erro ao tentar gerar ordem no Shopify.';
+            }
+
+            return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -445,7 +449,7 @@ class SalesApiController extends Controller
             $companiesModel = new Company();
 
             //Conta as  requisições diárias da Profitfy
-            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'));
+            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'), true);
             settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
 
             $user = auth()->user();
