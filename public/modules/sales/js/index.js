@@ -352,7 +352,7 @@ $(document).ready(function () {
     //Search plan
     $('#plan').select2({
         placeholder: 'Nome do plano',
-        // multiple: true,
+        // multiple: true,z
         allowClear: true,
         language: {
             noResults: function () {
