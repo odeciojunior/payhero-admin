@@ -558,6 +558,11 @@ class ShopifyApiController extends Controller
                         } catch (Exception $e) {
                             $message = ShopifyErrors::FormatErrors($e->getMessage());
 
+                            if (empty($message)) {
+                                report($e);
+                                $message = 'Problema ao refazer integração, tente novamente mais tarde';
+                            }
+
                             return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
                         }
                     } else {
@@ -594,54 +599,71 @@ class ShopifyApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateToken(Request $request)
     {
-        $data                    = $request->all();
-        $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel            = new Project();
+        try {
 
-        if (!empty($data['token'])) {
-            $projectId = current(Hashids::decode($data['project_id']));
-            $project   = $projectModel->find($projectId);
+            $data                    = $request->all();
+            $shopifyIntegrationModel = new ShopifyIntegration();
+            $projectModel            = new Project();
 
-            activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'updated';
-            })->log('Atualizou token de integração do shopify para o projeto ' . $project->name);
+            if (!empty($data['token'])) {
+                $projectId = current(Hashids::decode($data['project_id']));
+                $project   = $projectModel->find($projectId);
 
-            if ($projectId) {
-                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
-                try {
+                activity()->on($shopifyIntegrationModel)->tap(function(Activity $activity) {
+                    $activity->log_name = 'updated';
+                })->log('Atualizou token de integração do shopify para o projeto ' . $project->name);
+
+                if ($projectId) {
+                    $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
+
                     $shopify = new ShopifyService($integration->url_store, $data['token']);
                     if (empty($shopify->getClient())) {
                         return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
                     }
-                } catch (Exception $e) {
-                    report($e);
 
-                    return response()->json(['message' => 'Novo token inválido'], 400);
-                }
+                    $permissions = $shopify->verifyPermissions();
 
-                $permissions = $shopify->verifyPermissions();
+                    if ($permissions['status'] == 'error') {
+                        return response()->json([
+                                                    'message' => $permissions['message'],
+                                                ], 400);
+                    }
 
-                if ($permissions['status'] == 'error') {
+                    $integrationUpdated = $integration->update(['token' => $data['token']]);
+
+                    if ($integrationUpdated) {
+                        return response()->json(['message' => 'Token atualizado com sucesso'], 200);
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
+                                                ], 400);
+                    }
+                } else {
                     return response()->json([
-                                                'message' => $permissions['message'],
+                                                'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
                                             ], 400);
-                }
-
-                $integrationUpdated = $integration->update(['token' => $data['token']]);
-
-                if ($integrationUpdated) {
-                    return response()->json(['message' => 'Token atualizado com sucesso'], 200);
                 }
             } else {
                 return response()->json([
                                             'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
                                         ], 400);
             }
-        } else {
+        } catch (Exception $e) {
+            $message = ShopifyErrors::FormatErrors($e->getMessage());
+
+            if (empty($message)) {
+                report($e);
+                $message = 'Ocorreu um erro ao atualizar token, tente novamente mais tarde';
+            }
+
             return response()->json([
-                                        'message' => 'Ocorreu um erro ao atualizar token, tente novamente mais tarde',
+                                        'message' => $message,
                                     ], 400);
         }
     }

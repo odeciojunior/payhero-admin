@@ -1525,7 +1525,6 @@ class ShopifyService
             ];
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
-            Log::emergency('erro ao criar uma ordem pendente no shopify com a venda ' . $sale->id . ', gerando com com telefone coringa...');
             report($e);
 
             $shippingAddress['phone']      = '+5555959844325';
