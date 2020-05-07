@@ -722,4 +722,3 @@ class ProjectsApiController extends Controller
         }
     }
 }
-
