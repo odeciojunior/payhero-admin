@@ -352,7 +352,7 @@ $(document).ready(function () {
     //Search plan
     $('#plan').select2({
         placeholder: 'Nome do plano',
-        // multiple: true,z
+        // multiple: true,
         allowClear: true,
         language: {
             noResults: function () {
@@ -381,7 +381,7 @@ $(document).ready(function () {
             processResults: function (res) {
                 return {
                     results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name};
+                        return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
                     })
                 };
             },
