@@ -458,7 +458,7 @@ class ProjectsApiController extends Controller
                                     ->first();
 
             if (empty($project)) {
-                return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+                return response()->json(['message' => 'Projeto Excluido, permissão de acesso negada'], 410);
             }
 
             $producer = User::whereHas('usersProjects', function($query) use ($project, $usersProjectsPresent) {
@@ -722,4 +722,3 @@ class ProjectsApiController extends Controller
         }
     }
 }
-
