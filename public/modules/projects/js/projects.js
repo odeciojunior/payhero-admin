@@ -188,6 +188,11 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
+            error: (response) => {
+                window.location.replace(`${location.origin}/projects`);
+                /* errorAjaxResponse(response);
+                 loadOnAny('#tab_info_geral .card', true);*/
+            },
             success: (response) => {
 
                 let project = response.data;
@@ -206,10 +211,6 @@ $(() => {
                 }
                 $('#show-description').text(project.description);
 
-                loadOnAny('#tab_info_geral .card', true);
-            },
-            error: (response) => {
-                errorAjaxResponse(response);
                 loadOnAny('#tab_info_geral .card', true);
             }
         });
@@ -253,9 +254,9 @@ $(() => {
         for (let company of companies) {
             $('#update-project #companies').append(
                 `<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} ${(company.company_document_status == 'pending' ? 'disabled' : '')}>
-                   ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
-                </option>
-                `)
+                 ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
+              </option>
+              `)
         }
         $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
         $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_interest_free - 1).change();
@@ -972,4 +973,3 @@ $(() => {
     }
 
 });
-
