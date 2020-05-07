@@ -48,7 +48,7 @@
                 <p dir="ltr" style="line-height:22px;font-size:10px">
                     <span style="font-size:13px">Qualquer dúvida, reclamação ou sugestão entre em contato com o suporte clicando no link abaixo:</span>
                 </p>
-                <a href="" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3a99e0;border-radius:4px;width:auto;width:auto;border-top:1px solid #3a99e0;border-right:1px solid #3a99e0;border-bottom:1px solid #3a99e0;border-left:1px solid #3a99e0;padding-top:5px;padding-bottom:5px;text-align:center;word-break:keep-all"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block">
+                <a href="" onclick="event.preventDefault();" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#3a99e0;border-radius:4px;width:auto;width:auto;border-top:1px solid #3a99e0;border-right:1px solid #3a99e0;border-bottom:1px solid #3a99e0;border-left:1px solid #3a99e0;padding-top:5px;padding-bottom:5px;text-align:center;word-break:keep-all"><span style="padding-left:20px;padding-right:20px;font-size:14px;display:inline-block">
                     <span style="font-size:14px;line-height:25px"><strong>Ir para o atendimento</strong></span></span>
                 </a>
             </div>
