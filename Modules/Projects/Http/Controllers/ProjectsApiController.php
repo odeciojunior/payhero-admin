@@ -458,7 +458,7 @@ class ProjectsApiController extends Controller
                                     ->first();
 
             if (empty($project)) {
-                return response()->json(['message' => 'Projeto Excluido, permissão de acesso negada'], 410);
+                return response()->json(['message' => 'Projeto Excluido, permissão de acesso negada'], 403);
             }
 
             $producer = User::whereHas('usersProjects', function($query) use ($project, $usersProjectsPresent) {
