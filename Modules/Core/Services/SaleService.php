@@ -605,7 +605,9 @@ class SaleService
             $transferModel    = new Transfer();
             $companyModel     = new Company();
             $transactionModel = new Transaction();
+
             $saleId           = current(Hashids::connection('sale_id')->decode($transactionId));
+
             if (!empty($saleId)) {
                 if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
                     $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
@@ -633,7 +635,31 @@ class SaleService
                 $transaction->company->update([
                                                   'balance' => $transaction->company->balance -= 100,
                                               ]);
-                sleep(7);
+
+                $transferModel->create([
+                                        'transaction_id' => $transaction->id,
+                                        'user_id'        => $transaction->company->user_id,
+                                        'value'          => $transaction->value,
+                                        'type'           => 'out',
+                                        'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                        'reason'         => 'refunded',
+                                        'company_id'     => $transaction->company->id,
+                                    ]);
+ 
+                $transaction->company->update([
+                                    'balance' => $transaction->company->balance -= $transaction->value,
+                                ]);
+
+                $transaction->update([
+                    'status_enum' => (new Transaction)->present()->getStatusEnum('refunded'),
+                    'status'      => 'refunded'
+                ]);
+
+                $transaction->sale->update([
+                    'gateway_status' => 'refunded',
+                    'status'         => (new Sale)->present()->getStatus('refunded')
+                ]);
+
                 if (!empty($refundedTransaction)) {
                     SaleRefundHistory::create([
                                                   'sale_id'          => $sale->id,
@@ -645,7 +671,7 @@ class SaleService
                     return
                         [
                             'status'  => 'success',
-                            'message' => 'Transação estornada, aguarde alguns instantes para atualizar o status',
+                            'message' => 'Transação estornada com sucesso!',
                         ];
                 } else {
                     return [
