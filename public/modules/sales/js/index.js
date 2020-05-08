@@ -381,7 +381,7 @@ $(document).ready(function () {
             processResults: function (res) {
                 return {
                     results: $.map(res.data, function (obj) {
-                        return {id: obj.id, text: obj.name};
+                        return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
                     })
                 };
             },

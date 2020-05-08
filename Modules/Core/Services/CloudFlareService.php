@@ -239,16 +239,11 @@ class CloudFlareService
      * @param string $content | IP, dominio
      * @param int $ttl
      * @param bool $proxied
-     * @return bool
+     * @param string $priority
+     * @return array
      */
     public function addRecord(string $type, string $name, string $content, int $ttl = 0, bool $proxied = true, $priority = '0')
     {
-        //        if ($this->dns->addRecord($this->zoneID, $type, $name, $content, $ttl, $proxied, $priority) === true) {
-        //            return true;
-        //        } else {
-        //            return false;
-        //        }
-
         $options = [
             'type'    => $type,
             'name'    => $name,
@@ -262,6 +257,12 @@ class CloudFlareService
 
         if (!empty($priority)) {
             $options['priority'] = (int) $priority;
+        } else {
+            if ($priority == 0) {
+                $options['priority'] = 0;
+            } else {
+                return [];
+            }
         }
 
         if (!empty($data)) {
@@ -283,7 +284,7 @@ class CloudFlareService
      * @param string $zoneID
      * @param string $recordID
      * @param array $details
-     * @return array
+     * @return bool|mixed
      */
     public function updateRecordDetails(string $zoneID, string $recordID, array $details)
     {

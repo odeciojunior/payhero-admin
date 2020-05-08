@@ -32,7 +32,7 @@ class SalesRecoverydetailsResourceTransformer extends Resource
         ];
 
         if (strpos($client['email'], 'invalido') !== false) {
-            $client['email'] = 'Email inválido';
+            $client['email'] = 'Email não informado';
         }
 
         $delivery = [

@@ -8,11 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
-use Cloudflare\API\Auth\APIKey;
-use Cloudflare\API\Endpoints\DNS;
-use Cloudflare\API\Adapter\Guzzle;
-use Cloudflare\API\Endpoints\User;
-use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
@@ -20,7 +15,6 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
@@ -202,9 +196,15 @@ class DomainsApiController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            report($e);
 
-            return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+            if (strstr($e->getMessage(), "You cannot use this API for domains with a .cf, .ga, .gq, .ml, or .tk TLD (top-level domain)")) {
+                $message = 'Dominios (.cf, .ga, .gq, .ml, ou .tk) não podem ser cadastrados ou atualizados';
+            } else {
+                $message = 'Erro ao tentar cadastrar entrada, tente novamente mais tarde';
+                report($e);
+            }
+
+            return response()->json(['message' => $message], 400);
         }
     }
 
@@ -243,7 +243,6 @@ class DomainsApiController extends Controller
                         if ($record->type == 'A' && $record->name == $domain->name) {
                             $haveEnterA = true;
                         }
-                        $subdomain = explode('.', $record->name);
 
                         switch ($record->content) {
                             case $cloudFlareService::shopifyIp:
@@ -264,7 +263,6 @@ class DomainsApiController extends Controller
                         $newRegister = [
                             'id'          => Hashids::encode($record->id),
                             'type'        => $record->type,
-                            //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
                             'name'        => $record->name,
                             'content'     => $content,
                             'system_flag' => $record->system_flag,
@@ -327,8 +325,8 @@ class DomainsApiController extends Controller
                         $sendgridService->deleteLinkBrand($domain->name);
                         $sendgridService->deleteZone($domain->name);
 
-                        $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
-                        $domainDeleted  = $domain->delete();
+                        $domainRecordModel->where('domain_id', $domain->id)->delete();
+                        $domainDeleted = $domain->delete();
 
                         if ($domainDeleted) {
 
@@ -364,8 +362,8 @@ class DomainsApiController extends Controller
                     }
                 } else {
 
-                    $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
-                    $domainDeleted  = $domain->delete();
+                    $domainRecordModel->where('domain_id', $domain->id)->delete();
+                    $domainDeleted = $domain->delete();
 
                     if ($domainDeleted) {
                         return response()->json([
@@ -500,7 +498,9 @@ class DomainsApiController extends Controller
                                                     return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                                 }
                                             } else {
-
+                                                return response()->json([
+                                                                            'message' => 'Ocorreu um problema ao revalidar o domínio',
+                                                                        ], 400);
                                             }
                                         }
                                     } else {
@@ -551,7 +551,6 @@ class DomainsApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('DomainsAPiController recheckOnly - erro ao revalidar o dominio');
             report($e);
 
             return response()->json([
