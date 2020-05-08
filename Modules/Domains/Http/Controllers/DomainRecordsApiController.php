@@ -5,12 +5,10 @@ namespace Modules\Domains\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Services\CloudFlareService;
@@ -116,7 +114,7 @@ class DomainRecordsApiController extends Controller
                 $subdomain = "http://" . $subdomain;
                 $subdomain = parse_url($subdomain, PHP_URL_HOST);
 
-                if ((strpos($subdomain, '.') === false) || ($subdomain == $domain->name) || (strpos($domain->name, $subdomain)  === false)) {
+                if ((strpos($subdomain, '.') === false) || ($subdomain == $domain->name) || (strpos($domain->name, $subdomain) === false)) {
                     //dominio não tem "ponto" ou é igual ao dominio
                     if ($domain->domainsRecords->where('type', $requestData['type-register'])->where('name', $subdomain)
                                                ->where('content', $requestData['type-register'])->count() == 0) {
@@ -140,16 +138,16 @@ class DomainRecordsApiController extends Controller
                         }
 
                         if (!empty($cloudRecordId)) {
-                            $newRecord = $domainRecordModel->create([
-                                                                        'domain_id'            => $domain->id,
-                                                                        'cloudflare_record_id' => $cloudRecordId,
-                                                                        'type'                 => $requestData['type-register'],
-                                                                        'name'                 => $requestData['name-register'],
-                                                                        'content'              => $requestData['value-record'],
-                                                                        'system_flag'          => 0,
-                                                                        'priority'             => $priority,
-                                                                        'proxy'                => $proxy,
-                                                                    ]);
+                            $domainRecordModel->create([
+                                                           'domain_id'            => $domain->id,
+                                                           'cloudflare_record_id' => $cloudRecordId,
+                                                           'type'                 => $requestData['type-register'],
+                                                           'name'                 => $requestData['name-register'],
+                                                           'content'              => $requestData['value-record'],
+                                                           'system_flag'          => 0,
+                                                           'priority'             => $priority,
+                                                           'proxy'                => $proxy,
+                                                       ]);
 
                             DB::commit();
 
@@ -186,11 +184,15 @@ class DomainRecordsApiController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
 
-            report($e);
-            Log::warning('Erro ao tentar salvar record (DomainRecordsApiController - store)');
+            if (strstr($e->getMessage(), "You cannot use this API for domains with a .cf, .ga, .gq, .ml, or .tk TLD (top-level domain)")) {
+                $message = 'Dominios (.cf, .ga, .gq, .ml, ou .tk) não podem ser cadastrados ou atualizados';
+            } else {
+                $message = 'Erro ao tentar cadastrar entrada, tente novamente mais tarde';
+                report($e);
+            }
 
             return response()->json([
-                                        'message' => 'Erro ao tentar cadastrar entrada, tente novamente mais tarde',
+                                        'message' => $message,
                                     ], 400);
         }
     }
@@ -200,11 +202,10 @@ class DomainRecordsApiController extends Controller
      * @param $project
      * @param $domain
      * @param $domainRecord
-     * @return JsonResponse
      */
     public function update(Request $request, $project, $domain, $domainRecord)
     {
-        try {
+        /*try {
 
             $domainModel       = new Domain();
             $domainRecordModel = new DomainRecord();
@@ -267,7 +268,7 @@ class DomainRecordsApiController extends Controller
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde',
                                     ], 400);
-        }
+        }*/
     }
 
     /**
