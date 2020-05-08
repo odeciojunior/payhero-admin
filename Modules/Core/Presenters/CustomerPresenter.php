@@ -105,5 +105,17 @@ class CustomerPresenter extends Presenter
     {
         return "https://api.whatsapp.com/send?phone=" . preg_replace('/[^0-9]/', '', $this->telephone) . '&text=Olá ' . $this->getFirstName();
     }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        if (strpos($this->email, 'invalido') !== false) {
+            $this->email = 'Email não informado';
+        }
+
+        return $this->email;
+    }
 }
 

@@ -27,7 +27,7 @@ class CustomerResource extends JsonResource
             'code'          => $this->id_code,
             'name'          => $this->name,
             'document'      => $this->document,
-            'email'         => $this->email,
+            'email'         => $this->present()->getEmail(),
             'telephone'     => $this->telephone,
             'whatsapp_link' => $this->present()->getWhatsappLink(),
         ];
