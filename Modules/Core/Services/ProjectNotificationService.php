@@ -243,14 +243,17 @@ class ProjectNotificationService
                     $domain      = $domainModel->where('project_id', $sale->project_id)
                                                ->where('status', 3)
                                                ->first();
-                    if ($notificationType == 'sms') {
-                        $linkShortenerService = new LinkShortenerService();
-                        $linkBase             = 'https://tracking.' . $domain->name . '/';
-                        $link                 = $linkShortenerService->shorten($linkBase . $trackingCode);
-                        $message              = str_replace('{link_rastreamento}', $link, $message);
-                    } else {
-                        $link    = 'https://tracking.' . $domain->name . '/' . $trackingCode;
-                        $message = str_replace('{link_rastreamento}', $link, $message);
+                    if (!empty($domain)) {
+
+                        if ($notificationType == 'sms') {
+                            $linkShortenerService = new LinkShortenerService();
+                            $linkBase             = 'https://tracking.' . $domain->name . '/';
+                            $link                 = $linkShortenerService->shorten($linkBase . $trackingCode);
+                            $message              = str_replace('{link_rastreamento}', $link, $message);
+                        } else {
+                            $link    = 'https://tracking.' . $domain->name . '/' . $trackingCode;
+                            $message = str_replace('{link_rastreamento}', $link, $message);
+                        }
                     }
                 }
 
