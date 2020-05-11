@@ -19,7 +19,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $description
  * @property integer $ticket_category_enum
  * @property integer $ticket_status_enum
- * @property boolean $requested_mediation
+ * @property boolean $can_request_mediation
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -51,7 +51,7 @@ class Ticket extends Model
         'description',
         'ticket_category_enum',
         'ticket_status_enum',
-        'requested_mediation',
+        'can_request_mediation',
         'created_at',
         'updated_at',
         'deleted_at',

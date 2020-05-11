@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRequestedMediationToTickets extends Migration
+class AddCanRequestMediationToTickets extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddRequestedMediationToTickets extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->boolean('requested_mediation')
+            $table->boolean('can_request_mediation')
                 ->after('ticket_status_enum')
                 ->default(0);
         });
@@ -28,7 +28,7 @@ class AddRequestedMediationToTickets extends Migration
     public function down()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('requested_mediation');
+            $table->dropColumn('can_request_mediation');
         });
     }
 }
