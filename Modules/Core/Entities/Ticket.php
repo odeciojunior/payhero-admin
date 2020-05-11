@@ -50,6 +50,7 @@ class Ticket extends Model
         'description',
         'ticket_category_enum',
         'ticket_status_enum',
+        'requested_mediation',
         'created_at',
         'updated_at',
         'deleted_at',
