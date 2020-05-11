@@ -734,5 +734,15 @@ $(document).ready(function () {
     $("#nav-home-tab").on("click", function () {
         $('#export-excel').hide();
     });
-
+    $(document).on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
+            updateTransfersTable();
+            if ($(this).children("option:selected").attr('country') != 'brazil') {
+                $("#transferred_value").show();
+            } else {
+                $("#transferred_value").hide();
+            }
+        }
+    });
 });

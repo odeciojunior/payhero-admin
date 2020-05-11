@@ -264,10 +264,10 @@ $(() => {
                                             <a class='tracking-save pointer mr-10' title="Salvar" pps='${tracking.pps_id}'
                                              style="display:none"><i class='material-icons gradient'>save</i></a>
                                              ${tracking.tracking_status_enum
-                                                ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
+                            ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
                                                    <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
-                                                : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                                             }
+                            : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
+                        }
                                             <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;
@@ -501,5 +501,10 @@ $(() => {
             },
         });
     });
-
+    $(document).on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            index();
+            getResume();
+        }
+    });
 });
