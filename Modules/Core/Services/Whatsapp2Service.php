@@ -150,7 +150,7 @@ class Whatsapp2Service
                         ],
                         'costumer'         => [
                             'name'             => $sale->customer->name,
-                            'email'            => $sale->customer->email,
+                            'email'            => $sale->customer->present()->getEmail(),
                             'doc'              => $sale->customer->document,
                             'phone_number'     => preg_replace('/[^0-9]/', '', $sale->customer->telephone),
                             'address'          => $sale->delivery->street,

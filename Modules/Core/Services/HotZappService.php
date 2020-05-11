@@ -31,7 +31,7 @@ class HotZappService
             'transaction_id' => Hashids::connection('sale_id')->encode($sale->id),
             'name' => $sale->customer->name,
             'phone' => str_replace('+55', '', $sale->customer->telephone),
-            'email' => $sale->customer->email,
+            'email' => $sale->customer->present()->getEmail(),
             'address' => $sale->delivery->street,
             'address_number' => $sale->delivery->number,
             'address_district' => $sale->delivery->neighborhood,
