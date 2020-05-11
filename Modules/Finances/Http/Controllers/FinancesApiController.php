@@ -3,23 +3,22 @@
 namespace Modules\Finances\Http\Controllers;
 
 use Exception;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Modules\Core\Entities\AnticipatedTransaction;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AnticipationService;
-use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\CompanyService;
-use Symfony\Component\HttpFoundation\Response;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\RemessaOnlineService;
+use Modules\Core\Services\SaleService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
+use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\Response;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class FinancesApiController
@@ -36,12 +35,12 @@ class FinancesApiController extends Controller
         try {
             $companyModel = new Company();
 
-            $transactionModel             = new Transaction();
-            $companyService               = new CompanyService();
-            $remessaOnlineService         = new RemessaOnlineService();
-            $anticipationService          = new AnticipationService();
+            $transactionModel     = new Transaction();
+            $companyService       = new CompanyService();
+            $remessaOnlineService = new RemessaOnlineService();
+            $anticipationService  = new AnticipationService();
+            $saleService          = new SaleService();
 
-            $antecipableBalance = 0;
             $pendingBalance     = 0;
 
             if ($request->has('company') && !empty($request->input('company'))) {
@@ -51,42 +50,47 @@ class FinancesApiController extends Controller
 
                 if (Gate::denies('edit', [$company])) {
                     return response()->json([
-                            'message' => 'Sem permissão',
-                        ],Response::HTTP_FORBIDDEN
+                                                'message' => 'Sem permissão',
+                                            ], Response::HTTP_FORBIDDEN
                     );
                 }
 
                 if (!empty($company)) {
 
-                    $pendingTransactions     = $transactionModel->where('company_id', $company->id)
-                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                                                ->whereDate('release_date', '>', now()->startOfDay())
-                                                                ->select(DB::raw('sum( value ) as pending_balance'))
-                                                                ->first();
+                    $pendingTransactions = $transactionModel->where('company_id', $company->id)
+                                                            ->where('status_enum', $transactionModel->present()
+                                                                                                    ->getStatusEnum('paid'))
+                                                            ->whereDate('release_date', '>', now()->startOfDay())
+                                                            ->select(DB::raw('sum( value ) as pending_balance'))
+                                                            ->first();
 
                     $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
                                                                 ->where('company_id', $company->id)
-                                                                ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
+                                                                ->where('status_enum', $transactionModel->present()
+                                                                                                        ->getStatusEnum('anticipated'))
                                                                 ->get();
 
-                    $pendingBalance          += $pendingTransactions->pending_balance;
+                    $blockedValue = $saleService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
 
-                    if(count($transactionsAnticipated) > 0){
-                        foreach($transactionsAnticipated as $transactionAnticipated){
-                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
+                    $pendingBalance += $pendingTransactions->pending_balance;
+
+                    if (count($transactionsAnticipated) > 0) {
+                        foreach ($transactionsAnticipated as $transactionAnticipated) {
+                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()
+                                                                                                       ->first()->value;
                         }
                     }
 
-                    $availableBalance   = $company->balance;
-                    $totalBalance       = $availableBalance + $pendingBalance;
+                    $availableBalance = $company->balance;
+                    $totalBalance     = $availableBalance + $pendingBalance;
 
-                    $currency          = $companyService->getCurrency($company);
+                    $currency = $companyService->getCurrency($company);
 
                     $currencyQuotation = '';
 
-                    if($company->country != 'brazil'){
+                    if ($company->country != 'brazil') {
                         $currencyQuotation = $remessaOnlineService->getCurrentQuotation($currency);
-                        $currencyQuotation = number_format((float)$currencyQuotation, 2, ',', '');
+                        $currencyQuotation = number_format((float) $currencyQuotation, 2, ',', '');
                     }
 
                     $antecipableBalance = $company->user->antecipation_enabled_flag ? $anticipationService->getAntecipableValue($company) : '000';
@@ -100,6 +104,7 @@ class FinancesApiController extends Controller
                             'anticipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
+                            'blocked_balance'     => FoxUtils::formatMoney($blockedValue),
                         ]
                     );
                 } else {
@@ -109,13 +114,9 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar da empresa (FinancesController - getBalances)');
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu algum erro, tente novamente!',
-                ], 400);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
         }
     }
 
@@ -124,7 +125,7 @@ class FinancesApiController extends Controller
         try {
             $dataRequest = $request->all();
 
-            activity()->tap(function (Activity $activity) {
+            activity()->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Exportou tabela ' . $dataRequest['format'] . ' de transferências');
 

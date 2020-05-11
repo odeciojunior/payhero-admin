@@ -3,16 +3,14 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\LogsActivity;
 use DateTime;
-use Gateway;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Date;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
-use App\Traits\LogsActivity;
 
 /**
  * @property integer $id
@@ -70,6 +68,7 @@ use App\Traits\LogsActivity;
 class Sale extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+
     /**
      * @var string
      */
@@ -264,5 +263,13 @@ class Sale extends Model
     public function saleWhiteBlackListResult()
     {
         return $this->hasMany('Modules\Core\Entities\SaleWhiteBlackListResult');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
     }
 }

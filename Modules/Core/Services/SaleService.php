@@ -7,25 +7,25 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Affiliate;
-use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\SplitPaymentPartialRefundService;
-use Modules\Core\Services\TransfersService;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
-use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -606,7 +606,7 @@ class SaleService
             $companyModel     = new Company();
             $transactionModel = new Transaction();
 
-            $saleId           = current(Hashids::connection('sale_id')->decode($transactionId));
+            $saleId = current(Hashids::connection('sale_id')->decode($transactionId));
 
             if (!empty($saleId)) {
                 if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
@@ -637,28 +637,28 @@ class SaleService
                                               ]);
 
                 $transferModel->create([
-                                        'transaction_id' => $transaction->id,
-                                        'user_id'        => $transaction->company->user_id,
-                                        'value'          => $transaction->value,
-                                        'type'           => 'out',
-                                        'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                                        'reason'         => 'refunded',
-                                        'company_id'     => $transaction->company->id,
-                                    ]);
- 
+                                           'transaction_id' => $transaction->id,
+                                           'user_id'        => $transaction->company->user_id,
+                                           'value'          => $transaction->value,
+                                           'type'           => 'out',
+                                           'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                                           'reason'         => 'refunded',
+                                           'company_id'     => $transaction->company->id,
+                                       ]);
+
                 $transaction->company->update([
-                                    'balance' => $transaction->company->balance -= $transaction->value,
-                                ]);
+                                                  'balance' => $transaction->company->balance -= $transaction->value,
+                                              ]);
 
                 $transaction->update([
-                    'status_enum' => (new Transaction)->present()->getStatusEnum('refunded'),
-                    'status'      => 'refunded'
-                ]);
+                                         'status_enum' => (new Transaction)->present()->getStatusEnum('refunded'),
+                                         'status'      => 'refunded',
+                                     ]);
 
                 $transaction->sale->update([
-                    'gateway_status' => 'refunded',
-                    'status'         => (new Sale)->present()->getStatus('refunded')
-                ]);
+                                               'gateway_status' => 'refunded',
+                                               'status'         => (new Sale)->present()->getStatus('refunded'),
+                                           ]);
 
                 if (!empty($refundedTransaction)) {
                     SaleRefundHistory::create([
@@ -700,12 +700,17 @@ class SaleService
         }
     }
 
+    /**
+     * @param $sale
+     * @param $partialValues
+     * @return bool
+     * @throws Exception
+     */
     public function recalcSaleRefundPartial($sale, $partialValues)
     {
         try {
             $companyModel     = new Company();
             $transferModel    = new Transfer();
-            $transactionModel = new Transaction();
 
             $refundTransactions = $sale->transactions;
 
@@ -751,6 +756,12 @@ class SaleService
         }
     }
 
+    /**
+     * @param $sale
+     * @param $refundValue
+     * @return array
+     * @throws PresenterException
+     */
     public function getValuesPartialRefund($sale, $refundValue)
     {
         $totalPaidValue       = intval(strval($sale->total_paid_value * 100));
@@ -792,7 +803,6 @@ class SaleService
             $newTotalvalue = $totalValueWithTax;
         }
 
-        $installmentsValue = $installmentValue;
         $cloudfoxValue     = ((int) (($newTotalvalue - $interestValue) / 100 * $user->credit_card_tax));
         $cloudfoxValue     += str_replace('.', '', $user->transaction_rate);
         $cloudfoxValue     += $interestValue;
@@ -807,6 +817,9 @@ class SaleService
         ];
     }
 
+    /**
+     * @param $sale
+     */
     public function updateInterestTotalValue($sale)
     {
         $shopifyDiscount     = (!is_null($sale->shopify_discount)) ? intval(preg_replace("/[^0-9]/", "", $sale->shopify_discount)) : 0;
@@ -817,5 +830,36 @@ class SaleService
         $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
         $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
         $sale->update(['interest_total_value' => $interesetTotalValue]);
+    }
+
+    /**
+     * @param int $companyId
+     * @param $userAccountOwnerId
+     * @return HigherOrderBuilderProxy|int|mixed
+     * @throws PresenterException
+     */
+    public function getBlockedBalance(int $companyId, int $userAccountOwnerId): int
+    {
+        $salesModel  = new Sale();
+        $ticketModel = new Ticket();
+
+        $sales = $salesModel->with(['transactions'])
+                            ->where('status', $salesModel->present()->getStatus('approved'))
+                            ->where('owner_id', $userAccountOwnerId)
+                            ->whereHas('tickets', function($query) use ($ticketModel) {
+                                $query->where('ticket_status_enum', $ticketModel->present()
+                                                                                ->getTicketStatusEnum('mediation'));
+                            })->get();
+
+        $blockedBalance = 0;
+        foreach ($sales as $sale) {
+            $userTransaction = $sale->transactions->where('invitation_id', null)->where('company_id', $companyId)
+                                                  ->first();
+            if (!empty($userTransaction)) {
+                $blockedBalance += $userTransaction->value; //comissao
+            }
+        }
+
+        return $blockedBalance;
     }
 }
