@@ -57,7 +57,7 @@ class ProductService
 
         if (!empty($sale)) {
             foreach ($sale->productsPlansSale as $productsPlanSale) {
-                $product = $productsPlanSale->product;
+                $product = $productsPlanSale->product->toArray();
                 $tracking = $productsPlanSale->tracking;
                 $product['product_plan_sale_id'] = $productsPlanSale->id;
                 $product['sale_status'] = $sale->status;
@@ -68,7 +68,7 @@ class ProductService
                     ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
                             ->getTrackingStatusEnum($tracking->tracking_status_enum))
                     : 'Não informado';
-                $productsSale->add($product);
+                $productsSale->add((object) $product);
             }
         }
 
