@@ -156,16 +156,19 @@ $(document).ready(function () {
                 $('.removeSpan').remove();
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
-                $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
+                $('.saltoTotal').html('<span class="currency" style="color:#687089">R$</span><span class="total-balance" style="color:#57617c">0,00</span>');
+                $('.saldoBloqueado').html('<span class="currency">R$</span><span class="blocked-balance">0,00</span>');
 
                 //Saldo antecipavel
                 $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">' + response.anticipable_balance + '</span>');
+
+                // Saldo bloqueado
+                $('.saldoBloqueado').html('<span class="currency">R$</span><span class="blocked-balance">' + response.blocked_balance + '</span>');
 
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
                 $(".currency").html('R$ ');
                 $(".available-balance").html(isEmpty(response.available_balance));
-                // $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
                 $(".total-balance").html(isEmpty(response.total_balance));

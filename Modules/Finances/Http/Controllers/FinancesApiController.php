@@ -12,7 +12,6 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AnticipationService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Services\SaleService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
@@ -41,7 +40,7 @@ class FinancesApiController extends Controller
             $anticipationService  = new AnticipationService();
             $saleService          = new SaleService();
 
-            $pendingBalance     = 0;
+            $pendingBalance = 0;
 
             if ($request->has('company') && !empty($request->input('company'))) {
                 $companyId = current(Hashids::decode($request->input('company')));
@@ -84,8 +83,13 @@ class FinancesApiController extends Controller
                     $availableBalance = $company->balance;
                     $totalBalance     = $availableBalance + $pendingBalance;
 
-                    $currency = $companyService->getCurrency($company);
+                    if ($availableBalance < 1) {
+                        $availableBalance += $blockedValue;
+                    } else {
+                        $availableBalance -= $blockedValue;
+                    }
 
+                    $currency          = $companyService->getCurrency($company);
                     $currencyQuotation = '';
 
                     if ($company->country != 'brazil') {
@@ -98,13 +102,12 @@ class FinancesApiController extends Controller
                     return response()->json(
                         [
                             'available_balance'   => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                            'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                             'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
                             'anticipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
-                            'blocked_balance'     => FoxUtils::formatMoney($blockedValue),
+                            'blocked_balance'     => number_format(intval($blockedValue) / 100, 2, ',', '.'),
                         ]
                     );
                 } else {
@@ -120,6 +123,10 @@ class FinancesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function export(Request $request)
     {
         try {

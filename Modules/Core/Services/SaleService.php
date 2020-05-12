@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -834,8 +833,8 @@ class SaleService
 
     /**
      * @param int $companyId
-     * @param $userAccountOwnerId
-     * @return HigherOrderBuilderProxy|int|mixed
+     * @param int $userAccountOwnerId
+     * @return int
      * @throws PresenterException
      */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId): int

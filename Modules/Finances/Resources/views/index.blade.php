@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=1') }}">
     <style>
-        .popover{
+        .popover {
             left: -50px !important;
         }
     </style>
@@ -78,7 +78,97 @@
                                     <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                     </p>
                                 </div>
-                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                <!-- Comeca Primeira feiura aqui -->
+                                <div class='container mb-15 ' style='border-radius:20px;background-color: #f1f1f3e6;'>
+                                    <div class='row align-items-center mt-30 mb-30'>
+                                        <div class="col-sm-3">
+                                            <div id="div-available-money" class="price-holder pointer">
+                                                <h6 class="label-price mb-10"> Saldo Disponível </h6>
+                                                <h4 class="price saldoDisponivel">
+                                                </h4>
+                                                <div class="grad-border green"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="input-holder">
+                                                <label for="transfers_company_select"> Empresa</label>
+                                                <select style='border-radius:10px' class="form-control select-pad" name="company"
+                                                        id="transfers_company_select"> </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label for="company"> Valor a transferir</label>
+                                            <div class="input-group mb-3"
+                                                 style='padding:0'>
+                                                <div class='input-group-prepend'>
+                                                        <span class="input-group-text custom-addon" id="basic-addon1"
+                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
+                                                </div>
+                                                <input id="custom-input-addon" type="text"
+                                                       class="form-control input-pad withdrawal-value"
+                                                       placeholder="Digite o valor" aria-label="Digite o valor"
+                                                       aria-describedby="basic-addon1" style='border-radius: 0 10px 10px 0'>
+                                                <div class='w-20'></div>
+                                                <button id="bt-withdrawal"
+                                                        class="btn btn-success disabled btn-sacar ml-3 col-sm-12 col-md-12 col-lg-5"
+                                                        data-toggle="modal" disabled style='background-color:#ee752f; border-radius:20px'>
+                                                    <svg class="mr-2" style="fill: white; vertical-align: middle;"
+                                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         viewBox="0 0 24 24">
+                                                        <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                    </svg>
+                                                    Sacar dinheiro
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Termina aqui -->
+                                <!-- Comeca Segunda feiura aqui -->
+                                <div class='container col-sm-12 mb-15'>
+                                    <div class='row align-items-center d-flex flex-row'>
+                                        <div class="col div-antecipable-balance" style='display:none;cursor:pointer;
+                                    box-shadow:0 3px 8px 2px #ccc; border-radius:20px'>
+                                            <div class="price-holder mt-4 mb-30">
+                                                <h6 class="label-price mb-15 mt-40"> Saldo Antecipável </h6>
+                                                <h4 class="price saldoAntecipavel">
+                                                </h4>
+                                                <div class="grad-border purple"></div>
+                                            </div>
+                                        </div>
+                                        <div class='w-20'></div>
+                                        <div class="col "
+                                             style='box-shadow:0 3px 8px 2px #ccc; border-radius:20px'>
+                                            <div class="price-holder mt-4 mb-30">
+                                                <h6 class="label-price mb-15 mt-40"> Saldo pendente </h6>
+                                                <h4 class="price saldoPendente">
+                                                </h4>
+                                                <div class="grad-border red"></div>
+                                            </div>
+                                        </div>
+                                        <div class='w-20'></div>
+                                        <div class="col" style='box-shadow:0 3px 8px 2px #ccc; border-radius:20px'>
+                                            <div class="price-holder mt-4 mb-30">
+                                                <h6 class="label-price mb-15 mt-40"> Saldo Bloqueado </h6>
+                                                <h4 class="price saldoBloqueado">
+                                                </h4>
+                                                <div class="grad-border red"></div>
+                                            </div>
+                                        </div>
+                                        <div class='w-20'></div>
+                                        <div class="col" style='box-shadow:0 3px 8px 2px #ccc; border-radius:20px'>
+                                            <div class="price-holder mt-4 mb-30">
+                                                <h6 class="label-price mb-15 mt-40"> Saldo Total </h6>
+                                                <h4 class="price saltoTotal">
+                                                </h4>
+                                                <div class="grad-border blue"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!-- Termina Segunda Feiura aqui -->
+                                {{--<div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                             <div class="price-holder">
@@ -104,7 +194,7 @@
                                                 <div class="grad-border blue"></div>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;' data-container="body" data-toggle="popover" data-placement="top" data-title="Antecipação de vendas" data-content="Antecipavel"> --}}
+                                        --}}{{-- <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;' data-container="body" data-toggle="popover" data-placement="top" data-title="Antecipação de vendas" data-content="Antecipavel"> --}}{{--
                                         <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;'>
                                             <div class="price-holder">
                                                 <h6 class="label-price"> Saldo Antecipável </h6>
@@ -113,7 +203,6 @@
                                                 <div class="grad-border purple"></div>
                                             </div>
                                         </div>
-
                                         <div class="col-sm-12 col-md-12 col-lg-6" id="quotation_information" style="display: none">
                                             <div class="price-holder">
                                                 <h6 class="label-price" id="label_quotation"></h6>
@@ -160,7 +249,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>--}}
                                 <div class="col-12 mb-3 mt-3">
                                     <h5 class="card-title"> Histórico de transferências </h5>
                                 </div>
