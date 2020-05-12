@@ -101,6 +101,7 @@ class Company extends Model
         'address_document_status',
         'contract_document_status',
         'company_type',
+        'order_priority',
         'deleted_at',
         'created_at',
         'updated_at',

@@ -340,7 +340,7 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)->get();
+            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)->orderBy('order_priority')->get();
 
             return CompaniesSelectResource::collection($companies);
         } catch (Exception $e) {
@@ -464,6 +464,38 @@ class CompaniesApiController extends Controller
             return response()->json(['message' => 'Erro ao buscar CNPJ'], 400);
         } catch (Exception $e) {
             return response()->json(['message' => 'Erro ao buscar CNPJ'], 400);
+        }
+    }
+
+    public function updateOrder(Request $request)
+    {
+        try {
+
+            $orders    = $request->input('order');
+            $page      = $request->page ?? 1;
+            $paginate  = $request->paginate ?? 100;
+            $initOrder = ($page * $paginate) - $paginate + 1;
+
+            $companyIds = [];
+
+           foreach ($orders as $order) {
+                $companyIds[] = current(Hashids::decode($order));
+            }
+
+            $companies = Company::whereIn('id', collect($companyIds))
+                                ->where('user_id', auth()->user()->account_owner_id)
+                                ->get();
+
+            foreach ($companyIds as $value) {
+                $company = $companies->firstWhere('id', $value);
+                $company->update(['order_priority' => $initOrder]);
+                $initOrder ++;
+            }
+            return response()->json(['message' => 'Ordenação atualizada com sucesso'], 200);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao atualizar ordenação'], 400);
         }
     }
 }

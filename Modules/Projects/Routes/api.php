@@ -27,5 +27,8 @@ Route::group(
 
         Route::post('/projects/{projectId}/matchcontactverifycode', 'ProjectsApiController@matchContactVerifyCode')
              ->middleware('role:account_owner|admin');
+
+        Route::post('/projects/updateorder', 'ProjectsApiController@updateOrder')
+             ->middleware('role:account_owner|admin');
     }
 );

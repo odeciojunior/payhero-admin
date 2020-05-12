@@ -56,6 +56,7 @@ class Affiliate extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+        'order_priority',
     ];
     /**
      * @var bool
