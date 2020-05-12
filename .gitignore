@@ -73,5 +73,7 @@ app/Http/Controllers/Dev/TesteController.php
 
 public/tmp/*
 
-
 switcher_backup.env
+
+admin-cloudfox.pem
+
