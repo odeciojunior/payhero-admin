@@ -76,7 +76,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
 
         //verify users that has antecipation enabled and does not have approved sales in the last three days
-        //        $schedule->command('command:DisableUserAntecipation')->dailyAt('03:00');
+        $schedule->command('command:DisableUserAntecipation')->dailyAt('02:00');
     }
 
     /**
