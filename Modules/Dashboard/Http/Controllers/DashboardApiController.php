@@ -156,7 +156,7 @@ class DashboardApiController extends Controller
                         $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
                         if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
                             $userFirstName = explode(' ', auth()->user()->name)[0];
-                            $newsDecoded->title = str_replace('{nome_usuario}', $userFirstName, $newsDecoded->title);
+                            $newsDecoded->title = str_replace('{nome_usuario}', ucfirst($userFirstName), $newsDecoded->title);
                         }
                         $news[] = $newsDecoded;
                     }
@@ -215,7 +215,7 @@ class DashboardApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da empresa (DashboardApiController - getDataValues)');
             report($e);
-
+            dd($e);
             return [];
         }
     }
