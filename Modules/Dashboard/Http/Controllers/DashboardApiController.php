@@ -47,7 +47,7 @@ class DashboardApiController extends Controller
                                            ->exists();
             }
 
-            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->get() ?? collect();
+            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')->get() ?? collect();
 
             return response()->json(compact('companies', 'userTerm'), 200);
         } catch (Exception $e) {

@@ -42,7 +42,18 @@ class ProjectsResource extends Resource
         // $affiliate  = Affiliate::where('user_id', auth()->user()->account_owner_id)
         //                        ->where('project_id', $this->id)
         //                        ->first();
-        $affiliate  = $this->affiliates[0] ?? '';
+        if(isset($this->affiliate_id)) {
+            $affiliate = '';
+            if($this->affiliate_id > 0) {
+                $affiliate = New Affiliate;
+                $affiliate->id = $this->affiliate_id;
+                $affiliate->created_at = $this->affiliate_created_at;
+                $affiliate->percentage = $this->affiliate_percentage;
+                $affiliate->status_enum = $this->affiliate_status; 
+            }
+        } else {
+            $affiliate  = $this->affiliates[0] ?? '';
+        }
         $affiliated = !empty($affiliate) ? true : false;
 
         return [

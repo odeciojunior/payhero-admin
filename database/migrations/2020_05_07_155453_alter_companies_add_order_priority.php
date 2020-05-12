@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddMediationNotifiedToTickets extends Migration
+class AlterCompaniesAddOrderPriority extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddMediationNotifiedToTickets extends Migration
      */
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->boolean('mediation_notified')
-                ->default(0)
-                ->after('ticket_status_enum');
+        Schema::table('companies', function (Blueprint $table) {
+            $table->integer('order_priority')->unsigned()->default(0)->after('company_type');
         });
     }
 
@@ -27,8 +25,8 @@ class AddMediationNotifiedToTickets extends Migration
      */
     public function down()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('mediation_notified');
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('order_priority');
         });
     }
 }

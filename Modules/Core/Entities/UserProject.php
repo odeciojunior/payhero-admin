@@ -66,6 +66,7 @@ class UserProject extends Model
         'edit_permission',
         'status_flag',
         'status',
+        'order_priority',
         'created_at',
         'updated_at',
         'deleted_at',

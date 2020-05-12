@@ -32,9 +32,9 @@ class CompanyService
             $companies = $companyModel->with('user')->where('user_id', auth()->user()->account_owner_id);
 
             if ($paginate) {
-                return CompanyResource::collection($companies->paginate(10));
+                return CompanyResource::collection($companies->orderBy('order_priority')->paginate(10));
             } else {
-                return CompaniesSelectResource::collection($companies->get());
+                return CompaniesSelectResource::collection($companies->orderBy('order_priority')->get());
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar companies (CompaniesService - getCompaniesUser)');

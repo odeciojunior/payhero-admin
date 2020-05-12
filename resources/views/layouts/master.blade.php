@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/sortable/sortable.css') }}">
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
@@ -103,6 +104,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js?v=12') }}"></script>
 <script>
