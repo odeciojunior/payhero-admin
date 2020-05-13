@@ -167,6 +167,8 @@ class WithdrawalsApiController extends Controller
                         $withdrawalValue -= 1000;
                         $tax             = 1000;
                     }
+
+                    /** Verifica se é o primeiro saque do usuário */
                     $isFirstUserWithdrawal = false;
                     $userWithdrawal        = $withdrawalModel->whereHas('company', function($query) {
                         $query->where('user_id', auth()->user()->account_owner_id);
@@ -174,6 +176,7 @@ class WithdrawalsApiController extends Controller
                     if (empty($userWithdrawal)) {
                         $isFirstUserWithdrawal = true;
                     }
+
                     $withdrawal = $withdrawalModel->create(
                         [
                             'value'         => $withdrawalValue,
@@ -183,8 +186,7 @@ class WithdrawalsApiController extends Controller
                             'agency_digit'  => $company->agency_digit,
                             'account'       => $company->account,
                             'account_digit' => $company->account_digit,
-                            'status'        => $withdrawalModel->present()
-                                                               ->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
+                            'status'        => $withdrawalModel->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
                             'tax'           => $tax,
                             'observation'   => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
                         ]
