@@ -47,7 +47,7 @@ class DashboardApiController extends Controller
                                            ->exists();
             }
 
-            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->get() ?? collect();
+            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')->get() ?? collect();
 
             return response()->json(compact('companies', 'userTerm'), 200);
         } catch (Exception $e) {
@@ -153,7 +153,12 @@ class DashboardApiController extends Controller
                     $newsData = settings()->group('dashboard_news')->all(true);
                     $news     = [];
                     foreach ($newsData as $key => $value) {
-                        $news[] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
+                        $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
+                        if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
+                            $userFirstName = explode(' ', auth()->user()->name)[0];
+                            $newsDecoded->title = str_replace('{nome_usuario}', ucfirst($userFirstName), $newsDecoded->title);
+                        }
+                        $news[] = $newsDecoded;
                     }
 
                     $releasesData = settings()->group('dashboard_releases')->all(true);
@@ -210,7 +215,7 @@ class DashboardApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados da empresa (DashboardApiController - getDataValues)');
             report($e);
-
+            dd($e);
             return [];
         }
     }

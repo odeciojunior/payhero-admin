@@ -17,6 +17,7 @@ use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Affiliate;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectService;
@@ -719,6 +720,51 @@ class ProjectsApiController extends Controller
                 [
                     'message' => 'Ocorreu um erro ao verificar código!',
                 ], 400);
+        }
+    }
+
+    public function updateOrder(Request $request)
+    {
+        try {
+
+            $orders    = $request->input('order');
+            $page      = $request->page ?? 1;
+            $paginate  = $request->paginate ?? 100;
+            $initOrder = ($page * $paginate) - $paginate + 1;
+
+            $projectIds = [];
+
+            foreach ($orders as $order) {
+                $projectIds[] = current(Hashids::decode($order));
+            }
+
+            $projects = UserProject::whereIn('project_id', collect($projectIds))
+                                   ->where('user_id', auth()->user()->account_owner_id)
+                                   ->get();
+
+            $affiliates = Affiliate::whereIn('project_id', collect($projectIds))
+                                   ->where('user_id', auth()->user()->account_owner_id)
+                                   ->get();
+
+            foreach ($projectIds as $value) {
+
+                $project = $projects->firstWhere('project_id', $value);
+                if(isset($project->id)) {
+                    $project->update(['order_priority' => $initOrder]);
+                } else {
+                    $affiliate = $affiliates->firstWhere('project_id', $value);
+                    if(isset($affiliate->id)) {
+                        $affiliate->update(['order_priority' => $initOrder]);
+                    }
+                }
+                $initOrder ++;
+            }
+
+            return response()->json(['message' => 'Ordenação atualizada com sucesso'], 200);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao atualizar ordenação'], 400);
         }
     }
 }

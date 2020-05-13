@@ -21,6 +21,7 @@ use Modules\Core\Entities\Affiliate;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
+use DB;
 
 /**
  * Class ProjectService
@@ -311,29 +312,39 @@ class ProjectService
      */
     public function getUserProjects(string $pagination, array $status, $affiliate = false)
     {
-        $userProjectModel = new UserProject();
-
-        $userId       = auth()->user()->account_owner_id;
-        $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
+        $userId = auth()->user()->account_owner_id;
 
         if ($affiliate) {
-            $projects = $this->getProjectModel()
-                             ->whereIn('status', $status)
-                             ->with([
-                                        'affiliates' => function($query) use ($userId) {
-                                            $query->where('user_id', $userId);
-                                        },
-                                    ])
-                             ->where(function($query2) use ($userId, $userProjects) {
-                                 $query2->whereIn('id', $userProjects)
-                                        ->orWhereHas('affiliates', function($query3) use ($userId) {
-                                            $query3->where('user_id', $userId);
-                                        });
-                             })
-                             ->orderBy('id', 'DESC');
+            $projects = Project::leftJoin('users_projects', function($join) use($userId) {
+                                    $join->on('projects.id', '=', 'users_projects.project_id')
+                                        ->where('users_projects.user_id', $userId)
+                                        ->whereNull('users_projects.deleted_at');
+                                })
+                                ->leftJoin('affiliates', function($join) use($userId) {
+                                    $join->on('projects.id', '=', 'affiliates.project_id')
+                                        ->where('affiliates.user_id', $userId)
+                                        ->whereNull('affiliates.deleted_at');
+                                })
+                               ->select('projects.*', 'affiliates.created_at as affiliate_created_at', 'affiliates.percentage as affiliate_percentage',
+                                    'affiliates.status_enum as affiliate_status',
+                                    DB::raw('CASE WHEN affiliates.id IS NOT NULL THEN affiliates.id ELSE 0 END AS affiliate_id'),
+                                    DB::raw('CASE WHEN affiliates.order_priority IS NOT NULL THEN affiliates.order_priority ELSE users_projects.order_priority END AS order_p'))
+                               ->whereIn('projects.status', $status)
+                               ->where('users_projects.user_id', $userId)
+                               ->orWhere('affiliates.user_id', $userId)
+                               ->orderBy('projects.status')
+                               ->orderBy('order_p')
+                               ->orderBy('projects.id', 'DESC');
+
         } else {
-            $projects = $this->getProjectModel()->whereIn('status', $status)->whereIn('id', $userProjects)
-                             ->orderBy('id', 'DESC');
+            $projects = Project::leftJoin('users_projects','projects.id', '=', 'users_projects.project_id')
+                               ->select('projects.*', 'users_projects.order_priority as order_p')
+                               ->whereIn('projects.status', $status)
+                               ->where('users_projects.user_id', $userId)
+                               ->whereNull('users_projects.deleted_at')
+                               ->orderBy('projects.status')
+                               ->orderBy('order_p')
+                               ->orderBy('projects.id', 'DESC');
         }
 
         if ($pagination) {
