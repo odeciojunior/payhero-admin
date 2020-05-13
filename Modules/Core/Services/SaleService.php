@@ -842,23 +842,14 @@ class SaleService
         $salesModel  = new Sale();
         $ticketModel = new Ticket();
 
-        $sales = $salesModel->with(['transactions'])
-                            ->where('status', $salesModel->present()->getStatus('approved'))
-                            ->where('owner_id', $userAccountOwnerId)
-                            ->whereHas('tickets', function($query) use ($ticketModel) {
-                                $query->where('ticket_status_enum', $ticketModel->present()
-                                                                                ->getTicketStatusEnum('mediation'));
-                            })->get();
-
-        $blockedBalance = 0;
-        foreach ($sales as $sale) {
-            $userTransaction = $sale->transactions->where('invitation_id', null)->where('company_id', $companyId)
-                                                  ->first();
-            if (!empty($userTransaction)) {
-                $blockedBalance += $userTransaction->value; //comissao
-            }
-        }
-
-        return $blockedBalance;
+        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('sales.owner_id', $userAccountOwnerId)
+            ->where('sales.status', $salesModel->present()->getStatus('approved'))
+            ->whereNull('transactions.invitation_id')
+            ->where('transactions.company_id', $companyId)
+            ->whereHas('tickets', function ($query) use ($ticketModel) {
+                $query->where('ticket_status_enum', $ticketModel->present()
+                    ->getTicketStatusEnum('mediation'));
+            })->sum('transactions.value');
     }
 }
