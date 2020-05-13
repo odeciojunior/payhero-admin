@@ -708,8 +708,8 @@ class SaleService
     public function recalcSaleRefundPartial($sale, $partialValues)
     {
         try {
-            $companyModel     = new Company();
-            $transferModel    = new Transfer();
+            $companyModel  = new Company();
+            $transferModel = new Transfer();
 
             $refundTransactions = $sale->transactions;
 
@@ -802,9 +802,9 @@ class SaleService
             $newTotalvalue = $totalValueWithTax;
         }
 
-        $cloudfoxValue     = ((int) (($newTotalvalue - $interestValue) / 100 * $user->credit_card_tax));
-        $cloudfoxValue     += str_replace('.', '', $user->transaction_rate);
-        $cloudfoxValue     += $interestValue;
+        $cloudfoxValue = ((int) (($newTotalvalue - $interestValue) / 100 * $user->credit_card_tax));
+        $cloudfoxValue += str_replace('.', '', $user->transaction_rate);
+        $cloudfoxValue += $interestValue;
 
         return [
             'cloudfox_value'               => $cloudfoxValue,
@@ -843,14 +843,14 @@ class SaleService
         $ticketModel = new Ticket();
 
         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-            ->where('sales.owner_id', $userAccountOwnerId)
-            ->where('sales.status', $salesModel->present()->getStatus('approved'))
-            ->whereNull('transactions.invitation_id')
-            ->where('transactions.company_id', $companyId)
-            ->whereHas('tickets', function ($query) use ($ticketModel) {
-                $query->where('ticket_status_enum', $ticketModel->present()
-                    ->getTicketStatusEnum('mediation'))
-                ->where('ignore_balance_block', 0);
-            })->sum('transactions.value');
+                          ->where('sales.owner_id', $userAccountOwnerId)
+                          ->where('sales.status', $salesModel->present()->getStatus('approved'))
+                          ->whereNull('transactions.invitation_id')
+                          ->where('transactions.company_id', $companyId)
+                          ->whereHas('tickets', function($query) use ($ticketModel) {
+                              $query->where('ticket_status_enum', $ticketModel->present()
+                                                                              ->getTicketStatusEnum('mediation'))
+                                    ->where('ignore_balance_block', 0);
+                          })->sum('transactions.value');
     }
 }

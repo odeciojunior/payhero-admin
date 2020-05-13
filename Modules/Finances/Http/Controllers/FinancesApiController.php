@@ -69,7 +69,7 @@ class FinancesApiController extends Controller
                                                                                                         ->getStatusEnum('anticipated'))
                                                                 ->get();
 
-                    $blockedValue = $saleService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
+                    $blockedBalance = $saleService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
 
                     $pendingBalance += $pendingTransactions->pending_balance;
 
@@ -84,9 +84,9 @@ class FinancesApiController extends Controller
                     $totalBalance     = $availableBalance + $pendingBalance;
 
                     if ($availableBalance < 1) {
-                        $availableBalance += $blockedValue;
+                        $availableBalance += $blockedBalance;
                     } else {
-                        $availableBalance -= $blockedValue;
+                        $availableBalance -= $blockedBalance;
                     }
 
                     $currency          = $companyService->getCurrency($company);
@@ -107,7 +107,7 @@ class FinancesApiController extends Controller
                             'anticipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
-                            'blocked_balance'     => number_format(intval($blockedValue) / 100, 2, ',', '.'),
+                            'blocked_balance'     => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
                         ]
                     );
                 } else {
