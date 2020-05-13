@@ -34,7 +34,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-upsell" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+<ul id="pagination-upsell" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>
 {{-- Modal add-edit upsell --}}

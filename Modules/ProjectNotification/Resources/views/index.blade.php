@@ -27,7 +27,7 @@
         </div>
     </div>
 </div>
-<div id="pagination-project-notification" class="pagination-sm text-right">
+<div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination">
 </div>
 
 <!-- Edit -->

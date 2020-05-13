@@ -179,7 +179,7 @@
                                         <tbody id="withdrawals-table-data" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>
                                 </div>
@@ -270,7 +270,7 @@
                                         <tbody id="table-transfers-body" class="custom-t-body">
                                         </tbody>
                                     </table>
-                                    <ul id="pagination-transfers" class="pagination-sm"
+                                    <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination"
                                         style="margin-top:10px;position:relative;float:right">
                                         {{--js carrega...--}}
                                     </ul>

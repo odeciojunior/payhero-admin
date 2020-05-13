@@ -138,7 +138,7 @@
 {{--                    </div>--}}
                 </div>
             </div>
-            <ul id="pagination-tickets" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
