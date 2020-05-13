@@ -849,7 +849,8 @@ class SaleService
             ->where('transactions.company_id', $companyId)
             ->whereHas('tickets', function ($query) use ($ticketModel) {
                 $query->where('ticket_status_enum', $ticketModel->present()
-                    ->getTicketStatusEnum('mediation'));
+                    ->getTicketStatusEnum('mediation'))
+                ->where('ignore_balance_block', 0);
             })->sum('transactions.value');
     }
 }
