@@ -113,6 +113,10 @@ $(document).ready(function () {
                     $("#affiliation_switch").attr("checked", "checked");
                 }
 
+                if (response.data.blocked_balance) {
+                    $("#blocked_balance").attr("checked", "checked");
+                }
+
                 // Verificação de telefone
 
                 if (response.data.cellphone_verified) {

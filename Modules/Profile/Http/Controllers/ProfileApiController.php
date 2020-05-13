@@ -4,7 +4,6 @@ namespace Modules\Profile\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +34,7 @@ use Modules\Profile\Transformers\UserResource;
 class ProfileApiController
 {
     /**
-     * @return UserResource
+     * @return JsonResponse|UserResource
      */
     public function index()
     {
@@ -48,19 +47,19 @@ class ProfileApiController
 
                 return new UserResource($user);
             } else {
-                //sem permissao
-
+                return response()->json(['message' => 'Ocorreu um erro'], 403);
             }
         } catch (Exception $e) {
-            Log::warning('ProfileController index');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
     /**
      * @param ProfileUpdateRequest $request
      * @param $idCode
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function update(ProfileUpdateRequest $request, $idCode)
     {
@@ -158,8 +157,9 @@ class ProfileApiController
                 return response()->json(['message' => 'Sem permissão para editar este perfil'], 403);
             }
         } catch (Exception $e) {
-            Log::warning('ProfileController update');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
@@ -193,9 +193,6 @@ class ProfileApiController
                     'boleto_release_money_days' => 2,
                 ],
             ];
-
-            $newCardTax   = '';
-            $newBoletoTax = '';
 
             auth()->user()->update($cardTaxes[$requestData['credit_card_plan']]);
             auth()->user()->update($boletoTaxes[$requestData['boleto_plan']]);
@@ -239,8 +236,9 @@ class ProfileApiController
                 return response()->json(['message' => 'Sem permissão para trocar a senha '], 403);
             }
         } catch (Exception $e) {
-            Log::warning('ProfileController changePassword');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
@@ -285,8 +283,9 @@ class ProfileApiController
             )
                              ->withCookie("cellphoneverifycode_" . Hashids::encode(auth()->id()), $verifyCode, 15);
         } catch (Exception $e) {
-            Log::warning('ProfileController verifyCellphone');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
@@ -327,8 +326,9 @@ class ProfileApiController
             )
                              ->withCookie(Cookie::forget("cellphoneverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
-            Log::warning('ProfileController matchCellphoneVerifyCode');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
@@ -397,8 +397,9 @@ class ProfileApiController
                 400
             );
         } catch (Exception $e) {
-            Log::warning('ProfileController verifyEmail');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
@@ -439,8 +440,9 @@ class ProfileApiController
             )
                              ->withCookie(Cookie::forget("emailverifycode_" . Hashids::encode(auth()->id())));
         } catch (Exception $e) {
-            Log::warning('ProfileController matchEmailVerifyCode');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
@@ -504,7 +506,6 @@ class ProfileApiController
                 return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
             }
         } catch (Exception $e) {
-            Log::warning('ProfileApiController uploadDocuments');
             report($e);
 
             return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
@@ -534,7 +535,6 @@ class ProfileApiController
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar buscar dados taxas do usuario (ProfileApiController - getTax)');
             report($e);
 
             return response()->json([
@@ -555,6 +555,7 @@ class ProfileApiController
             $user->load(["userNotification"]);
             $userNotification = $user->userNotification ?? null;
             if (FoxUtils::isEmpty($userNotification)) {
+
                 return response()->json([
                                             'message' => 'Ocorreu um erro inesperado, tente novamente mais tarde!',
                                         ], 400);
@@ -609,8 +610,9 @@ class ProfileApiController
 
             return response()->json(['message' => 'Erro ao acessar documento do usuário!'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao acessar documento do usuário  ProfileApiController - openDocument');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 400);
         }
     }
 
@@ -666,7 +668,6 @@ class ProfileApiController
 
             return response()->json(['message' => 'Documentos verificados!', 'pending' => $result, 'link' => $link], 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao verificar documentos ProfileApiController - verifyDocuments');
             report($e);
 
             return response()->json(['error' => 'Erro ao verificar documentos'], 400);
