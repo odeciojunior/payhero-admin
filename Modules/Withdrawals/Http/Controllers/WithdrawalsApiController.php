@@ -111,7 +111,6 @@ class WithdrawalsApiController extends Controller
                                             ], 400);
                 }
                 $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
-                $companyDocument = preg_replace("/[^0-9]/", "", $company->company_document);
 
                 if ($withdrawalValue < 1000) {
                     return response()->json([
@@ -125,18 +124,16 @@ class WithdrawalsApiController extends Controller
                                             ], 400);
                 }
 
+                // verify blocked balance
                 $blockedValue = $saleService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
 
                 $availableBalance = $company->balance;
-                if ($company->balance < 1) {
-                    $availableBalance += $blockedValue;
-                } else {
-                    $availableBalance -= $blockedValue;
-                }
+
+                $availableBalance -= $blockedValue;
 
                 if ($withdrawalValue > $availableBalance) {
                     return response()->json([
-                                                'message' => 'Saldo Insuficiente!',
+                                                'message' => 'Valor informado inválido',
                                             ], 400);
                 }
 
