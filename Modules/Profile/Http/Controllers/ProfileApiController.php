@@ -52,7 +52,6 @@ class ProfileApiController
 
             }
         } catch (Exception $e) {
-            Log::warning('ProfileController index');
             report($e);
         }
     }
@@ -60,7 +59,7 @@ class ProfileApiController
     /**
      * @param ProfileUpdateRequest $request
      * @param $idCode
-     * @return RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function update(ProfileUpdateRequest $request, $idCode)
     {
@@ -128,6 +127,10 @@ class ProfileApiController
                 if ($userPhoto != null) {
 
                     try {
+                        if (empty($requestData['photo_w']) || empty($requestData['photo_h'])
+                            || empty($requestData['photo_x1']) || empty($requestData['photo_y1'])) {
+                            return response()->json(['message' => 'Erro ao salvar foto'], 400);
+                        }
                         $digitalOceanService = app(DigitalOceanFileService::class);
                         $digitalOceanService->deleteFile($user->photo);
 
@@ -158,7 +161,6 @@ class ProfileApiController
                 return response()->json(['message' => 'Sem permissão para editar este perfil'], 403);
             }
         } catch (Exception $e) {
-            Log::warning('ProfileController update');
             report($e);
         }
     }
@@ -193,9 +195,6 @@ class ProfileApiController
                     'boleto_release_money_days' => 2,
                 ],
             ];
-
-            $newCardTax   = '';
-            $newBoletoTax = '';
 
             auth()->user()->update($cardTaxes[$requestData['credit_card_plan']]);
             auth()->user()->update($boletoTaxes[$requestData['boleto_plan']]);
