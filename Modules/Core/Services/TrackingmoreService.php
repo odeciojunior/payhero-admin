@@ -52,9 +52,14 @@ class TrackingmoreService
      */
     public function createTracking($trackingNumber, $optionalParams = null)
     {
-        $carrierCode = $this->detectCarrier($trackingNumber);
+        //jadlog
+        if (strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber)) {
+            $carrierCode = 'dpd-brazil';
+        } else {
+            $carrierCode = $this->detectCarrier($trackingNumber);
 
-        if($carrierCode == "china-ems") $carrierCode = "china-post";
+            if ($carrierCode == "china-ems") $carrierCode = "china-post";
+        }
 
         $data = [
             'tracking_number' => $trackingNumber,
