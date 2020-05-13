@@ -16,9 +16,9 @@ class SalesRecoverydetailsResourceTransformer extends Resource
         $products = [];
         foreach ($this['products'] as $product) {
             $products[] = [
-                'photo'  => $product['photo'],
-                'name'   => $product['name'],
-                'amount' => $product['amount'],
+                'photo'  => $product->photo,
+                'name'   => $product->name,
+                'amount' => $product->amount,
             ];
         }
 

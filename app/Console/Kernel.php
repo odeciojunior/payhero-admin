@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
         // Alterar status do boletos de pendente para cancelado
-         $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');
+        $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');
 
         $schedule->command('command:UpdateListsFoxActiveCampaign')->cron('0 */12 * * *');
 
@@ -74,6 +74,9 @@ class Kernel extends ConsoleKernel
 
         //verify last domains on sendgrid
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
+
+        //verify users that has antecipation enabled and does not have approved sales in the last three days
+        $schedule->command('command:DisableUserAntecipation')->dailyAt('02:00');
     }
 
     /**

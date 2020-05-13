@@ -64,7 +64,7 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         dados = `
 
-                        <tr>
+                        <tr data-id='${value.id_code}'>
                             <td>${value.fantasy_name}</td>
                             <td>${value.country_translated}</td>
                             <td>${value.company_document}</td>
@@ -84,6 +84,36 @@ $(document).ready(function () {
                     `;
                         $('#companies_table').addClass('table-striped');
                         $("#companies_table_data").append(dados);
+                    });
+
+                    Sortable.create(document.getElementById('companies_table_data'), {
+                        onEnd: function(evt) {
+                            var orderCompanies = [];
+                            var listCompanies = $('#companies_table_data');
+                            $(listCompanies).find("tr").each(function(index, tr) {
+                                orderCompanies.push($(tr).data('id'));
+                            });
+
+                            $.ajax({
+                                method: "POST",
+                                url: "/api/companies/updateorder",
+                                dataType: "json",
+                                data: { order: orderCompanies },
+                                headers: {
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
+                                },
+                                error: function (response) {
+                                    loadingOnScreenRemove();
+                                    errorAjaxResponse(response);
+                                },
+                                success: function success(data) {
+                                    loadingOnScreenRemove();
+                                    alertCustom("success", data.message);
+                                }
+
+                            });
+                        }
                     });
 
                     $(".delete-company").unbind('click');

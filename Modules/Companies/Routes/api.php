@@ -22,5 +22,7 @@ Route::group(['middleware' => ['auth:api', 'scopes:admin', 'setUserAsLogged']], 
 
     Route::apiResource('companies', 'CompaniesApiController')->names('api.companies')
          ->middleware('role:account_owner|admin');
+
+    Route::post('/companies/updateorder', 'CompaniesApiController@updateOrder');
 });
 
