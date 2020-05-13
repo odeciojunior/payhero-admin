@@ -3,7 +3,6 @@
 namespace Modules\Profile\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
-use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\UserService;
 
 /**
@@ -48,6 +47,8 @@ class UserResource extends Resource
                                                   ->getPersonalDocumentStatus($this->personal_document_status),
             'address_document_translate'  => $this->present()
                                                   ->getPersonalDocumentStatus($this->address_document_status),
+            'role'                        => $role,
+            'refusedDocuments'            => $refusedDocuments,
             // Notificações
             'affiliation'                 => empty($userNotification->affiliation) ? false : $userNotification->affiliation,
             'boleto_compensated'          => empty($userNotification->boleto_compensated) ? false : $userNotification->boleto_compensated,
@@ -59,8 +60,7 @@ class UserResource extends Resource
             'shopify'                     => empty($userNotification->shopify) ? false : $userNotification->shopify,
             'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generated,
             'credit_card_in_proccess'     => empty($userNotification->credit_card_in_proccess) ? false : $userNotification->credit_card_in_proccess,
-            'role'                        => $role,
-            'refusedDocuments'            => $refusedDocuments,
+            'blocked_balance'             => empty($userNotification->blocked_balance) ? false : $userNotification->blocked_balance,
         ];
     }
 }
