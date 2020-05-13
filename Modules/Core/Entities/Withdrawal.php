@@ -65,7 +65,8 @@ class Withdrawal extends Model
         'created_at',
         'updated_at',
         'release_date_new',
-        'file'
+        'file',
+        'observation',
     ];
 
     /**

@@ -36,8 +36,8 @@ class WithdrawalsApiController extends Controller
     {
         try {
             $withdrawalModel = new Withdrawal();
-            $companyModel = new Company();
-            $companyId    = current(Hashids::decode($request->company));
+            $companyModel    = new Company();
+            $companyId       = current(Hashids::decode($request->company));
 
             if (empty($request->input('page')) || $request->input('page') == '1') {
                 activity()->on($withdrawalModel)->tap(function(Activity $activity) {
@@ -128,11 +128,14 @@ class WithdrawalsApiController extends Controller
 
                     $endDate = Carbon::now()->endOfMonth();
 
-                    $withdrawal = $withdrawalModel->where('company_id', $company->id)
-                                                  ->whereNotIn('status', collect([
-                                                                                    $withdrawalModel->present()->getStatus('returned'),
-                                                                                    $withdrawalModel->present()->getStatus('refused')]))
-                                                  ->whereBetween('created_at', [$startDate, $endDate])->get();
+                    $withdrawal    = $withdrawalModel->where('company_id', $company->id)
+                                                     ->whereNotIn('status', collect([
+                                                                                        $withdrawalModel->present()
+                                                                                                        ->getStatus('returned'),
+                                                                                        $withdrawalModel->present()
+                                                                                                        ->getStatus('refused'),
+                                                                                    ]))
+                                                     ->whereBetween('created_at', [$startDate, $endDate])->get();
                     $withdrawalSum = 0;
                     if (count($withdrawal) > 0) {
                         $withdrawalSum = $withdrawal->sum('value');
@@ -150,7 +153,7 @@ class WithdrawalsApiController extends Controller
                 /** Verifica se o usuário possui algum saque pendente */
                 $withdrawal = $withdrawalModel->where([
                                                           ['company_id', $company->id],
-                                                          ['status',     $companyModel->present()->getStatus('pending')],
+                                                          ['status', $companyModel->present()->getStatus('pending')],
                                                       ])
                                               ->first();
 
@@ -162,20 +165,30 @@ class WithdrawalsApiController extends Controller
                      */
                     if ($withdrawalValue < 50000) {
                         $withdrawalValue -= 1000;
-                        $tax = 1000;
+                        $tax             = 1000;
+                    }
+
+                    /** Verifica se é o primeiro saque do usuário */
+                    $isFirstUserWithdrawal = false;
+                    $userWithdrawal        = $withdrawalModel->whereHas('company', function($query) {
+                        $query->where('user_id', auth()->user()->account_owner_id);
+                    })->first();
+                    if (empty($userWithdrawal)) {
+                        $isFirstUserWithdrawal = true;
                     }
 
                     $withdrawal = $withdrawalModel->create(
                         [
-                            'value'               => $withdrawalValue,
-                            'company_id'          => $company->id,
-                            'bank'                => $company->bank,
-                            'agency'              => $company->agency,
-                            'agency_digit'        => $company->agency_digit,
-                            'account'             => $company->account,
-                            'account_digit'       => $company->account_digit,
-                            'status'              => $companyModel->present()->getStatus('pending'),
-                            'tax'                 => $tax,
+                            'value'         => $withdrawalValue,
+                            'company_id'    => $company->id,
+                            'bank'          => $company->bank,
+                            'agency'        => $company->agency,
+                            'agency_digit'  => $company->agency_digit,
+                            'account'       => $company->account,
+                            'account_digit' => $company->account_digit,
+                            'status'        => $withdrawalModel->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
+                            'tax'           => $tax,
+                            'observation'   => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
                         ]
                     );
                 } else {
@@ -187,9 +200,9 @@ class WithdrawalsApiController extends Controller
                      *  Se a soma dos saques pendentes for maior de R$500,00
                      *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
                      */
-                    if(!empty($withdrawal->tax) && $withdrawalValueSum > 50000){
+                    if (!empty($withdrawal->tax) && $withdrawalValueSum > 50000) {
                         $withdrawalValueSum += 1000;
-                        $withdrawalTax = 0;
+                        $withdrawalTax      = 0;
                     }
 
                     $withdrawal->update([
@@ -278,10 +291,10 @@ class WithdrawalsApiController extends Controller
 
                 $companyService = new CompanyService();
 
-                $currency = $companyService->getCurrency($company);
+                $currency         = $companyService->getCurrency($company);
                 $currentQuotation = 0;
 
-                if(!in_array($company->country, ['brazil', 'brasil'])){
+                if (!in_array($company->country, ['brazil', 'brasil'])) {
 
                     $remessaOnlineService = new RemessaOnlineService();
 
