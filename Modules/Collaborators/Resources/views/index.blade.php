@@ -41,7 +41,7 @@
                     </table>
                 </div>
             </div>
-            <ul id="pagination-collaborators" class="pagination-sm"
+            <ul id="pagination-collaborators" class="pagination-sm margin-chat-pagination"
                 style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>

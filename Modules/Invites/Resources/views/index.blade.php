@@ -74,7 +74,7 @@
                     </table>
                 </div>
             </div>
-            <ul id="pagination-invites" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-invites" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
             <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">

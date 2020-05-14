@@ -52,7 +52,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates" style="margin-top:10px;position:relative;float:right">
+                            <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                                 {{-- js carrega... --}}
                             </ul>
                         </div>
@@ -75,7 +75,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request" style="margin-top:10px;position:relative;float:right">
+                            <ul id="pagination-affiliates-request" class="pagination-sm pagination-affiliates-request margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                                 {{-- js carrega... --}}
                             </ul>
                         </div>

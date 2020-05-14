@@ -126,7 +126,7 @@ class TrackingService
 
                     if (!empty($event)) {
 
-                        $status_enum = $this->parseStatusApi($log->checkpoint_status);
+                        $status_enum = $this->parseStatusApi($log->checkpoint_status ?? 'notfound');
                         $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                         //remove caracteres chineses e informações indesejadas
