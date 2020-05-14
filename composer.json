@@ -9,7 +9,7 @@
     "type"             : "project",
     "require"          : {
         "php"                       : "^7.1.3",
-        "ext-json"                  : "^1.6",
+        "ext-json"                  : "*",
         "barryvdh/laravel-cors"     : "2.0.0",
         "cloudflare/sdk"            : "^1.0",
         "doctrine/dbal"             : "^2.10",
@@ -47,20 +47,20 @@
         "vinkla/hashids"            : "8.*",
         "vitorccsiqueira/zenvia-php": "2.1",
         "yajra/laravel-datatables"  : "^1.2",
-        "torann/geoip"              : "^1.0"    
+        "torann/geoip"              : "^1.0"
     },
     "require-dev"      : {
-        "barryvdh/laravel-debugbar": "^3.2",
-        "filp/whoops": "~2.0",
+        "barryvdh/laravel-debugbar"      : "^3.2",
+        "filp/whoops"                    : "~2.0",
         "krlove/eloquent-model-generator": "dev-master",
-        "shuchkin/simplexlsx": "^0.8.13",
-        "symfony/thanks": "^1.0",
-        "facade/ignition": "^2.0",
-        "fzaninotto/faker": "^1.9.1",
-        "mockery/mockery": "^1.3.1",
-        "nunomaduro/collision": "^4.1",
-        "phpunit/phpunit": "^8.5",
-        "ext-curl": "*"    
+        "shuchkin/simplexlsx"            : "^0.8.13",
+        "symfony/thanks"                 : "^1.0",
+        "facade/ignition"                : "^2.0",
+        "fzaninotto/faker"               : "^1.9.1",
+        "mockery/mockery"                : "^1.3.1",
+        "nunomaduro/collision"           : "^4.1",
+        "phpunit/phpunit"                : "^8.5",
+        "ext-curl"                       : "*"
     },
     "autoload"         : {
         "classmap": [
