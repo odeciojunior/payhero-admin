@@ -5,7 +5,7 @@ namespace Modules\Integrations\Transformers;
 use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\ApiToken;
@@ -17,7 +17,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property ApiToken $resource
  * @package Modules\Integrations\Transformers
  */
-class ApiTokenResource extends Resource
+class ApiTokenResource extends JsonResource
 {
     /**
      * @var string

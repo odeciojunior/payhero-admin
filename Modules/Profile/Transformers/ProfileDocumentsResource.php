@@ -4,7 +4,7 @@ namespace Modules\Profile\Transformers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\DigitalOceanFileService;
 
@@ -12,7 +12,7 @@ use Modules\Core\Services\DigitalOceanFileService;
  * Class ProfileDocumentsResource
  * @package Modules\Profile\Transformers
  */
-class ProfileDocumentsResource extends Resource
+class ProfileDocumentsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -2,9 +2,9 @@
 
 namespace Modules\Products\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreateProductResource extends Resource
+class CreateProductResource extends JsonResource
 {
     public function toArray($request)
     {

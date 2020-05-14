@@ -2,10 +2,10 @@
 
 namespace Modules\Whatsapp2\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class Whatsapp2Resource extends Resource
+class Whatsapp2Resource extends JsonResource
 {
     /**
      * Transform the resource into an array.

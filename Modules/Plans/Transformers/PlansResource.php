@@ -2,13 +2,13 @@
 
 namespace Modules\Plans\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\UserService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class PlansResource extends Resource
+class PlansResource extends JsonResource
 {
     public function toArray($request)
     {

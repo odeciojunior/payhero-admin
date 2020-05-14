@@ -4,13 +4,13 @@ namespace Modules\Projects\Transformers;
 
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed id
  * @property mixed name
  */
-class ProjectsSelectResource extends Resource
+class ProjectsSelectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

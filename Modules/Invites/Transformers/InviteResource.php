@@ -3,11 +3,11 @@
 namespace Modules\Invites\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 
-class InviteResource extends Resource
+class InviteResource extends JsonResource
 {
     /**
      * @param Request $request

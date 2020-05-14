@@ -4,9 +4,9 @@ namespace Modules\Companies\Transformers;
 
 use Modules\Core\Services\CompanyService;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class CompaniesSelectResource extends Resource
+class CompaniesSelectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

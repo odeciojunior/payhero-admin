@@ -5,11 +5,11 @@ namespace Modules\SalesBlackListAntifraud\Transformers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesBlackListAntiFraudResource extends Resource
+class SalesBlackListAntiFraudResource extends JsonResource
 {
     /**
      * @param Request $request

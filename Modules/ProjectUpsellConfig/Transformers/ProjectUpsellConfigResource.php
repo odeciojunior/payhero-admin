@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\ProjectUpsellRule;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectUpsellConfigResource extends Resource
+class ProjectUpsellConfigResource extends JsonResource
 {
     /**
      * @param Request $request

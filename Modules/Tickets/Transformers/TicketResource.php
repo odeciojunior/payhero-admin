@@ -4,11 +4,10 @@ namespace Modules\Tickets\Transformers;
 
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketResource extends Resource
+class TicketResource extends JsonResource
 {
     public function toArray($request)
     {

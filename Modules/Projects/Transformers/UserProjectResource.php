@@ -2,10 +2,10 @@
 
 namespace Modules\Projects\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class UserProjectResource extends Resource
+class UserProjectResource extends JsonResource
 {
     public function toArray($request)
     {

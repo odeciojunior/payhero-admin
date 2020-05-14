@@ -7,7 +7,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\CompanyService;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Presenters\CompanyPresenter;
 use Laracasts\Presenter\Exceptions\PresenterException;
 
@@ -15,7 +15,7 @@ use Laracasts\Presenter\Exceptions\PresenterException;
  * Class CompanyResource
  * @package Modules\Companies\Transformers
  */
-class CompanyResource extends Resource
+class CompanyResource extends JsonResource
 {
     /**
      * The resource instance.

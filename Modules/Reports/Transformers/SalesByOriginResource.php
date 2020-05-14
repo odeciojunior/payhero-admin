@@ -2,9 +2,9 @@
 
 namespace Modules\Reports\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class SalesByOriginResource extends Resource
+class SalesByOriginResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

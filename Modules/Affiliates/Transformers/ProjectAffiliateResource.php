@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateRequest;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
 /**
  * @property mixed id
  * @property mixed name
  */
-class ProjectAffiliateResource extends Resource
+class ProjectAffiliateResource extends JsonResource
 {
     /**
      * @param Request $request

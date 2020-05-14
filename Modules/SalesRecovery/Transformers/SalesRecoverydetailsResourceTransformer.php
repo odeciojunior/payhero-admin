@@ -2,10 +2,10 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesRecoverydetailsResourceTransformer extends Resource
+class SalesRecoverydetailsResourceTransformer extends JsonResource
 {
     /**
      * @param $request

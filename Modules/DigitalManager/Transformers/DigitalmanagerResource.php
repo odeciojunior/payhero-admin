@@ -3,9 +3,9 @@
 namespace Modules\DigitalManager\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class DigitalmanagerResource extends Resource
+class DigitalmanagerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

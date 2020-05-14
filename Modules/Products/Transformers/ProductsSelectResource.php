@@ -4,9 +4,9 @@ namespace Modules\Products\Transformers;
 
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductsSelectResource extends Resource
+class ProductsSelectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

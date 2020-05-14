@@ -3,9 +3,9 @@
 namespace Modules\ActiveCampaign\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ActivecampaignResource extends Resource
+class ActivecampaignResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

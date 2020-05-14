@@ -3,9 +3,9 @@
 namespace Modules\HotZapp\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class HotZappResource extends Resource
+class HotZappResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

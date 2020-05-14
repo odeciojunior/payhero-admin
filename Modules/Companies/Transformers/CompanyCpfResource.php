@@ -5,13 +5,13 @@ namespace Modules\Companies\Transformers;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\CompanyService;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class CompanyCpfResource
  * @package Modules\Companies\Transformers
  */
-class CompanyCpfResource extends Resource
+class CompanyCpfResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

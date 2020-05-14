@@ -4,9 +4,9 @@ namespace Modules\Partners\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class PartnersResource extends Resource
+class PartnersResource extends JsonResource
 {
     protected $defaultIncludes = ['user'];
 

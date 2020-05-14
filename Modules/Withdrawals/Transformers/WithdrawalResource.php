@@ -7,9 +7,9 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class WithdrawalResource extends Resource
+class WithdrawalResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
