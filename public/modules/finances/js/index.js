@@ -275,6 +275,7 @@ $(document).ready(function () {
             }
         }
 
+        // Fazer saque
         $('#bt-withdrawal').unbind("click");
         $('#bt-withdrawal').on('click', function () {
             let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');

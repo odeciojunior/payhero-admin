@@ -83,11 +83,7 @@ class FinancesApiController extends Controller
                     $availableBalance = $company->balance;
                     $totalBalance     = $availableBalance + $pendingBalance;
 
-                    if ($availableBalance < 1) {
-                        $availableBalance += $blockedBalance;
-                    } else {
-                        $availableBalance -= $blockedBalance;
-                    }
+                    $availableBalance -= $blockedBalance;
 
                     $currency          = $companyService->getCurrency($company);
                     $currencyQuotation = '';
@@ -97,14 +93,14 @@ class FinancesApiController extends Controller
                         $currencyQuotation = number_format((float) $currencyQuotation, 2, ',', '');
                     }
 
-                    $antecipableBalance = $company->user->antecipation_enabled_flag ? $anticipationService->getAntecipableValue($company) : '000';
+                    $anticipationBalance = $company->user->antecipation_enabled_flag ? $anticipationService->getAntecipableValue($company) : '000';
 
                     return response()->json(
                         [
                             'available_balance'   => number_format(intval($availableBalance) / 100, 2, ',', '.'),
                             'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                             'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                            'anticipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
+                            'anticipable_balance' => number_format(intval($anticipationBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
                             'blocked_balance'     => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
