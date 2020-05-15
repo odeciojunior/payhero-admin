@@ -16,8 +16,18 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\ConvertaxIntegration;
 
+/**
+ * Class SplitPaymentService
+ * @package Modules\Core\Services
+ */
 class SplitPaymentService
 {
+    /**
+     * @param $totalValue
+     * @param Sale $sale
+     * @param Project $project
+     * @param User $user
+     */
     public function splitPayment($totalValue, Sale $sale, Project $project, User $user)
     {
 
@@ -84,7 +94,8 @@ class SplitPaymentService
                                                                                         ->addDays($partnerGodfather->user->{$antecipationDaysKey})
                                                                                         ->format('Y-m-d'),
                                                       'status'                 => 'pending',
-                                                      'status_enum'            => $transactionModel->present()->getStatusEnum('pending'),
+                                                      'status_enum'            => $transactionModel->present()
+                                                                                                   ->getStatusEnum('pending'),
                                                       'antecipable_value'      => $antecipableValue,
                                                       'antecipable_tax'        => $partnerGodfather->user->antecipation_tax,
                                                       'currency'               => '',
@@ -109,7 +120,8 @@ class SplitPaymentService
                                                                                     ->addDays($partner->user->{$antecipationDaysKey})
                                                                                     ->format('Y-m-d'),
                                                   'status'                 => 'pending',
-                                                  'status_enum'            => $transactionModel->present()->getStatusEnum('pending'),
+                                                  'status_enum'            => $transactionModel->present()
+                                                                                               ->getStatusEnum('pending'),
                                                   'antecipable_value'      => intval($partnerValue / 100 * $partner->user->percentage_antecipable),
                                                   'antecipable_tax'        => $partner->user->antecipation_tax,
                                                   'currency'               => '',
@@ -142,7 +154,8 @@ class SplitPaymentService
                                               'value'                  => $valueProducerGodfather,
                                               'release_date'           => null,
                                               'status'                 => 'pending',
-                                              'status_enum'            => $transactionModel->present()->getStatusEnum('pending'),
+                                              'status_enum'            => $transactionModel->present()
+                                                                                           ->getStatusEnum('pending'),
                                               'antecipable_value'      => 0,
                                               'antecipable_tax'        => 0,
                                               'currency'               => '',
@@ -234,13 +247,13 @@ class SplitPaymentService
                                       ]);
             //Valor da Fox
             $transactionModel->create([
-                                          'sale_id'  => $sale->id,
-                                          'value'    => $cloudfoxValue,
-                                          'status'   => 'pending',
-                                          'status_enum'            => $transactionModel->present()
-                                                                                       ->getStatusEnum('pending'),
-                                          'currency' => ($producerCompany->country == 'usa') ? 'dolar' : 'real',
-                                          'type'     => $transactionModel->present()->getType('cloudfox'),
+                                          'sale_id'     => $sale->id,
+                                          'value'       => $cloudfoxValue,
+                                          'status'      => 'pending',
+                                          'status_enum' => $transactionModel->present()
+                                                                            ->getStatusEnum('pending'),
+                                          'currency'    => ($producerCompany->country == 'usa') ? 'dolar' : 'real',
+                                          'type'        => $transactionModel->present()->getType('cloudfox'),
                                       ]);
         } catch (\Exception $e) {
             Log::critical('erro ao fazer split da venda ' . $sale->id);

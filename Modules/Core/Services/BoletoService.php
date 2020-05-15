@@ -19,6 +19,7 @@ use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\BoletoPaidEvent;
 use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Entities\ProjectNotification;
+use Modules\Core\Entities\SaleLog;
 
 /**
  * Class BoletoService
@@ -501,6 +502,11 @@ class BoletoService
                                     'status'         => 5,
                                     'gateway_status' => 'canceled',
                                 ]);
+                SaleLog::create([
+                    'status'      => 'canceled',
+                    'status_enum' => 5,
+                    'sale_id'     => $boleto->id,
+                ]);
 
                 foreach ($boleto->transactions as $transaction) {
                     $transaction->update([

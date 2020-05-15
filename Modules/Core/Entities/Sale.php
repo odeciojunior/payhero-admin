@@ -265,4 +265,11 @@ class Sale extends Model
     {
         return $this->hasMany('Modules\Core\Entities\SaleWhiteBlackListResult');
     }
+    /**
+     * @return HasMany
+     */
+    public function saleLogs()
+    {
+        return $this->hasMany(SaleLog::class);
+    }
 }

@@ -28,6 +28,7 @@ use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\SaleLog;
 
 /**
  * Class SaleService
@@ -489,6 +490,11 @@ class SaleService
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
                     DB::commit();
+                    SaleLog::create([
+                        'sale_id'     => $sale->id,
+                        'status'      => $status,
+                        'status_enum' => $sale->status,
+                    ]);
                     try {
                         $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                         if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
@@ -659,6 +665,11 @@ class SaleService
                 $transaction->sale->update([
                     'gateway_status' => 'refunded',
                     'status'         => (new Sale)->present()->getStatus('refunded')
+                ]);
+                SaleLog::create([
+                    'sale_id'     => $sale->id,
+                    'status'      => 'refunded',
+                    'status_enum' => (new Sale)->present()->getStatus('refunded'),
                 ]);
 
                 if (!empty($refundedTransaction)) {
