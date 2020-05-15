@@ -10,19 +10,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Domain;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Services\FoxUtils;
 use SendGrid\Mail\Mail;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Services\SmsService;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Presenters\SalePresenter;
-use Modules\Core\Services\CloudFlareService;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Class CheckoutService
@@ -112,7 +105,7 @@ class CheckoutService
                                                   Str::replaceFirst('.', '', Str::replaceFirst('R$ ', '', $sale->total_paid_value)));
             // TODO não estamos implementando devolução parcial, quando for implementar tirar '|| $refundAmount < $saleAmount'
             // if ($refundAmount > $saleAmount || $refundAmount < $saleAmount) {
-            if ($refundAmount > $saleAmount ) {
+            if ($refundAmount > $saleAmount) {
                 $result = [
                     'status'  => 'error',
                     'message' => 'Valor não confere com o da Venda.',
@@ -123,7 +116,7 @@ class CheckoutService
                                                                                                  ->encode($sale->id);
             } else {
                 $urlCancelPayment = 'http://' . env('CHECKOUT_URL') . '/api/payment/cancel/' . Hashids::connection('sale_id')
-                                                                                                ->encode($sale->id);
+                                                                                                      ->encode($sale->id);
             }
             $dataCancel = [
                 'refundAmount' => (!empty($partialValues['value_to_refund'])) ? $partialValues['value_to_refund'] : $refundAmount,
@@ -179,6 +172,12 @@ class CheckoutService
         }
     }
 
+    /**
+     * @param $saleId
+     * @param $totalPaidValue
+     * @param $dueDate
+     * @return array
+     */
     public function regenerateBillet($saleId, $totalPaidValue, $dueDate)
     {
 
@@ -203,20 +202,22 @@ class CheckoutService
             if ($response->status == 'success' && $response->response->status == 'success') {
                 $saleModel  = new Sale();
                 $dataUpdate = (array) $response->response->response;
-                $check      = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
-                                        ->update(array_merge($dataUpdate,
-                                                             [
-                                                                 'start_date'       => Carbon::now()
-                                                                 ,
-                                                                 'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
-                                                             ]));
+                if (!empty($dataUpdate['gateway_received_date'])) {
+                    unset($dataUpdate['gateway_received_date']);
+                }
+                $check = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
+                                   ->update(array_merge($dataUpdate,
+                                                        [
+                                                            'start_date'       => Carbon::now(),
+                                                            'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
+                                                        ]));
                 if ($check) {
                     $transactionModel = new Transaction();
-                    $sale             = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
-                                                                                                ->decode($saleId))
+                    $sale             = $saleModel::with('project.domains')
+                                                  ->where('id', Hashids::connection('sale_id')->decode($saleId))
                                                   ->first();
-                    $transactions     = $transactionModel->where('sale_id', Hashids::connection('sale_id')
-                                                                                   ->decode($saleId))->delete();
+                    $transactionModel->where('sale_id', Hashids::connection('sale_id')
+                                                               ->decode($saleId))->delete();
 
                     $splitPaymentService = new SplitPaymentService();
 
