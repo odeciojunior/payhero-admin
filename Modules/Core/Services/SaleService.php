@@ -788,6 +788,26 @@ class SaleService
 
         }
 
+        $sale->customer->update([
+            'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+        ]);
+
+        $transactionUser = $transactionModel->where('sale_id', $sale->id)
+                                            ->whereIn('company_id', (new CompanyService)->getCompaniesUser()->pluck('id'))
+                                            ->first();
+
+        //Transferencia de entrada do cliente
+        $transferModel->create([
+           'transaction_id' => $transactionUser->id,
+           'user_id'        => auth()->user()->account_owner_id,
+           'customer_id'    => $sale->customer_id,
+           'company_id'     => $transactionUser->company_id,
+           'value'          => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+           'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+           'type'           => 'in',
+           'reason'         => 'Estorno de boleto',
+       ]);
+
         if(!empty($sale->shopify_order)){
             try{
                 $shopifyIntegration = $sale->project->shopifyIntegrations->first();
