@@ -665,6 +665,11 @@ class SaleService
                     'gateway_status' => 'refunded',
                     'status'         => (new Sale)->present()->getStatus('refunded')
                 ]);
+                SaleLog::create([
+                    'sale_id'     => $sale->id,
+                    'status'      => 'refunded',
+                    'status_enum' => (new Sale)->present()->getStatus('refunded'),
+                ]);
 
                 if (!empty($refundedTransaction)) {
                     SaleRefundHistory::create([

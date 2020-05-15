@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
@@ -312,6 +313,11 @@ class SalesApiController extends Controller
                               'status'         => $sale->present()->getStatus('billet_refunded'),
                               'gateway_status' => 'refunded',
                           ]);
+            SaleLog::create([
+                'sale_id'     => $sale->id,
+                'status'      => 'billet_refunded',
+                'status_enum' => $sale->present()->getStatus('billet_refunded'),
+            ]);
 
             $sale->customer->update([
                                         'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
