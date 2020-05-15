@@ -54,6 +54,7 @@ $(() => {
     $('#bt_filtro').on('click', function () {
         index();
         getResume();
+        getBlockedBalance();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -140,6 +141,7 @@ $(() => {
                 loadOnAny('.page-content', true);
                 index();
                 getResume();
+                getBlockedBalance();
             }
         });
     }
@@ -186,6 +188,30 @@ $(() => {
                     $('#percentual-unknown').text(unknown ? unknown + ' (' + ((unknown * 100) / total).toFixed(2) + '%)' : '0 (0.00%)');
                 }
                 loadOnAny('.number', true);
+            }
+        });
+    }
+
+    function getBlockedBalance() {
+
+        $('#alert-blockedbalance').hide();
+
+        $.ajax({
+            method: 'GET',
+            url: '/api/tracking/blockedbalance',
+            dataType: 'json',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#blocked-balance').html(response.total);
+                $('#blocked-balance-sales').html(response.sales);
+                $('#alert-blockedbalance').show()
+                    .shake();
             }
         });
     }
@@ -505,6 +531,7 @@ $(() => {
         if (e.keyCode == 13) {
             index();
             getResume();
+            getBlockedBalance();
         }
     });
 });
