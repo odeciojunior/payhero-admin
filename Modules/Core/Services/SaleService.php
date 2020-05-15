@@ -21,6 +21,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Core\Services\SplitPaymentPartialRefundService;
 use Modules\Core\Services\TransfersService;
 use Modules\Products\Transformers\ProductsSaleResource;
@@ -698,6 +699,98 @@ class SaleService
                 'message' => $message,
             ];
         }
+    }
+
+    public function refundBillet(Sale $sale)
+    {
+        $transferModel = new Transfer();
+        $transactionModel = new Transaction();
+
+        $sale->update([
+            'status'         => $sale->present()->getStatus('billet_refunded'),
+            'gateway_status' => 'refunded',
+        ]);
+
+        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+        $inviteTransaction   = $sale->transactions()->whereNotNull('invitation_id')->first();
+        $saleTax = $cloudfoxTransaction->value;
+
+        foreach ($sale->transactions as $transaction) {
+
+            if ($transaction->status_enum == $transactionModel->present()->getStatusEnum('transfered') && !empty($transaction->company)) {
+
+                $refundValue = $transaction->value;
+
+                if($transaction->type == $transactionModel->present()->getType('producer')){
+                    $refundValue += $saleTax;
+                    if(!empty($inviteTransaction)){
+                        $refundValue += $inviteTransaction->value;
+                    }
+                }
+
+                $transferModel->create([
+                    'transaction_id' => $transaction->id,
+                    'user_id'        => $transaction->company->user_id,
+                    'value'          => $refundValue,
+                    'type'           => 'out',
+                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                    'reason'         => 'Estorno',
+                    'company_id'     => $transaction->company->id,
+                ]);
+
+                $transaction->company->update([
+                    'balance' => $transaction->company->balance -= $refundValue,
+                ]);
+            }
+            elseif($transaction->status_enum == $transactionModel->present()->getStatusEnum('anticipated') && !empty($transaction->company)){
+
+                $anticipatedValue = $transaction->anticipatedTransactions()->first()->value;
+
+                $refundValue = $anticipatedValue;
+
+                if($transaction->type == $transactionModel->present()->getType('producer')){
+                    $refundValue += $saleTax;
+                    if(!empty($inviteTransaction)){
+                        $refundValue += $inviteTransaction->value;
+                    }
+                }
+
+                $transferModel->create([
+                    'transaction_id' => $transaction->id,
+                    'user_id'        => $transaction->company->user_id,
+                    'value'          => $refundValue,
+                    'type'           => 'out',
+                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                    'reason'         => 'Estorno',
+                    'company_id'     => $transaction->company->id,
+                ]);
+
+                $transaction->company->update([
+                    'balance' => $transaction->company->balance -= $refundValue,
+                ]);
+            }
+
+            $transaction->update([
+                'status_enum' => (new Transaction)->present()->getStatusEnum('billet_refunded'),
+                'status'      => 'billet_refunded',
+            ]);
+
+        }
+
+        if(!empty($sale->shopify_order)){
+            try{
+                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
+                if(!empty($shopifyIntegration)){
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopifyService->cancelOrder($sale);
+                }
+            }
+            catch(Exception $e){
+
+            }
+        }
+
+        event(new BilletRefundedEvent($sale));
     }
 
     public function recalcSaleRefundPartial($sale, $partialValues)

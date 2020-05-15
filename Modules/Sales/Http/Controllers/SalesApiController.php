@@ -16,7 +16,6 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletPaidEvent;
 use Modules\Core\Events\SaleRefundedEvent;
@@ -245,17 +244,15 @@ class SalesApiController extends Controller
     {
         try {
             $saleModel        = new Sale();
-            $userProjectModel = new UserProject();
-            $transferModel    = new Transfer();
             $transactionModel = new Transaction();
             $companyService   = new CompanyService();
+            $saleService      = new SaleService();
             $saleId           = Hashids::connection('sale_id')->decode($saleId);
 
             $sale = $saleModel->with('customer')->where('id', $saleId)->first();
 
             $transactionUser = $transactionModel->where('sale_id', $sale->id)
-                                                ->whereIn('company_id', $companyService->getCompaniesUser()
-                                                                                       ->pluck('id'))
+                                                ->whereIn('company_id', $companyService->getCompaniesUser()->pluck('id'))
                                                 ->first();
 
             $pendingBalance = $companyService->getPendingBalance($transactionUser->company);
@@ -265,77 +262,14 @@ class SalesApiController extends Controller
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], Response::HTTP_BAD_REQUEST);
             }
 
-            foreach ($sale->transactions as $transaction) {
+            $saleService->refundBillet($sale);
 
-                if (empty($transaction->company_id)) {
-                    //Taxa de estorno
-                    $transferModel->create([
-                                               'transaction_id' => $transactionUser->id,
-                                               'user_id'        => $transactionUser->company->user->account_owner_id,
-                                               'company_id'     => $transactionUser->company_id,
-                                               'value'          => $transaction->value,
-                                               'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                                               'type'           => 'out',
-                                               'reason'         => 'Taxa de estorno',
-                                           ]);
+            return response()->json([
+                'message' => 'Boleto estornado com sucesso'
+            ], Response::HTTP_OK);
 
-                    $transactionUser->company->update([
-                                                          'balance' => $transactionUser->company->balance - $transaction->value,
-                                                      ]);
-                } else {
-                    if ($transaction->status_enum == $transactionModel->present()->getStatusEnum('transfered')) {
-
-                        $transferModel->create([
-                                                   'transaction_id' => $transaction->id,
-                                                   'user_id'        => $transaction->company->user->account_owner_id,
-                                                   'company_id'     => $transaction->company_id,
-                                                   'value'          => $transaction->value,
-                                                   'type_enum'      => $transferModel->present()->getTypeEnum('out'),
-                                                   'type'           => 'out',
-                                                   'reason'         => 'Estorno',
-                                               ]);
-
-                        $transaction->company->update([
-                                                          'balance' => $transaction->company->balance - $transaction->value,
-                                                      ]);
-                    }
-                }
-
-                $transaction->update([
-                                         'status_enum' => $transactionModel->present()
-                                                                           ->getStatusEnum('billet_refunded'),
-                                         'status'      => 'billet_refunded',
-                                     ]);
-            }
-
-            $sale->update([
-                              'status'         => $sale->present()->getStatus('billet_refunded'),
-                              'gateway_status' => 'refunded',
-                          ]);
-
-            $sale->customer->update([
-                                        'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-                                    ]);
-
-            //Transferencia de entrada do cliente
-            $transferModel->create([
-                                       'transaction_id' => $transactionUser->id,
-                                       'user_id'        => auth()->user()->account_owner_id,
-                                       'customer_id'    => $sale->customer_id,
-                                       'company_id'     => $transactionUser->company_id,
-                                       'value'          => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
-                                       'type_enum'      => $transferModel->present()->getTypeEnum('in'),
-                                       'type'           => 'in',
-                                       'reason'         => 'Estorno de boleto',
-                                   ]);
-
-            // event(new BilletRefundedEvent($sale));
-
-            return response()->json(['message' => 'Boleto estornado com sucesso'], Response::HTTP_OK);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar estornar boleto  SalesApiController - refundBillet');
             report($e);
-
             return response()->json(['error' => 'Erro ao tentar estornar boleto'], 400);
         }
     }

@@ -318,6 +318,16 @@ class FoxUtils
 
         return $formatter->formatCurrency($value, $currency);
     }
+
+    /**
+     * @param $value
+     * @return int|null
+     */
+    public static function onlyNumbers($value)
+    {
+        return preg_replace("/[^0-9]/", "", $value);
+    }
+
 }
 
 

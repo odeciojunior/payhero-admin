@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Transaction;
@@ -228,16 +229,17 @@ class CompanyService
                                             ->whereDate('release_date', '>', Carbon::today()->toDateString())
                                             ->sum('value');
 
-        $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
-                                                    ->where('company_id', $company->id)
-                                                    ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
-                                                    ->get();
+        $transactionsAnticipatedValue = $transactionModel->with('anticipatedTransactions')
+                                         ->where('company_id', $company->id)
+                                         ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
+                                         ->sum('value');
 
-        if(count($transactionsAnticipated) > 0){
-            foreach($transactionsAnticipated as $transactionAnticipated){
-                $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()->first()->value;                        
-            }
-        }
+        $anticipatedValue = AnticipatedTransaction::with('transaction')->whereHas('transaction', function($query) use($company){
+            $query->where('status_enum', (new Transaction)->present()->getStatusEnum('anticipated'));
+            $query->where('company_id', $company->id);
+        })->sum('value');
+
+        $pendingBalance += ($transactionsAnticipatedValue - $anticipatedValue);
 
         return $pendingBalance;
 
