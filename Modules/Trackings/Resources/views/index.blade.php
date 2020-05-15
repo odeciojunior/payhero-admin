@@ -204,7 +204,7 @@
                         <strong class="font-size-16">Saldo Bloqueado</strong>
                         <p class="font-size-14 pr-md-100 mb-5">
                             Você possui <b>R$ <span id="blocked-balance"></span> de saldo bloqueado</b> por não informar
-                            o código de rastreio de <b><span id="blocked-balance-sales"></span> vendas</b>. informe os
+                            os códigos de rastreios de <b><span id="blocked-balance-sales"></span> vendas</b>. Informe os
                             códigos de rastreio dessas vendas para que o dinheiro seja transferido.
                         </p>
                     </div>
