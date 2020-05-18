@@ -63,19 +63,19 @@
             <form id='filter_form'>
                 <div id="" class="card shadow p-20">
                     <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-3">
+                        <div class="col-sm-6 col-md">
                             <label for="projeto">Projeto</label>
                             <select name='select_project' id="projeto" class="form-control select-pad">
                                 <option value="">Todos projetos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-3">
+                        <div class="col-sm-6 col-md">
                             <label for="plan">Plano</label>
                             <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
                                 <option value="">Todos planos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-2">
+                        <div class="col-sm-6 col-md">
                             <label for="forma">Forma de pagamento</label>
                             <select name='select_payment_method' id="forma" class="form-control select-pad">
                                 <option value="">Boleto e cartão de crédito</option>
@@ -83,7 +83,7 @@
                                 <option value="2">Boleto</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-2">
+                        <div class="col-sm-6 col-md">
                             <label for="status">Status</label>
                             <select name='sale_status' id="status" class="form-control select-pad">
                                 <option value="">Todos status</option>
@@ -96,35 +96,34 @@
                                 <option value="20">Análise Antifraude</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-2">
+                        <div class="col-sm-6 col-md">
                             <label for="comprador">Transação</label>
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                     </div>
                     <div class="row mt-15">
-                        <div class="col-sm-6 col-md-3 col-12">
+                        <div class="col-sm-6 col-md">
                             <label for="comprador">Nome do cliente</label>
                             <input name='client' id="comprador" class="input-pad" placeholder="cliente">
                         </div>
-                        <div class="col-sm-6 col-md-3 col-12">
+                        <div class="col-sm-6 col-md">
                             <label for="date_type">Data</label>
                             <select name='date_type' id="date_type" class="form-control select-pad">
                                 <option value="start_date">Data do pedido</option>
                                 <option value="end_date">Data do pagamento</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-2 col-12">
+                        <div class="col-sm-6 col-md">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-1 col-12" style='text-align:center'>
+                        <div class="col-sm-6 col-md d-flex flex-column justify-content-center">
                             <label for="token" class='mb-10 mr-5'>Shopify Erros</label>
                             <label class="switch m-0">
                                 <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
                                 <span class="slider round"></span>
                             </label>
                         </div>
-                        <div class='col-md-1'></div>
-                        <div class="col-sm-6 col-md-2 col-12">
+                        <div class="col-sm-6 col-md">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
