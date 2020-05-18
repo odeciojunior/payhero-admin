@@ -965,7 +965,7 @@ class SaleService
      */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId): int
     {
-        $salesModel  = new Sale();
+       /* $salesModel  = new Sale();
         $ticketModel = new Ticket();
 
         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
@@ -977,6 +977,8 @@ class SaleService
                               $query->where('ticket_status_enum', $ticketModel->present()
                                                                               ->getTicketStatusEnum('mediation'))
                                     ->where('ignore_balance_block', 0);
-                          })->sum('transactions.value');
+                          })->sum('transactions.value');*/
+
+        return 0;
     }
 }
