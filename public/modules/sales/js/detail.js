@@ -261,6 +261,7 @@ $(() => {
             $("#automatic-discount-value").html("R$ " + sale.automatic_discount);
         }
         $("#total-value").html("R$ " + sale.total);
+        $("#total-paid-value").html("R$ " + sale.total_paid_value);
 
         if (sale.refund_value != '0,00' && sale.status == 8) {
             $('.text-partial-refund').show();

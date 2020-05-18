@@ -77,6 +77,12 @@
                         <div class="col-lg-6 text-right">
                             <h4 id="total-value" class="table-title"></h4>
                         </div>
+                        <div class="col-lg-6 mb-10">
+                            <span class="text-muted ft-12 total-paid-title"> Total com juros</span>
+                        </div>
+                        <div class="col-lg-6 text-right mb-10">
+                            <span id="total-paid-value" class="text-muted ft-12"></span>
+                        </div>
                     </div>
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div id="cambio-label" class='col-8' style="display:none">
@@ -294,5 +300,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=3') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=4') }}"></script>
 @endpush
