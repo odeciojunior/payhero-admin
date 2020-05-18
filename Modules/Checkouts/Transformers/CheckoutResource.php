@@ -5,10 +5,10 @@ namespace Modules\Checkouts\Transformers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CheckoutResource extends Resource
+class CheckoutResource extends JsonResource
 {
     /**
      * @param Request $request

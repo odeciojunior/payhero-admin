@@ -199,7 +199,7 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
-            <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
         </div>
@@ -369,7 +369,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=13') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=14') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

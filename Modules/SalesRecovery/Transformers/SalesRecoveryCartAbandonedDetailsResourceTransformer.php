@@ -2,9 +2,9 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class SalesRecoveryCartAbandonedDetailsResourceTransformer extends Resource
+class SalesRecoveryCartAbandonedDetailsResourceTransformer extends JsonResource
 {
     /**
      * @param $request

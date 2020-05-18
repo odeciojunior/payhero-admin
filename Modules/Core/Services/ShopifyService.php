@@ -1968,6 +1968,28 @@ class ShopifyService
             Log::error('Erro ao buscar fulfillments no shopify com a order ' . $orderId);
         }
     }
+
+    /**
+     * @param $sale
+     */
+    public function cancelOrder($sale)
+    {
+        try {
+            $this->method = __METHOD__;
+            $this->saleId = $sale->id;
+            $url          = "orders/" . $sale->shopify_order . "/cancel";
+            $data         = [
+                "reason" => "fraud",
+            ];
+
+            $this->sendData     = $data;
+            $result             = $this->shopifyClient->post($url, $data);
+            $this->receivedData = json_encode($result);
+        } catch (Exception $ex) {
+            $this->exceptions[] = $ex->getMessage();
+        }
+    }
+
 }
 
 

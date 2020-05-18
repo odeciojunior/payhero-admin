@@ -127,6 +127,10 @@ class ProfileApiController
                 if ($userPhoto != null) {
 
                     try {
+                        if (empty($requestData['photo_w']) || empty($requestData['photo_h'])
+                            || empty($requestData['photo_x1']) || empty($requestData['photo_y1'])) {
+                            return response()->json(['message' => 'Erro ao salvar foto'], 400);
+                        }
                         $digitalOceanService = app(DigitalOceanFileService::class);
                         $digitalOceanService->deleteFile($user->photo);
 

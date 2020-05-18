@@ -3,12 +3,12 @@
 namespace Modules\Sales\Transformers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Vinkla\Hashids\Facades\Hashids;
 
-class TransactionResource extends Resource
+class TransactionResource extends JsonResource
 {
     public function toArray($request)
     {

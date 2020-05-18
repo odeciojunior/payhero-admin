@@ -46,7 +46,7 @@
         <div class="page-content container">
             <div id='data-table-products' class='row'>
             </div>
-            <div id='pagination-products' class='float-right' style="margin-bottom: 20px"></div>
+            <div id='pagination-products' class='float-right margin-chat-pagination' style="margin-bottom: 20px"></div>
             <div class='products-is-empty' style='display:none;'>
                 @push('css')
                     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">

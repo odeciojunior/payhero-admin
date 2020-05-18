@@ -86,7 +86,6 @@ class BilletRefundedSendEmailListener implements ShouldQueue
                                          $customer['name'], 'd-8c39acea2c2c4d94978dc16f5d518c05', $data);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao enviar email de boleto pago');
             report($e);
         }
     }

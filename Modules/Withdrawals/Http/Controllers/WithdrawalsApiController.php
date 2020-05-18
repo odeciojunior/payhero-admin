@@ -185,20 +185,30 @@ class WithdrawalsApiController extends Controller
                             $tax             = 1000;
                         }
 
-                        $withdrawal = $withdrawalModel->create(
-                            [
-                                'value'         => $withdrawalValue,
-                                'company_id'    => $company->id,
-                                'bank'          => $company->bank,
-                                'agency'        => $company->agency,
-                                'agency_digit'  => $company->agency_digit,
-                                'account'       => $company->account,
-                                'account_digit' => $company->account_digit,
-                                'status'        => $companyModel->present()->getStatus('pending'),
-                                'tax'           => $tax,
-                            ]
-                        );
-                    } else {
+                    /** Verifica se é o primeiro saque do usuário */
+                    $isFirstUserWithdrawal = false;
+                    $userWithdrawal        = $withdrawalModel->whereHas('company', function($query) {
+                        $query->where('user_id', auth()->user()->account_owner_id);
+                    })->first();
+                    if (empty($userWithdrawal)) {
+                        $isFirstUserWithdrawal = true;
+                    }
+
+                    $withdrawal = $withdrawalModel->create(
+                        [
+                            'value'         => $withdrawalValue,
+                            'company_id'    => $company->id,
+                            'bank'          => $company->bank,
+                            'agency'        => $company->agency,
+                            'agency_digit'  => $company->agency_digit,
+                            'account'       => $company->account,
+                            'account_digit' => $company->account_digit,
+                            'status'        => $withdrawalModel->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
+                            'tax'           => $tax,
+                            'observation'   => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                        ]
+                    );
+                } else {
 
                         $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
                         $withdrawalTax      = $withdrawal->tax;

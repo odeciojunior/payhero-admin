@@ -2,9 +2,9 @@
 
 namespace Modules\Profile\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProfileTaxResource extends Resource
+class ProfileTaxResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

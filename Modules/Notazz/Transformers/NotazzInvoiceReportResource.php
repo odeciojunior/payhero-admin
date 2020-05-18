@@ -3,11 +3,11 @@
 namespace Modules\Notazz\Transformers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 
-class NotazzInvoiceReportResource extends Resource
+class NotazzInvoiceReportResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

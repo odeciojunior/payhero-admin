@@ -4,9 +4,9 @@ namespace Modules\Tickets\Transformers;
 
 use Illuminate\Support\Carbon;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketMessageResource extends Resource
+class TicketMessageResource extends JsonResource
 {
     public function toArray($request)
     {

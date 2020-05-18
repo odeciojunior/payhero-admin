@@ -4,7 +4,7 @@ namespace Modules\SalesRecovery\Transformers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed created_at
@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\Resource;
  * @property mixed checkoutPlans
  * @property mixed telephone
  */
-class SalesRecoveryResource extends Resource
+class SalesRecoveryResource extends JsonResource
 {
     /**
      * @param Request $request

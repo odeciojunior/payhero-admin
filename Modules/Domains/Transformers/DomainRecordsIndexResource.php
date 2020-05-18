@@ -4,9 +4,9 @@ namespace Modules\Domains\Transformers;
 
 use Modules\Core\Services\CloudFlareService;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class DomainRecordsIndexResource extends Resource
+class DomainRecordsIndexResource extends JsonResource
 {
     /**
      * @param \Illuminate\Http\Request $request

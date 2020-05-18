@@ -4,9 +4,9 @@ namespace Modules\Trackings\Transformers;
 
 use Illuminate\Support\Carbon;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class TrackingShowResource extends Resource
+class TrackingShowResource extends JsonResource
 {
     public function toArray($request)
     {

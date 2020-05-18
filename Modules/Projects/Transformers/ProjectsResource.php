@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Affiliate;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed id
@@ -30,7 +30,7 @@ use Illuminate\Http\Resources\Json\Resource;
  * Class ProjectsResource
  * @package Modules\Projects\Transformers
  */
-class ProjectsResource extends Resource
+class ProjectsResource extends JsonResource
 {
     /**
      * @param Request $request

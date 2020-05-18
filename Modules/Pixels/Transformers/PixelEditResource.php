@@ -3,13 +3,13 @@
 namespace Modules\Pixels\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class PixelEditResource
  * @package Modules\Pixels\Transformers
  */
-class PixelEditResource extends Resource
+class PixelEditResource extends JsonResource
 {
     /**
      * @param Request $request

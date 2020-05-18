@@ -35,7 +35,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-links" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+<ul id="pagination-links" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
     {{-- js pagination carrega --}}
 </ul>
 

@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-11">
-                                        <ul id="pagination-origins" class="pagination-sm float-right" style="margin-top:10px; margin-left: 5%">
+                                        <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination" style="margin-top:10px; margin-left: 5%">
                                             {{-- js carrega... --}}
                                         </ul>
                                     </div>

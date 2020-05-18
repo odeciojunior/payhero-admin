@@ -4,9 +4,9 @@ namespace Modules\Plans\Transformers;
 
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class PlansSelectResource extends Resource
+class PlansSelectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

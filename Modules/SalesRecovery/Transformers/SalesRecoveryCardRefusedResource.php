@@ -5,12 +5,12 @@ namespace Modules\SalesRecovery\Transformers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesRecoveryCardRefusedResource extends Resource
+class SalesRecoveryCardRefusedResource extends JsonResource
 {
     /**
      * @param Request $request

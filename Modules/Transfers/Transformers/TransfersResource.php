@@ -4,12 +4,12 @@ namespace Modules\Transfers\Transformers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
-class TransfersResource extends Resource
+class TransfersResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

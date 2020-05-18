@@ -2,10 +2,10 @@
 
 namespace Modules\HotSac\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class HotsacResource extends Resource
+class HotsacResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

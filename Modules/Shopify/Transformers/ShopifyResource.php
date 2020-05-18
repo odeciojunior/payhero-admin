@@ -3,9 +3,9 @@
 namespace Modules\Shopify\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ShopifyResource extends Resource
+class ShopifyResource extends JsonResource
 {
     /**
      * @param $request

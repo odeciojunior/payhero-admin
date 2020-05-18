@@ -23,9 +23,13 @@ use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Events\BilletRefundedEvent;
+use Modules\Core\Services\SplitPaymentPartialRefundService;
+use Modules\Core\Services\TransfersService;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\SaleLog;
 
 /**
  * Class SaleService
@@ -487,6 +491,11 @@ class SaleService
                 $checktUpdate = $sale->update($updateData);
                 if ($checktUpdate) {
                     DB::commit();
+                    SaleLog::create([
+                        'sale_id'     => $sale->id,
+                        'status'      => $status,
+                        'status_enum' => $sale->status,
+                    ]);
                     try {
                         $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                         if (!FoxUtils::isEmpty($sale->shopify_order) && !FoxUtils::isEmpty($shopifyIntegration)) {
@@ -655,9 +664,14 @@ class SaleService
                                      ]);
 
                 $transaction->sale->update([
-                                               'gateway_status' => 'refunded',
-                                               'status'         => (new Sale)->present()->getStatus('refunded'),
-                                           ]);
+                    'gateway_status' => 'refunded',
+                    'status'         => (new Sale)->present()->getStatus('refunded')
+                ]);
+                SaleLog::create([
+                    'sale_id'     => $sale->id,
+                    'status'      => 'refunded',
+                    'status_enum' => (new Sale)->present()->getStatus('refunded'),
+                ]);
 
                 if (!empty($refundedTransaction)) {
                     SaleRefundHistory::create([
@@ -705,6 +719,118 @@ class SaleService
      * @return bool
      * @throws Exception
      */
+    public function refundBillet(Sale $sale)
+    {
+        $transferModel = new Transfer();
+        $transactionModel = new Transaction();
+
+        $sale->update([
+            'status'         => $sale->present()->getStatus('billet_refunded'),
+            'gateway_status' => 'refunded',
+        ]);
+
+        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+        $inviteTransaction   = $sale->transactions()->whereNotNull('invitation_id')->first();
+        $saleTax = $cloudfoxTransaction->value;
+
+        foreach ($sale->transactions as $transaction) {
+
+            if ($transaction->status_enum == $transactionModel->present()->getStatusEnum('transfered') && !empty($transaction->company)) {
+
+                $refundValue = $transaction->value;
+
+                if($transaction->type == $transactionModel->present()->getType('producer')){
+                    $refundValue += $saleTax;
+                    if(!empty($inviteTransaction)){
+                        $refundValue += $inviteTransaction->value;
+                    }
+                }
+
+                $transferModel->create([
+                    'transaction_id' => $transaction->id,
+                    'user_id'        => $transaction->company->user_id,
+                    'value'          => $refundValue,
+                    'type'           => 'out',
+                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                    'reason'         => 'Estorno',
+                    'company_id'     => $transaction->company->id,
+                ]);
+
+                $transaction->company->update([
+                    'balance' => $transaction->company->balance -= $refundValue,
+                ]);
+            }
+            elseif($transaction->status_enum == $transactionModel->present()->getStatusEnum('anticipated') && !empty($transaction->company)){
+
+                $anticipatedValue = $transaction->anticipatedTransactions()->first()->value;
+
+                $refundValue = $anticipatedValue;
+
+                if($transaction->type == $transactionModel->present()->getType('producer')){
+                    $refundValue += $saleTax;
+                    if(!empty($inviteTransaction)){
+                        $refundValue += $inviteTransaction->value;
+                    }
+                }
+
+                $transferModel->create([
+                    'transaction_id' => $transaction->id,
+                    'user_id'        => $transaction->company->user_id,
+                    'value'          => $refundValue,
+                    'type'           => 'out',
+                    'type_enum'      => $transferModel->present()->getTypeEnum('out'),
+                    'reason'         => 'Estorno',
+                    'company_id'     => $transaction->company->id,
+                ]);
+
+                $transaction->company->update([
+                    'balance' => $transaction->company->balance -= $refundValue,
+                ]);
+            }
+
+            $transaction->update([
+                'status_enum' => (new Transaction)->present()->getStatusEnum('billet_refunded'),
+                'status'      => 'billet_refunded',
+            ]);
+
+        }
+
+        $sale->customer->update([
+            'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+        ]);
+
+        $transactionUser = $transactionModel->where('sale_id', $sale->id)
+                                            ->whereIn('company_id', (new CompanyService)->getCompaniesUser()->pluck('id'))
+                                            ->first();
+
+        //Transferencia de entrada do cliente
+        $transferModel->create([
+           'transaction_id' => $transactionUser->id,
+           'user_id'        => auth()->user()->account_owner_id,
+           'customer_id'    => $sale->customer_id,
+           'company_id'     => $transactionUser->company_id,
+           'value'          => preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+           'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+           'type'           => 'in',
+           'reason'         => 'Estorno de boleto',
+       ]);
+
+        if(!empty($sale->shopify_order)){
+            try{
+                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
+                if(!empty($shopifyIntegration)){
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopifyService->cancelOrder($sale);
+                }
+            }
+            catch(Exception $e){
+
+            }
+        }
+
+        event(new BilletRefundedEvent($sale));
+    }
+
     public function recalcSaleRefundPartial($sale, $partialValues)
     {
         try {

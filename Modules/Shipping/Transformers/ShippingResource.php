@@ -3,7 +3,7 @@
 namespace Modules\Shipping\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -11,7 +11,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * Class ShippingResource
  * @package Modules\Shipping\Transformers
  */
-class ShippingResource extends Resource
+class ShippingResource extends JsonResource
 {
     /**
      * @param Request $request

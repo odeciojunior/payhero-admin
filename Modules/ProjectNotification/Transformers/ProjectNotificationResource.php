@@ -4,13 +4,13 @@ namespace Modules\ProjectNotification\Transformers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class ProjectNotificationResource
  * @package Modules\ProjectNotification\Transformers
  */
-class ProjectNotificationResource extends Resource
+class ProjectNotificationResource extends JsonResource
 {
     /**
      * @param Request $request

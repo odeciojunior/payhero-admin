@@ -4,7 +4,7 @@ namespace Modules\Affiliates\Transformers;
 
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
 
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Lang;
  * @property mixed id
  * @property mixed name
  */
-class AffiliateRequestResource extends Resource
+class AffiliateRequestResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

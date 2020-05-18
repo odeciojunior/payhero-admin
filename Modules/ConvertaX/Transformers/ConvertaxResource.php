@@ -3,9 +3,9 @@
 namespace Modules\ConvertaX\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ConvertaxResource extends Resource
+class ConvertaxResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -13,7 +13,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AnticipationService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
-use Modules\Core\Services\SaleService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,32 +55,12 @@ class FinancesApiController extends Controller
 
                 if (!empty($company)) {
 
-                    $pendingTransactions = $transactionModel->where('company_id', $company->id)
-                                                            ->where('status_enum', $transactionModel->present()
-                                                                                                    ->getStatusEnum('paid'))
-                                                            ->whereDate('release_date', '>', now()->startOfDay())
-                                                            ->select(DB::raw('sum( value ) as pending_balance'))
-                                                            ->first();
-
-                    $transactionsAnticipated = $transactionModel->with('anticipatedTransactions')
-                                                                ->where('company_id', $company->id)
-                                                                ->where('status_enum', $transactionModel->present()
-                                                                                                        ->getStatusEnum('anticipated'))
-                                                                ->get();
-
-                    $blockedBalance = $saleService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
-
-                    $pendingBalance += $pendingTransactions->pending_balance;
-
-                    if (count($transactionsAnticipated) > 0) {
-                        foreach ($transactionsAnticipated as $transactionAnticipated) {
-                            $pendingBalance += $transactionAnticipated->value - $transactionAnticipated->anticipatedTransactions()
-                                                                                                       ->first()->value;
-                        }
-                    }
+                    $pendingBalance = $companyService->getPendingBalance($company);
 
                     $availableBalance = $company->balance;
                     $totalBalance     = $availableBalance + $pendingBalance;
+
+                    $blockedBalance = $saleService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
 
                     $availableBalance -= $blockedBalance;
 

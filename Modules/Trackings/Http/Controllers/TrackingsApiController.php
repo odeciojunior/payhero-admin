@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Trackings\Exports\TrackingsReportExport;
@@ -189,6 +191,40 @@ class TrackingsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao exibir resumo dos rastreamentos'], 400);
+        }
+    }
+
+    public function getBlockedBalance() {
+        try {
+
+            $salesModel = new Sale();
+            $companiesModel = new Company();
+
+            $userAccountOwnerId = auth()->user()->account_owner_id;
+
+            $userCompanies = $companiesModel->where('user_id', $userAccountOwnerId)
+                ->pluck('id')
+                ->toArray();
+
+            $blockedBalance = $salesModel->select(DB::raw('sum(transactions.value) / 100 as total'),
+                DB::raw('count(distinct transactions.sale_id) as sales'))
+                ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+                ->where('sales.owner_id', $userAccountOwnerId)
+                ->where('sales.status', $salesModel->present()->getStatus('approved'))
+                ->whereNull('transactions.invitation_id')
+                ->whereIn('transactions.company_id', $userCompanies)
+                ->whereDoesntHave('tracking')
+                ->first();
+
+                return response()->json([
+                    'total' => number_format($blockedBalance->total, 2, ',', '.'),
+                    'sales' => $blockedBalance->sales,
+                ]);
+
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao obter saldo bloqueado por códigos de rasteio não informados'], 400);
         }
     }
 

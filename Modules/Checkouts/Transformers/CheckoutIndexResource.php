@@ -5,7 +5,7 @@ namespace Modules\Checkouts\Transformers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
@@ -19,7 +19,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property mixed telephone
  * @property mixed checkoutPlans
  */
-class CheckoutIndexResource extends Resource
+class CheckoutIndexResource extends JsonResource
 {
     /**
      * @param Request $request

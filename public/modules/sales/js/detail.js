@@ -387,8 +387,7 @@ $(() => {
             $('#saleReSendEmail').hide();
         }
         if (sale.payment_method == 2 && sale.status == 1) {
-            // $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet" sale=' + sale.id + '>Estornar boleto</button>');
-            $('#div_refund_billet').html('');
+            $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' + sale.id + '>Estornar boleto</button>');
         } else {
             $('#div_refund_billet').html('');
         }

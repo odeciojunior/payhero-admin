@@ -3,14 +3,14 @@
 namespace Modules\SalesBlackListAntifraud\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SalesBlackListAntiFraudDetaislResource
  * @package Modules\SalesBlackListAntifraud\Transformers
  */
-class SalesBlackListAntiFraudDetaislResource extends Resource
+class SalesBlackListAntiFraudDetaislResource extends JsonResource
 {
     /**
      * @param Request $request

@@ -2,10 +2,10 @@
 
 namespace Modules\Reportana\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class ReportanaResource extends Resource
+class ReportanaResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

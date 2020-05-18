@@ -4,9 +4,9 @@ namespace Modules\DiscountCoupons\Transformers;
 
 use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class DiscountCouponsResource extends Resource
+class DiscountCouponsResource extends JsonResource
 {
     public function toArray($request)
     {

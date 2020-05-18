@@ -4,14 +4,14 @@ namespace Modules\Sales\Transformers;
 
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
 
 /**
  * Class SalesResource
  * @package Modules\Sales\Transformers
  */
-class SalesResource extends Resource
+class SalesResource extends JsonResource
 {
     /**
      * @param Request $request

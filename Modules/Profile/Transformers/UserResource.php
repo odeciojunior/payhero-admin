@@ -2,14 +2,15 @@
 
 namespace Modules\Profile\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\UserService;
 
 /**
  * Class UserResource
  * @package Modules\Profile\Transformers
  */
-class UserResource extends Resource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

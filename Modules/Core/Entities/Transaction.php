@@ -164,4 +164,12 @@ class Transaction extends Model
     {
         return $this->belongsTo('Modules\Core\Entities\Invitation');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function productPlanSales()
+    {
+        return $this->hasMany(ProductPlanSale::class, 'sale_id', 'sale_id');
+    }
 }

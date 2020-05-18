@@ -3,14 +3,14 @@
 namespace Modules\Dashboard\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class DashboardResumeResource
  * @package Modules\Dashboard\Transformers
  */
-class DashboardResumeResource extends Resource
+class DashboardResumeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

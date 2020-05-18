@@ -3,10 +3,10 @@
 namespace Modules\Products\Transformers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class EditProductResource extends Resource
+class EditProductResource extends JsonResource
 {
     /**
      * @param Request $request

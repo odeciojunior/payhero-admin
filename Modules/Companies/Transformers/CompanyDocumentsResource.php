@@ -3,11 +3,11 @@
 namespace Modules\Companies\Transformers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\DigitalOceanFileService;
 
-class CompanyDocumentsResource extends Resource
+class CompanyDocumentsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

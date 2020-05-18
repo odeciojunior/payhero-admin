@@ -2,10 +2,10 @@
 
 namespace Modules\Plans\Transformers;
 
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class PlansDetailsResource extends Resource
+class PlansDetailsResource extends JsonResource
 {
     public function toArray($request)
     {

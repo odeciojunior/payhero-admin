@@ -4,9 +4,9 @@ namespace Modules\Pixels\Transformers;
 
 use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class PixelsResource extends Resource
+class PixelsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
