@@ -167,7 +167,12 @@ class AnticipationService
                                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                 ->whereDate('release_date', '>', Carbon::today())
                                 ->whereNull('invitation_id')
-                                ->whereDoesntHave('anticipatedTransactions');
+                                ->whereDoesntHave('anticipatedTransactions')
+                                ->whereHas('productPlanSales')
+                                ->whereDoesntHave('productPlanSales', function($query) {
+                                   $query->whereDoesntHave('tracking');
+                                });
+
     }
 
     /**
