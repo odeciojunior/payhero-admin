@@ -208,10 +208,12 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: response => {
-                $('#blocked-balance').html(response.total);
-                $('#blocked-balance-sales').html(response.sales);
-                $('#alert-blockedbalance').show()
-                    .shake();
+                if(response.sales) {
+                    $('#blocked-balance').html(response.total);
+                    $('#blocked-balance-sales').html(response.sales);
+                    $('#alert-blockedbalance').show()
+                        .shake();
+                }
             }
         });
     }
