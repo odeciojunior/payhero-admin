@@ -211,6 +211,7 @@ class TrackingsApiController extends Controller
                 ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
                 ->where('sales.owner_id', $userAccountOwnerId)
                 ->where('sales.status', $salesModel->present()->getStatus('approved'))
+                ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
                 ->whereNull('transactions.invitation_id')
                 ->whereIn('transactions.company_id', $userCompanies)
                 ->whereDoesntHave('tracking')
