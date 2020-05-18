@@ -116,10 +116,11 @@ class AnticipationService
         }
 
         $anticipation = $anticipationModel->create([
-            'value'          => $anticipationValue - $taxValue,
-            'tax'            => $taxValue,
-            'percentage_tax' => $user->antecipation_tax,
-            'company_id'     => $company->id,
+            'value'                  => $anticipationValue - $taxValue,
+            'tax'                    => $taxValue,
+            'percentage_tax'         => $user->antecipation_tax,
+            'percentage_anticipable' => $user->percentage_antecipable,
+            'company_id'             => $company->id,
         ]);
 
         foreach ($anticipationArray as $item) {
