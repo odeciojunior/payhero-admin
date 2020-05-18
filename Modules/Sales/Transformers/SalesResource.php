@@ -60,6 +60,7 @@ class SalesResource extends JsonResource
             'automatic_discount'    => $this->details->automatic_discount ?? 0,
             'refund_value'          => $this->details->refund_value ?? '0,00',
             'value_anticipable'     => $this->details->value_anticipable ?? null,
+            'total_paid_value'      => $this->details->total_paid_value,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
 
