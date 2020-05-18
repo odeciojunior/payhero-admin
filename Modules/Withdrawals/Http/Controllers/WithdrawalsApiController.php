@@ -78,7 +78,6 @@ class WithdrawalsApiController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function store(Request $request)
     {
@@ -247,7 +246,6 @@ class WithdrawalsApiController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function getAccountInformation(Request $request)
     {
@@ -382,7 +380,6 @@ class WithdrawalsApiController extends Controller
 
     /**
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function checkAllowed()
     {
