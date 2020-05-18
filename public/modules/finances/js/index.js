@@ -156,16 +156,19 @@ $(document).ready(function () {
                 $('.removeSpan').remove();
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
-                $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
+                $('.saltoTotal').html('<span class="currency" style="color:#687089">R$</span><span class="total-balance" style="color:#57617c">0,00</span>');
+                $('.saldoBloqueado').html('<span class="currency">R$</span><span class="blocked-balance">0,00</span>');
 
                 //Saldo antecipavel
                 $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">' + response.anticipable_balance + '</span>');
+
+                // Saldo bloqueado
+                $('.saldoBloqueado').html('<span class="currency">R$</span><span class="blocked-balance">' + response.blocked_balance + '</span>');
 
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
                 $(".currency").html('R$ ');
                 $(".available-balance").html(isEmpty(response.available_balance));
-                // $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
                 $(".total-balance").html(isEmpty(response.total_balance));
@@ -223,7 +226,7 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     loadingOnScreenRemove();
-                    var tooltipData = `
+                    let tooltipData = `
                         Disponível para antecipação: R$ ${response.data.antecipable_value} <br>
                         Taxa de antecipação: R$ ${response.data.tax_value} <br>
                         Saldo final antecipável: <b>R$ ${response.data.value_minus_tax}</b> <br>
@@ -272,12 +275,13 @@ $(document).ready(function () {
             }
         }
 
+        // Fazer saque
         $('#bt-withdrawal').unbind("click");
         $('#bt-withdrawal').on('click', function () {
-            var availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
-            var toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
-            var availableBalance = parseInt(availableBalanceText);
-            var toTransfer = parseFloat(toTransferText);
+            let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
+            let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
+            let availableBalance = parseInt(availableBalanceText);
+            let toTransfer = parseFloat(toTransferText);
 
             if (toTransfer > availableBalance) {
                 alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
@@ -306,14 +310,14 @@ $(document).ready(function () {
                         success: (response) => {
 
                             if (response.data.user_documents_status == 'pending') {
-                                var route = '/profile';
+                                let route = '/profile';
                                 $('#modal-withdrawal').modal('show');
                                 $('#modal-withdrawal-title').text("Oooppsssss!");
                                 $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos pessoais ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
                                 $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                             } else if (response.data.documents_status == 'pending') {
-                                var companie = $('#transfers_company_select').val();
-                                var _route = '/companies/' + companie + '/edit';
+                                let companie = $('#transfers_company_select').val();
+                                let _route = '/companies/' + companie + '/edit';
                                 $('#modal-withdrawal').modal('show');
                                 $('#modal-withdrawal-title').text("Oooppsssss!");
                                 $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos da empresa ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com os documentos de sua empresa</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
@@ -336,7 +340,7 @@ $(document).ready(function () {
                                 $('#modal-withdrawal').modal('show');
                                 $('#modal-withdrawal-title').text("Confirmar Saque");
 
-                                var confirmationData = `<div class="row">
+                                let confirmationData = `<div class="row">
                                                             <div class="col">
                                                                 <h4>Verifique os dados da conta:</h4>
                                                                 <div><b>Banco:</b><span id="modal-withdrawal-bank"></span></div>
@@ -441,7 +445,7 @@ $(document).ready(function () {
             }
         });
 
-        var statusWithdrawals = {
+        let statusWithdrawals = {
             1: 'warning',
             2: 'primary',
             3: 'success',
@@ -624,7 +628,7 @@ $(document).ready(function () {
 
         function paginationTransfersTable(response) {
             $("#pagination-transfers").html("");
-            var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+            let primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
             $("#pagination-transfers").append(primeira_pagina);
             if (response.meta.current_page == '1') {
                 $("#primeira_pagina").attr('disabled', true);
@@ -645,7 +649,7 @@ $(document).ready(function () {
                 });
             }
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                let pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
                 $("#pagination-transfers").append(pagina_atual);
                 $("#pagina_atual").attr('disabled', true).addClass('nav-btn').addClass('active');
             }
@@ -659,7 +663,7 @@ $(document).ready(function () {
                 });
             }
             if (response.meta.last_page != '1') {
-                var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+                let ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
                 $("#pagination-transfers").append(ultima_pagina);
                 if (response.meta.current_page == response.meta.last_page) {
                     $("#ultima_pagina").attr('disabled', true);

@@ -92,7 +92,7 @@
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     {{--carrega label no js--}}
-                                                    <label for="cpf" class='label-document'></label>
+                                                    <label for="document" class='label-document'></label>
                                                     <input name="document" value="" type="text" class="input-pad"
                                                            id="document">
                                                 </div>
@@ -393,6 +393,7 @@
                                     {{--ANTECIPAÇÃO--}}
                                 </div>
                             </div>
+                            <!-- Tab Notifications -->
                             <div class='tab-pane fade' id='tab_notifications' role='tabpanel'>
                                 <div class='row' style='padding:0 30px 0 30px'>
                                     <div class='col-12'>
@@ -500,6 +501,17 @@
                                                 <br>
                                                 <label class="switch">
                                                     <input type="checkbox" id="affiliation_switch" name="affiliation"
+                                                           class="check notification_switch" value='1'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mt-4">
+                                            <div class="switch-holder">
+                                                <label for="blocked_balance" class="mb-10">Saldo Bloqueado</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="blocked_balance" name="blocked_balance"
                                                            class="check notification_switch" value='1'>
                                                     <span class="slider round"></span>
                                                 </label>
@@ -665,7 +677,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=6')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=1')}}"></script>
     @endpush
 
 @endsection

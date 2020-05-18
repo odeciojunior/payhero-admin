@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=1') }}">
     <style>
-        .popover{
+        .popover {
             left: -50px !important;
         }
     </style>
@@ -78,89 +78,86 @@
                                     <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                     </p>
                                 </div>
-                                <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
-                                            <div class="price-holder">
-                                                <h6 class="label-price"> Saldo pendente </h6>
-                                                <h4 class="price saldoPendente">
-                                                </h4>
-                                                <div class="grad-border red"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
+                                <div class='container'>
+                                    <div class='row align-items-center my-20'>
+                                        <div class="col-sm-3">
                                             <div id="div-available-money" class="price-holder pointer">
-                                                <h6 class="label-price"> Saldo Disponível </h6>
+                                                <h6 class="label-price mb-10"> Saldo Disponível </h6>
                                                 <h4 class="price saldoDisponivel">
                                                 </h4>
                                                 <div class="grad-border green"></div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-6">
-                                            <div class="price-holder">
-                                                <h6 class="label-price"> Saldo Total </h6>
-                                                <h4 class="price saltoTotal">
-                                                </h4>
-                                                <div class="grad-border blue"></div>
+                                        <div class="col-sm-3">
+                                            <div class="input-holder">
+                                                <label for="transfers_company_select"> Empresa</label>
+                                                <select style='border-radius:10px' class="form-control select-pad" name="company"
+                                                        id="transfers_company_select"> </select>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;' data-container="body" data-toggle="popover" data-placement="top" data-title="Antecipação de vendas" data-content="Antecipavel"> --}}
-                                        <div class="col-sm-12 col-md-12 col-lg-6 div-antecipable-balance" style='display:none;cursor:pointer;'>
-                                            <div class="price-holder">
-                                                <h6 class="label-price"> Saldo Antecipável </h6>
+                                        <div class="col-sm-3">
+                                            <label for="custom-input-addon"> Valor a transferir</label>
+                                            <div class="input-group mb-3"
+                                                 style='padding:0'>
+                                                <div class='input-group-prepend'>
+                                                        <span class="input-group-text custom-addon" id="basic-addon1"
+                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
+                                                </div>
+                                                <input id="custom-input-addon" type="text"
+                                                       class="form-control input-pad withdrawal-value"
+                                                       placeholder="Digite o valor" aria-label="Digite o valor"
+                                                       aria-describedby="basic-addon1" style='border-radius: 0 10px 10px 0'>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 pt-1">
+                                            <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal" disabled>
+                                                <svg class="mr-2" style="fill: white; vertical-align: middle;"
+                                                     xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                     viewBox="0 0 24 24">
+                                                    <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
+                                                </svg>
+                                                Sacar dinheiro
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='container col-sm-12 mb-40'>
+                                    <div class='row'>
+                                        <div class="col-sm-3 div-antecipable-balance">
+                                            <div class="price-holder" style='cursor: pointer;'>
+                                                <h6 class="label-price mb-15"> Saldo Antecipável </h6>
                                                 <h4 class="price saldoAntecipavel">
                                                 </h4>
                                                 <div class="grad-border purple"></div>
                                             </div>
                                         </div>
-
-                                        <div class="col-sm-12 col-md-12 col-lg-6" id="quotation_information" style="display: none">
+                                        <div class="col-sm-3 ">
                                             <div class="price-holder">
-                                                <h6 class="label-price" id="label_quotation"></h6>
-                                                <h4 class="price" id="current_quotation">
+                                                <h6 class="label-price mb-15"> Saldo pendente </h6>
+                                                <h4 class="price saldoPendente">
                                                 </h4>
-                                                <div class="grad-border purple"></div>
+                                                <div class="grad-border red"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 ">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
+                                                <h4 class="price saldoBloqueado">
+                                                </h4>
+                                                <div class="grad-border red"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 ">
+                                            <div class="price-holder">
+                                                <h6 class="label-price mb-15"> Saldo Total </h6>
+                                                <h4 class="price saltoTotal">
+                                                </h4>
+                                                <div class="grad-border blue"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <div class="row flex-column">
-                                        <div class="col-12 mb-3">
-                                            <div class="input-holder">
-                                                <label for="transfers_company_select"> Empresa</label>
-                                                <select class="form-control select-pad" name="company"
-                                                        id="transfers_company_select"> </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 mb-3">
-                                            <label for="company"> Valor a transferir</label>
-                                            <div class='row' style='display: flex; margin:0px'>
-                                                <div class="input-group col-sm-12 col-md-12 col-lg-6"
-                                                     style='padding:0px'>
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon1 custom-addon"
-                                                              style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
-                                                    </div>
-                                                    <input id="custom-input-addon" type="text"
-                                                           class="form-control input-pad withdrawal-value"
-                                                           placeholder="Digite o valor" aria-label="Digite o valor"
-                                                           aria-describedby="basic-addon1">
-                                                </div>
-                                                <button id="bt-withdrawal"
-                                                        class="btn btn-success disabled btn-sacar ml-3 col-sm-12 col-md-12 col-lg-5"
-                                                        data-toggle="modal" disabled>
-                                                    <svg class="mr-2" style="fill: white; vertical-align: middle;"
-                                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                         viewBox="0 0 24 24">
-                                                        <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
-                                                    </svg>
-                                                    Sacar dinheiro
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <br>
                                 <div class="col-12 mb-3 mt-3">
                                     <h5 class="card-title"> Histórico de transferências </h5>
                                 </div>

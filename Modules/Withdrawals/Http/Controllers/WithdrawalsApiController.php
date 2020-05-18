@@ -2,25 +2,26 @@
 
 namespace Modules\Withdrawals\Http\Controllers;
 
-use Exception;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Modules\Core\Entities\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Gate;
-use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Services\BankService;
-use Spatie\Activitylog\Models\Activity;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Events\WithdrawalRequestEvent;
-use Modules\Core\Services\RemessaOnlineService;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Events\WithdrawalRequestEvent;
+use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\RemessaOnlineService;
+use Modules\Core\Services\SaleService;
+use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Spatie\Activitylog\Models\Activity;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class WithdrawalsApiController
@@ -30,7 +31,7 @@ class WithdrawalsApiController extends Controller
 {
     /**
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -66,7 +67,6 @@ class WithdrawalsApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar lista de saques (WithdrawalsController - index)');
             report($e);
 
             return response()->json([
@@ -78,95 +78,111 @@ class WithdrawalsApiController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function store(Request $request)
     {
+        try {
 
-        $userModel = new User();
+            $userModel = new User();
 
-        if (auth()->user()->status != $userModel->present()->getStatus('withdrawal blocked')) {
-            $data = $request->all();
+            if (auth()->user()->status != $userModel->present()->getStatus('withdrawal blocked')) {
+                $data = $request->all();
 
-            $withdrawalModel = new Withdrawal();
+                $withdrawalModel = new Withdrawal();
 
-            $companyModel = new Company();
+                $companyModel = new Company();
 
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+                $saleService = new SaleService();
 
-            if (Gate::allows('edit', [$company])) {
-                if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
-                    !$company->address_document_status == $companyModel->present()
-                                                                       ->getAddressDocumentStatus('approved') ||
-                    !$company->contract_document_status == $companyModel->present()
-                                                                        ->getContractDocumentStatus('approved')) {
-                    return response()->json([
-                                                'message' => 'error',
-                                                'data'    => [
-                                                    'documents_status' => 'pending',
-                                                ],
-                                            ], 400);
-                }
-                $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
-                $companyDocument = preg_replace("/[^0-9]/", "", $company->company_document);
+                $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
 
-                if ($withdrawalValue < 1000) {
-                    return response()->json([
-                                                'message' => 'Valor de saque precisa ser maior que R$ 10,00',
-                                            ], 400);
-                }
-
-                if ($withdrawalValue > $company->balance) {
-                    return response()->json([
-                                                'message' => 'Valor informado inválido',
-                                            ], 400);
-                }
-
-                /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
-                if ($company->company_type == 1) {
-                    $startDate = Carbon::now()->startOfMonth();
-
-                    $endDate = Carbon::now()->endOfMonth();
-
-                    $withdrawal    = $withdrawalModel->where('company_id', $company->id)
-                                                     ->whereNotIn('status', collect([
-                                                                                        $withdrawalModel->present()
-                                                                                                        ->getStatus('returned'),
-                                                                                        $withdrawalModel->present()
-                                                                                                        ->getStatus('refused'),
-                                                                                    ]))
-                                                     ->whereBetween('created_at', [$startDate, $endDate])->get();
-                    $withdrawalSum = 0;
-                    if (count($withdrawal) > 0) {
-                        $withdrawalSum = $withdrawal->sum('value');
-                    }
-
-                    if ($withdrawalSum + $withdrawalValue > 190000) {
+                if (Gate::allows('edit', [$company])) {
+                    if (!$company->bank_document_status == $companyModel->present()
+                                                                        ->getBankDocumentStatus('approved') ||
+                        !$company->address_document_status == $companyModel->present()
+                                                                           ->getAddressDocumentStatus('approved') ||
+                        !$company->contract_document_status == $companyModel->present()
+                                                                            ->getContractDocumentStatus('approved')) {
                         return response()->json([
-                                                    'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
+                                                    'message' => 'error',
+                                                    'data'    => [
+                                                        'documents_status' => 'pending',
+                                                    ],
                                                 ], 400);
                     }
-                }
+                    $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
 
-                $company->update(['balance' => $company->balance -= $withdrawalValue]);
-
-                /** Verifica se o usuário possui algum saque pendente */
-                $withdrawal = $withdrawalModel->where([
-                                                          ['company_id', $company->id],
-                                                          ['status', $companyModel->present()->getStatus('pending')],
-                                                      ])
-                                              ->first();
-
-                if (empty($withdrawal)) {
-                    $tax = 0;
-
-                    /**
-                     *  Taxa cobrada de R$10,00 quando o saque abaixo de R$500,00.
-                     */
-                    if ($withdrawalValue < 50000) {
-                        $withdrawalValue -= 1000;
-                        $tax             = 1000;
+                    if ($withdrawalValue < 1000) {
+                        return response()->json([
+                                                    'message' => 'Valor de saque precisa ser maior que R$ 10,00',
+                                                ], 400);
                     }
+
+                    if ($withdrawalValue > $company->balance) {
+                        return response()->json([
+                                                    'message' => 'Valor informado inválido',
+                                                ], 400);
+                    }
+
+                    // verify blocked balance
+                    $blockedValue = $saleService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
+
+                    $availableBalance = $company->balance - $blockedValue;
+
+                    if ($withdrawalValue > $availableBalance) {
+                        return response()->json([
+                                                    'message' => 'Valor informado inválido',
+                                                ], 400);
+                    }
+
+                    /** Se o cliente não tiver cadastrado um CNPJ, libera saque somente de 1900 por mês. */
+                    if ($company->company_type == 1) {
+                        $startDate = Carbon::now()->startOfMonth();
+
+                        $endDate = Carbon::now()->endOfMonth();
+
+                        $withdrawal    = $withdrawalModel->where('company_id', $company->id)
+                                                         ->whereNotIn('status', collect([
+                                                                                            $withdrawalModel->present()
+                                                                                                            ->getStatus('returned'),
+                                                                                            $withdrawalModel->present()
+                                                                                                            ->getStatus('refused'),
+                                                                                        ]))
+                                                         ->whereBetween('created_at', [$startDate, $endDate])->get();
+                        $withdrawalSum = 0;
+                        if (count($withdrawal) > 0) {
+                            $withdrawalSum = $withdrawal->sum('value');
+                        }
+
+                        if ($withdrawalSum + $withdrawalValue > 190000) {
+                            return response()->json([
+                                                        'message' => 'Valor de saque máximo no mês para pessoa física é até R$ 1.900,00',
+                                                    ], 400);
+                        }
+                    }
+
+                    $company->update(['balance' => $company->balance -= $withdrawalValue]);
+
+                    /** Verifica se o usuário possui algum saque pendente */
+                    $withdrawal = $withdrawalModel->where([
+                                                              ['company_id', $company->id],
+                                                              [
+                                                                  'status', $companyModel->present()
+                                                                                         ->getStatus('pending'),
+                                                              ],
+                                                          ])
+                                                  ->first();
+
+                    if (empty($withdrawal)) {
+                        $tax = 0;
+
+                        /**
+                         *  Taxa cobrada de R$10,00 quando o saque abaixo de R$500,00.
+                         */
+                        if ($withdrawalValue < 50000) {
+                            $withdrawalValue -= 1000;
+                            $tax             = 1000;
+                        }
 
                     /** Verifica se é o primeiro saque do usuário */
                     $isFirstUserWithdrawal = false;
@@ -193,167 +209,177 @@ class WithdrawalsApiController extends Controller
                     );
                 } else {
 
-                    $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
-                    $withdrawalTax      = $withdrawal->tax;
+                        $withdrawalValueSum = $withdrawal->value + $withdrawalValue;
+                        $withdrawalTax      = $withdrawal->tax;
 
-                    /**
-                     *  Se a soma dos saques pendentes for maior de R$500,00
-                     *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
-                     */
-                    if (!empty($withdrawal->tax) && $withdrawalValueSum > 50000) {
-                        $withdrawalValueSum += 1000;
-                        $withdrawalTax      = 0;
+                        /**
+                         *  Se a soma dos saques pendentes for maior de R$500,00
+                         *  e havia sido cobrada taxa de R$10.00, os R$10.00 são devolvidos.
+                         */
+                        if (!empty($withdrawal->tax) && $withdrawalValueSum > 50000) {
+                            $withdrawalValueSum += 1000;
+                            $withdrawalTax      = 0;
+                        }
+
+                        $withdrawal->update([
+                                                'value' => $withdrawalValueSum,
+                                                'tax'   => $withdrawalTax,
+                                            ]);
                     }
 
-                    $withdrawal->update([
-                                            'value' => $withdrawalValueSum,
-                                            'tax'   => $withdrawalTax,
-                                        ]);
+                    event(new WithdrawalRequestEvent($withdrawal));
+
+                    return response()->json(['message' => 'Saque pendente'], 200);
+                } else {
+                    return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
                 }
-
-                event(new WithdrawalRequestEvent($withdrawal));
-
-                return response()->json(['message' => 'Saque pendente'], 200);
             } else {
-                return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
+                return response()->json(['message' => 'Solicitação de saque bloqueada pela administração. Contate o suporte.'], 400);
             }
-        } else {
-            return response()->json(['message' => 'Solicitação de saque bloqueada pela administração. Contate o suporte.'], 400);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamnte mais tarde!'], 403);
         }
     }
 
     /**
-     * @param $companyId
+     * @param Request $request
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function getAccountInformation(Request $request)
     {
-        $data = $request->all();
+        try {
 
-        $companyModel = new Company();
+            $data = $request->all();
 
-        $bankService    = new BankService();
-        $companyService = new CompanyService();
+            $companyModel = new Company();
 
-        $userModel = new User();
+            $bankService    = new BankService();
+            $companyService = new CompanyService();
 
-        $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
-        if (Gate::allows('edit', [$company])) {
+            $userModel = new User();
 
-            $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
-            if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
-                $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data'    => [
-                            'user_documents_status' => 'pending',
-                        ],
-                    ], 200
-                );
-            }
+            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            if (Gate::allows('edit', [$company])) {
 
-            if (!$user->email_verified) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data'    => [
-                            'email_verified' => 'false',
-                        ],
-                    ], 200
-                );
-            }
-
-            if (!$user->cellphone_verified) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data'    => [
-                            'cellphone_verified' => 'false',
-                        ],
-                    ], 200
-                );
-            }
-
-            if ($companyService->isDocumentValidated($company->id)) {
-
-                $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
-
-                $convertedMoney = $withdrawalValue;
-
-                $iofValue            = 0;
-                $iofTax              = 0.38;
-                $costValue           = 0;
-                $costTax             = auth()->user()->abroad_transfer_tax;
-                $abroadTransferValue = 0;
-                $abroadTax           = $costTax + $iofTax;
-
-                $companyService = new CompanyService();
-
-                $currency         = $companyService->getCurrency($company);
-                $currentQuotation = 0;
-
-                if (!in_array($company->country, ['brazil', 'brasil'])) {
-
-                    $remessaOnlineService = new RemessaOnlineService();
-
-                    $currentQuotation = $remessaOnlineService->getCurrentQuotation($currency);
-
-                    $iofValue            = intval($withdrawalValue / 100 * $iofTax);
-                    $costValue           = intval($withdrawalValue / 100 * $costTax);
-                    $abroadTransferValue = $iofValue + $costValue;
-                    $withdrawalValue     -= $abroadTransferValue;
-                    $convertedMoney      = number_format(intval($withdrawalValue / $currentQuotation) / 100, 2, ',', '.');
+                $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
+                if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
+                    $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
+                    return response()->json(
+                        [
+                            'message' => 'success',
+                            'data'    => [
+                                'user_documents_status' => 'pending',
+                            ],
+                        ], 200
+                    );
                 }
 
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data'    => [
-                            'documents_status' => 'approved',
-                            'bank'             => $bankService->getBankName($company->bank),
-                            'account'          => $company->account,
-                            'account_digit'    => $company->account_digit,
-                            'agency'           => $company->agency,
-                            'agency_digit'     => $company->agency_digit,
-                            'document'         => $company->company_document,
-                            'currency'         => $currency,
-                            'quotation'        => $currentQuotation,
-                            'abroad_transfer'  => [
-                                'tax'             => $abroadTax,
-                                'value'           => number_format(intval($abroadTransferValue) / 100, 2, ',', '.'),
-                                'converted_money' => $convertedMoney,
+                if (!$user->email_verified) {
+                    return response()->json(
+                        [
+                            'message' => 'success',
+                            'data'    => [
+                                'email_verified' => 'false',
                             ],
-                            'iof'              => [
-                                'tax'   => $iofTax,
-                                'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
+                        ], 200
+                    );
+                }
+
+                if (!$user->cellphone_verified) {
+                    return response()->json(
+                        [
+                            'message' => 'success',
+                            'data'    => [
+                                'cellphone_verified' => 'false',
                             ],
-                            'cost'             => [
-                                'tax'   => $costTax,
-                                'value' => number_format(intval($costValue) / 100, 2, ',', '.'),
+                        ], 200
+                    );
+                }
+
+                if ($companyService->isDocumentValidated($company->id)) {
+
+                    $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+
+                    $convertedMoney = $withdrawalValue;
+
+                    $iofValue            = 0;
+                    $iofTax              = 0.38;
+                    $costValue           = 0;
+                    $costTax             = auth()->user()->abroad_transfer_tax;
+                    $abroadTransferValue = 0;
+                    $abroadTax           = $costTax + $iofTax;
+
+                    $companyService = new CompanyService();
+
+                    $currency         = $companyService->getCurrency($company);
+                    $currentQuotation = 0;
+
+                    if (!in_array($company->country, ['brazil', 'brasil'])) {
+
+                        $remessaOnlineService = new RemessaOnlineService();
+
+                        $currentQuotation = $remessaOnlineService->getCurrentQuotation($currency);
+
+                        $iofValue            = intval($withdrawalValue / 100 * $iofTax);
+                        $costValue           = intval($withdrawalValue / 100 * $costTax);
+                        $abroadTransferValue = $iofValue + $costValue;
+                        $withdrawalValue     -= $abroadTransferValue;
+                        $convertedMoney      = number_format(intval($withdrawalValue / $currentQuotation) / 100, 2, ',', '.');
+                    }
+
+                    return response()->json(
+                        [
+                            'message' => 'success',
+                            'data'    => [
+                                'documents_status' => 'approved',
+                                'bank'             => $bankService->getBankName($company->bank),
+                                'account'          => $company->account,
+                                'account_digit'    => $company->account_digit,
+                                'agency'           => $company->agency,
+                                'agency_digit'     => $company->agency_digit,
+                                'document'         => $company->company_document,
+                                'currency'         => $currency,
+                                'quotation'        => $currentQuotation,
+                                'abroad_transfer'  => [
+                                    'tax'             => $abroadTax,
+                                    'value'           => number_format(intval($abroadTransferValue) / 100, 2, ',', '.'),
+                                    'converted_money' => $convertedMoney,
+                                ],
+                                'iof'              => [
+                                    'tax'   => $iofTax,
+                                    'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
+                                ],
+                                'cost'             => [
+                                    'tax'   => $costTax,
+                                    'value' => number_format(intval($costValue) / 100, 2, ',', '.'),
+                                ],
                             ],
-                        ],
-                    ], 200
-                );
+                        ], 200
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            'message' => 'success',
+                            'data'    => [
+                                'documents_status' => 'pending',
+                            ],
+                        ], 200
+                    );
+                }
             } else {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data'    => [
-                            'documents_status' => 'pending',
-                        ],
-                    ], 200
-                );
+                return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
-        } else {
-            return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
 
     /**
      * @return JsonResponse
-     * @throws PresenterException
      */
     public function checkAllowed()
     {
@@ -365,7 +391,6 @@ class WithdrawalsApiController extends Controller
                                                                                          ->getStatus('withdrawal blocked'),
                                     ]);
         } catch (Exception $e) {
-            Log::warning('Erro ao verificar permisssão de saqea (WithdrawalsApiController - checkAllowed)');
             report($e);
 
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
