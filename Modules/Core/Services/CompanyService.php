@@ -226,7 +226,7 @@ class CompanyService
 
         $pendingBalance = $transactionModel->where('company_id', $company->id)
                                             ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                            ->whereDate('release_date', '>', Carbon::today()->toDateString())
+                                            // ->whereDate('release_date', '>', Carbon::today()->toDateString())
                                             ->sum('value');
 
         $transactionsAnticipatedValue = $transactionModel->with('anticipatedTransactions')
