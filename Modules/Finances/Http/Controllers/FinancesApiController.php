@@ -13,6 +13,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AnticipationService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
+use Modules\Core\Services\SaleService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
