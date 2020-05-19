@@ -272,7 +272,7 @@ class TrackingService
 
         $transactionStatus['status_enum'] = 'blocked';
 
-        if ($filters['transaction_status'] != 'blocked' && $filters['transaction_status'] != 'all') {
+        if (!empty($filters['transaction_status']) && $filters['transaction_status'] != 'blocked' && $filters['transaction_status'] != 'all') {
             $transactionStatus['status_enum'] = $transactionPresenter->getStatusEnum($filters['transaction_status']);
         }
 
