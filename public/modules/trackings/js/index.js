@@ -100,6 +100,7 @@ $(() => {
             'project': $('#project-select').val(),
             'date_updated': $('#date_updated').val(),
             'sale': $('#sale').val().replace('#', ''),
+            'transaction_status': $("#status_commission").val(),
         };
 
         if (urlParams) {

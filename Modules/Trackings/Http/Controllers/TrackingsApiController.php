@@ -37,17 +37,17 @@ class TrackingsApiController extends Controller
     {
         try {
             if (empty($request->input('page')) || $request->input('page') == '1') {
-
-                activity()->on(new Tracking())->tap(function(Activity $activity) {
-                    $activity->log_name = 'visualization';
-                })->log('Visualizou tela todos os códigos de rastreios');
+                activity()->on(new Tracking())->tap(
+                    function (Activity $activity) {
+                        $activity->log_name = 'visualization';
+                    }
+                )->log('Visualizou tela todos os códigos de rastreios');
             }
             $trackingService = new TrackingService();
 
             $data = $request->all();
 
             if (!empty($data["date_updated"])) {
-
                 $trackings = $trackingService->getPaginatedTrackings($data);
 
                 return TrackingResource::collection($trackings);
@@ -69,35 +69,43 @@ class TrackingsApiController extends Controller
     public function show($id)
     {
         try {
-            $trackingModel   = new Tracking();
+            $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
             $trackingId = current(Hashids::decode($id));
 
-            activity()->on($trackingModel)->tap(function(Activity $activity) use ($id) {
-                $activity->log_name   = 'visualization';
-                $activity->subject_id = current(Hashids::decode($id));
-            })->log('Visualizou tela detalhes do rastreamento');
+            activity()->on($trackingModel)->tap(
+                function (Activity $activity) use ($id) {
+                    $activity->log_name = 'visualization';
+                    $activity->subject_id = current(Hashids::decode($id));
+                }
+            )->log('Visualizou tela detalhes do rastreamento');
 
-            $tracking = $trackingModel->with([
-                                                 'productPlanSale.plan.project.domains',
-                                                 'product',
-                                                 'delivery',
-                                             ])->find($trackingId);
+            $tracking = $trackingModel->with(
+                [
+                    'productPlanSale.plan.project.domains',
+                    'product',
+                    'delivery',
+                ]
+            )->find($trackingId);
 
             $apiTracking = $trackingService->findTrackingApi($tracking);
 
             $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
-            $checkpoints  = collect();
+            $checkpoints = collect();
 
             //objeto postado
-            $checkpoints->add([
-                                  'tracking_status_enum' => $postedStatus,
-                                  'tracking_status'      => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
-                                                                                                                            ->getTrackingStatusEnum($postedStatus)),
-                                  'created_at'           => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                                  'event'                => 'Código de rastreio informado',
-                              ]);
+            $checkpoints->add(
+                [
+                    'tracking_status_enum' => $postedStatus,
+                    'tracking_status' => __(
+                        'definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                            ->getTrackingStatusEnum($postedStatus)
+                    ),
+                    'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                    'event' => 'Código de rastreio informado',
+                ]
+            );
 
             $checkpointsApi = $trackingService->getCheckpointsApi($tracking, $apiTracking);
 
@@ -122,7 +130,7 @@ class TrackingsApiController extends Controller
     public function detail($trackingCode)
     {
         try {
-            $trackingModel   = new Tracking();
+            $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
             $tracking = $trackingModel->where('tracking_code', $trackingCode)->first();
@@ -131,26 +139,30 @@ class TrackingsApiController extends Controller
                 $apiTracking = $trackingService->findTrackingApi($tracking);
 
                 $postedStatus = $tracking->present()->getTrackingStatusEnum('posted');
-                $checkpoints  = collect();
+                $checkpoints = collect();
 
                 //objeto postado
-                $checkpoints->add([
-                                      'tracking_status_enum' => $postedStatus,
-                                      'tracking_status'      => __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
-                                                                                                                                ->getTrackingStatusEnum($postedStatus)),
-                                      'created_at'           => Carbon::parse($tracking->created_at)->format('d/m/Y'),
-                                      'event'                => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
-                                  ]);
+                $checkpoints->add(
+                    [
+                        'tracking_status_enum' => $postedStatus,
+                        'tracking_status' => __(
+                            'definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
+                                ->getTrackingStatusEnum($postedStatus)
+                        ),
+                        'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
+                        'event' => 'Objeto postado. As informações de rastreio serão atualizadas nos próximos dias.',
+                    ]
+                );
 
                 $checkpointsApi = $trackingService->getCheckpointsApi($tracking, $apiTracking);
 
                 $checkpoints = $checkpoints->merge($checkpointsApi)->unique()->sortKeysDesc()->values()->toArray();
 
                 $trackingArray = [
-                    'id'                   => Hashids::encode($tracking->id),
-                    'tracking_code'        => $tracking->tracking_code,
+                    'id' => Hashids::encode($tracking->id),
+                    'tracking_code' => $tracking->tracking_code,
                     'tracking_status_enum' => $tracking->tracking_status_enum,
-                    'checkpoints'          => $checkpoints,
+                    'checkpoints' => $checkpoints,
                 ];
 
                 return response()->json(['data' => $trackingArray]);
@@ -177,12 +189,13 @@ class TrackingsApiController extends Controller
             $data = $request->all();
 
             if (!empty($data["date_updated"])) {
-
                 $resume = $trackingService->getResume($data);
 
-                return response()->json([
-                                            'data' => $resume,
-                                        ]);
+                return response()->json(
+                    [
+                        'data' => $resume,
+                    ]
+                );
             } else {
                 return response()->json(['message' => 'Erro ao exibir resumo dos rastreamentos'], 400);
             }
@@ -194,9 +207,12 @@ class TrackingsApiController extends Controller
         }
     }
 
-    public function getBlockedBalance() {
+    /**
+     * @return JsonResponse
+     */
+    public function getBlockedBalance()
+    {
         try {
-
             $salesModel = new Sale();
             $companiesModel = new Company();
 
@@ -206,8 +222,10 @@ class TrackingsApiController extends Controller
                 ->pluck('id')
                 ->toArray();
 
-            $blockedBalance = $salesModel->select(DB::raw('sum(transactions.value) / 100 as total'),
-                DB::raw('count(distinct transactions.sale_id) as sales'))
+            $blockedBalance = $salesModel->select(
+                DB::raw('sum(transactions.value) / 100 as total'),
+                DB::raw('count(distinct transactions.sale_id) as sales')
+            )
                 ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
                 ->where('sales.owner_id', $userAccountOwnerId)
                 ->where('sales.status', $salesModel->present()->getStatus('approved'))
@@ -217,15 +235,19 @@ class TrackingsApiController extends Controller
                 ->whereDoesntHave('tracking')
                 ->first();
 
-                return response()->json([
+            return response()->json(
+                [
                     'total' => number_format($blockedBalance->total, 2, ',', '.'),
                     'sales' => $blockedBalance->sales,
-                ]);
-
+                ]
+            );
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao obter saldo bloqueado por códigos de rasteio não informados'], 400);
+            return response()->json(
+                ['message' => 'Erro ao obter saldo bloqueado por códigos de rasteio não informados'],
+                400
+            );
         }
     }
 
@@ -253,25 +275,35 @@ class TrackingsApiController extends Controller
                     if (!empty($tracking)) {
                         $apiResult = $trackingService->sendTrackingToApi($tracking);
                         if (!empty($apiResult)) {
+                            $tracking->update(
+                                [
+                                    'tracking_code' => $data['tracking_code'],
+                                ]
+                            );
 
-                            $tracking->update([
-                                'tracking_code' => $data['tracking_code'],
-                            ]);
-
-                            return response()->json([
-                                'message' => 'Código de rastreio alterado',
-                                'data' => [
-                                    'id' => Hashids::encode($tracking->id),
-                                    'tracking_code' => $tracking->tracking_code,
-                                    'tracking_status_enum' => $tracking->tracking_status_enum,
-                                    'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
-                                            ->getTrackingStatusEnum($tracking->tracking_status_enum)),
+                            return response()->json(
+                                [
+                                    'message' => 'Código de rastreio alterado',
+                                    'data' => [
+                                        'id' => Hashids::encode($tracking->id),
+                                        'tracking_code' => $tracking->tracking_code,
+                                        'tracking_status_enum' => $tracking->tracking_status_enum,
+                                        'tracking_status' => Lang::get(
+                                            'definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present(
+                                            )
+                                                ->getTrackingStatusEnum($tracking->tracking_status_enum)
+                                        ),
+                                    ],
                                 ],
-                            ], 200);
+                                200
+                            );
                         } else {
-                            return response()->json([
-                                'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
-                            ], 400);
+                            return response()->json(
+                                [
+                                    'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
+                                ],
+                                400
+                            );
                         }
                     } else {  //create
                         $tracking = new Tracking();
@@ -280,31 +312,46 @@ class TrackingsApiController extends Controller
                         if (!empty($apiResult)) {
                             $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
 
-                            return response()->json([
-                                'message' => 'Código de rastreio salvo',
-                                'data' => [
-                                    'id' => Hashids::encode($tracking->id),
-                                    'tracking_code' => $tracking->tracking_code,
-                                    'tracking_status_enum' => $tracking->tracking_status_enum,
-                                    'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
-                                            ->getTrackingStatusEnum($tracking->tracking_status_enum)),
+                            return response()->json(
+                                [
+                                    'message' => 'Código de rastreio salvo',
+                                    'data' => [
+                                        'id' => Hashids::encode($tracking->id),
+                                        'tracking_code' => $tracking->tracking_code,
+                                        'tracking_status_enum' => $tracking->tracking_status_enum,
+                                        'tracking_status' => Lang::get(
+                                            'definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present(
+                                            )
+                                                ->getTrackingStatusEnum($tracking->tracking_status_enum)
+                                        ),
+                                    ],
                                 ],
-                            ], 200);
+                                200
+                            );
                         } else {
-                            return response()->json([
-                                'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
-                            ], 400);
+                            return response()->json(
+                                [
+                                    'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
+                                ],
+                                400
+                            );
                         }
                     }
                 } else {
-                    return response()->json([
-                        'message' => 'Erro ao salvar código de rastreio',
-                    ], 400);
+                    return response()->json(
+                        [
+                            'message' => 'Erro ao salvar código de rastreio',
+                        ],
+                        400
+                    );
                 }
             } else {
-                return response()->json([
-                    'message' => 'Erro ao salvar código de rastreio',
-                ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Erro ao salvar código de rastreio',
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar alterar código de rastreio (TrackingApiController - store)');
@@ -321,16 +368,14 @@ class TrackingsApiController extends Controller
     public function notifyClient($trackingId)
     {
         try {
-            $trackingModel  = new Tracking();
+            $trackingModel = new Tracking();
             $productService = new ProductService();
 
             if (isset($trackingId)) {
-
                 $tracking = $trackingModel->with('sale')
-                                          ->find(current(Hashids::decode($trackingId)));
+                    ->find(current(Hashids::decode($trackingId)));
 
                 if ($tracking && $tracking->sale) {
-
                     $saleProducts = $productService->getProductsBySale($tracking->sale);
                     event(new TrackingCodeUpdatedEvent($tracking->sale, $tracking, $saleProducts));
 
@@ -357,9 +402,11 @@ class TrackingsApiController extends Controller
     public function export(Request $request)
     {
         try {
-            activity()->tap(function(Activity $activity) {
-                $activity->log_name = 'created';
-            })->log('Exportou código de rastreio');
+            activity()->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'created';
+                }
+            )->log('Exportou código de rastreio');
 
             $data = $request->all();
 
@@ -385,9 +432,11 @@ class TrackingsApiController extends Controller
     public function import(Request $request)
     {
         try {
-            activity()->tap(function(Activity $activity) {
-                $activity->log_name = 'created';
-            })->log('Importou código de rastreio');
+            activity()->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'created';
+                }
+            )->log('Importou código de rastreio');
 
             if ($request->hasFile('import_xlsx')) {
                 $extension = strtolower(request()->file('import_xlsx')->getClientOriginalExtension());
@@ -395,7 +444,9 @@ class TrackingsApiController extends Controller
                     $user = auth()->user();
                     Excel::queueImport(new TrackingsImport($user), request()->file('import_xlsx'));
 
-                    return response()->json(['message' => 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!']);
+                    return response()->json(
+                        ['message' => 'A importação começou! Você receberá uma notificação quando tudo estiver pronto!']
+                    );
                 } else {
                     return response()->json(['message' => 'Formato de arquivo inválido!'], 400);
                 }
