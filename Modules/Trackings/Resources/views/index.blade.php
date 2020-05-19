@@ -217,7 +217,7 @@
                             <option value="all">Todos</option>
                             <option value="transfered">Transferido</option>
                             <option value="pending">Pendente</option>
-                            <option value="blocked">Não transferido</option>
+                            <option value="blocked">Não transferido por falta de rastreio</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
