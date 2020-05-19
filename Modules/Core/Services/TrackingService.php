@@ -29,7 +29,7 @@ class TrackingService
      */
     public function sendTrackingToApi($trackingCode)
     {
-        if(!empty($trackingCode)) {
+        if (!empty($trackingCode)) {
             $trackingmoreService = new TrackingmoreService();
             return $trackingmoreService->createTracking($trackingCode);
         } else {
@@ -38,7 +38,7 @@ class TrackingService
     }
 
     /**
-     * @param Tracking $tracking
+     * @param  Tracking  $tracking
      * @return mixed|null
      * @throws PresenterException
      */
@@ -48,7 +48,6 @@ class TrackingService
         //seja posterior a data da migração. Caso contrário busca as informações na
         //perfectlog/aftership
         if ($tracking->created_at->gte($this->migrationDate)) {
-
             $trackingmoreService = new TrackingmoreService();
 
             $apiTracking = $trackingmoreService->find($tracking->tracking_code);
@@ -96,7 +95,7 @@ class TrackingService
 
     /**
      * @param $status
-     * @param bool $beforeMigration
+     * @param  bool  $beforeMigration
      * @return int|mixed
      * @throws PresenterException
      */
@@ -117,7 +116,7 @@ class TrackingService
     }
 
     /**
-     * @param Tracking $tracking
+     * @param  Tracking  $tracking
      * @param $apiTracking
      * @return Collection
      * @throws PresenterException
@@ -129,20 +128,17 @@ class TrackingService
         //if de 10k. Trata os checkpoints da trackingmore caso a data de criação
         //seja posterior a data da migração. Caso contrário trata os checkpoints
         //da perfectlog/aftership
-        if($tracking->created_at->gte($this->migrationDate)) {
-
+        if ($tracking->created_at->gte($this->migrationDate)) {
             $apiCheckpoints = array_reverse($apiTracking->origin_info->trackinfo ?? []);
             $apiCheckpoints += array_reverse($apiTracking->destination_info->trackinfo ?? []);
 
             if (!empty($apiCheckpoints)) {
                 foreach ($apiCheckpoints as $log) {
-
-                    $event = $log->Details ? $log->StatusDescription . ' - ' . $log->Details : $log->StatusDescription;
+                    $event = $log->Details ? $log->StatusDescription.' - '.$log->Details : $log->StatusDescription;
 
                     if (!empty($event)) {
-
                         $status_enum = $this->parseStatusApi($log->checkpoint_status ?? 'notfound');
-                        $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+                        $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                         //remove caracteres chineses e informações indesejadas
                         $blacklistWords = [
@@ -177,8 +173,8 @@ class TrackingService
                             'zhongxin',
                         ];
 
-                        if(Str::contains(strtolower($event), $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event))
-                        {
+                        if (Str::contains(strtolower($event),
+                                $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event)) {
                             $event = 'Encomenda em movimentação no exterior';
                         }
 
@@ -195,7 +191,7 @@ class TrackingService
             if (!empty($apiTracking->trail)) {
                 foreach ($apiTracking->trail as $log) {
                     $status_enum = $this->parseStatusApi($log->tracking_status, true);
-                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                     $event = $log->event;
 
@@ -243,7 +239,7 @@ class TrackingService
             'delivery_id' => $productPlanSale->sale->delivery->id,
             'tracking_code' => $trackingCode,
             'tracking_status_enum' => $statusEnum ?? $trackingModel->present()
-                ->getTrackingStatusEnum('posted'),
+                    ->getTrackingStatusEnum('posted'),
         ]);
 
         return $tracking;
@@ -251,7 +247,7 @@ class TrackingService
 
     /**
      * @param $filters
-     * @param int $userId
+     * @param  int  $userId
      * @return Builder
      * @throws PresenterException
      */
@@ -260,9 +256,8 @@ class TrackingService
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
         $salePresenter = (new Sale())->present();
-        $transactionPresenter = (new Transaction())->present();
 
-        if(!$userId){
+        if (!$userId) {
             $userId = auth()->user()->account_owner_id;
         }
 
@@ -270,56 +265,38 @@ class TrackingService
             $salePresenter->getStatus('approved'),
         ];
 
-        $transactionStatus['status_enum'] = 'blocked';
+        $productPlanSales = $productPlanSaleModel->with(['tracking', 'sale.delivery', 'sale.customer', 'product',]);
 
-        if (!empty($filters['transaction_status']) && $filters['transaction_status'] != 'blocked' && $filters['transaction_status'] != 'all') {
-            $transactionStatus['status_enum'] = $transactionPresenter->getStatusEnum($filters['transaction_status']);
-        }
+        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $productPlanSales) {
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+            $query->whereBetween('end_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                ->whereIn('status', $saleStatus)
+                ->where('owner_id', $userId);
 
-        $transactionStatus['type'] = $transactionPresenter->getType('producer');
+            if (isset($filters['sale'])) {
+                $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
+                $query->where('id', $saleId);
+            }
 
-        $productPlanSales = $productPlanSaleModel
-            ->with(['tracking', 'sale.delivery', 'sale.customer', 'product',])
-            ->whereHas(
-                'sale',
-                function ($query) use ($filters, $saleStatus, $userId, $transactionStatus) {
-                    //tipo da data e periodo obrigatorio
-                    $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-                    $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-                        ->whereIn('status', $saleStatus)
-                        ->where('owner_id', $userId);
-
-                    if (isset($filters['sale'])) {
-                        $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
-                        $query->where('id', $saleId);
+            //filtro transactions
+            if (isset($filters['transaction_status'])) {
+                $query->whereHas('transactions', function ($queryTransaction) use ($filters) {
+                    $transactionPresenter = (new Transaction())->present();
+                    if ($filters['transaction_status'] != 'blocked') {
+                        $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
+                        $queryTransaction->where('status_enum', $statusEnum);
+                    } else {
+                        $queryTransaction->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
-
-                    if (isset($filters['transaction_status']) && $filters['transaction_status'] != 'all') {
-                        $query->whereHas(
-                            'transactions',
-                            function ($queryTransaction) use ($transactionStatus) {
-                                if ($transactionStatus['status_enum'] != 'blocked') {
-                                    $queryTransaction->where('status_enum', $transactionStatus['status_enum']);
-                                } else {
-                                    if ($transactionStatus['status_enum'] == 'blocked') {
-                                        $queryTransaction->where('release_date', '<=', Carbon::now()->format('Y-m-d'));
-                                    }
-                                }
-
-                                $queryTransaction
-                                    ->where('type', $transactionStatus['type'])
-                                    ->whereNull(
-                                        'invitation_id'
-                                    );
-                            }
-                        );
-
-                        if ($transactionStatus['status_enum'] == 'blocked') {
-                            $query->whereDoesntHave('tracking');
-                        }
-                    }
+                    $queryTransaction->where('type', $transactionPresenter->getType('producer'))
+                        ->whereNull('invitation_id');
+                });
+                if ($filters['transaction_status'] != 'blocked') {
+                    $productPlanSales->doesntHave('tracking');
                 }
-            );
+            }
+        });
 
 
         if (isset($filters['status'])) {
@@ -342,7 +319,7 @@ class TrackingService
             $productPlanSales->whereHas(
                 'tracking',
                 function ($query) use ($filters) {
-                    $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
+                    $query->where('tracking_code', 'like', '%'.$filters['tracking_code'].'%');
                 }
             );
         }

@@ -214,7 +214,7 @@
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                         <label for="status_commission">Status da comissão</label>
                         <select name='status_commission' id="status_commission" class="form-control select-pad">
-                            <option value="all">Todos</option>
+                            <option value="">Todos</option>
                             <option value="transfered">Transferido</option>
                             <option value="pending">Pendente</option>
                             <option value="blocked">Não transferido por falta de rastreio</option>
@@ -406,7 +406,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=1') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=14') }}"></script>
     @endpush
 
 @endsection
