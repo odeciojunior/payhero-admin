@@ -244,18 +244,48 @@ class TrackingsApiController extends Controller
             if (!empty($data['tracking_code']) && !empty($data['product_plan_sale_id'])) {
                 $ppsId = current(Hashids::decode($data['product_plan_sale_id']));
                 if ($ppsId) {
-                    $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.plansSales', 'sale.delivery'])
+                    $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.delivery'])
                         ->find($ppsId);
 
                     $tracking = $productPlanSale->tracking;
 
-                    //update
-                    if (!empty($tracking)) {
-                        $apiResult = $trackingService->sendTrackingToApi($tracking);
-                        if (!empty($apiResult)) {
+                    //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
+                    $sale = $productPlanSale->sale;
+                    $exists = $trackingModel->where('trackings.tracking_code', $data['tracking_code'])
+                        ->where('sale_id', '!=', $sale->id)
+                        ->whereHas('sale', function ($query) use ($sale) {
+                            $query->where('owner_id', $sale->owner_id);
+                        })->exists();
+                    if($exists) {
+                        return response()->json([
+                            'message' => 'Esse código de rastreio já foi cadastrado em outra venda!',
+                        ], 400);
+                    }
 
+                    $apiResult = $trackingService->sendTrackingToApi($data['tracking_code']);
+
+                    if (!empty($apiResult)) {
+
+                        //verifica se a data de postagem na transportadora é menor que a data da venda
+                        if (!empty($apiResult->origin_info)) {
+                            $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
+                            if ($postDate->lt($productPlanSale->created_at)) {
+                                if (!$apiResult->already_exists) { // deleta na api caso seja recém criado
+                                    $trackingService->deleteTrackingApi($apiResult);
+                                }
+                                return response()->json([
+                                    'message' => 'A data de postagem não com corresponde com a data da venda',
+                                ], 400);
+                            }
+                        }
+
+                        $statusEnum = $trackingService->parseStatusApi($apiResult->status);
+
+                        //update
+                        if (!empty($tracking)) {
                             $tracking->update([
                                 'tracking_code' => $data['tracking_code'],
+                                'tracking_status_enum' => $statusEnum
                             ]);
 
                             return response()->json([
@@ -264,21 +294,13 @@ class TrackingsApiController extends Controller
                                     'id' => Hashids::encode($tracking->id),
                                     'tracking_code' => $tracking->tracking_code,
                                     'tracking_status_enum' => $tracking->tracking_status_enum,
-                                    'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
+                                    'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.'.$trackingModel->present()
                                             ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                                 ],
                             ], 200);
-                        } else {
-                            return response()->json([
-                                'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
-                            ], 400);
-                        }
-                    } else {  //create
-                        $tracking = new Tracking();
-                        $tracking->tracking_code = $data['tracking_code'];
-                        $apiResult = $trackingService->sendTrackingToApi($tracking);
-                        if (!empty($apiResult)) {
-                            $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale);
+                        } else {  //create
+
+                            $tracking = $trackingService->createTracking($data['tracking_code'], $productPlanSale, $statusEnum);
 
                             return response()->json([
                                 'message' => 'Código de rastreio salvo',
@@ -286,15 +308,15 @@ class TrackingsApiController extends Controller
                                     'id' => Hashids::encode($tracking->id),
                                     'tracking_code' => $tracking->tracking_code,
                                     'tracking_status_enum' => $tracking->tracking_status_enum,
-                                    'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
+                                    'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.'.$trackingModel->present()
                                             ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                                 ],
                             ], 200);
-                        } else {
-                            return response()->json([
-                                'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
-                            ], 400);
                         }
+                    } else {
+                        return response()->json([
+                            'message' => 'O código de rastreio é inválido ou não foi reconhecido pela transportadora',
+                        ], 400);
                     }
                 } else {
                     return response()->json([

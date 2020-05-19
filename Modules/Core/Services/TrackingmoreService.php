@@ -33,15 +33,15 @@ class TrackingmoreService
     }
 
     /**
-     * @param null $filters
+     * @param $trackingNumber
      * @return mixed
      * @see https://www.trackingmore.com/api-track-list-all-track.html#get
      */
-    public function getAllTrackings($filters = null)
+    public function find($trackingNumber)
     {
-        $result = $this->call('/trackings/get', $filters);
-
-        return json_decode($result);
+        $result = $this->call('/trackings/get', ['numbers' => $trackingNumber]);
+        $result = json_decode($result);
+        return current($result->data->items ?? []) ?? null;
     }
 
     /**
@@ -52,49 +52,72 @@ class TrackingmoreService
      */
     public function createTracking($trackingNumber, $optionalParams = null)
     {
-        //jadlog
-        if (strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber)) {
-            $carrierCode = 'dpd-brazil';
+        $result = $this->find($trackingNumber);
+
+        if(!empty($result)) {
+            $result->already_exists = true;
+            return $result;
         } else {
-            $carrierCode = $this->detectCarrier($trackingNumber);
 
-            if ($carrierCode == "china-ems") $carrierCode = "china-post";
-        }
+            //jadlog
+            if (strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber)) {
+                $carrierCode = 'dpd-brazil';
+            } else {
+                $carrierCode = $this->detectCarrier($trackingNumber);
 
-        $data = [
-            'tracking_number' => $trackingNumber,
-            'carrier_code' => $carrierCode,
-        ];
-
-        if ($optionalParams) {
-            $data += $optionalParams;
-        }
-
-        $response = $this->call('/trackings/post', $data, 'POST');
-
-        $result = json_decode($response);
-
-        $metaCode = $result->meta->code ?? 0;
-
-        if (!empty($result->data)) {
-            return $result->data;
-        } elseif($metaCode == 4016){ //já existe
-            return true;
-        } else {
-            if ($metaCode == 4032 || $metaCode == 4015) {
-                Log::error('TrackingmoreService - Cannot detect courier - ' . $trackingNumber);
+                if ($carrierCode == "china-ems") {
+                    $carrierCode = "china-post";
+                }
             }
-            return null;
+
+            $data = [
+                'tracking_number' => $trackingNumber,
+                'carrier_code' => $carrierCode,
+            ];
+
+            if ($optionalParams) {
+                $data += $optionalParams;
+            }
+
+            $response = $this->call('/trackings/post', $data, 'POST');
+            $result = json_decode($response);
+            $metaCode = $result->meta->code ?? 0;
+
+            $result = $this->find($trackingNumber);
+
+            if (!empty($result)) {
+                return $result;
+            } else {
+                if ($metaCode == 4032 || $metaCode == 4015) {
+                    Log::error('TrackingmoreService - Cannot detect courier - '.$trackingNumber);
+                }
+                return null;
+            }
         }
     }
 
     /**
+     * @param $carrierCode
      * @param $trackingNumber
-     * @return
+     * @return mixed
+     * @see https://www.trackingmore.com/api-track-delete-a-tracking-item.html#single-delete
+     */
+    public function delete($carrierCode, $trackingNumber){
+
+        $response = $this->call("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
+
+        $result = json_decode($response);
+
+        return $result->meta->code == 200;
+    }
+
+    /**
+     * @param $trackingNumber
+     * @return mixed
      * @see https://www.trackingmore.com/api-carriers-detect-carrier.html
      */
-    private function detectCarrier($trackingNumber){
-
+    private function detectCarrier($trackingNumber)
+    {
         $data = ['tracking_number' => $trackingNumber];
 
         $response = $this->call('/carriers/detect', $data, 'POST');
@@ -102,6 +125,17 @@ class TrackingmoreService
         $result = json_decode($response);
 
         return $result->data[0]->code ?? null;
+    }
+
+    /**
+     * @return mixed
+     * @see https://www.trackingmore.com/api-carriers-list-all-carriers.html
+     */
+    public function getAllCarriers()
+    {
+        $response = $this->call('/carriers');
+
+        return json_decode($response);
     }
 
     /**

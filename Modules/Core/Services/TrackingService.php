@@ -23,15 +23,16 @@ class TrackingService
     private $migrationDate = '2020-02-03 10:16:00';
 
     /**
-     * @param Tracking $tracking
+     * @param $trackingCode
      * @return mixed
      */
-    public function sendTrackingToApi(Tracking $tracking)
+    public function sendTrackingToApi($trackingCode)
     {
-        if(!empty($tracking->tracking_code)) {
+        if(!empty($trackingCode)) {
             $trackingmoreService = new TrackingmoreService();
-
-            return $trackingmoreService->createTracking($tracking->tracking_code);
+            return $trackingmoreService->createTracking($trackingCode);
+        } else {
+            return null;
         }
     }
 
@@ -49,9 +50,9 @@ class TrackingService
 
             $trackingmoreService = new TrackingmoreService();
 
-            $response = $trackingmoreService->getAllTrackings(['numbers' => $tracking->tracking_code, 'lang' => 'cn']);
+            $response = $trackingmoreService->find($tracking->tracking_code);
 
-            $apiTracking = $response->data->items[0] ?? null;
+            $apiTracking = current($response->data->items) ?? null;
 
             if (isset($apiTracking->status)) {
                 $status = $this->parseStatusApi($apiTracking->status);
@@ -77,6 +78,21 @@ class TrackingService
 
             return $apiTracking;
         }
+    }
+
+    /**
+     * @param $apiTracking
+     * @return mixed
+     */
+    public function deleteTrackingApi($apiTracking)
+    {
+        $trackingmoreService = new TrackingmoreService();
+
+        $carrierCode = $apiTracking->carrier_code;
+
+        $trackingNumber = $apiTracking->tracking_number;
+
+        return $trackingmoreService->delete($carrierCode, $trackingNumber);
     }
 
     /**
@@ -210,12 +226,13 @@ class TrackingService
     }
 
     /**
-     * @param string $trackingCode
-     * @param ProductPlanSale $productPlanSale
+     * @param  string  $trackingCode
+     * @param  ProductPlanSale  $productPlanSale
+     * @param  int|null  $statusEnum
      * @return mixed
      * @throws PresenterException
      */
-    public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale)
+    public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale, $statusEnum = null)
     {
         $trackingModel = new Tracking();
 
@@ -226,7 +243,7 @@ class TrackingService
             'amount' => $productPlanSale->amount,
             'delivery_id' => $productPlanSale->sale->delivery->id,
             'tracking_code' => $trackingCode,
-            'tracking_status_enum' => $trackingModel->present()
+            'tracking_status_enum' => $statusEnum ?? $trackingModel->present()
                 ->getTrackingStatusEnum('posted'),
         ]);
 
@@ -310,6 +327,11 @@ class TrackingService
         return $productPlanSales->orderBy('id', 'desc')->paginate(10);
     }
 
+    /**
+     * @param $filters
+     * @return array
+     * @throws PresenterException
+     */
     public function getResume($filters)
     {
         $trackingPresenter = (new Tracking())->present();
