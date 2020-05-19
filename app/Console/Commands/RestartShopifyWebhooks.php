@@ -41,47 +41,37 @@ class RestartShopifyWebhooks extends Command
      */
     public function handle()
     {
+        foreach(ShopifyIntegration::all() as $shopifyIntegration){
 
-        $integrations = ShopifyIntegration::all();
-
-        $total = $integrations->count();
-
-        foreach ($integrations as $key => $integration) {
-            $count = $key + 1;
-            $this->info("Loja {$count} de {$total}: $integration->url_store");
-            try {
-                $shopifyService = new ShopifyService($integration->url_store, $integration->token);
-
-                if (count($shopifyService->getShopWebhook()) != 3) {
-
-                    $this->line('Excluindo webhooks antigos...');
-                    $shopifyService->deleteShopWebhook();
-
-                    $this->line('Recriando webhooks...');
-                    $this->createShopWebhook([
-                        "topic" => "products/create",
-                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($integration->project_id),
-                        "format" => "json",
-                    ]);
-
-                    $this->createShopWebhook([
-                        "topic" => "products/update",
-                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($integration->project_id),
-                        "format" => "json",
-                    ]);
-
-                    $this->createShopWebhook([
-                        "topic" => "orders/updated",
-                        "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($integration->project_id) . '/tracking',
-                        "format" => "json",
-                    ]);
-                }
-            } catch (Exception $e) {
-                $this->error('ERRO: ' . $e->getMessage());
+            try{
+                $shopifyService = new ShopifyService($shopifyIntegration->url_store,$shopifyIntegration->token);
+    
+                $shopifyService->deleteShopWebhook();
+    
+                $shopifyService->createShopWebhook([
+                    "topic"   => "products/create",
+                    "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                    "format"  => "json",
+                ]);
+    
+                $shopifyService->createShopWebhook([
+                    "topic"   => "products/update",
+                    "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id),
+                    "format"  => "json",
+                ]);
+    
+                $shopifyService->createShopWebhook([
+                    "topic"   => "orders/updated",
+                    "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($shopifyIntegration->project_id) . '/tracking',
+                    "format"  => "json",
+                ]);
+    
             }
+            catch(\Exception $e){
+                //
+            }
+    
         }
-
-        $this->info('ACABOOOOOOOOOU!');
     }
 
 }
