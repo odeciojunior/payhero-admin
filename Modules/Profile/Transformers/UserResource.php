@@ -2,6 +2,7 @@
 
 namespace Modules\Profile\Transformers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\UserService;
@@ -13,8 +14,7 @@ use Modules\Core\Services\UserService;
 class UserResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     * @param \Illuminate\Http\Request
+     * @param Request $request
      * @return array
      */
     public function toArray($request)
@@ -48,6 +48,8 @@ class UserResource extends JsonResource
                                                   ->getPersonalDocumentStatus($this->personal_document_status),
             'address_document_translate'  => $this->present()
                                                   ->getPersonalDocumentStatus($this->address_document_status),
+            'role'                        => $role,
+            'refusedDocuments'            => $refusedDocuments,
             // Notificações
             'affiliation'                 => empty($userNotification->affiliation) ? false : $userNotification->affiliation,
             'boleto_compensated'          => empty($userNotification->boleto_compensated) ? false : $userNotification->boleto_compensated,
@@ -59,8 +61,7 @@ class UserResource extends JsonResource
             'shopify'                     => empty($userNotification->shopify) ? false : $userNotification->shopify,
             'billet_generated'            => empty($userNotification->billet_generated) ? false : $userNotification->billet_generated,
             'credit_card_in_proccess'     => empty($userNotification->credit_card_in_proccess) ? false : $userNotification->credit_card_in_proccess,
-            'role'                        => $role,
-            'refusedDocuments'            => $refusedDocuments,
+            'blocked_balance'             => empty($userNotification->blocked_balance) ? false : $userNotification->blocked_balance,
         ];
     }
 }

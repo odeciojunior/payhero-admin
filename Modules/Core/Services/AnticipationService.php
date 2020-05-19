@@ -116,10 +116,11 @@ class AnticipationService
         }
 
         $anticipation = $anticipationModel->create([
-            'value'          => $anticipationValue - $taxValue,
-            'tax'            => $taxValue,
-            'percentage_tax' => $user->antecipation_tax,
-            'company_id'     => $company->id,
+            'value'                  => $anticipationValue - $taxValue,
+            'tax'                    => $taxValue,
+            'percentage_tax'         => $user->antecipation_tax,
+            'percentage_anticipable' => $user->percentage_antecipable,
+            'company_id'             => $company->id,
         ]);
 
         foreach ($anticipationArray as $item) {
@@ -167,7 +168,12 @@ class AnticipationService
                                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
                                 ->whereDate('release_date', '>', Carbon::today())
                                 ->whereNull('invitation_id')
-                                ->whereDoesntHave('anticipatedTransactions');
+                                ->whereDoesntHave('anticipatedTransactions')
+                                ->whereHas('productPlanSales')
+                                ->whereDoesntHave('productPlanSales', function($query) {
+                                   $query->whereDoesntHave('tracking');
+                                });
+
     }
 
     /**

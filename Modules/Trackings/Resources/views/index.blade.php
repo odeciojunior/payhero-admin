@@ -20,32 +20,42 @@
                     <div class="row justify-content-lg-end">
                         <div class="col mt-lg-0 mt-20" style="flex-grow: 0">
                             <div class="d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20" viewBox="0 0 24 24">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20"
+                                     viewBox="0 0 24 24">
                                     <path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                                 </svg>
                                 <div class="btn-group" role="group">
-                                    <button id="btn-export-xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                    <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                    <button id="btn-export-xls" type="button"
+                                            class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                    </button>
+                                    <button id="btn-export-csv" type="button"
+                                            class="btn btn-round btn-default btn-outline btn-pill-right">.CSV
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div class="col mt-lg-0 mt-20" style="flex-grow: 0">
                             <div class="d-flex align-items-center">
-                                <svg class="icon-download" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="icon-download" width="20" height="20" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="m4.056244,20.607375c-1.81431,-0.58843 -3.12847,-1.92219 -3.66786,-3.7267c-0.20595,-0.70611 -0.20595,-2.25563 0,-2.96175c0.53939,-1.8045 1.87316,-3.15789 3.66786,-3.71689l0.52958,-0.16672l0.1275,-0.72573c0.2844,-1.69663 0.87283,-2.81464 2.13795,-4.06995c0.76495,-0.76495 1.03955,-0.9709 1.82412,-1.34357c1.22589,-0.58843 1.95161,-0.75515 3.32461,-0.75515c1.37299,0 2.09872,0.16672 3.32461,0.75515c0.78457,0.37267 1.05917,0.57862 1.82412,1.34357c1.26512,1.25531 1.85354,2.37332 2.13795,4.06995l0.12749,0.72573l0.52959,0.16672c1.7947,0.559 3.12846,1.91239 3.66786,3.71689c0.20594,0.70611 0.20594,2.25564 0,2.96175c-0.5492,1.82412 -1.932,3.20692 -3.75613,3.75612c-0.4217,0.12749 -1.00032,0.15692 -2.72637,0.15692l-2.18699,0l0,-0.97091l0,-0.9709l2.03988,-0.03923c2.47139,-0.05884 2.87348,-0.17653 3.75612,-1.04936c0.69631,-0.70611 0.97091,-1.3828 0.97091,-2.41255c0,-1.33377 -0.59824,-2.36351 -1.73586,-2.96175c-0.53939,-0.29421 -1.78489,-0.61784 -2.33409,-0.61784c-0.24518,0 -0.24518,0 -0.24518,-0.86303c0,-2.66753 -1.47107,-4.79568 -3.81496,-5.5116c-0.78457,-0.24517 -2.28506,-0.26479 -3.05982,-0.03922c-2.33409,0.6963 -3.73651,2.63811 -3.88362,5.39391l-0.05884,0.99051l-0.65708,0.06865c-2.23602,0.20595 -3.62863,1.55933 -3.62863,3.54037c0,1.02975 0.2746,1.70644 0.97091,2.41255c0.88264,0.87283 1.28473,0.99052 3.76593,1.04936l2.03007,0.03923l0,0.9709l0,0.97091l-2.22622,-0.00981c-1.86335,0 -2.32428,-0.02942 -2.77541,-0.17653z"/>
                                     <path d="m11.01929,18.407315l0,-2.45178l-1.49068,0l-1.50049,0l1.99084,-1.98103l1.98104,-1.99085l1.98103,1.99085l1.99085,1.98103l-1.50049,0l-1.49068,0l0,2.45178l0,2.45177l-0.98071,0l-0.98071,0l0,-2.45177z"/>
                                 </svg>
-                                <button id="btn-import-xls" type="button" class="btn btn-round btn-default btn-outline" style="min-width: 118px;">IMPORTAR</button>
+                                <button id="btn-import-xls" type="button" class="btn btn-round btn-default btn-outline"
+                                        style="min-width: 118px;">IMPORTAR
+                                </button>
                                 <input type="file" id="input-import-xls" style="display:none" accept=".csv,.xlsx">
                             </div>
                         </div>
                         <div class="col mt-lg-0 mt-20" style="flex-grow: 0">
                             <div class="d-flex align-items-center">
-                                <a class="btn rounded-circle btn-default btn-outline" style="padding: 6px 0px;height: 36px;width: 36px; min-width:36px"
+                                <a class="btn rounded-circle btn-default btn-outline"
+                                   style="padding: 6px 0px;height: 36px;width: 36px; min-width:36px"
                                    data-toggle="modal" data-target="#modal-detalhes-importar">
                                     <i class="icon wb-info"></i>
                                 </a>
-                                <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10 pointer" style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
+                                <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10 pointer"
+                                      style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
                             </div>
                         </div>
                     </div>
@@ -53,27 +63,37 @@
             </div>
         </div>
         <!-- Modal de Instruções -->
-        <div class="modal fade modal-3d-flip-vertical" id="modal-detalhes-importar" aria-hidden='true' role="dialog" tabindex="-1">
+        <div class="modal fade modal-3d-flip-vertical" id="modal-detalhes-importar" aria-hidden='true' role="dialog"
+             tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="panel-group panel-group-continuous m-0" id="accordion" aria-multiselectable="true" role="tablist">
+                    <div class="panel-group panel-group-continuous m-0" id="accordion" aria-multiselectable="true"
+                         role="tablist">
                         <div class="panel">
                             <div class="panel-heading" id="headingFirst" role="tab">
-                                <a class="panel-title collapsed" data-parent="#accordion" data-toggle="collapse" href="#collapseFirst" aria-controls="collapseFirst" aria-expanded="false">
+                                <a class="panel-title collapsed" data-parent="#accordion" data-toggle="collapse"
+                                   href="#collapseFirst" aria-controls="collapseFirst" aria-expanded="false">
                                     <strong>Primeiro passo</strong>
                                 </a>
                             </div>
-                            <div class="panel-collapse collapse" id="collapseFirst" aria-labelledby="headingFirst" role="tabpanel" style="">
+                            <div class="panel-collapse collapse" id="collapseFirst" aria-labelledby="headingFirst"
+                                 role="tabpanel" style="">
                                 <div class="panel-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span> Clique para fazer o download da planilha</span>
                                         <div class="d-flex align-items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20" viewBox="0 0 24 24">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20"
+                                                 height="20" viewBox="0 0 24 24">
                                                 <path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
                                             </svg>
                                             <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                                <button type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                                                <button type="button"
+                                                        class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-round btn-default btn-outline btn-pill-right">
+                                                    .CSV
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -82,41 +102,43 @@
                         </div>
                         <div class="panel">
                             <div class="panel-heading" id="headingSecond" role="tab">
-                                <a class="panel-title collapsed" data-parent="#accordion" data-toggle="collapse" href="#collapseSecond" aria-controls="collapseSecond" aria-expanded="false">
+                                <a class="panel-title collapsed" data-parent="#accordion" data-toggle="collapse"
+                                   href="#collapseSecond" aria-controls="collapseSecond" aria-expanded="false">
                                     <strong>Segundo passo</strong>
                                 </a>
                             </div>
-                            <div class="panel-collapse collapse" id="collapseSecond" aria-labelledby="headingSecond" role="tabpanel" style="">
+                            <div class="panel-collapse collapse" id="collapseSecond" aria-labelledby="headingSecond"
+                                 role="tabpanel" style="">
                                 <div class="panel-body justify-content-center" style="overflow-x: auto;">
                                     <span class="d-block mb-10">Preencha a coluna correspondente aos <strong>Códigos de Rastreio</strong></span>
                                     <table class="table table-striped" style="cursor: default;">
                                         <thead style="font-size: 16px; background: #3e8ef7;">
-                                            <tr style="color: #fff;">
-                                                <td class="text-nowrap">Código da Venda</td>
-                                                <td class="text-nowrap">Código de Rastreio</td>
-                                                <td class="text-nowrap">Código do Produto</td>
-                                            </tr>
+                                        <tr style="color: #fff;">
+                                            <td class="text-nowrap">Código da Venda</td>
+                                            <td class="text-nowrap">Código de Rastreio</td>
+                                            <td class="text-nowrap">Código do Produto</td>
+                                        </tr>
                                         </thead>
                                         <tbody style="font-size: 11px;">
-                                            <tr style="color: #000;">
-                                                <td>#x4S2ksh3</td>
-                                                <td>AA123456789BR</td>
-                                                <td>#mWspfhMRLCHLxke</td>
-                                            </tr>
-                                            <tr style="color: #000;">
-                                                <td>#PhkZkf4W</td>
-                                                <td>AA987654321BR</td>
-                                                <td>#Ra1rm46WlzA09nB</td>
-                                            </tr>
-                                            <tr style="color: #000;">
-                                                <td>#LAc8z7H9</td>
-                                                <td style="padding: 0 !important;">
-                                                    <div class="cell-selected">
-                                                        <span class="caret">AA100833276BR</span>
-                                                    </div>
-                                                </td>
-                                                <td>#EQUZC43Kq2HLalK</td>
-                                            </tr>
+                                        <tr style="color: #000;">
+                                            <td>#x4S2ksh3</td>
+                                            <td>AA123456789BR</td>
+                                            <td>#mWspfhMRLCHLxke</td>
+                                        </tr>
+                                        <tr style="color: #000;">
+                                            <td>#PhkZkf4W</td>
+                                            <td>AA987654321BR</td>
+                                            <td>#Ra1rm46WlzA09nB</td>
+                                        </tr>
+                                        <tr style="color: #000;">
+                                            <td>#LAc8z7H9</td>
+                                            <td style="padding: 0 !important;">
+                                                <div class="cell-selected">
+                                                    <span class="caret">AA100833276BR</span>
+                                                </div>
+                                            </td>
+                                            <td>#EQUZC43Kq2HLalK</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                     <div class="cell-fade"></div>
@@ -125,21 +147,27 @@
                         </div>
                         <div class="panel">
                             <div class="panel-heading" id="headingThird" role="tab">
-                                <a class="panel-title collapsed" data-parent="#accordion" data-toggle="collapse" href="#collapseThird" aria-controls="collapseThird" aria-expanded="false">
+                                <a class="panel-title collapsed" data-parent="#accordion" data-toggle="collapse"
+                                   href="#collapseThird" aria-controls="collapseThird" aria-expanded="false">
                                     <strong>Terceiro passo</strong>
                                 </a>
                             </div>
-                            <div class="panel-collapse collapse" id="collapseThird" aria-labelledby="headingThird" role="tabpanel" style="">
+                            <div class="panel-collapse collapse" id="collapseThird" aria-labelledby="headingThird"
+                                 role="tabpanel" style="">
                                 <div class="panel-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <span> Clique em <strong>importar</strong> para fazer o upload</span>
                                         <div class="d-flex align-items-center">
-                                            <svg class="icon-download" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <svg class="icon-download" width="20" height="20" viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path d="m4.056244,20.607375c-1.81431,-0.58843 -3.12847,-1.92219 -3.66786,-3.7267c-0.20595,-0.70611 -0.20595,-2.25563 0,-2.96175c0.53939,-1.8045 1.87316,-3.15789 3.66786,-3.71689l0.52958,-0.16672l0.1275,-0.72573c0.2844,-1.69663 0.87283,-2.81464 2.13795,-4.06995c0.76495,-0.76495 1.03955,-0.9709 1.82412,-1.34357c1.22589,-0.58843 1.95161,-0.75515 3.32461,-0.75515c1.37299,0 2.09872,0.16672 3.32461,0.75515c0.78457,0.37267 1.05917,0.57862 1.82412,1.34357c1.26512,1.25531 1.85354,2.37332 2.13795,4.06995l0.12749,0.72573l0.52959,0.16672c1.7947,0.559 3.12846,1.91239 3.66786,3.71689c0.20594,0.70611 0.20594,2.25564 0,2.96175c-0.5492,1.82412 -1.932,3.20692 -3.75613,3.75612c-0.4217,0.12749 -1.00032,0.15692 -2.72637,0.15692l-2.18699,0l0,-0.97091l0,-0.9709l2.03988,-0.03923c2.47139,-0.05884 2.87348,-0.17653 3.75612,-1.04936c0.69631,-0.70611 0.97091,-1.3828 0.97091,-2.41255c0,-1.33377 -0.59824,-2.36351 -1.73586,-2.96175c-0.53939,-0.29421 -1.78489,-0.61784 -2.33409,-0.61784c-0.24518,0 -0.24518,0 -0.24518,-0.86303c0,-2.66753 -1.47107,-4.79568 -3.81496,-5.5116c-0.78457,-0.24517 -2.28506,-0.26479 -3.05982,-0.03922c-2.33409,0.6963 -3.73651,2.63811 -3.88362,5.39391l-0.05884,0.99051l-0.65708,0.06865c-2.23602,0.20595 -3.62863,1.55933 -3.62863,3.54037c0,1.02975 0.2746,1.70644 0.97091,2.41255c0.88264,0.87283 1.28473,0.99052 3.76593,1.04936l2.03007,0.03923l0,0.9709l0,0.97091l-2.22622,-0.00981c-1.86335,0 -2.32428,-0.02942 -2.77541,-0.17653z"/>
                                                 <path d="m11.01929,18.407315l0,-2.45178l-1.49068,0l-1.50049,0l1.99084,-1.98103l1.98104,-1.99085l1.98103,1.99085l1.99085,1.98103l-1.50049,0l-1.49068,0l0,2.45178l0,2.45177l-0.98071,0l-0.98071,0l0,-2.45177z"/>
                                             </svg>
-                                            <button type="button" class="btn btn-round btn-default btn-outline" style="min-width: 118px;">IMPORTAR</button>
-                                            <input type="file" id="input-import-xls" style="display:none" accept=".csv,.xlsx">
+                                            <button type="button" class="btn btn-round btn-default btn-outline"
+                                                    style="min-width: 118px;">IMPORTAR
+                                            </button>
+                                            <input type="file" id="input-import-xls" style="display:none"
+                                                   accept=".csv,.xlsx">
                                         </div>
                                     </div>
                                 </div>
@@ -184,10 +212,20 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                        <label for="date_updated">Data de aprovação venda</label>
-                        <input name='date_updated' id="date_updated" class="select-pad" placeholder="Clique para editar..." readonly>
+                        <label for="status_commission">Status da comissão</label>
+                        <select name='status_commission' id="status_commission" class="form-control select-pad">
+                            <option value="all">Todos</option>
+                            <option value="transfered">Transferido</option>
+                            <option value="pending">Pendente</option>
+                            <option value="blocked">Não transferido</option>
+                        </select>
                     </div>
-                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 offset-xl-6">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <label for="date_updated">Data de aprovação venda</label>
+                        <input name='date_updated' id="date_updated" class="select-pad"
+                               placeholder="Clique para editar..." readonly>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 offset-xl-3">
                         <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                             <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                         </button>
@@ -203,22 +241,27 @@
                     <div class="w-full">
                         <strong class="font-size-16">Saldo Bloqueado</strong>
                         <p class="font-size-14 pr-md-100 mb-5">
-                            Você possui <b>R$ <span id="blocked-balance"></span> de saldo bloqueado</b> por não informar
-                            os códigos de rastreios de <b><span id="blocked-balance-sales"></span> vendas</b>. Informe os
-                            códigos de rastreio dessas vendas para que o dinheiro seja transferido.
+                            Você possui <b>R$
+                                <span id="blocked-balance"></span>
+                                de saldo bloqueado</b> por não informar os códigos de rastreios de <b>
+                                <span id="blocked-balance-sales"></span>
+                                vendas</b>. Informe os códigos de rastreio dessas vendas para que o dinheiro seja
+                            transferido.
                         </p>
                     </div>
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
                 </div>
             </div>
             <!-- Aviso de Exportação -->
-            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
+            <div id="alert-export" class="alert alert-info alert-dismissible fade show card py-10 pl-20 pr-10"
+                 style="display:none;">
                 <div class="d-flex">
                     <i class="material-icons mr-10">info</i>
                     <div class="w-full">
                         <strong class="font-size-16">Exportando seu relatório</strong>
                         <p class="font-size-14 pr-md-100 mb-5">Sua exportação será entregue por e-mail para:
-                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum tempo, dependendo de quantos registros você estiver exportando.
+                            <strong id="export-email"></strong> e aparecerá nas suas notificações. Pode levar algum
+                            tempo, dependendo de quantos registros você estiver exportando.
                         </p>
                     </div>
                     <i class="material-icons pointer" data-dismiss="alert">close</i>
@@ -270,30 +313,33 @@
                 <div class="page-invoice-table table-responsive">
                     <table id="tabela_trackings" class="table-trackings table unify" style="">
                         <thead>
-                            <tr>
-                                <td class="table-title">Venda</td>
-                                <td class="table-title">Data de Aprovação</td>
-                                <td class="table-title">Produto</td>
-                                <td class="table-title">Status</td>
-                                <td class="table-title">Código de Rastreio</td>
-                                <td class="table-title" width="80px;"></td>
-                            </tr>
+                        <tr>
+                            <td class="table-title">Venda</td>
+                            <td class="table-title">Data de Aprovação</td>
+                            <td class="table-title">Produto</td>
+                            <td class="table-title">Status</td>
+                            <td class="table-title">Código de Rastreio</td>
+                            <td class="table-title" width="80px;"></td>
+                        </tr>
                         </thead>
                         <tbody id="dados_tabela">
-                            {{-- js carrega... --}}
+                        {{-- js carrega... --}}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-trackings" class="pagination-sm margin-chat-pagination"
+                style="margin-top:10px;position:relative;float:right">
                 {{-- js carrega... --}}
             </ul>
             <!-- Modal detalhes da venda-->
         @include('sales::details')
         <!-- End Modal -->
             <!-- Modal detalhes tracking -->
-            <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg" style="width: 500px;">
+            <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog"
+                 tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg"
+                     style="width: 500px;">
                     <div id='modal-tracking-details' class="modal-content">
                         <div class="modal-header simple-border-bottom justify-content-center">
                             <h4> Detalhes do rastreamento </h4>
@@ -311,8 +357,10 @@
                                 <div class="row align-items-center mb-20">
                                     <div class="col-lg-10 col-9">
                                         <div class="row align-items-center pl-10">
-                                            <img id="tracking-product-image" src="" width="50px" style="border-radius: 6px;">
-                                            <h4 id="tracking-product-name" class="table-title ml-10 ellipsis" style="flex: 1"></h4>
+                                            <img id="tracking-product-image" src="" width="50px"
+                                                 style="border-radius: 6px;">
+                                            <h4 id="tracking-product-name" class="table-title ml-10 ellipsis"
+                                                style="flex: 1"></h4>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-3 text-center">
@@ -329,7 +377,8 @@
                                     <br>
                                     <span id="tracking-delivery-city" class="table-title gray"></span>
                                 </div>
-                                <a class='btn mt-10 pl-0 pointer btn-notify-trackingcode' title='Enviar e-mail com codigo de rastreio para o cliente'>
+                                <a class='btn mt-10 pl-0 pointer btn-notify-trackingcode'
+                                   title='Enviar e-mail com codigo de rastreio para o cliente'>
                                     <i class='icon wb-envelope'></i> Enviar e-mail/sms para o cliente
                                 </a>
                                 <p class="mt-5" id="link-tracking"><i class="material-icons">link</i>
@@ -337,11 +386,11 @@
                                 </p>
                                 <table class="table">
                                     <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Status</th>
-                                            <th>Evento</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Evento</th>
+                                    </tr>
                                     </thead>
                                     <tbody id="table-checkpoint"></tbody>
                                 </table>
@@ -357,7 +406,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=13') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=1') }}"></script>
     @endpush
 
 @endsection
