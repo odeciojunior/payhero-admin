@@ -292,7 +292,7 @@ class TrackingService
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
                 });
-                if ($filters['transaction_status'] != 'blocked') {
+                if ($filters['transaction_status'] == 'blocked') {
                     $productPlanSales->doesntHave('tracking');
                 }
             }
