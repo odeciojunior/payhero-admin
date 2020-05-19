@@ -51,9 +51,7 @@ class TrackingService
 
             $trackingmoreService = new TrackingmoreService();
 
-            $response = $trackingmoreService->find($tracking->tracking_code);
-
-            $apiTracking = current($response->data->items) ?? null;
+            $apiTracking = $trackingmoreService->find($tracking->tracking_code);
 
             if (isset($apiTracking->status)) {
                 $status = $this->parseStatusApi($apiTracking->status);

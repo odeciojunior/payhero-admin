@@ -62,6 +62,8 @@ class TrackingmoreService
             //jadlog
             if (strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber)) {
                 $carrierCode = 'dpd-brazil';
+            } else if(preg_match('/^NX[0-9]{9}BR$/', $trackingNumber)){
+                $carrierCode = 'brazil-correios';
             } else {
                 $carrierCode = $this->detectCarrier($trackingNumber);
 
