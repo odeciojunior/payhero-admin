@@ -17,7 +17,6 @@ use Cloudflare\API\Endpoints\TLS;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
-use Illuminate\Support\Facades\Log;
 use Cloudflare\API\Endpoints\Crypto;
 use Modules\Core\Entities\DomainRecord;
 use stdClass;
@@ -117,7 +116,6 @@ class CloudFlareService
             $this->zones   = new Zones($this->adapter);
             $this->user    = new User($this->adapter);
         } catch (Exception $e) {
-            Log::warning('__construct - Erro ao criar servico do cloudflare');
             report($e);
         }
     }
@@ -188,8 +186,6 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-            // Log::warning('Erro ao remover dominio (dominio inexistente)');
-            // report($e);
 
             return false;
         }
@@ -212,8 +208,6 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-            // Log::warning('Erro ao remover dominio (dominio inexistente)');
-            // report($e);
 
             return false;
         }
@@ -299,7 +293,6 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao remover record (record inexistente)');
             report($e);
 
             return false;
@@ -324,7 +317,6 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-            Log::warning('Erro ao remover record (record inexistente)');
             report($e);
 
             return false;
@@ -342,7 +334,6 @@ class CloudFlareService
 
             return $this->zones->activationCheck($zoneID);
         } catch (Exception $e) {
-            Log::warning('Erro ao checar dominio');
             report($e);
 
             return false;
@@ -686,7 +677,6 @@ class CloudFlareService
                 return $this->ssl->getSSLSetting($zoneID);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao ver configuração de SSL');
             report($e);
 
             return [];
@@ -713,7 +703,6 @@ class CloudFlareService
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao ver configuração de SSL');
             report($e);
 
             return [];
@@ -740,7 +729,6 @@ class CloudFlareService
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao configurar HTTPSRedirectS');
             report($e);
 
             return [];
@@ -767,7 +755,6 @@ class CloudFlareService
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao configurar HTTPSRewrites');
             report($e);
 
             return [];
@@ -793,7 +780,6 @@ class CloudFlareService
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao configurar TLS 1.3');
             report($e);
 
             return [];
@@ -820,7 +806,6 @@ class CloudFlareService
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao configurar OpportunisticEncryption');
             report($e);
 
             return [];
@@ -847,7 +832,6 @@ class CloudFlareService
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao configurar OnionRouting');
             report($e);
 
             return [];

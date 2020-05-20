@@ -24,11 +24,11 @@ class DomainRecordsRequest extends FormRequest
         return [
             'type-register' => 'required|string',
             'name-register' => 'required|string',
-            'value-record'  => 'required|string',
-            'priority'      => 'nullable|string',
-            'proxy'         => 'required|string',
-            'project'       => 'required|string',
-            'domain'        => 'required|string',
+            'value-record' => 'required|string',
+            'priority' => 'nullable|string',
+            'proxy' => 'required|string',
+            'project' => 'required|string',
+            'domain' => 'required|string',
         ];
     }
 
@@ -39,12 +39,13 @@ class DomainRecordsRequest extends FormRequest
     {
         return [
             'type-register.required' => 'O campo tipo de entrada deve ser selecionado',
-            'type-register.string'   => 'O campo tipo deve ser selecionado corretamente',
+            'type-register.string' => 'O campo tipo deve ser selecionado corretamente',
             'name-register.required' => 'O campo nome deve ser preenchido corretamente',
-            'name-register.string'   => 'O campo nome deve ser preenchido corretamente',
-            'value-record.string'    => 'O campo valor deve ser preenchido corretamente',
-            'project.required'       => 'Projeto nao encontrado',
-            'domain.required'        => 'Domínio nao econtrado',
+            'name-register.string' => 'O campo nome deve ser preenchido corretamente',
+            'value-record.required' => 'O campo tipo deve ser preenchido corretamente',
+            'value-record.string' => 'O campo valor deve ser preenchido corretamente',
+            'project.required' => 'Projeto nao encontrado',
+            'domain.required' => 'Domínio nao econtrado',
         ];
     }
 }

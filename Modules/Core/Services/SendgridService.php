@@ -3,7 +3,6 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\SentEmail;
 use SendGrid;
 
@@ -53,12 +52,14 @@ class SendgridService
      */
     public function addZone($domain, $autoSet = false)
     {
-        $requestBody = json_decode('{
+        $requestBody = json_decode(
+            '{
                      "automatic_security": false,
                      "custom_spf" : true,
                      "default" : false,
                      "domain" : "' . $domain . '"
-                 }');
+                 }'
+        );
 
         $response = $this->sendgrid(true)->client->whitelabel()->domains()->post($requestBody);
 
@@ -78,7 +79,6 @@ class SendgridService
     {
         $zone = $this->getZone($domain);
         if (!empty($zone)) {
-
             $response = $this->sendgrid()->client->whitelabel()->domains()->_($zone->id)->delete();
             if ($response->statusCode() == 204) {
                 return true;
@@ -113,7 +113,6 @@ class SendgridService
 
         $sendgridDomains = json_decode($response->body());
         foreach ($sendgridDomains as $sendgridDomain) {
-
             if (!empty($sendgridDomain->domain) && $sendgridDomain->domain == $domain) {
                 return $sendgridDomain;
             }
@@ -130,7 +129,6 @@ class SendgridService
     {
         $zone = $this->getZone($domain);
         if (!empty($zone)) {
-
             $this->zone = $zone;
 
             return true;
@@ -207,11 +205,13 @@ class SendgridService
     {
         $this->deleteLinkBrand($domain);
 
-        $request_body = json_decode('{
+        $request_body = json_decode(
+            '{
                  "default": false,
                  "domain": "' . $domain . '",
                  "subdomain": "mail"
-             }');
+             }'
+        );
 
         $query_params = json_decode('{"limit": 1, "offset": 1}');
 
@@ -249,7 +249,6 @@ class SendgridService
     {
         $link = $this->getLinkBrand($domain);
         if (!empty($link)) {
-
             $response = $this->sendgrid()->client->whitelabel()->links()->_($link->id)->delete();
             if ($response->statusCode() == 204) {
                 return true;
@@ -316,15 +315,11 @@ class SendgridService
             //Em produção valida o e-mail e local marreta e-mail de teste
             if (env('APP_ENV') == 'production') {
                 if (!FoxUtils::validateEmail($toEmail)) {
-                    Log::warning('E-mail invalid');
-
                     return false;
                 }
             } else {
                 $toEmail = env('APP_EMAIL_TEST');
                 if (empty($toEmail)) {
-                    Log::warning('E-mail test invalid');
-
                     return false;
                 }
             }
@@ -349,7 +344,7 @@ class SendgridService
                 SentEmail::create(
                     [
                         'from_email' => $fromEmail,
-                        'from_name' => $fromName,
+                        'from_name' => $fromName == '' ? ' vazio ' : $fromName,
                         'to_email' => $toEmail,
                         'to_name' => $toName,
                         'template_id' => $templateId,
@@ -362,12 +357,11 @@ class SendgridService
 
                 return true;
             } catch (Exception $e) {
-                Log::warning('Caught exception: ' . $e->getMessage());
 
                 SentEmail::create(
                     [
                         'from_email' => $fromEmail,
-                        'from_name' => $fromName,
+                        'from_name' => $fromName == '' ? ' vazio ' : $fromName,
                         'to_email' => $toEmail,
                         'to_name' => $toName,
                         'template_id' => $templateId,
@@ -385,7 +379,7 @@ class SendgridService
             SentEmail::create(
                 [
                     'from_email' => $fromEmail,
-                    'from_name' => $fromName,
+                    'from_name' => $fromName == '' ? ' vazio ' : $fromName,
                     'to_email' => $toEmail,
                     'to_name' => $toName,
                     'template_id' => $templateId,
@@ -398,7 +392,5 @@ class SendgridService
 
             return false;
         }
-
-        return false;
     }
 }
