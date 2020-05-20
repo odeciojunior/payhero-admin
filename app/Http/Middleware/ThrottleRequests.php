@@ -3,12 +3,12 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use RuntimeException;
-use Illuminate\Support\Str;
 use Illuminate\Cache\RateLimiter;
-use Illuminate\Support\InteractsWithTime;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Support\InteractsWithTime;
+use Illuminate\Support\Str;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ThrottleRequests
 {
@@ -22,15 +22,6 @@ class ThrottleRequests
     protected $limiter;
 
     /**
-     * The URIs that should be excluded from Throttle verification.
-     *
-     * @var array
-     */
-    protected $except = [
-        '/api/profitfy/*'
-    ];
-
-    /**
      * Create a new request throttler.
      *
      * @param  \Illuminate\Cache\RateLimiter  $limiter
@@ -42,42 +33,30 @@ class ThrottleRequests
     }
 
     /**
-     * Determine if the request has a URI that should pass through Throttle verification.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    protected function inExceptArray($request)
-    {
-        foreach ($this->except as $except) {
-            if ($except !== '/') {
-                $except = trim($except, '/');
-            }
-
-            if ($request->fullUrlIs($except) || $request->is($except)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @param  int|string  $maxAttempts
      * @param  float|int  $decayMinutes
+     * @param  string  $prefix
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Illuminate\Http\Exceptions\ThrottleRequestsException
      */
-    public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1)
+    public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1, $prefix = '')
     {
-        if($this->inExceptArray($request)) return $next($request);
+        //subscribe if it was defined globally
+        $middlewares = $request->route()->computedMiddleware;
+        foreach ($middlewares as $middleware) {
+            preg_match('/throttle:(\d+),(\d+)/',  $middleware, $matches);
+            if(!empty($matches)){
+                $maxAttempts = $matches[1] ?? $maxAttempts;
+                $decayMinutes = $matches[2] ?? $decayMinutes;
+            }
+        }
 
-        $key = $this->resolveRequestSignature($request);
+        $key = $prefix.$this->resolveRequestSignature($request);
 
         $maxAttempts = $this->resolveMaxAttempts($request, $maxAttempts);
 
@@ -108,7 +87,7 @@ class ThrottleRequests
             $maxAttempts = explode('|', $maxAttempts, 2)[$request->user() ? 1 : 0];
         }
 
-        if (! is_numeric($maxAttempts) && $request->user()) {
+        if (!is_numeric($maxAttempts) && $request->user()) {
             $maxAttempts = $request->user()->{$maxAttempts};
         }
 
@@ -202,7 +181,7 @@ class ThrottleRequests
             'X-RateLimit-Remaining' => $remainingAttempts,
         ];
 
-        if (! is_null($retryAfter)) {
+        if (!is_null($retryAfter)) {
             $headers['Retry-After'] = $retryAfter;
             $headers['X-RateLimit-Reset'] = $this->availableAt($retryAfter);
         }

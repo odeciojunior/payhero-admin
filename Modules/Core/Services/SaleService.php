@@ -67,7 +67,7 @@ class SaleService
                                                         'sale.shipping',
                                                         'sale.checkout',
                                                         'sale.delivery',
-                                                        'sale.transactions',
+                                                        'sale.transactions.anticipatedTransactions',
                                                         'sale.affiliate.user',
                                                     ])->whereIn('company_id', $userCompanies)
                                              ->join('sales', 'sales.id', 'transactions.sale_id')
@@ -167,6 +167,7 @@ class SaleService
     /**
      * @param $filters
      * @return array
+     * @throws PresenterException
      */
     public function getResume($filters)
     {
@@ -265,10 +266,9 @@ class SaleService
     {
         $userTransaction  = $sale->transactions->where('invitation_id', null)->whereIn('company_id', $userCompanies)
                                                ->first();
-        $valueAnticipable = null;
-        if (!empty($userTransaction->anticipatedTransactions()->first())) {
-            $valueAnticipable = $userTransaction->anticipatedTransactions()->first()->value;
-        }
+
+       $anticipatedTransaction = $userTransaction->anticipatedTransactions->first();
+       $valueAnticipable = $anticipatedTransaction->value ?? 0;
 
         //calcule total
         $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
