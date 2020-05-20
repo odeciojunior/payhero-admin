@@ -76,6 +76,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                         //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
                         $exists = $trackingModel->where('trackings.tracking_code', $trackingCode)
                             ->where('sale_id', '!=', $sale->id)
+                            ->where('upsell_id', '!=', $sale->id)
                             ->whereHas('sale', function ($query) use ($sale) {
                                 $query->where('owner_id', $sale->owner_id);
                             })->exists();

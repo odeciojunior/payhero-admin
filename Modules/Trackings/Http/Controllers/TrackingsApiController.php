@@ -275,6 +275,7 @@ class TrackingsApiController extends Controller
                     $sale = $productPlanSale->sale;
                     $exists = $trackingModel->where('trackings.tracking_code', $data['tracking_code'])
                         ->where('sale_id', '!=', $sale->id)
+                        ->where('upsell_id', '!=', $sale->id)
                         ->whereHas('sale', function ($query) use ($sale) {
                             $query->where('owner_id', $sale->owner_id);
                         })->exists();

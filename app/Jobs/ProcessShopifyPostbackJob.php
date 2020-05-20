@@ -89,6 +89,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                                         $exists = $trackingModel->where('trackings.tracking_code',
                                             $fulfillment["tracking_number"])
                                             ->where('sale_id', '!=', $sale->id)
+                                            ->where('upsell_id', '!=', $sale->id)
                                             ->whereHas('sale', function ($query) use ($sale) {
                                                 $query->where('owner_id', $sale->owner_id);
                                             })->exists();
