@@ -130,7 +130,7 @@ class DomainRecordsApiController extends Controller
 
                         if ($requestData['type-register'] == 'MX') {
                             $cloudRecordId = $cloudFlareService->addRecord($requestData['type-register'], $subdomain, $requestData['value-record'], 0, false, $priority);
-                        } else if ($requestData['type-register'] == 'TXT') {
+                        } elseif ($requestData['type-register'] == 'TXT') {
                             $cloudRecordId = $cloudFlareService->addRecord($requestData['type-register'], $subdomain, $requestData['value-record'], 0, false);
                         } else {
                             $proxy         = $requestData['proxy'] == '1' ? true : false;
@@ -186,7 +186,10 @@ class DomainRecordsApiController extends Controller
 
             if (strstr($e->getMessage(), "You cannot use this API for domains with a .cf, .ga, .gq, .ml, or .tk TLD (top-level domain)")) {
                 $message = 'Dominios (.cf, .ga, .gq, .ml, ou .tk) não podem ser cadastrados ou atualizados';
+            } elseif(strstr($e->getMessage(), 'An A, AAAA or CNAME r (truncated...)')){
+                $message = 'Um registro A, AAAA ou CNAME já existe com esse host.';
             } else {
+
                 $message = 'Erro ao tentar cadastrar entrada, tente novamente mais tarde';
                 report($e);
             }
@@ -325,7 +328,6 @@ class DomainRecordsApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('DomainRecordsApiController destroy - erro ao deletar record');
             report($e);
 
             return response()->json([
