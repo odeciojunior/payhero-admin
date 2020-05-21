@@ -11,6 +11,7 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\Transaction;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
@@ -23,20 +24,21 @@ class TrackingService
     private $migrationDate = '2020-02-03 10:16:00';
 
     /**
-     * @param Tracking $tracking
+     * @param $trackingCode
      * @return mixed
      */
-    public function sendTrackingToApi(Tracking $tracking)
+    public function sendTrackingToApi($trackingCode)
     {
-        if(!empty($tracking->tracking_code)) {
+        if (!empty($trackingCode)) {
             $trackingmoreService = new TrackingmoreService();
-
-            return $trackingmoreService->createTracking($tracking->tracking_code);
+            return $trackingmoreService->createTracking($trackingCode);
+        } else {
+            return null;
         }
     }
 
     /**
-     * @param Tracking $tracking
+     * @param  Tracking  $tracking
      * @return mixed|null
      * @throws PresenterException
      */
@@ -46,12 +48,9 @@ class TrackingService
         //seja posterior a data da migração. Caso contrário busca as informações na
         //perfectlog/aftership
         if ($tracking->created_at->gte($this->migrationDate)) {
-
             $trackingmoreService = new TrackingmoreService();
 
-            $response = $trackingmoreService->getAllTrackings(['numbers' => $tracking->tracking_code, 'lang' => 'cn']);
-
-            $apiTracking = $response->data->items[0] ?? null;
+            $apiTracking = $trackingmoreService->find($tracking->tracking_code);
 
             if (isset($apiTracking->status)) {
                 $status = $this->parseStatusApi($apiTracking->status);
@@ -80,8 +79,23 @@ class TrackingService
     }
 
     /**
+     * @param $apiTracking
+     * @return mixed
+     */
+    public function deleteTrackingApi($apiTracking)
+    {
+        $trackingmoreService = new TrackingmoreService();
+
+        $carrierCode = $apiTracking->carrier_code;
+
+        $trackingNumber = $apiTracking->tracking_number;
+
+        return $trackingmoreService->delete($carrierCode, $trackingNumber);
+    }
+
+    /**
      * @param $status
-     * @param bool $beforeMigration
+     * @param  bool  $beforeMigration
      * @return int|mixed
      * @throws PresenterException
      */
@@ -102,7 +116,7 @@ class TrackingService
     }
 
     /**
-     * @param Tracking $tracking
+     * @param  Tracking  $tracking
      * @param $apiTracking
      * @return Collection
      * @throws PresenterException
@@ -114,20 +128,17 @@ class TrackingService
         //if de 10k. Trata os checkpoints da trackingmore caso a data de criação
         //seja posterior a data da migração. Caso contrário trata os checkpoints
         //da perfectlog/aftership
-        if($tracking->created_at->gte($this->migrationDate)) {
-
+        if ($tracking->created_at->gte($this->migrationDate)) {
             $apiCheckpoints = array_reverse($apiTracking->origin_info->trackinfo ?? []);
             $apiCheckpoints += array_reverse($apiTracking->destination_info->trackinfo ?? []);
 
             if (!empty($apiCheckpoints)) {
                 foreach ($apiCheckpoints as $log) {
-
-                    $event = $log->Details ? $log->StatusDescription . ' - ' . $log->Details : $log->StatusDescription;
+                    $event = $log->Details ? $log->StatusDescription.' - '.$log->Details : $log->StatusDescription;
 
                     if (!empty($event)) {
-
                         $status_enum = $this->parseStatusApi($log->checkpoint_status ?? 'notfound');
-                        $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+                        $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                         //remove caracteres chineses e informações indesejadas
                         $blacklistWords = [
@@ -162,8 +173,8 @@ class TrackingService
                             'zhongxin',
                         ];
 
-                        if(Str::contains(strtolower($event), $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event))
-                        {
+                        if (Str::contains(strtolower($event),
+                                $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event)) {
                             $event = 'Encomenda em movimentação no exterior';
                         }
 
@@ -180,7 +191,7 @@ class TrackingService
             if (!empty($apiTracking->trail)) {
                 foreach ($apiTracking->trail as $log) {
                     $status_enum = $this->parseStatusApi($log->tracking_status, true);
-                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
+                    $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
                     $event = $log->event;
 
@@ -210,12 +221,13 @@ class TrackingService
     }
 
     /**
-     * @param string $trackingCode
-     * @param ProductPlanSale $productPlanSale
+     * @param  string  $trackingCode
+     * @param  ProductPlanSale  $productPlanSale
+     * @param  int|null  $statusEnum
      * @return mixed
      * @throws PresenterException
      */
-    public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale)
+    public function createTracking(string $trackingCode, ProductPlanSale $productPlanSale, $statusEnum = null)
     {
         $trackingModel = new Tracking();
 
@@ -226,8 +238,8 @@ class TrackingService
             'amount' => $productPlanSale->amount,
             'delivery_id' => $productPlanSale->sale->delivery->id,
             'tracking_code' => $trackingCode,
-            'tracking_status_enum' => $trackingModel->present()
-                ->getTrackingStatusEnum('posted'),
+            'tracking_status_enum' => $statusEnum ?? $trackingModel->present()
+                    ->getTrackingStatusEnum('posted'),
         ]);
 
         return $tracking;
@@ -235,7 +247,7 @@ class TrackingService
 
     /**
      * @param $filters
-     * @param int $userId
+     * @param  int  $userId
      * @return Builder
      * @throws PresenterException
      */
@@ -245,7 +257,7 @@ class TrackingService
         $productPlanSaleModel = new ProductPlanSale();
         $salePresenter = (new Sale())->present();
 
-        if(!$userId){
+        if (!$userId) {
             $userId = auth()->user()->account_owner_id;
         }
 
@@ -253,46 +265,72 @@ class TrackingService
             $salePresenter->getStatus('approved'),
         ];
 
-        $productPlanSales = $productPlanSaleModel
-            ->with([
-                'tracking',
-                'sale.delivery',
-                'sale.customer',
-                'product',
-            ])
-            ->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId) {
-                //tipo da data e periodo obrigatorio
-                $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-                $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-                    ->whereIn('status', $saleStatus)
-                    ->where('owner_id', $userId);
+        $productPlanSales = $productPlanSaleModel->with(['tracking', 'sale.delivery', 'sale.customer', 'product',]);
 
-                if (isset($filters['sale'])) {
-                    $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
-                    $query->where('id', $saleId);
+        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $productPlanSales) {
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
+            $query->whereBetween('end_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                ->whereIn('status', $saleStatus)
+                ->where('owner_id', $userId);
+
+            if (isset($filters['sale'])) {
+                $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
+                $query->where('id', $saleId);
+            }
+
+            //filtro transactions
+            if (isset($filters['transaction_status'])) {
+                $query->whereHas('transactions', function ($queryTransaction) use ($filters) {
+                    $transactionPresenter = (new Transaction())->present();
+                    if ($filters['transaction_status'] != 'blocked') {
+                        $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
+                        $queryTransaction->where('status_enum', $statusEnum);
+                    } else {
+                        $queryTransaction->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                    }
+                    $queryTransaction->where('type', $transactionPresenter->getType('producer'))
+                        ->whereNull('invitation_id');
+                });
+                if ($filters['transaction_status'] == 'blocked') {
+                    $productPlanSales->doesntHave('tracking');
                 }
-            });
+            }
+        });
+
 
         if (isset($filters['status'])) {
             if ($filters['status'] === 'unknown') {
                 $productPlanSales->doesntHave('tracking');
             } else {
-                $productPlanSales->whereHas('tracking', function ($query) use ($trackingModel, $filters) {
-                    $query->where('tracking_status_enum', $trackingModel->present()->getTrackingStatusEnum($filters['status']));
-                });
+                $productPlanSales->whereHas(
+                    'tracking',
+                    function ($query) use ($trackingModel, $filters) {
+                        $query->where(
+                            'tracking_status_enum',
+                            $trackingModel->present()->getTrackingStatusEnum($filters['status'])
+                        );
+                    }
+                );
             }
         }
 
         if (isset($filters['tracking_code'])) {
-            $productPlanSales->whereHas('tracking', function ($query) use ($filters) {
-                $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
-            });
+            $productPlanSales->whereHas(
+                'tracking',
+                function ($query) use ($filters) {
+                    $query->where('tracking_code', 'like', '%'.$filters['tracking_code'].'%');
+                }
+            );
         }
 
         if (isset($filters['project'])) {
-            $productPlanSales->whereHas('product', function ($query) use ($filters) {
-                $query->where('project_id', current(Hashids::decode($filters['project'])));
-            });
+            $productPlanSales->whereHas(
+                'product',
+                function ($query) use ($filters) {
+                    $query->where('project_id', current(Hashids::decode($filters['project'])));
+                }
+            );
         }
 
         return $productPlanSales;
@@ -310,6 +348,11 @@ class TrackingService
         return $productPlanSales->orderBy('id', 'desc')->paginate(10);
     }
 
+    /**
+     * @param $filters
+     * @return array
+     * @throws PresenterException
+     */
     public function getResume($filters)
     {
         $trackingPresenter = (new Tracking())->present();
@@ -324,20 +367,25 @@ class TrackingService
         ];
 
         $productPlanSales = $this->getTrackingsQueryBuilder($filters)
-            ->without([
-                'tracking',
-                'sale',
-                'product',
-            ])
+            ->without(
+                [
+                    'tracking',
+                    'sale',
+                    'product',
+                ]
+            )
             ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
-            ->selectRaw("COUNT(*) as total,
+            ->selectRaw(
+                "COUNT(*) as total,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as posted,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as dispatched,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as ignored,
-                                   SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown", $status)
+                                   SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown",
+                $status
+            )
             ->first();
 
         return $productPlanSales->toArray();

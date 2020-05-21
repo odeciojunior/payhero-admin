@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -51,7 +50,6 @@ class DashboardApiController extends Controller
 
             return response()->json(compact('companies', 'userTerm'), 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da dashboard (DashboardApiController - index)');
             report($e);
 
             return response()->json([
@@ -85,7 +83,6 @@ class DashboardApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da dashboard (DashboardController - getValues)');
             report($e);
 
             return response()->json([
@@ -213,9 +210,7 @@ class DashboardApiController extends Controller
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da empresa (DashboardApiController - getDataValues)');
             report($e);
-            dd($e);
             return [];
         }
     }

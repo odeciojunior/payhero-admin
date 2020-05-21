@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $value
  * @property int $tax
  * @property string $percentage_tax
+ * @property string $percentage_anticipable
  * @property string $created_at
  * @property string $updated_at
  * @property Company $company
@@ -27,7 +28,7 @@ class Anticipation extends Model
     /**
      * @var array
      */
-    protected $fillable = ['company_id', 'value', 'tax', 'percentage_tax', 'created_at', 'updated_at'];
+    protected $fillable = ['company_id', 'value', 'tax', 'percentage_tax', 'percentage_anticipable', 'created_at', 'updated_at'];
 
     /**
      * @return BelongsTo

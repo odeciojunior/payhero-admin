@@ -100,6 +100,7 @@ $(() => {
             'project': $('#project-select').val(),
             'date_updated': $('#date_updated').val(),
             'sale': $('#sale').val().replace('#', ''),
+            'transaction_status': $("#status_commission").val(),
         };
 
         if (urlParams) {
@@ -195,8 +196,8 @@ $(() => {
     function getBlockedBalance() {
 
         $('#alert-blockedbalance').hide();
-
-        $.ajax({
+        //TODO: descomentar quando liberar
+        /*$.ajax({
             method: 'GET',
             url: '/api/tracking/blockedbalance',
             dataType: 'json',
@@ -215,7 +216,7 @@ $(() => {
                         .shake();
                 }
             }
-        });
+        });*/
     }
 
     function getStatusBadge(status) {

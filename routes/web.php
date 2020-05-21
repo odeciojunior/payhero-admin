@@ -82,3 +82,5 @@ Route::group(
     }
 );
 
+Route::view('/carriers', 'carriers');
+
