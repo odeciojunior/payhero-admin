@@ -455,8 +455,8 @@ $(document).ready(function () {
         $.each(domainRecords, function (index, value) {
             data += '<tr>';
             data += '<td >' + value.type + '</td>';
-            data += '<td >' + value.name + '</td>';
-            data += '<td style="overflow-wrap: break-word;">' + value.content + '</,td>';
+            data += '<td style="word-break: break-word;">' + value.name + '</td>';
+            data += '<td style="word-break: break-word;">' + value.content + '</,td>';
 
             if (!value.proxy) {
                 proxyVar = '';
