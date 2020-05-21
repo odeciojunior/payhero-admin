@@ -58,8 +58,7 @@ class PlansApiController extends Controller
                                                       },
                                                   ]);
                         if ($request->has('plan') && !empty($request->input('plan'))) {
-                            $plans->where('name', 'like', '%' . $request->input('plan') . '%')
-                                  ->orWhere('description', 'like', '%' . $request->input('plan') . '%');
+                            $plans->where('name', 'like', '%' . $request->input('plan') . '%');
                         }
 
                         $plans = $plans->where('project_id', $projectId)->orderBy('id', 'DESC')->paginate(5);
