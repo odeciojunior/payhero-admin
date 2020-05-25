@@ -44,17 +44,14 @@ class SalePresenter extends Presenter
     /**
      * @return string
      */
-    public function getIofValue()
-    {
-        return number_format(intval($this->iof) / 100, 2, ',', '.');
-    }
-
-    /**
-     * @return string
-     */
     public function getShopifyDiscount()
     {
-        return ($this->shopify_discount != '' && $this->shopify_discount != '0') ? number_format(preg_replace("/[^0-9]/", "", $this->shopify_discount) / 100, 2, ',', '.') : '0,00';
+        return ($this->shopify_discount != '' && $this->shopify_discount != '0') ? number_format(
+            preg_replace("/[^0-9]/", "", $this->shopify_discount) / 100,
+            2,
+            ',',
+            '.'
+        ) : '0,00';
     }
 
     /**
@@ -160,9 +157,9 @@ class SalePresenter extends Presenter
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
             foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product           = $productPlan->product()->first()->toArray();
+                $product = $productPlan->product()->first()->toArray();
                 $product['amount'] = $productPlan->amount * $planSale->amount;
-                $productsSale[]    = $product;
+                $productsSale[] = $product;
             }
         }
 

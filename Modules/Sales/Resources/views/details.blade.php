@@ -300,5 +300,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=4') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=1') }}"></script>
 @endpush

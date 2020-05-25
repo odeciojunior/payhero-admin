@@ -33,7 +33,6 @@ class SalesResource extends JsonResource
             'hours'                 => $this->hours,
             'status'                => $this->status,
             'dolar_quotation'       => $this->dolar_quotation,
-            'iof'                   => $this->iof,
             'installments_amount'   => $this->installments_amount,
             'boleto_link'           => $this->boleto_link,
             'boleto_digitable_line' => $this->boleto_digitable_line,
