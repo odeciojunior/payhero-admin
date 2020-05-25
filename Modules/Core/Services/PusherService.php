@@ -2,16 +2,24 @@
 
 namespace Modules\Core\Services;
 
-use Illuminate\Support\Facades\Log;
 use Pusher\Pusher;
-use Pusher\PusherException;
 use Vinkla\Hashids\Facades\Hashids;
 use Exception;
 
+/**
+ * Class PusherService
+ * @package Modules\Core\Services
+ */
 class PusherService
 {
+    /**
+     * @var Pusher
+     */
     private $pusher;
 
+    /**
+     * PusherService constructor.
+     */
     public function __construct()
     {
         try {
@@ -22,7 +30,6 @@ class PusherService
                 $this->getOptions()
             );
         } catch (Exception $e) {
-            Log::warning('Erro ao instanciar pusher');
             report($e);
         }
     }
@@ -34,7 +41,7 @@ class PusherService
     {
         return [
             'cluster' => getenv('PUSHER_APP_CLUSTER'),
-            'useTLS'  => true,
+            'useTLS' => true,
         ];
     }
 
@@ -44,10 +51,13 @@ class PusherService
     public function sendPusher($data)
     {
         try {
-            $this->pusher->trigger('channel-' . Hashids::connection('pusher_connection')
-                                                       ->encode($data['user']), 'new-notification', $data);
+            $this->pusher->trigger(
+                'channel-' . Hashids::connection('pusher_connection')
+                    ->encode($data['user']),
+                'new-notification',
+                $data
+            );
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar gerar notificacao');
             report($e);
         }
     }
