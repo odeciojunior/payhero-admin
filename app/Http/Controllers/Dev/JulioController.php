@@ -279,6 +279,120 @@ class JulioController extends Controller
 
     }
 
+    public function updateShopifyBoletos(){
+
+        $shopifyIntegrationModel = new ShopifyIntegration();
+
+        $sales = Sale::whereBetween('end_date', ['2020-05-15 00:00:00', '2020-05-21 23:59:59'])
+                        ->where('project_id', 2417)
+                        ->where('status', 1)
+                        ->where('payment_method', 2)
+                        ->orderBy('id','desc')
+                        ->get();
+
+        $x = 1;
+
+        foreach($sales as $sale){
+
+            $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $sale->project_id)->first();
+
+            try {
+                $this->line($x++ . "-> Atualizando pedido no shopify " . $sale->id);
+
+                $credential = new PublicAppCredential($shopifyIntegration->token);
+
+                $client = new Client($credential, $shopifyIntegration->url_store, [
+                    'metaCacheDir' => '/var/tmp',
+                ]);
+
+                $client->getTransactionManager()->create($sale->shopify_order, [
+                    "kind"    => "sale",
+                    "source"  => "external",
+                    "gateway" => "cloudfox",
+                    "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                ]);
+            } catch (Exception $e) {
+                $this->line("Erro ao atualizar pedido no shopify " . $sale->id . ' erro ' . $e->getMessage());
+            }
+        }
+    }
+
+    public function updateDomains()
+    {
+        // $cloudflareService = new CloudFlareService();
+
+        // $domains = Domain::all();
+        // $total = $domains->count();
+
+        // foreach ($domains as $key => $domain) {
+        //     $this->info($key + 1 . ' de ' . $total . '. Domínio: ' . $domain->name);
+        //     try {
+
+        //         // checkout
+        //         $records = $cloudflareService->getRecords($domain->name);
+        //         $domainRecord = collect($records)->first(function ($item) {
+        //             if (Str::contains($item->name, 'checkout.')) {
+        //                 return $item;
+        //             }
+        //         });
+        //         if(empty($domainRecord)){
+        //             $this->warn('Record não encontrado');
+        //             continue;
+        //         }
+
+        //         $data = [
+        //             'type'    => $domainRecord->type,
+        //             'name'    => 'checkout10',
+        //             'content' => $domainRecord->content,
+        //             'proxied' => true,
+        //         ];
+
+        //         $updated = $cloudflareService->updateRecordDetails($domain->cloudflare_domain_id, $domainRecord->id, $data);
+
+        //         if ($updated) {
+        //             $this->line('Record checkout atualizado!');
+        //             $recordId = $cloudflareService->addRecord("CNAME", 'checkout', 'CloudfoxSuit-Checkout-Balance-1912358215.us-east-1.elb.amazonaws.com');
+        //             $this->line('Novo record criado: ' . $recordId);
+        //         }
+        //         else{
+        //             $this->line('Erro ao atualizar record!');
+        //         }
+
+                // sac
+                // $domainRecord = collect($records)->first(function ($item) {
+                //     if (Str::contains($item->name, 'sac.')) {
+                //         return $item;
+                //     }
+                // });
+                // if(empty($domainRecord)){
+                //     $this->warn('Record não encontrado');
+                //     continue;
+                // }
+
+                // $data = [
+                //     'type'    => $domainRecord->type,
+                //     'name'    => 'sac3',
+                //     'content' => $domainRecord->content,
+                //     'proxied' => true,
+                // ];
+
+                // $updated = $cloudflareService->updateRecordDetails($domain->cloudflare_domain_id, $domainRecord->id, $data);
+
+                // if ($updated) {
+                //     $this->line('Record checkout atualizado!');
+                //     $recordId = $cloudflareService->addRecord("CNAME", 'sac', 'CloudfoxSuit-SAC-Balance-1972915763.us-east-1.elb.amazonaws.com');
+                //     $this->line('Novo record criado: ' . $recordId);
+                // }
+                // else{
+                //     $this->line('Erro ao atualizar record!');
+                // }
+
+        //     } catch (\Exception $e) {
+        //         $this->error($e->getMessage());
+        //     }
+        // }
+        // $this->info('ACABOOOOOOOOOOOOOU!');
+    }
 }
 
 
