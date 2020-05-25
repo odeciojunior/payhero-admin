@@ -200,11 +200,7 @@ class SaleService
             if ($shopify_discount > 0) {
                 $total -= $shopify_discount;
             }
-            if ($item->sale->dolar_quotation != 0) {
-                $iof   = preg_replace('/[^0-9]/', '', $item->sale->iof);
-                $iof   = substr_replace($iof, '.', strlen($iof) - 2, 0);
-                $total += floatval($iof);
-            }
+
             if (!empty($item->sale->automatic_discount)) {
                 $total -= ($item->sale->automatic_discount / 100);
             }
@@ -398,8 +394,7 @@ class SaleService
      * @param null $saleId
      * @return AnonymousResourceCollection|null
      */
-    public
-    function getProducts($saleId = null)
+    public function getProducts($saleId = null)
     {
         try {
             if ($saleId) {
@@ -422,8 +417,7 @@ class SaleService
      * @param $saleId
      * @return array
      */
-    public
-    function getEmailProducts($saleId)
+    public function getEmailProducts($saleId)
     {
         $saleModel = new Sale();
 
@@ -452,8 +446,7 @@ class SaleService
      * @return bool
      * @throws Exception
      */
-    public
-    function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [])
+    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [])
     {
         try {
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
@@ -532,8 +525,7 @@ class SaleService
      * @return bool
      * @throws Exception
      */
-    public
-    function recalcSaleRefund($sale, $refundAmount)
+    public function recalcSaleRefund($sale, $refundAmount)
     {
         try {
             $companyModel     = new Company();
@@ -612,8 +604,7 @@ class SaleService
      * @param $transactionId
      * @return array
      */
-    public
-    function refund($transactionId)
+    public function refund($transactionId)
     {
         try {
             $saleModel        = new Sale();
@@ -726,8 +717,7 @@ class SaleService
      * @return bool
      * @throws Exception
      */
-    public
-    function refundBillet(Sale $sale)
+    public function refundBillet(Sale $sale)
     {
         $transferModel    = new Transfer();
         $transactionModel = new Transaction();
@@ -839,8 +829,7 @@ class SaleService
         event(new BilletRefundedEvent($sale));
     }
 
-    public
-    function recalcSaleRefundPartial($sale, $partialValues)
+    public function recalcSaleRefundPartial($sale, $partialValues)
     {
         try {
             $companyModel  = new Company();
@@ -896,8 +885,7 @@ class SaleService
      * @return array
      * @throws PresenterException
      */
-    public
-    function getValuesPartialRefund($sale, $refundValue)
+    public function getValuesPartialRefund($sale, $refundValue)
     {
         $totalPaidValue       = intval(strval($sale->total_paid_value * 100));
         $totalWithoutInterest = $totalPaidValue - $sale->interest_total_value; // total sem juros
@@ -955,8 +943,7 @@ class SaleService
     /**
      * @param $sale
      */
-    public
-    function updateInterestTotalValue($sale)
+    public function updateInterestTotalValue($sale)
     {
         $shopifyDiscount     = (!is_null($sale->shopify_discount)) ? intval(preg_replace("/[^0-9]/", "", $sale->shopify_discount)) : 0;
         $subTotal            = intval(strval($sale->sub_total * 100));
