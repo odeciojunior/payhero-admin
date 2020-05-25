@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\TrackingCreateException;
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
@@ -43,7 +44,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         $project = $this->project;
         $productService = new ProductService();
         $trackingService = new TrackingService();
-        $trackingModel = new Tracking();
 
         $integration = $project->shopifyIntegrations->first();
         $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
@@ -76,7 +76,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             ])->doesntHave('tracking')
             ->where('status', 1)
             ->whereNotNull('shopify_order')
-            ->chunk(100, function ($sales) use ($productService, $trackingService, $trackingModel, $shopifyService) {
+            ->chunk(100, function ($sales) use ($productService, $trackingService, $shopifyService) {
                 foreach ($sales as $sale) {
                     try {
                         $fulfillments = $shopifyService->findFulfillments($sale->shopify_order);
@@ -93,39 +93,10 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                             foreach ($products as &$product) {
                                                 $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
 
-                                                //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
-                                                $sale = $productPlanSale->sale;
-                                                $exists = $trackingModel->where('trackings.tracking_code',
-                                                    $trackingCode)
-                                                    ->where('sale_id', '!=', $sale->id)
-                                                    ->whereHas('sale', function ($query) use ($sale) {
-                                                        $query->where('owner_id', $sale->owner_id)
-                                                            ->where('upsell_id', '!=', $sale->id);
-                                                    })->exists();
-                                                if ($exists) {
-                                                    continue;
-                                                }
+                                                $tracking = $trackingService->createOrUpdateTracking($trackingCode,
+                                                    $productPlanSale);
 
-                                                $apiResult = $trackingService->sendTrackingToApi($trackingCode);
-
-                                                if (!empty($apiResult)) {
-                                                    //verifica se a data de postagem na transportadora é menor que a data da venda
-                                                    if (!empty($apiResult->origin_info)) {
-                                                        $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
-                                                        if ($postDate->lt($productPlanSale->created_at)) {
-                                                            if (!$apiResult->already_exists) { // deleta na api caso seja recém criado
-                                                                $trackingService->deleteTrackingApi($apiResult);
-                                                            }
-                                                            continue;
-                                                        }
-                                                    }
-
-                                                    $statusEnum = $trackingService->parseStatusApi($apiResult->status);
-
-                                                    activity()->disableLogging();
-                                                    $tracking = $trackingService->createTracking($trackingCode,
-                                                        $productPlanSale, $statusEnum);
-                                                    activity()->enableLogging();
+                                                if(!empty($tracking)) {
                                                     $product->tracking_code = $trackingCode;
                                                     event(new TrackingCodeUpdatedEvent($sale, $tracking,
                                                         $saleProducts));

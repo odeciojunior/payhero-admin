@@ -38,12 +38,12 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
     /**
      * @param  Collection  $collection
      * @throws PresenterException
+     * @throws \App\Exceptions\TrackingCreateException
      */
     public function collection(Collection $collection)
     {
         $saleModel = new Sale();
         $trackingService = new TrackingService();
-        $trackingModel = new Tracking();
         $productService = new ProductService();
 
         foreach ($collection as $key => $value) {
@@ -71,50 +71,11 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
                 if (!empty($sale)) {
                     $productPlanSale = $sale->productsPlansSale->where('product_id', $productId)->first();
                     if (!empty($productPlanSale)) {
-                        $tracking = $productPlanSale->tracking;
 
-                        //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
-                        $exists = $trackingModel->where('trackings.tracking_code', $trackingCode)
-                            ->where('sale_id', '!=', $sale->id)
-                            ->whereHas('sale', function ($query) use ($sale) {
-                                $query->where('owner_id', $sale->owner_id)
-                                      ->where('upsell_id', '!=', $sale->id);
-                            })->exists();
-                        if ($exists) {
-                            continue;
-                        }
-
-                        $apiTracking = $trackingService->sendTrackingToApi($trackingCode);
-
-                        if (!empty($apiTracking)) {
-                            //verifica se a data de postagem na transportadora é menor que a data da venda
-                            if (!empty($apiTracking->origin_info)) {
-                                $postDate = Carbon::parse($apiTracking->origin_info->ItemReceived);
-                                if ($postDate->lt($productPlanSale->created_at)) {
-                                    if (!$apiTracking->already_exists) { // deleta na api caso seja recém criado
-                                        $trackingService->deleteTrackingApi($apiTracking);
-                                    }
-                                    continue;
-                                }
-                            }
-
-                            $statusEnum = $trackingService->parseStatusApi($apiTracking->status);
-
-                            if (!empty($tracking)) {
-                                if ($tracking->tracking_code != $trackingCode) {
-                                    $tracking->update([
-                                        'tracking_code' => $trackingCode,
-                                        'tracking_status_enum' => $statusEnum,
-                                    ]);
-                                    $saleProducts = $productService->getProductsBySale($sale);
-                                    event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                                }
-                            } else {
-                                $tracking = $trackingService->createTracking($trackingCode, $productPlanSale,
-                                    $statusEnum);
-                                $saleProducts = $productService->getProductsBySale($sale);
-                                event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
-                            }
+                        $tracking = $trackingService->createOrUpdateTracking($trackingCode, $productPlanSale);
+                        if(!empty($tracking)) {
+                            $saleProducts = $productService->getProductsBySale($sale);
+                            event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
                         }
                     }
                 }
