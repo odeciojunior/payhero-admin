@@ -290,9 +290,11 @@ class TrackingService
                         'tracking_status_enum' => $statusEnum,
                     ]);
                 }
-            }
 
-            return $tracking;
+                return $tracking;
+            } else {
+                throw new TrackingCreateException('O código de rastreio é inválido ou não foi reconhecido pela transportadora');
+            }
         } catch (\Exception $e) {
             if($throws) throw $e;
             return null;
