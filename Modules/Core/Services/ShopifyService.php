@@ -1231,9 +1231,7 @@ class ShopifyService
     public function getShopProducts()
     {
         if (!empty($this->client)) {
-            $storeProducts = $this->client->getProductManager()->paginate(['limit' => 250]);
-
-            return $storeProducts;
+            return $this->client->getProductManager()->paginate(['limit' => 250]);
         } else {
             return [];
         }

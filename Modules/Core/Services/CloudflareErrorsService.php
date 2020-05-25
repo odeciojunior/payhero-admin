@@ -16,7 +16,11 @@ class CloudflareErrorsService
     public static function formatErrorException($e)
     {
         $message = '';
-        $response = json_decode($e->getResponse()->getBody()->getContents(), true);
+        $response = '';
+
+        if (!empty($e->getResponse())) {
+            $response = json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
 
         if (isset($response['success']) && $response['success'] == false) {
             foreach ($response['errors'] as $error) {

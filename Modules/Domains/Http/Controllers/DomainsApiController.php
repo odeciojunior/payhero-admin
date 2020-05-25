@@ -121,6 +121,12 @@ class DomainsApiController extends Controller
                     $requestData['name'] = 'http://' . $requestData['name'];
                     $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
+                    if ($domainModel->where('name', 'like', '%' . $requestData['name'] . '%')->count() > 0) {
+                        DB::rollBack();
+
+                        return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
+                    }
+
                     if ($project->domains->where('name', $requestData['name'])
                             ->count() == 0) {
                         if (empty($cloudFlareService->getZones($requestData['name']))) {

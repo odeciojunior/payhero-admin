@@ -134,7 +134,13 @@ class DashboardApiController extends Controller
                                                 ->where('owner_id', $userId)
                                                 ->whereHas('transactions', function($query) use ($companyId) {
                                                     $query->where('company_id', $companyId);
-                                                })->first();
+                                                })
+                                                ->where(function($q1) {
+                                                    $q1->where('status', 4)->whereDoesntHave('saleLogs', function($querySaleLog) {
+                                                        $querySaleLog->whereIn('status_enum', collect([20,7]));
+                                                    })->orWhere('status', 1);
+                                                })
+                                                ->first();
 
                     $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
 

@@ -4,11 +4,18 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
+/**
+ * Class DomainPresenter
+ * @package Modules\Core\Presenters
+ */
 class DomainPresenter extends Presenter
 {
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
