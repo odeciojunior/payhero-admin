@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\TrackingCreateException;
+use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Bus\Queueable;
@@ -9,8 +11,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -52,19 +52,19 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
         $shopifyService->createShopWebhook([
             "topic" => "products/create",
-            "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($project->id),
+            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
             "format" => "json",
         ]);
 
         $shopifyService->createShopWebhook([
             "topic" => "products/update",
-            "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($project->id),
+            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id),
             "format" => "json",
         ]);
 
         $shopifyService->createShopWebhook([
             "topic" => "orders/updated",
-            "address" => 'https://app.cloudfox.net/postback/shopify/' . Hashids::encode($project->id) . '/tracking',
+            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode($project->id).'/tracking',
             "format" => "json",
         ]);
 
@@ -81,31 +81,25 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                     try {
                         $fulfillments = $shopifyService->findFulfillments($sale->shopify_order);
                         if (!empty($fulfillments)) {
-
                             $saleProducts = $productService->getProductsBySale($sale);
                             foreach ($fulfillments as $fulfillment) {
-                                if (!empty($fulfillment->getTrackingNumber())) {
-
+                                $trackingCode = $fulfillment->getTrackingNumber();
+                                if (!empty($trackingCode)) {
                                     foreach ($fulfillment->getLineItems() as $lineItem) {
-
-                                        $products = $saleProducts->where('shopify_variant_id', $lineItem->getVariantId())->where('amount', $lineItem->getQuantity());
+                                        $products = $saleProducts->where('shopify_variant_id',
+                                            $lineItem->getVariantId())->where('amount', $lineItem->getQuantity());
 
                                         if ($products->count()) {
                                             foreach ($products as &$product) {
-
                                                 $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
 
-                                                $tracking = new Tracking();
-                                                $tracking->tracking_code = $fulfillment->getTrackingNumber();
+                                                $tracking = $trackingService->createOrUpdateTracking($trackingCode,
+                                                    $productPlanSale);
 
-                                                $apiTracking = $trackingService->sendTrackingToApi($tracking);
-
-                                                if (!empty($apiTracking)) {
-                                                    activity()->disableLogging();
-                                                    $tracking = $trackingService->createTracking($fulfillment->getTrackingNumber(), $productPlanSale);
-                                                    activity()->enableLogging();
-                                                    $product->tracking_code = $fulfillment->getTrackingNumber();
-                                                    event(new TrackingCodeUpdatedEvent($sale, $tracking, $saleProducts));
+                                                if(!empty($tracking)) {
+                                                    $product->tracking_code = $trackingCode;
+                                                    event(new TrackingCodeUpdatedEvent($sale, $tracking,
+                                                        $saleProducts));
                                                 }
                                             }
                                         }
@@ -118,6 +112,5 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                     }
                 }
             });
-
     }
 }
