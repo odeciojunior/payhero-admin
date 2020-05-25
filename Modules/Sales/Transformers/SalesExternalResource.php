@@ -30,8 +30,8 @@ class SalesExternalResource extends JsonResource
             'net_amount' => (float) number_format(preg_replace("/[^0-9]/", "", $this->details->comission)/100, 2),
             'payment_method' => $this->present()->getPaymentType(),
             'status' => $this->present()->getStatus(),
-            'created_at' => $this->start_date,
-            'approved_at' => $this->end_date,
+            'created_at' => Carbon::parse($this->start_date)->toDateTimeString(),
+            'approved_at' => $this->end_date ? Carbon::parse($this->end_date)->toDateTimeString(): null,
             'products' => $this->products ?? [],
         ];
     }
