@@ -8,7 +8,8 @@
                     <div class="col-lg-8 text-center"><h4> Detalhes da venda </h4></div>
                     <div class="col-lg-2 text-right">
                         <a role="button" data-dismiss="modal">
-                            <i class="material-icons pointer">close</i></a>
+                            <i class="material-icons pointer">close</i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -114,7 +115,8 @@
                         <br>
                         <span id="client-telephone" class='table-title gray'></span>
                         <a id="client-whatsapp" href="#" target='_blank'>
-                            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px" title='Enviar mensagem pelo whatsapp'>
+                            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px"
+                                 title='Enviar mensagem pelo whatsapp'>
                         </a>
                         <br>
                         <span id="client-email" class="table-title gray"></span>
@@ -130,15 +132,15 @@
                             <h4> Rastreio </h4>
                             <table class='table table-striped mt-15'>
                                 <thead>
-                                    <tr>
-                                        <th>Produto</th>
-                                        <th>Rastreio</th>
-                                        <th>Status</th>
-                                        <th>Ações</th>
-                                    </tr>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Rastreio</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
                                 </thead>
                                 <tbody id='data-tracking-products'>
-                                    {{-- js carregado--}}
+                                {{-- js carregado--}}
                                 </tbody>
                             </table>
                         </div>
@@ -153,15 +155,19 @@
                             <br>
                         </div>
                         <div id="details-boleto" style="display:none">
-            <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link'
-                                                                                   style='cursor:pointer;' link='' title='Copiar link'><i
-                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                            <span id="boleto-link" class="table-title gray">
+                                Link para o boleto:
+                                <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
+                                    <i class='material-icons gradient' style='font-size:17px;'>file_copy</i>
+                                </a>
+                            </span>
                             <br>
-                            <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button'
-                                                                                                          class='copy_link'
-                                                                                                          style='cursor:pointer;'
-                                                                                                          digitable-line='' title='Copiar link'><i
-                                        class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+                            <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
+                                <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
+                                   title='Copiar link'>
+                                    <i class='material-icons gradient' style='font-size:17px;'>file_copy</i>
+                                </a>
+                            </span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
@@ -191,16 +197,16 @@
                             <h4> Integração Notazz </h4>
                             <table class='table table-striped mt-15'>
                                 <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Status</th>
-                                        <th>Code</th>
-                                        <th>Message</th>
-                                        <th>Ações</th>
-                                    </tr>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Code</th>
+                                    <th>Message</th>
+                                    <th>Ações</th>
+                                </tr>
                                 </thead>
                                 <tbody id='data-notazz-invoices'>
-                                    {{-- js carregado--}}
+                                {{-- js carregado--}}
                                 </tbody>
                             </table>
                             <div id='div_notazz_schedule'>
@@ -213,6 +219,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/detail.js') }}"></script>
+        <script src="{{ asset('/modules/notazz/js/detail.js?v=1') }}"></script>
     @endpush
 </div>

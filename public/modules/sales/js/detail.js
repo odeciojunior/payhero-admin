@@ -236,10 +236,9 @@ $(() => {
 
         $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
         if (sale.dolar_quotation) {
-            $('#iof-value span').text('R$ ' + sale.iof);
             $('#cambio-label span').text('Câmbio (1 $ = R$ ' + sale.dolar_quotation + '): ');
             $('#cambio-value span').text('US$ ' + sale.taxa);
-            $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
+            $('#cambio-label, #cambio-value').show();
         }
 
         $("#taxas-installment-free-label, #taxa-installment-value").hide();
@@ -735,6 +734,7 @@ $(() => {
             }
         });
     }
+
     //Estornar boleto
 
     function refundedBilletClick(sale, refunded_value) {
@@ -760,6 +760,7 @@ $(() => {
             }
         });
     }
+
     //Gera ordem shopify
     function newOrderClick(sale) {
         loadingOnScreen();
