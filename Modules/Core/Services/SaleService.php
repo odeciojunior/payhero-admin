@@ -319,11 +319,12 @@ class SaleService
         }
 
         $taxa = 0;
+        $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
         if (preg_replace("/[^0-9]/", "", $sale->installment_tax_value) > 0) {
-            $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "",
+            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission) - preg_replace("/[^0-9]/", "",
                                                                                          $sale->installment_tax_value);
         } else {
-            $taxaReal = $total - preg_replace('/[^0-9]/', '', $comission);
+            $taxaReal = $totalToCalcTaxReal - preg_replace('/[^0-9]/', '', $comission);
         }
         if (!empty($sale->affiliate_id) && !empty(Affiliate::withTrashed()->find($sale->affiliate_id))) {
             $taxaReal -= $affiliateValue;

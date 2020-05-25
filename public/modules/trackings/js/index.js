@@ -196,8 +196,8 @@ $(() => {
     function getBlockedBalance() {
 
         $('#alert-blockedbalance').hide();
-
-        $.ajax({
+        //TODO: descomentar quando liberar
+        /*$.ajax({
             method: 'GET',
             url: '/api/tracking/blockedbalance',
             dataType: 'json',
@@ -216,7 +216,7 @@ $(() => {
                         .shake();
                 }
             }
-        });
+        });*/
     }
 
     function getStatusBadge(status) {

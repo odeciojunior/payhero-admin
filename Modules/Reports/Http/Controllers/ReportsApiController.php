@@ -150,6 +150,11 @@ class ReportsApiController extends Controller
                         $salesDetails->whereDate('end_date', '<', date('Y-m-d', strtotime($requestEndDate . ' + 1 day')));
                     }
                 }
+                $salesDetails->where(function($q1) {
+                    $q1->where('status', 4)->whereDoesntHave('saleLogs', function($querySaleLog) {
+                        $querySaleLog->whereIn('status_enum', collect([20,7]));
+                    })->orWhere('status', '<>', 4);
+                });
                 $details               = $salesDetails->get();
                 $countSalesAproved     = $details[0]->contSalesAproved;
                 $countSalesPending     = $details[0]->contSalesPending;

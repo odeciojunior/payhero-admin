@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -51,7 +50,6 @@ class DashboardApiController extends Controller
 
             return response()->json(compact('companies', 'userTerm'), 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da dashboard (DashboardApiController - index)');
             report($e);
 
             return response()->json([
@@ -85,7 +83,6 @@ class DashboardApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da dashboard (DashboardController - getValues)');
             report($e);
 
             return response()->json([
@@ -137,7 +134,13 @@ class DashboardApiController extends Controller
                                                 ->where('owner_id', $userId)
                                                 ->whereHas('transactions', function($query) use ($companyId) {
                                                     $query->where('company_id', $companyId);
-                                                })->first();
+                                                })
+                                                ->where(function($q1) {
+                                                    $q1->where('status', 4)->whereDoesntHave('saleLogs', function($querySaleLog) {
+                                                        $querySaleLog->whereIn('status_enum', collect([20,7]));
+                                                    })->orWhere('status', 1);
+                                                })
+                                                ->first();
 
                     $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
 
@@ -213,9 +216,7 @@ class DashboardApiController extends Controller
                 return [];
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados da empresa (DashboardApiController - getDataValues)');
             report($e);
-            dd($e);
             return [];
         }
     }

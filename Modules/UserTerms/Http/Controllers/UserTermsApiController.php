@@ -5,6 +5,7 @@ namespace Modules\UserTerms\Http\Controllers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\IpService;
 use Jenssegers\Agent\Facades\Agent;
@@ -25,17 +26,32 @@ class UserTermsApiController
         try {
             $userTermsModel = new UserTerms();
 
-            $userLogged = auth()->user();
+            $userIdLogged = Auth::id();
 
-            $userTerm = $userTermsModel->whereNotNull('accepted_at')->where([
-                                                                                ['user_id', $userLogged->account_owner_id],
-                                                                                ['term_version', 'v1'],
-                                                                            ])->first();
+            if (empty($userIdLogged)) {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente!',
+                    ],
+                    400
+                );
+            }
+
+            $userTerm = $userTermsModel->whereNotNull('accepted_at')
+                ->where(
+                    [
+                        ['user_id', $userIdLogged],
+                        ['term_version', 'v1'],
+                    ]
+                )->first();
 
             if (!empty($userTerm)) {
-                return response()->json([
-                                            'message' => 'Salvo com sucesso!',
-                                        ], 200);
+                return response()->json(
+                    [
+                        'message' => 'Salvo com sucesso!',
+                    ],
+                    200
+                );
             }
 
             $geoIp = null;
@@ -46,47 +62,58 @@ class UserTermsApiController
             }
 
             $operationalSystem = Agent::platform();
-            $browser           = Agent::browser();
+            $browser = Agent::browser();
 
             $deviceData = [
-                'operational_system'       => Agent::platform(),
+                'operational_system' => Agent::platform(),
                 'operation_system_version' => Agent::version($operationalSystem),
-                'browser'                  => Agent::browser(),
-                'browser_version'          => Agent::version($browser),
-                'is_mobile'                => Agent::isMobile(),
-                'ip'                       => @$geoIp['ip'],
-                'country'                  => @$geoIp['country'],
-                'city'                     => @$geoIp['city'],
-                'state'                    => @$geoIp['state'],
-                'state_name'               => @$geoIp['state_name'],
-                'zip_code'                 => @$geoIp['postal_code'],
-                'currency'                 => @$geoIp['currency'],
-                'lat'                      => @$geoIp['lat'],
-                'lon'                      => @$geoIp['lon'],
+                'browser' => Agent::browser(),
+                'browser_version' => Agent::version($browser),
+                'is_mobile' => Agent::isMobile(),
+                'ip' => @$geoIp['ip'],
+                'country' => @$geoIp['country'],
+                'city' => @$geoIp['city'],
+                'state' => @$geoIp['state'],
+                'state_name' => @$geoIp['state_name'],
+                'zip_code' => @$geoIp['postal_code'],
+                'currency' => @$geoIp['currency'],
+                'lat' => @$geoIp['lat'],
+                'lon' => @$geoIp['lon'],
             ];
 
-            $userTermsCreated = $userTermsModel->create([
-                                                            'user_id'      => $userLogged->account_owner_id,
-                                                            'term_version' => 'v1',
-                                                            'device_data'  => json_encode($deviceData, true),
-                                                            'accepted_at'  => Carbon::now(),
-                                                        ]);
+            $userTermsCreated = $userTermsModel->create(
+                [
+                    'user_id' => $userIdLogged,
+                    'term_version' => 'v1',
+                    'device_data' => json_encode($deviceData, true),
+                    'accepted_at' => Carbon::now(),
+                ]
+            );
 
             if ($userTermsCreated) {
-                return response()->json([
-                                            'message' => 'Salvo com sucesso!',
-                                        ], 200);
-            } else {
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente!',
-                                        ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Salvo com sucesso!',
+                    ],
+                    200
+                );
             }
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente!',
+                ],
+                400
+            );
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro',
-                                    ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro',
+                ],
+                400
+            );
         }
     }
 }
