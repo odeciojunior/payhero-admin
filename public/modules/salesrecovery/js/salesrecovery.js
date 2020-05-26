@@ -175,6 +175,7 @@ $(document).ready(function () {
                             $('#saleId').val(saleId);
                             $('#modal_regerar_boleto').modal('show');
 
+                            $('#bt_send').unbind('click');
                             $('#bt_send').on('click', function () {
                                 loadingOnScreen();
 
