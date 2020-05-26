@@ -6,7 +6,8 @@
                 <div class="row">
                     <div class="form-group col-12 mt-4">
                         <label for="name">Descrição</label>
-                        <input name="name" type="text" class="form-control pixel-description" placeholder="Descrição" maxlength='30'>
+                        <input name="name" type="text" class="form-control pixel-description" placeholder="Descrição"
+                               maxlength='30'>
                     </div>
                     <div class="form-group col-6">
                         <label for="platform">Plataforma</label>
@@ -29,14 +30,23 @@
                 <label for="code">Código</label>
                 <div class="input-group mb-3">
                     <div class='input-group-prepend'>
-                        <span class='input-group-text' id='input-code-pixel' style='background:#f3f3f3;display:none'></span>
+                        <span class='input-group-text' id='input-code-pixel'
+                              style='background:#f3f3f3;display:none'></span>
                     </div>
-                    <input name="code" type="text" id='code-pixel' class="form-control pixel-code" placeholder="52342343245553" maxlength='30' aria-describedby="input-code-pixel">
+                    <input name="code" type="text" id='code-pixel' class="form-control pixel-code"
+                           placeholder="52342343245553" maxlength='100' aria-describedby="input-code-pixel">
                 </div>
+                <h5 id="outbrain-info" style="display:none">
+                    Para os eventos do pixel funcionarem normalmente, você deve cadastrar os seguintes eventos no
+                    Outbrain:<br>
+                    Categoria Purchase - nome Purchase<br>
+                    Categoria Checkout - nome Checkout<br>
+                </h5>
                 <div class='row'>
                     <div class='form-group col-12 my-20'>
                         <label for="add_pixel_plans">Executar no(s) plano(s)</label>
-                        <select name="add_pixel_plans[]" id="add_pixel_plans" class="js-states form-control" style='width:100%' data-plugin="select2" multiple='multiple'>
+                        <select name="add_pixel_plans[]" id="add_pixel_plans" class="js-states form-control"
+                                style='width:100%' data-plugin="select2" multiple='multiple'>
                             <option value='all'>Todos</option>
                         </select>
                     </div>
@@ -60,7 +70,8 @@
                             <label for="cartao">Purchase (cartão):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="" name='purchase_card' class='check pixel-purchase-card' checked>
+                                <input type="checkbox" value="" name='purchase_card' class='check pixel-purchase-card'
+                                       checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>
@@ -70,7 +81,8 @@
                             <label for="boleto">Purchase (boleto):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="" name='purchase_boleto' class='check pixel-purchase-boleto' checked>
+                                <input type="checkbox" value="" name='purchase_boleto'
+                                       class='check pixel-purchase-boleto' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>

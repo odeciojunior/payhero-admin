@@ -3,6 +3,14 @@ let statusPixel = {
     0: "danger",
 };
 
+let formatPlatform = {
+    1: 'Facebook',
+    2: 'Google Adwords',
+    3: 'Google Analytics',
+    4: 'Taboola',
+    5: 'Outbrain'
+}
+
 $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
@@ -28,6 +36,7 @@ $(function () {
 
     $("#select-platform").change(function () {
         let value = $(this).val();
+        $("#outbrain-info").hide();
 
         if (value === 'facebook') {
             $("#input-code-pixel").html('').hide();
@@ -38,6 +47,10 @@ $(function () {
         } else if (value === 'google_analytics') {
             $("#input-code-pixel").html('UA-').show();
             $("#code-pixel").attr("placeholder", '8984567741-3');
+        } else if (value === 'outbrain') {
+            $("#input-code-pixel").html('').hide();
+            $("#outbrain-info").show();
+            $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
         } else {
             $("#input-code-pixel").html('').hide();
             $("#code-pixel").attr("placeholder", 'Código');
@@ -171,7 +184,7 @@ $(function () {
 
         $("#modal-edit-pixel .apply_plans").html('');
         let applyOnPlans = [];
-        for(let plan of pixel.apply_on_plans){
+        for (let plan of pixel.apply_on_plans) {
             applyOnPlans.push(plan.id);
             $("#modal-edit-pixel .apply_plans").append(`<option value="${plan.id}">${plan.name + (plan.description ? ' - ' + plan.description : '')}</option>`);
         }
@@ -338,7 +351,7 @@ $(function () {
                         let data = `<tr>
                                     <td>${value.name}</td>
                                     <td>${value.code}</td>
-                                    <td>${value.platform}</td>
+                                    <td>${formatPlatform[value.platform_enum]}</td>
                                     <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
                                     <td style='text-align:center'>
                                         <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
@@ -374,6 +387,7 @@ $(function () {
             }
         });
     }
+
     function clearFields() {
         $('.pixel-description').val('');
         $('.pixel-code').val('');
