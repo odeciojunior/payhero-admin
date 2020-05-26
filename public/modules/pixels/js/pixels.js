@@ -118,24 +118,50 @@ $(function () {
                     }
                 });
 
+
                 // troca o placeholder dos inputs
-                $("#select-platform").change(function () {
+                $("#modal-edit-pixel #select-platform").change(function () {
                     let value = $(this).val();
+                    $("#modal-edit-pixel #outbrain-info-edit").hide();
 
                     if (value === 'facebook') {
-                        $("#code-pixel-edit").html('').hide();
-                        $("#code-pixel").attr("placeholder", '52342343245553');
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
                     } else if (value === 'google_adwords') {
-                        $("#code-pixel-edit").html('AW-').show();
-                        $("#code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
+                        $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
                     } else if (value === 'google_analytics') {
-                        $("#code-pixel-edit").html('UA-').show();
-                        $("#code-pixel").attr("placeholder", '8984567741-3');
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('UA-').show();
+                        $("#modal-edit-pixel #code-pixel").attr("placeholder", '8984567741-3');
+                    } else if (value === 'outbrain') {
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #outbrain-info-edit").show();
+                        $("#modal-edit-pixel #code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                     } else {
-                        $("#code-pixel-edit").html('').hide();
-                        $("#code-pixel").attr("placeholder", 'Código');
+                        $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                        $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
                     }
                 });
+
+                if (pixel.platform === 'facebook') {
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", '52342343245553');
+                } else if (pixel.platform === 'google_adwords') {
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('AW-').show();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", '8981445741-4/AN7162ASNSG');
+                } else if (pixel.platform === 'google_analytics') {
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('UA-').show();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", '8984567741-3');
+                } else if (pixel.platform === 'outbrain') {
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #outbrain-info-edit").show();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
+                } else {
+                    $("#modal-edit-pixel #input-code-pixel-edit").html('').hide();
+                    $("#modal-edit-pixel #code-pixel").attr("placeholder", 'Código');
+                }
+
+
             }
         });
     });
@@ -191,6 +217,8 @@ $(function () {
         $("#modal-edit-pixel .apply_plans").val(applyOnPlans);
 
         $('#modal-edit-pixel').modal('show');
+
+
     }
 
     //carregar modal delecao
@@ -368,6 +396,7 @@ $(function () {
 
                 $("#select-platform").change(function () {
                     let value = $(this).val();
+                    $("#outbrain-info").hide();
 
                     if (value === 'facebook') {
                         $("#input-code-pixel").html('').hide();
@@ -378,6 +407,10 @@ $(function () {
                     } else if (value === 'google_analytics') {
                         $("#input-code-pixel").html('UA-').show();
                         $("#code-pixel").attr("placeholder", '8984567741-3');
+                    } else if (value === 'outbrain') {
+                        $("#input-code-pixel").html('').hide();
+                        $("#outbrain-info").show();
+                        $("#code-pixel").attr("placeholder", '00de2748d47f2asdl39877mash');
                     } else {
                         $("#input-code-pixel").html('').hide();
                         $("#code-pixel").attr("placeholder", 'Código');
