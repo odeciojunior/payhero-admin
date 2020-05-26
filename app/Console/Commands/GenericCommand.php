@@ -34,6 +34,7 @@ class GenericCommand extends Command
      * @var string
      */
     protected $signature = 'generic';
+
     /**
      * The console command description.
      * @var string
@@ -43,7 +44,10 @@ class GenericCommand extends Command
     public function handle()
     {
 
+
+
     }
+
 }
 
 

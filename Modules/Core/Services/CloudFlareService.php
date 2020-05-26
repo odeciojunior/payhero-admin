@@ -28,10 +28,11 @@ use stdClass;
 class CloudFlareService
 {
     const shopifyIp   = '23.227.38.32';
-    const checkoutIp  = '104.248.234.121';
-    const sacIp       = '157.245.81.127';
-    const affiliateIp = '104.248.234.121';
-    const adminIp     = '165.22.13.237';
+    const checkoutIp  = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
+    const sacIp       = 'cloudfoxsuit-sac-balance-1972915763.us-east-1.elb.amazonaws.com';
+    const affiliateIp = 'cloudfoxsuit-checkout-balance-1912358215.us-east-1.elb.amazonaws.com';
+    const adminIp     = 'cloudfoxsuit-admin-balance-942137392.us-east-1.elb.amazonaws.com';
+
     /**
      * @var APIKey
      */
@@ -389,41 +390,41 @@ class CloudFlareService
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'checkout', self::checkoutIp);
+            $recordId = $this->addRecord("CNAME", 'checkout', self::checkoutIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'checkout',
                                                       'content'              => self::checkoutIp,
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'sac', self::sacIp);
+            $recordId = $this->addRecord("CNAME", 'sac', self::sacIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'sac',
                                                       'content'              => self::sacIp,
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'affiliate', self::affiliateIp);
+            $recordId = $this->addRecord("CNAME", 'affiliate', self::affiliateIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'affiliate',
                                                       'content'              => self::affiliateIp,
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'tracking', self::adminIp);
+            $recordId = $this->addRecord("CNAME", 'tracking', self::adminIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'tracking',
                                                       'content'              => self::adminIp,
                                                       'system_flag'          => 1,
@@ -523,41 +524,41 @@ class CloudFlareService
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'checkout', self::checkoutIp);
+            $recordId = $this->addRecord("CNAME", 'checkout', self::checkoutIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'checkout',
                                                       'content'              => self::checkoutIp,
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'sac', self::sacIp);
+            $recordId = $this->addRecord("CNAME", 'sac', self::sacIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'sac',
                                                       'content'              => self::sacIp,
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'affiliate', self::affiliateIp);
+            $recordId = $this->addRecord("CNAME", 'affiliate', self::affiliateIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'affiliate',
                                                       'content'              => self::affiliateIp,
                                                       'system_flag'          => 1,
                                                   ]);
 
-            $recordId = $this->addRecord("A", 'tracking', self::adminIp);
+            $recordId = $this->addRecord("CNAME", 'tracking', self::adminIp);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'            => $domainModelId,
                                                       'cloudflare_record_id' => $recordId,
-                                                      'type'                 => 'A',
+                                                      'type'                 => 'CNAME',
                                                       'name'                 => 'tracking',
                                                       'content'              => self::adminIp,
                                                       'system_flag'          => 1,
