@@ -41,6 +41,7 @@ class GenericCommand extends Command
 
         $total = $sales->count();
 
+        $ordersApproved = 0;
         foreach ($sales as $key => $sale) {
             $count = $key + 1;
             $this->line("Verificando venda {$count} de {$total}: {$sale->id}");
@@ -68,11 +69,16 @@ class GenericCommand extends Command
                         "authorization" => Hashids::connection('sale_id')->encode($sale->id),
                     ];
                     $shopifyService->getClient()->getTransactionManager()->create($sale->shopify_order, $data);
+                    $ordersApproved++;
+
+                    $this->info('Order criada no shopify');
                 }
             } catch (Exception $e) {
                 $this->error($e->getMessage());
             }
         }
+
+        $this->info("{$ordersApproved} orders aprovadas no shopify de {$total} vendas verificadas");
     }
 }
 
