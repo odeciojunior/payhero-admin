@@ -393,6 +393,31 @@ class JulioController extends Controller
         // }
         // $this->info('ACABOOOOOOOOOOOOOU!');
     }
+
+    public function checkAntifraude(){
+
+        $sales = Sale::whereHas('saleLogs',function($query){
+            $query->where('status_enum',20);
+        })->whereDate('created_at', '>=',Carbon::now()->subDays(3)->toDateString())
+        ->get();
+
+        $approved = 0;
+        $reproved = 0;
+        $total = 0;
+        foreach($sales as $sale){
+            if($sale->status == 1){
+                $approved++;
+                $total++;
+            }
+            if($sale->status == 21){
+                $reproved++;
+                $total++;
+            }
+        }
+
+        dd('total ' . $total . ' aprovado ' . $approved . ' reprovado '. $reproved);
+
+    }
 }
 
 
