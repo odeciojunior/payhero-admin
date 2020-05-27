@@ -16,7 +16,6 @@ class TransfersService
 {
     public function verifyTransactions($saleId = null)
     {
-
         $companyModel     = new Company();
         $transferModel    = new Transfer();
         $transactionModel = new Transaction();
@@ -26,22 +25,22 @@ class TransfersService
             $transactions = $transactionModel->where([
                                                          ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                          ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
-                                                     ]);
-                                            //  ->whereHas('productPlanSales')
-                                            //  ->whereDoesntHave('productPlanSales', function($query) {
-                                            //     $query->whereDoesntHave('tracking');
-                                            //  });
+                                                     ])
+                                             ->whereHas('productPlanSales')
+                                             ->whereDoesntHave('productPlanSales', function($query) {
+                                                $query->whereDoesntHave('tracking');
+                                             });
         }
         else {
             $transactions = $transactionModel->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                 ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                 ['sale_id', $saleId]
-            ]);
-            // ->whereHas('productPlanSales')
-            // ->whereDoesntHave('productPlanSales', function($query) {
-            //                     $query->whereDoesntHave('tracking');
-            //                 });
+            ])
+            ->whereHas('productPlanSales')
+            ->whereDoesntHave('productPlanSales', function($query) {
+                                $query->whereDoesntHave('tracking');
+                            });
         }
 
         foreach ($transactions->cursor() as $transaction) {
@@ -78,11 +77,11 @@ class TransfersService
                                              ->where([
                                                         ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                         ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
-                                                    ]);
-                                            //  ->whereHas('productPlanSales')
-                                            //  ->whereDoesntHave('productPlanSales', function($query) {
-                                            //     $query->whereDoesntHave('tracking');
-                                            //  });
+                                                    ])
+                                             ->whereHas('productPlanSales')
+                                             ->whereDoesntHave('productPlanSales', function($query) {
+                                                $query->whereDoesntHave('tracking');
+                                             });
         }
         else {
             $transactions = $transactionModel->with('anticipatedTransactions')
@@ -90,11 +89,11 @@ class TransfersService
                                                  ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                  ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
                                                  ['sale_id', $saleId]
-                                             ]);
-                                            //  ->whereHas('productPlanSales')
-                                            //  ->whereDoesntHave('productPlanSales', function($query) {
-                                            //     $query->whereDoesntHave('tracking');
-                                            //  });
+                                             ])
+                                             ->whereHas('productPlanSales')
+                                             ->whereDoesntHave('productPlanSales', function($query) {
+                                                $query->whereDoesntHave('tracking');
+                                             });
         }
 
         foreach ($transactions->cursor() as $transaction) {

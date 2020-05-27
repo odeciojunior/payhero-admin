@@ -303,7 +303,7 @@
                                                 <select id="credit-card-release" disabled='disabled' class="form-control">
                                                     <option value="plan-30">30 dias (taxa de 5.9%)</option>
                                                     <option value="plan-15">15 dias (taxa de 6.5%)</option>
-                                                    <option value="plan-0">D+P - na postagem do código de rastreio (taxa de 10%)</option>
+                                                    <option value="plan-0">Após postagem com rastreio válido</option>
                                                     <option value="plan-tracking-code" disabled>Ao informar o código de rastreio (em breve)
                                                     </option>
                                                 </select>
@@ -345,7 +345,7 @@
                                                 <select id="boleto-release" disabled='disabled' class="form-control">
                                                     <option value="plan-30">30 dias (taxa de 5.9%)</option>
                                                     <option value="plan-2">2 dias (taxa de 6.5%)</option>
-                                                    <option value="plan-0">D+P - na postagem do código de rastreio (taxa de 10%)</option>
+                                                    <option value="plan-0">Após postagem com rastreio válido</option>
                                                 </select>
                                             </div>
                                         </div>
