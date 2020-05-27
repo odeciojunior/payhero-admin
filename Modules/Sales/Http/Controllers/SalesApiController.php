@@ -400,7 +400,7 @@ class SalesApiController extends Controller
                     'transactions',
                     'productsPlansSale.product',
                 ])->where('owner_id', $userId)
-                    ->whereDate('start_date', '<=', now()->subDays(30))
+                    ->whereDate('start_date', '>=', now()->subDays(30))
                     ->whereIn('status', $saleStatus)
                     ->paginate(100);
 
