@@ -67,6 +67,15 @@ return [
             'block_for' => null,
         ],
 
+        'redis-horizon' => [
+            'driver' => 'redis',
+            'connection' => 'redis-horizon',
+            'queue' => 'default',
+            'retry_after' => 7200,
+            'timeout' => 3600,
+            'block_for' => null,
+        ],
+
     ],
 
     /*
