@@ -86,6 +86,8 @@ class Kernel extends ConsoleKernel
 
         //Reorder shopify hourly
         // $schedule->command('command:ShopifyReorderSalesHourly')->hourly();
+
+        $schedule->command('test:test')->everyMinute();
     }
 
     /**
