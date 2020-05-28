@@ -16,7 +16,13 @@ class TicketResource extends JsonResource
             ? $this->messages->last()->created_at->format('d/m/Y H:i:s')
             : $createdAt;
         $this->sale;
-        $userProject = UserProject::with('company')->where('project_id', $this->sale->project_id)->first();
+        $userProject      = UserProject::with('company')->where('project_id', $this->sale->project_id)->first();
+        $adminLastMessage = false;
+        if (!empty($this->lastMessage->first())) {
+            if ($this->lastMessage->first()->from_admin) {
+                $adminLastMessage = true;
+            }
+        }
 
         return [
             'id'                   => Hashids::encode($this->id),
@@ -31,6 +37,7 @@ class TicketResource extends JsonResource
             'last_message'         => $lastMessage,
             'customer_name'        => $this->customer->name,
             'company_name'         => $userProject->company->fantasy_name,
+            'admin_last_message'   => $adminLastMessage,
         ];
     }
 }
