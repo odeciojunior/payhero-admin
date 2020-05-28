@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     loadOnAny('.page-content');
+    $('#btn-integration-model').hide();
 
     $.ajax({
         method: "GET",
@@ -17,6 +18,7 @@ $(document).ready(function () {
         },
         success: function success(response) {
             index();
+            verifyDocuments();
             create(response.data);
         }
     });
@@ -40,6 +42,32 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.page-content', true);
                 createHtmlIntegrations(response.data);
+            }
+        });
+    }
+
+    function verifyDocuments() {
+        $.ajax({
+            method: "GET",
+            url: "/api/profile/verifydocuments",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.page-content', true);
+                errorAjaxResponse(response);
+                $('#btn-integration-model').hide();
+            },
+            success: function success(response) {
+                loadOnAny('.page-content', true);
+                if(response.pending === false) {
+                    $('#btn-integration-model').show();
+                } else {
+                    $('#btn-integration-model').hide();
+                    alertCustom('error', 'Finalize seu cadastro para integrar com Shopify!');
+                }
             }
         });
     }

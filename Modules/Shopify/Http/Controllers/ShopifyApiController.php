@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\UserService;
 use Modules\Core\Services\ShopifyErrors;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -73,6 +75,14 @@ class ShopifyApiController extends Controller
     public function store(Request $request)
     {
         try {
+            $companyService = new CompanyService();
+            $userService    = new UserService();
+
+            $companyDocumentPending = $companyService->haveAnyDocumentPending();
+            $userDocumentPending    = $userService->haveAnyDocumentPending();
+            if($companyDocumentPending || $userDocumentPending) {
+                return response()->json(['message' => 'Finalize seu cadastro para integrar com Shopify'], 400);
+            }
 
             $projectModel            = new Project();
             $userProjectModel        = new UserProject();
