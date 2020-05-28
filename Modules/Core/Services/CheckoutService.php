@@ -16,6 +16,7 @@ use Modules\Core\Entities\Transfer;
 use SendGrid\Mail\Mail;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\RegeneratedBillet;
 
 /**
  * Class CheckoutService
@@ -182,14 +183,37 @@ class CheckoutService
     {
 
         try {
+            $saleIdDecode = current(Hashids::connection('sale_id')->decode($saleId));
             $saleModel = new Sale();
-            $sale      = $saleModel::with('project.domains')->where('id', Hashids::connection('sale_id')
-                                                                                 ->decode($saleId))->first();
+            $sale      = $saleModel::with('project.domains')->where('id', $saleIdDecode)->first();
+
+            $billets = RegeneratedBillet::where('sale_id', $saleIdDecode)
+                                        ->orWhere('owner_id', $sale->owner_id)
+                                        ->limit(6)
+                                        ->get();
+
+            if($billets->where('sale_id', $saleIdDecode)->count() > 1) {
+                return [
+                    'status'   => 'error',
+                    'error'    => 'error',
+                    'message'  => 'Só é permitido regerar 4 boletos por venda',
+                ];
+            }
+
+            if($billets->where('created_at', '>', Carbon::now()->subMinute())->count() > 1) {
+                return [
+                    'status'   => 'error',
+                    'error'    => 'error',
+                    'message'  => 'Aguarde um instante, só é permitido regerar 2 boletos por minuto',
+                ];
+            }
+
+
             $domain    = $sale->project->domains->where('status', 3)->first();
             if (FoxUtils::isProduction()) {
                 $regenerateBilletUrl = 'https://checkout.cloudfox.net/api/payment/regeneratebillet';
             } else {
-                $regenerateBilletUrl = 'http://dev.checkout.com.br/api/payment/regeneratebillet';
+                $regenerateBilletUrl = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/regeneratebillet';
             }
 
             $data = [
@@ -205,19 +229,29 @@ class CheckoutService
                 if (!empty($dataUpdate['gateway_received_date'])) {
                     unset($dataUpdate['gateway_received_date']);
                 }
-                $check = $saleModel->where('id', Hashids::connection('sale_id')->decode($saleId))
+                $check = $saleModel->where('id', $saleIdDecode)
                                    ->update(array_merge($dataUpdate,
                                                         [
                                                             'start_date'       => Carbon::now(),
                                                             'total_paid_value' => substr_replace($totalPaidValue, '.', strlen($totalPaidValue) - 2, 0),
                                                         ]));
                 if ($check) {
+                    RegeneratedBillet::create([
+                        'sale_id'                      => $saleIdDecode,
+                        'billet_link'                  => $dataUpdate['boleto_link'],
+                        'billet_digitable_line'        => $dataUpdate['boleto_digitable_line'],
+                        'billet_due_date'              => $dataUpdate['boleto_due_date'],
+                        'gateway_transaction_id'       => $dataUpdate['gateway_transaction_id'],
+                        'gateway_billet_identificator' => $dataUpdate['gateway_billet_identificator'] ?? null,
+                        'gateway_id'                   => $dataUpdate['gateway_id'],
+                        'owner_id'                     => $sale->owner_id,
+                    ]);
+
                     $transactionModel = new Transaction();
                     $sale             = $saleModel::with('project.domains')
-                                                  ->where('id', Hashids::connection('sale_id')->decode($saleId))
+                                                  ->where('id', $saleIdDecode)
                                                   ->first();
-                    $transactionModel->where('sale_id', Hashids::connection('sale_id')
-                                                               ->decode($saleId))->delete();
+                    $transactionModel->where('sale_id', $saleIdDecode)->delete();
 
                     $splitPaymentService = new SplitPaymentService();
 

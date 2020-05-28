@@ -72,7 +72,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         Sale::where('project_id', $project->id)
             ->with([
                 'productsPlansSale',
-                'plansSales.plan.project.shopifyIntegrations'
             ])->doesntHave('tracking')
             ->where('status', 1)
             ->whereNotNull('shopify_order')
