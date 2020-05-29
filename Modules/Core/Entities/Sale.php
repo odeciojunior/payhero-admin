@@ -41,7 +41,6 @@ use Modules\Core\Presenters\SalePresenter;
  * @property string $boleto_due_date
  * @property string $cupom_code
  * @property string $shopify_order
- * @property string $iof
  * @property string $shopify_discount
  * @property string $dolar_quotation
  * @property boolean $first_confirmation
@@ -110,7 +109,6 @@ class Sale extends Model
         'boleto_due_date',
         'cupom_code',
         'shopify_order',
-        'iof',
         'shopify_discount',
         'dolar_quotation',
         'first_confirmation',
@@ -264,6 +262,7 @@ class Sale extends Model
     {
         return $this->hasMany('Modules\Core\Entities\SaleWhiteBlackListResult');
     }
+
     /**
      * @return HasMany
      */
