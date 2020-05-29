@@ -467,7 +467,7 @@ class ShopifyApiController extends Controller
             ImportShopifyTrackingCodesJob::dispatch($project);
 
             return response()->json([
-                                        'message' => 'Códigos de rastreio sendo importados...',
+                                        'message' => 'Os códigos de rastreio sendo importados...',
                                     ], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
