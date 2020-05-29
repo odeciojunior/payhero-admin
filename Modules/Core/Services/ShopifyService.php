@@ -1876,7 +1876,6 @@ class ShopifyService
                 'status' => 'success',
             ];
         } catch (Exception $e) {
-            report($e);
 
             return [
                 'status' => 'error',
