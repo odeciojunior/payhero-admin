@@ -104,6 +104,9 @@ body {
 .card-left.red {
     background-image: linear-gradient(to right, rgb(247, 107, 28), rgb(255, 97, 97));
 }
+.card-left.blue {
+    background-image: linear-gradient(to right, rgb(20, 105, 217), rgb(20, 105, 217));
+}
 /*left*/
 
 /*top*/
@@ -141,6 +144,11 @@ body {
 
 .red-gradient {
     background: -webkit-linear-gradient(rgb(247, 107, 28), rgb(255, 97, 97));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.blue-gradient {
+    background: -webkit-linear-gradient(rgb(20, 105, 217), rgb(20, 105, 217));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -210,29 +218,29 @@ body {
 }
 
 .progress {
-    background-color: #e5e5e5;
+    background-color: #E5E5E5;
     margin-bottom: 5px;
 }
 
 .progress-bar {
-    background: linear-gradient(to right, #3fda58, #51ecc3);
+    background: linear-gradient(to right, #3FDA58, #51ECC3);
 }
 
 .progress-bar.bg-warning {
-    background: linear-gradient(to right, #fad961, #f76b1c);
+    background: linear-gradient(to right, #FAD961, #F76B1C);
 }
 
-.progress-bar.bg-danger{
-    background: linear-gradient(to right, #f76b1c, #ff6161);
+.progress-bar.bg-danger {
+    background: linear-gradient(to right, #F76B1C, #FF6161);
 }
 
 .not-hover,
-.not-hover:hover{
+.not-hover:hover {
     color: inherit;
 }
 
 .mini-card {
-    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0,0,0,.1);
+    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, .1);
     border-radius: 0.25rem;
     padding: 15px;
 }

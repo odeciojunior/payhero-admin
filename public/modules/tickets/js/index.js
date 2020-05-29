@@ -12,7 +12,7 @@ $(document).ready(function () {
     };
 
     let pageCurrent = JSON.parse(getCookie('filterTickets') || '{}').page;
-    if(!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)){
+    if (!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)) {
         deleteCookie('filterTickets');
     }
 
@@ -65,7 +65,7 @@ $(document).ready(function () {
         }
 
         let cookie = getCookie('filterTickets');
-        if(!!cookie){
+        if (!!cookie) {
             cookie = JSON.parse(cookie);
             $("#status-filter").val(cookie.status);
             $("#customer-filter").val(cookie.customer);
@@ -105,7 +105,7 @@ $(document).ready(function () {
                     for (let ticket of response.data) {
                         data = `
                            <div class='col-12 col-lg-12'>
-                                <div class="card card-shadow bg-white card-left ${cardColorByStatus[ticket.ticket_status_enum]}">
+                                <div class="card card-shadow bg-white card-left ${ticket.admin_last_message ? 'blue' : cardColorByStatus[ticket.ticket_status_enum]}">
                                     <div class="card-header bg-white p-20 pb-0">
                                         <i class="material-icons mr-1">chat_bubble_outline</i>
                                         <a class="not-hover" href="${locationUrl}/${ticket.id}"><span class='font-size-18 font-weight-bold'>${ticket.subject}</span></a>
@@ -163,7 +163,7 @@ $(document).ready(function () {
                                                 <span class='font-weight-bold'>${ticket.last_message}</span>
                                             </div>
                                             <div class='col-6 col-lg-2 mt-10'>
-                                                <span class='font-size-12 ${letterColorByStatus[ticket.ticket_status_enum]} mt-20'>${ticket.ticket_status}</span>
+                                                <span class='font-size-12 ${ticket.admin_last_message ? 'blue-gradient' : letterColorByStatus[ticket.ticket_status_enum]} mt-20'>${ticket.ticket_status}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -175,7 +175,7 @@ $(document).ready(function () {
                     $("#div-tickets").hide();
                     $("#div-ticket-empty").show();
                 }
-                let filter = {...getFilters(), page : pageCurrent || null};
+                let filter = {...getFilters(), page: pageCurrent || null};
                 setCookie('filterTickets', 1, filter);
                 pagination(response, 'tickets', getTickets);
             }

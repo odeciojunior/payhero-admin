@@ -72,7 +72,8 @@ return [
     |
     */
 
-    'connection' => null,
+    // 'connection' => null,
+    'connection' => 'redis-sessions',
 
     /*
     |--------------------------------------------------------------------------

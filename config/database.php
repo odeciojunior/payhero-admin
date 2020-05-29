@@ -104,17 +104,39 @@ return [
     |
     */
 
+    // 'redis' => [
+
+    //     'client' => 'predis',
+
+    //     'default' => [
+    //         'host' => env('REDIS_HOST', '127.0.0.1'),
+    //         'password' => env('REDIS_PASSWORD', null),
+    //         'port' => env('REDIS_PORT', 6379),
+    //         'database' => 0,
+    //     ],
+
+    // ],
+
     'redis' => [
-
         'client' => 'predis',
-
         'default' => [
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],
-
-    ],
+        'redis-sessions' => [
+            'host' => env('REDIS_SESSION_HOST', '127.0.0.1'),
+            'password' => env('REDIS_SESSION_PASSWORD', null),
+            'port' => env('REDIS_SESSION_PORT', 6379),
+            'database' => 10,
+        ],
+        'redis-horizon' => [
+            'host' => env('REDIS_HORIZON_HOST', '127.0.0.1'),
+            'password' => env('REDIS_HORIZON_PASSWORD', null),
+            'port' => env('REDIS_HORIZON_PORT', 6379),
+            'database' => 0,
+        ],
+    ]    
 
 ];

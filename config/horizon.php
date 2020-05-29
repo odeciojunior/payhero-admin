@@ -39,7 +39,8 @@ return [
     |
     */
 
-    'use' => 'default',
+    // 'use' => 'default',
+    'use' => 'redis-horizon',
 
     /*
     |--------------------------------------------------------------------------
@@ -142,7 +143,7 @@ return [
     'environments' => [
         'production' => [
             'supervisor-production' => [
-                'connection' => 'redis',
+                'connection' => 'redis-horizon',
                 'queue' => ['high','default','low'],
                 'balance' => 'false',
                 'processes' => 15,
@@ -154,7 +155,7 @@ return [
 
         'local' => [
             'supervisor-1' => [
-                'connection' => 'redis',
+                'connection' => 'redis-horizon',
                 'queue' => ['high','default'],
                 'balance' => 'false',
                 'processes' => 3,

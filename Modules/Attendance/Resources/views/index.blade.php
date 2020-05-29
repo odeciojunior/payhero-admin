@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=2') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=3') }}">
     @endpush
     <div class="page">
         <div class="page-header container">
@@ -144,7 +144,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=7')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=9')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
