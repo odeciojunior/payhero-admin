@@ -51,7 +51,7 @@ class TicketsApiController extends Controller
                 });
             }
             if (!empty($data['cpf'])) {
-                $document = preg_replace("/[^0-9]/","", $data['cpf']);
+                $document = preg_replace("/[^0-9]/", "", $data['cpf']);
                 $tickets->whereHas('customer', function($query) use ($document) {
                     $query->where('document', $document);
                 });
@@ -60,27 +60,34 @@ class TicketsApiController extends Controller
                 $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
                 $tickets->where('id', $ticketId);
             }
-            if (!empty($data['answered'])) {
-                if ($data['answered'] == 'answered') {
-                    $tickets->whereHas('lastMessage', function ($query) {
-                        $query->where('from_admin', 1)
-                              ->where('from_system', 0);
-                    });
-                } else {
-                    $tickets->whereDoesntHave('lastMessage', function ($query) {
-                        $query->where('from_admin', 1)
-                            ->where('from_system', 0);
-                    });
-                }
-            }
+            //            if (!empty($data['answered'])) {
+            //                if ($data['answered'] == 'answered') {
+            //                    $tickets->whereHas('lastMessage', function($query) {
+            //                        $query->where('from_admin', 1)
+            //                              ->where('from_system', 0);
+            //                    });
+            //                } else {
+            //                    $tickets->whereDoesntHave('lastMessage', function($query) {
+            //                        $query->where('from_admin', 1)
+            //                              ->where('from_system', 0);
+            //                    });
+            //                }
+            //            }
 
             $tickets = $tickets->orderByDesc('id')
-                ->paginate(5);
+                               ->paginate(5);
+
+            if (!empty($data['answered'])) {
+                if ($data['answered'] == 'answered') {
+                    $tickets = $tickets->where('lastOneMessage.from_admin', 1);
+                } else {
+                    $tickets = $tickets->where('lastOneMessage.from_admin', 0)->where('lastOneMessage.from_system', 0);
+                }
+            }
 
             return TicketResource::collection($tickets);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao carregar chamados'], 400);
         }
     }

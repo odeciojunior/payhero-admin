@@ -3,12 +3,12 @@ $(document).ready(function () {
     let cardColorByStatus = {
         1: 'orange',
         2: 'green',
-        3: 'red',
+        3: '',
     };
     let letterColorByStatus = {
         1: 'orange-gradient',
         2: 'green-gradient',
-        3: 'red-gradient',
+        3: '',
     };
 
     let pageCurrent = JSON.parse(getCookie('filterTickets') || '{}').page;
@@ -105,7 +105,7 @@ $(document).ready(function () {
                     for (let ticket of response.data) {
                         data = `
                            <div class='col-12 col-lg-12'>
-                                <div class="card card-shadow bg-white card-left ${ticket.admin_last_message ? 'blue' : cardColorByStatus[ticket.ticket_status_enum]}">
+                                <div class="card card-shadow bg-white card-left ${ticket.last_message_from == 'admin' ? 'blue' : !ticket.admin_answered ? 'red' : 'orange'}">
                                     <div class="card-header bg-white p-20 pb-0">
                                         <i class="material-icons mr-1">chat_bubble_outline</i>
                                         <a class="not-hover" href="${locationUrl}/${ticket.id}"><span class='font-size-18 font-weight-bold'>${ticket.subject}</span></a>
@@ -163,7 +163,9 @@ $(document).ready(function () {
                                                 <span class='font-weight-bold'>${ticket.last_message}</span>
                                             </div>
                                             <div class='col-6 col-lg-2 mt-10'>
-                                                <span class='font-size-12 ${ticket.admin_last_message ? 'blue-gradient' : letterColorByStatus[ticket.ticket_status_enum]} mt-20'>${ticket.ticket_status}</span>
+                                                <span class='font-size-12 ${ticket.last_message_from == 'admin' ? 'blue-gradient' : !ticket.admin_answered ? 'red-gradient' : 'orange-gradient'} mt-20'>
+                                                    ${ticket.ticket_status}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

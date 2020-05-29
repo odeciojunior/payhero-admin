@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=3') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=5') }}">
     @endpush
     <div class="page">
         <div class="page-header container">
@@ -64,8 +64,8 @@
                                     <label>Respostas</label>
                                     <select id='answered' class='form-control'>
                                         <option value="">Todos</option>
-                                        <option value="answered">Já Respondidos</option>
-                                        <option value="not-answered">Não respondidos</option>
+                                        <option value="answered">Última resposta minha</option>
+                                        <option value="not-answered">Última resposta do cliente</option>
                                     </select>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
-                    <div class="card card-shadow bg-white card-left red">
+                    <div class="card card-shadow bg-white card-left">
                         <div class="card-header bg-white p-20 pb-0">
                             <div>
                                 <span class="card-desc">Chamados em mediação</span>
@@ -144,7 +144,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=9')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=11')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

@@ -129,9 +129,9 @@ class Ticket extends Model
     /**
      * @return HasMany
      */
-    public function lastMessage()
+    public function lastOneMessage()
     {
-        return $this->hasMany(TicketMessage::class)
+        return $this->hasOne(TicketMessage::class)
             ->latest();
     }
 }
