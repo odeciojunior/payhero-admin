@@ -124,7 +124,9 @@ class ShopifyApiController extends Controller
                     if($e->getCode() == 401) {
                         return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                     } elseif($e->getCode() == 402) {
-                        return response()->json(['message' => 'pagamento pendente na sua loja do Shopify'], 400);
+                        return response()->json(['message' => 'Pagamento pendente na sua loja do Shopify'], 400);
+                    }  elseif($e->getCode() == 403) {
+                        return response()->json(['message' => 'Verifique as permissões de seu aplicativo no Shopify'], 400);
                     } elseif($e->getCode() == 404) {
                         return response()->json(['message' => 'Url da loja não encontrada, revise os dados informados'], 400);
                     } elseif($e->getCode() == 423) {
