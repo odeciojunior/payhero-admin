@@ -33,6 +33,7 @@ use Spatie\Activitylog\Models\Activity;
 class Ticket extends Model
 {
     use PresentableTrait, LogsActivity;
+
     /**
      * @var string
      */
@@ -129,9 +130,18 @@ class Ticket extends Model
     /**
      * @return HasMany
      */
+    public function lastMessage()
+    {
+        return $this->hasMany(TicketMessage::class)
+                    ->latest();
+    }
+
+    /**
+     * @return HasOne
+     */
     public function lastOneMessage()
     {
         return $this->hasOne(TicketMessage::class)
-            ->latest();
+                    ->latest();
     }
 }
