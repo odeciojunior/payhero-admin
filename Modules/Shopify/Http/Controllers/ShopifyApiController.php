@@ -120,6 +120,21 @@ class ShopifyApiController extends Controller
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
             } catch (Exception $e) {
+                if(method_exists($e, 'getCode')) {
+                    if($e->getCode() == 401) {
+                        return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                    } elseif($e->getCode() == 402) {
+                        return response()->json(['message' => 'Pagamento pendente na sua loja do Shopify'], 400);
+                    }  elseif($e->getCode() == 403) {
+                        return response()->json(['message' => 'Verifique as permissões de seu aplicativo no Shopify'], 400);
+                    } elseif($e->getCode() == 404) {
+                        return response()->json(['message' => 'Url da loja não encontrada, revise os dados informados'], 400);
+                    } elseif($e->getCode() == 423) {
+                        return response()->json(['message' => 'Loja bloqueada, entre em contato com o suporte do Shopify'], 400);
+                    } elseif($e->getCode() == 429) {
+                        return response()->json(['message' => 'Limite de requisiçoes atingido, tente novamente'], 400);
+                    }
+                }
                 report($e);
 
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
@@ -467,7 +482,7 @@ class ShopifyApiController extends Controller
             ImportShopifyTrackingCodesJob::dispatch($project);
 
             return response()->json([
-                                        'message' => 'Códigos de rastreio sendo importados...',
+                                        'message' => 'Os códigos de rastreio sendo importados...',
                                     ], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);

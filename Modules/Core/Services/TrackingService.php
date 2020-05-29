@@ -260,7 +260,7 @@ class TrackingService
                 if (!empty($apiResult->origin_info)) {
                     $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
                     if ($postDate->lt($productPlanSale->created_at)) {
-                        if (!$apiResult->already_exists) { // deleta na api caso seja recém criado
+                        if (!empty($apiResult->already_exists)) { // deleta na api caso seja recém criado
                             $trackingService->deleteTrackingApi($apiResult);
                         }
                         throw new TrackingCreateException("A data de postagem não com corresponde com a data da venda");

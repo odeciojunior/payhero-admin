@@ -929,7 +929,7 @@ $(() => {
                 project_id: projectId,
             },
             error: function (response) {
-                errorAjaxResponse(response);
+                alertCustom('success', 'Os códigos de rastreio sendo importados...')
             },
             success: function (response) {
                 alertCustom('success', response.message);
