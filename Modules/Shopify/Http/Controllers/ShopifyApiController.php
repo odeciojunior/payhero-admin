@@ -135,6 +135,9 @@ class ShopifyApiController extends Controller
                         return response()->json(['message' => 'Limite de requisiçoes atingido, tente novamente'], 400);
                     }
                 }
+                if(strpos($e->getMessage(), 'Shop name should be') !== false) {
+                    return response()->json(['message' => 'Url inválida, revise os dados informados'], 400);
+                }
                 report($e);
 
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
