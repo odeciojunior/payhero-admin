@@ -38,8 +38,8 @@ use Laravel\Passport\HasApiTokens;
  * @property string $complement
  * @property string $photo
  * @property string $date_birth
- * @property boolean $address_document_status
- * @property boolean $personal_document_status
+ * @property bool $address_document_status
+ * @property bool $personal_document_status
  * @property string $percentage_rate
  * @property string $transaction_rate
  * @property string $updated_at
@@ -52,7 +52,8 @@ use Laravel\Passport\HasApiTokens;
  * @property int $invites_amount
  * @property float $abroad_transfer_tax
  * @property string $installment_tax
- * @property boolean $antecipation_enabled_flag
+ * @property int $boleto_release_money_days
+ * @property bool $antecipation_enabled_flag
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
@@ -68,7 +69,15 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticable
 {
-    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait, FoxModelTrait, CausesActivity, LogsActivity;
+    use CausesActivity;
+    use FoxModelTrait;
+    use HasApiTokens;
+    use HasRoles;
+    use LogsActivity;
+    use Notifiable;
+    use PresentableTrait;
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -156,9 +165,9 @@ class User extends Authenticable
     {
         if ($eventName == 'deleted') {
             $activity->description = 'Usuário ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
+        } elseif ($eventName == 'updated') {
             $activity->description = 'Usuário ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
+        } elseif ($eventName == 'created') {
             $activity->description = 'Usuário ' . $this->name . ' foi criado.';
         } else {
             $activity->description = $eventName;
