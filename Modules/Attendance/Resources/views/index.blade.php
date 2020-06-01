@@ -133,9 +133,9 @@
             </div>
             <div id='div-ticket-empty' class='row' style='display:none;'>
                 <div class='col-12 col-lg-12'>
-{{--                    <div class="card card-shadow bg-white p-5">--}}
-                        <div class='alert font-size-14 text-center mt-10' style='background-color:#f1f4f5;'>Nenhum chamado encontrado</div>
-{{--                    </div>--}}
+                    {{--                    <div class="card card-shadow bg-white p-5">--}}
+                    <div class='alert font-size-14 text-center mt-10' style='background-color:#f1f4f5;'>Nenhum chamado encontrado</div>
+                    {{--                    </div>--}}
                 </div>
             </div>
             <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
@@ -143,8 +143,91 @@
             </ul>
         </div>
     </div>
+    <!-- Modal detalhes do ticket -->
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-ticket" role="dialog" tabindex="-1" style='padding-right: 15px;'>
+        <div class="modal-dialog modal-dialog-centered modal-simple modal-lg">
+            <div class="modal-content p-10">
+                <div class="modal-header simple-border-bottom mb-10">
+                    <h4 class="modal-title" id="modal-title-ticket">Detalhes do Chamado </h4>
+                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div id="modal-body-content" class="modal-body" style='min-height: 100px'>
+                    <div class="card card-shadow card-top card-ticket-color">
+                        <div class="card-body bg-white p-40">
+                            <div>
+                                <h4 class='font-weight-bold ticket-subject'></h4>
+                            </div>
+                            <div>
+                                <span class='font-size-14 ticket-description'></span>
+                            </div>
+                            <div>
+                                <span class='font-size-14 customer-name'></span>
+                            </div>
+                            <div>
+                                <span class='font-size-14 ticket-informations'></span>
+                            </div>
+                            <div class='row my-20 font-size-12'>
+                                <div class='col-6 col-lg-3'>
+                                    <span>Código da Transação</span>
+                                    <br>
+                                    <span id='sale_code' class='font-weight-bold sale-code'></span>
+                                </div>
+                                <div class='col-6 col-lg-3'>
+                                    <span>Empresa</span>
+                                    <br>
+                                    <span class='font-weight-bold company-name'></span>
+                                </div>
+                                <div class='col-6 col-lg-3'>
+                                    <span>Planos</span>
+                                    <br>
+                                    <span class='font-weight-bold ticket-products'></span>
+                                </div>
+                                <div class='col-6 col-lg-3'>
+                                    <span>Valor total</span>
+                                    <br>
+                                    <span class='font-weight-bold total-value'></span>
+                                </div>
+                            </div>
+                            <div class='my-20'>
+                                <span class='font-size-16 mt-20 ticket-status'></span>
+                                <hr class='mb-0 mt-10'>
+                            </div>
+                            <div style="display:none">
+                                <span class="font-weight-bold d-block mb-10">Anexos:</span>
+                                <div id='div-ticket-attachments'>
+                                    {{-- js carrega... --}}
+                                </div>
+                                <hr class="mt-30">
+                            </div>
+                            <div id='div-ticket-comments'>
+                                {{-- js carrega... --}}
+                            </div>
+                            <div class='text-right mt-10 div-buttons'>
+                                <button id='btn-answer' class='btn btn-primary'>Responder</button>
+                            </div>
+                            <div class='row div-message' style='display:none;'>
+                                <div class='col-lg-12'>
+                                    <div class='form-group'>
+                                        <label>Mensagem</label>
+                                        <textarea class='form-control user-message' placeholder='Digite sua resposta' rows='6'></textarea>
+                                    </div>
+                                </div>
+                                <div class='col-lg-12 text-right'>
+                                    <button id='btn-cancel' class='btn mr-20'>Cancelar</button>
+                                    <button id='btn-send' class='btn btn-primary'>Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal detalhes do ticket -->
     @push('scripts')
-        <script src='{{asset('/modules/tickets/js/index.js?v=11')}}'></script>
+        <script src='{{asset('/modules/tickets/js/index.js?v=13')}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

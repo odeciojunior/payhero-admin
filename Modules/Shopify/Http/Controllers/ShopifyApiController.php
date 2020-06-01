@@ -599,6 +599,12 @@ class ShopifyApiController extends Controller
                 Response::HTTP_OK
             );
         } catch (Exception $e) {
+            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,422,423,429])) {
+                return response()->json(
+                    ['message' => 'Problema ao sincronizar códigos de rastreio do shopify, tente novamente mais tarde'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
             report($e);
 
             return response()->json(

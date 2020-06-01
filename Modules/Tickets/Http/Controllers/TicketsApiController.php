@@ -30,6 +30,7 @@ class TicketsApiController extends Controller
                                          ->whereHas('sale', function($query) use ($userId) {
                                              $query->where('owner_id', $userId);
                                          });
+
             if (!empty($data['date'])) {
                 $date = FoxUtils::validateDateRange($data["date"]);
                 $tickets->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
@@ -74,20 +75,38 @@ class TicketsApiController extends Controller
             //                }
             //            }
 
-            $tickets = $tickets->orderByDesc('id')
-                               ->paginate(5);
-
             if (!empty($data['answered'])) {
                 if ($data['answered'] == 'answered') {
-                    $tickets = $tickets->where('lastOneMessage.from_admin', 1);
+                    $tickets->whereHas('messages', function($query) {
+                        $query->where('from_admin', 1)
+                              ->where('from_system', 0)
+                              ->where('id', function($query) {
+                                  $query
+                                      ->selectRaw('max(id)')
+                                      ->from('ticket_messages')
+                                      ->whereColumn('ticket_id', 'tickets.id');
+                              });
+                    });
                 } else {
-                    $tickets = $tickets->where('lastOneMessage.from_admin', 0)->where('lastOneMessage.from_system', 0);
+                    $tickets->whereHas('messages', function($query) {
+                        $query->where('from_admin', 0)
+                              ->where('from_system', 0)
+                              ->where('id', function($query) {
+                                  $query
+                                      ->selectRaw('max(id)')
+                                      ->from('ticket_messages')
+                                      ->whereColumn('ticket_id', 'tickets.id');
+                              });
+                    });
                 }
             }
+            $tickets = $tickets->orderByDesc('id')
+                               ->paginate(5);
 
             return TicketResource::collection($tickets);
         } catch (Exception $e) {
             report($e);
+
             return response()->json(['message' => 'Erro ao carregar chamados'], 400);
         }
     }

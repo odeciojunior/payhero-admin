@@ -15,7 +15,7 @@ $(document).ready(function () {
     if (!/\/attendance\/[a-zA-Z0-9]{15}/.test(document.referrer)) {
         deleteCookie('filterTickets');
     }
-
+    let ticketId = '';
     $('#cpf-filter').mask('000.000.000-00');
 
     dateRangePicker();
@@ -108,12 +108,12 @@ $(document).ready(function () {
                                 <div class="card card-shadow bg-white card-left ${ticket.last_message_from == 'admin' ? 'blue' : !ticket.admin_answered ? 'red' : 'orange'}">
                                     <div class="card-header bg-white p-20 pb-0">
                                         <i class="material-icons mr-1">chat_bubble_outline</i>
-                                        <a class="not-hover" href="${locationUrl}/${ticket.id}"><span class='font-size-18 font-weight-bold'>${ticket.subject}</span></a>
+                                        <a class="not-hover ticket-details" data-id='${ticket.id}' href="#"><span class='font-size-18 font-weight-bold'>${ticket.subject}</span></a>
                                         <div class='float-right'>
                                             <div class='dropdown'>
                                                 <i class="material-icons" id="dropdownMenuButton" title='Opções' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='cursor:pointer'>more_vert</i>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item details" href="${locationUrl}/${ticket.id}">Detalhes</a>
+                                                    <a class="dropdown-item ticket-details" data-id='${ticket.id}' href="#">Detalhes</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -181,6 +181,149 @@ $(document).ready(function () {
                 setCookie('filterTickets', 1, filter);
                 pagination(response, 'tickets', getTickets);
             }
+        });
+    }
+    $(document).on('click', '.ticket-details', function (event) {
+        event.preventDefault();
+        let id = $(this).data('id');
+        ticketId = id;
+        $('#modal-title-ticket').html(`Detalhes do Chamado #${ticketId}`);
+        $('#modal-ticket').modal('show');
+        ticketShow(id);
+    });
+    $(document).on('click', '#btn-answer', function (event) {
+        event.preventDefault();
+        $(".div-message").slideDown();
+    });
+
+    $(document).on('click', '#btn-cancel', function (event) {
+        event.preventDefault();
+        $(".div-message").slideUp();
+    });
+    $(document).on('click', '#btn-send', function (event) {
+        event.preventDefault();
+        if ($('.user-message').val() == '') {
+            alertCustom("error", "Preencha o campo mensagem");
+            return false;
+        }
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: '/api/tickets/sendmessage',
+            dataType: "json",
+            data: {
+                message: $('.user-message').val(),
+                ticket_id: ticketId,
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                loadingOnScreenRemove();
+                $(".div-message").slideUp();
+                alertCustom("success", "Mensagem enviada com sucesso");
+                ticketShow(ticketId);
+                $('.user-message').val('');
+            }
+        });
+    });
+    function ticketShow(ticketId) {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/tickets/' + ticketId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                loadingOnScreenRemove();
+                if ($('.card-ticket-color').hasClass('orange')) {
+                    $('.card-ticket-color').removeClass('orange');
+                    $('.ticket-status').removeClass('orange-gradient');
+                } else if ($('.card-ticket-color').hasClass('green')) {
+                    $('.card-ticket-color').removeClass('green');
+                    $('.ticket-status').removeClass('green-gradient');
+                }
+                $('.card-ticket-color').addClass(`${cardColorByStatus[response.data.ticket_status_enum]}`);
+                $('.ticket-subject').html(`${response.data.subject}`);
+                $('.ticket-description').html(`<b>Descrição:</b> ${response.data.description}`);
+                $('.customer-name').html(`<b>Cliente:</b> ${response.data.customer_name}`);
+                $('.ticket-informations').html(`<b>Empresa</b>: ${response.data.company_name} | <b>Motivo:</b> ${response.data.ticket_category} | <b>Aberto em:</b> ${response.data.created_at} | <b>Última resposta em:</b> ${response.data.last_message}`);
+                $('#ticket-id').html(response.data.id);
+                $('.company-name').html(`${response.data.company_name}`);
+                $('.total-value').html(`${response.data.total_paid_value}`);
+                $('.sale-code').html(`${response.data.sale_code}`);
+                $('.ticket-status').html(`${response.data.ticket_status}`);
+                $('.ticket-status').addClass(`${letterColorByStatus[response.data.ticket_status_enum]}`);
+                $('.ticket-products').html('');
+
+                for (let product of response.data.products) {
+                    $('.ticket-products').append(`${product.name}<br>`);
+                }
+
+                //Monta a div de anexos
+                if (!isEmpty(response.data.attachments)) {
+                    $("#div-ticket-attachments").html('');
+                    for (let attachment of response.data.attachments) {
+                        let data = `<div class="mini-card mr-10 my-5 d-inline-block">
+                                        <a class="not-hover" target="_blank" href="${attachment.file}">
+                                            <i class="material-icons">attach_file</i>
+                                            <span>${attachment.id}</span>
+                                        </a>
+                                    </div>`;
+
+                        $('#div-ticket-attachments').append(data);
+                    }
+                    $("#div-ticket-attachments").parent().show();
+                } else {
+                    $("#div-ticket-attachments").parent().hide();
+                }
+
+                //Monta a div de comentários
+                $("#div-ticket-comments").html('');
+                if (!isEmpty(response.data.messages)) {
+                    let customerNameSplit = response.data.customer_name.split(' ');
+                    // let adminSrcImage = $('.img-user-menu-principal').attr('src');
+                    let foxSrcImage = $('.navbar-brand-logo').attr('src');
+
+                    for (let ticketMessage of response.data.messages) {
+                        let data = '';
+                        data = `
+                        <div class="d-flex flex-row mb-10">
+                                <img ${ticketMessage.from_admin == 1 ? `src="${response.data.project_logo}"` : ticketMessage.from_system ? `src="${foxSrcImage}"` : `src="https://ui-avatars.com/api/?name=${customerNameSplit[0]}+${customerNameSplit[1]}&background=0D8ABC&color=fff&bold=true"`}
+                                style='height:50px;width:50px;' class="img-fluid rounded-circle ${ticketMessage.from_system ? 'bg-dark' : ''}">
+                            <div class="ml-15">
+                                <span class='font-weight-bold'>${ticketMessage.from_admin == 1 ? response.data.project_name : ticketMessage.from_system ? 'CloudFox' : response.data.customer_name}</span>
+                                <br>
+                                <small>${ticketMessage.created_at}</small>
+                                <p>${ticketMessage.message}</p>
+                            </div>
+                        </div>`;
+
+                        $('#div-ticket-comments').append(data);
+                    }
+                } else {
+                    $('#div-ticket-comments').append('<div class="alert alert-info text-center font-size-14">Nenhuma mensagem encontrada</div>');
+                }
+
+                if (response.data.ticket_status_enum === 2) {
+                    $('#btn-answer').hide();
+                } else {
+                    $('#btn-answer').show();
+                }
+            }
+
         });
     }
     function getTotalValues() {
