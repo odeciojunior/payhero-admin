@@ -1301,19 +1301,26 @@ class ShopifyService
      */
     public function deleteShopWebhook($webhookId = null)
     {
-        if (!empty($this->client)) {
-            if ($webhookId) {
-                return $this->client->getWebhookManager()->remove($webhookId);
-            } else {
-                $webhooks = $this->getShopWebhook();
-                foreach ($webhooks as $webhook) {
-                    $this->client->getWebhookManager()->remove($webhook->getId());
-                }
+        try {
+            if (!empty($this->client)) {
+                if ($webhookId) {
+                    return $this->client->getWebhookManager()->remove($webhookId);
+                } else {
+                    $webhooks = $this->getShopWebhook();
+                    foreach ($webhooks as $webhook) {
+                        $this->client->getWebhookManager()->remove($webhook->getId());
+                    }
 
-                return $this->client->getWebhookManager()->findAll();
+                    return $this->client->getWebhookManager()->findAll();
+                }
+            } else {
+                return [];
             }
-        } else {
-            return [];
+        } catch (Exception $e) {
+            if(method_exists($e, 'getCode') && $e->getCode() == 406) {
+                return [];
+            }
+            throw $e;
         }
     }
 
