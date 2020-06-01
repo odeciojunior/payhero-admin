@@ -35,7 +35,7 @@ class GenericCommand extends Command
 
         $shopifyStores = [];
 
-        Sale::with([
+        $salesQuery = Sale::with([
             'project',
             'productsPlansSale',
         ])->doesntHave('tracking')
@@ -44,9 +44,19 @@ class GenericCommand extends Command
             })
             ->where('status', 1)
             ->whereNotNull('shopify_order')
-            ->chunk(100, function ($sales) use ($productService, $trackingService, $shopifyStores) {
-                foreach ($sales as $sale) {
+            ->orderByDesc('id');
+
+        $total = $salesQuery->count();
+        $count = 0;
+        $added = 0;
+
+        $salesQuery->chunk(100,
+            function ($sales) use ($productService, $trackingService, $shopifyStores, $total, &$count, &$added) {
+                foreach ($sales as $key => $sale) {
                     try {
+                        $count++;
+                        $this->line("Verificando venda {$count} de {$total}: {$sale->id}");
+
                         $project = $sale->project;
 
                         if (empty($shopifyStores[$project->id])) {
@@ -75,6 +85,8 @@ class GenericCommand extends Command
                                                     $productPlanSale);
 
                                                 if (!empty($tracking)) {
+                                                    $added++;
+                                                    $this->info("Trackings criado!");
                                                     $product->tracking_code = $trackingCode;
                                                     event(new TrackingCodeUpdatedEvent($sale, $tracking,
                                                         $saleProducts));
@@ -86,12 +98,13 @@ class GenericCommand extends Command
                             }
                         }
                     } catch (\Exception $e) {
-                        report($e);
+                        $this->error($e->getMessage());
                     }
                 }
             });
 
-        $smsService->sendSms('5524998345779', 'ACABOOOU');
+        $this->info("Trackings criados: {$added}");
+        $smsService->sendSms('5524998345779', "ACABOU! Trackings criados: {$added}");
     }
 }
 
