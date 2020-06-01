@@ -343,85 +343,68 @@ class DomainsApiController extends Controller
 
             $requestData = $request->validated();
 
-            $domainId = current(Hashids::decode($requestData['domain']));
-
             $domain = $domainModel->with('domainsRecords', 'project', 'project.shopifyIntegrations')
-                ->find($domainId);
+                ->find(current(Hashids::decode($requestData['domain'])));
 
-            if (!empty($domain->project) && Gate::allows('edit', [$domain->project])) {
-                if (!empty($domain->cloudflare_domain_id)) {
-                    if ($cloudFlareService->deleteZoneById(
-                            $domain->cloudflare_domain_id
-                        ) || empty($cloudFlareService->getZones($domain->name))) {
-                        //zona deletada
-                        $sendgridService->deleteLinkBrand($domain->name);
-                        $sendgridService->deleteZone($domain->name);
+            if (empty($domain->project) && !Gate::allows('edit', [$domain->project])) {
+                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+            }
 
-                        $domainRecordModel->where('domain_id', $domain->id)->delete();
-                        $domainDeleted = $domain->delete();
+            if (!empty($domain->cloudflare_domain_id)) {
+                if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id)
+                    || empty($cloudFlareService->getZones($domain->name))
+                ) {
+                    //zona deletada
+                    $sendgridService->deleteLinkBrand($domain->name);
+                    $sendgridService->deleteZone($domain->name);
 
-                        if ($domainDeleted) {
-                            if (!empty($domain->project->shopify_id)) {
-                                //se for shopify, voltar as integraçoes ao html padrao
-                                try {
-                                    foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                        $shopify = new ShopifyService(
-                                            $shopifyIntegration->url_store,
-                                            $shopifyIntegration->token
-                                        );
-
-                                        $shopify->setThemeByRole('main');
-                                        if (!empty($shopifyIntegration->theme_html)) {
-                                            $shopify->setTemplateHtml(
-                                                $shopifyIntegration->theme_file,
-                                                $shopifyIntegration->theme_html
-                                            );
-                                        }
-                                        if (!empty($shopifyIntegration->layout_theme_html)) {
-                                            $shopify->setTemplateHtml(
-                                                'layout/theme.liquid',
-                                                $shopifyIntegration->layout_theme_html
-                                            );
-                                        }
-                                    }
-                                } catch (Exception $e) {
-                                    report($e);
-
-                                    return response()->json(
-                                        ['message' => 'Não foi possível deletar o registro do domínio!'],
-                                        400
-                                    );
-                                }
-                            }
-
-                            return response()->json(['message' => 'Domínio removido com sucesso'], 200);
-                        } else {
-                            return response()->json(
-                                ['message' => 'Não foi possível deletar o registro do domínio!'],
-                                400
-                            );
-                        }
-                    } else {
-                        //erro ao deletar zona
-                        return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
-                    }
-                } else {
                     $domainRecordModel->where('domain_id', $domain->id)->delete();
                     $domainDeleted = $domain->delete();
 
-                    if ($domainDeleted) {
-                        return response()->json(
-                            [
-                                'message' => 'Dominio removido com sucesso!',
-                            ],
-                            200
-                        );
-                    } else {
-                        return response()->json(['message' => 'Sem permissão para deletar domínio'], 400);
+                    if (empty($domainDeleted)) {
+                        return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
                     }
+
+                    if (!empty($domain->project->shopify_id)) {
+                        //se for shopify, voltar as integraçoes ao html padrao
+                        try {
+                            foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = new ShopifyService(
+                                    $shopifyIntegration->url_store, $shopifyIntegration->token
+                                );
+
+                                $shopify->setThemeByRole('main');
+                                if (!empty($shopifyIntegration->theme_html)) {
+                                    $shopify->setTemplateHtml(
+                                        $shopifyIntegration->theme_file,
+                                        $shopifyIntegration->theme_html
+                                    );
+                                }
+                                if (!empty($shopifyIntegration->layout_theme_html)) {
+                                    $shopify->setTemplateHtml(
+                                        'layout/theme.liquid',
+                                        $shopifyIntegration->layout_theme_html
+                                    );
+                                }
+                            }
+                        } catch (Exception $e) {
+                            return response()->json(['message' => 'Domínio removido com sucesso!'], 200);
+                        }
+                    }
+
+                    return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                } else {
+                    //erro ao deletar zona
+                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
                 }
             } else {
-                return response()->json(['message' => 'Sem permissão para deletar domínio'], 400);
+                $domainRecordModel->where('domain_id', $domain->id)->delete();
+                $domainDeleted = $domain->delete();
+
+                if ($domainDeleted) {
+                    return response()->json(['message' => 'Dominio removido com sucesso!'], 200);
+                }
+                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);

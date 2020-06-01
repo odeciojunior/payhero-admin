@@ -107,6 +107,7 @@ body {
 .card-left.blue {
     background-image: linear-gradient(to right, rgb(20, 105, 217), rgb(20, 105, 217));
 }
+/*rgb(0, 229, 255)*/
 /*left*/
 
 /*top*/
@@ -152,7 +153,11 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-
+.black-gradient {
+    background: -webkit-linear-gradient(rgb(0, 0, 0), rgb(0, 0, 0));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 .drop-empresas {
     min-height: 140px;
     border: 2px solid rgba(0, 0, 0, 0.3);

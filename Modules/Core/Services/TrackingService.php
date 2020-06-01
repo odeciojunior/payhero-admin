@@ -260,7 +260,7 @@ class TrackingService
                 if (!empty($apiResult->origin_info)) {
                     $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
                     if ($postDate->lt($productPlanSale->created_at)) {
-                        if (!$apiResult->already_exists) { // deleta na api caso seja recém criado
+                        if (!empty($apiResult->already_exists)) { // deleta na api caso seja recém criado
                             $trackingService->deleteTrackingApi($apiResult);
                         }
                         throw new TrackingCreateException("A data de postagem não com corresponde com a data da venda");
@@ -280,7 +280,7 @@ class TrackingService
                         ]);
                     }
                 } else { //senao cria o tracking
-                    $tracking = $trackingModel->firstOrCreate([
+                    $tracking = $trackingModel->create([
                         'sale_id' => $productPlanSale->sale_id,
                         'product_id' => $productPlanSale->product_id,
                         'product_plan_sale_id' => $productPlanSale->id,
@@ -296,6 +296,7 @@ class TrackingService
                 throw new TrackingCreateException('O código de rastreio é inválido ou não foi reconhecido pela transportadora');
             }
         } catch (\Exception $e) {
+            report($e);
             if($throws) throw $e;
             return null;
         }
