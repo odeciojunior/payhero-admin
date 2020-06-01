@@ -1638,6 +1638,9 @@ class ShopifyService
             }
         } catch (Exception $ex) {
             $this->exceptions[] = $ex->getMessage();
+            if(method_exists($ex, 'getCode') && in_array($ex->getCode(), [401,402,403,404,423,429])) {
+                return [];
+            }
             throw $ex;
         }
     }
