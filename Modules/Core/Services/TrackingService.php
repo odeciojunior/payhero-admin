@@ -296,6 +296,7 @@ class TrackingService
                 throw new TrackingCreateException('O código de rastreio é inválido ou não foi reconhecido pela transportadora');
             }
         } catch (\Exception $e) {
+            report($e);
             if($throws) throw $e;
             return null;
         }
