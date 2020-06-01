@@ -987,6 +987,12 @@ class ShopifyApiController extends Controller
                         return response()->json(['message' => 'Alteração permitida somente em produção!'], 400);
                     }
                 } catch (Exception $e) {
+                    if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404])) {
+                        return response()->json(
+                            ['message' => 'Ocorreu um erro ao atualizar o skip to cart do projeto'],
+                            400
+                        );
+                    }
                     report($e);
 
                     return response()->json(
