@@ -2,16 +2,16 @@
 
 namespace Modules\Core\Entities;
 
+use Laracasts\Presenter\PresentableTrait;
+use Spatie\Activitylog\Models\Activity;
+use App\Traits\LogsActivity;
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DomainPresenter;
 use Modules\Domains\Transformers\DomainResource;
-use App\Traits\LogsActivity;
-use Spatie\Activitylog\Models\Activity;
 
 /**
  * Class Domain
@@ -30,7 +30,11 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Domain extends Model
 {
-    use SoftDeletes, PresentableTrait, FoxModelTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -83,9 +87,9 @@ class Domain extends Model
     {
         if ($eventName == 'deleted') {
             $activity->description = 'Domínio ' . $this->name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
+        } elseif ($eventName == 'updated') {
             $activity->description = 'Domínio ' . $this->name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
+        } elseif ($eventName == 'created') {
             $activity->description = 'Domínio ' . $this->name . ' foi criado.';
         } else {
             $activity->description = $eventName;

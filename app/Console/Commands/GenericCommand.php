@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProductService;
 use Modules\Core\Services\ShopifyService;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\SmsService;
+use Modules\Core\Services\TrackingService;
 
 /**
  * Class GenericCommand
@@ -27,58 +29,82 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $salesModel = new Sale();
-
-        $sales = $salesModel->with(['project.shopifyIntegrations'])
-            ->where('status', $salesModel->present()->getStatus('approved'))
-            ->where('payment_method', $salesModel->present()->getPaymentType('credit_card'))
-            ->whereNotNull('shopify_order')
-            ->whereHas('saleLogs', function ($query) use ($salesModel) {
-                $query->where('status_enum', $salesModel->present()->getStatus('in_review'));
-            })->get();
+        $productService = new ProductService();
+        $trackingService = new TrackingService();
+        $smsService = new SmsService();
 
         $shopifyStores = [];
 
-        $total = $sales->count();
+        $salesQuery = Sale::with([
+            'project',
+            'productsPlansSale',
+        ])->doesntHave('tracking')
+            ->whereHas('project', function ($query) {
+                $query->whereNotNull('shopify_id');
+            })
+            ->where('status', 1)
+            ->whereNotNull('shopify_order')
+            ->orderByDesc('id');
 
-        $ordersApproved = 0;
-        foreach ($sales as $key => $sale) {
-            $count = $key + 1;
-            $this->line("Verificando venda {$count} de {$total}: {$sale->id}");
+        $total = $salesQuery->count();
+        $count = 0;
+        $added = 0;
 
-            $project = $sale->project;
-            if (!empty($shopifyStores[$project->id])) {
-                $shopifyService = $shopifyStores[$project->id];
-            } else {
-                $integration = $sale->project->shopifyIntegrations->first();
-                if (!empty($integration)) {
-                    $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
-                    $shopifyStores[$project->id] = $shopifyService;
-                } else {
-                    $this->warn('Nenhuma integração encontrada para este projeto');
-                    continue;
+        $salesQuery->chunk(100,
+            function ($sales) use ($productService, $trackingService, $shopifyStores, $total, &$count, &$added) {
+                foreach ($sales as $key => $sale) {
+                    try {
+                        $count++;
+                        $this->line("Verificando venda {$count} de {$total}: {$sale->id}");
+
+                        $project = $sale->project;
+
+                        if (empty($shopifyStores[$project->id])) {
+                            $integration = $project->shopifyIntegrations->first();
+                            $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+                            $shopifyStores[$project->id] = $shopifyService;
+                        } else {
+                            $shopifyService = $shopifyStores[$project->id];
+                        }
+
+                        $fulfillments = $shopifyService->findFulfillments($sale->shopify_order);
+                        if (!empty($fulfillments)) {
+                            $saleProducts = $productService->getProductsBySale($sale);
+                            foreach ($fulfillments as $fulfillment) {
+                                $trackingCode = $fulfillment->getTrackingNumber();
+                                if (!empty($trackingCode)) {
+                                    foreach ($fulfillment->getLineItems() as $lineItem) {
+                                        $products = $saleProducts->where('shopify_variant_id',
+                                            $lineItem->getVariantId())->where('amount', $lineItem->getQuantity());
+
+                                        if ($products->count()) {
+                                            foreach ($products as &$product) {
+                                                $productPlanSale = $sale->productsPlansSale->find($product->product_plan_sale_id);
+
+                                                $tracking = $trackingService->createOrUpdateTracking($trackingCode,
+                                                    $productPlanSale);
+
+                                                if (!empty($tracking)) {
+                                                    $added++;
+                                                    $this->info("Trackings criado!");
+                                                    $product->tracking_code = $trackingCode;
+                                                    event(new TrackingCodeUpdatedEvent($sale, $tracking,
+                                                        $saleProducts));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $this->error($e->getMessage());
+                    }
                 }
-            }
+            });
 
-            try {
-                $order = $shopifyService->getClient()->getOrderManager()->find($sale->shopify_order);
-                if ($order->getFinancialStatus() == 'pending') {
-                    $data = [
-                        "kind" => "capture",
-                        "gateway" => "cloudfox",
-                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                    ];
-                    $shopifyService->getClient()->getTransactionManager()->create($sale->shopify_order, $data);
-                    $ordersApproved++;
-
-                    $this->info('Order criada no shopify');
-                }
-            } catch (Exception $e) {
-                $this->error($e->getMessage());
-            }
-        }
-
-        $this->info("{$ordersApproved} orders aprovadas no shopify de {$total} vendas verificadas");
+        $this->info("Trackings criados: {$added}");
+        $smsService->sendSms('5524998345779', "ACABOU! Trackings criados: {$added}");
     }
 }
 
