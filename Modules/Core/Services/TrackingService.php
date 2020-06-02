@@ -262,11 +262,11 @@ class TrackingService
                 } else {
                     $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('no_tracking_info');
                 }
+                $statusEnum = $trackingService->parseStatusApi($apiResult->status) ?? $trackingModel->present()->getTrackingStatusEnum('posted');
             } else {
                 $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('unknown_carrier');
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
             }
-
-            $statusEnum = $trackingService->parseStatusApi($apiResult->status) ?? $trackingModel->present()->getTrackingStatusEnum('posted');
 
             $tracking = $productPlanSale->tracking;
 

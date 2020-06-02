@@ -43,7 +43,7 @@ class GenericCommand extends Command
                 $query->whereNotNull('shopify_id');
             })
             ->where('status', 1)
-            ->where('owner_id', 557)
+            //->where('owner_id', 557)
             ->whereNotNull('shopify_order')
             ->orderByDesc('id');
 
