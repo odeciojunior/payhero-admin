@@ -37,8 +37,6 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
 
     /**
      * @param  Collection  $collection
-     * @throws PresenterException
-     * @throws \App\Exceptions\TrackingCreateException
      */
     public function collection(Collection $collection)
     {

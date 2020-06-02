@@ -2,9 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Exceptions\TrackingCreateException;
-use Illuminate\Support\Carbon;
-use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -27,7 +24,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param  Project  $project
      */
     public function __construct(Project $project)
     {
@@ -38,6 +35,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \Exception
      */
     public function handle()
     {
@@ -68,7 +66,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             "format" => "json",
         ]);
 
-
         Sale::where('project_id', $project->id)
             ->with([
                 'productsPlansSale',
@@ -95,7 +92,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                                                 $tracking = $trackingService->createOrUpdateTracking($trackingCode,
                                                     $productPlanSale);
 
-                                                if(!empty($tracking)) {
+                                                if (!empty($tracking)) {
                                                     $product->tracking_code = $trackingCode;
                                                     event(new TrackingCodeUpdatedEvent($sale, $tracking,
                                                         $saleProducts));

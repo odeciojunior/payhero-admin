@@ -2,7 +2,6 @@
 
 namespace Modules\Trackings\Http\Controllers;
 
-use App\Exceptions\TrackingCreateException;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -270,8 +269,7 @@ class TrackingsApiController extends Controller
                     $productPlanSale = $productPlanSaleModel->with(['tracking', 'sale.delivery'])
                         ->find($ppsId);
 
-                    $tracking = $trackingService->createOrUpdateTracking($data['tracking_code'], $productPlanSale, true,
-                        true);
+                    $tracking = $trackingService->createOrUpdateTracking($data['tracking_code'], $productPlanSale, true);
 
                     return response()->json([
                         'message' => 'Código de rastreio salvo',
@@ -293,8 +291,6 @@ class TrackingsApiController extends Controller
                     'message' => 'Erro ao salvar código de rastreio',
                 ], 400);
             }
-        } catch (TrackingCreateException $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar alterar código de rastreio (TrackingApiController - store)');
             report($e);
