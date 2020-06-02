@@ -64,8 +64,9 @@
                                     <label>Respostas</label>
                                     <select id='answered' class='form-control'>
                                         <option value="">Todos</option>
-                                        <option value="answered">Última resposta minha</option>
-                                        <option value="not-answered">Última resposta do cliente</option>
+                                        <option value="last-answer-admin">Última resposta minha</option>
+                                        <option value="last-answer-customer">Última resposta do cliente</option>
+                                        <option value="not-answered">Não respondidos</option>
                                     </select>
                                 </div>
                             </div>
