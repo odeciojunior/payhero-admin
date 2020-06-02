@@ -158,7 +158,7 @@
                             <div class="font-size-14 gray-600 mr-auto">
                                 <img class="orange-gradient" src="{{ asset('modules/global/img/svg/tickets.svg') }}"
                                      width="30px">
-                                <span class="card-desc">Chamados</span>
+                                <span class="card-desc">Atendimento</span>
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center">

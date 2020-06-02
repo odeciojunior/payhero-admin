@@ -340,7 +340,7 @@ class TrackingService
                         $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
                         $queryTransaction->where('status_enum', $statusEnum);
                     } else {
-                        $queryTransaction->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                        $queryTransaction->where('transactions.release_date', '>', '2020-05-25')->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
@@ -350,7 +350,6 @@ class TrackingService
                 }
             }
         });
-
 
         if (isset($filters['status'])) {
             if ($filters['status'] === 'unknown') {

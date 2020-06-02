@@ -61,22 +61,8 @@ class TicketsApiController extends Controller
                 $ticketId = current(Hashids::decode($data['ticket_id'] ?? ''));
                 $tickets->where('id', $ticketId);
             }
-            //            if (!empty($data['answered'])) {
-            //                if ($data['answered'] == 'answered') {
-            //                    $tickets->whereHas('lastMessage', function($query) {
-            //                        $query->where('from_admin', 1)
-            //                              ->where('from_system', 0);
-            //                    });
-            //                } else {
-            //                    $tickets->whereDoesntHave('lastMessage', function($query) {
-            //                        $query->where('from_admin', 1)
-            //                              ->where('from_system', 0);
-            //                    });
-            //                }
-            //            }
-
             if (!empty($data['answered'])) {
-                if ($data['answered'] == 'answered') {
+                if ($data['answered'] == 'last-answer-admin') {
                     $tickets->whereHas('messages', function($query) {
                         $query->where('from_admin', 1)
                               ->where('from_system', 0)
@@ -87,7 +73,7 @@ class TicketsApiController extends Controller
                                       ->whereColumn('ticket_id', 'tickets.id');
                               });
                     });
-                } else {
+                } else if ($data['answered'] == 'last-answer-customer') {
                     $tickets->whereHas('messages', function($query) {
                         $query->where('from_admin', 0)
                               ->where('from_system', 0)
@@ -97,6 +83,11 @@ class TicketsApiController extends Controller
                                       ->from('ticket_messages')
                                       ->whereColumn('ticket_id', 'tickets.id');
                               });
+                    });
+                } else {
+                    $tickets->whereDoesntHave('lastMessage', function($query) {
+                        $query->where('from_admin', 1)
+                              ->where('from_system', 0);
                     });
                 }
             }
