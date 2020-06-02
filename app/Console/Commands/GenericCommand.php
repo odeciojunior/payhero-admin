@@ -43,6 +43,7 @@ class GenericCommand extends Command
                 $query->whereNotNull('shopify_id');
             })
             ->where('status', 1)
+            ->where('owner_id', 557)
             ->whereNotNull('shopify_order')
             ->orderByDesc('id');
 
@@ -52,9 +53,9 @@ class GenericCommand extends Command
 
         $salesQuery->chunk(100,
             function ($sales) use ($productService, $trackingService, $shopifyStores, $total, &$count, &$added) {
-                foreach ($sales as $key => $sale) {
+                foreach ($sales as $sale) {
                     try {
-                        $count++;
+                        $count += 1;
                         $this->line("Verificando venda {$count} de {$total}: {$sale->id}");
 
                         $project = $sale->project;
@@ -96,6 +97,8 @@ class GenericCommand extends Command
                                     }
                                 }
                             }
+                        } else{
+                          $this->warn('Sem fulfillment!');
                         }
                     } catch (\Exception $e) {
                         $this->error($e->getMessage());
