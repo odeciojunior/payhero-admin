@@ -66,9 +66,6 @@ class Kernel extends ConsoleKernel
         // restart queues running on supervisor
         $schedule->command('queue:restart')->hourly();
 
-        // verify checkout status (ON - OFF)
-        $schedule->command('check:checkout-status')->everyTenMinutes();
-
         // verify redis status (ON - OFF)
         $schedule->command('verify:redis')->everyThirtyMinutes();
 
