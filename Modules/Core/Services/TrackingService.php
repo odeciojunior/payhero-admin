@@ -224,9 +224,10 @@ class TrackingService
      * @param  string  $trackingCode
      * @param  ProductPlanSale  $productPlanSale
      * @param  bool  $logging
+     * @param  bool  $forceUpdate
      * @return mixed
      */
-    public function createOrUpdateTracking(string $trackingCode, ProductPlanSale $productPlanSale, $logging = false)
+    public function createOrUpdateTracking(string $trackingCode, ProductPlanSale $productPlanSale, $logging = false, $forceUpdate = false)
     {
         try {
             $trackingService = new TrackingService();
@@ -270,8 +271,7 @@ class TrackingService
             $tracking = $productPlanSale->tracking;
 
             if (!empty($tracking)) {
-                //caso seja diferente, atualiza o registro e dispara o e-mail
-                if ($tracking->tracking_code != $trackingCode) {
+                if (($tracking->tracking_code != $trackingCode) || $forceUpdate) {
                     $tracking->update([
                         'tracking_code' => $trackingCode,
                         'tracking_status_enum' => $statusEnum,

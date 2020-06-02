@@ -27,7 +27,7 @@ class TrackingPresenter extends Presenter
     {
         $statusArray = [
             1 => 'valid', // O código passou em todas as validações
-            2 => 'no_tracking_info',  // O código é reconhecido pela transportadora mais ainda não tem nenhuma movimentação
+            2 => 'no_tracking_info',  // O código é reconhecido pela transportadora mas ainda não tem nenhuma movimentação
             3 => 'unknown_carrier', // O código não foi reconhecido por nenhuma transportadora
             4 => 'posted_before_sale', // A data de postagem da remessa é anterior a data da venda
             5 => 'duplicated', // Já existe uma venda com esse código de rastreio cadastrado

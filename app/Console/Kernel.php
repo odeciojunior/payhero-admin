@@ -83,6 +83,9 @@ class Kernel extends ConsoleKernel
 
         //Reorder shopify hourly
         // $schedule->command('command:ShopifyReorderSalesHourly')->hourly();
+
+        //checks the trackings that have been recognized by the carrier but has no movement yet
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
     }
 
     /**
