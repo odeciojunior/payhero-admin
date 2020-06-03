@@ -15,7 +15,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $delivery_id
  * @property string $tracking_code
  * @property boolean $tracking_type_enum
- * @property boolean $tracking_status_enum
+ * @property int $tracking_status_enum
+ * @property int $system_status_enum
  * @property string $tracking_date
  * @property string $description
  * @property string $created_at
@@ -23,6 +24,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $deleted_at
  * @property Delivery $delivery
  * @property ProductPlanSale $productPlanSale
+ * @method TrackingPresenter present()
  */
 class Tracking extends Model
 {
@@ -47,6 +49,7 @@ class Tracking extends Model
         'delivery_id',
         'tracking_code',
         'tracking_status_enum',
+        'system_status_enum',
         'created_at',
         'updated_at',
         'deleted_at',

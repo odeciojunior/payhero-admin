@@ -8,40 +8,37 @@ class TrackingPresenter extends Presenter
 {
     public function getTrackingStatusEnum($status)
     {
+        $statusArray = [
+            1 => 'posted',
+            2 => 'dispatched',
+            3 => 'delivered',
+            4 => 'out_for_delivery',
+            5 => 'exception',
+        ];
+
         if (is_numeric($status)) {
-            switch ($status) {
-                case 1:
-                    return 'posted';
-                case 2:
-                    return 'dispatched';
-                case 3:
-                    return 'delivered';
-                case 4:
-                    return 'out_for_delivery';
-                case 5:
-                    return 'exception';
-                case 6:
-                    return 'ignored';
-            }
-
-            return '';
+            return $statusArray[$status] ?? '';
         } else {
-            switch ($status) {
-                case 'posted':
-                    return 1;
-                case 'dispatched':
-                    return 2;
-                case 'delivered':
-                    return 3;
-                case 'out_for_delivery':
-                    return 4;
-                case 'exception':
-                    return 5;
-                case 'ignored':
-                    return 6;
-            }
+            return array_search($status, $statusArray) ?? '';
+        }
+    }
 
-            return '';
+    public function getSystemtatusEnum($status)
+    {
+        $statusArray = [
+            1 => 'valid', // O código passou em todas as validações
+            2 => 'no_tracking_info',  // O código é reconhecido pela transportadora mas ainda não tem nenhuma movimentação
+            3 => 'unknown_carrier', // O código não foi reconhecido por nenhuma transportadora
+            4 => 'posted_before_sale', // A data de postagem da remessa é anterior a data da venda
+            5 => 'duplicated', // Já existe uma venda com esse código de rastreio cadastrado
+            6 => 'ignored', // Código ignorado pela plataforma (no Manager)
+            7 => 'checked_manually', // Código de rastreio verificado manualmente (no Manager)
+        ];
+
+        if (is_numeric($status)) {
+            return $statusArray[$status] ?? '';
+        } else {
+            return array_search($status, $statusArray) ?? '';
         }
     }
 }

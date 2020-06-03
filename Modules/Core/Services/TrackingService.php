@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use App\Exceptions\TrackingCreateException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -13,8 +12,6 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TrackingService
@@ -226,12 +223,11 @@ class TrackingService
     /**
      * @param  string  $trackingCode
      * @param  ProductPlanSale  $productPlanSale
-     * @param  bool  $throws
      * @param  bool  $logging
+     * @param  bool  $forceUpdate
      * @return mixed
-     * @throws \Exception
      */
-    public function createOrUpdateTracking(string $trackingCode, ProductPlanSale $productPlanSale, $throws = false, $logging = false)
+    public function createOrUpdateTracking(string $trackingCode, ProductPlanSale $productPlanSale, $logging = false, $forceUpdate = false)
     {
         try {
             $trackingService = new TrackingService();
@@ -239,18 +235,19 @@ class TrackingService
 
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
+            $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('valid');
+
             //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
             $sale = $productPlanSale->sale;
             $exists = $trackingModel->where('trackings.tracking_code',
                 $trackingCode)
                 ->where('sale_id', '!=', $sale->id)
                 ->whereHas('sale', function ($query) use ($sale) {
-                    $query->where('owner_id', $sale->owner_id)
-                        ->where('upsell_id', '!=', $sale->id);
+                    $query->where('upsell_id', '!=', $sale->id);
                 })->exists();
 
             if ($exists) {
-                throw new TrackingCreateException("Esse código de rastreio já foi cadastrado em outra venda!");
+                $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('duplicated');
             }
 
             $apiResult = $trackingService->sendTrackingToApi($trackingCode);
@@ -260,44 +257,43 @@ class TrackingService
                 if (!empty($apiResult->origin_info)) {
                     $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
                     if ($postDate->lt($productPlanSale->created_at)) {
-                        if (!empty($apiResult->already_exists)) { // deleta na api caso seja recém criado
-                            $trackingService->deleteTrackingApi($apiResult);
-                        }
-                        throw new TrackingCreateException("A data de postagem não com corresponde com a data da venda");
+                        $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('posted_before_sale');
                     }
+                } else {
+                    $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('no_tracking_info');
                 }
-
                 $statusEnum = $trackingService->parseStatusApi($apiResult->status) ?? $trackingModel->present()->getTrackingStatusEnum('posted');
+            } else {
+                $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('unknown_carrier');
+                $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
+            }
 
-                $tracking = $productPlanSale->tracking;
+            $tracking = $productPlanSale->tracking;
 
-                if (!empty($tracking)) {
-                    //caso seja diferente, atualiza o registro e dispara o e-mail
-                    if ($tracking->tracking_code != $trackingCode) {
-                        $tracking->update([
-                            'tracking_code' => $trackingCode,
-                            'tracking_status_enum' => $statusEnum,
-                        ]);
-                    }
-                } else { //senao cria o tracking
-                    $tracking = $trackingModel->create([
-                        'sale_id' => $productPlanSale->sale_id,
-                        'product_id' => $productPlanSale->product_id,
-                        'product_plan_sale_id' => $productPlanSale->id,
-                        'amount' => $productPlanSale->amount,
-                        'delivery_id' => $productPlanSale->sale->delivery->id,
+            if (!empty($tracking)) {
+                if (($tracking->tracking_code != $trackingCode) || $forceUpdate) {
+                    $tracking->update([
                         'tracking_code' => $trackingCode,
                         'tracking_status_enum' => $statusEnum,
+                        'system_status_enum' => $systemStatusEnum,
                     ]);
                 }
-
-                return $tracking;
-            } else {
-                throw new TrackingCreateException('O código de rastreio é inválido ou não foi reconhecido pela transportadora');
+            } else { //senao cria o tracking
+                $tracking = $trackingModel->create([
+                    'sale_id' => $productPlanSale->sale_id,
+                    'product_id' => $productPlanSale->product_id,
+                    'product_plan_sale_id' => $productPlanSale->id,
+                    'amount' => $productPlanSale->amount,
+                    'delivery_id' => $productPlanSale->sale->delivery->id,
+                    'tracking_code' => $trackingCode,
+                    'tracking_status_enum' => $statusEnum,
+                    'system_status_enum' => $systemStatusEnum,
+                ]);
             }
+
+            return $tracking;
         } catch (\Exception $e) {
             report($e);
-            if($throws) throw $e;
             return null;
         }
     }
@@ -344,7 +340,7 @@ class TrackingService
                         $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
                         $queryTransaction->where('status_enum', $statusEnum);
                     } else {
-                        $queryTransaction->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                        $queryTransaction->where('transactions.release_date', '>', '2020-05-25')->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
@@ -354,7 +350,6 @@ class TrackingService
                 }
             }
         });
-
 
         if (isset($filters['status'])) {
             if ($filters['status'] === 'unknown') {

@@ -66,9 +66,6 @@ class Kernel extends ConsoleKernel
         // restart queues running on supervisor
         $schedule->command('queue:restart')->hourly();
 
-        // verify checkout status (ON - OFF)
-        $schedule->command('check:checkout-status')->everyTenMinutes();
-
         // verify redis status (ON - OFF)
         $schedule->command('verify:redis')->everyThirtyMinutes();
 
@@ -86,6 +83,9 @@ class Kernel extends ConsoleKernel
 
         //Reorder shopify hourly
         // $schedule->command('command:ShopifyReorderSalesHourly')->hourly();
+
+        //checks the trackings that have been recognized by the carrier but has no movement yet
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
     }
 
     /**
