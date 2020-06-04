@@ -375,7 +375,7 @@ $(() => {
             $('#checkout-attempts').text('Quantidade de tentativas: ' + sale.attempts).show();
         }
 
-        if ((sale.payment_method == 1 || sale.payment_method == 3) && (sale.status == 1 || sale.status == 8)) {
+        if ((sale.payment_method == 1 || sale.payment_method == 3) && (sale.status == 1 || sale.status == 8) && sale.userPermissionRefunded) {
             $('#div_refund_transaction').html('<button class="btn btn-secondary btn-sm btn_refund_transaction" sale=' + sale.id + '>Estornar transação</button>');
         } else {
             $('#div_refund_transaction').html('');
@@ -386,7 +386,7 @@ $(() => {
         } else {
             $('#saleReSendEmail').hide();
         }
-        if (sale.payment_method == 2 && sale.status == 1) {
+        if (sale.payment_method == 2 && sale.status == 1 && sale.userPermissionRefunded) {
             $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' + sale.id + '>Estornar boleto</button>');
         } else {
             $('#div_refund_billet').html('');
