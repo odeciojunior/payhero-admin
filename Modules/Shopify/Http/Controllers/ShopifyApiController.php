@@ -906,6 +906,21 @@ class ShopifyApiController extends Controller
                         return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
                     }
                 } catch (Exception $e) {
+                    if(method_exists($e, 'getCode')) {
+                        if ($e->getCode() == 401) {
+                            return response()->json(['message' => 'Token inválido'], 400);
+                        } elseif ($e->getCode() == 402) {
+                            return response()->json(['message' => 'Pagamento pendente na sua loja do Shopify'], 400);
+                        } elseif ($e->getCode() == 403) {
+                            return response()->json(['message' => 'Erro nas permissões de seu aplicativo'],400);
+                        } elseif ($e->getCode() == 404) {
+                            return response()->json(['message' => 'Url da loja não encontrada'],400);
+                        } elseif ($e->getCode() == 423) {
+                            return response()->json(['message' => 'Loja bloqueada no Shopify'],400);
+                        } elseif ($e->getCode() == 429) {
+                            return response()->json(['message' => 'Limite de requisiçoes atingido'], 400);
+                        }
+                    }
                     report($e);
 
                     return response()->json(['message' => 'Token inválido'], 400);

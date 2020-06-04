@@ -1243,10 +1243,14 @@ class ShopifyService
      */
     public function getShopProduct($variantId)
     {
-        if (!empty($this->client)) {
-            return $this->client->getProductManager()
-                ->find($variantId);
-        } else {
+        try {
+            if (!empty($this->client)) {
+                return $this->client->getProductManager()
+                    ->find($variantId);
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -1317,7 +1321,7 @@ class ShopifyService
                 return [];
             }
         } catch (Exception $e) {
-            if(method_exists($e, 'getCode') && $e->getCode() == 406) {
+            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,423,429])) { 
                 return [];
             }
             throw $e;
