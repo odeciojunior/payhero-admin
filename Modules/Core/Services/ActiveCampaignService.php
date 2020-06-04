@@ -72,7 +72,7 @@ class ActiveCampaignService
     {
         $tags   = $this->sendDataActiveCampaign('', 'tags?limit=100', 'GET');
         $tags   = json_decode($tags, true);
-        $total  = (int) $tags['meta']['total'] ?? 0;
+        $total  = !empty($tags['meta']['total']) ? (int)$tags['meta']['total'] : 0;
         $pages  = ($total > 0) ? ceil($total / 100) : 0;
         $return = $tags;
 
@@ -150,7 +150,7 @@ class ActiveCampaignService
     {
         $lists  = $this->sendDataActiveCampaign('', 'lists?limit=100', 'GET');
         $lists  = json_decode($lists, true);
-        $total  = (int) $lists['meta']['total'] ?? 0;
+        $total  = !empty($lists['meta']['total']) ? (int)$lists['meta']['total'] : 0;
         $pages  = ($total > 0) ? ceil($total / 100) : 0;
         $return = $lists;
 
