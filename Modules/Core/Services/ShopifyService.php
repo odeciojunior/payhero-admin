@@ -1275,10 +1275,18 @@ class ShopifyService
      */
     public function createShopWebhook($data = [])
     {
-        if (!empty($this->client)) {
-            return $this->client->getWebhookManager()->create($data);
-        } else {
-            return null;
+        try {
+
+            if (!empty($this->client)) {
+                return $this->client->getWebhookManager()->create($data);
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,422,423,429])) { 
+                return null;
+            }
+            throw $e;
         }
     }
 
