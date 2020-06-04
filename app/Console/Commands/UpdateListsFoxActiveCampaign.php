@@ -80,7 +80,7 @@ class UpdateListsFoxActiveCampaign extends Command
             $activeCampaignService->setAccess($this->apiUrlFox, $this->apiKeyFox, null);
             $contacts = $activeCampaignService->getContactsByList($listId, 1, 0);
             $contacts = json_decode($contacts, true);
-            $total    = (int)$contacts['meta']['total'] ?? 0;
+            $total    = !empty($contacts['meta']['total']) ? (int)$contacts['meta']['total'] : 0;
 
             $pages = ($total > 0) ? ceil($total/100) : 0;
 
@@ -191,7 +191,7 @@ class UpdateListsFoxActiveCampaign extends Command
             $activeCampaignService->setAccess($this->apiUrlFox, $this->apiKeyFox, null);
             $contacts = $activeCampaignService->getContactsByList($listId, 1, 0);
             $contacts = json_decode($contacts, true);
-            $total    = (int)$contacts['meta']['total'] ?? 0;
+            $total    = !empty($contacts['meta']['total']) ? (int)$contacts['meta']['total'] : 0;
             $pages = ($total > 0) ? ceil($total/100) : 0;
 
             for ($i=0; $i < $pages; $i++) { 
