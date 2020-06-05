@@ -953,6 +953,14 @@ class ShopifyService
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
             } else {
+                try {
+                    $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                } catch (Exception $e) {
+                    if(method_exists($e, 'getCode') && $e->getCode() == 429 ) {
+                        sleep(1);
+                        $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                    }
+                }
                 $product = $productModel->create(
                     [
                         'user_id' => $userId,
@@ -961,7 +969,7 @@ class ShopifyService
                         'guarantee' => '0',
                         'format' => 1,
                         'category_id' => '11',
-                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
+                        'cost' => $cost,
                         'shopify' => true,
                         'price' => '',
                         'shopify_id' => $storeProduct->getId(),
