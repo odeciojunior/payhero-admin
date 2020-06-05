@@ -23,7 +23,7 @@ class TrackingPresenter extends Presenter
         }
     }
 
-    public function getSystemtatusEnum($status)
+    public function getSystemStatusEnum($status)
     {
         $statusArray = [
             1 => 'valid', // O código passou em todas as validações

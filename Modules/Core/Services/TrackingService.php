@@ -235,7 +235,7 @@ class TrackingService
 
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
-            $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('valid');
+            $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('valid');
 
             //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
             $sale = $productPlanSale->sale;
@@ -247,7 +247,7 @@ class TrackingService
                 })->exists();
 
             if ($exists) {
-                $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('duplicated');
+                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
             }
 
             $apiResult = $trackingService->sendTrackingToApi($trackingCode);
@@ -257,14 +257,14 @@ class TrackingService
                 if (!empty($apiResult->origin_info)) {
                     $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
                     if ($postDate->lt($productPlanSale->created_at)) {
-                        $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('posted_before_sale');
+                        $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('posted_before_sale');
                     }
                 } else {
-                    $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('no_tracking_info');
+                    $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('no_tracking_info');
                 }
                 $statusEnum = $trackingService->parseStatusApi($apiResult->status) ?? $trackingModel->present()->getTrackingStatusEnum('posted');
             } else {
-                $systemStatusEnum = $trackingModel->present()->getSystemtatusEnum('unknown_carrier');
+                $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('unknown_carrier');
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
             }
 
