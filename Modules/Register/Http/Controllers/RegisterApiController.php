@@ -74,6 +74,10 @@ class RegisterApiController extends Controller
                 }
             }
 
+            if (!stristr($requestData['date_birth'], '-')) {
+                $requestData['date_birth'] = null;
+            }
+
             $requestData['password'] = bcrypt($requestData['password']);
             $requestData['percentage_rate'] = '5.9';
             $requestData['transaction_rate'] = '1.00';
