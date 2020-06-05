@@ -953,6 +953,14 @@ class ShopifyService
                     $plan->update(['code' => Hashids::encode($plan->id)]);
                 }
             } else {
+                try {
+                    $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                } catch (Exception $e) {
+                    if(method_exists($e, 'getCode') && $e->getCode() == 429 ) {
+                        sleep(1);
+                        $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
+                    }
+                }
                 $product = $productModel->create(
                     [
                         'user_id' => $userId,
@@ -961,7 +969,7 @@ class ShopifyService
                         'guarantee' => '0',
                         'format' => 1,
                         'category_id' => '11',
-                        'cost' => $this->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
+                        'cost' => $cost,
                         'shopify' => true,
                         'price' => '',
                         'shopify_id' => $storeProduct->getId(),
@@ -1243,10 +1251,14 @@ class ShopifyService
      */
     public function getShopProduct($variantId)
     {
-        if (!empty($this->client)) {
-            return $this->client->getProductManager()
-                ->find($variantId);
-        } else {
+        try {
+            if (!empty($this->client)) {
+                return $this->client->getProductManager()
+                    ->find($variantId);
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -1271,10 +1283,18 @@ class ShopifyService
      */
     public function createShopWebhook($data = [])
     {
-        if (!empty($this->client)) {
-            return $this->client->getWebhookManager()->create($data);
-        } else {
-            return null;
+        try {
+
+            if (!empty($this->client)) {
+                return $this->client->getWebhookManager()->create($data);
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,422,423,429])) { 
+                return null;
+            }
+            throw $e;
         }
     }
 
@@ -1317,7 +1337,7 @@ class ShopifyService
                 return [];
             }
         } catch (Exception $e) {
-            if(method_exists($e, 'getCode') && $e->getCode() == 406) {
+            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,423,429])) { 
                 return [];
             }
             throw $e;

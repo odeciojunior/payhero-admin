@@ -19,47 +19,53 @@ class SalesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data                = [
+        $user = auth()->user();
+        $userPermissionRefunded = false;
+        if ($user->hasRole('admin') || $user->hasRole('account_owner')) {
+            $userPermissionRefunded = true;
+        }
+        $data = [
             //hide ids
-            'id'                    => Hashids::connection('sale_id')->encode($this->id),
-            'upsell'                => Hashids::connection('sale_id')->encode($this->upsell_id),
-            'delivery_id'           => Hashids::encode($this->delivery_id),
-            'checkout_id'           => Hashids::encode($this->checkout_id),
-            'client_id'             => Hashids::encode($this->customer_id),
+            'id' => Hashids::connection('sale_id')->encode($this->id),
+            'upsell' => Hashids::connection('sale_id')->encode($this->upsell_id),
+            'delivery_id' => Hashids::encode($this->delivery_id),
+            'checkout_id' => Hashids::encode($this->checkout_id),
+            'client_id' => Hashids::encode($this->customer_id),
             //sale
-            'payment_method'        => $this->payment_method,
-            'flag'                  => $this->flag,
-            'start_date'            => $this->start_date,
-            'hours'                 => $this->hours,
-            'status'                => $this->status,
-            'dolar_quotation'       => $this->dolar_quotation,
-            'installments_amount'   => $this->installments_amount,
-            'boleto_link'           => $this->boleto_link,
+            'payment_method' => $this->payment_method,
+            'flag' => $this->flag,
+            'start_date' => $this->start_date,
+            'hours' => $this->hours,
+            'status' => $this->status,
+            'dolar_quotation' => $this->dolar_quotation,
+            'installments_amount' => $this->installments_amount,
+            'boleto_link' => $this->boleto_link,
             'boleto_digitable_line' => $this->boleto_digitable_line,
-            'boleto_due_date'       => $this->boleto_due_date,
-            'attempts'              => $this->attempts,
-            'shipment_value'        => $this->shipment_value,
+            'boleto_due_date' => $this->boleto_due_date,
+            'attempts' => $this->attempts,
+            'shipment_value' => $this->shipment_value,
             //invoices
-            'invoices'              => $this->details->invoices ?? null,
+            'invoices' => $this->details->invoices ?? null,
             //transaction
-            'transaction_rate'      => $this->details->transaction_rate ?? null,
-            'percentage_rate'       => $this->details->percentage_rate ?? null,
+            'transaction_rate' => $this->details->transaction_rate ?? null,
+            'percentage_rate' => $this->details->percentage_rate ?? null,
             //extra info
-            'total'                 => $this->details->total ?? null,
-            'subTotal'              => $this->details->subTotal ?? null,
-            'discount'              => $this->details->discount ?? null,
-            'comission'             => $this->details->comission ?? null,
-            'convertax_value'       => $this->details->convertax_value ?? null,
-            'taxa'                  => $this->details->taxa ?? null,
-            'taxaReal'              => $this->details->taxaReal ?? null,
+            'total' => $this->details->total ?? null,
+            'subTotal' => $this->details->subTotal ?? null,
+            'discount' => $this->details->discount ?? null,
+            'comission' => $this->details->comission ?? null,
+            'convertax_value' => $this->details->convertax_value ?? null,
+            'taxa' => $this->details->taxa ?? null,
+            'taxaReal' => $this->details->taxaReal ?? null,
             'installment_tax_value' => $this->present()->getInstallmentValue,
-            'release_date'          => $this->details->release_date,
-            'affiliate_comission'   => $this->details->affiliate_comission,
-            'shopify_order'         => $this->shopify_order ?? null,
-            'automatic_discount'    => $this->details->automatic_discount ?? 0,
-            'refund_value'          => $this->details->refund_value ?? '0,00',
-            'value_anticipable'     => $this->details->value_anticipable ?? null,
-            'total_paid_value'      => $this->details->total_paid_value,
+            'release_date' => $this->details->release_date,
+            'affiliate_comission' => $this->details->affiliate_comission,
+            'shopify_order' => $this->shopify_order ?? null,
+            'automatic_discount' => $this->details->automatic_discount ?? 0,
+            'refund_value' => $this->details->refund_value ?? '0,00',
+            'value_anticipable' => $this->details->value_anticipable ?? null,
+            'total_paid_value' => $this->details->total_paid_value,
+            'userPermissionRefunded' => $userPermissionRefunded,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
 
@@ -76,7 +82,7 @@ class SalesResource extends JsonResource
         }
 
         if (!empty($this->affiliate_id)) {
-            $affiliate         = Affiliate::withTrashed()->find($this->affiliate_id);
+            $affiliate = Affiliate::withTrashed()->find($this->affiliate_id);
             $data['affiliate'] = $affiliate->user->name;
         } else {
             $data['affiliate'] = null;
