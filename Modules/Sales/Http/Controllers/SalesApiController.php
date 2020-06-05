@@ -119,7 +119,7 @@ class SalesApiController extends Controller
 
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
-            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
+            return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
             report($e);
 

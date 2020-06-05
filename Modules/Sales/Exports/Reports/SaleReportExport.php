@@ -26,12 +26,15 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
     private $saleService;
 
+    private $email;
+
     public function __construct($filters, $user, $filename)
     {
-        $this->filters = $filters;
+        $this->filters     = $filters;
         $this->saleService = new SaleService();
-        $this->user = $user;
-        $this->filename = $filename;
+        $this->user        = $user;
+        $this->filename    = $filename;
+        $this->email       = !empty($filters['email']) ? $filters['email'] : $user->email;
     }
 
     public function query()
@@ -209,7 +212,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                     $lastSale = $currentSale;
                 }
 
-                event(new SalesExportedEvent($this->user, $this->filename));
+                event(new SalesExportedEvent($this->user, $this->filename, $this->email));
             },
         ];
     }
