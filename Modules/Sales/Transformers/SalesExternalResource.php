@@ -32,6 +32,7 @@ class SalesExternalResource extends JsonResource
             'status' => $this->present()->getStatus(),
             'created_at' => $this->end_date,
             'approved_at' => $this->end_date,
+            'refunded_at' => $this->date_refunded,
             'products' => $this->products ?? [],
         ];
     }
