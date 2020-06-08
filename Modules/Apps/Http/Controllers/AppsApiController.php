@@ -11,6 +11,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\ActivecampaignIntegration;
 use Modules\Core\Entities\DigitalmanagerIntegration;
+use Modules\Core\Entities\UnicodropIntegration;
 use Modules\Core\Entities\Whatsapp2Integration;
 use Modules\Core\Entities\HotsacIntegration;
 use Modules\Core\Entities\ReportanaIntegration;
@@ -32,6 +33,8 @@ class AppsApiController extends Controller
         $whatsapp2IntegrationModel      = new Whatsapp2Integration();
         $hotsacIntegrationModel         = new HotsacIntegration();
         $reportanaIntegrationModel      = new ReportanaIntegration();
+        $unicodropIntegrationModel      = new UnicodropIntegration();
+
 
         return response()->json([
             'hotzappIntegrations'        => $hotzappIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
@@ -43,7 +46,8 @@ class AppsApiController extends Controller
             'whatsapp2Integrations'      => $whatsapp2IntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'hotsacIntegrations'         => $hotsacIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
             'reportanaIntegrations'      => $reportanaIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
-        ]);
+            'unicodropIntegrations'      => $unicodropIntegrationModel->where('user_id', auth()->user()->account_owner_id)->count(),
+          ]);
     }
 
 }

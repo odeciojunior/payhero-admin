@@ -1,5 +1,6 @@
-var currentPage = null;
-var atualizar = null;
+var currentPage  = null;
+var atualizar    = null;
+var exportFormat = null;
 
 $(document).ready(function () {
 
@@ -14,11 +15,26 @@ $(document).ready(function () {
     // COMPORTAMENTOS DA JANELA
 
     $("#bt_get_csv").on("click", function () {
-        salesExport('csv');
+        $('#modal-export-sale').modal('show');
+        exportFormat = 'csv';
     });
 
     $("#bt_get_xls").on("click", function () {
-        salesExport('xls');
+        $('#modal-export-sale').modal('show');
+        exportFormat = 'xls';
+    });
+
+    $(".btn-confirm-export-sale").on("click", function () {
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+        var email = $('#email_export').val();
+
+        if( email == '' || !regexEmail.test(email) ) { 
+            alertCustom('error', 'Preencha o email corretamente');
+            return false;
+        } else {
+            salesExport(exportFormat);
+            $('#modal-export-sale').modal('hide');
+        }
     });
 
     $("#filtros").on("click", function () {
@@ -276,6 +292,7 @@ $(document).ready(function () {
 
         let data = getFilters();
         data['format'] = fileFormat;
+        data['email'] = $('#email_export').val();
         $.ajax({
             method: "POST",
             url: '/api/sales/export',

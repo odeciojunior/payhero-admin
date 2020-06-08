@@ -44,7 +44,7 @@ class VerifyTrackingsWithoutInfo extends Command
         $trackingService = new TrackingService();
 
         $trackingModel->with('productPlanSale')
-        ->where('system_status_enum', $trackingModel->present()->getSystemtatusEnum('no_tracking_info'))
+        ->where('system_status_enum', $trackingModel->present()->getSystemStatusEnum('no_tracking_info'))
             ->chunk(100, function ($trackings) use ($trackingService) {
                 foreach ($trackings as $tracking) {
                     try {

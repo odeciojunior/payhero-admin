@@ -9,6 +9,7 @@ use Modules\Core\Events\SaleRefundedPartialEvent;
 use Modules\Core\Events\BilletExpiredEvent;
 use Modules\Core\Listeners\BilletPaidHotZappListener;
 use Modules\Core\Listeners\BilletPaidSendEmailListener;
+use Modules\Core\Listeners\BilletPaidUnicodropListener;
 use Modules\Core\Listeners\BilletPaidWhatsapp2Listener;
 use Modules\Core\Listeners\BilletRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
@@ -34,6 +35,7 @@ class EventServiceProvider extends ServiceProvider
             BilletPaidWhatsapp2Listener::class,
             BilletPaidHotsacListener::class,
             BilletPaidReportanaListener::class,
+//            BilletPaidUnicodropListener::class,
         ],
         BilletExpiredEvent::class => [
             BilletExpiredWhatsapp2Listener::class,
