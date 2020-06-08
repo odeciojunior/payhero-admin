@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/unicodrop",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Unicodrop\\Providers\\UnicodropServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Unicodrop\\": ""
+        }
+    }
+}

@@ -51,6 +51,10 @@ $(document).ready(function(){
                     $('#reportana-bt').addClass('added');
                     $('#reportana-icon').removeClass('wb-plus').addClass('wb-check');
                 }
+                if(response.unicodropIntegrations > 0){
+                    $('#unicodrop-bt').addClass('added');
+                    $('#unicodrop-icon').removeClass('wb-plus').addClass('wb-check');
+                }
             }
         });
     }
