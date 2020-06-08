@@ -54,7 +54,7 @@ class UpdateTrackingsIgnoredStatus extends Command
             } else {
                 $tracking->tracking_status_enum = 1;
             }
-            $tracking->system_status_enum = $trackingsPresenter->getSystemtatusEnum('ignored');
+            $tracking->system_status_enum = $trackingsPresenter->getSystemStatusEnum('ignored');
             $tracking->save();
         }
     }

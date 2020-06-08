@@ -17,6 +17,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Presenters\TrackingPresenter;
 use Modules\Trackings\Exports\TrackingsReportExport;
 use Modules\Trackings\Imports\TrackingsImport;
 use Modules\Core\Services\ProductService;
@@ -225,8 +226,7 @@ class TrackingsApiController extends Controller
             $blockedBalance = $salesModel->select(
                 DB::raw('sum(transactions.value) / 100 as total'),
                 DB::raw('count(distinct transactions.sale_id) as sales')
-            )
-                ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            )->join('transactions', 'transactions.sale_id', '=', 'sales.id')
                 ->where('sales.owner_id', $userAccountOwnerId)
                 ->where('sales.status', $salesModel->present()->getStatus('approved'))
                 ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
@@ -234,6 +234,20 @@ class TrackingsApiController extends Controller
                 ->whereIn('transactions.company_id', $userCompanies)
                 ->whereDoesntHave('tracking')
                 ->first();
+            /**
+             * TODO: trocar whereDoesntHave('tracking') por:
+             *  ->where(function ($query){
+             *      $query->whereHas('tracking', function ($trackingsQuery) {
+             *          $trackingPresenter = (new Tracking)->present();
+             *          $status = [
+             *              $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+             *              $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+             *              $trackingPresenter->getSystemStatusEnum('duplicated'),
+             *          ];
+             *          $trackingsQuery->whereIn('system_status_enum', $status);
+             *     })->orDoesntHave('tracking');
+             *  })
+             */
 
             return response()->json(
                 [

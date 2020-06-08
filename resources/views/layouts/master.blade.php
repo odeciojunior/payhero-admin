@@ -116,22 +116,36 @@
 
 @if(env('APP_ENV', 'production') == 'production')
 
-    <script src="https://fast.appcues.com/60650.js"></script>
-
-    <script>
-        window.Appcues.identify("{{ auth()->user()->id }}", {
-            account_id: "{{ auth()->user()->id }}",
-            first_name: "{{ auth()->user()->name }}",
-            email: "{{ auth()->user()->email }}",
-        });
-    </script>
-
     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
     <script src="{{ asset('modules/global/js/notifications.js?v=9') }}"></script>
 
-    <!-- Init code pzw.io -->
-    <script>
+    <script type="text/javascript"> 
+
+        window.$crisp=[];
+        window.CRISP_WEBSITE_ID="96ad410d-c6cf-4ffa-9763-be123b05acbd";
+
+        (function(){ 
+            d=document;
+            s=d.createElement("script"); 
+            s.src="https://client.crisp.chat/l.js"; 
+            s.async=1;
+            $crisp.push(["set", "user:email", '{{ auth()->user()->email }}']);
+            $crisp.push(["set", "user:nickname", '{{ auth()->user()->name }}'])
+            d.getElementsByTagName("head")[0].appendChild(s);        
+        })(); 
+
+    </script>
+
+@endif
+
+</body>
+
+</html>
+
+    
+    <!-- chat huggy abandonado -->
+    {{-- <script>
         var $_PowerZAP = {
             defaultCountry: '+55',
             widget_id: '15840',
@@ -146,11 +160,5 @@
             o.async=1;o.src=g;m=s.getElementsByTagName(a)[0];
             m.parentNode.insertBefore(o,m);
         })(window,document,'script','https://js.huggy.chat/widget.min.js?v=8.0.0','pwz');
-    </script>
+    </script> --}}
     <!-- End code pzw.io  -->
-@endif
-
-</body>
-
-</html>
-
