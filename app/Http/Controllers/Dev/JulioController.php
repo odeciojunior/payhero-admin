@@ -51,7 +51,7 @@ class JulioController extends Controller
 
     public function julioFunction()
     {
-
+        $this->checkPaidBoletos();
         // dd(env('DB_HOST'));
 
         //$this->testSms(['message'   => 'teste','telephone' => '5555996931098']);
@@ -65,43 +65,21 @@ class JulioController extends Controller
 
     public function checkPaidBoletos(){
 
-        $saleModel = new Sale();
-
-        $sales = $saleModel->where([
-            ['status',1],
-            ['payment_method', 1],
-            ['start_date', '>',  '2019-09-01']
-        ])
-        ->whereHas('transactions', function($query){
-            $query->whereNotIn('status_enum', [1,2]);
-            $query->whereNotNull('company_id');
-        })->get();
+        $sales = Sale::where('status', 20)->whereNotNull('upsell_id')->get();
 
         echo "<table>";
         echo "<thead>";
-        echo "<th>ID</th>";
-        echo "<th>Code</th>";
-        echo "<th>Data</th>";
-        echo "<th>Status</th>";
-        echo "<th>Usuario</th>";
-        echo "<th>Transações</th>";
+        echo "<th>Transação upsell</th>";
+        echo "<th>Transação original</th>";
         echo "</thead>";
+        echo "<tbody>";
         foreach($sales as $sale){
             echo "<tr>";
-            echo "<td>" . $sale->id . "</td>";
-            echo "<td>" . Hashids::connection('sale_id')->encode($sale->id) . "</td>";
-            echo "<td>" . $sale->start_date . "</td>";
-            echo "<td>" . $saleModel->present()->getStatus($sale->status) . "</td>";
-            echo "<td>" . $sale->user->name . "</td>";
-            echo "<td>";
-            foreach($sale->transactions as $transaction){
-                if(!empty($transaction->company_id)){
-                    echo $transaction->status . ' - ';
-                }
-            }
-            echo "</td>";
+            echo "<td>" . Hashids::encode($sale->id) . "</td>";
+            echo "<td>" . Hashids::encode($sale->upsell_id) . "</td>";
             echo "</tr>";
         }
+        echo "</tbody>";
         echo "</table>";
 
         // dd($sales->with('transactions')->limit(10)->get()->toArray());
