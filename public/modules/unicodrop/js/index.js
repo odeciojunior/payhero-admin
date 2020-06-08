@@ -143,7 +143,7 @@ $(document).ready(function () {
             success: (response) => {
                 $("#select_projects_edit").val(response.data.project_id);
                 $('#integration_id').val(response.data.id);
-                // $("#api_token_edit").val(response.data.api_token);
+                $("#inputToken").val(response.data.token);
 
                 $("#boleto_generated_edit").val(response.data.boleto_generated);
                 $("#boleto_generated_edit").prop('checked', $("#boleto_generated_edit").val() == '1');
@@ -212,5 +212,12 @@ $(document).ready(function () {
                 alertCustom("success", response.message);
             }
         });
+    });
+
+    $("#btnCopyToken").on("click", function () {
+        var copyText = document.getElementById("inputToken");
+        copyText.select();
+        document.execCommand("copy");
+        alertCustom('success', 'Token copiado!');
     });
 });

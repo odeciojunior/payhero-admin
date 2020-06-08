@@ -64,9 +64,7 @@
                     </div>
                 </div>
             </div>
-
             @include('projects::empty')
-
             <div id="no-integration-found" class='row justify-content-center' style="display:none; width:100%;">
                 <div class="content-error text-center">
                     <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
@@ -78,6 +76,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/unicodrop/js/index.js"></script>
+        <script src="/modules/unicodrop/js/index.js?v=1"></script>
     @endpush
 @endsection

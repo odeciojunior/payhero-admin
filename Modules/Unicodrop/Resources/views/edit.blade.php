@@ -3,6 +3,19 @@
     @csrf
     @method('PUT')
     <div style="width:100%">
+        <div class='row'>
+            <div class='col-12'>
+                <label for='email'>Token
+                    <i class="fa-question-circle-o text-info" data-content="Copie o token e adicione no Unicodrop" data-toggle="popover" data-trigger="click"></i>
+                </label>
+            </div>
+            <div id='invite-link-select' class='input-group col-12'>
+                <input type='text' class='form-control' id='inputToken' value='' readonly>
+                <span class='input-group-btn'>
+                       <button id='btnCopyToken' class='btn btn-default' type='button'>Copiar</button>
+                 </span>
+            </div>
+        </div>
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
