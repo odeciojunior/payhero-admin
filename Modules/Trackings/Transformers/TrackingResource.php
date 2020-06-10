@@ -11,10 +11,13 @@ class TrackingResource extends JsonResource
     public function toArray($request)
     {
         if ($this->tracking) {
+            $trackingCode = $this->tracking->system_status_enum == $this->tracking->present()->getSystemStatusEnum('ignored')
+                ? ''
+                : $this->tracking->tracking_code;
             return [
                 'id' => Hashids::encode($this->tracking->id),
                 'pps_id' => Hashids::encode($this->id),
-                'tracking_code' => $this->tracking->tracking_code,
+                'tracking_code' => $trackingCode,
                 'tracking_status_enum' => $this->tracking->tracking_status_enum,
                 'tracking_status' => $this->tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->tracking->present()->getTrackingStatusEnum($this->tracking->tracking_status_enum)) : 'Não informado',
                 'sale' => Hashids::connection('sale_id')->encode($this->sale->id),
