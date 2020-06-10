@@ -53,6 +53,11 @@
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly>
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                            <label for="customer_name">Cliente</label>
+                            <input name='customer_name' id="customer_name" class="input-pad" placeholder="Nome do cliente">
+                        </div>
+                        <div class='col-md-9'></div>
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label></label>
                             <button id="bt_filtro" class="btn btn-primary col-sm-12">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
@@ -92,7 +97,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=2') }}"></script>
+        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=3') }}"></script>
         <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>

@@ -76,8 +76,9 @@ $(document).ready(function () {
             'payment_method': $('#forma').val(),
             'date_range': $("#date_range").val(),
             'status': $('#status').val(),
-            'client': $('#comprador').val(),
+            // 'client': $('#comprador').val(),
             'transaction': $('#transaction').val().replace('#', ''),
+            'customer': $('#customer_name').val(),
         };
 
         if (urlParams) {

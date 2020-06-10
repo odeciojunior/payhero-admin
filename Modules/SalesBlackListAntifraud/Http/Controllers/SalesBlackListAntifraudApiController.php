@@ -76,6 +76,12 @@ class SalesBlackListAntifraudApiController extends Controller
                                          ->decode(str_replace('#', '', $filters["transaction"])));
                 $sales->where('id', $saleId);
             }
+            if (!empty($filters["customer"])) {
+                $customerName = $filters["customer"];
+                $sales->whereHas('customer', function($query) use ($customerName) {
+                    $query->where('name', 'LIKE', '%' . $customerName . '%');
+                });
+            }
 
             return SalesBlackListAntiFraudResource::collection($sales->orderBy('start_date', 'DESC')->paginate(10));
         } catch (Exception $e) {
