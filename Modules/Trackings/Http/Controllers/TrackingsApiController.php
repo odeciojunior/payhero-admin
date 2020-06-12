@@ -232,22 +232,18 @@ class TrackingsApiController extends Controller
                 ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
                 ->whereNull('transactions.invitation_id')
                 ->whereIn('transactions.company_id', $userCompanies)
-                ->whereDoesntHave('tracking')
+                ->where(function ($query) {
+                    $query->whereHas('tracking', function ($trackingsQuery) {
+                        $trackingPresenter = (new Tracking)->present();
+                        $status = [
+                            $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+                            $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+                            $trackingPresenter->getSystemStatusEnum('duplicated'),
+                        ];
+                        $trackingsQuery->whereIn('system_status_enum', $status);
+                    })->orDoesntHave('tracking');
+                })
                 ->first();
-            /**
-             * TODO: trocar whereDoesntHave('tracking') por:
-             *  ->where(function ($query){
-             *      $query->whereHas('tracking', function ($trackingsQuery) {
-             *          $trackingPresenter = (new Tracking)->present();
-             *          $status = [
-             *              $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-             *              $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
-             *              $trackingPresenter->getSystemStatusEnum('duplicated'),
-             *          ];
-             *          $trackingsQuery->whereIn('system_status_enum', $status);
-             *     })->orDoesntHave('tracking');
-             *  })
-             */
 
             return response()->json(
                 [

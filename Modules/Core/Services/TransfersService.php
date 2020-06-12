@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Exception;
 use Carbon\Carbon;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Transaction;
 
@@ -26,28 +27,24 @@ class TransfersService
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                 ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
             ])->whereHas('productPlanSales', function ($query) {
-                    $query->whereHas('tracking');
-                });
+                $query->whereHas('tracking');
+            });
         } else {
             $transactions = $transactionModel->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                 ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
                 ['sale_id', $saleId]
             ])->whereHas('productPlanSales', function ($query) {
-                $query->whereHas('tracking');
-                /**
-                 * TODO: trocar whereDoesntHave('tracking') por:
-                 *   $query->whereHas('tracking', function ($trackingsQuery) {
-                 *       $trackingPresenter = (new Tracking)->present();
-                 *       $status = [
-                 *           $trackingPresenter->getSystemStatusEnum('valid'),
-                 *           $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
-                 *           $trackingPresenter->getSystemStatusEnum('ignored'),
-                 *           $trackingPresenter->getSystemStatusEnum('checked_manually'),
-                 *       ];
-                 *       $trackingsQuery->whereIn('system_status_enum', $status);
-                 *   });
-                 */
+                $query->whereHas('tracking', function ($trackingsQuery) {
+                    $trackingPresenter = (new Tracking())->present();
+                    $status = [
+                        $trackingPresenter->getSystemStatusEnum('valid'),
+                        $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                        $trackingPresenter->getSystemStatusEnum('ignored'),
+                        $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                    ];
+                    $trackingsQuery->whereIn('system_status_enum', $status);
+                });
             });
         }
 
@@ -85,20 +82,16 @@ class TransfersService
                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                     ['status_enum', $transactionModel->present()->getStatusEnum('anticipated')],
                 ])->whereHas('productPlanSales', function ($query) {
-                    $query->whereHas('tracking');
-                    /**
-                     * TODO: trocar whereDoesntHave('tracking') por:
-                     *   $query->whereHas('tracking', function ($trackingsQuery) {
-                     *       $trackingPresenter = (new Tracking)->present();
-                     *       $status = [
-                     *           $trackingPresenter->getSystemStatusEnum('valid'),
-                     *           $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
-                     *           $trackingPresenter->getSystemStatusEnum('ignored'),
-                     *           $trackingPresenter->getSystemStatusEnum('checked_manually'),
-                     *       ];
-                     *       $trackingsQuery->whereIn('system_status_enum', $status);
-                     *   });
-                     */
+                    $query->whereHas('tracking', function ($trackingsQuery) {
+                        $trackingPresenter = (new Tracking())->present();
+                        $status = [
+                            $trackingPresenter->getSystemStatusEnum('valid'),
+                            $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                            $trackingPresenter->getSystemStatusEnum('ignored'),
+                            $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                        ];
+                        $trackingsQuery->whereIn('system_status_enum', $status);
+                    });
                 });
         } else {
             $transactions = $transactionModel->with('anticipatedTransactions')
@@ -108,20 +101,16 @@ class TransfersService
                     ['sale_id', $saleId]
                 ])
                 ->whereHas('productPlanSales', function ($query) {
-                    $query->whereHas('tracking');
-                    /**
-                     * TODO: trocar whereDoesntHave('tracking') por:
-                     *   $query->whereHas('tracking', function ($trackingsQuery) {
-                     *       $trackingPresenter = (new Tracking)->present();
-                     *       $status = [
-                     *           $trackingPresenter->getSystemStatusEnum('valid'),
-                     *           $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
-                     *           $trackingPresenter->getSystemStatusEnum('ignored'),
-                     *           $trackingPresenter->getSystemStatusEnum('checked_manually'),
-                     *       ];
-                     *       $trackingsQuery->whereIn('system_status_enum', $status);
-                     *   });
-                     */
+                    $query->whereHas('tracking', function ($trackingsQuery) {
+                        $trackingPresenter = (new Tracking())->present();
+                        $status = [
+                            $trackingPresenter->getSystemStatusEnum('valid'),
+                            $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                            $trackingPresenter->getSystemStatusEnum('ignored'),
+                            $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                        ];
+                        $trackingsQuery->whereIn('system_status_enum', $status);
+                    });
                 });
         }
 
