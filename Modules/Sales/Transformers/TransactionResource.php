@@ -62,10 +62,16 @@ class TransactionResource extends JsonResource
         }
 
         if (!empty($sale->affiliate_id)) {
-            $affiliate = Affiliate::withTrashed()->find($sale->affiliate_id);
+            $affiliate         = Affiliate::withTrashed()->find($sale->affiliate_id);
             $data['affiliate'] = $affiliate->user->name;
         } else {
             $data['affiliate'] = null;
+        }
+
+        if ($sale->start_date <= Carbon::now()->subMinutes(5)->toDateTimeString()) {
+            $data['date_before_five_minutes_ago'] = true;
+        } else {
+            $data['date_before_five_minutes_ago'] = false;
         }
 
         return $data;
