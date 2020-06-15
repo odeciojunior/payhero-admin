@@ -42,7 +42,7 @@
                 </div>
             </div>
             <ul id="pagination-collaborators" class="pagination-sm margin-chat-pagination"
-                style="margin-top:10px;position:relative;float:right">
+                style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                 {{-- js pagination carrega --}}
             </ul>
             <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle"
