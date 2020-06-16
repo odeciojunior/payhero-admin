@@ -338,16 +338,23 @@ class ActiveCampaignService
                     }
                 }
 
+                if (!empty($event->remove_list)) {
+                    $idRemoveList = json_decode($event->remove_list, true);
+                    if (!empty($idRemoveList['id'])) {
+                        $contactLists = json_decode($this->getListsByContact($contact['contact']['id']), true);
+                        if(isset($contactLists['contactLists']) && is_array($contactLists['contactLists'])) {
+                            foreach ($contactLists['contactLists'] as $contactList) {
+                                if($contactList['list'] == $idRemoveList['id'] && $contactList['status'] == 1) {
+                                    $removeList = $this->updateContactList($idRemoveList['id'], $contact['contact']['id'], 0);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (!empty($event->add_list)) {
                     $idAddList = json_decode($event->add_list, true);
                     if (!empty($idAddList['id'])) {
                         $addList = $this->updateContactList($idAddList['id'], $contact['contact']['id'], 1);
-                    }
-                }
-                if (!empty($event->remove_list)) {
-                    $idRemoveList = json_decode($event->remove_list, true);
-                    if (!empty($idAddList['id'])) {
-                        $removeList = $this->updateContactList($idRemoveList['id'], $contact['contact']['id'], 0);
                     }
                 }
                 $return     = ['add' => $tagsApply ?? null, 'remove' => $tagsRemove ?? null, 'listAdd' => $addList ?? null, 'listRemove' => $removeList ?? null];
@@ -560,5 +567,14 @@ class ActiveCampaignService
                 $this->createCustomFieldRelation($newField['field']['id'], 0);
             }
         }
+    }
+
+    /**
+     * @param int $contactId
+     * @return json
+     */
+    public function getListsByContact($contactId)
+    {
+        return $this->sendDataActiveCampaign(null, 'contacts/' . $contactId . '/contactLists', 'GET');
     }
 }

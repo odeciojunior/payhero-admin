@@ -52,7 +52,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                            <ul id="pagination-affiliates" class="pagination-sm pagination-affiliates margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                                 {{-- js carrega... --}}
                             </ul>
                         </div>

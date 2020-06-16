@@ -139,7 +139,7 @@
                     {{--                    </div>--}}
                 </div>
             </div>
-            <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-tickets" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                 {{-- js carrega... --}}
             </ul>
         </div>

@@ -28,7 +28,7 @@ $(document).ready(function () {
         var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         var email = $('#email_export').val();
 
-        if( email == '' || !regexEmail.test(email) ) { 
+        if( email == '' || !regexEmail.test(email) ) {
             alertCustom('error', 'Preencha o email corretamente');
             return false;
         } else {
@@ -241,7 +241,7 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
                         let tableClass = '';
-                        if (value.has_shopify_integration != null && value.shopify_order == null && value.status != 20) {
+                        if (value.has_shopify_integration != null && value.shopify_order == null && value.status != 20 && value.date_before_five_minutes_ago) {
                             tableClass = 'table-warning-roll'
                         } else {
                             tableClass = ''

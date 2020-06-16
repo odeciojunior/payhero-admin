@@ -32,7 +32,7 @@
         </div>
     </div>
 </div>
-<ul id="pagination-events" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+<ul id="pagination-events" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
     {{-- js pagination carrega --}}
 </ul>
 <!-- Modal padrão para adicionar Adicionar e Editar -->
