@@ -66,10 +66,14 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             "format" => "json",
         ]);
 
-        Sale::where('project_id', $project->id)
-            ->with([
-                'productsPlansSale',
-            ])->doesntHave('tracking')
+        Sale::with([
+            'productsPlansSale' => function ($query) {
+                $query->whereDoesntHave('tracking');
+            }
+        ])->where('project_id', $project->id)
+            ->whereHas('productsPlansSale', function ($query) {
+                $query->whereDoesntHave('tracking');
+            })
             ->where('status', 1)
             ->whereNotNull('shopify_order')
             ->chunk(100, function ($sales) use ($productService, $trackingService, $shopifyService) {
