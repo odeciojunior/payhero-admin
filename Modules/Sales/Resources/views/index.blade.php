@@ -91,9 +91,9 @@
                                 <option value="2">Aguardando pagamento</option>
                                 <option value="4">Chargeback</option>
                                 <option value="7">Estornado</option>
-                                <option value="6">Em análise</option>
-                                <option value="8">Parcialmente estornado</option>
-                                <option value="20">Análise Antifraude</option>
+{{--                                <option value="6">Em análise</option>--}}
+{{--                                <option value="8">Parcialmente estornado</option>--}}
+                                <option value="20">Revisão Antifraude</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md">
