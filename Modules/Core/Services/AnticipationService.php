@@ -7,6 +7,7 @@ use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Anticipation;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
@@ -154,25 +155,35 @@ class AnticipationService
     }
 
     /**
-     * @param Company $company
-     * @return Builder
+     * @param  int  $companyId
+     * @return \Illuminate\Database\Eloquent\Builder
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function getQuery(int $companyId)
     {
         $transactionModel = new Transaction;
-        
-        return $transactionModel->with(['sale' => function ($query) {
-                                    $query->where('payment_method', (new Sale)->present()->getPaymentType('credit_card'));
-                                }])
-                                ->where('company_id', $companyId)
-                                ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
-                                ->whereDate('release_date', '>', Carbon::today())
-                                ->whereNull('invitation_id')
-                                ->whereDoesntHave('anticipatedTransactions')
-                                ->whereHas('productPlanSales')
-                                ->whereDoesntHave('productPlanSales', function($query) {
-                                   $query->whereDoesntHave('tracking');
-                                });
+
+        return $transactionModel->with([
+            'sale' => function ($query) {
+                $query->where('payment_method', (new Sale)->present()->getPaymentType('credit_card'));
+            }
+        ])->where('company_id', $companyId)
+            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
+            ->whereDate('release_date', '>', Carbon::today())
+            ->whereNull('invitation_id')
+            ->whereDoesntHave('anticipatedTransactions')
+            ->whereHas('productPlanSales', function ($query) {
+                $query->whereHas('tracking', function ($trackingsQuery) {
+                    $trackingPresenter = (new Tracking())->present();
+                    $status = [
+                        $trackingPresenter->getSystemStatusEnum('valid'),
+                        $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                        $trackingPresenter->getSystemStatusEnum('ignored'),
+                        $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                    ];
+                    $trackingsQuery->whereIn('system_status_enum', $status);
+                });
+            });
 
     }
 

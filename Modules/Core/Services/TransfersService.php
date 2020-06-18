@@ -27,7 +27,16 @@ class TransfersService
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                 ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
             ])->whereHas('productPlanSales', function ($query) {
-                $query->whereHas('tracking');
+                $query->whereHas('tracking', function ($trackingsQuery) {
+                    $trackingPresenter = (new Tracking())->present();
+                    $status = [
+                        $trackingPresenter->getSystemStatusEnum('valid'),
+                        $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                        $trackingPresenter->getSystemStatusEnum('ignored'),
+                        $trackingPresenter->getSystemStatusEnum('checked_manually'),
+                    ];
+                    $trackingsQuery->whereIn('system_status_enum', $status);
+                });
             });
         } else {
             $transactions = $transactionModel->where([
