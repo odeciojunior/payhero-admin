@@ -16,12 +16,13 @@ class AddColumnsCompaniesTable extends Migration
         Schema::create(
             'user_informations',
             function (Blueprint $table) {
-
-                $table->unsignedInteger('patrimony')->nullable()->after('working_end_time');
-                $table->string('state_fiscal_document_number', 255)->nullable()->after('monthly_gross_income');
+                $table->unsignedInteger('patrimony')->nullable()->after('order_priority');
+                $table->string('state_fiscal_document_number', 255)->nullable()->after('patrimony');
                 $table->string('business_entity_type', 255)->nullable()->after('state_fiscal_document_number');
                 $table->string('economic_activity_classification_code', 255)->nullable()->after('business_entity_type');
-                $table->unsignedInteger('monthly_gross_income')->nullable()->after('order_priority');
+                $table->unsignedInteger('monthly_gross_income')->nullable()->after(
+                    'economic_activity_classification_code'
+                );
                 $table->unsignedInteger('federal_registration_status')->nullable()->after('monthly_gross_income');
                 $table->date('founding_date')->nullable()->after('federal_registration_status');
             }
@@ -35,6 +36,21 @@ class AddColumnsCompaniesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table(
+            'user_informations',
+            function (Blueprint $table) {
+                $table->dropColumn(
+                    [
+                        'patrimony',
+                        'state_fiscal_document_number',
+                        'business_entity_type',
+                        'economic_activity_classification_code',
+                        'monthly_gross_income',
+                        'federal_registration_status',
+                        'founding_date'
+                    ]
+                );
+            }
+        );
     }
 }
