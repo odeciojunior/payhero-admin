@@ -29,35 +29,53 @@ class GetnetService
         return base64_encode($clientId . ':' . $clientSecret);
     }
 
-    public function setAccessToken()
+    public function getAuthorizationHeader()
     {
-        try {
-            $headers = [
-                'content-type: application/x-www-form-urlencoded',
-                'authorization: Basic ' . $this->getAuthorizationToken(),
-            ];
-
-            $ch = curl_init(self::URL_API . 'credenciamento/auth/oauth/v2/token');
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, 'scope=mgm&grant_type=client_credentials');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            $result     = curl_exec($ch);
-            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if($httpStatus == 200){
-                $this->accessToken = json_decode($result)->access_token;
-            }
-            else{
-                throw new Exception('Erro ao gerar token de acesso backoffice getnet');
-            }
-
-        } catch (Exception $ex) {
-            report($ex);
-        }
-
+        return [
+            'authorization: Bearer ' . $this->accessToken,
+        ];
     }
 
+    public function setAccessToken()
+    {
+        $headers = [
+            'content-type: application/x-www-form-urlencoded',
+            'authorization: Basic ' . $this->getAuthorizationToken(),
+        ];
 
+        $curl = curl_init(self::URL_API . 'credenciamento/auth/oauth/v2/token');
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, 'scope=mgm&grant_type=client_credentials');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $result     = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if($httpStatus == 200){
+            $this->accessToken = json_decode($result)->access_token;
+        }
+        else{
+            throw new Exception('Erro ao gerar token de acesso backoffice getnet');
+        }
+    }
+
+    public function checkAvailablePaymentPlans()
+    {
+        $curl = curl_init(self::URL_API . 'v1/mgm/pj/consult/paymentplans/' . env('GET_NET_MERCHANT_ID'));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl,CURLOPT_HEADER,true); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+
+        $result     = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        dd($result, $httpStatus);
+    }
+
+    public function createPfCompany()
+    {
+
+    }
 }
