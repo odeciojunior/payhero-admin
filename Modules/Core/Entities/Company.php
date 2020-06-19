@@ -38,7 +38,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $business_website
  * @property string $support_email
  * @property string $support_telephone
- * @property integer $balance
+ * @property int $balance
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
@@ -59,7 +59,12 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Company extends Model
 {
-    use SoftDeletes, PaginatableTrait, PresentableTrait, FoxModelTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PaginatableTrait;
+    use PresentableTrait;
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -68,9 +73,7 @@ class Company extends Model
      * The accessors to append to the model's array form.
      * @var array
      */
-    protected $appends = [
-        'id_code',
-    ];
+    protected $appends = ['id_code'];
     /**
      * @var array
      */
@@ -102,6 +105,13 @@ class Company extends Model
         'contract_document_status',
         'company_type',
         'order_priority',
+        'patrimony',
+        'state_fiscal_document_number',
+        'business_entity_type',
+        'economic_activity_classification_code',
+        'monthly_gross_income',
+        'federal_registration_status',
+        'founding_date',
         'deleted_at',
         'created_at',
         'updated_at',
@@ -133,9 +143,9 @@ class Company extends Model
     {
         if ($eventName == 'deleted') {
             $activity->description = 'Empresa ' . $this->fantasy_name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
+        } elseif ($eventName == 'updated') {
             $activity->description = 'Empresa ' . $this->fantasy_name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
+        } elseif ($eventName == 'created') {
             $activity->description = 'Empresa ' . $this->fantasy_name . ' foi criado.';
         } else {
             $activity->description = $eventName;

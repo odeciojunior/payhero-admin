@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateUserInformationsTable
+ */
 class CreateUserInformationsTable extends Migration
 {
     /**
@@ -17,6 +20,7 @@ class CreateUserInformationsTable extends Migration
             'user_informations',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
+                $table->unsignedInteger('user_id')->index();
                 $table->string('sex', 50)->nullable();
                 $table->unsignedInteger('marital_status')->nullable();
                 $table->string('nationality', 2)->nullable();
@@ -39,6 +43,14 @@ class CreateUserInformationsTable extends Migration
                 $table->string('document_serial_number')->nullable();
 
                 $table->timestamps();
+                $table->softDeletes();
+            }
+        );
+
+        Schema::table(
+            'user_informations',
+            function (Blueprint $table) {
+                $table->foreign('user_id')->references('id')->on('users');
             }
         );
     }
@@ -50,6 +62,12 @@ class CreateUserInformationsTable extends Migration
      */
     public function down()
     {
+        Schema::table(
+            'user_informations',
+            function ($table) {
+                $table->dropForeign(['user_id']);
+            }
+        );
         Schema::dropIfExists('user_informations');
     }
 }
