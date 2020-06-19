@@ -4,6 +4,10 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
+/**
+ * Class UserPresenter
+ * @package Modules\Core\Presenters
+ */
 class UserPresenter extends Presenter
 {
     /**
@@ -14,11 +18,12 @@ class UserPresenter extends Presenter
         return number_format($this->transaction_rate, 2, ',', '.');
     }
 
-
-
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -44,10 +49,12 @@ class UserPresenter extends Presenter
         }
     }
 
-
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getAddressDocumentStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -77,9 +84,12 @@ class UserPresenter extends Presenter
         }
     }
 
+    /**
+     * @param $status
+     * @return int|string
+     */
     public function getPersonalDocumentStatus($status)
     {
-
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -109,9 +119,12 @@ class UserPresenter extends Presenter
         }
     }
 
+    /**
+     * @param $type
+     * @return int|string
+     */
     public function getDocumentType($type)
     {
-
         if (is_numeric($type)) {
             switch ($type) {
                 case 1:

@@ -6,12 +6,10 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Core\Events\ResetPasswordEvent;
-use Modules\Core\Events\UserRegistrationEvent;
 use Modules\Core\Presenters\UserPresenter;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\CausesActivity;
@@ -310,6 +308,9 @@ class User extends Authenticable
         return $this->belongsToMany('Modules\Core\Entities\Projects', 'users_projects', 'user_id', 'project_id');
     }
 
+    /**
+     * @param string $token
+     */
     public function sendPasswordResetNotification($token)
     {
         event(new ResetPasswordEvent($token, $this));
@@ -338,4 +339,13 @@ class User extends Authenticable
     {
         return $this->hasMany('Modules\Core\Entities\UserTerms');
     }
+
+    /**
+     * @return HasOne
+     */
+    public function userInformation()
+    {
+        return $this->hasOne('Modules\Core\Entities\UserInformation');
+    }
+
 }
