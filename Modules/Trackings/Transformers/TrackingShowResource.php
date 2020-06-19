@@ -12,9 +12,13 @@ class TrackingShowResource extends JsonResource
     {
         $linkBase = $this->productPlanSale->plan->project->domains->first()->name ?? '';
 
+        $trackingCode = $this->tracking->tracking_code == "CLOUDFOX000XX"
+            ? ''
+            : $this->tracking->tracking_code;
+
         return [
             'id' => Hashids::encode($this->id),
-            'tracking_code' => $this->tracking_code,
+            'tracking_code' => $trackingCode,
             'tracking_status_enum' => $this->tracking_status_enum,
             'tracking_status' => $this->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->present()->getTrackingStatusEnum($this->tracking_status_enum)) : 'Não informado',
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y'),

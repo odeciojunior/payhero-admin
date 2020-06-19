@@ -11,7 +11,7 @@ class TrackingResource extends JsonResource
     public function toArray($request)
     {
         if ($this->tracking) {
-            $trackingCode = $this->tracking->system_status_enum == $this->tracking->present()->getSystemStatusEnum('ignored')
+            $trackingCode = $this->tracking->tracking_code == "CLOUDFOX000XX"
                 ? ''
                 : $this->tracking->tracking_code;
             return [
