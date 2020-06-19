@@ -68,12 +68,12 @@ trait GetNetFakeDataTrait
         ];
     }
 
-    public function getPfCompanyComplementTestData()
+    public function getPfCompanyComplementTestData($merchantId, $subsellerId)
     {
         
         return [
-            "merchant_id"                           => "string",
-            "subseller_id"                          => 0,
+            "merchant_id"                           => $merchantId,
+            "subseller_id"                          => $subsellerId,
             "legal_document_number"                 => 0,
             "legal_name"                            => "string",
             "trade_name"                            => "string",
@@ -147,9 +147,79 @@ trait GetNetFakeDataTrait
         ];
     }
 
-    public function getPfCompanyUpdateTestData()
+    public function getPfCompanyUpdateTestData($merchantId, $subsellerId)
     {
-
+        return [
+            "merchant_id"=> $merchantId,
+            "subseller_id"=> $subsellerId,
+            "legal_document_number"=> 0,
+            "legal_name"=> "string",
+            "block_payments"=> "S",
+            "block_transactions"=> "S",
+            "birth_date"=> "2020-06-19T18=>08=>47Z",
+            "mothers_name"=> "string",
+            "occupation"=> "string",
+            "monthly_gross_income"=> 0,
+            "business_address"=> [
+                "street"=> "string",
+                "number"=> 0,
+                "district"=> "string",
+                "city"=> "string",
+                "state"=> "string",
+                "postal_code"=> 0,
+                "suite"=> "string",
+                "country"=> "string"
+            ],
+            "working_hours"=> [
+                [
+                    "start_day"=> "mon",
+                    "end_day"=> "mon",
+                    "start_time"=> "string",
+                    "end_time"=> "string"
+                ]
+            ],
+            "phone"=> [
+                "area_code"=> 0,
+                "phone_number"=> 0
+            ],
+            "cellphone"=> [
+                "area_code"=> 0,
+                "phone_number"=> 0
+            ],
+            "email"=> "string",
+            "acquirer_merchant_category_code"=> "string",
+            "bank_accounts"=> [
+                "type_accounts"=> "unique",
+                "unique_account"=> [
+                    "bank"=> 0,
+                    "agency"=> 0,
+                    "account"=> 0,
+                    "account_type"=> "C",
+                    "account_digit"=> "string"
+                ],
+                "custom_accounts"=> [
+                    [
+                        "brand"=> "MASTERCARD",
+                        "bank"=> 0,
+                        "agency"=> 0,
+                        "account"=> 0,
+                        "account_type"=> "string",
+                        "account_digit"=> "string"
+                    ]
+                ]
+            ],
+            "list_commissions"=> [
+                [
+                    "brand"=> "MASTERCARD",
+                    "product"=> "DEBITO A VISTA",
+                    "commission_percentage"=> 0,
+                    "payment_plan"=> 0
+                ]
+            ],
+            "liability_chargeback" => "S",
+            "marketplace_store"    => "S",
+            "payment_plan"         => 0
+        ];
     }
 
 }

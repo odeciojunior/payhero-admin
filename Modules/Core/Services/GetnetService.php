@@ -112,12 +112,60 @@ class GetnetService
 
     public function complementPfCompany()
     {
-        
+        $url = self::URL_API . 'v1/mgm/pf/complement';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        // curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_POSTFIELDS,http_build_query($this->getPfCompanyComplementTestData($this->getMerchantId(), 12344123)));
+
+        $result     = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        GetnetBackofficeRequests::create([
+            'sent_data' => json_encode([
+                'url' => $url,
+                'data' => $this->getPfCompanyComplementTestData($this->getMerchantId(), 12344123)
+            ]),
+            'response' => json_encode([
+                'result' => json_decode($result),
+                'status' => $httpStatus
+            ])
+        ]);
+
+        dd($result, $httpStatus);        
     }
 
     public function updatePfCompany()
     {
+        $url = self::URL_API . 'v1/mgm/pf/update-subseller';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        // curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_POSTFIELDS,http_build_query($this->getPfCompanyUpdateTestData($this->getMerchantId(), 12344123)));
 
+        $result     = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        GetnetBackofficeRequests::create([
+            'sent_data' => json_encode([
+                'url' => $url,
+                'data' => $this->getPfCompanyUpdateTestData($this->getMerchantId(), 12344123)
+            ]),
+            'response' => json_encode([
+                'result' => json_decode($result),
+                'status' => $httpStatus
+            ])
+        ]);
+
+        dd($result, $httpStatus);
     }
 
     public function getPfCompany()
