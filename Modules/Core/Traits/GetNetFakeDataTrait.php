@@ -68,6 +68,15 @@ trait GetNetFakeDataTrait
         ];
     }
 
-    
+    public function getPfCompanyComplementTestData()
+    {
+        
+    }
+
+    public function getPfCompanyUpdateTestData()
+    {
+
+    }
 
 }
+

@@ -95,4 +95,24 @@ class GetnetService
         dd($result, $httpStatus);
     }
 
+    public function complementPfCompany()
+    {
+        
+    }
+
+    public function updatePfCompany()
+    {
+
+    }
+
+    public function getPfCompany()
+    {
+
+    }
+
+    public function checkPfCompanyRegister()
+    {
+        
+    }
+
 }
