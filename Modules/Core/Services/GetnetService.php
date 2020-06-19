@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Http;
 use Modules\Core\Entities\GetnetBackofficeRequests;
 use Modules\Core\Traits\GetNetFakeDataTrait;
 
+/**
+ * Class GetnetService
+ * @package Modules\Core\Services
+ */
 class GetnetService
 {
     use GetNetFakeDataTrait;
@@ -53,18 +57,20 @@ class GetnetService
         curl_setopt($curl, CURLOPT_POSTFIELDS, 'scope=mgm&grant_type=client_credentials');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        $result     = curl_exec($curl);
+        $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        if($httpStatus == 200){
+        if ($httpStatus == 200) {
             $this->accessToken = json_decode($result)->access_token;
-        }
-        else{
+        } else {
             throw new Exception('Erro ao gerar token de acesso backoffice getnet');
         }
     }
 
+    /**
+     * Consulta planos de pagamentos configurados para a loja
+     */
     public function checkAvailablePaymentPlans()
     {
         $url = self::URL_API . 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
@@ -76,7 +82,7 @@ class GetnetService
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
 
-        $result     = curl_exec($curl);
+        $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
@@ -136,7 +142,7 @@ class GetnetService
             ])
         ]);
 
-        dd($result, $httpStatus);        
+        dd($result, $httpStatus);
     }
 
     public function updatePfCompany()
@@ -170,12 +176,151 @@ class GetnetService
 
     public function getPfCompany()
     {
-
     }
 
     public function checkPfCompanyRegister()
     {
-
     }
+
+    /**
+     * Method GET
+     * Consulta situação cadastral do CNPJ da loja
+     * @todo CNPJ fixo por enquanto
+     */
+    public function checkPjCompanyRegister()
+    {
+        $url = self::URL_API . 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . 28337339000105;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $this->saveRequestsPjCompany($url, $result, $httpStatus);
+    }
+
+    /**
+     * Method GET
+     * Consulta planos de pagamentos connfigurados para loja PJ
+     */
+    public function checkAvailablePaymentPlansPj()
+    {
+        $url = self::URL_API . 'v1/mgm/pj/consult/paymentplans/' . $this->getMerchantId();
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        $this->saveRequestsPjCompany($url, $result, $httpStatus);
+    }
+
+    /**
+     * Method POST
+     * Cria pré-cadastro da loja
+     */
+    public function createPjCompany()
+    {
+        $url = self::URL_API . 'v1/mgm/pj/create-presubseller';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->getPjCompanyCreateTestData()));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        $this->saveRequestsPjCompany($url, $result, $httpStatus);
+
+
+        dd($result, $httpStatus);
+    }
+
+    /**
+     * Method PUT
+     * Complementa pré-cadastro da loja se necessario
+     */
+    public function complementPjCompany()
+    {
+        $url = self::URL_API . 'v1/mgm/pj/complement';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_PUT, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->getPfCompanyCreateTestData()));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $this->saveRequestsPjCompany($url, $result, $httpStatus);
+    }
+
+    /**
+     * Method PUT
+     * Atualiza cadastro da loja
+     */
+    public function updatePjCompany()
+    {
+        $url = self::URL_API . 'v1/mgm/pj/update-subseller';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_PUT, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->getPfCompanyCreateTestData()));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $this->saveRequestsPjCompany($url, $result, $httpStatus);
+    }
+
+    /**
+     * Method POST
+     * Descredenciar Loja PJ
+     * @todo cnpj fixo
+     */
+    public function disqualifyPjCompany()
+    {
+        $url = self::URL_API . 'v1/mgm/pj/de-accredit/' . $this->getMerchantId() . '/700050664';
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->getPjCompanyDesqualifyTestData()));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $this->saveRequestsPjCompany($url, $result, $httpStatus);
+    }
+
+
+    public function saveRequestsPjCompany($url, $result, $httpStatus)
+    {
+        GetnetBackofficeRequests::create(
+            [
+                'sent_data' => json_encode(
+                    [
+                        'url' => $url,
+                        'data' => $this->getPjCompanyCreateTestData()
+                    ]
+                ),
+                'response' => json_encode(
+                    [
+                        'result' => $result,
+                        'status' => $httpStatus
+                    ]
+                )
+            ]
+
+        );
+    }
+
 
 }
