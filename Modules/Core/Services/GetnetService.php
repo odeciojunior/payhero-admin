@@ -77,7 +77,7 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        dd($result, $httpStatus);
+        dd($result);
     }
 
     public function createPfCompany()
@@ -112,7 +112,7 @@ class GetnetService
 
     public function checkPfCompanyRegister()
     {
-        
+
     }
 
 }
