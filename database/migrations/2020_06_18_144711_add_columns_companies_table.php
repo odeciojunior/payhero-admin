@@ -13,8 +13,9 @@ class AddColumnsCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'user_informations',
+
+        Schema::table(
+            'companies',
             function (Blueprint $table) {
                 $table->unsignedInteger('patrimony')->nullable()->after('order_priority');
                 $table->string('state_fiscal_document_number', 255)->nullable()->after('patrimony');
@@ -37,7 +38,7 @@ class AddColumnsCompaniesTable extends Migration
     public function down()
     {
         Schema::table(
-            'user_informations',
+            'companies',
             function (Blueprint $table) {
                 $table->dropColumn(
                     [
