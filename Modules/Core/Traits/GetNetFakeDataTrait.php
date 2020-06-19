@@ -8,7 +8,7 @@ trait GetNetFakeDataTrait
     {
         return [
             "merchant_id"=> $this->getMerchantId(),
-            "legal_document_number"=> 84947611022,
+            "legal_document_number"=> '37608099011',
             "legal_name"=> "fulano silva",
             "birth_date"=> "1990-06-18",
             "mothers_name"=> "beltrana silva",
@@ -71,6 +71,80 @@ trait GetNetFakeDataTrait
     public function getPfCompanyComplementTestData()
     {
         
+        return [
+            "merchant_id"                           => "string",
+            "subseller_id"                          => 0,
+            "legal_document_number"                 => 0,
+            "legal_name"                            => "string",
+            "trade_name"                            => "string",
+            "block_payments"                        => "S",
+            "block_transactions"                    => "S",
+            "business_entity_type"                  => 0,
+            "economic_activity_classification_code" => 0,
+            "state_fiscal_document_number"          => "string",
+            "federal_registration_status"           => "active",
+            "email"                                 => "string",
+            "business_address"=> [
+                "street"      => "string",
+                "number"      => 0,
+                "district"    => "string",
+                "city"        => "string",
+                "state"       => "string",
+                "postal_code" => 0,
+                "suite"       => "string",
+                "country"     => "string"
+            ],
+            "phone"=> [            
+                "area_code"    => 0,
+                "phone_number" => 0
+            ],
+            "bank_accounts"=> [
+                "type_accounts"  => "unique",
+                "unique_account" => [
+                    "bank"          => 0,
+                    "agency"        => 0,
+                    "account"       => 0,
+                    "account_type"  => "C",
+                    "account_digit" => "string"
+                ],
+                "custom_accounts"=> [
+                    [
+                        "brand"=> "MASTERCARD",
+                        "bank"=> 0,
+                        "agency"=> 0,
+                        "account"=> 0,
+                        "account_type"=> "string",
+                        "account_digit"=> "string"
+                    ]
+                ]
+            ],
+            "list_commissions"=> [
+                [
+                    "brand"=> "MASTERCARD",
+                    "product"=> "DEBITO A VISTA",
+                    "commission_percentage"=> 0,
+                    "payment_plan"=> 0
+                ]
+            ],
+            "liability_chargeback"=> "S",
+            "marketplace_store"=> "S",
+            "payment_plan"=> 0,
+            "legal_representative"=> [
+                "name"=> "string",
+                "birth_date"=> "2020-06-19T18=>08=>48Z",
+                "cpf"=> 0
+            ],
+            "shareholders"=> [
+                [
+                    "fiscal_type"=> "natural_person",
+                    "document"=> 0,
+                    "participation"=> 0,
+                    "name"=> "string",
+                    "date"=> "2020-06-19T18=>08=>48Z",
+                    "mother_name"=> "string"
+                ]
+            ]
+        ];
     }
 
     public function getPfCompanyUpdateTestData()

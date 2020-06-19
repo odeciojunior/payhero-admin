@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Modules\Core\Entities\GetnetBackofficeRequests;
 use Modules\Core\Traits\GetNetFakeDataTrait;
 
 class GetnetService
@@ -66,8 +67,10 @@ class GetnetService
 
     public function checkAvailablePaymentPlans()
     {
+        $url = self::URL_API . 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
+
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, self::URL_API . 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId());
+        curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
         // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -82,7 +85,8 @@ class GetnetService
 
     public function createPfCompany()
     {
-        $curl = curl_init(self::URL_API . 'v1/mgm/pf/create-presubseller');
+        $url = self::URL_API . 'v1/mgm/pf/create-presubseller';
+        $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->getPfCompanyCreateTestData()));
@@ -91,6 +95,17 @@ class GetnetService
         $result     = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
+
+        GetnetBackofficeRequests::create([
+            'sent_data' => json_encode([
+                'url' => $url,
+                'data' => $this->getPfCompanyCreateTestData()
+            ]),
+            'response' => json_encode([
+                'result' => json_decode($result),
+                'status' => $httpStatus
+            ])
+        ]);
 
         dd($result, $httpStatus);
     }
