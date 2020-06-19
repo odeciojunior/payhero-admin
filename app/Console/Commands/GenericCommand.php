@@ -32,9 +32,9 @@ class GenericCommand extends Command
     {
         $getNetService = new GetnetService();
 
-        $getNetService->checkAvailablePaymentPlans();
         $getNetService->createPfCompany();
+
+        $getNetService->checkAvailablePaymentPlans();
     }
+
 }
-
-
