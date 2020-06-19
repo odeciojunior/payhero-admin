@@ -16,11 +16,6 @@ class GetnetService
         $this->setAccessToken();
     }
 
-    public function dumpAccessToken()
-    {
-        dd($this->accessToken);
-    }
-
     public function getAuthorizationToken()
     {
         $clientId = getenv('GET_NET_CLIENT_ID');
