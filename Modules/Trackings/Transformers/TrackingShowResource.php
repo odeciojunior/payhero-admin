@@ -12,9 +12,9 @@ class TrackingShowResource extends JsonResource
     {
         $linkBase = $this->productPlanSale->plan->project->domains->first()->name ?? '';
 
-        $trackingCode = $this->tracking->tracking_code == "CLOUDFOX000XX"
+        $trackingCode = $this->tracking_code == "CLOUDFOX000XX"
             ? ''
-            : $this->tracking->tracking_code;
+            : $this->tracking_code;
 
         return [
             'id' => Hashids::encode($this->id),
