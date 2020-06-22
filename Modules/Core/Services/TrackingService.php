@@ -237,6 +237,8 @@ class TrackingService
 
             $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('valid');
 
+            $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
+
             //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
             $sale = $productPlanSale->sale;
             $exists = $trackingModel->where('trackings.tracking_code',
