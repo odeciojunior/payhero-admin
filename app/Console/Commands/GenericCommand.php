@@ -21,7 +21,7 @@ class GenericCommand extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'generic';
+    protected $signature = 'generic {user?}';
     /**
      * The console command description.
      * @var string

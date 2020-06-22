@@ -144,8 +144,6 @@ class BankService
             ['code' => '356', 'name' => 'ABN Amro Real'],
             ['code' => '341', 'name' => 'Itau'],
             ['code' => '347', 'name' => 'Sudameris'],
-            ['code' => '351', 'name' => 'Banco Santander'],
-            ['code' => '353', 'name' => 'Banco Santander Brasil'],
             ['code' => '366', 'name' => 'Banco Societe Generale Brasil'],
             ['code' => '370', 'name' => 'Banco WestLB'],
             ['code' => '376', 'name' => 'JP Morgan'],

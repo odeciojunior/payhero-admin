@@ -172,7 +172,7 @@ class ActiveCampaignService
     public function updateContactList($listId, $contactId, $status)
     {
         // status = 1 - adiciona contato na lista
-        // status = 0 - remove contato da lista
+        // status = 2 - remove contato da lista
         $data = ['contactList' => ['contact' => $contactId, 'list' => $listId, 'status' => $status]];
 
         return $this->sendDataActiveCampaign($data, 'contactLists', 'POST');
@@ -338,16 +338,25 @@ class ActiveCampaignService
                     }
                 }
 
+                if (!empty($event->remove_list)) {
+                    $idRemoveList = json_decode($event->remove_list, true);
+                    if (!empty($idRemoveList['id'])) {
+                        $contactLists = json_decode($this->getListsByContact($contact['contact']['id']), true);
+                        if(isset($contactLists['contactLists']) && is_array($contactLists['contactLists'])) {
+                            foreach ($contactLists['contactLists'] as $contactList) {
+                                if($contactList['list'] == $idRemoveList['id'] && $contactList['status'] == 1) {
+                                    $idRemoveList = $idRemoveList['id'];
+                                    $removeList = $this->updateContactList($idRemoveList, $contact['contact']['id'], 2);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (!empty($event->add_list)) {
                     $idAddList = json_decode($event->add_list, true);
                     if (!empty($idAddList['id'])) {
-                        $addList = $this->updateContactList($idAddList['id'], $contact['contact']['id'], 1);
-                    }
-                }
-                if (!empty($event->remove_list)) {
-                    $idRemoveList = json_decode($event->remove_list, true);
-                    if (!empty($idAddList['id'])) {
-                        $removeList = $this->updateContactList($idRemoveList['id'], $contact['contact']['id'], 0);
+                        $idAddList = $idAddList['id'];
+                        $addList = $this->updateContactList($idAddList, $contact['contact']['id'], 1);
                     }
                 }
                 $return     = ['add' => $tagsApply ?? null, 'remove' => $tagsRemove ?? null, 'listAdd' => $addList ?? null, 'listRemove' => $removeList ?? null];
@@ -359,7 +368,7 @@ class ActiveCampaignService
             $activecampaignSentModel = new ActivecampaignSent;
             $activecampaignSentModel->create(
                 [
-                    'data'                          => json_encode(['contact' => $data, 'tags_add' => $arrayApply ?? null, 'tags_remove' => $arrayRemove ?? null, 'customs' => $sentCustom ?? null]),
+                    'data'                          => json_encode(['contact' => $data, 'tags_add' => $arrayApply ?? null, 'tags_remove' => $arrayRemove ?? null, 'customs' => $sentCustom ?? null, 'list_add' => $idAddList ?? null, 'list_rm' => $idRemoveList ?? null]),
                     'response'                      => json_encode(['contact' => $contact, 'tags' => $return ?? null, 'customs' => $returnCustom ?? null]),
                     'sent_status'                   => $sentStatus,
                     'instance_id'                   => $instanceId,
@@ -560,5 +569,14 @@ class ActiveCampaignService
                 $this->createCustomFieldRelation($newField['field']['id'], 0);
             }
         }
+    }
+
+    /**
+     * @param int $contactId
+     * @return json
+     */
+    public function getListsByContact($contactId)
+    {
+        return $this->sendDataActiveCampaign(null, 'contacts/' . $contactId . '/contactLists', 'GET');
     }
 }

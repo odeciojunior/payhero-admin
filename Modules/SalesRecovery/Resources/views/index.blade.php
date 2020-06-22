@@ -226,7 +226,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <ul id="pagination-salesRecovery" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+                        <ul id="pagination-salesRecovery" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                             {{-- js carrega... --}}
                         </ul>
                     </div>

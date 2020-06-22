@@ -91,9 +91,9 @@
                                 <option value="2">Aguardando pagamento</option>
                                 <option value="4">Chargeback</option>
                                 <option value="7">Estornado</option>
-                                <option value="6">Em análise</option>
-                                <option value="8">Parcialmente estornado</option>
-                                <option value="20">Análise Antifraude</option>
+{{--                                <option value="6">Em análise</option>--}}
+{{--                                <option value="8">Parcialmente estornado</option>--}}
+                                <option value="20">Revisão Antifraude</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md">
@@ -198,7 +198,7 @@
             @include('sales::details')
             <!-- End Modal -->
             </div>
-            <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-sales" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                 {{-- js carrega... --}}
             </ul>
         </div>
@@ -389,7 +389,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=15') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=16') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

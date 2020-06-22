@@ -100,7 +100,12 @@ class SaleService
                     $queryShopifyIntegration->where('status', 2);
                 });
                 $transactions->whereHas('sale', function($querySaleShopify) {
-                    $querySaleShopify->whereNull('shopify_order');
+                    $querySaleShopify->whereNull('shopify_order')->where(
+                        'start_date',
+                        '<=',
+                        Carbon::now()->subMinutes(5)
+                              ->toDateTimeString()
+                    );
                 });
             }
             if (!empty($filters["payment_method"])) {

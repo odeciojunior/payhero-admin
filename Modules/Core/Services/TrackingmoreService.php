@@ -40,7 +40,6 @@ class TrackingmoreService
     public function find($trackingNumber)
     {
         $result = $this->call('/trackings/get', ['numbers' => $trackingNumber]);
-        $result = json_decode($result);
         return current($result->data->items ?? []) ?? null;
     }
 
@@ -81,8 +80,7 @@ class TrackingmoreService
                 $data += $optionalParams;
             }
 
-            $response = $this->call('/trackings/post', $data, 'POST');
-            $result = json_decode($response);
+            $result = $this->call('/trackings/post', $data, 'POST');
             $metaCode = $result->meta->code ?? 0;
 
             $result = $this->find($trackingNumber);
@@ -106,9 +104,7 @@ class TrackingmoreService
      */
     public function delete($carrierCode, $trackingNumber){
 
-        $response = $this->call("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
-
-        $result = json_decode($response);
+        $result = $this->call("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
 
         return $result->meta->code == 200;
     }
@@ -122,9 +118,7 @@ class TrackingmoreService
     {
         $data = ['tracking_number' => $trackingNumber];
 
-        $response = $this->call('/carriers/detect', $data, 'POST');
-
-        $result = json_decode($response);
+        $result = $this->call('/carriers/detect', $data, 'POST');
 
         return $result->data[0]->code ?? null;
     }
@@ -135,16 +129,14 @@ class TrackingmoreService
      */
     public function getAllCarriers()
     {
-        $response = $this->call('/carriers');
-
-        return json_decode($response);
+        return $this->call('/carriers');
     }
 
     /**
      * @param string $uri
      * @param null $data
      * @param string $method
-     * @return bool|string
+     * @return object
      */
     private function call($uri = '/', $data = null, $method = 'GET')
     {
@@ -173,7 +165,16 @@ class TrackingmoreService
         ]);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
-        $result = curl_exec($curl);
+        $retry = true;
+        while($retry) {
+            $result = curl_exec($curl);
+            $result = json_decode($result);
+            if($result->meta->code == 429) {
+                sleep(1);
+            } else {
+                $retry = false;
+            }
+        }
         curl_close($curl);
         return $result;
     }

@@ -350,7 +350,7 @@ class ProjectService
         if ($pagination) {
             return ProjectsSelectResource::collection($projects->get());
         } else {
-            return ProjectsResource::collection($projects->paginate(10));
+            return ProjectsResource::collection($projects->get());
         }
     }
 

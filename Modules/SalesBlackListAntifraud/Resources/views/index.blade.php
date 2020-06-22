@@ -90,7 +90,7 @@
             @include('salesblacklistantifraud::details')
             <!-- End Modal -->
             </div>
-            <ul id="pagination-sales-atifraud-blacklist" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+            <ul id="pagination-sales-atifraud-blacklist" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right;margin-bottom:100px;">
                 {{-- js carrega... --}}
             </ul>
         </div>
