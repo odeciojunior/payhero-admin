@@ -31,9 +31,11 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $getNetService = new GetnetService();
+//        $getNetService = new GetnetService();
+//
+//        $getNetService->checkPjCompanyRegister();
 
-        $getNetService->disqualifyPjCompany();
+        dd(substr(32998417455, 0, 2));
 
     }
 

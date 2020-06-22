@@ -42,6 +42,15 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
+ * @property int $patrimony
+ * @property string $state_fiscal_document_number
+ * @property string $business_entity_type
+ * @property string $economic_activity_classification_code
+ * @property int $monthly_gross_income
+ * @property int $federal_registration_status
+ * @property string $founding_date
+ * @property int $subseller_getnet_id
+ * @property int $account_type
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
@@ -56,6 +65,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Withdrawal[] $withdrawals
  * @property string $bank_document_status_value
  * @property string $bank_document_status_badge
+ * @method CompanyPresenter present()
  */
 class Company extends Model
 {
@@ -112,6 +122,8 @@ class Company extends Model
         'monthly_gross_income',
         'federal_registration_status',
         'founding_date',
+        'subseller_getnet_id',
+        'account_type',
         'deleted_at',
         'created_at',
         'updated_at',
