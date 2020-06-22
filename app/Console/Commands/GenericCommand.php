@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\GetnetBackofficeRequests;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\GetnetService;
@@ -32,9 +33,8 @@ class GenericCommand extends Command
     {
         $getNetService = new GetnetService();
 
-        $getNetService->createPfCompany();
+        $getNetService->disqualifyPjCompany();
 
-        $getNetService->checkAvailablePaymentPlans();
     }
 
 }

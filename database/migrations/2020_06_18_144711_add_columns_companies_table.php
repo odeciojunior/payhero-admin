@@ -26,6 +26,7 @@ class AddColumnsCompaniesTable extends Migration
                 );
                 $table->unsignedInteger('federal_registration_status')->nullable()->after('monthly_gross_income');
                 $table->date('founding_date')->nullable()->after('federal_registration_status');
+                $table->unsignedInteger('subseller_getnet_id')->nullable()->after('founding_date');
             }
         );
     }
