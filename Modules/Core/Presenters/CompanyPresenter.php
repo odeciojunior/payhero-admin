@@ -60,7 +60,7 @@ class CompanyPresenter extends Presenter
     {
         /** @var Company $company */
         $company = $this->entity;
-        $status  = $bankStatus ?? $company->bank_document_status;
+        $status = $bankStatus ?? $company->bank_document_status;
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
@@ -227,5 +227,47 @@ class CompanyPresenter extends Presenter
         return $this->entity->bank_document_status == 3 &&
             $this->entity->address_document_status == 3 &&
             $this->entity->contract_document_status == 3;
+    }
+
+    /**
+     * @param null $federalRegistrationStatus
+     * @return int|string
+     * Situação do subseller na receita federal
+     */
+    public function getFederalRegistrationStatus($federalRegistrationStatus = null)
+    {
+        $company = $this->entity;
+        $status = $federalRegistrationStatus ?? $company->federal_registration_status;
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'active';
+                case 2:
+                    return 'suspended';
+                case 3:
+                    return 'unfit';
+                case 4:
+                    return 'dactivated';
+                case 5:
+                    return 'nulified';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'active':
+                    return 1;
+                case 'suspended':
+                    return 2;
+                case 'unfit':
+                    return 3;
+                case 'dactivated':
+                    return 4;
+                case 'nulified':
+                    return 5;
+            }
+
+            return '';
+        }
     }
 }

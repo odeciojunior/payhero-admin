@@ -13,7 +13,6 @@ class AddColumnsCompaniesTable extends Migration
      */
     public function up()
     {
-
         Schema::table(
             'companies',
             function (Blueprint $table) {
@@ -27,6 +26,7 @@ class AddColumnsCompaniesTable extends Migration
                 $table->unsignedInteger('federal_registration_status')->nullable()->after('monthly_gross_income');
                 $table->date('founding_date')->nullable()->after('federal_registration_status');
                 $table->unsignedInteger('subseller_getnet_id')->nullable()->after('founding_date');
+                $table->unsignedInteger('account_type')->nullable()->after('subseller_getnet_id');
             }
         );
     }
@@ -49,7 +49,9 @@ class AddColumnsCompaniesTable extends Migration
                         'economic_activity_classification_code',
                         'monthly_gross_income',
                         'federal_registration_status',
-                        'founding_date'
+                        'founding_date',
+                        'subseller_getnet_id',
+                        'account_type'
                     ]
                 );
             }

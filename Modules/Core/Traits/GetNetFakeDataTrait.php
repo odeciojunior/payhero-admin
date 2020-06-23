@@ -273,40 +273,14 @@ trait GetNetFakeDataTrait
             "merchant_id" => $this->getMerchantId(),
             "subseller_id" => 700050664,
             "legal_document_number" => 28337339000105,
-            "legal_name" => "HEALTH LAB PRODUTOS NATURAIS EIRELI",
-            "date" => Carbon::now(),
-            "email" => "joaolucas@cloudfox.net",
+//            "legal_name" => "HEALTH LAB PRODUTOS NATURAIS EIRELI",
+//            "date" => Carbon::now(),
             "working_hours" => [
                 [
                     "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
                     "end_day" => "mon",
                     "start_time" => "08:00:00",      // "hh:mm:ss"
                     "end_time" => "18:00:00"
-                ],
-            ],
-            "phone" => [
-                "area_code" => 32,
-                "phone_number" => 998417455
-            ],
-            "adresses" => [
-                "address_type" => 'business',
-                "street" => "AV SETE DE SETEMBRO",
-                "number" => 1012,
-                "district" => "CENTRO",
-                "city" => "BAGE",
-                "state" => "RS",
-                "postal_code" => 96400003,
-                "suite" => "SALA 03",
-                "country" => "BR"
-            ],
-            "bank_accounts" => [
-                "type_accounts" => "unique",
-                "unique_account" => [
-                    "bank" => '001',
-                    "agency" => 150,
-                    "account" => 12345,
-                    "account_type" => "C", // C conta corrente P conta poupança
-                    "account_digit" => "2"
                 ],
             ],
             "url_callback" => "https://app.cloudfox.net/postback/getnet",
