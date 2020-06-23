@@ -348,7 +348,12 @@ class SaleService
         catch(Exception $e){
             $sale->hours = '';
         }
-        $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y') ?? '';
+        try{
+            $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y') ?? '';
+        }
+        catch(Exception $e){
+            //
+        }
         if (isset($sale->boleto_due_date)) {
             try{
                 $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
