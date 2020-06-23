@@ -52,6 +52,8 @@ class UserInformation extends Model
      */
     protected $appends = ['id_code'];
 
+    protected $table = "user_informations";
+
     /**
      * @var array
      */

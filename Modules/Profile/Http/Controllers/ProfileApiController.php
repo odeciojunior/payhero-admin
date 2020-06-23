@@ -2,6 +2,7 @@
 
 namespace Modules\Profile\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -9,11 +10,14 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserInformation;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\CountryService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
 use Modules\Core\Services\UserService;
+use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -45,7 +49,17 @@ class ProfileApiController
             if (Gate::allows('view', [$user])) {
                 $user->load(["userNotification", "userDocuments"]);
 
-                return new UserResource($user);
+                $userResource   = new UserResource($user);
+                $countryService = new CountryService();
+                $countries      = $countryService->getCountries();
+
+                return response()->json(
+                    [
+                        'user'      => $userResource,
+                        'countries' => $countries,
+                    ],
+                    Response::HTTP_OK
+                );
             } else {
                 return response()->json(['message' => 'Ocorreu um erro'], 403);
             }
@@ -96,6 +110,34 @@ class ProfileApiController
                         'street'       => $requestData['street'],
                         'number'       => $requestData['number'],
                         'complement'   => $requestData['complement'],
+                    ]
+                )->save();
+
+                $user->load('userInformation');
+
+                if (!empty($requestData['monthly_income'])) {
+                    $requestData['monthly_income'] = preg_replace("/[^0-9]/", "", $requestData['monthly_income']);
+                }
+
+                $user->userInformation->fill(
+                    [
+                        'sex'                      => $requestData['sex'],
+                        'marital_status'           => !empty($requestData['marital_status']) ? (new UserInformation())->present()
+                                                                                                                      ->getMaritalStatus($requestData['marital_status']) : null,
+                        'nationality'              => $requestData['nationality'],
+                        'mother_name'              => $requestData['mother_name'],
+                        'father_name'              => $requestData['father_name'],
+                        'spouse_name'              => $requestData['spouse_name'],
+                        'birth_place'              => $requestData['birth_place'],
+                        'birth_city'               => $requestData['birth_city'],
+                        'birth_state'              => $requestData['birth_state'],
+                        'birth_country'            => $requestData['birth_country'],
+                        'monthly_income'           => $requestData['monthly_income'],
+                        'document_issue_date'      => $requestData['document_issue_date'],
+                        'document_expiration_date' => $requestData['document_expiration_date'],
+                        'document_issuer'          => $requestData['document_issuer'],
+                        'document_issuer_state'    => $requestData['document_issuer_state'],
+                        'document_serial_number'   => $requestData['document_serial_number'],
                     ]
                 )->save();
 
@@ -162,6 +204,7 @@ class ProfileApiController
             }
         } catch (Exception $e) {
             report($e);
+            dd($e);
 
             return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
