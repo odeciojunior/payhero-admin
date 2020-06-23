@@ -64,6 +64,7 @@ use Laravel\Passport\HasApiTokens;
  * @property ShopifyIntegration[] $shopifyIntegrations
  * @property Transfer[] $transfers
  * @property UserDocument[] $userDocuments
+ * @property UserInformation[] $userInformation
  */
 class User extends Authenticable
 {
