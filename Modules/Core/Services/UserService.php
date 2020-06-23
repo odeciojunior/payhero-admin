@@ -9,6 +9,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserInformation;
 
 /**
  * Class CompaniesService
@@ -18,11 +19,10 @@ class UserService
 {
     public function isDocumentValidated($userId = null)
     {
-        $userModel     = new User();
-        if(empty($userId)){
+        $userModel = new User();
+        if (empty($userId)) {
             $user = auth()->user();
-        }
-        else{
+        } else {
             $user = User::find($userId);
         }
 
@@ -94,5 +94,22 @@ class UserService
         }
 
         return false;
+    }
+
+    public function createUserInformationDefault($userId)
+    {
+        try {
+            $user = User::find($userId);
+            UserInformation::create(
+                [
+                    'user_id'         => $userId,
+                    'document_type'   => 1,
+                    'document_number' => $user->document,
+                ]
+            );
+        } catch (Exception $e) {
+            dd($e);
+            return $e->getMessage();
+        }
     }
 }
