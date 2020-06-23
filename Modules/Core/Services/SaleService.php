@@ -350,7 +350,12 @@ class SaleService
         }
         $sale->start_date = (new Carbon($sale->start_date))->format('d/m/Y') ?? '';
         if (isset($sale->boleto_due_date)) {
-            $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
+            try{
+                $sale->boleto_due_date = (new Carbon($sale->boleto_due_date))->format('d/m/Y');
+            }
+            catch(Exception $e){
+                //
+            }
         }
 
         if ($sale->status == 1) {
