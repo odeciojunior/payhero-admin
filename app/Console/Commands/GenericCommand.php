@@ -46,7 +46,7 @@ class GenericCommand extends Command
 //        $getNetService->createPjCompany($company);
 //        $getNetService->complementPjCompany($company);
 //        $getNetService->checkComplementPjCompanyRegister($company->company_document);
-        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+        $getNetService->checkPjCompanyRegister($company->company_document);
     }
 
 }
