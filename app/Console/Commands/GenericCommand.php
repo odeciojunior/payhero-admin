@@ -41,10 +41,12 @@ class GenericCommand extends Command
     {
         $getNetService = new GetnetService();
 
-        $company = Company::find(26);
+        $company = Company::find(13);
 
 //        $getNetService->createPjCompany($company);
-        $getNetService->checkPjCompanyRegister($company->company_document);
+//        $getNetService->complementPjCompany($company);
+//        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+        $getNetService->checkComplementPjCompanyRegister($company->company_document);
     }
 
 }
