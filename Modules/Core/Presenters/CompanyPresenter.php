@@ -270,4 +270,29 @@ class CompanyPresenter extends Presenter
             return '';
         }
     }
+
+    public function getAccountType($type = null)
+    {
+        $company = $this->entity;
+        $status = $type ?? $company->account_type;
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'C';
+                case 2:
+                    return 'P';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'C':
+                    return 1;
+                case 'P':
+                    return 2;
+            }
+
+            return '';
+        }
+    }
 }
