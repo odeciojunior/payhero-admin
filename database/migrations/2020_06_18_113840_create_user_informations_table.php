@@ -62,12 +62,6 @@ class CreateUserInformationsTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'user_informations',
-            function ($table) {
-                $table->dropForeign(['user_id']);
-            }
-        );
         Schema::dropIfExists('user_informations');
     }
 }
