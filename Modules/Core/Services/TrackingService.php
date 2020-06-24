@@ -281,7 +281,7 @@ class TrackingService
                     ]);
                 }
             } else { //senao cria o tracking
-                $tracking = $trackingModel->firstOrNew([
+                $tracking = $trackingModel->create([
                     'sale_id' => $productPlanSale->sale_id,
                     'product_id' => $productPlanSale->product_id,
                     'product_plan_sale_id' => $productPlanSale->id,
@@ -291,7 +291,6 @@ class TrackingService
                     'tracking_status_enum' => $statusEnum,
                     'system_status_enum' => $systemStatusEnum,
                 ]);
-                $tracking->save();
             }
 
             return $tracking;
