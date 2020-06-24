@@ -346,7 +346,7 @@ $(document).ready(function () {
         $('#document').removeAttr('disabled');
 
         event.preventDefault();
-        if ($('#marital_status').val() == 'married') {
+        if ($('#marital_status').val() == 'married' && $('#spouse_name').val() == '') {
             alertCustom('error', 'Preencha o campo Nome completo do cônjuge');
             return false;
         }
