@@ -176,6 +176,15 @@ class CompaniesApiController extends Controller
                 if ($company->country == 'brazil' && !empty($requestData['agency']) && strlen($requestData['agency']) == 3) {
                     $requestData['agency'] = substr_replace($requestData['agency'], '0', 0, 0);
                 }
+                if (!empty($requestData['patrimony'])) {
+                    $requestData['patrimony'] = preg_replace("/[^0-9]/", "", $requestData['patrimony']);
+                }
+                if (!empty($requestData['social_value'])) {
+                    $requestData['social_value'] = preg_replace("/[^0-9]/", "", $requestData['social_value']);
+                }
+                if (!empty($requestData['monthly_gross_income'])) {
+                    $requestData['monthly_gross_income'] = preg_replace("/[^0-9]/", "", $requestData['monthly_gross_income']);
+                }
                 $company->update($requestData);
                 $companyService->getChangesUpdateBankData($company);
 
@@ -186,7 +195,6 @@ class CompaniesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - update - error');
             report($e);
-
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }
@@ -340,7 +348,8 @@ class CompaniesApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)->orderBy('order_priority')->get();
+            $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)
+                                         ->orderBy('order_priority')->get();
 
             return CompaniesSelectResource::collection($companies);
         } catch (Exception $e) {
@@ -478,7 +487,7 @@ class CompaniesApiController extends Controller
 
             $companyIds = [];
 
-           foreach ($orders as $order) {
+            foreach ($orders as $order) {
                 $companyIds[] = current(Hashids::decode($order));
             }
 
@@ -489,12 +498,13 @@ class CompaniesApiController extends Controller
             foreach ($companyIds as $value) {
                 $company = $companies->firstWhere('id', $value);
                 $company->update(['order_priority' => $initOrder]);
-                $initOrder ++;
+                $initOrder++;
             }
-            return response()->json(['message' => 'Ordenação atualizada com sucesso'], 200);
 
+            return response()->json(['message' => 'Ordenação atualizada com sucesso'], 200);
         } catch (Exception $e) {
             report($e);
+
             return response()->json(['message' => 'Erro ao atualizar ordenação'], 400);
         }
     }

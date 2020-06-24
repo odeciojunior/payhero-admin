@@ -115,6 +115,67 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="patrimony">Valor do patrimônio</label>
+                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="state_fiscal_document_number">Inscrição Estadual</label>
+                                            <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="business_entity_type">Código da natureza jurídica</label>
+                                            <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="economic_activity_classification_code">CNAE primário</label>
+                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="monthly_gross_income">Faturamento anual</label>
+                                            <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual'>
+                                        </div>
+                                        <div class='form-group col-xl-4'>
+                                            <label for='federal_registration_status'>Situação na Receita Federal</label>
+                                            <select id="federal_registration_status" name="federal_registration_status" class="form-control">
+                                                <option value="">Selecione</option>
+                                                <option value="1">Ativo</option>
+                                                <option value="2">Suspenso</option>
+                                                <option value="3">Inadequado</option>
+                                                <option value="4">Desativado</option>
+                                                <option value="5">Anulado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="founding_date">Data de fundação do CNPJ</label>
+                                            <input name="founding_date" value="" type="date"
+                                                   class="form-control form-control" id="founding_date">
+                                        </div>
+                                        <div class='form-group col-xl-4'>
+                                            <label for='account_type'>Tipo de conta</label>
+                                            <select id="account_type" name="account_type" class="form-control">
+                                                <option value="">Selecione</option>
+                                                <option value="1">Conta corrente</option>
+                                                <option value="2">Conta poupança</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="federal_registration_status_date">Data da situação na Receita Federal</label>
+                                            <input name="federal_registration_status_date" value="" type="date"
+                                                   class="form-control form-control" id="federal_registration_status_date">
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="social_value">Valor do capital social</label>
+                                            <input name="social_value" value="" type="text" class="form-control" id="social_value" placeholder='Valor do capital social'>
+                                        </div>
+                                    </div>
                                     <div class="form-group text-right">
                                         <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                                     </div>
@@ -339,7 +400,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=3')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=4')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
