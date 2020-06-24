@@ -19,19 +19,18 @@ class FoxUtils
      */
     public static function checkDNS($host)
     {
-
         $variant = INTL_IDNA_VARIANT_2003;
         if (defined('INTL_IDNA_VARIANT_UTS46')) {
             $variant = INTL_IDNA_VARIANT_UTS46;
         }
         $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
 
-        $Aresult  = true;
+        $Aresult = true;
         $MXresult = checkdnsrr($host, 'MX');
 
         if (!$MXresult) {
             $warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
-            $Aresult                       = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
+            $Aresult = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
             if (!$Aresult) {
                 $error = new NoDNSRecord();
                 Log::warning(print_r($error));
@@ -49,7 +48,7 @@ class FoxUtils
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($email)) {
             $emailExploded = explode('@', $email);
-            $variant       = INTL_IDNA_VARIANT_2003;
+            $variant = INTL_IDNA_VARIANT_2003;
             if (defined('INTL_IDNA_VARIANT_UTS46')) {
                 $variant = INTL_IDNA_VARIANT_UTS46;
             }
@@ -68,13 +67,15 @@ class FoxUtils
             $number = substr_replace($number, '55', 0, 0);
 
             return $number;
-        } else if (strlen($number) == 10) {
-            $subNumber = substr($number, 2, 1);
-            if ($subNumber != 2 && $subNumber != 3 && $subNumber != 4 && $subNumber != 5) {
-                $number = substr_replace($number, '55', 0, 0);
-                $number = substr_replace($number, '9', 4, 0);
+        } else {
+            if (strlen($number) == 10) {
+                $subNumber = substr($number, 2, 1);
+                if ($subNumber != 2 && $subNumber != 3 && $subNumber != 4 && $subNumber != 5) {
+                    $number = substr_replace($number, '55', 0, 0);
+                    $number = substr_replace($number, '9', 4, 0);
 
-                return $number;
+                    return $number;
+                }
             }
         }
 
@@ -106,36 +107,53 @@ class FoxUtils
         $telephone = preg_replace("/\D/", '', $telephone);
 
         if (!$ddd && !$number) {
-
             $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
             if ($length == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
-                return "+" . substr($telephone, 0, $length - 11) . "(" . substr($telephone, $length - 11, 2) . ")" . substr($telephone, $length - 9, 5) . "-" . substr($telephone, -4);
+                return "+" . substr($telephone, 0, $length - 11) . "(" . substr(
+                        $telephone,
+                        $length - 11,
+                        2
+                    ) . ")" . substr($telephone, $length - 9, 5) . "-" . substr($telephone, -4);
             }
             if ($length == 12) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
-                return "+" . substr($telephone, 0, $length - 10) . "(" . substr($telephone, $length - 10, 2) . ")" . substr($telephone, $length - 8, 4) . "-" . substr($telephone, -4);
+                return "+" . substr($telephone, 0, $length - 10) . "(" . substr(
+                        $telephone,
+                        $length - 10,
+                        2
+                    ) . ")" . substr($telephone, $length - 8, 4) . "-" . substr($telephone, -4);
             }
             if ($length == 11) { // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
-                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 5) . "-" . substr($telephone, 7, 11);
+                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 5) . "-" . substr(
+                        $telephone,
+                        7,
+                        11
+                    );
             }
             if ($length == 10) { // COM CÓDIGO DE ÁREA NACIONAL
-                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 4) . "-" . substr($telephone, 6, 10);
+                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 4) . "-" . substr(
+                        $telephone,
+                        6,
+                        10
+                    );
             }
             if ($length <= 9) { // SEM CÓDIGO DE ÁREA
                 return substr($telephone, 0, $length - 4) . "-" . substr($telephone, -4);
             }
-        } else if ($ddd) {
-            return substr($telephone, 0, 2);
         } else {
-            $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
+            if ($ddd) {
+                return substr($telephone, 0, 2);
+            } else {
+                $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
 
-            if ($length == 11) {
-                return substr($telephone, 2, 5) . "-" . substr($telephone, 7, 11);
-            }
-            if ($length == 10) {
-                return substr($telephone, 2, 4) . "-" . substr($telephone, 6, 10);
-            }
+                if ($length == 11) {
+                    return substr($telephone, 2, 5) . "-" . substr($telephone, 7, 11);
+                }
+                if ($length == 10) {
+                    return substr($telephone, 2, 4) . "-" . substr($telephone, 6, 10);
+                }
 
-            return '';
+                return '';
+            }
         }
 
         return '';
@@ -192,12 +210,28 @@ class FoxUtils
 
     public static function removeAccents($string)
     {
-        return preg_replace(["/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/"], explode(" ", "a A e E i I o O u U n N"), $string);
+        return preg_replace(
+            [
+                "/(á|à|ã|â|ä)/",
+                "/(Á|À|Ã|Â|Ä)/",
+                "/(é|è|ê|ë)/",
+                "/(É|È|Ê|Ë)/",
+                "/(í|ì|î|ï)/",
+                "/(Í|Ì|Î|Ï)/",
+                "/(ó|ò|õ|ô|ö)/",
+                "/(Ó|Ò|Õ|Ô|Ö)/",
+                "/(ú|ù|û|ü)/",
+                "/(Ú|Ù|Û|Ü)/",
+                "/(ñ)/",
+                "/(Ñ)/"
+            ],
+            explode(" ", "a A e E i I o O u U n N"),
+            $string
+        );
     }
 
     public static function removeSpecialChars($string)
     {
-
         return preg_replace('/([^a-zà-úA-ZÀ-Ú0-9 ]|[äåæËÎÏÐðÑ×÷ØÝÞßÆøÆø])/u', "", $string);
     }
 
@@ -209,14 +243,22 @@ class FoxUtils
     {
         if (!isset($var)) {
             return true;
-        } else if (empty($var)) {
-            return true;
-        } else if (is_string($var) && trim($var) == '') {
-            return true;
-        } else if (is_array($var) && count($var) == 0) {
-            return true;
-        } else if (is_object($var) && ($var instanceof Collection) && count($var) == 0) {
-            return true;
+        } else {
+            if (empty($var)) {
+                return true;
+            } else {
+                if (is_string($var) && trim($var) == '') {
+                    return true;
+                } else {
+                    if (is_array($var) && count($var) == 0) {
+                        return true;
+                    } else {
+                        if (is_object($var) && ($var instanceof Collection) && count($var) == 0) {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
 
         return false;
@@ -262,7 +304,7 @@ class FoxUtils
         if ($type == "decrypt") {
             $value = base64_decode($value);
         }
-        $valueLength     = strlen($value);
+        $valueLength = strlen($value);
         $customKeyLength = strlen($customKey);
         for ($i = 0; $i < $valueLength; $i++) {
             for ($j = 0; $j < $customKeyLength; $j++) {
@@ -290,14 +332,16 @@ class FoxUtils
     public static function mask($val, $mask)
     {
         $maskared = '';
-        $k        = 0;
+        $k = 0;
         for ($i = 0; $i <= strlen($mask) - 1; $i++) {
             if ($mask[$i] == '#') {
-                if (isset($val[$k]))
+                if (isset($val[$k])) {
                     $maskared .= $val[$k++];
+                }
             } else {
-                if (isset($mask[$i]))
+                if (isset($mask[$i])) {
                     $maskared .= $mask[$i];
+                }
             }
         }
 
@@ -313,7 +357,6 @@ class FoxUtils
      */
     public static function formatMoney($value, $locale = 'pt_BR', $currency = 'BRL')
     {
-
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
         return $formatter->formatCurrency($value, $currency);
@@ -328,6 +371,14 @@ class FoxUtils
         return preg_replace("/[^0-9]/", "", $value);
     }
 
+    public static function formatCellPhoneGetNet($number)
+    {
+        $number = self::onlyNumbers($number);
+        return [
+            'dd' => substr($number, 2, 2),
+            'number' => substr($number, 4)
+        ];
+    }
 }
 
 
