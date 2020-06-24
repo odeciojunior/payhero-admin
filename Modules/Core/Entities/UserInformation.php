@@ -34,6 +34,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $document_issuer
  * @property string $document_issuer_state
  * @property string $document_serial_number
+ * @method UserInformationPresenter present()
  */
 class UserInformation extends Model
 {
@@ -47,12 +48,12 @@ class UserInformation extends Model
      */
     protected $presenter = UserInformationPresenter::class;
 
+    protected $table = 'user_informations';
+
     /**
      * @var string[]
      */
     protected $appends = ['id_code'];
-
-    protected $table = "user_informations";
 
     /**
      * @var array
