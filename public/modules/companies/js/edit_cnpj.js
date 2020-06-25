@@ -119,7 +119,6 @@ $(document).ready(function () {
                 $('#monthly_gross_income').val(company.monthly_gross_income);
                 $('#federal_registration_status').val(company.federal_registration_status);
                 $('#founding_date').val(company.founding_date);
-                $('#account_type').val(company.account_type);
                 $('#federal_registration_status_date').val(company.federal_registration_status_date);
                 $('#social_value').val(company.social_value);
 
@@ -142,7 +141,7 @@ $(document).ready(function () {
                     $('#agency_digit').val(company.agency_digit);
                     $('#account').val(company.account);
                     $('#account_digit').val(company.account_digit);
-
+                    $('#account_type').val(company.account_type);
                 }
 
                 if (company.country === 'brazil') {
