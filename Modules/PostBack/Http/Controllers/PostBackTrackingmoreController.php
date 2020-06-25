@@ -34,7 +34,8 @@ class PostBackTrackingmoreController extends Controller
 
             foreach ($trackings as $tracking){
                 $tracking->tracking_status_enum = $trackingStatus;
-                if($tracking->system_status_enum == $trackingModel->present()->getSystemStatusEnum('no_tracking_info')){
+                if($tracking->system_status_enum == $trackingModel->present()->getSystemStatusEnum('no_tracking_info')
+                  && $trackingStatus != $trackingModel->present()->getTrackingStatusEnum('posted')){
                     $tracking->system_status_enum = $trackingModel->present()->getSystemStatusEnum('valid');
                 }
                 $tracking->save();
