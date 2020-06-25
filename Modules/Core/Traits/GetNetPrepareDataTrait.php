@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Traits;
 
-use Carbon\Carbon;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
@@ -13,6 +12,11 @@ use Modules\Core\Services\FoxUtils;
  */
 trait GetNetPrepareDataTrait
 {
+    /**
+     * @param Company $company
+     * @return array
+     * @throws PresenterException
+     */
     public function getPrepareDataCreatePfCompany(Company $company)
     {
         $user = $company->user;
@@ -25,9 +29,9 @@ trait GetNetPrepareDataTrait
             'legal_document_number' => $company->company_document,
             'legal_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->name)),
             'birth_date' => $user->date_birth,
-            'mothers_name' => $userInformation->mother_name,
-            'occupation' => 'Desenvolvedor DE Software',
-            'monthly_gross_income' => $userInformation->monthly_income,
+            'mothers_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($userInformation->mother_name)),
+            'occupation' => 'vendedor',
+            'monthly_gross_income' => FoxUtils::onlyNumbers($userInformation->monthly_income),
             'business_address' => [
                 'mailing_address_equals' => 'S',
                 'street' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
@@ -49,14 +53,14 @@ trait GetNetPrepareDataTrait
                 'phone_number' => $telephone['number'],
             ],
             'email' => $user->email,
-            'acquirer_merchant_category_code' => '',
+            'acquirer_merchant_category_code' => '2119',
             'bank_accounts' => [
                 'type_accounts' => 'unique',
                 'unique_account' => [
                     'bank' => $company->bank,
                     'agency' => $company->agency,
                     'account' => $company->account,
-                    'account_type' => 'C',
+                    'account_type' => $company->present()->getAccountType(),
                     'account_digit' => $company->account_digit,
                 ]
             ],
@@ -78,6 +82,10 @@ trait GetNetPrepareDataTrait
         ];
     }
 
+    /**
+     * @param Company $company
+     * @return array
+     */
     public function getPrepareDataComplementPfCompany(Company $company)
     {
         $user = $company->user;
@@ -111,156 +119,42 @@ trait GetNetPrepareDataTrait
         ];
     }
 
-    public function getPfCompanyComplementTestData($merchantId, $subsellerId)
+    /**
+     * @param Company $company
+     * @return array
+     */
+    public function getPrepareDataUpdatePfCompany(Company $company)
     {
+        $user = $company->user;
+        $userInformation = $user->userInformation;
         return [
-            "merchant_id" => $merchantId,
-            "subseller_id" => $subsellerId,
-            "legal_document_number" => 0,
-            "legal_name" => "string",
-            "trade_name" => "string",
-            "block_payments" => "S",
-            "block_transactions" => "S",
-            "business_entity_type" => 0,
-            "economic_activity_classification_code" => 0,
-            "state_fiscal_document_number" => "string",
-            "federal_registration_status" => "active",
-            "email" => "string",
-            "business_address" => [
-                "street" => "string",
-                "number" => 0,
-                "district" => "string",
-                "city" => "string",
-                "state" => "string",
-                "postal_code" => 0,
-                "suite" => "string",
-                "country" => "string"
+            'merchant_id' => $this->getMerchantId(),
+            'subseller_id' => $company->subseller_getnet_id,
+            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
+            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->name)),
+            'birth_date' => $user->date_birth,
+            'mothers_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($userInformation->mother_name)),
+            'monthly_gross_income' => FoxUtils::onlyNumbers($company->monthly_gross_income),
+            'business_address' => [
+                'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->street)),
+                'number' => FoxUtils::onlyNumbers($user->number),
+                'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->neighborhood)),
+                'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->city)),
+                'state' => $user->state,
+                'postal_code' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->zip_code)),
+                'country' => 'BR',
             ],
-            "phone" => [
-                "area_code" => 0,
-                "phone_number" => 0
-            ],
-            "bank_accounts" => [
-                "type_accounts" => "unique",
-                "unique_account" => [
-                    "bank" => 0,
-                    "agency" => 0,
-                    "account" => 0,
-                    "account_type" => "C",
-                    "account_digit" => "string"
-                ],
-                "custom_accounts" => [
-                    [
-                        "brand" => "MASTERCARD",
-                        "bank" => 0,
-                        "agency" => 0,
-                        "account" => 0,
-                        "account_type" => "string",
-                        "account_digit" => "string"
-                    ]
-                ]
-            ],
-            "list_commissions" => [
-                [
-                    "brand" => "MASTERCARD",
-                    "product" => "DEBITO A VISTA",
-                    "commission_percentage" => 0,
-                    "payment_plan" => 0
-                ]
-            ],
-            "liability_chargeback" => "S",
-            "marketplace_store" => "S",
-            "payment_plan" => 0,
-            "legal_representative" => [
-                "name" => "string",
-                "birth_date" => "2020-06-19T18=>08=>48Z",
-                "cpf" => 0
-            ],
-            "shareholders" => [
-                [
-                    "fiscal_type" => "natural_person",
-                    "document" => 0,
-                    "participation" => 0,
-                    "name" => "string",
-                    "date" => "2020-06-19T18=>08=>48Z",
-                    "mother_name" => "string"
+            'email' => $user->email,
+            'bank_accounts' => [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => FoxUtils::onlyNumbers($company->bank),
+                    'agency' => FoxUtils::onlyNumbers($company->agency),
+                    'account' => FoxUtils::onlyNumbers($company->account),
+                    'account_type' => $company->present()->getAccountType(),
+                    'account_digit' => FoxUtils::onlyNumbers($company->account_digit),
                 ]
             ]
-        ];
-    }
-
-    public function getPfCompanyUpdateTestData($merchantId, $subsellerId)
-    {
-        return [
-            "merchant_id" => $merchantId,
-            "subseller_id" => $subsellerId,
-            "legal_document_number" => 0,
-            "legal_name" => "string",
-            "block_payments" => "S",
-            "block_transactions" => "S",
-            "birth_date" => "2020-06-19T18=>08=>47Z",
-            "mothers_name" => "string",
-            "occupation" => "string",
-            "monthly_gross_income" => 0,
-            "business_address" => [
-                "street" => "string",
-                "number" => 0,
-                "district" => "string",
-                "city" => "string",
-                "state" => "string",
-                "postal_code" => 0,
-                "suite" => "string",
-                "country" => "string"
-            ],
-            "working_hours" => [
-                [
-                    "start_day" => "mon",
-                    "end_day" => "mon",
-                    "start_time" => "string",
-                    "end_time" => "string"
-                ]
-            ],
-            "phone" => [
-                "area_code" => 0,
-                "phone_number" => 0
-            ],
-            "cellphone" => [
-                "area_code" => 0,
-                "phone_number" => 0
-            ],
-            "email" => "string",
-            "acquirer_merchant_category_code" => "string",
-            "bank_accounts" => [
-                "type_accounts" => "unique",
-                "unique_account" => [
-                    "bank" => 0,
-                    "agency" => 0,
-                    "account" => 0,
-                    "account_type" => "C",
-                    "account_digit" => "string"
-                ],
-                "custom_accounts" => [
-                    [
-                        "brand" => "MASTERCARD",
-                        "bank" => 0,
-                        "agency" => 0,
-                        "account" => 0,
-                        "account_type" => "string",
-                        "account_digit" => "string"
-                    ]
-                ]
-            ],
-            "list_commissions" => [
-                [
-                    "brand" => "MASTERCARD",
-                    "product" => "DEBITO A VISTA",
-                    "commission_percentage" => 0,
-                    "payment_plan" => 0
-                ]
-            ],
-            "liability_chargeback" => "S",
-            "marketplace_store" => "S",
-            "payment_plan" => 0
         ];
     }
 
@@ -277,7 +171,7 @@ trait GetNetPrepareDataTrait
             'legal_document_number' => $company->company_document,
             'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'state_fiscal_document_number' => $company->state_fiscal_document_number,
+            'state_fiscal_document_number' => empty($company->state_fiscal_document_number) ? 'ISENTO' : $company->state_fiscal_document_number,
             'email' => $company->support_email,
             'cellphone' => [
                 'area_code' => $telephone['dd'],
@@ -300,7 +194,7 @@ trait GetNetPrepareDataTrait
                 'type_accounts' => 'unique',
                 'unique_account' => [
                     'bank' => $company->bank,
-                    'agency' => $company->agency . $company->agency_digit,
+                    'agency' => $company->agency,
                     'account' => $company->account,
                     'account_type' => $company->present()->getAccountType(),
                     'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,

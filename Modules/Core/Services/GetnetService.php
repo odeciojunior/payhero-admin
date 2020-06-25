@@ -117,6 +117,7 @@ class GetnetService
 
     /**
      * @param Company $company
+     * @throws PresenterException
      * Cria pré-cadastro da loja PF
      */
     public function createPfCompany(Company $company)
@@ -138,6 +139,18 @@ class GetnetService
         curl_close($curl);
 
         $this->saveRequests($url, $result, $httpStatus, $data);
+
+        if ($httpStatus == 200) {
+            return [
+                'message' => 'Success',
+                'data' => json_decode($result)
+            ];
+        } else {
+            return [
+                'message' => 'Error',
+                'data' => json_decode($result)
+            ];
+        }
     }
 
     /**
@@ -172,43 +185,30 @@ class GetnetService
         $this->saveRequests($url, $result, $httpStatus, $data);
     }
 
-    public function updatePfCompany()
+    public function updatePfCompany(Company $company)
     {
         $url = self::URL_API . 'v1/mgm/pf/update-subseller';
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        // curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-        curl_setopt(
+        $data = $this->getPrepareDataUpdatePfCompany($company);
+
+        $curl = curl_init();
+        curl_setopt_array(
             $curl,
-            CURLOPT_POSTFIELDS,
-            http_build_query($this->getPfCompanyUpdateTestData($this->getMerchantId(), 12344123))
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_POST => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => 'PUT',
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
+                CURLOPT_POSTFIELDS => json_encode($data)
+            ]
         );
 
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-
-        GetnetBackofficeRequests::create(
-            [
-                'sent_data' => json_encode(
-                    [
-                        'url' => $url,
-                        'data' => $this->getPfCompanyUpdateTestData($this->getMerchantId(), 12344123)
-                    ]
-                ),
-                'response' => json_encode(
-                    [
-                        'result' => json_decode($result),
-                        'status' => $httpStatus
-                    ]
-                )
-            ]
-        );
-
-        dd($result, $httpStatus);
+        $this->saveRequests($url, $result, $httpStatus, $data);
     }
 
     /**
@@ -301,13 +301,24 @@ class GetnetService
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-
         $this->saveRequests($url, $result, $httpStatus, $data);
+
+
+        if ($httpStatus == 200) {
+            return [
+                'message' => 'success',
+                'data' => json_decode($result)
+            ];
+        } else {
+            return [
+                'message' => 'error',
+                'data' => json_decode($result)
+            ];
+        }
     }
 
     /**
      * @param Company $company
-     * @throws PresenterException
      * Method PUT
      * Complementa pré-cadastro da loja se necessario
      */
@@ -347,12 +358,22 @@ class GetnetService
     {
         $url = self::URL_API . 'v1/mgm/pj/update-subseller';
         $data = $this->getPrepareDataUpdatePjCompany($company);
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_PUT, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+
+        $curl = curl_init();
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_POST => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => 'PUT',
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
+                CURLOPT_POSTFIELDS => json_encode($data)
+            ]
+        );
+
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);

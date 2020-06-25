@@ -295,4 +295,33 @@ class CompanyPresenter extends Presenter
             return '';
         }
     }
+
+    public function getStatusGetnet($status = null)
+    {
+        $company = $this->entity;
+        $status = $status ?? $company->get_net_status;
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'Approved';
+                case 2:
+                    return 'review';
+                case 3:
+                    return 'reproved';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'Approved':
+                    return 1;
+                case 'review':
+                    return 2;
+                case 'reproved':
+                    return 3;
+            }
+
+            return '';
+        }
+    }
 }

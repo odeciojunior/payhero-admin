@@ -34,15 +34,24 @@ class GenericCommand extends Command
          */
 //        $company = Company::find(13);
         /** Joao */
-        $company = Company::find(28);
+        $company = Company::find(28); // PF
+//        $company = Company::find(2702); // PJ
 
 
-//        $getNetService->createPfCompany($company);
-
+        /**
+         * PJ
+         */
 //        $getNetService->createPjCompany($company);
 //        $getNetService->complementPjCompany($company);
 //        $getNetService->checkComplementPjCompanyRegister($company->company_document);
 //        $getNetService->checkPjCompanyRegister($company->company_document);
+
+
+        /**
+         * PF
+         */
         $getNetService->checkPfCompanyRegister($company->company_document);
+//        $getNetService->createPfCompany($company);
+//        $getNetService->updatePfCompany($company);
     }
 }
