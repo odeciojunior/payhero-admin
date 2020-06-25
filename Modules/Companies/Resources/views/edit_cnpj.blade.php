@@ -156,21 +156,11 @@
                                             <input name="founding_date" value="" type="date"
                                                    class="form-control form-control" id="founding_date">
                                         </div>
-                                        <div class='form-group col-xl-4'>
-                                            <label for='account_type'>Tipo de conta</label>
-                                            <select id="account_type" name="account_type" class="form-control">
-                                                <option value="">Selecione</option>
-                                                <option value="1">Conta corrente</option>
-                                                <option value="2">Conta poupança</option>
-                                            </select>
-                                        </div>
                                         <div class="form-group col-xl-4">
                                             <label for="federal_registration_status_date">Data da situação na Receita Federal</label>
                                             <input name="federal_registration_status_date" value="" type="date"
                                                    class="form-control form-control" id="federal_registration_status_date">
                                         </div>
-                                    </div>
-                                    <div class='row'>
                                         <div class="form-group col-xl-4">
                                             <label for="social_value">Valor do capital social</label>
                                             <input name="social_value" value="" type="text" class="form-control" id="social_value" placeholder='Valor do capital social'>
@@ -233,8 +223,16 @@
                                             <label for="account_digit">Digito</label>
                                             <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
                                         </div>
+                                        <div class='form-group col-xl-2'>
+                                            <label for='account_type'>Tipo de conta</label>
+                                            <select id="account_type" name="account_type" class="input-pad">
+                                                <option value="">Selecione</option>
+                                                <option value="1">Conta corrente</option>
+                                                <option value="2">Conta poupança</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form-group text-right">
+                                    <div class="form-group text-right mt-20">
                                         <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                                     </div>
                                 </form>
