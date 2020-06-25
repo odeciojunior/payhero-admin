@@ -121,6 +121,9 @@ $(document).ready(function () {
                 $('#founding_date').val(company.founding_date);
                 $('#federal_registration_status_date').val(company.federal_registration_status_date);
                 $('#social_value').val(company.social_value);
+                $('#document_issue_date').val(company.document_issue_date);
+                $('#document_issuer').val(company.document_issuer);
+                $('#document_issuer_state').val(company.document_issuer_state);
 
                 if (company.country === 'usa') {
                     $('#rounting_number').val(company.bank).trigger('input');

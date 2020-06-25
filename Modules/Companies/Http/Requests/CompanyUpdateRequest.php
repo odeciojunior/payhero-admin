@@ -42,6 +42,9 @@ class CompanyUpdateRequest extends FormRequest
             'account_type'                          => 'nullable',
             'federal_registration_status_date'      => 'nullable',
             'social_value'                          => 'nullable',
+            'document_issue_date'                   => 'nullable',
+            'document_issuer'                       => 'nullable',
+            'document_issuer_state'                 => 'nullable',
             //'routing_number'    => 'nullable|string|max:255',
         ];
     }

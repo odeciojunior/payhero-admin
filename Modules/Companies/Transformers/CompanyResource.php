@@ -2,6 +2,7 @@
 
 namespace Modules\Companies\Transformers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
@@ -80,6 +81,11 @@ class CompanyResource extends JsonResource
             'account_type'                          => $this->account_type ?? '',
             'federal_registration_status_date'      => $this->federal_registration_status_date ?? '',
             'social_value'                          => $this->social_value ?? '',
+            'document_issue_date'                   => !empty($this->document_issue_date) ? Carbon::parse($this->document_issue_date)
+                                                                                                  ->format('Y-m-d') : '',
+            'document_issuer'                       => $this->document_issuer ?? '',
+            'document_issuer_state'                 => $this->document_issuer_state ?? '',
+
         ];
     }
 }
