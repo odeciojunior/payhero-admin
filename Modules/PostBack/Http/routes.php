@@ -2,7 +2,7 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'scopes:admin'],
+        'middleware' => ['web'],
         'prefix' => 'postback',
         'namespace' => 'Modules\PostBack\Http\Controllers'
     ],
@@ -18,17 +18,7 @@ Route::group(
         Route::post('/perfectlog', 'PostBackPerfectLogController@postBackListener');
 
         Route::post('/trackingmore', 'PostBackTrackingmoreController@postBackListener');
-    }
-);
 
-
-Route::group(
-    [
-        'middleware' => ['web'],
-        'prefix' => 'postback',
-        'namespace' => 'Modules\PostBack\Http\Controllers'
-    ],
-    function () {
         Route::post('/shopify/{project_id}/tracking', 'PostBackShopifyController@postBackTracking');
 
         Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
