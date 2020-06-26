@@ -241,11 +241,11 @@ class TrackingService
 
             //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
             $sale = $productPlanSale->sale;
-            $exists = $trackingModel->where('trackings.tracking_code',
-                $trackingCode)
+            $exists = $trackingModel->where('trackings.tracking_code', $trackingCode)
                 ->where('sale_id', '!=', $sale->id)
                 ->whereHas('sale', function ($query) use ($sale) {
-                    $query->where('upsell_id', '!=', $sale->id);
+                    $query->where('upsell_id', '!=', $sale->id)
+                        ->where('upsell_id', '!=', $sale->upsell_id);
                 })->exists();
 
             if ($exists) {
