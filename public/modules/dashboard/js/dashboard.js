@@ -33,14 +33,14 @@ $(document).ready(function () {
                             `);
                     }
                     if (!isEmpty(companies)) {
-                        $('.div-pending-company').modal('show');
+                        $('.div-pending-company').show();
                     } else {
-                        $('.div-pending-company').modal('hide');
+                        $('.div-pending-company').hide();
                     }
                     if (response.pending_user_data) {
-                        $('.div-pending-profile').modal('show');
+                        $('.div-pending-profile').show();
                     } else {
-                        $('.div-pending-profile').modal('hide');
+                        $('.div-pending-profile').hide();
                     }
                     $('#modal-peding-data').modal('show');
                 }

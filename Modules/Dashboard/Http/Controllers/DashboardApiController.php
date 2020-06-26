@@ -228,30 +228,38 @@ class DashboardApiController extends Controller
 
     public function verifyPendingData()
     {
-        $user            = auth()->user();
-        $companyModel    = new Company();
-        $userService     = new UserService();
-        $companyService  = new CompanyService();
-        $pendingUserData = $userService->verifyFieldsEmpty($user);
-        $companies       = $companyModel->where('user_id', $user->account_owner_id)->orderBy('order_priority')
-                                        ->get();
-        $companyArray    = [];
-        foreach ($companies as $company) {
-            if ($companyService->verifyFieldsEmpty($company)) {
-                $companyArray[] = [
-                    'id_code'      => Hashids::encode($company->id),
-                    'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : $company->fantasy_name ?? '',
-                    'type'         => $company->company_type,
-                ];
+        try {
+            $user            = auth()->user();
+            $companyModel    = new Company();
+            $userService     = new UserService();
+            $companyService  = new CompanyService();
+            $pendingUserData = $userService->verifyFieldsEmpty($user);
+            $companies       = $companyModel->where('user_id', $user->account_owner_id)->orderBy('order_priority')
+                                            ->get();
+            $companyArray    = [];
+            foreach ($companies as $company) {
+                if ($companyService->verifyFieldsEmpty($company)) {
+                    $companyArray[] = [
+                        'id_code'      => Hashids::encode($company->id),
+                        'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : $company->fantasy_name ?? '',
+                        'type'         => $company->company_type,
+                    ];
+                }
             }
-        }
 
-        return response()->json(
-            [
-                'companies'         => $companyArray,
-                'pending_user_data' => $pendingUserData,
-            ],
-            200
-        );
+            return response()->json(
+                [
+                    'companies'         => $companyArray,
+                    'pending_user_data' => $pendingUserData,
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
+        }
     }
 }
