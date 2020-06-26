@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\AnticipatedTransaction;
@@ -37,7 +38,6 @@ class CompanyService
                 return CompaniesSelectResource::collection($companies->orderBy('order_priority')->get());
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar companies (CompaniesService - getCompaniesUser)');
             report($e);
 
             return [];
@@ -146,6 +146,7 @@ class CompanyService
 
     /**
      * @param $company
+     * @return bool
      * Se os dados do relacionados ao banco forem alterados o status documento muda para pendente
      */
     public function getChangesUpdateBankData($company)
@@ -230,7 +231,8 @@ class CompanyService
 
     /**
      * @param Company $company
-     * @return int
+     * @return int|mixed
+     * @throws PresenterException
      */
     public function getPendingBalance(Company $company)
     {
@@ -249,7 +251,7 @@ class CompanyService
         $anticipatedValue = AnticipatedTransaction::with('transaction')->whereHas(
             'transaction',
             function ($query) use ($company) {
-                $query->where('status_enum', (new Transaction)->present()->getStatusEnum('anticipated'));
+                $query->where('status_enum', (new Transaction())->present()->getStatusEnum('anticipated'));
                 $query->where('company_id', $company->id);
             }
         )->sum('value');
@@ -257,5 +259,57 @@ class CompanyService
         $pendingBalance += ($transactionsAnticipatedValue - $anticipatedValue);
 
         return $pendingBalance;
+    }
+
+    /**
+     * @param Company $company
+     * @return bool
+     * Verifica campos que estao vazio para integração com getnet
+     */
+    public function verifyFieldsEmpty(Company $company)
+    {
+        if (empty($company->fantasy_name)) {
+            return true;
+        } elseif (empty($company->company_document)) {
+            return true;
+        } elseif (empty($company->agency)) {
+            return true;
+        } elseif (empty($company->bank)) {
+            return true;
+        } elseif (empty($company->account)) {
+            return true;
+        } elseif (empty($company->account_digit)) {
+            return true;
+        } elseif (empty($company->support_email)) {
+            return true;
+        } elseif (empty($company->patrimony)) {
+            return true;
+        } elseif (empty($company->state_fiscal_document_number)) {
+            return true;
+        } elseif (empty($company->business_entity_type)) {
+            return true;
+        } elseif (empty($company->economic_activity_classification_code)) {
+            return true;
+        } elseif (empty($company->monthly_gross_income)) {
+            return true;
+        } elseif (empty($company->federal_registration_status)) {
+            return true;
+        } elseif (empty($company->founding_date)) {
+            return true;
+        } elseif (empty($company->account_type)) {
+            return true;
+        } elseif (empty($company->social_value)) {
+            return true;
+        } elseif (empty($company->federal_registration_status_date)) {
+            return true;
+        } elseif (empty($company->document_issue_date)) {
+            return true;
+        } elseif (empty($company->document_issuer)) {
+            return true;
+        } elseif (empty($company->document_issuer_state)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
