@@ -39,6 +39,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $support_email
  * @property string $support_telephone
  * @property int $balance
+ * @property int $company_type
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
@@ -53,6 +54,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $account_type
  * @property int $social_value
  * @property string $federal_registration_status_date
+ * @property string $document_issue_date
+ * @property string $document_issuer
+ * @property string document_issuer_state
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
