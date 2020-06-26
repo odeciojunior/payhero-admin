@@ -23,7 +23,7 @@ Route::group(
 
         Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
 
-        Route::post('/getnet', 'PostBackGetnetController@postBackGetnet');
+        Route::any('/getnet', 'PostBackGetnetController@postBackGetnet');
     }
 );
 
