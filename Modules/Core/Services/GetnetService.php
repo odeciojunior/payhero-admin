@@ -127,7 +127,6 @@ class GetnetService
 
         $curl = curl_init($url);
 
-
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
@@ -142,12 +141,12 @@ class GetnetService
 
         if ($httpStatus == 200) {
             return [
-                'message' => 'Success',
+                'message' => 'success',
                 'data' => json_decode($result)
             ];
         } else {
             return [
-                'message' => 'Error',
+                'message' => 'error',
                 'data' => json_decode($result)
             ];
         }
@@ -176,7 +175,6 @@ class GetnetService
                 CURLOPT_POSTFIELDS => json_encode($data)
             ]
         );
-
 
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);

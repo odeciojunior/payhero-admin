@@ -210,7 +210,7 @@ class CompaniesApiController extends Controller
             $dataUpdate = $companyService->getChangesUpdateBankData($company);
 
 
-            if (empty($company->subseller_getnet_id)) {
+           /* if (empty($company->subseller_getnet_id)) {
                 if ($companyPresent->getCompanyType($company->company_type) == 'physical person') {
                     $result = $getnetService->createPfCompany($company);
                 } else {
@@ -230,7 +230,7 @@ class CompaniesApiController extends Controller
                 } else {
                     $getnetService->updatePjCompany($company);
                 }
-            }
+            }*/
 
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
