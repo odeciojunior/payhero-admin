@@ -1,11 +1,52 @@
 $(document).ready(function () {
     console.log();
     getDataDashboard();
+    verifyPendingData();
 
     $("#company").on("change", function () {
         updateValues();
     });
-
+    function verifyPendingData() {
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/verifypendingdata",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {company: $('#company').val()},
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                let companies = response.companies;
+                if ((!isEmpty(companies)) || response.pending_user_data) {
+                    for (let company of companies) {
+                        $('.table-pending-data-body').append(`
+                                <tr>
+                                    <th style='width:40%;' class='text-center'>${company.fantasy_name}</th>
+                                    <td class='text-center'>
+                                        <a class='btn btn-secondary' href='/companies/${company.id_code}/edit?type=${company.type}'>Editar</a>
+                                    </td>
+                                </tr>
+                            `);
+                    }
+                    if (!isEmpty(companies)) {
+                        $('.div-pending-company').modal('show');
+                    } else {
+                        $('.div-pending-company').modal('hide');
+                    }
+                    if (response.pending_user_data) {
+                        $('.div-pending-profile').modal('show');
+                    } else {
+                        $('.div-pending-profile').modal('hide');
+                    }
+                    $('#modal-peding-data').modal('show');
+                }
+            }
+        });
+    }
     function getDataDashboard() {
         loadOnAny('.page-content');
         $.ajax({

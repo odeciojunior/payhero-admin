@@ -12,5 +12,6 @@ Route::group(
              ->names('api.dashboard');
 
         Route::post('/dashboard/getvalues', 'DashboardApiController@getValues');
+        Route::get('/dashboard/verifypendingdata', 'DashboardApiController@verifyPendingData');
     }
 );

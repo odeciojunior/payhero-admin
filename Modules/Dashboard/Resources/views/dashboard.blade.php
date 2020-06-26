@@ -246,9 +246,37 @@
         </div>
     </div>
 
+    <!-- Modal Dados pendentes -->
+    <div id="modal-peding-data" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header flex-column-reverse align-items-center border-bottom py-1">
+                    <h4 class="modal-title">Dados pendentes de atualização</h4>
+                    {{--                    <small class="py-1">Nossos termos de uso foram atualizados. Para continuar utilizando nossos serviços, é preciso que esteja de acordo com os novos termos:</small>--}}
+                </div>
+                <div class="modal-body p-2">
+                    <div class='text-center div-pending-profile' style='display:none;'>
+                        <label>Dados do perfil</label>
+                        <a class='btn btn-secondary ml-10' href='{{ route('profile.index') }}'>Editar</a>
+                    </div>
+                    <div class='text-center mt-20 div-pending-company' style='display:none;'>
+                        <label>Empresas com dados pendentes:</label>
+                    </div>
+                    <table class='table table-pending-data table-bordered table-striped table-hover text-center mt-2 mb-10' style='overflow-x: auto !important;'>
+                        <tbody class='table-pending-data-body'>
+                            {{-- js carrega... --}}
+                        </tbody>
+                    </table>
+                    <div class="modal-footer border-top py-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=3') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=4') }}"></script>
     @endpush
 
 @endsection

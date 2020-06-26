@@ -8,12 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -46,7 +48,8 @@ class DashboardApiController extends Controller
                                            ->exists();
             }
 
-            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')->get() ?? collect();
+            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')
+                                      ->get() ?? collect();
 
             return response()->json(compact('companies', 'userTerm'), 200);
         } catch (Exception $e) {
@@ -136,9 +139,10 @@ class DashboardApiController extends Controller
                                                     $query->where('company_id', $companyId);
                                                 })
                                                 ->where(function($q1) {
-                                                    $q1->where('status', 4)->whereDoesntHave('saleLogs', function($querySaleLog) {
-                                                        $querySaleLog->whereIn('status_enum', collect([20,7]));
-                                                    })->orWhere('status', 1);
+                                                    $q1->where('status', 4)
+                                                       ->whereDoesntHave('saleLogs', function($querySaleLog) {
+                                                           $querySaleLog->whereIn('status_enum', collect([20, 7]));
+                                                       })->orWhere('status', 1);
                                                 })
                                                 ->first();
 
@@ -158,7 +162,7 @@ class DashboardApiController extends Controller
                     foreach ($newsData as $key => $value) {
                         $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
                         if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
-                            $userFirstName = explode(' ', auth()->user()->name)[0];
+                            $userFirstName      = explode(' ', auth()->user()->name)[0];
                             $newsDecoded->title = str_replace('{nome_usuario}', ucfirst($userFirstName), $newsDecoded->title);
                         }
                         $news[] = $newsDecoded;
@@ -191,9 +195,9 @@ class DashboardApiController extends Controller
                                                          sum(case when ticket_status_enum = ? then 1 else 0 end) as open,
                                                          sum(case when ticket_status_enum = ? then 1 else 0 end) as closed,
                                                          sum(case when ticket_status_enum = ? then 1 else 0 end) as mediation", $statusArray)
-                        ->join('sales', 'tickets.sale_id', '=', 'sales.id')
-                        ->where('sales.owner_id', $userId)
-                        ->first();
+                                            ->join('sales', 'tickets.sale_id', '=', 'sales.id')
+                                            ->where('sales.owner_id', $userId)
+                                            ->first();
 
                     return [
                         'available_balance'      => number_format(intval($availableBalance) / 100, 2, ',', '.'),
@@ -217,7 +221,37 @@ class DashboardApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
+
             return [];
         }
+    }
+
+    public function verifyPendingData()
+    {
+        $user            = auth()->user();
+        $companyModel    = new Company();
+        $userService     = new UserService();
+        $companyService  = new CompanyService();
+        $pendingUserData = $userService->verifyFieldsEmpty($user);
+        $companies       = $companyModel->where('user_id', $user->account_owner_id)->orderBy('order_priority')
+                                        ->get();
+        $companyArray    = [];
+        foreach ($companies as $company) {
+            if ($companyService->verifyFieldsEmpty($company)) {
+                $companyArray[] = [
+                    'id_code'      => Hashids::encode($company->id),
+                    'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : $company->fantasy_name ?? '',
+                    'type'         => $company->company_type,
+                ];
+            }
+        }
+
+        return response()->json(
+            [
+                'companies'         => $companyArray,
+                'pending_user_data' => $pendingUserData,
+            ],
+            200
+        );
     }
 }
