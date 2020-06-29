@@ -252,8 +252,12 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header flex-column-reverse align-items-center border-bottom py-1">
-                    <h4 class="modal-title">Dados pendentes de atualização</h4>
-                    {{--                    <small class="py-1">Nossos termos de uso foram atualizados. Para continuar utilizando nossos serviços, é preciso que esteja de acordo com os novos termos:</small>--}}
+                    <h4 class="modal-title">Encontramos dados que precisam ser atualizados!</h4>
+                    <span class="py-1">
+                        Estamos avaliando a parceria com outras adquirentes para aumentar ainda mais sua conversão.
+                        E por isso é fundamental manter seu cadastro completo e atualizado, conforme as exigências destas adquirentes. Contamos com você!
+                        Afinal, assim será possível liberar o d+p para vendas no cartão em breve. Confira abaixo o que precisa ser atualizado.
+                    </span>
                 </div>
                 <div class="modal-body p-2">
                     <div class='text-center div-pending-profile' style='display:none;'>
