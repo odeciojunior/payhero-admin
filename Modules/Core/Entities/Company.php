@@ -133,6 +133,7 @@ class Company extends Model
         'account_type',
         'social_value',
         'federal_registration_status_date',
+        'document_number',
         'document_issue_date',
         'document_issuer',
         'document_issuer_state',

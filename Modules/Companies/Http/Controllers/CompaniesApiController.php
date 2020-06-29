@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompanyDocumentsResource;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
@@ -82,31 +83,28 @@ class CompaniesApiController extends Controller
             $companyModel = new Company();
             $requestData = $request->validated();
 
+            $fantasyName = ($requestData['company_type'] == $companyModel->present()->getCompanyType('physical person'))
+                ? auth()->user()->name : $requestData['fantasy_name'];
+
+            $companyDocument = $requestData['company_type'] == $companyModel->present()->getCompanyType(
+                'physical person'
+            ) ? auth()->user()->document : FoxUtils::onlyNumbers($requestData['company_document']);
+
             $company = $companyModel->create(
                 [
                     'user_id' => auth()->user()->account_owner_id,
                     'country' => $requestData["country"],
-                    'fantasy_name' => ($requestData['company_type'] == $companyModel->present()
-                            ->getCompanyType('physical person')) ? auth()->user()->name : $requestData['fantasy_name'],
-                    'company_document' => ($requestData['company_type'] == $companyModel->present()
-                            ->getCompanyType('physical person')) ? auth()->user()->document : preg_replace(
-                        "/[^0-9]/",
-                        "",
-                        $requestData['company_document']
-                    ),
+                    'fantasy_name' => $fantasyName,
+                    'company_document' => $companyDocument,
                     'company_type' => $requestData['company_type'],
                 ]
             );
 
             return response()->json(
-                [
-                    'message' => 'Empresa cadastrada com sucesso',
-                    'idEncoded' => Hashids::encode($company->id),
-                ],
+                ['message' => 'Empresa cadastrada com sucesso', 'idEncoded' => Hashids::encode($company->id)],
                 Response::HTTP_OK
             );
         } catch (Exception $e) {
-            Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
             report($e);
 
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
@@ -115,7 +113,7 @@ class CompaniesApiController extends Controller
 
     /**
      * @param $encodedId
-     * @return Factory|JsonResponse|View
+     * @return JsonResponse
      */
     public function show($encodedId)
     {
@@ -134,10 +132,8 @@ class CompaniesApiController extends Controller
                 $companyResource = null;
                 if ($company->company_type == $companyModel->present()->getCompanyType('juridical person')) {
                     $companyResource = new CompanyResource($company);
-                } else {
-                    if ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
-                        $companyResource = new CompanyCpfResource($company);
-                    }
+                } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
+                    $companyResource = new CompanyCpfResource($company);
                 }
 
                 return response()->json(
@@ -156,7 +152,6 @@ class CompaniesApiController extends Controller
                 );
             }
         } catch (Exception $e) {
-            Log::warning('CompaniesController - edit - error');
             report($e);
 
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
@@ -190,9 +185,9 @@ class CompaniesApiController extends Controller
             if (!empty($requestData['company_document'])) {
                 $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
             }
-            if ($company->country == 'brazil' && !empty($requestData['agency']) && strlen(
-                    $requestData['agency']
-                ) == 3) {
+            if ($company->country == 'brazil' && !empty($requestData['agency'])
+                && strlen($requestData['agency']) == 3
+            ) {
                 $requestData['agency'] = substr_replace($requestData['agency'], '0', 0, 0);
             }
             if (!empty($requestData['patrimony'])) {
@@ -207,18 +202,17 @@ class CompaniesApiController extends Controller
             $company->update($requestData);
             $dataUpdate = $companyService->getChangesUpdateBankData($company);
 
-            if (empty($company->subseller_getnet_id)) {
-                $companyService->createCompanyGetnet($company);
-            } elseif ($dataUpdate == true || $company->getnet_status != 'aprovado') {
-                $getnetService = new GetnetService();
-
-                if ($company->present()->getCompanyType($company->company_type) == 'physical person') {
-                    $getnetService->updatePfCompany($company);
-                } else {
-                    $getnetService->updatePjCompany($company);
-                }
+           /* if ($companyService->verifyFieldsEmpty($company)) {
+                return response()->json(['message' => 'Preencha os campos corretamente'], Response::HTTP_BAD_REQUEST);
             }
 
+            if (empty($company->subseller_getnet_id)) {
+                $companyService->createCompanyGetnet($company);
+            } elseif (($dataUpdate == true)
+                || ($company->getnet_status != $company->present()->getStatusGetnet('approved'))
+            ) {
+                $companyService->updateCompanyGetnet($company);
+            }*/
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -237,68 +231,61 @@ class CompaniesApiController extends Controller
             $companyModel = new Company();
             $projectModel = new Project();
 
-            $company = $companyModel->with('usersProjects')->withCount(
-                [
-                    'transactions',
-                    'usersProjects',
-                ]
-            )
+            $company = $companyModel->with('usersProjects')
+                ->withCount(['transactions', 'usersProjects'])
                 ->find(current(Hashids::decode($encodedId)));
-            if ($company) {
-                if (Gate::allows('destroy', [$company])) {
-                    if ($company->transactions_count > 0) {
-                        return response()->json(
-                            ['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'],
-                            Response::HTTP_BAD_REQUEST
-                        );
-                    } else {
-                        if ($company->users_projects_count > 0) {
-                            $projects = [];
-                            foreach ($company->usersProjects as $userProject) {
-                                $projects = $projectModel->where('id', $userProject->project->id)
-                                    ->where(
-                                        'status',
-                                        $projectModel->present()
-                                            ->getStatus('active')
-                                    )
-                                    ->get();
-                            }
 
-                            if (count($projects) > 0) {
-                                return response()->json(
-                                    ['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'],
-                                    Response::HTTP_BAD_REQUEST
-                                );
-                            } else {
-                                $company->delete();
-
-                                return response()->json(
-                                    ['message' => 'Empresa removida com sucesso'],
-                                    Response::HTTP_OK
-                                );
-                            }
-                        } else {
-                            $company->delete();
-
-                            return response()->json(['message' => 'Empresa removida com sucesso'], Response::HTTP_OK);
-                        }
-                    }
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Sem permissão para remover a empresa',
-                        ],
-                        Response::HTTP_FORBIDDEN
-                    );
-                }
-            } else {
+            if (empty($company)) {
                 return response()->json(
                     ['message' => 'Empresa não encontrada para remoção'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
+            if (!Gate::allows('destroy', [$company])) {
+                return response()->json(
+                    [
+                        'message' => 'Sem permissão para remover a empresa',
+                    ],
+                    Response::HTTP_FORBIDDEN
+                );
+            }
+
+            if ($company->transactions_count > 0) {
+                return response()->json(
+                    ['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+
+            if ($company->users_projects_count > 0) {
+                $projects = [];
+                foreach ($company->usersProjects as $userProject) {
+                    $projects = $projectModel->where('id', $userProject->project->id)
+                        ->where('status', $projectModel->present()->getStatus('active'))
+                        ->get();
+                }
+
+                if (count($projects) > 0) {
+                    return response()->json(
+                        ['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'],
+                        Response::HTTP_BAD_REQUEST
+                    );
+                } else {
+                    $company->delete();
+
+                    return response()->json(
+                        ['message' => 'Empresa removida com sucesso'],
+                        Response::HTTP_OK
+                    );
+                }
+            } else {
+                $company->delete();
+
+                return response()->json(['message' => 'Empresa removida com sucesso'], Response::HTTP_OK);
+            }
         } catch (Exception $e) {
-            Log::warning('CompaniesController - destroy - error');
             report($e);
 
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
@@ -400,7 +387,7 @@ class CompaniesApiController extends Controller
     }
 
     /**
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function getCompanies()
     {
@@ -439,14 +426,15 @@ class CompaniesApiController extends Controller
 
             return response()->json(['message' => 'Erro ao acessar documento da empresa!'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao acessar documento da empresa CompaniesApiController - openDocument');
             report($e);
+
+            return response()->json(['message' => 'Erro ao acessar documento da empresa!'], 400);
         }
     }
 
     /**
      * @return JsonResponse
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     * @throws PresenterException
      */
     public function verify()
     {
@@ -492,6 +480,11 @@ class CompaniesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $companyId
+     * @return JsonResponse|AnonymousResourceCollection
+     */
     public function getDocuments(Request $request, $companyId)
     {
         try {
@@ -528,6 +521,10 @@ class CompaniesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function consultCnpj(Request $request)
     {
         try {
@@ -545,6 +542,10 @@ class CompaniesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateOrder(Request $request)
     {
         try {

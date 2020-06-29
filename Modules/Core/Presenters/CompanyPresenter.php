@@ -296,6 +296,10 @@ class CompanyPresenter extends Presenter
         }
     }
 
+    /**
+     * @param null $status
+     * @return int|string
+     */
     public function getStatusGetnet($status = null)
     {
         $company = $this->entity;
@@ -303,7 +307,7 @@ class CompanyPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'Approved';
+                    return 'approved';
                 case 2:
                     return 'review';
                 case 3:
@@ -313,7 +317,7 @@ class CompanyPresenter extends Presenter
             return '';
         } else {
             switch ($status) {
-                case 'Approved':
+                case 'approved':
                     return 1;
                 case 'review':
                     return 2;

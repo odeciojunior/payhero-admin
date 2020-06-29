@@ -18,6 +18,8 @@ class GetnetService
 
     public const URL_API = 'https://api-homologacao.getnet.com.br/';
 
+    public $urlCallback = 'https://app.cloudfox.net/postback/getnet';
+
     private $accessToken;
 
     public function __construct()
@@ -207,6 +209,16 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
         $this->saveRequests($url, $result, $httpStatus, $data);
+
+        if ($httpStatus == 200 && json_decode($result)->success == 'true') {
+            return [
+                'message' => 'success',
+            ];
+        } else {
+            return [
+                'message' => 'error',
+            ];
+        }
     }
 
     /**

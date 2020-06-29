@@ -24,6 +24,11 @@ trait GetNetPrepareDataTrait
 
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
+        $country = 'BR';
+        if ($company->country == 'usa') {
+            $country = 'EUA';
+        }
+
         return [
             'merchant_id' => $this->getMerchantId(),
             'legal_document_number' => $company->company_document,
@@ -35,7 +40,7 @@ trait GetNetPrepareDataTrait
             'business_address' => [
                 'mailing_address_equals' => 'S',
                 'street' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
-                'number' => $user->number,
+                'number' => $user->number ?? '',
                 'district' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->neighborhood)),
                 'city' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->city)),
                 'state' => $user->state,
@@ -43,6 +48,7 @@ trait GetNetPrepareDataTrait
                 'suite' => empty($user->complement) ? '' : FoxUtils::removeAccents(
                     FoxUtils::removeSpecialChars($user->complement)
                 ),
+                'country' => $country
             ],
             'working_hours' => [
                 "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
@@ -75,12 +81,11 @@ trait GetNetPrepareDataTrait
                     "payment_plan" => 3
                 ]
             ],
-            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
+            'url_callback' => $this->urlCallback,
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
             'marketplace_store' => 'S',
             'payment_plan' => 3
-
         ];
     }
 
@@ -105,7 +110,6 @@ trait GetNetPrepareDataTrait
                 'document_expiration_date' => $userInformation->document_expiration_date,
                 'document_issuer' => $userInformation->document_issuer,
                 'document_issuer_state' => $userInformation->document_issuer_state,
-                'document_serial_number' => $userInformation->document_serial_number,
             ],
             'sex' => $userInformation->sex,
             'marital_status' => $userInformation->marital_status,
@@ -124,6 +128,7 @@ trait GetNetPrepareDataTrait
     /**
      * @param Company $company
      * @return array
+     * @throws PresenterException
      */
     public function getPrepareDataUpdatePfCompany(Company $company)
     {
@@ -203,7 +208,7 @@ trait GetNetPrepareDataTrait
                     'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
                 ]
             ],
-            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
+            'url_callback' => $this->urlCallback,
             "accepted_contract" => "S",
             "liability_chargeback" => "S",
             'marketplace_store' => "S",
@@ -224,71 +229,33 @@ trait GetNetPrepareDataTrait
      */
     private function getPrepareDataComplementPjCompany(Company $company)
     {
-//        $userInformation = $company->user->userInformation;
-
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
             'legal_document_number' => $company->company_document,
-//            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-//            'date' => $company->founding_date,
-//            'email' => $company->support_email,
             "working_hours" => [
-                "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
+                "start_day" => "mon",
                 "end_day" => "mon",
-                "start_time" => "08:00:00",      // "hh:mm:ss"
+                "start_time" => "08:00:00",
                 "end_time" => "18:00:00"
             ],
-            /*'addresses' => [
-                'address_type' => 'business',
-                'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'number' => $company->number ?? '',
-                'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
-                'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                // @todo esta salvando a string inteira precisa ter somente codigo UF
-                'state' => $company->state,
-                'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($company->complement)
-                ),
-            ],*/
-            /*'identification_document' => [
+            'identification_document' => [
                 'document_type' => 'nire',
                 'document_number' => '',
-                'document_issue_date' => '',
-                'document_issuer' => '',
-                'document_issuer_state' => ''
-            ],*/
-            /*'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency . $company->agency_digit,
-                    'account' => $company->account,
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => ($company->account_digit == 'X' || $company->account_digit == 'x') ? 0 : $company->account_digit,
-                ],
-            ],*/
-            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
-//            'payment_plan' => 3,
-//            'marketplace_store' => "S",
-//            'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
+                'document_issue_date' => $company->document_issue_date,
+                'document_issuer' => $company->document_issuer,
+                'document_issuer_state' => $company->document_issuer_state
+            ],
+            'url_callback' => $this->urlCallback,
             'state_fiscal_document_number' => $company->state_fiscal_document_number,
-//            'federal_registration_status' => $company->present()->getFederalRegistrationStatus(),
             'federal_registration_status_date' => $company->federal_registration_status_date,
             'social_value' => $company->social_value,
-//            'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
-            /*'economic_activity_classification_code' => FoxUtils::onlyNumbers(
-                $company->economic_activity_classification_code
-            ),*/
-//            'monthly_gross_income' => FoxUtils::onlyNumbers($company->monthly_gross_income),
         ];
     }
 
     /**
      * @param Company $company
      * @return array
-     * @throws PresenterException
      */
     private function getPrepareDataUpdatePjCompany(Company $company)
     {
@@ -296,7 +263,17 @@ trait GetNetPrepareDataTrait
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
             'legal_document_number' => $company->company_document,
-            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
+            'bank_accounts' => [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => $company->bank,
+                    'agency' => $company->agency . $company->agency_digit,
+                    'account' => $company->account,
+                    'account_type' => $company->account_type,
+                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
+                ],
+            ],
+            /*'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'block_payments' => 'N',
             'block_transactions' => 'N',
@@ -318,26 +295,13 @@ trait GetNetPrepareDataTrait
                 'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
                     FoxUtils::removeSpecialChars($company->complement)
                 ),
-                // @todo esta salvando a string inteira precisa ter somente dois caracteres
-                'country' => $company->country
+                'country' => $country
             ],
             'phone' => [
-                'area_code' => substr($company->support_telephone, 0, 2),
-                'phone_number' => $company->support_telephone
-            ],
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency . $company->agency_digit,
-                    'account' => $company->account,
-                    'account_type' => $company->account_type,
-                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
-                ],
-            ],
-            'liability_chargeback' => 'S',
-            'marketplace_store' => 'S',
-            'payment_plan' => 3,
+                'area_code' => $telephone['dd'],
+                'phone_number' => $telephone['number']
+            ],*/
+
         ];
     }
 
