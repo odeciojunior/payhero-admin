@@ -127,8 +127,8 @@
                                                 </div>
                                                 <div class='col-lg-4'>
                                                     <div class="form-group">
-                                                        <label for="document_number">Identidade</label>
-                                                        <input name="document_number" value="" type="text" class="input-pad" id="document_number" placeholder="Identidade">
+                                                        <label for="document_number">Identidade (RG)</label>
+                                                        <input name="document_number" value="" type="text" class="input-pad" id="document_number" placeholder="Identidade (RG)">
                                                     </div>
                                                 </div>
                                                 <div class='col-lg-4'>
@@ -145,7 +145,7 @@
                                                                class="form-control input-pad" id="document_expiration_date">
                                                     </div>
                                                 </div>
-                                                <div class='col-lg-4'>
+                                                <div class='col-lg-6'>
                                                     <div class="form-group">
                                                         <label for="document_issuer_state">Estado emissor identidade</label>
                                                         {{--                                                <input name="document_issuer_state" value="" type="text" class="input-pad" id="document_issuer_state" placeholder="Estado do emissor do documento">--}}
@@ -182,13 +182,12 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class='col-lg-4'>
+                                                <div class='col-lg-6'>
                                                     <div class="form-group">
                                                         <label for="document_issuer">Órgão emissor identidade</label>
                                                         <input name="document_issuer" value="" type="text" class="input-pad" id="document_issuer" placeholder="Órgão emissor do documento">
                                                     </div>
                                                 </div>
-                                                <div class='col-lg-4'></div>
                                                 <div class='col-lg-4'>
                                                     <label for="sex">Sexo</label>
                                                     <select id="sex" name='sex' class="form-control select-pad">
@@ -281,7 +280,7 @@
                                                         <input name="birth_city" value="" type="text" class="input-pad" id="birth_city" placeholder="Cidade de nascimento">
                                                     </div>
                                                 </div>
-                                                <div class='col-lg-4'>
+                                                <div class='col-lg-8'>
                                                     <div class="form-group">
                                                         <label for="birth_place">Local de nascimento</label>
                                                         <input name="birth_place" value="" type="text" class="input-pad" id="birth_place" placeholder="Local de nascimento">

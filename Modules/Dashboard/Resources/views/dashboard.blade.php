@@ -248,12 +248,12 @@
 
     <!-- Modal Dados pendentes -->
     <div id="modal-peding-data" class="modal fade" role="dialog" data-backdrop="static">
-        <div class="modal-dialog">
+        <div class="modal-dialog p-2">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header flex-column-reverse align-items-center border-bottom py-1">
-                    <h4 class="modal-title">Encontramos dados que precisam ser atualizados!</h4>
-                    <span class="py-1">
+                <div class="modal-header flex-column-reverse align-items-center border-bottom">
+                    <h4 class="modal-title font-size-20">Encontramos dados que precisam ser atualizados!</h4>
+                    <span class="py-1 text-center">
                         Estamos avaliando a parceria com outras adquirentes para aumentar ainda mais sua conversão.
                         E por isso é fundamental manter seu cadastro completo e atualizado, conforme as exigências destas adquirentes. Contamos com você!
                         Afinal, assim será possível liberar o d+p para vendas no cartão em breve. Confira abaixo o que precisa ser atualizado.
