@@ -121,7 +121,9 @@ class ProfileApiController
             if (!empty($requestData['monthly_income'])) {
                 $requestData['monthly_income'] = preg_replace("/[^0-9]/", "", $requestData['monthly_income']);
             }
-
+            if (!empty($requestData['document_number'])) {
+                $requestData['document_number'] = preg_replace("/[^0-9]/", "", $requestData['document_number']);
+            }
             $user->userInformation->fill(
                 [
                     'sex' => $requestData['sex'],
@@ -140,7 +142,8 @@ class ProfileApiController
                     'document_expiration_date' => $requestData['document_expiration_date'],
                     'document_issuer' => $requestData['document_issuer'],
                     'document_issuer_state' => $requestData['document_issuer_state'],
-                    'document_serial_number' => $requestData['document_serial_number'],
+                    'document_number' => $requestData['document_number'],
+//                    'document_serial_number' => $requestData['document_serial_number'],
                 ]
             )->save();
 
