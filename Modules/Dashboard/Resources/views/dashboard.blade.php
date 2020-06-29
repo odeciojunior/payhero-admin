@@ -258,7 +258,7 @@
                 <div class="modal-body p-2">
                     <div class='text-center div-pending-profile' style='display:none;'>
                         <label>Dados do perfil</label>
-                        <a class='btn btn-secondary ml-10' href='{{ route('profile.index') }}'>Editar</a>
+                        <a class='btn btn-primary ml-10' href='{{ route('profile.index') }}' target='_blank'>Atualizar</a>
                     </div>
                     <div class='text-center mt-20 div-pending-company' style='display:none;'>
                         <label>Empresas com dados pendentes:</label>
@@ -269,6 +269,7 @@
                         </tbody>
                     </table>
                     <div class="modal-footer border-top py-2">
+                        <button class='btn-success btn-update-later' data-dismiss="modal">Atualizar depois</button>
                     </div>
                 </div>
             </div>
@@ -276,7 +277,7 @@
     </div>
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=4') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=6') }}"></script>
     @endpush
 
 @endsection

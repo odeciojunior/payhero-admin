@@ -18,7 +18,8 @@ $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
-    $('#monthly_income').mask('#.###,#0', {reverse: true});
+    // $('#monthly_income').mask('#.###,#0', {reverse: true});
+
     $('#document_number').mask('00.000.000-0');
     getDataProfile = function () {
         $.ajax({
@@ -56,6 +57,7 @@ $(document).ready(function () {
                 /**
                  * Dados User Informations
                  */
+
                 $('#sex').val(response.user.sex);
                 $('#marital_status').val(response.user.marital_status);
                 $('#nationality').val(response.user.nationality);
@@ -73,6 +75,8 @@ $(document).ready(function () {
                 $('#document_issuer_state').val(response.user.document_issuer_state);
                 // $('#document_serial_number').val(response.user.document_serial_number);
                 $('#document_number').val(response.user.document_number);
+                $('#monthly_income').unmask();
+                $('#monthly_income').mask('#.###,#0', {reverse: true});
 
                 for (var country of countries) {
                     $('#nationality').append(`<option value="${country.code}" ${country.code === response.user.nationality ? 'selected' : ''}>${country.name}</option>`);
@@ -204,6 +208,7 @@ $(document).ready(function () {
                 verifyUserAddress(response.user);
                 changeMaskByUserCountry(response.user);
                 loadLabelsByCountry(response.user);
+
             }
         });
     }
