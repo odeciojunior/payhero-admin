@@ -27,7 +27,7 @@ $(document).ready(function () {
                                 <tr>
                                     <th style='width:40%;' class='text-center'>${company.fantasy_name}</th>
                                     <td class='text-center'>
-                                        <a class='btn btn-secondary' href='/companies/${company.id_code}/edit?type=${company.type}'>Editar</a>
+                                        <a class='btn btn-primary' href='/companies/${company.id_code}/edit?type=${company.type}' target='_blank'>Atualizar</a>
                                     </td>
                                 </tr>
                             `);
