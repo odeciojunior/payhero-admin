@@ -229,87 +229,51 @@ trait GetNetPrepareDataTrait
      */
     private function getPrepareDataComplementPjCompany(Company $company)
     {
-//        $userInformation = $company->user->userInformation;
-
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
             'legal_document_number' => $company->company_document,
-//            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-//            'date' => $company->founding_date,
-//            'email' => $company->support_email,
             "working_hours" => [
-                "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
+                "start_day" => "mon",
                 "end_day" => "mon",
-                "start_time" => "08:00:00",      // "hh:mm:ss"
+                "start_time" => "08:00:00",
                 "end_time" => "18:00:00"
             ],
-            /*'addresses' => [
-                'address_type' => 'business',
-                'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'number' => $company->number ?? '',
-                'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
-                'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                // @todo esta salvando a string inteira precisa ter somente codigo UF
-                'state' => $company->state,
-                'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($company->complement)
-                ),
-            ],*/
-            /*'identification_document' => [
+            'identification_document' => [
                 'document_type' => 'nire',
                 'document_number' => '',
-                'document_issue_date' => '',
-                'document_issuer' => '',
-                'document_issuer_state' => ''
-            ],*/
-            /*'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency . $company->agency_digit,
-                    'account' => $company->account,
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => ($company->account_digit == 'X' || $company->account_digit == 'x') ? 0 : $company->account_digit,
-                ],
-            ],*/
+                'document_issue_date' => $company->document_issue_date,
+                'document_issuer' => $company->document_issuer,
+                'document_issuer_state' => $company->document_issuer_state
+            ],
             'url_callback' => $this->urlCallback,
-//            'payment_plan' => 3,
-//            'marketplace_store' => "S",
-//            'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'state_fiscal_document_number' => $company->state_fiscal_document_number,
-//            'federal_registration_status' => $company->present()->getFederalRegistrationStatus(),
             'federal_registration_status_date' => $company->federal_registration_status_date,
             'social_value' => $company->social_value,
-//            'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
-            /*'economic_activity_classification_code' => FoxUtils::onlyNumbers(
-                $company->economic_activity_classification_code
-            ),*/
-//            'monthly_gross_income' => FoxUtils::onlyNumbers($company->monthly_gross_income),
         ];
     }
 
     /**
      * @param Company $company
      * @return array
-     * @throws PresenterException
      */
     private function getPrepareDataUpdatePjCompany(Company $company)
     {
-        $user = $company->user;
-        $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
-
-        $country = 'BR';
-        if ($company->country == 'usa') {
-            $country = 'EUA';
-        }
-
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
             'legal_document_number' => $company->company_document,
-            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
+            'bank_accounts' => [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => $company->bank,
+                    'agency' => $company->agency . $company->agency_digit,
+                    'account' => $company->account,
+                    'account_type' => $company->account_type,
+                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
+                ],
+            ],
+            /*'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'block_payments' => 'N',
             'block_transactions' => 'N',
@@ -336,20 +300,8 @@ trait GetNetPrepareDataTrait
             'phone' => [
                 'area_code' => $telephone['dd'],
                 'phone_number' => $telephone['number']
-            ],
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency . $company->agency_digit,
-                    'account' => $company->account,
-                    'account_type' => $company->account_type,
-                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
-                ],
-            ],
-            'liability_chargeback' => 'S',
-            'marketplace_store' => 'S',
-            'payment_plan' => 3,
+            ],*/
+
         ];
     }
 

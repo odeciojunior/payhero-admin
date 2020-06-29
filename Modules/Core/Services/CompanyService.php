@@ -316,6 +316,9 @@ class CompanyService
             if (empty($company->social_value)) {
                 return true;
             }
+            if (empty($company->document_number)) {
+                return true;
+            }
             if (empty($company->document_issue_date)) {
                 return true;
             }
