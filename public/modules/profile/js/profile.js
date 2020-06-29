@@ -19,6 +19,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
     $('#monthly_income').mask('#.###,#0', {reverse: true});
+    $('#document_number').mask('00.000.000-0');
     getDataProfile = function () {
         $.ajax({
             url: "/api/profile",
@@ -70,7 +71,9 @@ $(document).ready(function () {
                 $('#document_expiration_date').val(response.user.document_expiration_date);
                 $('#document_issuer').val(response.user.document_issuer);
                 $('#document_issuer_state').val(response.user.document_issuer_state);
-                $('#document_serial_number').val(response.user.document_serial_number);
+                // $('#document_serial_number').val(response.user.document_serial_number);
+                $('#document_number').val(response.user.document_number);
+
                 for (var country of countries) {
                     $('#nationality').append(`<option value="${country.code}" ${country.code === response.user.nationality ? 'selected' : ''}>${country.name}</option>`);
                     $('#birth_country').append(`<option value="${country.name}" ${country.name === response.user.birth_country ? 'selected' : ''}>${country.name}</option>`);

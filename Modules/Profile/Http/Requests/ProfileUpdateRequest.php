@@ -48,7 +48,8 @@ class ProfileUpdateRequest extends FormRequest
             'document_expiration_date' => 'nullable',
             'document_issuer'          => 'nullable',
             'document_issuer_state'    => 'nullable',
-            'document_serial_number'   => 'nullable',
+//            'document_serial_number'   => 'nullable',
+            'document_number'          => 'nullable',
         ];
     }
 

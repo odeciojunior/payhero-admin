@@ -66,8 +66,8 @@ class UserResource extends JsonResource
             'credit_card_in_proccess'     => empty($userNotification->credit_card_in_proccess) ? false : $userNotification->credit_card_in_proccess,
             'blocked_balance'             => empty($userNotification->blocked_balance) ? false : $userNotification->blocked_balance,
             'sex'                         => $userInformation->sex ?? '',
-            'marital_status'              => !empty($userInformation->marital_status) ?(new UserInformation())->present()
-                                                                                                               ->getMaritalStatus($userInformation->marital_status) :'',
+            'marital_status'              => !empty($userInformation->marital_status) ? (new UserInformation())->present()
+                                                                                                               ->getMaritalStatus($userInformation->marital_status) : '',
             'nationality'                 => $userInformation->nationality ?? '',
             'mother_name'                 => $userInformation->mother_name ?? '',
             'father_name'                 => $userInformation->father_name ?? '',
@@ -83,7 +83,8 @@ class UserResource extends JsonResource
                                                                                                         ->format('Y-m-d') : '',
             'document_issuer'             => $userInformation->document_issuer ?? '',
             'document_issuer_state'       => $userInformation->document_issuer_state ?? '',
-            'document_serial_number'      => $userInformation->document_serial_number ?? '',
+//            'document_serial_number'      => $userInformation->document_serial_number ?? '',
+            'document_number'             => $userInformation->document_number ?? '',
         ];
     }
 }

@@ -107,12 +107,10 @@ class UserService
     public function createUserInformationDefault($userId)
     {
         try {
-            $user = User::find($userId);
             UserInformation::create(
                 [
                     'user_id' => $userId,
                     'document_type' => 1,
-                    'document_number' => $user->document,
                 ]
             );
         } catch (Exception $e) {
