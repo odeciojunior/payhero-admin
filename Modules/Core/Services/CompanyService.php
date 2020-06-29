@@ -344,24 +344,49 @@ class CompanyService
 
     /**
      * @param Company $company
+     * @return string|string[]
      * @throws PresenterException
      */
     public function createCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
+        $userService = new UserService();
 
-        if ($company->present()->getCompanyType($company->company_type) == 'physical person') {
+        if (($company->present()->getCompanyType($company->company_type) == 'physical person')
+            && (!$userService->verifyFieldsEmpty($company->user))
+        ) {
             $result = $getnetService->createPfCompany($company);
-        } else {
+        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')) {
             $result = $getnetService->createPjCompany($company);
         }
 
-        if ($result['message'] == 'success') {
+        if (!empty($result) && $result['message'] == 'success') {
             $company->update(
                 [
-                    'subseller_getnet_id' => $result['data']->subseller_id
+                    'subseller_getnet_id' => $result['data']->subseller_id,
+                    'getnet_status' => $company->present()->getStatusGetnet('review')
                 ]
             );
+        } else {
+            return [
+                'message' => 'error',
+                'data' => ''
+            ];
+        }
+    }
+
+    /**
+     * @param Company $company
+     * @throws PresenterException
+     */
+    public function updateCompanyGetnet(Company $company)
+    {
+        $getnetService = new GetnetService();
+
+        if ($company->present()->getCompanyType($company->company_type) == 'physical person') {
+            $getnetService->updatePfCompany($company);
+        } else {
+            $getnetService->updatePjCompany($company);
         }
     }
 }

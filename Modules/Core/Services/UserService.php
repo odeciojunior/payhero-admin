@@ -154,13 +154,8 @@ class UserService
             return true;
         } elseif (empty($userInformation->nationality)) {
             return true;
-        } elseif (empty($userInformation->mother_name)) {
-            return true;
-        } elseif (empty($userInformation->father_name)) {
-            return true;
-        } elseif ($userInformation->present()->getMaritalStatus(
-                'married'
-            ) == $userInformation->marital_status && empty($userInformation->spouse_name)) {
+        } elseif ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
+            && empty($userInformation->spouse_name)) {
             return true;
         } elseif (empty($userInformation->birth_place)) {
             return true;
@@ -176,16 +171,18 @@ class UserService
             return true;
         } elseif (empty($userInformation->document_issue_date)) {
             return true;
-        } elseif (empty($userInformation->document_expiration_date)) {
-            return true;
         } elseif (empty($userInformation->document_issuer)) {
             return true;
         } elseif (empty($userInformation->document_issuer_state)) {
             return true;
-        } elseif (empty($userInformation->document_serial_number)) {
-            return true;
         } else {
             return false;
         }
+        /*
+         * mother_name
+         * father_name
+         * document_serial_number
+         * document_expiration_date
+         */
     }
 }

@@ -79,13 +79,15 @@ class ProfileApiController
         try {
             $user = auth()->user();
             $userModel = new User();
+            $companyService = new CompanyService();
+
+            $requestData = $request->validated();
 
             if (!Gate::allows('update', [$user])) {
                 return response()->json(['message' => 'Sem permissão para editar este perfil'], 403);
             }
 
 
-            $requestData = $request->validated();
             if ($requestData['country'] == 'brazil' && !empty($requestData['cellphone'])) {
                 $requestData['cellphone'] = '+' . preg_replace("/[^0-9]/", "", $requestData['cellphone']);
             }
@@ -93,7 +95,8 @@ class ProfileApiController
             $requestData['name'] = preg_replace('/( )+/', ' ', $requestData['name']);
 
             $equalUserEmail = $userModel->where('email', $requestData['email'])
-                ->where('id', '!=', $user->account_owner_id)->first();
+                ->where('id', '!=', $user->account_owner_id)
+                ->first();
             if (!empty($equalUserEmail)) {
                 return response()->json(['message' => 'Já existe um usuário cadastrado com esse Email'], 400);
             }
@@ -127,8 +130,8 @@ class ProfileApiController
             $user->userInformation->fill(
                 [
                     'sex' => $requestData['sex'],
-                    'marital_status' => !empty($requestData['marital_status']) ? (new UserInformation())->present()
-                        ->getMaritalStatus($requestData['marital_status']) : null,
+                    'marital_status' => !empty($requestData['marital_status']) ?
+                        (new UserInformation())->present()->getMaritalStatus($requestData['marital_status']) : null,
                     'nationality' => $requestData['nationality'],
                     'mother_name' => $requestData['mother_name'],
                     'father_name' => $requestData['father_name'],
@@ -147,6 +150,11 @@ class ProfileApiController
                 ]
             )->save();
 
+            $companyModel = new Company();
+            $company = $companyModel->where('user_id', $user->id)
+                ->where('company_type', $companyModel->present()->getCompanyType('physical person'))
+                ->first();
+
             $userUpdateChanges = $user->getChanges();
             if (!empty($userUpdateChanges)) {
                 if ((!empty($userUpdateChanges['email']) || array_key_exists('email', $userUpdateChanges))) {
@@ -156,14 +164,6 @@ class ProfileApiController
                     $user->fill(["cellphone_verified" => false])->save();
                 }
                 if ((!empty($userUpdateChanges['document']) || array_key_exists('document', $userUpdateChanges))) {
-                    $companyModel = new Company();
-                    $company = $companyModel->where('user_id', $user->id)
-                        ->where(
-                            'company_type',
-                            $companyModel->present()
-                                ->getCompanyType('physical person')
-                        )
-                        ->first();
                     if (!empty($company)) {
                         $company->update(['company_document' => $user->document]);
                     }
@@ -203,16 +203,18 @@ class ProfileApiController
                         ]
                     );
                 } catch (Exception $e) {
-                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
                     report($e);
 
                     return response()->json(['message' => 'Erro ao salvar foto'], 400);
                 }
             }
+/*
+            if (!empty($company) && $company->getnet_status != $company->present()->getStatusGetnet('approved')) {
+                $companyService->updateCompanyGetnet($company);
+            }*/
+
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
-            //return redirect()->route('profile');
-
         } catch (Exception $e) {
             report($e);
 
