@@ -36,11 +36,13 @@ trait GetNetPrepareDataTrait
                 'mailing_address_equals' => 'S',
                 'street' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
                 'number' => $user->number,
-                'district' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
-                'city' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
+                'district' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->neighborhood)),
+                'city' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->city)),
                 'state' => $user->state,
                 'postal_code' => FoxUtils::onlyNumbers($user->zip_code),
-                'suite' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->complement)),
+                'suite' => empty($user->complement) ? '' : FoxUtils::removeAccents(
+                    FoxUtils::removeSpecialChars($user->complement)
+                ),
             ],
             'working_hours' => [
                 "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
@@ -165,14 +167,15 @@ trait GetNetPrepareDataTrait
      */
     private function getPrepareDataCreatePjCompany(Company $company)
     {
-        $telephone = FoxUtils::formatCellPhoneGetNet($company->support_telephone);
+        $user = $company->user;
+        $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
         return [
             'merchant_id' => $this->getMerchantId(),
             'legal_document_number' => $company->company_document,
             'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'state_fiscal_document_number' => empty($company->state_fiscal_document_number) ? 'ISENTO' : $company->state_fiscal_document_number,
-            'email' => $company->support_email,
+            'email' => $user->email,
             'cellphone' => [
                 'area_code' => $telephone['dd'],
                 'phone_number' => $telephone['number']
@@ -187,7 +190,7 @@ trait GetNetPrepareDataTrait
                 'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
                     FoxUtils::removeSpecialChars($company->complement)
                 ),
-                'country' => $company->country == 'brazil' ? 'BR' : 'BR'
+                'country' => 'BR'
 
             ],
             'bank_accounts' => [

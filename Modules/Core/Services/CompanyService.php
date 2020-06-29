@@ -268,48 +268,100 @@ class CompanyService
      */
     public function verifyFieldsEmpty(Company $company)
     {
+        if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
+            // informações basicas
+            if (empty($company->zip_code)) {
+                return true;
+            }
+            if (empty($company->street)) {
+                return true;
+            }
+            if (empty($company->neighborhood)) {
+                return true;
+            }
+            if (empty($company->state)) {
+                return true;
+            }
+            if (empty($company->city)) {
+                return true;
+            }
+            if (empty($company->country)) {
+                return true;
+            }
+            // informações complementares
+            if (empty($company->patrimony)) {
+                return true;
+            }
+            if (empty($company->state_fiscal_document_number)) {
+                return true;
+            }
+            if (empty($company->business_entity_type)) {
+                return true;
+            }
+            if (empty($company->economic_activity_classification_code)) {
+                return true;
+            }
+            if (empty($company->monthly_gross_income)) {
+                return true;
+            }
+            if (empty($company->federal_registration_status)) {
+                return true;
+            }
+            if (empty($company->founding_date)) {
+                return true;
+            }
+            if (empty($company->federal_registration_status_date)) {
+                return true;
+            }
+            if (empty($company->social_value)) {
+                return true;
+            }
+            if (empty($company->document_issue_date)) {
+                return true;
+            }
+            if (empty($company->document_issuer)) {
+                return true;
+            }
+            if (empty($company->document_issuer_state)) {
+                return true;
+            }
+        }
+
         if (empty($company->fantasy_name)) {
             return true;
         } elseif (empty($company->company_document)) {
             return true;
-        } elseif (empty($company->agency)) {
-            return true;
         } elseif (empty($company->bank)) {
+            return true;
+        } elseif (empty($company->agency)) {
             return true;
         } elseif (empty($company->account)) {
             return true;
-        } elseif (empty($company->account_digit)) {
-            return true;
-        } elseif (empty($company->support_email)) {
-            return true;
-        } elseif (empty($company->patrimony)) {
-            return true;
-        } elseif (empty($company->state_fiscal_document_number)) {
-            return true;
-        } elseif (empty($company->business_entity_type)) {
-            return true;
-        } elseif (empty($company->economic_activity_classification_code)) {
-            return true;
-        } elseif (empty($company->monthly_gross_income)) {
-            return true;
-        } elseif (empty($company->federal_registration_status)) {
-            return true;
-        } elseif (empty($company->founding_date)) {
-            return true;
-        } elseif (empty($company->account_type)) {
-            return true;
-        } elseif (empty($company->social_value)) {
-            return true;
-        } elseif (empty($company->federal_registration_status_date)) {
-            return true;
-        } elseif (empty($company->document_issue_date)) {
-            return true;
-        } elseif (empty($company->document_issuer)) {
-            return true;
-        } elseif (empty($company->document_issuer_state)) {
-            return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * @param Company $company
+     * @throws PresenterException
+     */
+    public function createCompanyGetnet(Company $company)
+    {
+        $getnetService = new GetnetService();
+
+        if ($company->present()->getCompanyType($company->company_type) == 'physical person') {
+            $result = $getnetService->createPfCompany($company);
+        } else {
+            $result = $getnetService->createPjCompany($company);
+        }
+
+        if ($result['message'] == 'success') {
+            $company->update(
+                [
+                    'subseller_getnet_id' => $result['data']->subseller_id
+                ]
+            );
         }
     }
 }

@@ -173,8 +173,6 @@ class CompaniesApiController extends Controller
         try {
             $companyModel = new Company();
             $companyService = new CompanyService();
-            $getnetService = new GetnetService();
-            $companyPresent = $companyModel->present();
 
             $requestData = $request->validated();
             $company = $companyModel->find(current(Hashids::decode($encodedId)));
@@ -209,28 +207,17 @@ class CompaniesApiController extends Controller
             $company->update($requestData);
             $dataUpdate = $companyService->getChangesUpdateBankData($company);
 
-
-           /* if (empty($company->subseller_getnet_id)) {
-                if ($companyPresent->getCompanyType($company->company_type) == 'physical person') {
-                    $result = $getnetService->createPfCompany($company);
-                } else {
-                    $result = $getnetService->createPjCompany($company);
-                }
-
-                if ($result['message'] == 'success') {
-                    $company->update(
-                        [
-                            'subseller_getnet_id' => $result['data']->subseller_id
-                        ]
-                    );
-                }
+            if (empty($company->subseller_getnet_id)) {
+                $companyService->createCompanyGetnet($company);
             } elseif ($dataUpdate == true || $company->getnet_status != 'aprovado') {
-                if ($companyPresent->getCompanyType($company->company_type) == 'physical person') {
+                $getnetService = new GetnetService();
+
+                if ($company->present()->getCompanyType($company->company_type) == 'physical person') {
                     $getnetService->updatePfCompany($company);
                 } else {
                     $getnetService->updatePjCompany($company);
                 }
-            }*/
+            }
 
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
