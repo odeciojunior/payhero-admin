@@ -101,6 +101,7 @@ $(() => {
             'date_updated': $('#date_updated').val(),
             'sale': $('#sale').val().replace('#', ''),
             'transaction_status': $("#status_commission").val(),
+            'problem': $('#tracking_problem').prop('checked') ? 1 : 0
         };
 
         if (urlParams) {
@@ -234,6 +235,21 @@ $(() => {
         }
     }
 
+    function getSystemStatus(status) {
+        switch (status) {
+            case 2:
+                return `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`;
+            case 3:
+                return `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`;
+            case 4:
+                return `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`;
+            case 5:
+                return `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`;
+            default :
+                return '';
+        }
+    }
+
     function index(link = null) {
 
         if (link == null) {
@@ -273,30 +289,34 @@ $(() => {
 
                         let dados = `<tr ${grayRow ? 'class="td-odd"' : ''}>
                                          ${
-                            lastSale !== tracking.sale
-                                ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
-                                : `<td></td>`
-                        }
+                                            lastSale !== tracking.sale
+                                                ? `<td class="detalhes_venda pointer table-title" venda="${tracking.sale}">#${tracking.sale}</td>`
+                                                : `<td></td>`
+                                         }
                                          <td>${tracking.approved_date}</td>
                                          <td>
                                              <span style="max-width: 330px; display:block; margin:0 auto;">
                                                 ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}
                                             </span>
-                                        </td>
+                                         </td>
                                          <td class="td-status">
-                                            <span class="badge badge-${badge}">${tracking.tracking_status}</span>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge badge-${badge}">${tracking.tracking_status}</span>
+                                                ${getSystemStatus(tracking.system_status_enum)}
+                                            </div>
                                          </td>
                                          <td>
                                             <input maxlength="18" minlength="10" class="form-control font-weight-bold input-tracking-code fake-label" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">
                                          </td>
-                                         <td class="text-md-right" style="min-width: 100px;">
+                                         <td class="text-md-right">
                                             <a class='tracking-save pointer mr-10' title="Salvar" pps='${tracking.pps_id}'
                                              style="display:none"><i class='material-icons gradient'>save</i></a>
-                                             ${tracking.tracking_status_enum
-                            ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
-                                                   <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
-                            : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
-                        }
+                                             ${
+                                                 tracking.tracking_status_enum
+                                                     ? `<a class='tracking-edit pointer mr-10' title="Editar"><i class='material-icons gradient'>edit</i></a>
+                                                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><i class='material-icons gradient'>remove_red_eye</i></a>`
+                                                     : `<a class='tracking-add pointer' title="Adicionar"><i class='material-icons gradient'>add_circle</i></a>`
+                                             }
                                             <a class='tracking-close pointer' title="Fechar" style="display:none"><i class='material-icons gradient'>close</i></a>
                                         </td>
                                  </tr>`;

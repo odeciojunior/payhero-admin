@@ -237,7 +237,7 @@ class TrackingsApiController extends Controller
                         $trackingPresenter = (new Tracking)->present();
                         $status = [
                             $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-                            //$trackingPresenter->getSystemStatusEnum('no_tracking_info'), não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
+                            $trackingPresenter->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
                             $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
                             $trackingPresenter->getSystemStatusEnum('duplicated'),
                         ];

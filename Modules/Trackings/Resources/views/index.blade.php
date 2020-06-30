@@ -225,7 +225,14 @@
                         <input name='date_updated' id="date_updated" class="select-pad"
                                placeholder="Clique para editar..." readonly>
                     </div>
-                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 offset-xl-3">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 d-flex flex-column justify-content-center">
+                        <label for="tracking_problem" class='mb-10 mr-5'>Problemas com o código</label>
+                        <label class="switch">
+                            <input type="checkbox" id='tracking_problem' name="tracking_problem" class='check'>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                         <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                             <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                         </button>
@@ -269,38 +276,38 @@
             </div>
             <!-- Resumo -->
             <div class="card shadow p-20" style='display:block;'>
-                <div class="row justify-content-center">
-                    <div class="col">
+                <div class="d-flex justify-content-between">
+                    <div>
                         <h6 class="text-center text-success" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> trending_up </i> Total</h6>
                         <h4 id="total-trackings" class="number text-center text-success"></h4>
                     </div>
-                    <div class="col">
+                    <div>
                         <h6 class="text-center text-info" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> markunread_mailbox </i> Postado</h6>
                         <h4 id="percentual-posted" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col">
+                    <div>
                         <h6 class="text-center text-info" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> local_shipping </i> Em trânsito</h6>
                         <h4 id="percentual-dispatched" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col">
+                    <div>
                         <h6 class="text-center text-info" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> arrow_right_alt </i> Saiu para entrega</h6>
                         <h4 id="percentual-out" class="number text-center text-info"></h4>
                     </div>
-                    <div class="col">
+                    <div>
                         <h6 class="text-center text-success" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> check_circle </i> Entregues</h6>
                         <h4 id="percentual-delivered" class="number text-center text-success"></h4>
                     </div>
-                    <div class="col">
+                    <div>
                         <h6 class="text-center text-warning" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> error </i> Problema na entrega</h6>
                         <h4 id="percentual-exception" class="number text-center text-warning"></h4>
                     </div>
-                    <div class="col">
+                    <div>
                         <h6 class="text-center text-danger" style="white-space: nowrap;">
                             <i class="material-icons align-middle mr-1"> error </i> Não informado</h6>
                         <h4 id="percentual-unknown" class="number text-center text-danger"></h4>
@@ -314,12 +321,12 @@
                     <table id="tabela_trackings" class="table-trackings table unify" style="">
                         <thead>
                         <tr>
-                            <td class="table-title">Venda</td>
-                            <td class="table-title">Data de Aprovação</td>
-                            <td class="table-title">Produto</td>
+                            <th class="table-title">Venda</th>
+                            <th class="table-title">Data de Aprovação</th>
+                            <th class="table-title">Produto</th>
                             <td class="table-title">Status</td>
-                            <td class="table-title">Código de Rastreio</td>
-                            <td class="table-title" width="80px;"></td>
+                            <th class="table-title">Código de Rastreio</th>
+                            <th class="table-title" style="width:90px;"></th>
                         </tr>
                         </thead>
                         <tbody id="dados_tabela">
@@ -406,7 +413,7 @@
     @push('scripts')
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('/modules/trackings/js/index.js?v=15') }}"></script>
+        <script src="{{ asset('/modules/trackings/js/index.js?v=16') }}"></script>
     @endpush
 
 @endsection

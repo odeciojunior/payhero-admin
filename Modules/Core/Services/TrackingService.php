@@ -343,13 +343,25 @@ class TrackingService
                         $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
                         $queryTransaction->where('status_enum', $statusEnum);
                     } else {
-                        $queryTransaction->where('transactions.release_date', '>', '2020-05-25')->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                        $queryTransaction->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
+                            ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
                 });
                 if ($filters['transaction_status'] == 'blocked') {
-                    $productPlanSales->doesntHave('tracking');
+                    $productPlanSales->where(function ($query) {
+                        $query->whereHas('tracking', function ($trackingsQuery) {
+                            $trackingPresenter = (new Tracking)->present();
+                            $status = [
+                                $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+                                $trackingPresenter->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
+                                $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+                                $trackingPresenter->getSystemStatusEnum('duplicated'),
+                            ];
+                            $trackingsQuery->whereIn('system_status_enum', $status);
+                        })->orDoesntHave('tracking');
+                    });
                 }
             }
         });
@@ -364,6 +376,23 @@ class TrackingService
                         $query->where(
                             'tracking_status_enum',
                             $trackingModel->present()->getTrackingStatusEnum($filters['status'])
+                        );
+                    }
+                );
+            }
+        }
+
+        if (isset($filters['problem'])) {
+            if ($filters['problem'] == 1) {
+                $productPlanSales->whereHas(
+                    'tracking',
+                    function ($query) use ($trackingModel, $filters) {
+                        $query->whereIn('system_status_enum', [
+                                $trackingModel->present()->getSystemStatusEnum('unknown_carrier'),
+                                $trackingModel->present()->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
+                                $trackingModel->present()->getSystemStatusEnum('posted_before_sale'),
+                                $trackingModel->present()->getSystemStatusEnum('duplicated'),
+                            ]
                         );
                     }
                 );
@@ -437,7 +466,6 @@ class TrackingService
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
                                    SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
-                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as ignored,
                                    SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown",
                 $status
             )
