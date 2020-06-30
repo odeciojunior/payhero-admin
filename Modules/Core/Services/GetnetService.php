@@ -101,16 +101,22 @@ class GetnetService
     /**
      * Consulta planos de pagamentos configurados para a loja
      */
-    public function checkAvailablePaymentPlans()
+    public function checkAvailablePaymentPlansPf()
     {
         $url = self::URL_API . 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
+            ]
+        );
 
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -119,6 +125,7 @@ class GetnetService
 
     /**
      * @param Company $company
+     * @return array
      * @throws PresenterException
      * Cria pré-cadastro da loja PF
      */
@@ -280,9 +287,18 @@ class GetnetService
         $url = self::URL_API . 'v1/mgm/pj/consult/paymentplans/' . $this->getMerchantId();
         $data = '';
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
+            ]
+        );
+
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);

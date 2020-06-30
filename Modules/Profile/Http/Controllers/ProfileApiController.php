@@ -208,11 +208,15 @@ class ProfileApiController
                     return response()->json(['message' => 'Erro ao salvar foto'], 400);
                 }
             }
-/*
-            if (!empty($company) && $company->getnet_status != $company->present()->getStatusGetnet('approved')) {
-                $companyService->updateCompanyGetnet($company);
-            }*/
 
+
+            if (!empty($company) && !$companyService->verifyFieldsEmpty($company)) {
+                if (empty($company->subseller_getnet_id)) {
+                    $companyService->createCompanyGetnet($company);
+                } elseif ($company->getnet_status != $company->present()->getStatusGetnet('approved')) {
+                    $companyService->updateCompanyGetnet($company);
+                }
+            }
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
         } catch (Exception $e) {

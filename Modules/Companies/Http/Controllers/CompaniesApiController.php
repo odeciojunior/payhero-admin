@@ -202,21 +202,21 @@ class CompaniesApiController extends Controller
             $company->update($requestData);
             $dataUpdate = $companyService->getChangesUpdateBankData($company);
 
-           /* if ($companyService->verifyFieldsEmpty($company)) {
-                return response()->json(['message' => 'Preencha os campos corretamente'], Response::HTTP_BAD_REQUEST);
+            $messageReturn = 'Dados atualizados com sucesso';
+            if (!$companyService->verifyFieldsEmpty($company)) {
+                if (empty($company->subseller_getnet_id)) {
+                    $result = $companyService->createCompanyGetnet($company);
+                } elseif (($dataUpdate == true)
+                    || ($company->getnet_status != $company->present()->getStatusGetnet('approved'))
+                ) {
+                    $result = $companyService->updateCompanyGetnet($company);
+                }
             }
 
-            if (empty($company->subseller_getnet_id)) {
-                $companyService->createCompanyGetnet($company);
-            } elseif (($dataUpdate == true)
-                || ($company->getnet_status != $company->present()->getStatusGetnet('approved'))
-            ) {
-                $companyService->updateCompanyGetnet($company);
-            }*/
-
-            return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
+            return response()->json(['message' => $messageReturn], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
+
             return response()->json('erro', Response::HTTP_BAD_REQUEST);
         }
     }

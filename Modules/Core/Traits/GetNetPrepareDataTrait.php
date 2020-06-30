@@ -72,7 +72,6 @@ trait GetNetPrepareDataTrait
                     'account_digit' => $company->account_digit,
                 ]
             ],
-            // @todo AINDA VERIFICAR SE ESTA CORRETO / PF É OBRIGATORIO
             "list_commissions" => [
                 [
                     "brand" => "MASTERCARD",
@@ -85,7 +84,7 @@ trait GetNetPrepareDataTrait
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
             'marketplace_store' => 'S',
-            'payment_plan' => 3
+            'payment_plan' => 1005
         ];
     }
 
@@ -212,13 +211,13 @@ trait GetNetPrepareDataTrait
             "accepted_contract" => "S",
             "liability_chargeback" => "S",
             'marketplace_store' => "S",
-            'payment_plan' => 3,
+            'payment_plan' => 1005,
             'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
             'economic_activity_classification_code' => FoxUtils::onlyNumbers(
                 $company->economic_activity_classification_code
             ),
             'monthly_gross_income' => FoxUtils::onlyNumbers($company->monthly_gross_income),
-            'federal_registration_status' => $company->present()->getFederalRegistrationStatus(),
+            'federal_registration_status' => 'active',
             'founding_date' => $company->founding_date,
         ];
     }
@@ -256,9 +255,18 @@ trait GetNetPrepareDataTrait
     /**
      * @param Company $company
      * @return array
+     * @throws PresenterException
      */
     private function getPrepareDataUpdatePjCompany(Company $company)
     {
+        $user = $company->user;
+        $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
+
+        $country = 'BR';
+        if ($company->country == 'usa') {
+            $country = 'EUA';
+        }
+
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
@@ -267,13 +275,13 @@ trait GetNetPrepareDataTrait
                 'type_accounts' => 'unique',
                 'unique_account' => [
                     'bank' => $company->bank,
-                    'agency' => $company->agency . $company->agency_digit,
+                    'agency' => $company->agency,
                     'account' => $company->account,
-                    'account_type' => $company->account_type,
+                    'account_type' => $company->present()->getAccountType(),
                     'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
                 ],
             ],
-            /*'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
+            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'block_payments' => 'N',
             'block_transactions' => 'N',
@@ -282,14 +290,13 @@ trait GetNetPrepareDataTrait
                 $company->economic_activity_classification_code
             ),
             'state_fiscal_document_number' => $company->state_fiscal_document_number,
-            'federal_registration_status' => $company->present()->getFederalRegistrationStatus(),
+            'federal_registration_status' => 'active',
             'email' => $company->support_email,
             'business_address' => [
                 'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
                 'number' => $company->number ?? '',
                 'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
                 'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                // @todo esta salvando STATE a string inteira precisa ter somente codigo UF
                 'state' => $company->state,
                 'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
                 'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
@@ -300,7 +307,7 @@ trait GetNetPrepareDataTrait
             'phone' => [
                 'area_code' => $telephone['dd'],
                 'phone_number' => $telephone['number']
-            ],*/
+            ],
 
         ];
     }

@@ -347,7 +347,7 @@ class CompanyService
 
     /**
      * @param Company $company
-     * @return string|string[]
+     * @return string[]
      * @throws PresenterException
      */
     public function createCompanyGetnet(Company $company)
@@ -355,11 +355,14 @@ class CompanyService
         $getnetService = new GetnetService();
         $userService = new UserService();
 
+        $user = $company->user;
+
         if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-            && (!$userService->verifyFieldsEmpty($company->user))
+            && (!$userService->verifyFieldsEmpty($user))
         ) {
             $result = $getnetService->createPfCompany($company);
-        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')) {
+        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
+            && !empty($user->cellphone) && !empty($user->email)) {
             $result = $getnetService->createPjCompany($company);
         }
 
@@ -370,12 +373,16 @@ class CompanyService
                     'getnet_status' => $company->present()->getStatusGetnet('review')
                 ]
             );
-        } else {
+
             return [
-                'message' => 'error',
+                'message' => 'success',
                 'data' => ''
             ];
         }
+        return [
+            'message' => 'error',
+            'data' => ''
+        ];
     }
 
     /**
@@ -385,11 +392,20 @@ class CompanyService
     public function updateCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
+        $userService = new UserService();
+        $user = $company->user;
 
-        if ($company->present()->getCompanyType($company->company_type) == 'physical person') {
+        if ($company->present()->getCompanyType($company->company_type) == 'physical person'
+            && (!$userService->verifyFieldsEmpty($user))
+        ) {
             $getnetService->updatePfCompany($company);
-        } else {
+        } elseif (!empty($user->cellphone) && !empty($user->email)) {
             $getnetService->updatePjCompany($company);
         }
+
+        return [
+            'message' => 'success',
+            'data' => ''
+        ];
     }
 }
