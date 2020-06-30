@@ -22,25 +22,25 @@ $(document).ready(function () {
             success: function success(response) {
                 let companies = response.companies;
                 if ((!isEmpty(companies)) || response.pending_user_data) {
+                    if (response.pending_user_data) {
+                        $('.tr-pending-profile').show();
+                    } else {
+                        $('.tr-pending-profile').hide();
+                    }
                     for (let company of companies) {
                         $('.table-pending-data-body').append(`
                                 <tr>
-                                    <th style='width:40%;' class='text-center'>${company.fantasy_name}</th>
+                                    <td style='width:2px;' class='text-center'>
+                                    <span class="status status-lg status-away"></span>
+                                    </td>
+                                    <td class='text-left'>
+                                        Empresas > ${company.fantasy_name}
+                                    </td>
                                     <td class='text-center'>
-                                        <a class='btn btn-primary' href='/companies/${company.id_code}/edit?type=${company.type}' target='_blank'>Atualizar</a>
+                                        <a class='btn' style='color:darkorange;' href='/companies/${company.id_code}/edit?type=${company.type}' target='_blank'><b><i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i>Atualizar</b></a>
                                     </td>
                                 </tr>
                             `);
-                    }
-                    if (!isEmpty(companies)) {
-                        $('.div-pending-company').show();
-                    } else {
-                        $('.div-pending-company').hide();
-                    }
-                    if (response.pending_user_data) {
-                        $('.div-pending-profile').show();
-                    } else {
-                        $('.div-pending-profile').hide();
                     }
                     $('#modal-peding-data').modal('show');
                 }

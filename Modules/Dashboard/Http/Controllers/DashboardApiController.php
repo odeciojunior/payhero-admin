@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
@@ -241,7 +242,7 @@ class DashboardApiController extends Controller
                 if ($companyService->verifyFieldsEmpty($company)) {
                     $companyArray[] = [
                         'id_code'      => Hashids::encode($company->id),
-                        'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : $company->fantasy_name ?? '',
+                        'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : Str::limit($company->fantasy_name, 20) ?? '',
                         'type'         => $company->company_type,
                     ];
                 }

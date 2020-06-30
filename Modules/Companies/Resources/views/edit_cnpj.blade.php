@@ -165,13 +165,13 @@
                                         </div>
                                         <div class='col-lg-4'>
                                             <div class="form-group">
-                                                <label for="document_issuer">Órgão emissor do documento</label>
+                                                <label for="document_issuer">Órgão emissor do CNPJ</label>
                                                 <input name="document_issuer" value="" type="text" class="input-pad" id="document_issuer" placeholder="Órgão emissor do documento">
                                             </div>
                                         </div>
                                         <div class='col-lg-4'>
                                             <div class="form-group">
-                                                <label for="document_issuer_state">Estado do emissor do documento</label>
+                                                <label for="document_issuer_state">Estado do emissor do CNPJ</label>
                                                 <select id="document_issuer_state" name='document_issuer_state' class="form-control select-pad">
                                                     <option value="">Selecione</option>
                                                     <option value="São Paulo">São Paulo</option>
