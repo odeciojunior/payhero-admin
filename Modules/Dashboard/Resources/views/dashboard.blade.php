@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=5') }}">
         <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=3') }}">
     @endpush
 
@@ -94,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Chargeback e Tracking -->
+            <!-- Tracking e Chargeback -->
             <div class="row">
                 <div class="col-12 col-lg-4 d-flex align-items-stretch">
                     <div class="card card-shadow bg-white w-full">
@@ -104,23 +104,25 @@
                                      width="30px">
                                 <span class="card-desc">Códigos de rastreio informados</span>
                             </div>
-                            <i class="material-icons gray text-danger" id="alert-trackings" data-toggle="tooltip"
-                               data-placement="bottom"
-                               title="Não informar os códigos de rastreio corretamente pode ocasionar bloqueio de saque"
-                               style="transition: all .5s; display:none">warning</i>
+                            <i class="material-icons gray" data-toggle="tooltip" data-placement="bottom"
+                               title="As vendas que permanecerem sem o código de rastreamento por 15 dias poderão ser estornadas. Geralmente o tempo médio de postagem é de 5 dias">help</i>
                         </div>
-                        <div class="card-body py-15">
-                            <label>Últimos 10 dias:</label>
-                            <div class="progress">
-                                <div class="progress-bar" id="tracking-10-days"></div>
+                        <div class="card-body d-flex flex-column justify-content-lg-between py-15">
+                            <div>
+                                <label>Tempo médio de postagem:</label>
+                                <span id="average_post_time"></span>
                             </div>
-                            <label>Últimos 30 dias:</label>
-                            <div class="progress">
-                                <div class="progress-bar" id="tracking-30-days"></div>
+                            <div>
+                                <label>Venda mais antiga sem código:</label>
+                                <span id="oldest_sale"></span>
                             </div>
-                            <label>Total:</label>
-                            <div class="progress">
-                                <div class="progress-bar" id="tracking-total"></div>
+                            <div>
+                                <label>Códigos informados com problema:</label>
+                                <span id="problem"></span>
+                            </div>
+                            <div>
+                                <label>Códigos não informados:</label>
+                                <span id="unknown"></span>
                             </div>
                         </div>
                         <div class="card-bottom orangered"></div>
@@ -248,7 +250,7 @@
 
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=3') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=4') }}"></script>
     @endpush
 
 @endsection

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\CompanyService;
@@ -170,15 +171,29 @@ class DashboardApiController extends Controller
                         $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
                     }
                     //Trackings
-                    $informedTrackings = DB::table("products_plans_sales as pps")
-                                           ->selectRaw("ROUND(100 - IFNULL(SUM(t.id IS NULL) * 100 / COUNT(*), 100), 2) AS total,
-                                                ROUND(100 - IFNULL(SUM(s.end_date >= DATE_SUB(CURDATE(), interval 10 day) and t.id is null) * 100 / SUM(s.end_date >= DATE_SUB(CURDATE(), interval 10 day)), 100), 2) AS last_10_days,
-                                                ROUND(100 - IFNULL(SUM(s.end_date >= DATE_SUB(CURDATE(), interval 30 day) and t.id is null) * 100 / SUM(s.end_date >= DATE_SUB(CURDATE(), interval 30 day)), 100), 2) AS last_30_days")
-                                           ->join('sales as s', 's.id', '=', 'pps.sale_id')
-                                           ->leftJoin('trackings as t', 't.product_plan_sale_id', '=', 'pps.id')
-                                           ->where('s.owner_id', $userId)
-                                           ->where('s.status', $saleModel->present()->getStatus('approved'))
-                                           ->first();
+                    $trackingPresenter = (new Tracking())->present();
+                    $trackingSystemStatus = [
+                        $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                        $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+                        $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+                        $trackingPresenter->getSystemStatusEnum('duplicated'),
+                    ];
+                    $trackingSystemStatus = implode(',', $trackingSystemStatus);
+
+                    $trackingsInfo = DB::table("products_plans_sales as pps")
+                        ->selectRaw("count(*) as total,
+                                               ifnull(sum(if(t.id is null, 1, 0)), 0) as unknown,
+                                               ifnull(sum(if(t.system_status_enum in ({$trackingSystemStatus}), 1, 0)), 0) as problem,
+                                               ifnull(ceil(avg(timestampdiff(day, s.end_date, t.created_at))), 0) as average_post_time,
+                                               ifnull(max(if(t.id is not null, timestampdiff(day, s.end_date, now()), 0)), 0) as oldest_sale")
+                        ->join('sales as s', 's.id', '=', 'pps.sale_id')
+                        ->leftJoin('trackings as t', 't.product_plan_sale_id', '=', 'pps.id')
+                        ->where('s.owner_id', $userId)
+                        ->where('s.status', $saleModel->present()->getStatus('approved'))
+                        ->first();
+
+                    $trackingsInfo->unknown_percentage = number_format($trackingsInfo->unknown / $trackingsInfo->total * 100, 2);
+                    $trackingsInfo->problem_percentage = number_format($trackingsInfo->problem / $trackingsInfo->total * 100, 2);
 
                     //Tickets
                     $statusArray = [
@@ -206,7 +221,7 @@ class DashboardApiController extends Controller
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
                         'news'                   => $news,
                         'releases'               => $releases,
-                        'trackings'              => $informedTrackings,
+                        'trackings'              => $trackingsInfo,
                         'tickets'                => $tickets,
                     ];
                 } else {
