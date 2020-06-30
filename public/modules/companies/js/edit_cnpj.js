@@ -28,9 +28,9 @@ $(document).ready(function () {
     var companyBankUpdateForm = $("#company_bank_update_form");
     var companyBankUpdateRoutingForm = $("#company_bank_routing_number_form");
     initLinks();
-    $('#patrimony').mask('#.###,#0', {reverse: true});
-    $('#social_value').mask('#.###,#0', {reverse: true});
-    $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
+    // $('#patrimony').mask('#.###,#0', {reverse: true});
+    // $('#social_value').mask('#.###,#0', {reverse: true});
+    // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
 
     //Functions
     function initLinks() {
@@ -117,13 +117,21 @@ $(document).ready(function () {
                 $('#business_entity_type').val(company.business_entity_type);
                 $('#economic_activity_classification_code').val(company.economic_activity_classification_code);
                 $('#monthly_gross_income').val(company.monthly_gross_income);
-                $('#federal_registration_status').val(company.federal_registration_status);
+                // $('#federal_registration_status').val(company.federal_registration_status);
                 $('#founding_date').val(company.founding_date);
                 $('#federal_registration_status_date').val(company.federal_registration_status_date);
                 $('#social_value').val(company.social_value);
                 $('#document_issue_date').val(company.document_issue_date);
                 $('#document_issuer').val(company.document_issuer);
                 $('#document_issuer_state').val(company.document_issuer_state);
+                $('#document_number').val(company.document_number);
+
+                $('#patrimony').unmask();
+                $('#patrimony').mask('#.###,#0', {reverse: true});
+                $('#social_value').unmask();
+                $('#social_value').mask('#.###,#0', {reverse: true});
+                $('#monthly_gross_income').unmask();
+                $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
 
                 if (company.country === 'usa') {
                     $('#rounting_number').val(company.bank).trigger('input');

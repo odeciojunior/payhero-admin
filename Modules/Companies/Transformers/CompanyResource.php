@@ -85,7 +85,7 @@ class CompanyResource extends JsonResource
                                                                                                   ->format('Y-m-d') : '',
             'document_issuer'                       => $this->document_issuer ?? '',
             'document_issuer_state'                 => $this->document_issuer_state ?? '',
-
+            'document_number'                       => $this->document_number ?? '',
         ];
     }
 }

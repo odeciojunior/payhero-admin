@@ -69,87 +69,70 @@
                                         </div>
                                     </div>
                                     <h3 class="mb-15">Informações complementares</h3>
-                                    <div class="row">
-                                        <div class="form-group col-xl-2">
-                                            <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="" type="text" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xl-5">
-                                            <label for="street">Rua/Avenida</label>
-                                            <input name="street" value="" type="text" class="form-control info-complemented" id="street" placeholder='Rua/Avenida' maxlength='40'>
-                                        </div>
-                                        <div class="form-group col-xl-2">
-                                            <label for="number">Nº</label>
-                                            <input name="number" value="" type="text" data-mask="0#########" class="form-control info-complemented" id="number" placeholder='Nº' maxlength='10'>
-                                        </div>
-                                        <div class="form-group col-xl-5">
-                                            <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="" type="text" class="form-control info-complemented" id="neighborhood" placeholder='Bairro' maxlength='30'>
-                                        </div>
-                                        <div class="form-group col-xl-4">
-                                            <label for="complement">Complemento</label>
-                                            <input name="complement" value="" type="text" class="form-control info-complemented" id="complement" placeholder='Complemento' maxlength='30'>
-                                        </div>
-                                        <div class="form-group col-xl-4 div-state" style='display:none;'>
-                                            <label for="state">Estado</label>
-                                            <input name="state" value="" type="text" class="form-control info-complemented" id="state" placeholder='Estado' maxlength='30'>
-                                        </div>
-                                        <div class="form-group col-xl-4">
-                                            <label for="city">Cidade</label>
-                                            <input name="city" value="" type="text" class="form-control info-complemented" id="city" placeholder='Cidade' maxlength='30'>
-                                        </div>
-                                        <div class="form-group col-xl-4">
-                                            <label for="country">País</label>
-                                            {{--                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">--}}
-                                            <select id="country" name='country' class="form-control select-pad" disabled>
-                                                <option value="brazil">Brasil</option>
-                                                <option value="usa">Estados Unidos</option>
-                                                <option value="germany">Alemanha</option>
-                                                <option value="spain">Espanha</option>
-                                                <option value="france">França</option>
-                                                <option value="italy">Itália</option>
-                                                <option value="portugal">Portugal</option>
-                                                <option value="unitedkingdom">Reino Unido</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class='row'>
                                         <div class="form-group col-xl-4">
-                                            <label for="patrimony">Valor do patrimônio</label>
-                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio'>
+                                            <label for="document_number">NIRE</label>
+                                            <input name="document_number" value="" type="text" class="form-control" id="document_number" placeholder='NIRE'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state_fiscal_document_number">Inscrição Estadual</label>
                                             <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="business_entity_type">Código da natureza jurídica</label>
-                                            <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>
+                                            <label for="economic_activity_classification_code">CNAE primário</label>
+                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário'>
                                         </div>
                                     </div>
                                     <div class='row'>
                                         <div class="form-group col-xl-4">
-                                            <label for="economic_activity_classification_code">CNAE primário</label>
-                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário'>
+                                            <label for="business_entity_type">Código da natureza jurídica</label>
+                                            <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="monthly_gross_income">Faturamento anual</label>
                                             <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual'>
                                         </div>
-                                        <div class='form-group col-xl-4'>
-                                            <label for='federal_registration_status'>Situação na Receita Federal</label>
-                                            <select id="federal_registration_status" name="federal_registration_status" class="form-control">
-                                                <option value="">Selecione</option>
-                                                <option value="1">Ativo</option>
-                                                <option value="2">Suspenso</option>
-                                                <option value="3">Inadequado</option>
-                                                <option value="4">Desativado</option>
-                                                <option value="5">Anulado</option>
-                                            </select>
+                                        <div class="form-group col-xl-4">
+                                            <label for="patrimony">Valor do patrimônio</label>
+                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio'>
                                         </div>
                                     </div>
+
+{{--                                    <div class='row'>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="patrimony">Valor do patrimônio</label>--}}
+{{--                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="state_fiscal_document_number">Inscrição Estadual</label>--}}
+{{--                                            <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="business_entity_type">Código da natureza jurídica</label>--}}
+{{--                                            <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class='row'>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="economic_activity_classification_code">CNAE primário</label>--}}
+{{--                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="monthly_gross_income">Faturamento anual</label>--}}
+{{--                                            <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class='form-group col-xl-4'>--}}
+{{--                                            <label for='federal_registration_status'>Situação na Receita Federal</label>--}}
+{{--                                            <select id="federal_registration_status" name="federal_registration_status" class="form-control">--}}
+{{--                                                <option value="">Selecione</option>--}}
+{{--                                                <option value="1">Ativo</option>--}}
+{{--                                                <option value="2">Suspenso</option>--}}
+{{--                                                <option value="3">Inadequado</option>--}}
+{{--                                                <option value="4">Desativado</option>--}}
+{{--                                                <option value="5">Anulado</option>--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                     <div class='row'>
                                         <div class="form-group col-xl-4">
                                             <label for="founding_date">Data de fundação do CNPJ</label>
@@ -216,7 +199,53 @@
                                                 </select>
                                             </div>
                                         </div>
-
+                                    </div>
+                                    <h3 class="mb-15">Informações de endereço</h3>
+                                    <div class="row">
+                                        <div class="form-group col-xl-2">
+                                            <label for="zip_code">CEP</label>
+                                            <input name="zip_code" value="" type="text" class="form-control info-complemented" id="zip_code" placeholder='CEP'>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-xl-5">
+                                            <label for="street">Rua/Avenida</label>
+                                            <input name="street" value="" type="text" class="form-control info-complemented" id="street" placeholder='Rua/Avenida' maxlength='40'>
+                                        </div>
+                                        <div class="form-group col-xl-2">
+                                            <label for="number">Nº</label>
+                                            <input name="number" value="" type="text" data-mask="0#########" class="form-control info-complemented" id="number" placeholder='Nº' maxlength='10'>
+                                        </div>
+                                        <div class="form-group col-xl-5">
+                                            <label for="neighborhood">Bairro</label>
+                                            <input name="neighborhood" value="" type="text" class="form-control info-complemented" id="neighborhood" placeholder='Bairro' maxlength='30'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="complement">Complemento</label>
+                                            <input name="complement" value="" type="text" class="form-control info-complemented" id="complement" placeholder='Complemento' maxlength='30'>
+                                        </div>
+                                        <div class="form-group col-xl-4 div-state" style='display:none;'>
+                                            <label for="state">Estado</label>
+                                            <input name="state" value="" type="text" class="form-control info-complemented" id="state" placeholder='Estado' maxlength='30'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="city">Cidade</label>
+                                            <input name="city" value="" type="text" class="form-control info-complemented" id="city" placeholder='Cidade' maxlength='30'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="country">País</label>
+                                            {{--                                            <input name="country" value="" type="text" class="form-control info-complemented" id="country">--}}
+                                            <select id="country" name='country' class="form-control select-pad" disabled>
+                                                <option value="brazil">Brasil</option>
+                                                <option value="usa">Estados Unidos</option>
+                                                <option value="germany">Alemanha</option>
+                                                <option value="spain">Espanha</option>
+                                                <option value="france">França</option>
+                                                <option value="italy">Itália</option>
+                                                <option value="portugal">Portugal</option>
+                                                <option value="unitedkingdom">Reino Unido</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="form-group text-right">
                                         <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
@@ -237,7 +266,7 @@
                                             </div>
                                         </div>
                                         <div class='col-xl-4'></div>
-                                        <div class='form-group col-xl-4'>
+                                        <div class='form-group col-xl-2'>
                                             <label for='account_type'>Tipo de conta</label>
                                             <select id="account_type" name="account_type" class="input-pad">
                                                 <option value="">Selecione</option>
@@ -451,7 +480,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=6')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=7')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
