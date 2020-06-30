@@ -75,7 +75,7 @@ $(document).ready(function () {
                 // $('#document_serial_number').val(response.user.document_serial_number);
                 $('#document_number').val(response.user.document_number);
                 $('#monthly_income').unmask();
-                $('#monthly_income').mask('#.###,#0', {reverse: true});
+                $('#monthly_income').mask('#.##0,00', {reverse: true});
                 $('#document_number').unmask();
                 $('#document_number').mask('00.000.000-0');
 

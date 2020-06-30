@@ -68,7 +68,7 @@
                                             <input name="support_telephone" value="" type="text" class="form-control" id="support_telephone" placeholder='Telefone'>
                                         </div>
                                     </div>
-                                    <h3 class="mb-15">Informações complementares</h3>
+                                    <h3 class="mb-15 mt-15">Informações complementares</h3>
                                     <div class='row'>
                                         <div class="form-group col-xl-4">
                                             <label for="document_number">NIRE</label>
@@ -79,14 +79,20 @@
                                             <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="economic_activity_classification_code">CNAE primário</label>
-                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário'>
+                                            <label for="economic_activity_classification_code">CNAE primário (somente o código)</label>
+                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário (somente o código)'>
                                         </div>
                                     </div>
                                     <div class='row'>
                                         <div class="form-group col-xl-4">
                                             <label for="business_entity_type">Código da natureza jurídica</label>
                                             <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>
+                                            <p class='info pt-5 mb-0 link-info' style='font-size: 10px;'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Saiba mais
+                                                <a href='https://www.lefisc.com.br/news/novatabelanaturezajuridica.htm' target='_blank'>
+                                                    clicando aqui
+                                                </a>
+                                            </p>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="monthly_gross_income">Faturamento anual</label>
@@ -152,7 +158,7 @@
                                     <div class='row'>
                                         <div class='col-lg-4'>
                                             <div class="form-group">
-                                                <label for="document_issue_date">Data de emissão do documento</label>
+                                                <label for="document_issue_date">Data de emissão do CNPJ</label>
                                                 <input name="document_issue_date" value="" type="date"
                                                        class="form-control input-pad" id="document_issue_date">
                                             </div>
@@ -200,7 +206,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h3 class="mb-15">Informações de endereço</h3>
+                                    <h3 class="mb-15 mt-15">Informações de endereço</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
@@ -480,7 +486,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=7')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=8')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

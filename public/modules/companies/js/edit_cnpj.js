@@ -127,11 +127,11 @@ $(document).ready(function () {
                 $('#document_number').val(company.document_number);
 
                 $('#patrimony').unmask();
-                $('#patrimony').mask('#.###,#0', {reverse: true});
+                $('#patrimony').mask('#.##0,00', {reverse: true});
                 $('#social_value').unmask();
-                $('#social_value').mask('#.###,#0', {reverse: true});
+                $('#social_value').mask('#.##0,00', {reverse: true});
                 $('#monthly_gross_income').unmask();
-                $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
+                $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
 
                 if (company.country === 'usa') {
                     $('#rounting_number').val(company.bank).trigger('input');

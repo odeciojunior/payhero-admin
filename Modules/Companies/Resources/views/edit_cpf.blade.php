@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                                 <div class='col-xl-4'></div>
-                                <div class="col-xl-4">
+                                <div class="col-xl-2">
                                     <div class='form-group'>
                                         <label for='account_type'>Tipo de conta</label>
                                         <select id="account_type" name="account_type" class="input-pad">
