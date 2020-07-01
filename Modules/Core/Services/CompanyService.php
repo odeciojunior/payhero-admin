@@ -387,6 +387,7 @@ class CompanyService
 
     /**
      * @param Company $company
+     * @return string[]
      * @throws PresenterException
      */
     public function updateCompanyGetnet(Company $company)

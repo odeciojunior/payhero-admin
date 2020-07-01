@@ -203,7 +203,7 @@ class CompaniesApiController extends Controller
             $dataUpdate = $companyService->getChangesUpdateBankData($company);
 
             $messageReturn = 'Dados atualizados com sucesso';
-            if (!$companyService->verifyFieldsEmpty($company)) {
+          /*  if (!$companyService->verifyFieldsEmpty($company)) {
                 if (empty($company->subseller_getnet_id)) {
                     $result = $companyService->createCompanyGetnet($company);
                 } elseif (($dataUpdate == true)
@@ -211,7 +211,7 @@ class CompaniesApiController extends Controller
                 ) {
                     $result = $companyService->updateCompanyGetnet($company);
                 }
-            }
+            }*/
 
             return response()->json(['message' => $messageReturn], Response::HTTP_OK);
         } catch (Exception $e) {

@@ -210,13 +210,13 @@ class ProfileApiController
             }
 
 
-            if (!empty($company) && !$companyService->verifyFieldsEmpty($company)) {
+    /*        if (!empty($company) && !$companyService->verifyFieldsEmpty($company)) {
                 if (empty($company->subseller_getnet_id)) {
                     $companyService->createCompanyGetnet($company);
                 } elseif ($company->getnet_status != $company->present()->getStatusGetnet('approved')) {
                     $companyService->updateCompanyGetnet($company);
                 }
-            }
+            }*/
 
             return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
         } catch (Exception $e) {

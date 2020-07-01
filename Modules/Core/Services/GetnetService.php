@@ -192,6 +192,11 @@ class GetnetService
         $this->saveRequests($url, $result, $httpStatus, $data);
     }
 
+    /**
+     * @param Company $company
+     * @return string[]
+     * @throws PresenterException
+     */
     public function updatePfCompany(Company $company)
     {
         $url = self::URL_API . 'v1/mgm/pf/update-subseller';
