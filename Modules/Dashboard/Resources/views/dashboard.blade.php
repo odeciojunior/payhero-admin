@@ -293,7 +293,7 @@
     </div>
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=5') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1') }}"></script>
     @endpush
 
 @endsection
