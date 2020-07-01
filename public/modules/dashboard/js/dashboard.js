@@ -118,8 +118,8 @@ $(document).ready(function () {
     }
 
     function updateTrackings(trackings) {
-        $('#average_post_time').html(trackings.average_post_time + ' dias');
-        $('#oldest_sale').html(trackings.oldest_sale + ' dias');
+        $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
+        $('#oldest_sale').html(trackings.oldest_sale + ' dia' + (trackings.oldest_sale === 1 ? '' : 's'));
         $('#problem').html(trackings.problem + ' (' + trackings.problem_percentage + '%)');
         $('#unknown').html(trackings.unknown + ' (' + trackings.unknown_percentage + '%)');
     }
