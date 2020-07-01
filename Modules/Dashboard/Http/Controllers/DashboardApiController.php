@@ -192,8 +192,8 @@ class DashboardApiController extends Controller
                         ->where('s.status', $saleModel->present()->getStatus('approved'))
                         ->first();
 
-                    $trackingsInfo->unknown_percentage = number_format($trackingsInfo->unknown / $trackingsInfo->total * 100, 2);
-                    $trackingsInfo->problem_percentage = number_format($trackingsInfo->problem / $trackingsInfo->total * 100, 2);
+                    $trackingsInfo->unknown_percentage = $trackingsInfo->total ? number_format($trackingsInfo->unknown / $trackingsInfo->total * 100, 2) : '0.00';
+                    $trackingsInfo->problem_percentage = $trackingsInfo->total ? number_format($trackingsInfo->problem / $trackingsInfo->total * 100, 2) : '0.00';
 
                     //Tickets
                     $statusArray = [
