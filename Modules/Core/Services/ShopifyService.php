@@ -1398,6 +1398,14 @@ class ShopifyService
     {
         try {
             $this->method = __METHOD__;
+
+            if (!empty($sale->shopify_order)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Venda já existe no shopify.',
+                ];
+            }
+
             $this->saleId = $sale->id;
             $delivery = $sale->delivery;
             $client = $sale->customer;
