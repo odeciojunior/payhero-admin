@@ -95,12 +95,12 @@
                                             </p>
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="monthly_gross_income">Faturamento anual</label>
-                                            <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual'>
+                                            <label for="monthly_gross_income">Faturamento anual (em reais)</label>
+                                            <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual (em reais)'>
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="patrimony">Valor do patrimônio</label>
-                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio'>
+                                            <label for="patrimony">Valor do patrimônio (em reais)</label>
+                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio (em reais)'>
                                         </div>
                                     </div>
 
@@ -151,8 +151,8 @@
                                                    class="form-control form-control" id="federal_registration_status_date">
                                         </div>
                                         <div class="form-group col-xl-4">
-                                            <label for="social_value">Valor do capital social</label>
-                                            <input name="social_value" value="" type="text" class="form-control" id="social_value" placeholder='Valor do capital social'>
+                                            <label for="social_value">Valor do capital social (em reais)</label>
+                                            <input name="social_value" value="" type="text" class="form-control" id="social_value" placeholder='Valor do capital social (em reais)'>
                                         </div>
                                     </div>
                                     <div class='row'>
