@@ -304,9 +304,6 @@ class CompanyService
             if (empty($company->monthly_gross_income)) {
                 return true;
             }
-            if (empty($company->federal_registration_status)) {
-                return true;
-            }
             if (empty($company->founding_date)) {
                 return true;
             }
