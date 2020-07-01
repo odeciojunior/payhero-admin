@@ -185,7 +185,7 @@ class DashboardApiController extends Controller
                                                ifnull(sum(if(t.id is null, 1, 0)), 0) as unknown,
                                                ifnull(sum(if(t.system_status_enum in ({$trackingSystemStatus}), 1, 0)), 0) as problem,
                                                ifnull(ceil(avg(timestampdiff(day, s.end_date, t.created_at))), 0) as average_post_time,
-                                               ifnull(max(if(t.id is not null, timestampdiff(day, s.end_date, now()), 0)), 0) as oldest_sale")
+                                               ifnull(max(if(t.id is null, timestampdiff(day, s.end_date, now()), 0)), 0) as oldest_sale")
                         ->join('sales as s', 's.id', '=', 'pps.sale_id')
                         ->leftJoin('trackings as t', 't.product_plan_sale_id', '=', 'pps.id')
                         ->where('s.owner_id', $userId)
