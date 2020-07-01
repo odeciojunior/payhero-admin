@@ -237,7 +237,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class='col-lg-4'>
+                                                <div class='col-lg-4 div-birth-state'>
                                                     <div class="form-group">
                                                         <label for="birth_state">Estado de nascimento</label>
                                                         {{--                                                <input name="birth_state" value="" type="text" class="input-pad" id="birth_state" placeholder="Estado de nascimento">--}}
@@ -1136,7 +1136,7 @@
     </style>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=9')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=10')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

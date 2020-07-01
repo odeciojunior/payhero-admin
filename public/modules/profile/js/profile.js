@@ -19,7 +19,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
     // $('#monthly_income').mask('#.###,#0', {reverse: true});
-
+    $('#document_number').mask('0#');
     getDataProfile = function () {
         $.ajax({
             url: "/api/profile",
@@ -76,8 +76,8 @@ $(document).ready(function () {
                 $('#document_number').val(response.user.document_number);
                 $('#monthly_income').unmask();
                 $('#monthly_income').mask('#.##0,00', {reverse: true});
-                $('#document_number').unmask();
-                $('#document_number').mask('00.000.000-0');
+                // $('#document_number').unmask();
+                // $('#document_number').mask('00.000.000-0');
 
                 for (var country of countries) {
                     $('#nationality').append(`<option value="${country.code}" ${country.code === response.user.nationality ? 'selected' : ''}>${country.name}</option>`);
@@ -85,6 +85,12 @@ $(document).ready(function () {
                 }
                 if ($('#marital_status').val() == 'married') {
                     $('.spouse-name-div').show();
+                }
+
+                if (response.user.birth_country == 'Brasil') {
+                    $('.div-birth-state').show();
+                } else {
+                    $('.div-birth-state').hide();
                 }
                 /**
                  * Dados Residenciais
@@ -320,6 +326,14 @@ $(document).ready(function () {
         } else {
             $('.spouse-name-div').hide();
             $('#spouse_name').val('');
+        }
+    });
+    $('#birth_country').on('change', function () {
+        if ($(this).val() == 'Brasil') {
+            $('.div-birth-state').show();
+        } else {
+            $('.div-birth-state').hide();
+            $('#birth_state').val('');
         }
     });
     function cellphoneVerified() {
