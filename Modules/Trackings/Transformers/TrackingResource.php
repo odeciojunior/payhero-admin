@@ -19,7 +19,7 @@ class TrackingResource extends JsonResource
                 'pps_id' => Hashids::encode($this->id),
                 'tracking_code' => $trackingCode,
                 'tracking_status_enum' => $this->tracking->tracking_status_enum,
-                'tracking_status' => $this->tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->tracking->present()->getTrackingStatusEnum($this->tracking->tracking_status_enum)) : 'Não informado',
+                'tracking_status' => $this->tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $this->tracking->present()->getTrackingStatusEnum($this->tracking->tracking_status_enum)) : '',
                 'system_status_enum' => $this->tracking->system_status_enum,
                 'sale' => Hashids::connection('sale_id')->encode($this->sale->id),
                 'approved_date' => Carbon::parse($this->sale->end_date)->format('d/m/Y'),

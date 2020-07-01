@@ -74,8 +74,8 @@ class ProductService
                         : $tracking->tracking_code;
                     $product['tracking_id'] = Hashids::encode($tracking->id);
                     $product['tracking_code'] = $trackingCode;
-                    $product['tracking_status_enum'] = __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()
-                            ->getTrackingStatusEnum($tracking->tracking_status_enum));
+                    $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()
+                            ->getTrackingStatusEnum($tracking->tracking_status_enum)) : '';
                 } else {
                     $product['tracking_id'] = '';
                     $product['tracking_code'] = '';
