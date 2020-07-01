@@ -157,11 +157,7 @@ class UserService
         } elseif ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
             && empty($userInformation->spouse_name)) {
             return true;
-        } elseif (empty($userInformation->birth_place)) {
-            return true;
         } elseif (empty($userInformation->birth_city)) {
-            return true;
-        } elseif (empty($userInformation->birth_state)) {
             return true;
         } elseif (empty($userInformation->birth_country)) {
             return true;
