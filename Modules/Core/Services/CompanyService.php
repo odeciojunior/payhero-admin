@@ -340,6 +340,8 @@ class CompanyService
             return true;
         } elseif (empty($company->account)) {
             return true;
+        } elseif (empty($company->account_type)) {
+            return true;
         } else {
             return false;
         }
