@@ -956,7 +956,7 @@ class ShopifyService
                 try {
                     $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
                 } catch (Exception $e) {
-                    if(method_exists($e, 'getCode') && $e->getCode() == 429 ) {
+                    if (method_exists($e, 'getCode') && $e->getCode() == 429) {
                         sleep(1);
                         $cost = $this->getShopInventoryItem($variant->getInventoryItemId())->getCost();
                     }
@@ -1284,14 +1284,13 @@ class ShopifyService
     public function createShopWebhook($data = [])
     {
         try {
-
             if (!empty($this->client)) {
                 return $this->client->getWebhookManager()->create($data);
             } else {
                 return null;
             }
         } catch (Exception $e) {
-            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,422,423,429])) { 
+            if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404, 406, 422, 423, 429])) {
                 return null;
             }
             throw $e;
@@ -1337,7 +1336,7 @@ class ShopifyService
                 return [];
             }
         } catch (Exception $e) {
-            if(method_exists($e, 'getCode') && in_array($e->getCode(), [401,402,403,404,406,423,429])) { 
+            if (method_exists($e, 'getCode') && in_array($e->getCode(), [401, 402, 403, 404, 406, 423, 429])) {
                 return [];
             }
             throw $e;
@@ -1398,6 +1397,16 @@ class ShopifyService
     {
         try {
             $this->method = __METHOD__;
+
+            $sale = Sale::find($sale->id);
+
+            if (!empty($sale->shopify_order)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Venda já existe no shopify.',
+                ];
+            }
+
             $this->saleId = $sale->id;
             $delivery = $sale->delivery;
             $client = $sale->customer;
@@ -1658,7 +1667,7 @@ class ShopifyService
             }
         } catch (Exception $ex) {
             $this->exceptions[] = $ex->getMessage();
-            if(method_exists($ex, 'getCode') && in_array($ex->getCode(), [401,402,403,404,423,429])) {
+            if (method_exists($ex, 'getCode') && in_array($ex->getCode(), [401, 402, 403, 404, 423, 429])) {
                 return [];
             }
             throw $ex;
@@ -1906,7 +1915,6 @@ class ShopifyService
                 'status' => 'success',
             ];
         } catch (Exception $e) {
-
             return [
                 'status' => 'error',
                 'message' => 'Erro na permissão de pedidos',
