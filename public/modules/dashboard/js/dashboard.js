@@ -1,11 +1,10 @@
 $(document).ready(function () {
-    console.log();
     getDataDashboard();
-    verifyPendingData();
 
     $("#company").on("change", function () {
         updateValues();
     });
+    let userAccepted = true;
     function verifyPendingData() {
         $.ajax({
             method: "GET",
@@ -42,7 +41,11 @@ $(document).ready(function () {
                                 </tr>
                             `);
                     }
-                    $('#modal-peding-data').modal('show');
+                    if (!userAccepted) {
+                        $('#modal-peding-data').modal('hide');
+                    } else {
+                        $('#modal-peding-data').modal('show');
+                    }
                 }
             }
         });
@@ -82,6 +85,7 @@ $(document).ready(function () {
                 }
 
                 if (!data.userTerm) {
+                    userAccepted = data.userTerm;
                     $('#modal-user-term').modal('show');
                 }
 
@@ -104,6 +108,7 @@ $(document).ready(function () {
                         }
                     });
                 });
+                verifyPendingData();
             }
         });
     }
