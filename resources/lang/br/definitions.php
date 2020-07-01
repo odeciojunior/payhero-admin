@@ -107,6 +107,15 @@ return [
             "admin"         => "Administrativo",
             "attendance"    => "Atendimento",
         ],
+        "tracking"                 => [
+            "tracking_status_enum" => [
+                "posted"           => "Postado",
+                "dispatched"       => "Em trânsito",
+                "delivered"        => "Entregue",
+                "out_for_delivery" => "Saiu para entrega",
+                "exception"        => "Problema na entrega",
+            ],
+        ],
         "user_document_type"    => [
             "personal_document" => "Documento Pessoal",
             "address_document"  => "Comprovante de residência",
