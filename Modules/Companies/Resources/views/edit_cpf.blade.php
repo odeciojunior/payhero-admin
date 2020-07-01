@@ -44,6 +44,17 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class='col-xl-4'></div>
+                                <div class="col-xl-2">
+                                    <div class='form-group'>
+                                        <label for='account_type'>Tipo de conta</label>
+                                        <select id="account_type" name="account_type" class="input-pad">
+                                            <option value="">Selecione</option>
+                                            <option value="1">Conta corrente</option>
+                                            <option value="2">Conta poupança</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-xl-8" id="swift-code-info" style="display:none">
                                     <div class="alert alert-secondary">
                                         <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
@@ -217,7 +228,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=3')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=5')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

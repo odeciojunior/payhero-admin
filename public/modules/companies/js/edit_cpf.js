@@ -50,6 +50,7 @@ $(document).ready(function () {
                     $("#agency_digit").val(response.company.agency_digit);
                     $("#account").val(response.company.account);
                     $("#account_digit").val(response.company.account_digit);
+                    $('#account_type').val(response.company.account_type);
                 }
 
                 if (response.company.country === 'brazil') {

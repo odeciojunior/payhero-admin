@@ -9,6 +9,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserInformation;
 
 /**
  * Class CompaniesService
@@ -18,11 +19,10 @@ class UserService
 {
     public function isDocumentValidated($userId = null)
     {
-        $userModel     = new User();
-        if(empty($userId)){
+        $userModel = new User();
+        if (empty($userId)) {
             $user = auth()->user();
-        }
-        else{
+        } else {
             $user = User::find($userId);
         }
 
@@ -41,8 +41,8 @@ class UserService
 
     public function haveAnyDocumentPending()
     {
-        $userModel     = new User();
-        $user          = auth()->user();
+        $userModel = new User();
+        $user = auth()->user();
         $userPresenter = $userModel->present();
 
         if (!empty($user)) {
@@ -59,18 +59,22 @@ class UserService
 
     public function getRefusedDocuments()
     {
-        $userModel        = new User();
-        $userPresenter    = $userModel->present();
-        $user             = auth()->user();
+        $userModel = new User();
+        $userPresenter = $userModel->present();
+        $user = auth()->user();
         $refusedDocuments = collect();
         if (!empty($user)) {
             foreach ($user->userDocuments as $document) {
                 if (!empty($document->refused_reason)) {
                     $dataDocument = [
-                        'date'            => $document->created_at->format('d/m/Y'),
-                        'type_translated' => __('definitions.enum.user_document_type.' . $userPresenter->getDocumentType($document->document_type_enum)),
-                        'document_url'    => $document->document_url,
-                        'refused_reason'  => $document->refused_reason,
+                        'date' => $document->created_at->format('d/m/Y'),
+                        'type_translated' => __(
+                            'definitions.enum.user_document_type.' . $userPresenter->getDocumentType(
+                                $document->document_type_enum
+                            )
+                        ),
+                        'document_url' => $document->document_url,
+                        'refused_reason' => $document->refused_reason,
                     ];
                     $refusedDocuments->push(collect($dataDocument));
                 }
@@ -82,17 +86,99 @@ class UserService
 
     public function verifyCpf($cpf)
     {
-        $userModel     = new User();
-        $cpf           = preg_replace("/[^0-9]/", "", $cpf);
+        $userModel = new User();
+        $cpf = preg_replace("/[^0-9]/", "", $cpf);
         $userPresenter = $userModel->present();
 
         $user = $userModel->where(
-            [['document', $cpf], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
+            [
+                ['document', $cpf],
+                ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')],
+                ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]
+            ]
         )->first();
         if (!empty($user)) {
             return true;
         }
 
         return false;
+    }
+
+    public function createUserInformationDefault($userId)
+    {
+        try {
+            UserInformation::create(
+                [
+                    'user_id' => $userId,
+                    'document_type' => 1,
+                ]
+            );
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function verifyFieldsEmpty(User $user)
+    {
+        $userInformation = $user->userInformation;
+
+        if (empty($user->email)) {
+            return true;
+        } elseif (empty($user->cellphone)) {
+            return true;
+        } elseif (empty($user->document)) {
+            return true;
+        } elseif (empty($user->zip_code)) {
+            return true;
+        } elseif (empty($user->country)) {
+            return true;
+        } elseif (empty($user->state)) {
+            return true;
+        } elseif (empty($user->city)) {
+            return true;
+        } elseif (empty($user->neighborhood)) {
+            return true;
+        } elseif (empty($user->street)) {
+            return true;
+        } elseif (empty($user->number)) {
+            return true;
+        } elseif (empty($user->date_birth)) {
+            return true;
+        } elseif (empty($userInformation->sex)) {
+            return true;
+        } elseif (empty($userInformation->marital_status)) {
+            return true;
+        } elseif (empty($userInformation->nationality)) {
+            return true;
+        } elseif ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
+            && empty($userInformation->spouse_name)) {
+            return true;
+        } elseif (empty($userInformation->birth_city)) {
+            return true;
+        } elseif (empty($userInformation->birth_country)) {
+            return true;
+        } elseif (empty($userInformation->monthly_income)) {
+            return true;
+        } elseif (empty($userInformation->document_number)) {
+            return true;
+        } elseif (empty($userInformation->document_issue_date)) {
+            return true;
+        } elseif (empty($userInformation->document_issuer)) {
+            return true;
+        } elseif (empty($userInformation->document_issuer_state)) {
+            return true;
+        } else {
+            return false;
+        }
+        /*
+         * mother_name
+         * father_name
+         * document_serial_number
+         * document_expiration_date
+         */
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\TrackingService;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\UserInformation;
+use Modules\Core\Services\GetnetService;
 
 /**
  * Class GenericCommand
@@ -25,36 +27,40 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $trackingModel = new Tracking();
-        $trackingService = new TrackingService();
+        $getNetService = new GetnetService();
 
-        $trackingsQuery = $trackingModel->with('productPlanSale')
-            ->where('system_status_enum', $trackingModel->present()->getSystemStatusEnum('unknown_carrier'));
+        /**
+         * Lorram
+         */
+//        $company = Company::find(13);
+        /**
+         * Julio
+         */
+        //        $company = Company::find(2704); // PF
+//        $company = Company::find(26); // PJ
 
-        $userId = $this->argument('user');
-        if (!empty($userId)) {
-            $trackingsQuery->whereHas('sale', function ($query) use ($userId) {
-                $query->where('owner_id', $userId);
-            });
-        }
+        /** Joao */
+//        $company = Company::find(28); // PF
+        $company = Company::find(2702); // PJ
 
-        $count = 0;
-        $trackingsQuery->chunk(100, function ($trackings) use ($trackingService, &$count) {
-            foreach ($trackings as $tracking) {
-                try {
-                    $count++;
-                    $this->line("tracking: {$count}");
-                    $trackingCode = $tracking->tracking_code;
-                    $pps = $tracking->productPlanSale;
-                    $trackingService->createOrUpdateTracking($trackingCode, $pps, false, true);
-                } catch (\Exception $e) {
-                    continue;
-                }
-            }
-        });
 
-        return;
+        /**
+         * PJ
+         */
+//        $getNetService->checkAvailablePaymentPlansPj();
+        $getNetService->checkPjCompanyRegister($company->company_document);
+        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+//        $getNetService->createPjCompany($company);
+//        $getNetService->complementPjCompany($company);
+//        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+
+
+        /**
+         * PF
+         */
+//        $getNetService->checkAvailablePaymentPlansPf();
+//        $getNetService->checkPfCompanyRegister($company->company_document);
+//        $getNetService->createPfCompany($company);
+//        $getNetService->updatePfCompany($company);
     }
 }
-
-

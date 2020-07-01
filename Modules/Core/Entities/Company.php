@@ -38,10 +38,25 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $business_website
  * @property string $support_email
  * @property string $support_telephone
- * @property integer $balance
+ * @property int $balance
+ * @property int $company_type
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
+ * @property int $patrimony
+ * @property string $state_fiscal_document_number
+ * @property string $business_entity_type
+ * @property string $economic_activity_classification_code
+ * @property int $monthly_gross_income
+ * @property int $federal_registration_status
+ * @property string $founding_date
+ * @property int $subseller_getnet_id
+ * @property int $account_type
+ * @property int $social_value
+ * @property string $federal_registration_status_date
+ * @property string $document_issue_date
+ * @property string $document_issuer
+ * @property string document_issuer_state
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
@@ -56,10 +71,16 @@ use Spatie\Activitylog\Models\Activity;
  * @property Withdrawal[] $withdrawals
  * @property string $bank_document_status_value
  * @property string $bank_document_status_badge
+ * @method CompanyPresenter present()
  */
 class Company extends Model
 {
-    use SoftDeletes, PaginatableTrait, PresentableTrait, FoxModelTrait, LogsActivity;
+    use FoxModelTrait;
+    use LogsActivity;
+    use PaginatableTrait;
+    use PresentableTrait;
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -68,9 +89,7 @@ class Company extends Model
      * The accessors to append to the model's array form.
      * @var array
      */
-    protected $appends = [
-        'id_code',
-    ];
+    protected $appends = ['id_code'];
     /**
      * @var array
      */
@@ -102,6 +121,22 @@ class Company extends Model
         'contract_document_status',
         'company_type',
         'order_priority',
+        'patrimony',
+        'state_fiscal_document_number',
+        'business_entity_type',
+        'economic_activity_classification_code',
+        'monthly_gross_income',
+        'federal_registration_status',
+        'get_net_status',
+        'founding_date',
+        'subseller_getnet_id',
+        'account_type',
+        'social_value',
+        'federal_registration_status_date',
+        'document_number',
+        'document_issue_date',
+        'document_issuer',
+        'document_issuer_state',
         'deleted_at',
         'created_at',
         'updated_at',
@@ -133,9 +168,9 @@ class Company extends Model
     {
         if ($eventName == 'deleted') {
             $activity->description = 'Empresa ' . $this->fantasy_name . ' foi deletedo.';
-        } else if ($eventName == 'updated') {
+        } elseif ($eventName == 'updated') {
             $activity->description = 'Empresa ' . $this->fantasy_name . ' foi atualizado.';
-        } else if ($eventName == 'created') {
+        } elseif ($eventName == 'created') {
             $activity->description = 'Empresa ' . $this->fantasy_name . ' foi criado.';
         } else {
             $activity->description = $eventName;

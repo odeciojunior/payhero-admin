@@ -8,6 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
@@ -15,6 +17,7 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserTerms;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\UserService;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -31,11 +34,13 @@ class DashboardApiController extends Controller
     public function index(Request $request)
     {
         try {
-            activity()->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou Dashboard');
+            activity()->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'visualization';
+                }
+            )->log('Visualizou Dashboard');
 
-            $companyModel   = new Company();
+            $companyModel = new Company();
             $userTermsModel = new UserTerms();
 
             $userLogged = auth()->user();
@@ -43,19 +48,23 @@ class DashboardApiController extends Controller
             $userTerm = true;
             if (!$request->has('skip')) {
                 $userTerm = $userTermsModel->whereNotNull('accepted_at')
-                                           ->where([['term_version', 'v1'], ['user_id', $userLogged->id]])
-                                           ->exists();
+                    ->where([['term_version', 'v1'], ['user_id', $userLogged->id]])
+                    ->exists();
             }
 
-            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')->get() ?? collect();
+            $companies = $companyModel->where('user_id', $userLogged->account_owner_id)->orderBy('order_priority')
+                    ->get() ?? collect();
 
             return response()->json(compact('companies', 'userTerm'), 200);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
         }
     }
 
@@ -67,28 +76,35 @@ class DashboardApiController extends Controller
     {
         try {
             if ($request->has('company') && !empty($request->input('company'))) {
-
                 $values = $this->getDataValues($request->company);
 
                 if ($values) {
                     return response()->json($values, 200);
                 } else {
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                            ], 400);
+                    return response()->json(
+                        [
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ],
+                        400
+                    );
                 }
             } else {
-
-                return response()->json([
-                                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                        ], 400);
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                    ],
+                    400
+                );
             }
         } catch (Exception $e) {
             report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                                    ], 400);
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
         }
     }
 
@@ -100,14 +116,14 @@ class DashboardApiController extends Controller
     {
         try {
             if ($companyHash) {
-                $companyModel     = new Company();
-                $saleModel        = new Sale();
+                $companyModel = new Company();
+                $saleModel = new Sale();
                 $transactionModel = new Transaction();
-                $ticketsModel     = new Ticket();
-                $companyId        = current(Hashids::decode($companyHash));
-                $company          = $companyModel->find($companyId);
-                $userId           = auth()->user()->account_owner_id;
-                $companyService   = new CompanyService();
+                $ticketsModel = new Ticket();
+                $companyId = current(Hashids::decode($companyHash));
+                $company = $companyModel->find($companyId);
+                $userId = auth()->user()->account_owner_id;
+                $companyService = new CompanyService();
 
                 if (!empty($company)) {
                     //Balance
@@ -126,22 +142,33 @@ class DashboardApiController extends Controller
                         ->sum('t.value');
 
                     $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance;
+                    $totalBalance = $availableBalance + $pendingBalance;
 
                     //Chargeback
-                    $chargebackData = $saleModel->selectRaw("SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
-                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved")
-                                                ->where('payment_method', 1)
-                                                ->where('owner_id', $userId)
-                                                ->whereHas('transactions', function($query) use ($companyId) {
-                                                    $query->where('company_id', $companyId);
-                                                })
-                                                ->where(function($q1) {
-                                                    $q1->where('status', 4)->whereDoesntHave('saleLogs', function($querySaleLog) {
-                                                        $querySaleLog->whereIn('status_enum', collect([20,7]));
-                                                    })->orWhere('status', 1);
-                                                })
-                                                ->first();
+                    $chargebackData = $saleModel->selectRaw(
+                        "SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
+                                                             SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesApproved"
+                    )
+                        ->where('payment_method', 1)
+                        ->where('owner_id', $userId)
+                        ->whereHas(
+                            'transactions',
+                            function ($query) use ($companyId) {
+                                $query->where('company_id', $companyId);
+                            }
+                        )
+                        ->where(
+                            function ($q1) {
+                                $q1->where('status', 4)
+                                    ->whereDoesntHave(
+                                        'saleLogs',
+                                        function ($querySaleLog) {
+                                            $querySaleLog->whereIn('status_enum', collect([20, 7]));
+                                        }
+                                    )->orWhere('status', 1);
+                            }
+                        )
+                        ->first();
 
                     $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
 
@@ -155,18 +182,22 @@ class DashboardApiController extends Controller
 
                     //News and releases
                     $newsData = settings()->group('dashboard_news')->all(true);
-                    $news     = [];
+                    $news = [];
                     foreach ($newsData as $key => $value) {
                         $newsDecoded = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
                         if (strpos($newsDecoded->title, '{nome_usuario}') !== false) {
                             $userFirstName = explode(' ', auth()->user()->name)[0];
-                            $newsDecoded->title = str_replace('{nome_usuario}', ucfirst($userFirstName), $newsDecoded->title);
+                            $newsDecoded->title = str_replace(
+                                '{nome_usuario}',
+                                ucfirst($userFirstName),
+                                $newsDecoded->title
+                            );
                         }
                         $news[] = $newsDecoded;
                     }
 
                     $releasesData = settings()->group('dashboard_releases')->all(true);
-                    $releases     = [];
+                    $releases = [];
                     foreach ($releasesData as $key => $value) {
                         $releases[$key] = json_decode($value, false, 512, JSON_UNESCAPED_UNICODE);
                     }
@@ -202,21 +233,24 @@ class DashboardApiController extends Controller
                         $ticketsModel->present()->getTicketStatusEnum('mediation'),
                     ];
 
-                    $tickets = $ticketsModel->selectRaw("count(*) as total,
+                    $tickets = $ticketsModel->selectRaw(
+                        "count(*) as total,
                                                          sum(case when ticket_status_enum = ? then 1 else 0 end) as open,
                                                          sum(case when ticket_status_enum = ? then 1 else 0 end) as closed,
-                                                         sum(case when ticket_status_enum = ? then 1 else 0 end) as mediation", $statusArray)
+                                                         sum(case when ticket_status_enum = ? then 1 else 0 end) as mediation",
+                        $statusArray
+                    )
                         ->join('sales', 'tickets.sale_id', '=', 'sales.id')
                         ->where('sales.owner_id', $userId)
                         ->first();
 
                     return [
-                        'available_balance'      => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                        'total_balance'          => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                        'pending_balance'        => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                        'today_balance'          => number_format(intval($todayBalance) / 100, 2, ',', '.'),
-                        'currency'               => 'R$',
-                        'total_sales_approved'   => $totalSalesApproved ?? 0,
+                        'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                        'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                        'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                        'today_balance' => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                        'currency' => 'R$',
+                        'total_sales_approved' => $totalSalesApproved ?? 0,
                         'total_sales_chargeback' => $totalSalesChargeBack ?? 0,
                         'chargeback_tax'         => $chargebackTax ?? "0.00%",
                         'news'                   => $news,
@@ -232,7 +266,58 @@ class DashboardApiController extends Controller
             }
         } catch (Exception $e) {
             report($e);
+
             return [];
+        }
+    }
+
+    public function verifyPendingData()
+    {
+        try {
+            $user = auth()->user();
+            $companyModel = new Company();
+            $userService = new UserService();
+            $companyService = new CompanyService();
+            $companies = $companyModel->where('user_id', $user->account_owner_id)->orderBy('order_priority')
+                ->get();
+
+
+            if ($user->created_at <= '2020-07-01') {
+                $pendingUserData = $userService->verifyFieldsEmpty($user);
+            } else {
+                $pendingUserData = false;
+            }
+
+            $companyArray = [];
+            foreach ($companies as $company) {
+                if ($company->created_at <= '2020-07-01' && $companyService->verifyFieldsEmpty($company)) {
+                    $companyArray[] = [
+                        'id_code' => Hashids::encode($company->id),
+                        'fantasy_name' => $company->company_type == 1 ? 'Pessoa física' : Str::limit(
+                                $company->fantasy_name,
+                                20
+                            ) ?? '',
+                        'type' => $company->company_type,
+                    ];
+                }
+            }
+
+            return response()->json(
+                [
+                    'companies' => $companyArray,
+                    'pending_user_data' => $pendingUserData,
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
         }
     }
 }
