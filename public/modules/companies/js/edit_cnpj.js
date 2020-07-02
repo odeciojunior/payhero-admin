@@ -135,7 +135,7 @@ $(document).ready(function () {
                 $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
 
                 if (!isEmpty(unfilledFields)) {
-                    $('#company_update_form input,#company_update_form select').each(function () {
+                    $('form input, select').each(function () {
                         let id = $(this).attr('id');
                         let attr = $(this).attr('data-plugin');
                         if (unfilledFields.includes(id)) {

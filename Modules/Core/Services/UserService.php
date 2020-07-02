@@ -223,9 +223,6 @@ class UserService
         if (empty($userInformation->mother_name)) {
             $arrayFields[] = 'mother_name';
         }
-        if (empty($userInformation->father_name)) {
-            $arrayFields[] = 'father_name';
-        }
         if (empty($userInformation->marital_status)) {
             $arrayFields[] = 'marital_status';
         }
@@ -235,9 +232,6 @@ class UserService
         if ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
             && empty($userInformation->spouse_name)) {
             $arrayFields[] = 'spouse_name';
-        }
-        if (empty($userInformation->birth_place)) {
-            $arrayFields[] = 'birth_place';
         }
         if (empty($userInformation->birth_city)) {
             $arrayFields[] = 'birth_city';

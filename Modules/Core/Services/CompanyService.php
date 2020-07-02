@@ -327,6 +327,9 @@ class CompanyService
             if (empty($company->document_issuer_state)) {
                 return true;
             }
+            if (empty($company->account_type)) {
+                return true;
+            }
         }
 
         if (empty($company->fantasy_name)) {
@@ -471,6 +474,9 @@ class CompanyService
             }
             if (empty($company->document_issuer_state)) {
                 $arrayFields[] = 'document_issuer_state';
+            }
+            if (empty($company->account_type)) {
+                $arrayFields[] = 'account_type';
             }
         } else {
             if (empty($company->fantasy_name)) {
