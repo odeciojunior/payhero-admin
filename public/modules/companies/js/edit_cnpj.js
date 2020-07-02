@@ -96,6 +96,7 @@ $(document).ready(function () {
             success: function success(response) {
                 var company = response.company;
                 var banks = response.banks;
+                var unfilledFields = response.unfilledFields;
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
@@ -132,6 +133,28 @@ $(document).ready(function () {
                 $('#social_value').mask('#.##0,00', {reverse: true});
                 $('#monthly_gross_income').unmask();
                 $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
+
+                if (!isEmpty(unfilledFields)) {
+                    $('#company_update_form input,#company_update_form select').each(function () {
+                        let id = $(this).attr('id');
+                        let attr = $(this).attr('data-plugin');
+                        if (unfilledFields.includes(id)) {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
+                            } else {
+                                $(this).addClass('input-is-invalid');
+                            }
+                        } else {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
+                            } else {
+                                if ($(this).hasClass('input-is-invalid')) {
+                                    $(this).removeClass('input-is-invalid');
+                                }
+                            }
+                        }
+                    });
+                }
 
                 if (company.country === 'usa') {
                     $('#rounting_number').val(company.bank).trigger('input');
@@ -268,6 +291,7 @@ $(document).ready(function () {
             success: function success(response) {
                 alertCustom('success', response.message);
                 loadingOnScreenRemove();
+                initForm();
                 // $("#company_document").attr('disabled', 'disabled');
             }
         });

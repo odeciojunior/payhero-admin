@@ -35,6 +35,7 @@ $(document).ready(function () {
                 loadOnAny('#tab_user', true);
             },
             success: function success(response) {
+                var unfilledFields = response.unfilledFields;
                 if (response.company.country === 'usa') {
                     $('#rounting_number').val(response.company.bank).trigger('input');
                     $('#account_routing_number').val(response.company.account);
@@ -74,6 +75,28 @@ $(document).ready(function () {
                     Dropzone.forElement('#dropzoneDocumentsFisicPerson').removeAllFiles(true);
                     getDocuments(encodedId);
                 });
+
+                if (!isEmpty(unfilledFields)) {
+                    $('#company_update_bank_form input,#company_update_bank_form select').each(function () {
+                        let id = $(this).attr('id');
+                        let attr = $(this).attr('data-plugin');
+                        if (unfilledFields.includes(id)) {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
+                            } else {
+                                $(this).addClass('input-is-invalid');
+                            }
+                        } else {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
+                            } else {
+                                if ($(this).hasClass('input-is-invalid')) {
+                                    $(this).removeClass('input-is-invalid');
+                                }
+                            }
+                        }
+                    });
+                }
 
                 loadOnAny('#tab_user', true);
             }

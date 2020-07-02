@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 @endpush
@@ -200,7 +200,7 @@
 
     <style>
         .select2-selection--single{
-            border: 1px solid #dddddd !important;
+            /*border: 1px solid #dddddd !important;*/
             border-radius: .215rem !important;
             height: 43px !important;
         }
@@ -228,7 +228,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=5')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=6')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

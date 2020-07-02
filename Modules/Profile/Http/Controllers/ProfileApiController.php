@@ -50,12 +50,15 @@ class ProfileApiController
 
                 $userResource = new UserResource($user);
                 $countryService = new CountryService();
+                $userService         = new UserService();
                 $countries = $countryService->getCountries();
+                $unfilledFieldsArray = $userService->unfilledFields($user);
 
                 return response()->json(
                     [
                         'user' => $userResource,
                         'countries' => $countries,
+                        'unfilledFields' => $unfilledFieldsArray,
                     ],
                     Response::HTTP_OK
                 );

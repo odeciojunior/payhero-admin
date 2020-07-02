@@ -122,6 +122,8 @@ class CompaniesApiController extends Controller
 
             $bankService = new BankService();
 
+            $companyService = new CompanyService();
+
             $company = $companyModel
                 ->with('user', 'companyDocuments')
                 ->find(current(Hashids::decode($encodedId)));
@@ -135,11 +137,12 @@ class CompaniesApiController extends Controller
                 } elseif ($company->company_type == $companyModel->present()->getCompanyType('physical person')) {
                     $companyResource = new CompanyCpfResource($company);
                 }
-
+                $unfilledFieldsArray = $companyService->unfilledFields($company);
                 return response()->json(
                     [
                         'company' => $companyResource,
                         'banks' => $banks,
+                        'unfilledFields' => $unfilledFieldsArray,
                     ],
                     Response::HTTP_OK
                 );

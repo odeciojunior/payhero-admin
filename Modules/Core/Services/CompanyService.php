@@ -46,8 +46,8 @@ class CompanyService
 
     public function isDocumentValidated(int $companyId)
     {
-        $companyModel = new Company();
-        $company = $companyModel->find($companyId);
+        $companyModel     = new Company();
+        $company          = $companyModel->find($companyId);
         $companyPresenter = $companyModel->present();
         if (!empty($company)) {
             if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
@@ -68,8 +68,8 @@ class CompanyService
 
     public function haveAnyDocumentPending()
     {
-        $companyModel = new Company();
-        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
+        $companyModel     = new Company();
+        $companies        = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
         $companyPresenter = $companyModel->present();
 
         foreach ($companies as $company) {
@@ -99,22 +99,22 @@ class CompanyService
 
     public function getRefusedDocuments(int $companyId)
     {
-        $companyModel = new Company();
-        $company = $companyModel->with('companyDocuments')->find($companyId);
+        $companyModel     = new Company();
+        $company          = $companyModel->with('companyDocuments')->find($companyId);
         $companyPresenter = $companyModel->present();
         $refusedDocuments = collect();
         if (!empty($company)) {
             foreach ($company->companyDocuments as $document) {
                 if (!empty($document->refused_reason)) {
                     $dataDocument = [
-                        'date' => $document->created_at->format('d/m/Y'),
+                        'date'            => $document->created_at->format('d/m/Y'),
                         'type_translated' => __(
                             'definitions.enum.company_document_type.' . $companyPresenter->getDocumentType(
                                 $document->document_type_enum
                             )
                         ),
-                        'document_url' => $document->document_url,
-                        'refused_reason' => $document->refused_reason,
+                        'document_url'    => $document->document_url,
+                        'refused_reason'  => $document->refused_reason,
                     ];
                     $refusedDocuments->push(collect($dataDocument));
                 }
@@ -126,10 +126,10 @@ class CompanyService
 
     public function verifyCnpj($cnpj)
     {
-        $companyModel = new Company();
+        $companyModel     = new Company();
         $companyPresenter = $companyModel->present();
-        $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
-        $company = $companyModel->where(
+        $cnpj             = preg_replace("/[^0-9]/", "", $cnpj);
+        $company          = $companyModel->where(
             [
                 ['company_document', $cnpj],
                 ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
@@ -164,6 +164,7 @@ class CompanyService
                     'bank_document_status' => $company->present()->getStatus('pending'),
                 ]
             );
+
             return true;
         }
 
@@ -200,9 +201,9 @@ class CompanyService
 
         if (in_array($company->country, $dolar)) {
             return $symbol ? '$' : 'dolar';
-        } elseif (in_array($company->country, $euro)) {
+        } else if (in_array($company->country, $euro)) {
             return $symbol ? '€' : 'euro';
-        } elseif (in_array($company->country, $real)) {
+        } else if (in_array($company->country, $real)) {
             return $symbol ? 'R$' : 'real';
         } else {
             return null;
@@ -239,18 +240,19 @@ class CompanyService
         $transactionModel = new Transaction();
 
         $pendingBalance = $transactionModel->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
+                                           ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
             // ->whereDate('release_date', '>', Carbon::today()->toDateString())
-            ->sum('value');
+                                           ->sum('value');
 
         $transactionsAnticipatedValue = $transactionModel->with('anticipatedTransactions')
-            ->where('company_id', $company->id)
-            ->where('status_enum', $transactionModel->present()->getStatusEnum('anticipated'))
-            ->sum('value');
+                                                         ->where('company_id', $company->id)
+                                                         ->where('status_enum', $transactionModel->present()
+                                                                                                 ->getStatusEnum('anticipated'))
+                                                         ->sum('value');
 
         $anticipatedValue = AnticipatedTransaction::with('transaction')->whereHas(
             'transaction',
-            function ($query) use ($company) {
+            function($query) use ($company) {
                 $query->where('status_enum', (new Transaction())->present()->getStatusEnum('anticipated'));
                 $query->where('company_id', $company->id);
             }
@@ -329,15 +331,15 @@ class CompanyService
 
         if (empty($company->fantasy_name)) {
             return true;
-        } elseif (empty($company->company_document)) {
+        } else if (empty($company->company_document)) {
             return true;
-        } elseif (empty($company->bank)) {
+        } else if (empty($company->bank)) {
             return true;
-        } elseif (empty($company->agency)) {
+        } else if (empty($company->agency)) {
             return true;
-        } elseif (empty($company->account)) {
+        } else if (empty($company->account)) {
             return true;
-        } elseif (empty($company->account_type)) {
+        } else if (empty($company->account_type)) {
             return true;
         } else {
             return false;
@@ -352,7 +354,7 @@ class CompanyService
     public function createCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
-        $userService = new UserService();
+        $userService   = new UserService();
 
         $user = $company->user;
 
@@ -360,7 +362,7 @@ class CompanyService
             && (!$userService->verifyFieldsEmpty($user))
         ) {
             $result = $getnetService->createPfCompany($company);
-        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
+        } else if (($company->present()->getCompanyType($company->company_type) == 'juridical person')
             && !empty($user->cellphone) && !empty($user->email)) {
             $result = $getnetService->createPjCompany($company);
         }
@@ -369,18 +371,19 @@ class CompanyService
             $company->update(
                 [
                     'subseller_getnet_id' => $result['data']->subseller_id,
-                    'getnet_status' => $company->present()->getStatusGetnet('review')
+                    'getnet_status'       => $company->present()->getStatusGetnet('review'),
                 ]
             );
 
             return [
                 'message' => 'success',
-                'data' => ''
+                'data'    => '',
             ];
         }
+
         return [
             'message' => 'error',
-            'data' => ''
+            'data'    => '',
         ];
     }
 
@@ -392,20 +395,104 @@ class CompanyService
     public function updateCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
-        $userService = new UserService();
-        $user = $company->user;
+        $userService   = new UserService();
+        $user          = $company->user;
 
         if ($company->present()->getCompanyType($company->company_type) == 'physical person'
             && (!$userService->verifyFieldsEmpty($user))
         ) {
             $getnetService->updatePfCompany($company);
-        } elseif (!empty($user->cellphone) && !empty($user->email)) {
+        } else if (!empty($user->cellphone) && !empty($user->email)) {
             $getnetService->updatePjCompany($company);
         }
 
         return [
             'message' => 'success',
-            'data' => ''
+            'data'    => '',
         ];
+    }
+
+    public function unfilledFields(Company $company)
+    {
+        $arrayFields = [];
+        if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
+            // informações basicas
+            if (empty($company->zip_code)) {
+                $arrayFields[] = 'zip_code';
+            }
+            if (empty($company->street)) {
+                $arrayFields[] = 'street';
+            }
+            if (empty($company->neighborhood)) {
+                $arrayFields[] = 'neighborhood';
+            }
+            if (empty($company->state)) {
+                $arrayFields[] = 'state';
+            }
+            if (empty($company->city)) {
+                $arrayFields[] = 'city';
+            }
+            if (empty($company->country)) {
+                $arrayFields[] = 'country';
+            }
+            // informações complementares
+            if (empty($company->patrimony)) {
+                $arrayFields[] = 'patrimony';
+            }
+            if (empty($company->state_fiscal_document_number)) {
+                $arrayFields[] = 'state_fiscal_document_number';
+            }
+            if (empty($company->business_entity_type)) {
+                $arrayFields[] = 'business_entity_type';
+            }
+            if (empty($company->economic_activity_classification_code)) {
+                $arrayFields[] = 'economic_activity_classification_code';
+            }
+            if (empty($company->monthly_gross_income)) {
+                $arrayFields[] = 'monthly_gross_income';
+            }
+            if (empty($company->founding_date)) {
+                $arrayFields[] = 'founding_date';
+            }
+            if (empty($company->federal_registration_status_date)) {
+                $arrayFields[] = 'federal_registration_status_date';
+            }
+            if (empty($company->social_value)) {
+                $arrayFields[] = 'social_value';
+            }
+            if (empty($company->document_number)) {
+                $arrayFields[] = 'document_number';
+            }
+            if (empty($company->document_issue_date)) {
+                $arrayFields[] = 'document_issue_date';
+            }
+            if (empty($company->document_issuer)) {
+                $arrayFields[] = 'document_issuer';
+            }
+            if (empty($company->document_issuer_state)) {
+                $arrayFields[] = 'document_issuer_state';
+            }
+        } else {
+            if (empty($company->fantasy_name)) {
+                $arrayFields[] = 'fantasy_name';
+            }
+            if (empty($company->company_document)) {
+                $arrayFields[] = 'company_document';
+            }
+            if (empty($company->bank)) {
+                $arrayFields[] = 'bank';
+            }
+            if (empty($company->agency)) {
+                $arrayFields[] = 'agency';
+            }
+            if (empty($company->account)) {
+                $arrayFields[] = 'account';
+            }
+            if (empty($company->account_type)) {
+                $arrayFields[] = 'account_type';
+            }
+        }
+
+        return $arrayFields;
     }
 }
