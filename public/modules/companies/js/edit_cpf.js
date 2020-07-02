@@ -76,27 +76,25 @@ $(document).ready(function () {
                     getDocuments(encodedId);
                 });
 
-                if (!isEmpty(unfilledFields)) {
-                    $('#company_update_bank_form input,#company_update_bank_form select').each(function () {
-                        let id = $(this).attr('id');
-                        let attr = $(this).attr('data-plugin');
-                        if (unfilledFields.includes(id)) {
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
-                            } else {
-                                $(this).addClass('input-is-invalid');
-                            }
+                $('#company_update_bank_form input,#company_update_bank_form select').each(function () {
+                    let id = $(this).attr('id');
+                    let attr = $(this).attr('data-plugin');
+                    if (unfilledFields.includes(id)) {
+                        if (typeof attr !== typeof undefined && attr !== false) {
+                            $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
                         } else {
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
-                            } else {
-                                if ($(this).hasClass('input-is-invalid')) {
-                                    $(this).removeClass('input-is-invalid');
-                                }
+                            $(this).addClass('input-is-invalid');
+                        }
+                    } else {
+                        if (typeof attr !== typeof undefined && attr !== false) {
+                            $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
+                        } else {
+                            if ($(this).hasClass('input-is-invalid')) {
+                                $(this).removeClass('input-is-invalid');
                             }
                         }
-                    });
-                }
+                    }
+                });
 
                 loadOnAny('#tab_user', true);
             }
@@ -277,7 +275,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
             } else {
                 document.querySelector("#table-body-documents-person-fisic").innerHTML = '';
                 document.querySelector("#document-person-fisic-refused-motived").innerHTML = '';
-                for (var value  of dataTable) {
+                for (var value of dataTable) {
                     dados += `<tr>
                         <td class='text-center'>${value.date}</td>
                         <td class='text-center' style='cursor: pointer;'>
