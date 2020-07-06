@@ -248,9 +248,52 @@
         </div>
     </div>
 
+    <!-- Modal Dados pendentes -->
+    <div id="modal-peding-data" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog p-2">
+            <!-- Modal content-->
+            <div class="modal-content p-4">
+                <h4 class="modal-title font-size-20 text-center">Encontramos dados que precisam ser atualizados!</h4>
+                <span class="py-1 text-center">
+                        Estamos avaliando a parceria com outras adquirentes para aumentar ainda mais sua conversão.
+                        E por isso <b>é fundamental manter seu cadastro completo e atualizado</b>, conforme as exigências destas adquirentes. <b>Contamos com você!
+                        Afinal, assim será possível liberar o d+p para vendas no cartão em breve</b>.
+                    </span>
+                <span class='py-1 text-center'>
+                     Confira abaixo o que precisa ser atualizado.
+                </span>
+                <div class="modal-body p-2 text-center">
+                    <div class='text-center div-pending-profile' style='display:none;'>
+                        <label>Dados do perfil</label>
+                        <a class='btn btn-primary ml-10' href='{{ route('profile.index') }}' target='_blank'>Atualizar</a>
+                    </div>
+                    <table class='table table-pending-data table-striped table-hover mt-2 mb-10' style='overflow-x: auto !important;'>
+                        <tbody class='table-pending-data-body'>
+                            <tr class='tr-pending-profile' style='display:none;'>
+                                <td style='width:2px;' class='text-center'>
+                                    <span class="status status-lg status-away"></span>
+                                </td>
+                                <td class='text-left'>
+                                    Conta > Dados do Perfil
+                                </td>
+                                <td class='text-center'>
+                                    <a class='btn' style='color:darkorange;' href='{{ route('profile.index') }}' target='_blank'>
+                                        <b><i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i>Atualizar</b>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{-- js carrega... --}}
+                        </tbody>
+                    </table>
+                    <a class='btn btn-update-later mt-10' style='color:darkorange;' data-dismiss="modal">
+                        <b>Atualizar mais tarde</b></a>
+                </div>
+            </div>
+        </div>
+    </div>
     @push('scripts')
         <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=5') }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=1') }}"></script>
     @endpush
 
 @endsection

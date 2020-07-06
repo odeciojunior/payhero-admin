@@ -35,6 +35,7 @@ $(document).ready(function () {
                 loadOnAny('#tab_user', true);
             },
             success: function success(response) {
+                var unfilledFields = response.unfilledFields;
                 if (response.company.country === 'usa') {
                     $('#rounting_number').val(response.company.bank).trigger('input');
                     $('#account_routing_number').val(response.company.account);
@@ -50,6 +51,7 @@ $(document).ready(function () {
                     $("#agency_digit").val(response.company.agency_digit);
                     $("#account").val(response.company.account);
                     $("#account_digit").val(response.company.account_digit);
+                    $('#account_type').val(response.company.account_type);
                 }
 
                 if (response.company.country === 'brazil') {
@@ -72,6 +74,26 @@ $(document).ready(function () {
                 $(".details-document-person-fisic").on('click', function () {
                     Dropzone.forElement('#dropzoneDocumentsFisicPerson').removeAllFiles(true);
                     getDocuments(encodedId);
+                });
+
+                $('#company_update_bank_form input,#company_update_bank_form select').each(function () {
+                    let id = $(this).attr('id');
+                    let attr = $(this).attr('data-plugin');
+                    if (unfilledFields.includes(id)) {
+                        if (typeof attr !== typeof undefined && attr !== false) {
+                            $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
+                        } else {
+                            $(this).addClass('input-is-invalid');
+                        }
+                    } else {
+                        if (typeof attr !== typeof undefined && attr !== false) {
+                            $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
+                        } else {
+                            if ($(this).hasClass('input-is-invalid')) {
+                                $(this).removeClass('input-is-invalid');
+                            }
+                        }
+                    }
                 });
 
                 loadOnAny('#tab_user', true);
@@ -253,7 +275,7 @@ const myDropzone = new Dropzone('#dropzoneDocumentsFisicPerson', {
             } else {
                 document.querySelector("#table-body-documents-person-fisic").innerHTML = '';
                 document.querySelector("#document-person-fisic-refused-motived").innerHTML = '';
-                for (var value  of dataTable) {
+                for (var value of dataTable) {
                     dados += `<tr>
                         <td class='text-center'>${value.date}</td>
                         <td class='text-center' style='cursor: pointer;'>

@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 
@@ -68,7 +68,145 @@
                                             <input name="support_telephone" value="" type="text" class="form-control" id="support_telephone" placeholder='Telefone'>
                                         </div>
                                     </div>
-                                    <h3 class="mb-15">Informações complementares</h3>
+                                    <h3 class="mb-15 mt-15">Informações complementares</h3>
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="document_number">NIRE</label>
+                                            <input name="document_number" value="" type="text" class="form-control" id="document_number" placeholder='NIRE'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="state_fiscal_document_number">Inscrição Estadual</label>
+                                            <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="economic_activity_classification_code">CNAE primário (somente o código)</label>
+                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário (somente o código)'>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="business_entity_type">Código da natureza jurídica</label>
+                                            <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>
+                                            <p class='info pt-5 mb-0 link-info' style='font-size: 10px;'>
+                                                <i class='icon wb-info-circle' aria-hidden='true'></i> Saiba mais
+                                                <a href='https://www.lefisc.com.br/news/novatabelanaturezajuridica.htm' target='_blank'>
+                                                    clicando aqui
+                                                </a>
+                                            </p>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="monthly_gross_income">Faturamento anual (em reais)</label>
+                                            <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual (em reais)'>
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="patrimony">Valor do patrimônio (em reais)</label>
+                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio (em reais)'>
+                                        </div>
+                                    </div>
+
+{{--                                    <div class='row'>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="patrimony">Valor do patrimônio</label>--}}
+{{--                                            <input name="patrimony" value="" type="text" class="form-control" id="patrimony" placeholder='Valor do patrimônio'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="state_fiscal_document_number">Inscrição Estadual</label>--}}
+{{--                                            <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="business_entity_type">Código da natureza jurídica</label>--}}
+{{--                                            <input name="business_entity_type" value="" type="text" class="form-control" id="business_entity_type" placeholder='Código da natureza jurídica'>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class='row'>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="economic_activity_classification_code">CNAE primário</label>--}}
+{{--                                            <input name="economic_activity_classification_code" value="" type="text" class="form-control" id="economic_activity_classification_code" placeholder='CNAE primário'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="form-group col-xl-4">--}}
+{{--                                            <label for="monthly_gross_income">Faturamento anual</label>--}}
+{{--                                            <input name="monthly_gross_income" value="" type="text" class="form-control" id="monthly_gross_income" placeholder='Faturamento anual'>--}}
+{{--                                        </div>--}}
+{{--                                        <div class='form-group col-xl-4'>--}}
+{{--                                            <label for='federal_registration_status'>Situação na Receita Federal</label>--}}
+{{--                                            <select id="federal_registration_status" name="federal_registration_status" class="form-control">--}}
+{{--                                                <option value="">Selecione</option>--}}
+{{--                                                <option value="1">Ativo</option>--}}
+{{--                                                <option value="2">Suspenso</option>--}}
+{{--                                                <option value="3">Inadequado</option>--}}
+{{--                                                <option value="4">Desativado</option>--}}
+{{--                                                <option value="5">Anulado</option>--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+                                    <div class='row'>
+                                        <div class="form-group col-xl-4">
+                                            <label for="founding_date">Data de fundação do CNPJ</label>
+                                            <input name="founding_date" value="" type="date"
+                                                   class="form-control form-control" id="founding_date">
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="federal_registration_status_date">Data da situação na Receita Federal</label>
+                                            <input name="federal_registration_status_date" value="" type="date"
+                                                   class="form-control form-control" id="federal_registration_status_date">
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="social_value">Valor do capital social (em reais)</label>
+                                            <input name="social_value" value="" type="text" class="form-control" id="social_value" placeholder='Valor do capital social (em reais)'>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-lg-4'>
+                                            <div class="form-group">
+                                                <label for="document_issue_date">Data de emissão do CNPJ</label>
+                                                <input name="document_issue_date" value="" type="date"
+                                                       class="form-control input-pad" id="document_issue_date">
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-4'>
+                                            <div class="form-group">
+                                                <label for="document_issuer">Órgão emissor do CNPJ</label>
+                                                <input name="document_issuer" value="" type="text" class="input-pad" id="document_issuer" placeholder="Órgão emissor do documento">
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-4'>
+                                            <div class="form-group">
+                                                <label for="document_issuer_state">Estado do emissor do CNPJ</label>
+                                                <select id="document_issuer_state" name='document_issuer_state' class="form-control select-pad">
+                                                    <option value="">Selecione</option>
+                                                    <option value="São Paulo">São Paulo</option>
+                                                    <option value="Minas Gerais">Minas Gerais</option>
+                                                    <option value="Rio de Janeiro">Rio de Janeiro</option>
+                                                    <option value="Bahia">Bahia</option>
+                                                    <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                                                    <option value="Paraná">Paraná</option>
+                                                    <option value="Pernambuco">Pernambuco</option>
+                                                    <option value="Ceará">Ceará</option>
+                                                    <option value="Pará">Pará</option>
+                                                    <option value="Maranhão">Maranhão</option>
+                                                    <option value="Santa Catarina">Santa Catarina</option>
+                                                    <option value="Goiás">Goiás</option>
+                                                    <option value="Paraíba">Paraíba</option>
+                                                    <option value="Espírito Santo">Espírito Santo</option>
+                                                    <option value="Amazonas">Amazonas</option>
+                                                    <option value="Alagoas">Alagoas</option>
+                                                    <option value="Piauí">Piauí</option>
+                                                    <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+                                                    <option value="Mato Grosso">Mato Grosso</option>
+                                                    <option value="Distrito Federal">Distrito Federal</option>
+                                                    <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+                                                    <option value="Sergipe">Sergipe</option>
+                                                    <option value="Rondônia">Rondônia</option>
+                                                    <option value="Tocantins">Tocantins</option>
+                                                    <option value="Acre">Acre</option>
+                                                    <option value="Amapá">Amapá</option>
+                                                    <option value="Roraima">Roraima</option>
+                                                    <option value="Bahia">Bahia</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-15 mt-15">Informações de endereço</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
@@ -133,6 +271,15 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class='col-xl-4'></div>
+                                        <div class='form-group col-xl-2'>
+                                            <label for='account_type'>Tipo de conta</label>
+                                            <select id="account_type" name="account_type" class="input-pad">
+                                                <option value="">Selecione</option>
+                                                <option value="1">Conta corrente</option>
+                                                <option value="2">Conta poupança</option>
+                                            </select>
+                                        </div>
                                         <div class="col-xl-8" id="swift-code-info" style="display:none">
                                             <div class="alert alert-secondary">
                                                 <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
@@ -173,7 +320,7 @@
                                             <input name="account_digit" value="" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
                                         </div>
                                     </div>
-                                    <div class="form-group text-right">
+                                    <div class="form-group text-right mt-20">
                                         <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                                     </div>
                                 </form>
@@ -313,7 +460,7 @@
 
     <style>
         .select2-selection--single {
-            border: 1px solid #dddddd !important;
+            /*border: 1px solid #dddddd !important;*/
             border-radius: .215rem !important;
             height: 43px !important;
         }
@@ -339,7 +486,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=3')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=10')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

@@ -9,6 +9,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserInformation;
 
 /**
  * Class CompaniesService
@@ -18,11 +19,10 @@ class UserService
 {
     public function isDocumentValidated($userId = null)
     {
-        $userModel     = new User();
-        if(empty($userId)){
+        $userModel = new User();
+        if (empty($userId)) {
             $user = auth()->user();
-        }
-        else{
+        } else {
             $user = User::find($userId);
         }
 
@@ -68,7 +68,11 @@ class UserService
                 if (!empty($document->refused_reason)) {
                     $dataDocument = [
                         'date'            => $document->created_at->format('d/m/Y'),
-                        'type_translated' => __('definitions.enum.user_document_type.' . $userPresenter->getDocumentType($document->document_type_enum)),
+                        'type_translated' => __(
+                            'definitions.enum.user_document_type.' . $userPresenter->getDocumentType(
+                                $document->document_type_enum
+                            )
+                        ),
                         'document_url'    => $document->document_url,
                         'refused_reason'  => $document->refused_reason,
                     ];
@@ -87,12 +91,172 @@ class UserService
         $userPresenter = $userModel->present();
 
         $user = $userModel->where(
-            [['document', $cpf], ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')], ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')]]
+            [
+                ['document', $cpf],
+                ['address_document_status', $userPresenter->getAddressDocumentStatus('approved')],
+                ['personal_document_status', $userPresenter->getPersonalDocumentStatus('approved')],
+            ]
         )->first();
         if (!empty($user)) {
             return true;
         }
 
         return false;
+    }
+
+    public function createUserInformationDefault($userId)
+    {
+        try {
+            UserInformation::create(
+                [
+                    'user_id'       => $userId,
+                    'document_type' => 1,
+                ]
+            );
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function verifyFieldsEmpty(User $user)
+    {
+        $userInformation = $user->userInformation;
+
+        if (empty($user->email)) {
+            return true;
+        } else if (empty($user->cellphone)) {
+            return true;
+        } else if (empty($user->document)) {
+            return true;
+        } else if (empty($user->zip_code)) {
+            return true;
+        } else if (empty($user->country)) {
+            return true;
+        } else if (empty($user->state)) {
+            return true;
+        } else if (empty($user->city)) {
+            return true;
+        } else if (empty($user->neighborhood)) {
+            return true;
+        } else if (empty($user->street)) {
+            return true;
+        } else if (empty($user->number)) {
+            return true;
+        } else if (empty($user->date_birth)) {
+            return true;
+        } else if (empty($userInformation->sex)) {
+            return true;
+        } else if (empty($userInformation->marital_status)) {
+            return true;
+        } else if (empty($userInformation->nationality)) {
+            return true;
+        } else if ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
+            && empty($userInformation->spouse_name)) {
+            return true;
+        } else if (empty($userInformation->birth_city)) {
+            return true;
+        } else if (empty($userInformation->birth_country)) {
+            return true;
+        } else if (empty($userInformation->monthly_income)) {
+            return true;
+        } else if (empty($userInformation->document_number)) {
+            return true;
+        } else if (empty($userInformation->document_issue_date)) {
+            return true;
+        } else if (empty($userInformation->document_issuer)) {
+            return true;
+        } else if (empty($userInformation->document_issuer_state)) {
+            return true;
+        } else {
+            return false;
+        }
+        /*
+         * mother_name
+         * father_name
+         * document_serial_number
+         * document_expiration_date
+         */
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function unfilledFields(User $user)
+    {
+        $arrayFields     = [];
+        $userInformation = $user->userInformation;
+        if (empty($user->document)) {
+            $arrayFields[] = 'document';
+        }
+        if (empty($user->zip_code)) {
+            $arrayFields[] = 'zip_code';
+        }
+        if (empty($user->country)) {
+            $arrayFields[] = 'country';
+        }
+        if (empty($user->state)) {
+            $arrayFields[] = 'state';
+        }
+        if (empty($user->city)) {
+            $arrayFields[] = 'city';
+        }
+        if (empty($user->neighborhood)) {
+            $arrayFields[] = 'neighborhood';
+        }
+        if (empty($user->street)) {
+            $arrayFields[] = 'street';
+        }
+        if (empty($user->number)) {
+            $arrayFields[] = 'number';
+        }
+        if (empty($user->date_birth)) {
+            $arrayFields[] = 'date_birth';
+        }
+        if (empty($userInformation->sex)) {
+            $arrayFields[] = 'sex';
+        }
+        if (empty($userInformation->mother_name)) {
+            $arrayFields[] = 'mother_name';
+        }
+        if (empty($userInformation->marital_status)) {
+            $arrayFields[] = 'marital_status';
+        }
+        if (empty($userInformation->nationality)) {
+            $arrayFields[] = 'nationality';
+        }
+        if ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
+            && empty($userInformation->spouse_name)) {
+            $arrayFields[] = 'spouse_name';
+        }
+        if (empty($userInformation->birth_city)) {
+            $arrayFields[] = 'birth_city';
+        }
+        if (empty($userInformation->birth_country)) {
+            $arrayFields[] = 'birth_country';
+        }
+        if (empty($userInformation->monthly_income)) {
+            $arrayFields[] = 'monthly_income';
+        }
+        if (empty($userInformation->document_number)) {
+            $arrayFields[] = 'document_number';
+        }
+        if (empty($userInformation->document_issue_date)) {
+            $arrayFields[] = 'document_issue_date';
+        }
+        if (empty($userInformation->document_issuer)) {
+            $arrayFields[] = 'document_issuer';
+        }
+        if (empty($userInformation->document_issuer_state)) {
+            $arrayFields[] = 'document_issuer_state';
+        }
+        if (empty($userInformation->document_expiration_date)) {
+            $arrayFields[] = 'document_expiration_date';
+        }
+        return $arrayFields;
     }
 }

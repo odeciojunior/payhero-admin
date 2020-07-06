@@ -28,6 +28,9 @@ $(document).ready(function () {
     var companyBankUpdateForm = $("#company_bank_update_form");
     var companyBankUpdateRoutingForm = $("#company_bank_routing_number_form");
     initLinks();
+    // $('#patrimony').mask('#.###,#0', {reverse: true});
+    // $('#social_value').mask('#.###,#0', {reverse: true});
+    // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
 
     //Functions
     function initLinks() {
@@ -93,6 +96,7 @@ $(document).ready(function () {
             success: function success(response) {
                 var company = response.company;
                 var banks = response.banks;
+                var unfilledFields = response.unfilledFields;
 
                 $("#company_id").val(company.id_code);
                 $('#fantasy_name').val(company.fantasy_name);
@@ -108,6 +112,49 @@ $(document).ready(function () {
                 $('#state').val(company.state);
                 $('#city').val(company.city);
                 $('#country').val(company.country);
+
+                $('#patrimony').val(company.patrimony);
+                $('#state_fiscal_document_number').val(company.state_fiscal_document_number);
+                $('#business_entity_type').val(company.business_entity_type);
+                $('#economic_activity_classification_code').val(company.economic_activity_classification_code);
+                $('#monthly_gross_income').val(company.monthly_gross_income);
+                // $('#federal_registration_status').val(company.federal_registration_status);
+                $('#founding_date').val(company.founding_date);
+                $('#federal_registration_status_date').val(company.federal_registration_status_date);
+                $('#social_value').val(company.social_value);
+                $('#document_issue_date').val(company.document_issue_date);
+                $('#document_issuer').val(company.document_issuer);
+                $('#document_issuer_state').val(company.document_issuer_state);
+                $('#document_number').val(company.document_number);
+
+                $('#patrimony').unmask();
+                $('#patrimony').mask('#.##0,00', {reverse: true});
+                $('#social_value').unmask();
+                $('#social_value').mask('#.##0,00', {reverse: true});
+                $('#monthly_gross_income').unmask();
+                $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
+
+                if (!isEmpty(unfilledFields)) {
+                    $('form input, select').each(function () {
+                        let id = $(this).attr('id');
+                        let attr = $(this).attr('data-plugin');
+                        if (unfilledFields.includes(id)) {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
+                            } else {
+                                $(this).addClass('input-is-invalid');
+                            }
+                        } else {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
+                            } else {
+                                if ($(this).hasClass('input-is-invalid')) {
+                                    $(this).removeClass('input-is-invalid');
+                                }
+                            }
+                        }
+                    });
+                }
 
                 if (company.country === 'usa') {
                     $('#rounting_number').val(company.bank).trigger('input');
@@ -128,7 +175,7 @@ $(document).ready(function () {
                     $('#agency_digit').val(company.agency_digit);
                     $('#account').val(company.account);
                     $('#account_digit').val(company.account_digit);
-
+                    $('#account_type').val(company.account_type);
                 }
 
                 if (company.country === 'brazil') {
@@ -238,11 +285,13 @@ $(document).ready(function () {
             data: form_data,
             error: function (response) {
                 errorAjaxResponse(response);
+                loadingOnScreenRemove();
                 // $("#company_document").attr('disabled', 'disabled');
             },
             success: function success(response) {
                 alertCustom('success', response.message);
                 loadingOnScreenRemove();
+                initForm();
                 // $("#company_document").attr('disabled', 'disabled');
             }
         });

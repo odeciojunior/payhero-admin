@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 @endpush
@@ -41,6 +41,17 @@
                                         <label for='bank'>Banco</label>
                                         <select id="bank" name="bank" class="form-control" style='width:100%' data-plugin="select2">
                                             <option value="">Selecione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class='col-xl-4'></div>
+                                <div class="col-xl-2">
+                                    <div class='form-group'>
+                                        <label for='account_type'>Tipo de conta</label>
+                                        <select id="account_type" name="account_type" class="input-pad">
+                                            <option value="">Selecione</option>
+                                            <option value="1">Conta corrente</option>
+                                            <option value="2">Conta poupança</option>
                                         </select>
                                     </div>
                                 </div>
@@ -189,7 +200,7 @@
 
     <style>
         .select2-selection--single{
-            border: 1px solid #dddddd !important;
+            /*border: 1px solid #dddddd !important;*/
             border-radius: .215rem !important;
             height: 43px !important;
         }
@@ -217,7 +228,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=3')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=7')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

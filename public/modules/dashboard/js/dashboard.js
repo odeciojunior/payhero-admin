@@ -1,11 +1,55 @@
 $(document).ready(function () {
-    console.log();
     getDataDashboard();
 
     $("#company").on("change", function () {
         updateValues();
     });
-
+    let userAccepted = true;
+    function verifyPendingData() {
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/verifypendingdata",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {company: $('#company').val()},
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                let companies = response.companies;
+                if ((!isEmpty(companies)) || response.pending_user_data) {
+                    if (response.pending_user_data) {
+                        $('.tr-pending-profile').show();
+                    } else {
+                        $('.tr-pending-profile').hide();
+                    }
+                    for (let company of companies) {
+                        $('.table-pending-data-body').append(`
+                                <tr>
+                                    <td style='width:2px;' class='text-center'>
+                                    <span class="status status-lg status-away"></span>
+                                    </td>
+                                    <td class='text-left'>
+                                        Empresas > ${company.fantasy_name}
+                                    </td>
+                                    <td class='text-center'>
+                                        <a class='btn' style='color:darkorange;' href='/companies/${company.id_code}/edit?type=${company.type}' target='_blank'><b><i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i>Atualizar</b></a>
+                                    </td>
+                                </tr>
+                            `);
+                    }
+                    if (!userAccepted) {
+                        $('#modal-peding-data').modal('hide');
+                    } else {
+                        $('#modal-peding-data').modal('show');
+                    }
+                }
+            }
+        });
+    }
     function getDataDashboard() {
         loadOnAny('.page-content');
         $.ajax({
@@ -41,6 +85,7 @@ $(document).ready(function () {
                 }
 
                 if (!data.userTerm) {
+                    userAccepted = data.userTerm;
                     $('#modal-user-term').modal('show');
                 }
 
@@ -63,6 +108,7 @@ $(document).ready(function () {
                         }
                     });
                 });
+                verifyPendingData();
             }
         });
     }

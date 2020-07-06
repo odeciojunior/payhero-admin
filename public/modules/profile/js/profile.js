@@ -18,7 +18,8 @@ $(document).ready(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
     var user = '';
-
+    // $('#monthly_income').mask('#.###,#0', {reverse: true});
+    $('#document_number').mask('0#');
     getDataProfile = function () {
         $.ajax({
             url: "/api/profile",
@@ -33,99 +34,165 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                var countries = response.countries;
+                var unfilledFields = response.unfilledFields;
                 /**
                  * Dados Pessoais
                  */
 
-                $('#name').val(response.data.name);
-                $('#email').val(response.data.email);
-                $('#document').val(response.data.document);
-                $('#cellphone').val(response.data.cellphone);
-                $('#date_birth').val(response.data.date_birth);
+                $('#name').val(response.user.name);
+                $('#email').val(response.user.email);
+                $('#document').val(response.user.document);
+                $('#cellphone').val(response.user.cellphone);
+                $('#date_birth').val(response.user.date_birth);
 
                 /**
                  * Imagem Perfil
                  */
-                $('#previewimage').attr("src", response.data.photo ? response.data.photo : '/modules/global/img/user-default.png');
+                $('#previewimage').attr("src", response.user.photo ? response.user.photo : '/modules/global/img/user-default.png');
                 $("#previewimage").on("error", function () {
                     $(this).attr('src', '/modules/global/img/user-default.png');
                 });
 
                 /**
+                 * Dados User Informations
+                 */
+
+                $('#sex').val(response.user.sex);
+                $('#marital_status').val(response.user.marital_status);
+                $('#nationality').val(response.user.nationality);
+                $('#mother_name').val(response.user.mother_name);
+                $('#father_name').val(response.user.father_name);
+                $('#spouse_name').val(response.user.spouse_name);
+                $('#birth_place').val(response.user.birth_place);
+                $('#birth_city').val(response.user.birth_city);
+                $('#birth_state').val(response.user.birth_state);
+                $('#birth_country').val(response.user.birth_country);
+                $('#monthly_income').val(response.user.monthly_income);
+                $('#document_issue_date').val(response.user.document_issue_date);
+                $('#document_expiration_date').val(response.user.document_expiration_date);
+                $('#document_issuer').val(response.user.document_issuer);
+                $('#document_issuer_state').val(response.user.document_issuer_state);
+                // $('#document_serial_number').val(response.user.document_serial_number);
+                $('#document_number').val(response.user.document_number);
+                $('#monthly_income').unmask();
+                $('#monthly_income').mask('#.##0,00', {reverse: true});
+                // $('#document_number').unmask();
+                // $('#document_number').mask('00.000.000-0');
+
+                for (var country of countries) {
+                    $('#nationality').append(`<option value="${country.code}" ${country.code === response.user.nationality ? 'selected' : ''}>${country.name}</option>`);
+                    $('#birth_country').append(`<option value="${country.name}" ${country.name === response.user.birth_country ? 'selected' : ''}>${country.name}</option>`);
+                }
+                if ($('#marital_status').val() == 'married') {
+                    $('.spouse-name-div').show();
+                }
+
+                if (response.user.birth_country == 'Brasil') {
+                    $('.div-birth-state').show();
+                } else {
+                    $('.div-birth-state').hide();
+                }
+                // for (let filled of unfilledFields) {
+                //     $(`#${filled}`).addClass('input-is-invalid');
+                // }
+                if (!isEmpty(unfilledFields)) {
+                    $('#profile_update_form input,#profile_update_form select').each(function () {
+                        let id = $(this).attr('id');
+                        let attr = $(this).attr('data-plugin');
+                        if (unfilledFields.includes(id)) {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').addClass('input-is-invalid');
+                            } else {
+                                $(this).addClass('input-is-invalid');
+                            }
+                        } else {
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                $(this).parent().find('.selection .select2-selection--single').removeClass('input-is-invalid');
+                            } else {
+                                if ($(this).hasClass('input-is-invalid')) {
+                                    $(this).removeClass('input-is-invalid');
+                                }
+                            }
+                        }
+                    });
+                }
+
+                /**
                  * Dados Residenciais
                  */
-                if (statusArray[response.data.address_document_translate] === 'Aprovado') {
+                if (statusArray[response.user.address_document_translate] === 'Aprovado') {
                     $('.dados-residenciais').attr('disabled', 'disabled');
 
                 } else {
                     $("#text-alert-documents").show();
                     $('.dados-residenciais').removeAttr('disabled');
                 }
-                $('#zip_code').val(response.data.zip_code);
-                $('#street').val(response.data.street);
-                $('#number').val(response.data.number);
-                $('#neighborhood').val(response.data.neighborhood);
-                $('#complement').val(response.data.complement);
-                $('#city').val(response.data.city);
-                $('#state').val(response.data.state);
+                $('#zip_code').val(response.user.zip_code);
+                $('#street').val(response.user.street);
+                $('#number').val(response.user.number);
+                $('#neighborhood').val(response.user.neighborhood);
+                $('#complement').val(response.user.complement);
+                $('#city').val(response.user.city);
+                $('#state').val(response.user.state);
 
                 //seleciona a opcao do select de acordo com o país do usuário
                 $("#country").find('option').each(function () {
-                    if (response.data.country == $(this).val()) {
+                    if (response.user.country == $(this).val()) {
                         $(this).attr('selected', true);
                     }
                 });
                 //só mostra o campo estado se o país for Brasil e Estados Unidos
-                if (response.data.country == 'brazil' || response.data.country == 'usa') {
+                if (response.user.country == 'brazil' || response.user.country == 'usa') {
                     $(".div-state").show();
                 }
                 /**
                  * Notificações
                  */
-                if (response.data.boleto_compensated) {
+                if (response.user.boleto_compensated) {
                     $("#boleto_compensated_switch").attr("checked", "checked");
                 }
-                if (response.data.sale_approved) {
+                if (response.user.sale_approved) {
                     $("#sale_approved_switch").attr("checked", "checked");
                 }
-                if (response.data.notazz) {
+                if (response.user.notazz) {
                     $("#notazz_switch").attr("checked", "checked");
                 }
 
-                if (response.data.released_balance) {
+                if (response.user.released_balance) {
                     $("#released_balance_switch").attr("checked", "checked");
                 }
-                if (response.data.domain_approved) {
+                if (response.user.domain_approved) {
                     $("#domain_approved_switch").attr("checked", "checked");
                 }
-                if (response.data.shopify) {
+                if (response.user.shopify) {
                     $("#shopify_switch").attr("checked", "checked");
                 }
 
-                if (response.data.billet_generated) {
+                if (response.user.billet_generated) {
                     $("#billet_generated_switch").attr("checked", "checked");
                 }
-                if (response.data.credit_card_in_proccess) {
+                if (response.user.credit_card_in_proccess) {
                     $("#credit_card_in_proccess_switch").attr("checked", "checked");
                 }
 
-                if (response.data.affiliation) {
+                if (response.user.affiliation) {
                     $("#affiliation_switch").attr("checked", "checked");
                 }
 
-                if (response.data.blocked_balance) {
+                if (response.user.blocked_balance) {
                     $("#blocked_balance").attr("checked", "checked");
                 }
 
                 // Verificação de telefone
 
-                if (response.data.cellphone_verified) {
+                if (response.user.cellphone_verified) {
                     cellphoneVerified();
                 } else {
                     cellphoneNotVerified();
                 }
 
-                if (response.data.role.name !== 'account_owner') {
+                if (response.user.role.name !== 'account_owner') {
                     $("#nav_notifications").hide();
                     $("#nav_taxs").hide();
                 } else {
@@ -135,7 +202,7 @@ $(document).ready(function () {
 
                 // Verificação de email
 
-                if (response.data.email_verified) {
+                if (response.user.email_verified) {
                     emailVerified();
                 } else {
                     emailNotVerified();
@@ -145,35 +212,36 @@ $(document).ready(function () {
                  * Documentos
                  */
 
-                if (response.data.personal_document_translate === 'pending' || response.data.personal_document_translate === 'refused') {
+                if (response.user.personal_document_translate === 'pending' || response.user.personal_document_translate === 'refused') {
                     $("#text-alert-documents-cpf").show();
                 } else {
                     $("#text-alert-documents-cpf").hide();
                 }
 
-                if (response.data.personal_document_translate === 'approved' || response.data.personal_document_translate === 'analyzing') {
+                if (response.user.personal_document_translate === 'approved' || response.user.personal_document_translate === 'analyzing') {
                     $('#document').attr('disabled', 'disabled');
                     $("#personal-document-id").hide();
                 }
 
-                if (response.data.address_document_translate == 'pending' || response.data.address_document_translate == 'refused') {
+                if (response.user.address_document_translate == 'pending' || response.user.address_document_translate == 'refused') {
                     $("#text-alert-documents-cpf").show();
                     $("#address-document-id").show();
                 }
 
-                if (response.data.address_document_translate == 'approved' || response.data.address_document_translate == 'analyzing') {
+                if (response.user.address_document_translate == 'approved' || response.user.address_document_translate == 'analyzing') {
                     $("#address-document-id").hide();
                 }
 
-                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.data.personal_document_translate]}'>${statusArray[response.data.personal_document_translate]}</span>`);
+                $("#td_personal_status").html('').append(`<span class='badge ${badgeArray[response.user.personal_document_translate]}'>${statusArray[response.user.personal_document_translate]}</span>`);
 
-                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.data.address_document_translate]}'>${statusArray[response.data.address_document_translate]}</span>`);
-                user = response.data.id_code;
+                $("#td_address_status").html('').append(`<span class='badge ${badgeArray[response.user.address_document_translate]}'>${statusArray[response.user.address_document_translate]}</span>`);
+                user = response.user.id_code;
 
-                verifyDocuments(response.data);
-                verifyUserAddress(response.data);
-                changeMaskByUserCountry(response.data);
-                loadLabelsByCountry(response.data);
+                verifyDocuments(response.user);
+                verifyUserAddress(response.user);
+                changeMaskByUserCountry(response.user);
+                loadLabelsByCountry(response.user);
+
             }
         });
     }
@@ -278,7 +346,22 @@ $(document).ready(function () {
             }
         });
     });
-
+    $('#marital_status').on('change', function () {
+        if ($(this).val() == 'married') {
+            $('.spouse-name-div').show();
+        } else {
+            $('.spouse-name-div').hide();
+            $('#spouse_name').val('');
+        }
+    });
+    $('#birth_country').on('change', function () {
+        if ($(this).val() == 'Brasil') {
+            $('.div-birth-state').show();
+        } else {
+            $('.div-birth-state').hide();
+            $('#birth_state').val('');
+        }
+    });
     function cellphoneVerified() {
         $("#message_not_verified_cellphone").css("display", "none");
         $("#input_group_cellphone").css("border-color", "forestgreen");
@@ -312,6 +395,10 @@ $(document).ready(function () {
         $('#document').removeAttr('disabled');
 
         event.preventDefault();
+        if ($('#marital_status').val() == 'married' && $('#spouse_name').val() == '') {
+            alertCustom('error', 'Preencha o campo Nome completo do cônjuge');
+            return false;
+        }
         var form_data = new FormData(document.getElementById('profile_update_form'));
         loadingOnScreen();
         $.ajax({

@@ -9,22 +9,23 @@ use App\Traits\LogsActivity;
 /**
  * Class UserNotification
  * @package Modules\Core\Entities
- * @property integer $user_id
- * @property boolean $new_affiliation
- * @property boolean $new_affiliation_request
- * @property boolean $approved_affiliation
- * @property boolean $boleto_compensated
- * @property boolean $sale_approved
- * @property boolean $retroactive_notazz
- * @property boolean $withdrawal_approved
- * @property boolean $released_balance
- * @property boolean $domain_approved
- * @property boolean $send_push_shopify_integration_ready
- * @property boolean $user_shopify_integration_store
+ * @property int $user_id
+ * @property bool $new_affiliation
+ * @property bool $new_affiliation_request
+ * @property bool $approved_affiliation
+ * @property bool $boleto_compensated
+ * @property bool $sale_approved
+ * @property bool $retroactive_notazz
+ * @property bool $withdrawal_approved
+ * @property bool $released_balance
+ * @property bool $domain_approved
+ * @property bool $send_push_shopify_integration_ready
+ * @property bool $user_shopify_integration_store
  */
 class UserNotification extends Model
 {
     use LogsActivity;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

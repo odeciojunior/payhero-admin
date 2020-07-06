@@ -21,6 +21,10 @@ use Modules\Core\Listeners\BilletPaidHotsacListener;
 use Modules\Core\Listeners\BilletPaidReportanaListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
+/**
+ * Class EventServiceProvider
+ * @package App\Providers
+ */
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -107,13 +111,13 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\TicketMessageEvent' => [
             'Modules\Core\Listeners\TicketMessageSendEmailListener',
         ],
-        'Modules\Core\Events\AffiliateRequestEvent'           => [
+        'Modules\Core\Events\AffiliateRequestEvent' => [
             'Modules\Core\Listeners\AffiliateRequestSendEmailListener',
         ],
-        'Modules\Core\Events\AffiliateEvent'                  => [
+        'Modules\Core\Events\AffiliateEvent' => [
             'Modules\Core\Listeners\AffiliateSendEmailListener',
         ],
-        'Modules\Core\Events\EvaluateAffiliateRequestEvent'   => [
+        'Modules\Core\Events\EvaluateAffiliateRequestEvent' => [
             'Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener',
         ],
     ];
