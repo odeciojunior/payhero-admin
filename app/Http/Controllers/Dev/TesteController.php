@@ -289,25 +289,33 @@ class TesteController extends Controller
 
     public function jeanFunction(Request $request)
     {
-        settings()->flushCache();
-        try {
-            $data = $request->all();
-            if (!empty($data['id'])) {
+        //regerar order shopify considerando upsell
+        $userId = $this->argument('user');
 
-                if (is_numeric($data['id'])) {
-                    strlen($data['id'] > 8)
-                        ? dd(Hashids::encode($data['id']))
-                        : dd(Hashids::connection('sale_id')->encode($data['id']));
-                } else {
-                    strlen($data['id'] > 8)
-                        ? dd(current(Hashids::decode($data['id'])))
-                        : dd(current(Hashids::connection('sale_id')->decode($data['id'])));
+        if(!empty($userId)) {
+
+            $sales = Sale::with([
+                'upsells',
+                'project.shopifyIntegrations'
+            ])->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
+                ->where('sales.shopify_order', '!=', DB::raw('s2.shopify_order'))
+                ->where('sales.owner_id', $userId)
+                ->selectRaw('sales.*')
+                ->get();
+
+            $integrations = [];
+
+            foreach ($sales as $sale) {
+
+                $shopifyService = $integrations[$sale->project_id] ?? null;
+                if(empty($shopifyService)) {
+                    $integration = $sale->project->shopifyIntegrations->first();
+                    $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+                    $integrations[$sale->project_id] = $shopifyService;
                 }
-            } else {
-                dd('Não rolou!');
+
+                $shopifyService->addItemsToOrder($sale->id);
             }
-        } catch (Exception $e) {
-            dd($e->getMessage());
         }
     }
 
