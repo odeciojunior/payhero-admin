@@ -36,31 +36,44 @@ class GenericCommand extends Command
         /**
          * Julio
          */
-        //        $company = Company::find(2704); // PF
 //        $company = Company::find(26); // PJ
 
         /** Joao */
-//        $company = Company::find(28); // PF
-        $company = Company::find(2702); // PJ
+//        $company = Company::find(2702); // PJ
 
 
         /**
          * PJ
          */
 //        $getNetService->checkAvailablePaymentPlansPj();
-        $getNetService->checkPjCompanyRegister($company->company_document);
-        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+//        $getNetService->checkPjCompanyRegister($company->company_document);
+//        $getNetService->checkComplementPjCompanyRegister($company->company_document);
 //        $getNetService->createPjCompany($company);
 //        $getNetService->complementPjCompany($company);
 //        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+
+
+        /** Joao */
+//        $company = Company::find(28); // PF
+
+        /**
+         * Julio
+         */
+//        $company = Company::find(2704); // PF
+
+        /**
+         * Matheus
+         */
+        $company = Company::find(1940);
 
 
         /**
          * PF
          */
 //        $getNetService->checkAvailablePaymentPlansPf();
-//        $getNetService->checkPfCompanyRegister($company->company_document);
+        $getNetService->checkPfCompanyRegister($company->company_document);
 //        $getNetService->createPfCompany($company);
+//        $getNetService->complementPfCompany($company);
 //        $getNetService->updatePfCompany($company);
     }
 }

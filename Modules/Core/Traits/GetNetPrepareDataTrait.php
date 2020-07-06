@@ -4,6 +4,7 @@ namespace Modules\Core\Traits;
 
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\UserInformation;
 use Modules\Core\Services\FoxUtils;
 
 /**
@@ -84,7 +85,7 @@ trait GetNetPrepareDataTrait
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
             'marketplace_store' => 'S',
-            'payment_plan' => 1005
+            'payment_plan' => 3
         ];
     }
 
@@ -96,14 +97,13 @@ trait GetNetPrepareDataTrait
     {
         $user = $company->user;
         $userInformation = $user->userInformation;
-        $userInformationPresent = $userInformation->present();
 
         return [
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
             'legal_document_number' => $company->company_document,
             'identification_document' => [
-                'document_type' => $userInformationPresent->getDocumentType(), //
+                'document_type' => 'id_card', //
                 'document_number' => $userInformation->document_number,
                 'document_issue_date' => $userInformation->document_issue_date,
                 'document_expiration_date' => $userInformation->document_expiration_date,
@@ -137,30 +137,7 @@ trait GetNetPrepareDataTrait
             'merchant_id' => $this->getMerchantId(),
             'subseller_id' => $company->subseller_getnet_id,
             'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
-            'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->name)),
-            'birth_date' => $user->date_birth,
-            'mothers_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($userInformation->mother_name)),
-            'monthly_gross_income' => FoxUtils::onlyNumbers($company->monthly_gross_income),
-            'business_address' => [
-                'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->street)),
-                'number' => FoxUtils::onlyNumbers($user->number),
-                'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->neighborhood)),
-                'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->city)),
-                'state' => $user->state,
-                'postal_code' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->zip_code)),
-                'country' => 'BR',
-            ],
             'email' => $user->email,
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => FoxUtils::onlyNumbers($company->bank),
-                    'agency' => FoxUtils::onlyNumbers($company->agency),
-                    'account' => FoxUtils::onlyNumbers($company->account),
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => FoxUtils::onlyNumbers($company->account_digit),
-                ]
-            ]
         ];
     }
 

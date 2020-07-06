@@ -71,32 +71,6 @@ class GetnetService
         }
     }
 
-    /**
-     * @param string $cpf
-     * Consulta complemento cadastral de um CPF
-     */
-    public function checkPfCompanyRegister(string $cpf)
-    {
-        $url = self::URL_API . 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
-        $data = $cpf;
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
 
     /**
      * Consulta planos de pagamentos configurados para a loja
@@ -192,6 +166,7 @@ class GetnetService
         $this->saveRequests($url, $result, $httpStatus, $data);
     }
 
+
     /**
      * @param Company $company
      * @return string[]
@@ -232,6 +207,35 @@ class GetnetService
             ];
         }
     }
+
+
+    /**
+     * @param string $cpf
+     * Consulta situação cadastral de um CPF que já finalizou o fluxo de pré cadastro
+     */
+    public function checkPfCompanyRegister(string $cpf)
+    {
+        $url = self::URL_API . 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
+        $data = $cpf;
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
+            ]
+        );
+
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $this->saveRequests($url, $result, $httpStatus, $data);
+    }
+
 
     /**
      * @param $cnpj
