@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\TrackingService;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Services\ShopifyService;
 
 /**
  * Class GenericCommand
@@ -25,35 +26,34 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $trackingModel = new Tracking();
-        $trackingService = new TrackingService();
-
-        $trackingsQuery = $trackingModel->with('productPlanSale')
-            ->where('system_status_enum', $trackingModel->present()->getSystemStatusEnum('unknown_carrier'));
 
         $userId = $this->argument('user');
-        if (!empty($userId)) {
-            $trackingsQuery->whereHas('sale', function ($query) use ($userId) {
-                $query->where('owner_id', $userId);
-            });
-        }
 
-        $count = 0;
-        $trackingsQuery->chunk(100, function ($trackings) use ($trackingService, &$count) {
-            foreach ($trackings as $tracking) {
-                try {
-                    $count++;
-                    $this->line("tracking: {$count}");
-                    $trackingCode = $tracking->tracking_code;
-                    $pps = $tracking->productPlanSale;
-                    $trackingService->createOrUpdateTracking($trackingCode, $pps, false, true);
-                } catch (\Exception $e) {
-                    continue;
+        if(!empty($userId)) {
+
+            $sales = Sale::with([
+                'upsells',
+                'project.shopifyIntegrations'
+            ])->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
+                ->where('sales.shopify_order', '!=', DB::raw('s2.shopify_order'))
+                ->where('sales.owner_id', $userId)
+                ->selectRaw('sales.*')
+                ->get();
+
+            $integrations = [];
+
+            foreach ($sales as $sale) {
+
+                $shopifyService = $integrations[$sale->project_id] ?? null;
+                if(empty($shopifyService)) {
+                    $integration = $sale->project->shopifyIntegrations->first();
+                    $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+                    $integrations[$sale->project_id] = $shopifyService;
                 }
-            }
-        });
 
-        return;
+                $shopifyService->addItemsToOrder($sale->id);
+            }
+        }
     }
 }
 

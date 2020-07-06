@@ -1392,6 +1392,156 @@ class ShopifyService
     /**
      * @param Sale $sale
      * @return array
+     * @throws PresenterException
+     */
+    public function prepareOrder(Sale $sale)
+    {
+        $this->saleId = $sale->id;
+        $delivery     = $sale->delivery;
+        $client       = $sale->customer;
+
+        $totalValue = $sale->present()->getSubTotal();
+
+        $firstProduct = true;
+        $items        = [];
+        foreach ($sale->productsPlansSale as $productsPlanSale) {
+            $productPrice = 0;
+            if ($firstProduct) {
+                if (!empty($sale->shopify_discount)) {
+                    $totalValue -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                }
+
+                if ($productsPlanSale->amount > 1) {
+                    $productPrice = intval($totalValue / $productsPlanSale->amount);
+                } else {
+                    $productPrice = $totalValue;
+                }
+                $productPrice = substr_replace($productPrice, '.', strlen($productPrice) - 2, 0);
+                $firstProduct = false;
+            }
+
+            $product = $productsPlanSale->product;
+
+            $items[] = [
+                "grams"             => 500,
+                "id"                => $productsPlanSale->plan->id,
+                "price"             => $productPrice,
+                "product_id"        => $product->shopify_id,
+                "quantity"          => $productsPlanSale->amount,
+                "requires_shipping" => true,
+                "sku"               => $product->sku,
+                "title"             => $product->name,
+                "variant_id"        => $product->shopify_variant_id,
+                "variant_title"     => $product->description,
+                "name"              => $product->name,
+                "gift_card"         => false,
+            ];
+        }
+
+        $address = $delivery->street . ' - ' . $delivery->number;
+        if ($delivery->complement != '') {
+            $address .= ' - ' . $delivery->complement;
+        }
+        $address .= ' - ' . $delivery->neighborhood;
+
+        $shippingAddress = [
+            "address1"      => $address,
+            "address2"      => "",
+            "city"          => $delivery->city,
+            "company"       => $client->document,
+            "country"       => "Brasil",
+            "first_name"    => $delivery->present()->getReceiverFirstName(),
+            "last_name"     => $delivery->present()->getReceiverLastName(),
+            "phone"         => $client->present()->getTelephoneShopify(),
+            "province"      => $delivery->state,
+            "zip"           => FoxUtils::formatCEP($delivery->zip_code),
+            "name"          => $client->name,
+            "country_code"  => "BR",
+            "province_code" => $delivery->state,
+        ];
+
+        // Endereço de Faturamento
+        $billingAddress = [
+            "first_name" => $delivery->present()->getReceiverFirstName(),
+            "last_name"  => $delivery->present()->getReceiverLastName(),
+            "address1"   => $address,
+            "phone"      => $client->present()->getTelephoneShopify(),
+            "city"       => $delivery->city,
+            "province"   => $delivery->state,
+            "country"    => "Brasil",
+            "zip"        => FoxUtils::formatCEP($delivery->zip_code),
+        ];
+
+        $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
+        if ($shippingValue <= 0) {
+            $shippingTitle = 'Free Shipping';
+        } else {
+            $shippingTitle = 'Standard Shipping';
+            $totalValue    += $shippingValue;
+        }
+        $shipping[] = [
+            "custom" => true,
+            "price"  => $shippingValue <= 0 ? 0.0 : substr_replace($shippingValue, '.', strlen($shippingValue) - 2, 0),
+            "title"  => $shippingTitle,
+        ];
+
+        $orderData = [
+            "accepts_marketing"       => false,
+            "currency"                => "BRL",
+            "email"                   => $client->email,
+            "phone"                   => $client->present()->getTelephoneShopify(),
+            "first_name"              => $delivery->present()->getReceiverFirstName(),
+            "last_name"               => $delivery->present()->getReceiverLastName(),
+            "buyer_accepts_marketing" => false,
+            "line_items"              => $items,
+            "shipping_address"        => $shippingAddress,
+            "billing_address"         => $billingAddress,
+            "shipping_lines"          => $shipping,
+            "note_attributes"         => [
+                "token_cloudfox" => Hashids::encode($sale->checkout_id),
+            ],
+            "total_price"             => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+        ];
+
+        if ($sale->payment_method == 1 || $sale->payment_method == 3) {
+            //cartao
+
+            $orderData += [
+                "transactions" => [
+                    [
+                        "gateway"       => "cloudfox",
+                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "kind"          => "sale",
+                        "status"        => "success",
+                        "amount"        => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                    ],
+                ],
+            ];
+        } else if ($sale->payment_method == 2) {
+            //boleto
+
+            $orderData += [
+                "financial_status" => $sale->status == 1 ? "success" : "pending",
+                "transactions"     => [
+                    [
+                        "gateway"       => "cloudfox",
+                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "kind"          => "sale",
+                        "status"        => $sale->status == 1 ? "success" : "pending",
+                        "amount"        => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
+                    ],
+                ],
+            ];
+        } else {
+            return null;
+        }
+
+        return $orderData;
+    }
+
+    /**
+     * @param Sale $sale
+     * @return array
      */
     public function newOrder(Sale $sale)
     {
@@ -1407,159 +1557,13 @@ class ShopifyService
                 ];
             }
 
-            $this->saleId = $sale->id;
-            $delivery = $sale->delivery;
-            $client = $sale->customer;
+            $orderData = $this->prepareOrder($sale);
 
-            $totalValue = $sale->present()->getSubTotal();
-
-            $firstProduct = true;
-            $items = [];
-            foreach ($sale->plansSales as $planSale) {
-                foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $productPrice = 0;
-                    if ($firstProduct) {
-                        if (!empty($sale->shopify_discount)) {
-                            $totalValue -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
-                        }
-
-                        if ($productPlan->amount * $planSale->amount > 1) {
-                            $productPrice = intval($totalValue / ($productPlan->amount * $planSale->amount));
-                        } else {
-                            $productPrice = $totalValue;
-                        }
-                        $productPrice = substr_replace($productPrice, '.', strlen($productPrice) - 2, 0);
-                        $firstProduct = false;
-                    }
-
-                    $items[] = [
-                        "grams" => 500,
-                        "id" => $planSale->plan->id,
-                        "price" => $productPrice,
-                        "product_id" => $productPlan->product->shopify_id,
-                        "quantity" => $productPlan->amount * $planSale->amount,
-                        "requires_shipping" => true,
-                        "sku" => $productPlan->product->sku,
-                        "title" => $productPlan->product->name,
-                        "variant_id" => $productPlan->product->shopify_variant_id,
-                        "variant_title" => $productPlan->product->description,
-                        "name" => $productPlan->product->name,
-                        "gift_card" => false,
-                    ];
-                }
-            }
-
-            $address = $delivery->street . ' - ' . $delivery->number;
-            if ($delivery->complement != '') {
-                $address .= ' - ' . $delivery->complement;
-            }
-            $address .= ' - ' . $delivery->neighborhood;
-
-            // Endereço de faturamento
-            $billingAddress = [
-                "first_name" => $delivery->present()->getReceiverFirstName(),
-                "last_name" => $delivery->present()->getReceiverLastName(),
-                "address1" => $address,
-                "phone" => $client->present()->getTelephoneShopify(),
-                "city" => $delivery->city,
-                "province" => $delivery->state,
-                "country" => "Brasil",
-                "zip" => FoxUtils::formatCEP($delivery->zip_code),
-            ];
-
-            $shippingAddress = [
-                "address1" => $address,
-                "address2" => "",
-                "city" => $delivery->city,
-                "company" => $client->document,
-                "country" => "Brasil",
-                "first_name" => $delivery->present()->getReceiverFirstName(),
-                "last_name" => $delivery->present()->getReceiverLastName(),
-                "phone" => $client->present()->getTelephoneShopify(),
-                "province" => $delivery->state,
-                "zip" => FoxUtils::formatCEP($delivery->zip_code),
-                "name" => $client->name,
-                "country_code" => "BR",
-                "province_code" => $delivery->state,
-            ];
-            $shippingValue = intval(preg_replace("/[^0-9]/", "", $sale->shipment_value));
-            if ($shippingValue <= 0) {
-                $shippingTitle = 'Free Shipping';
-            } else {
-                $shippingTitle = 'Standard Shipping';
-                $totalValue += $shippingValue;
-            }
-            $shipping[] = [
-                "custom" => true,
-                "price" => $shippingValue <= 0 ? 0.0 : substr_replace(
-                    $shippingValue,
-                    '.',
-                    strlen($shippingValue) - 2,
-                    0
-                ),
-                "title" => $shippingTitle,
-            ];
-            $orderData = [
-                "accepts_marketing" => false,
-                "currency" => "BRL",
-                "email" => $client->email,
-                "phone" => $client->present()->getTelephoneShopify(),
-                "first_name" => $delivery->present()->getReceiverFirstName(),
-                "last_name" => $delivery->present()->getReceiverLastName(),
-                "buyer_accepts_marketing" => false,
-                "line_items" => $items,
-                "billing_address" => $billingAddress,
-                "shipping_address" => $shippingAddress,
-                "shipping_lines" => $shipping,
-                "note_attributes" => [
-                    "token_cloudfox" => Hashids::encode($sale->checkout_id),
-                ],
-                "total_price" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
-            ];
-
-            if (($sale->payment_method == 1 || $sale->payment_method == 3) && $sale->status == 1) {
-                //cartao aprovado
-
-                $orderData += [
-                    "transactions" => [
-                        [
-                            "gateway" => "cloudfox",
-                            "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                            "kind" => "sale",
-                            "status" => "success",
-                            "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
-                        ],
-                    ],
+            if(empty($orderData)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
                 ];
-            } else {
-                if (($sale->payment_method == 2) && $sale->status == 2) {
-                    //boleto pending
-
-                    $orderData += [
-                        "financial_status" => "pending",
-                    ];
-                } else {
-                    if (($sale->payment_method == 2) && $sale->status == 1) {
-                        //boleto pago
-
-                        $orderData += [
-                            "transactions" => [
-                                [
-                                    "gateway" => "cloudfox",
-                                    "authorization" => Hashids::connection('sale_id')->encode($sale->id),
-                                    "kind" => "sale",
-                                    "status" => "success",
-                                    "amount" => substr_replace($totalValue, '.', strlen($totalValue) - 2, 0),
-                                ],
-                            ],
-                        ];
-                    } else {
-                        return [
-                            'status' => 'error',
-                            'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
-                        ];
-                    }
-                }
             }
 
             $this->sendData = $orderData;
@@ -1624,6 +1628,134 @@ class ShopifyService
             return [
                 'status' => 'success',
                 'message' => 'Ordem gerada com sucesso.',
+            ];
+        }
+    }
+
+    /**
+     * Usado para gerar order de vendas com upsell
+     * @param  int  $saleId
+     * @return array
+     */
+    public function addItemsToOrder(int $saleId)
+    {
+        try {
+            $this->method = __METHOD__;
+            $saleModel    = new Sale();
+
+            $firstSale = $saleModel->with(['upsells.productsPlansSale'])
+                ->find($saleId);
+
+            $orderData = $this->prepareOrder($firstSale);
+
+            if(empty($orderData)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Venda não atende requisitos para gerar ordem no shopify.',
+                ];
+            }
+
+            foreach ($firstSale->upsells as $sale) {
+                $totalValue   = $sale->present()->getSubTotal();
+                $firstProduct = true;
+                foreach ($sale->productsPlansSale as $productsPlanSale) {
+                    $productPrice = 0;
+                    if ($firstProduct) {
+                        if (!empty($sale->shopify_discount)) {
+                            $totalValue -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                        }
+                        if ($productsPlanSale->amount > 1) {
+                            $productPrice = intval($totalValue / $productsPlanSale->amount);
+                        } else {
+                            $productPrice = $totalValue;
+                        }
+                        $productPrice = substr_replace($productPrice, '.', strlen($productPrice) - 2, 0);
+                        $firstProduct = false;
+                    }
+
+                    $product = $productsPlanSale->product;
+
+                    $orderData['line_items'][] = [
+                        "grams"             => 500,
+                        "id"                => $productsPlanSale->plan_id,
+                        "price"             => $productPrice,
+                        "product_id"        => $product->shopify_id,
+                        "quantity"          => $productsPlanSale->amount,
+                        "requires_shipping" => true,
+                        "sku"               => $productsPlanSale->product->sku,
+                        "title"             => $product->name,
+                        "variant_id"        => $product->shopify_variant_id,
+                        "variant_title"     => $product->description,
+                        "name"              => $product->name,
+                        "gift_card"         => false,
+                    ];
+                }
+
+                $totalValue               /= 100;
+                $orderPrice               = preg_replace("/[^0-9]/", "", $orderData['total_price']) / 100;
+                $orderData['total_price'] = $orderPrice + $totalValue;
+                if ($sale->payment_method == 1) {
+                    $orderData['transactions'][] = [
+                        "gateway"       => "cloudfox",
+                        "authorization" => Hashids::connection('sale_id')->encode($sale->id),
+                        "kind"          => "sale",
+                        "status"        => "success",
+                        "amount"        => $totalValue,
+                    ];
+                }
+            }
+
+            $this->sendData     = $orderData;
+            $order              = $this->getClient()->getOrderManager()->create($orderData);
+            $this->receivedData = $this->convertToArray($order);
+
+            $oldOrderId = $firstSale->shopify_order;
+
+
+            try {
+                $fulfillments = $this->getClient()->getFulfillmentManager()->findAll($oldOrderId);
+                foreach ($fulfillments as $fulfillment){
+                    $this->getClient()->getFulfillmentManager()->cancel($oldOrderId, $fulfillment->getId());
+                }
+                $this->getClient()->getOrderManager()->cancel($oldOrderId);
+                $this->getClient()->getOrderManager()->remove($oldOrderId);
+            } catch (Exception $e) {}
+
+
+            $orderId = $order->getId();
+
+            $firstSale->update([
+                'shopify_order' => $orderId,
+            ]);
+
+            foreach ($firstSale->upsells as $upsell) {
+                if ($upsell->shopify_order != $oldOrderId) {
+                    try {
+                        $fulfillments = $this->getClient()->getFulfillmentManager()->findAll($upsell->shopify_order);
+                        foreach ($fulfillments as $fulfillment) {
+                            $this->getClient()->getFulfillmentManager()->cancel($upsell->shopify_order,
+                                $fulfillment->getId());
+                        }
+                        $this->getClient()->getOrderManager()->cancel($upsell->shopify_order);
+                        $this->getClient()->getOrderManager()->remove($upsell->shopify_order);
+                    } catch (Exception $e) {}
+                }
+
+                $upsell->shopify_order = $orderId;
+                $upsell->save();
+            }
+
+            return [
+                'status' => 'success',
+                'message' => 'Ordem gerada com sucesso.',
+            ];
+        } catch (Exception $e) {
+            $this->exceptions[] = $e->getMessage();
+            report($e);
+
+            return [
+                'status' => 'success',
+                'message' => 'Erro ao gerar order',
             ];
         }
     }

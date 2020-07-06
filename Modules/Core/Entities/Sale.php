@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
+use Nwidart\Modules\Collection;
 
 /**
  * @property integer $id
@@ -59,9 +60,10 @@ use Modules\Core\Presenters\SalePresenter;
  * @property Delivery $delivery
  * @property SaleRefundHistory $saleRefundHistory
  * @property User $user
- * @property PlanSale[] $plansSales
- * @property Transaction[] $transactions
+ * @property Collection $plansSales
+ * @property Collection $transactions
  * @property Tracking $tracking
+ * @property Collection $upsells
  * @method SalePresenter present()
  */
 class Sale extends Model
@@ -277,5 +279,13 @@ class Sale extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function upsells()
+    {
+        return $this->hasMany(Sale::class, 'upsell_id');
     }
 }
