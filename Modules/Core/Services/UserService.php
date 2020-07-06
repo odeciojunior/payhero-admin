@@ -128,48 +128,48 @@ class UserService
 
         if (empty($user->email)) {
             return true;
-        } else if (empty($user->cellphone)) {
+        } elseif (empty($user->cellphone)) {
             return true;
-        } else if (empty($user->document)) {
+        } elseif (empty($user->document)) {
             return true;
-        } else if (empty($user->zip_code)) {
+        } elseif (empty($user->zip_code)) {
             return true;
-        } else if (empty($user->country)) {
+        } elseif (empty($user->country)) {
             return true;
-        } else if (empty($user->state)) {
+        } elseif (empty($user->state)) {
             return true;
-        } else if (empty($user->city)) {
+        } elseif (empty($user->city)) {
             return true;
-        } else if (empty($user->neighborhood)) {
+        } elseif (empty($user->neighborhood)) {
             return true;
-        } else if (empty($user->street)) {
+        } elseif (empty($user->street)) {
             return true;
-        } else if (empty($user->number)) {
+        } elseif (empty($user->number)) {
             return true;
-        } else if (empty($user->date_birth)) {
+        } elseif (empty($user->date_birth)) {
             return true;
-        } else if (empty($userInformation->sex)) {
+        } elseif (empty($userInformation->sex)) {
             return true;
-        } else if (empty($userInformation->marital_status)) {
+        } elseif (empty($userInformation->marital_status)) {
             return true;
-        } else if (empty($userInformation->nationality)) {
+        } elseif (empty($userInformation->nationality)) {
             return true;
-        } else if ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
+        } elseif ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
             && empty($userInformation->spouse_name)) {
             return true;
-        } else if (empty($userInformation->birth_city)) {
+        } elseif (empty($userInformation->birth_city)) {
             return true;
-        } else if (empty($userInformation->birth_country)) {
+        } elseif (empty($userInformation->birth_country)) {
             return true;
-        } else if (empty($userInformation->monthly_income)) {
+        } elseif (empty($userInformation->monthly_income)) {
             return true;
-        } else if (empty($userInformation->document_number)) {
+        } elseif (empty($userInformation->document_number)) {
             return true;
-        } else if (empty($userInformation->document_issue_date)) {
+        } elseif (empty($userInformation->document_issue_date)) {
             return true;
-        } else if (empty($userInformation->document_issuer)) {
+        } elseif (empty($userInformation->document_issuer)) {
             return true;
-        } else if (empty($userInformation->document_issuer_state)) {
+        } elseif (empty($userInformation->document_issuer_state)) {
             return true;
         } else {
             return false;
