@@ -71,6 +71,35 @@ class GetnetService
         }
     }
 
+    public function getStatement()
+    {
+        $url = self::URL_API . 'v1/mgm/statement';
+
+        $queryParameters = [
+            'seller_id' => getenv('GET_NET_SELLER_ID'),
+            'transaction_date_init' => '2020-06-06T18:49:59Z',
+            'transaction_date_end' => '2020-07-06T18:49:59Z'
+
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
+                CURLOPT_POSTFIELDS => http_build_query($queryParameters)
+            ]
+        );
+
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+    }
+
 
     /**
      * Consulta planos de pagamentos configurados para a loja
