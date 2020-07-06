@@ -1521,7 +1521,7 @@ class ShopifyService
             //boleto
 
             $orderData += [
-                "financial_status" => $sale->status == 1 ? "success" : "pending",
+                "financial_status" => $sale->status == 1 ? "paid" : "pending",
                 "transactions"     => [
                     [
                         "gateway"       => "cloudfox",
