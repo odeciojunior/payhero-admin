@@ -21,7 +21,15 @@ class TransfersService
         $transferModel = new Transfer();
         $transactionModel = new Transaction();
 
-        // Transações pagas
+        try{
+            // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
+            settings()->group('withdrawal_request')->set('withdrawal_request', false);
+        }catch (Exception $e){
+            report($e);
+        }
+
+
+        /*// Transações pagas
         if (empty($saleId)) {
             $transactions = $transactionModel->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
@@ -80,7 +88,6 @@ class TransfersService
                 report($e);
             }
         }
-
 
         // Trasações antecipadas
         if (empty($saleId)) {
@@ -143,6 +150,12 @@ class TransfersService
             } catch (Exception $e) {
                 report($e);
             }
+        }*/
+
+        try {
+            settings()->group('withdrawal_request')->set('withdrawal_request', true);
+        }catch (Exception $e){
+            report($e);
         }
     }
 

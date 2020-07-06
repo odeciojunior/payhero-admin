@@ -26,8 +26,9 @@ class GenericCommand extends Command
 
     public function handle()
     {
+        settings()->group('withdrawal_request')->set('withdrawal_request', true);
 
-        $userId = $this->argument('user');
+        /*$userId = $this->argument('user');
 
         if(!empty($userId)) {
 
@@ -53,7 +54,7 @@ class GenericCommand extends Command
 
                 $shopifyService->addItemsToOrder($sale->id);
             }
-        }
+        }*/
     }
 }
 
