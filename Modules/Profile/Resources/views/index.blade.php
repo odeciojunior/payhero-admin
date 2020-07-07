@@ -99,7 +99,7 @@
                                                            style='color:red; display:none;'>Email não verificado, clique
                                                         <a href='#' id='btn_verify_email'
                                                            onclick='event.preventDefault();' data-toggle='modal'
-                                                           data-target='#modal_verify_emai  l'>aqui
+                                                           data-target='#modal_verify_email'>aqui
                                                         </a>
                                                         para verificá-lo!
                                                     </small>
