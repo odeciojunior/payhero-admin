@@ -240,6 +240,7 @@ class SaleService
                                      'transactions',
                                      'notazzInvoices',
                                      'affiliate',
+                                     'saleRefundHistory',
                                  ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
         //add details to sale
@@ -368,7 +369,6 @@ class SaleService
         } else {
             $userTransaction->release_date = null;
         }
-
         //add details to sale
         $sale->details = (object) [
             'transaction_rate'    => 'R$ ' . number_format(preg_replace('/[^0-9]/', '', $userTransaction->transaction_rate) / 100, 2, ',', '.'),
@@ -386,6 +386,8 @@ class SaleService
             'refund_value'        => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
             'value_anticipable'   => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
             'total_paid_value'    => number_format($sale->total_paid_value, 2, ',', '.'),
+            'refund_observation' => count($sale->saleRefundHistory) > 0 ? $sale->saleRefundHistory->first()->refund_observation : null,
+            'user_changed_observation' => count($sale->saleRefundHistory) > 0 && !empty($sale->saleRefundHistory->first()->user_id),
         ];
     }
 
@@ -466,7 +468,7 @@ class SaleService
      * @return bool
      * @throws Exception
      */
-    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [])
+    public function updateSaleRefunded($sale, $refundAmount, $response, $partialValues = [],$refundObservation)
     {
         try {
             $totalPaidValue = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
@@ -499,6 +501,8 @@ class SaleService
                                           'date_refunded'    => Carbon::now(),
                                           'gateway_response' => json_encode($responseGateway),
                                           'refund_value'     => $refundAmount,
+                                          'refund_observation'=> $refundObservation,
+                                          'user_id' => auth()->user()->account_owner_id,
                                       ]);
             if ($status == 'refunded') {
                 $checktRecalc = $this->recalcSaleRefund($sale, $refundAmount);
@@ -622,9 +626,10 @@ class SaleService
 
     /**
      * @param $transactionId
-     * @return array
+     * @param null $refundObservation
+     * @return string[]
      */
-    public function refund($transactionId)
+    public function refund($transactionId, $refundObservation = null)
     {
         try {
             $saleModel        = new Sale();
@@ -697,6 +702,8 @@ class SaleService
                                                   'refunded_amount'  => $sale->original_total_paid_value ?? 0,
                                                   'date_refunded'    => Carbon::now(),
                                                   'gateway_response' => json_encode($refundedTransaction),
+                                                  'user_id' => auth()->user()->account_owner_id,
+                                                  'refund_observation'=> $refundObservation,
                                               ]);
 
                     return

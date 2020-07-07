@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
@@ -87,7 +88,6 @@ class SalesApiController extends Controller
 
             if (isset($id)) {
                 $sale = $saleService->getSaleWithDetails($id);
-
                 return new SalesResource($sale);
             }
 
@@ -167,6 +167,8 @@ class SalesApiController extends Controller
                                               ->whereIn('company_id', $userCompanies)
                                               ->first();
 
+            $refundObservation = $request->input('refund_observation') ?? null;
+
             $partial    = boolval($request->input('partial'));
             $refundSale = intval(strval($sale->total_paid_value * 100));
             if (is_null($sale->interest_total_value)) {
@@ -215,9 +217,9 @@ class SalesApiController extends Controller
 
             if (in_array($sale->gateway->name, ['zoop_sandbox', 'zoop_production', 'cielo_sandbox', 'cielo_production'])) {
                 // Zoop e Cielo CancelPayment
-                $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues);
+                $result = $checkoutService->cancelPayment($sale, $refundAmount, $partialValues,$refundObservation);
             } else {
-                $result = $saleService->refund($saleId);
+                $result = $saleService->refund($saleId,$refundObservation);
             }
             if ($result['status'] == 'success') {
                 $sale->update([
@@ -494,7 +496,32 @@ class SalesApiController extends Controller
             return response()->json(['error' => 'Erro ao obter venda'], 400);
         }
     }
+    public function updateRefundObservation($id, Request $request)
+    {
+        try {
+            $saleRefundHistoryModel = new SaleRefundHistory();
 
+            $data = $request->all();
+            $id           = current(Hashids::connection('sale_id')->decode($id));
+            if (!empty($id && !empty($data['name']) && !empty($data['value']))) {
+                $saleRefundHistory = $saleRefundHistoryModel->where('sale_id',$id)->first();
+                if (!empty($saleRefundHistory)) {
+                    $saleRefundHistory->refund_observation = $data['value'];
+                    $saleRefundHistory->save();
+
+                    return response()->json(['message' => 'Causa do estorno alterado com successo!']);
+                } else {
+                    return response()->json(['message' => 'Venda não encontrada!'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Os dados informados são inválidos!'], 400);
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao alterar causa do estorno!'], 400);
+        }
+    }
     public function getPlans(Request $request)
     {
         try {

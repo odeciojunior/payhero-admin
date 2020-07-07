@@ -25,6 +25,7 @@ Route::group(
         Route::post('/refund/{transaction_id}', 'SalesApiController@refund');
         Route::post('/refund/billet/{transaction_id}', 'SalesApiController@refundBillet');
         Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify');
+        Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation');
         Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail');
         Route::get('/user-plans', 'SalesApiController@getPlans');
     }

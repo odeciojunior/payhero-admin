@@ -65,6 +65,7 @@ use Laravel\Passport\HasApiTokens;
  * @property Transfer[] $transfers
  * @property UserDocument[] $userDocuments
  * @property UserInformation[] $userInformation
+ * @method UserPresenter present()
  */
 class User extends Authenticable
 {

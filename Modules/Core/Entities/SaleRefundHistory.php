@@ -43,6 +43,8 @@ class SaleRefundHistory extends Model
         'date_refunded',
         'gateway_response',
         'refund_value',
+        'user_id',
+        'refund_observation',
         'created_at',
         'deleted_at',
         'updated_at',

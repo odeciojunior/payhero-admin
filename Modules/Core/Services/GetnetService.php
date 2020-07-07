@@ -71,6 +71,35 @@ class GetnetService
         }
     }
 
+    public function getStatement()
+    {
+        $queryParameters = http_build_query(
+            [
+                'seller_id' => getenv('GET_NET_SELLER_ID'),
+                'subseller_id' => '700050664',
+            ]
+        );
+
+        $url = self::URL_API . 'v1/mgm/statement?' . $queryParameters;
+
+
+        $curl = curl_init();
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
+            ]
+        );
+
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+    }
+
 
     /**
      * Consulta planos de pagamentos configurados para a loja

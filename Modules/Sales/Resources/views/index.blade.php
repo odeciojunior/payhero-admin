@@ -298,6 +298,10 @@
                         <input type="text" name="refundAmount" id="refundAmount" style="width: 200px;" maxlength="9">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="refund_observation">Causa do estorno</label>
+                    <textarea class="form-control" id="refund_observation"  rows="3"></textarea>
+                </div>
                 <div class="modal-footer">
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                         Fechar
@@ -391,7 +395,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=16') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=17') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
