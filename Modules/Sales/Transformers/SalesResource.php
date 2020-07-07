@@ -66,9 +66,10 @@ class SalesResource extends JsonResource
             'value_anticipable' => $this->details->value_anticipable ?? null,
             'total_paid_value' => $this->details->total_paid_value,
             'userPermissionRefunded' => $userPermissionRefunded,
+            'refund_observation' => $this->details->refund_observation,
+            'user_changed_observation'=>$this->details->user_changed_observation,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
-
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
         } else {

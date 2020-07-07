@@ -98,6 +98,56 @@ $(() => {
 
     // FIM - COMPORTAMENTOS DA JANELA
 
+    $(document).on('click', '.btn-edit-observation', function () {
+        let container = $(this).parent();
+        container.find('input').removeClass('fake-label').prop('readonly', false);
+        $(this).hide();
+        container.find('.btn-save-observation').show();
+        container.find('.btn-close-observation').show();
+    });
+    $(document).on('click', '.btn-close-observation', function () {
+        let container = $(this).parent();
+        container.find('input').addClass('fake-label').prop('readonly', true);
+        $(this).hide();
+        container.find('.btn-save-observation').hide();
+        container.find('.btn-edit-observation').show();
+    });
+    $(document).on('click', '.btn-save-observation', function () {
+        if ($('#refund-observation').val() == '') {
+            alertCustom('error', 'Dados informados inválidos');
+            return false;
+        }
+        let container = $(this).parent();
+        let input = container.find('input');
+
+        let data = {
+            id: input.attr('sale'),
+            name: input.attr('name'),
+            value: input.val(),
+            // _method: 'PUT',
+        };
+        $.ajax({
+            method: "POST",
+            url: '/api/sales/updaterefundobservation/' + input.attr('sale'),
+            dataType: "json",
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                input.addClass('fake-label').prop('readonly', true);
+                $(this).hide();
+                container.find('.btn-close-observation').hide();
+                container.find('.btn-edit-observation').show();
+                alertCustom('success', 'Causa do estorno alterado com successo!')
+            }
+        });
+    });
+
     // MODAL DETALHES DA VENDA
     $(document).on('click', '.detalhes_venda', function () {
         let sale = $(this).attr('venda');
@@ -142,7 +192,7 @@ $(() => {
                             var partial = 1;
                         }
                         var refunded_value = $('#refundAmount').val();
-                        refundedClick(sale, refunded_value, partial);
+                        refundedClick(sale, refunded_value, partial, $('#refund_observation').val());
                     })
                 });
 
@@ -390,6 +440,18 @@ $(() => {
             $('#div_refund_billet').html('<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' + sale.id + '>Estornar boleto</button>');
         } else {
             $('#div_refund_billet').html('');
+        }
+        if (sale.refund_observation != null) {
+            $('.div-refund-observation').show();
+            $('#refund-observation').val(sale.refund_observation)
+                .attr('sale', sale.id);
+            if (sale.user_changed_observation) {
+                $('.btn-edit-observation').show();
+            } else {
+                $('.btn-edit-observation').hide();
+            }
+        } else {
+            $('.div-refund-observation').hide();
         }
     }
 
@@ -711,12 +773,12 @@ $(() => {
     // FIM - MODAL DETALHES DA VENDA
 
     //Estornar venda
-    function refundedClick(sale, refunded_value = 0, partial = 0) {
+    function refundedClick(sale, refunded_value = 0, partial = 0, refundObservation) {
         loadingOnScreen();
         $.ajax({
             method: "POST",
             url: '/api/sales/refund/' + sale,
-            data: {refunded_value: refunded_value, partial: partial},
+            data: {refunded_value: refunded_value, partial: partial, refund_observation: refundObservation},
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -730,6 +792,7 @@ $(() => {
             success: (response) => {
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
+                $('#refund_observation').val('');
                 atualizar(currentPage);
             }
         });

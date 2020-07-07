@@ -95,7 +95,7 @@ class CheckoutService
         return $total;
     }
 
-    public function cancelPayment($sale, $refundAmount, $partialValues = [])
+    public function cancelPayment($sale, $refundAmount, $partialValues = [],$refundObservation)
     {
         try {
             $saleService      = new SaleService();
@@ -125,7 +125,7 @@ class CheckoutService
             ];
             $response   = $this->runCurl($urlCancelPayment, 'POST', $dataCancel);
             if (($response->status ?? '') == 'success') {
-                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response, $partialValues);
+                $checkUpdate = $saleService->updateSaleRefunded($sale, $refundAmount, $response, $partialValues,$refundObservation);
                 if ($checkUpdate) {
                     $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
                     $transaction   = $transactionModel->where('sale_id', $sale->id)
