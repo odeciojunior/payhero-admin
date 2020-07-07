@@ -73,14 +73,15 @@ class GetnetService
 
     public function getStatement()
     {
-        $url = self::URL_API . 'v1/mgm/statement';
+        $queryParameters = http_build_query(
+            [
+                'seller_id' => getenv('GET_NET_SELLER_ID'),
+                'subseller_id' => '700050664',
+            ]
+        );
 
-        $queryParameters = [
-            'seller_id' => getenv('GET_NET_SELLER_ID'),
-            'transaction_date_init' => '2020-06-06T18:49:59Z',
-            'transaction_date_end' => '2020-07-06T18:49:59Z'
+        $url = self::URL_API . 'v1/mgm/statement?' . $queryParameters;
 
-        ];
 
         $curl = curl_init();
         curl_setopt_array(
@@ -91,7 +92,6 @@ class GetnetService
                 CURLOPT_ENCODING => '',
                 CURLOPT_CUSTOMREQUEST => "GET",
                 CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
-                CURLOPT_POSTFIELDS => http_build_query($queryParameters)
             ]
         );
 

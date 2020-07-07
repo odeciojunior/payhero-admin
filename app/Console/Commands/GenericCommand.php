@@ -26,16 +26,15 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        settings()->group('withdrawal_request')->set('withdrawal_request', true);
+        $userId = $this->argument('user');
 
-        /*$userId = $this->argument('user');
-
-        if(!empty($userId)) {
-
-            $sales = Sale::with([
-                'upsells',
-                'project.shopifyIntegrations'
-            ])->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
+        if (!empty($userId)) {
+            $sales = Sale::with(
+                [
+                    'upsells',
+                    'project.shopifyIntegrations'
+                ]
+            )->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
                 ->where('sales.shopify_order', '!=', DB::raw('s2.shopify_order'))
                 ->where('sales.owner_id', $userId)
                 ->selectRaw('sales.*')
@@ -44,9 +43,8 @@ class GenericCommand extends Command
             $integrations = [];
 
             foreach ($sales as $sale) {
-
                 $shopifyService = $integrations[$sale->project_id] ?? null;
-                if(empty($shopifyService)) {
+                if (empty($shopifyService)) {
                     $integration = $sale->project->shopifyIntegrations->first();
                     $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
                     $integrations[$sale->project_id] = $shopifyService;
@@ -54,7 +52,7 @@ class GenericCommand extends Command
 
                 $shopifyService->addItemsToOrder($sale->id);
             }
-        }*/
+        }
     }
 }
 
