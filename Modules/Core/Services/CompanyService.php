@@ -334,15 +334,15 @@ class CompanyService
 
         if (empty($company->fantasy_name)) {
             return true;
-        } else if (empty($company->company_document)) {
+        } elseif (empty($company->company_document)) {
             return true;
-        } else if (empty($company->bank)) {
+        } elseif (empty($company->bank)) {
             return true;
-        } else if (empty($company->agency)) {
+        } elseif (empty($company->agency)) {
             return true;
-        } else if (empty($company->account)) {
+        } elseif (empty($company->account)) {
             return true;
-        } else if (empty($company->account_type)) {
+        } elseif (empty($company->account_type)) {
             return true;
         } else {
             return false;
@@ -365,7 +365,7 @@ class CompanyService
             && (!$userService->verifyFieldsEmpty($user))
         ) {
             $result = $getnetService->createPfCompany($company);
-        } else if (($company->present()->getCompanyType($company->company_type) == 'juridical person')
+        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
             && !empty($user->cellphone) && !empty($user->email)) {
             $result = $getnetService->createPjCompany($company);
         }

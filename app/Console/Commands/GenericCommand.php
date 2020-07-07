@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\UserInformation;
-use Modules\Core\Services\GetnetService;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Services\ShopifyService;
 
 /**
  * Class GenericCommand
@@ -27,40 +26,36 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $getNetService = new GetnetService();
+        settings()->group('withdrawal_request')->set('withdrawal_request', true);
 
-        /**
-         * Lorram
-         */
-//        $company = Company::find(13);
-        /**
-         * Julio
-         */
-        //        $company = Company::find(2704); // PF
-//        $company = Company::find(26); // PJ
+        /*$userId = $this->argument('user');
 
-        /** Joao */
-//        $company = Company::find(28); // PF
-        $company = Company::find(2702); // PJ
+        if(!empty($userId)) {
 
+            $sales = Sale::with([
+                'upsells',
+                'project.shopifyIntegrations'
+            ])->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
+                ->where('sales.shopify_order', '!=', DB::raw('s2.shopify_order'))
+                ->where('sales.owner_id', $userId)
+                ->selectRaw('sales.*')
+                ->get();
 
-        /**
-         * PJ
-         */
-//        $getNetService->checkAvailablePaymentPlansPj();
-        $getNetService->checkPjCompanyRegister($company->company_document);
-        $getNetService->checkComplementPjCompanyRegister($company->company_document);
-//        $getNetService->createPjCompany($company);
-//        $getNetService->complementPjCompany($company);
-//        $getNetService->checkComplementPjCompanyRegister($company->company_document);
+            $integrations = [];
 
+            foreach ($sales as $sale) {
 
-        /**
-         * PF
-         */
-//        $getNetService->checkAvailablePaymentPlansPf();
-//        $getNetService->checkPfCompanyRegister($company->company_document);
-//        $getNetService->createPfCompany($company);
-//        $getNetService->updatePfCompany($company);
+                $shopifyService = $integrations[$sale->project_id] ?? null;
+                if(empty($shopifyService)) {
+                    $integration = $sale->project->shopifyIntegrations->first();
+                    $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+                    $integrations[$sale->project_id] = $shopifyService;
+                }
+
+                $shopifyService->addItemsToOrder($sale->id);
+            }
+        }*/
     }
 }
+
+

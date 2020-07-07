@@ -287,7 +287,7 @@ class SalesApiController extends Controller
             if (FoxUtils::isProduction()) {
                 $result             = false;
                 $saleModel          = new Sale();
-                $sale               = $saleModel->find(Hashids::connection('sale_id')->decode($saleId))->first();
+                $sale               = $saleModel->with('upsells')->find(Hashids::connection('sale_id')->decode($saleId))->first();
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
 
                 activity()->on($saleModel)->tap(function(Activity $activity) use ($saleId) {
@@ -298,7 +298,15 @@ class SalesApiController extends Controller
                 if (!FoxUtils::isEmpty($shopifyIntegration)) {
                     $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                    $result = $shopifyService->newOrder($sale);
+                    if (is_null($sale->upsell_id)) {
+                        if($sale->upsells->count()) {
+                            $result = $shopifyService->addItemsToOrder($sale->id);
+                        } else {
+                            $result = $shopifyService->newOrder($sale);
+                        }
+                    } else {
+                        $result = $shopifyService->addItemsToOrder($sale->upsell_id);
+                    }
                     $shopifyService->saveSaleShopifyRequest();
                 }
                 if ($result['status'] == 'success') {
