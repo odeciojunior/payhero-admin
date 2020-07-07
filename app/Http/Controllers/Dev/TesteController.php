@@ -289,9 +289,10 @@ class TesteController extends Controller
 
     public function jeanFunction(Request $request)
     {
-        //regerar order shopify considerando upsell
+        //regerar order shopify considerando descontos e upsell
         $userId = $this->argument('user');
 
+        //upsell
         if(!empty($userId)) {
 
             $sales = Sale::with([
@@ -315,6 +316,42 @@ class TesteController extends Controller
                 }
 
                 $shopifyService->addItemsToOrder($sale->id);
+            }
+        }
+
+        //descontos
+        if (!empty($userId)) {
+            $sales = Sale::with(
+                [
+                    'project.shopifyIntegrations'
+                ]
+            )->whereIn('id', [668020])
+                ->get();
+
+            $integrations = [];
+
+            foreach ($sales as $sale) {
+                $shopifyService = $integrations[$sale->project_id] ?? null;
+                if (empty($shopifyService)) {
+                    $integration = $sale->project->shopifyIntegrations->first();
+                    $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
+                    $integrations[$sale->project_id] = $shopifyService;
+                }
+
+                $oldOrderId = $sale->shopify_order;
+                $fulfillments = $shopifyService->getClient()->getFulfillmentManager()->findAll($oldOrderId);
+                try {
+                    foreach ($fulfillments as $fulfillment){
+                        $shopifyService->getClient()->getFulfillmentManager()->cancel($oldOrderId, $fulfillment->getId());
+                    }
+                    $shopifyService->getClient()->getOrderManager()->cancel($oldOrderId);
+                    $shopifyService->getClient()->getOrderManager()->remove($oldOrderId);
+                } catch (\Exception $e) {}
+
+                $sale->shopify_order = null;
+                $sale->save();
+                $result = $shopifyService->newOrder($sale);
+                $this->line(json_encode($result, JSON_PRETTY_PRINT));
             }
         }
     }
