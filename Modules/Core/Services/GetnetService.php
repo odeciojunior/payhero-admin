@@ -18,8 +18,6 @@ class GetnetService
 
     public const URL_API = 'https://api-homologacao.getnet.com.br/';
 
-    public $urlCallback = 'https://app.cloudfox.net/postback/getnet';
-
     private $accessToken;
 
     public function __construct()
@@ -40,11 +38,16 @@ class GetnetService
         return env('GET_NET_MERCHANT_ID');
     }
 
+    /**
+     * @return string[]
+     */
     public function getAuthorizationHeader()
     {
         return [
             'authorization: Bearer ' . $this->accessToken,
             'Content-Type: application/json',
+            'transaction_date_init: 2020-06-01',
+            'transaction_date_end: 2020-07-07'
         ];
     }
 
@@ -76,7 +79,6 @@ class GetnetService
         $queryParameters = http_build_query(
             [
                 'seller_id' => getenv('GET_NET_SELLER_ID'),
-                'subseller_id' => '700050664',
             ]
         );
 
@@ -84,6 +86,7 @@ class GetnetService
 
 
         $curl = curl_init();
+
         curl_setopt_array(
             $curl,
             [
@@ -99,7 +102,6 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
     }
-
 
     /**
      * Consulta planos de pagamentos configurados para a loja
@@ -195,7 +197,6 @@ class GetnetService
         $this->saveRequests($url, $result, $httpStatus, $data);
     }
 
-
     /**
      * @param Company $company
      * @return string[]
@@ -237,7 +238,6 @@ class GetnetService
         }
     }
 
-
     /**
      * @param string $cpf
      * Consulta situação cadastral de um CPF que já finalizou o fluxo de pré cadastro
@@ -264,7 +264,6 @@ class GetnetService
         curl_close($curl);
         $this->saveRequests($url, $result, $httpStatus, $data);
     }
-
 
     /**
      * @param $cnpj
@@ -346,8 +345,8 @@ class GetnetService
 
     /**
      * @param Company $company
+     * @return array
      * @throws PresenterException
-     * Method POST
      * Cria pré-cadastro da loja
      */
     public function createPjCompany(Company $company)
@@ -490,12 +489,5 @@ class GetnetService
 
         );
     }
-
-
-
-    // @todo
-    // criar campos :
-    //                  'liability_chargeback' => 'S',
-    //                  'marketplace_store' => 'S',
 
 }
