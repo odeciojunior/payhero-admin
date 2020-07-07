@@ -39,7 +39,7 @@ class TrackingmoreService
      */
     public function find($trackingNumber)
     {
-        $result = $this->call('/trackings/get', ['numbers' => $trackingNumber]);
+        $result = $this->doRequest('/trackings/get', ['numbers' => $trackingNumber]);
         return current($result->data->items ?? []) ?? null;
     }
 
@@ -80,7 +80,7 @@ class TrackingmoreService
                 $data += $optionalParams;
             }
 
-            $result = $this->call('/trackings/post', $data, 'POST');
+            $result = $this->doRequest('/trackings/post', $data, 'POST');
             $metaCode = $result->meta->code ?? 0;
 
             $result = $this->find($trackingNumber);
@@ -104,7 +104,7 @@ class TrackingmoreService
      */
     public function delete($carrierCode, $trackingNumber){
 
-        $result = $this->call("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
+        $result = $this->doRequest("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
 
         return $result->meta->code == 200;
     }
@@ -118,7 +118,7 @@ class TrackingmoreService
     {
         $data = ['tracking_number' => $trackingNumber];
 
-        $result = $this->call('/carriers/detect', $data, 'POST');
+        $result = $this->doRequest('/carriers/detect', $data, 'POST');
 
         return $result->data[0]->code ?? null;
     }
@@ -129,7 +129,7 @@ class TrackingmoreService
      */
     public function getAllCarriers()
     {
-        return $this->call('/carriers');
+        return $this->doRequest('/carriers');
     }
 
     /**
@@ -138,7 +138,7 @@ class TrackingmoreService
      * @param string $method
      * @return object
      */
-    private function call($uri = '/', $data = null, $method = 'GET')
+    private function doRequest($uri = '/', $data = null, $method = 'GET')
     {
         $url = self::API_URL . '/' . self::API_VERSION . $uri;
 
