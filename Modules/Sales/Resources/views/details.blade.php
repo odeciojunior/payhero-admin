@@ -149,6 +149,24 @@
                     </button>
                 </div>
                 {{--resend shopfy order--}}
+
+                <div class='div-refund-observation' style='display:none;'>
+{{--                    <h5>Causa do estorno</h5>--}}
+{{--                    <span class='refund-observation'></span>--}}
+                    <label for="refund-observation" class="table-title gray mb-0">Causa do estorno:</label>&nbsp;
+                    {{--        <h5>Causa do estorno</h5>--}}
+                    <div class="d-flex align-items-center">
+                        <input id="refund-observation" type="email" name="refund_observation"
+                               class="detail-input mr-2 table-title gray fake-label"
+                                readonly>
+                        <a class="pointer btn-edit-observation"><i class="material-icons font-size-18">edit</i></a>
+                        <a class="pointer btn-save-observation" style="display:none;">
+                            <i class="material-icons font-size-18">save</i></a>
+                        <a class="pointer btn-close-observation ml-2" style="display:none;">
+                            <i class="material-icons font-size-18">close</i></a>
+                    </div>
+                </div>
+
                 <div class="nav-tabs-horizontal">
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
@@ -300,5 +318,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=6') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=8') }}"></script>
 @endpush
