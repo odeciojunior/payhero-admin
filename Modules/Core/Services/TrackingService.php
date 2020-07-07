@@ -17,13 +17,6 @@ use Vinkla\Hashids\Facades\Hashids;
 class TrackingService
 {
     /**
-     * @var string
-     *
-     * Data em que migrou da aftership/perfectlog para a trackingmore
-     */
-    private $migrationDate = '2020-02-03 10:16:00';
-
-    /**
      * @param $trackingCode
      * @return mixed
      */
@@ -44,38 +37,19 @@ class TrackingService
      */
     public function findTrackingApi(Tracking $tracking)
     {
-        //if de 10k. Busca o código de rastreio na trackingmore caso a data de criação
-        //seja posterior a data da migração. Caso contrário busca as informações na
-        //perfectlog/aftership
-        if ($tracking->created_at->gte($this->migrationDate)) {
-            $trackingmoreService = new TrackingmoreService();
+        $trackingmoreService = new TrackingmoreService();
 
-            $apiTracking = $trackingmoreService->find($tracking->tracking_code);
+        $apiTracking = $trackingmoreService->find($tracking->tracking_code);
 
-            if (isset($apiTracking->status)) {
-                $status = $this->parseStatusApi($apiTracking->status);
-                if ($tracking->tracking_status_enum != $status) {
-                    $tracking->tracking_status_enum = $status;
-                    $tracking->save();
-                }
+        if (isset($apiTracking->status)) {
+            $status = $this->parseStatusApi($apiTracking->status);
+            if ($tracking->tracking_status_enum != $status) {
+                $tracking->tracking_status_enum = $status;
+                $tracking->save();
             }
-
-            return $apiTracking;
-        } else {
-            $perfectLogService = new PerfectLogService();
-
-            $apiTracking = $perfectLogService->find($tracking->tracking_code);
-
-            if (isset($apiTracking->tracking_status)) {
-                $status = $this->parseStatusApi($apiTracking->tracking_status, true);
-                if ($tracking->tracking_status_enum != $status) {
-                    $tracking->tracking_status_enum = $status;
-                    $tracking->save();
-                }
-            }
-
-            return $apiTracking;
         }
+
+        return $apiTracking;
     }
 
     /**
@@ -95,24 +69,14 @@ class TrackingService
 
     /**
      * @param $status
-     * @param  bool  $beforeMigration
      * @return int|mixed
      * @throws PresenterException
      */
-    public function parseStatusApi($status, $beforeMigration = false)
+    public function parseStatusApi($status)
     {
-        //if de 10k. Converte o status da trackingmore caso a data de criação
-        //seja posterior a data da migração. Caso contrário converte o status
-        //da perfectlog/aftership
-        if (!$beforeMigration) {
-            $trackingmoreService = new TrackingmoreService();
+        $trackingmoreService = new TrackingmoreService();
 
-            return $trackingmoreService->parseStatus($status);
-        } else {
-            $perfectLogService = new PerfectLogService();
-
-            return $perfectLogService->parseStatus($status);
-        }
+        return $trackingmoreService->parseStatus($status);
     }
 
     /**
@@ -125,93 +89,60 @@ class TrackingService
     {
         $checkpoints = collect();
 
-        //if de 10k. Trata os checkpoints da trackingmore caso a data de criação
-        //seja posterior a data da migração. Caso contrário trata os checkpoints
-        //da perfectlog/aftership
-        if ($tracking->created_at->gte($this->migrationDate)) {
-            $apiCheckpoints = array_reverse($apiTracking->origin_info->trackinfo ?? []);
-            $apiCheckpoints += array_reverse($apiTracking->destination_info->trackinfo ?? []);
+        $apiCheckpoints = array_reverse($apiTracking->origin_info->trackinfo ?? []);
+        $apiCheckpoints += array_reverse($apiTracking->destination_info->trackinfo ?? []);
 
-            if (!empty($apiCheckpoints)) {
-                foreach ($apiCheckpoints as $log) {
-                    $event = $log->Details ? $log->StatusDescription.' - '.$log->Details : $log->StatusDescription;
+        if (!empty($apiCheckpoints)) {
+            foreach ($apiCheckpoints as $log) {
+                $event = $log->Details ? $log->StatusDescription.' - '.$log->Details : $log->StatusDescription;
 
-                    if (!empty($event)) {
-                        $status_enum = $this->parseStatusApi($log->checkpoint_status ?? 'notfound');
-                        $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
-
-                        //remove caracteres chineses e informações indesejadas
-                        $blacklistWords = [
-                            'asendia',
-                            'beijing',
-                            'chaozhou',
-                            'china',
-                            'dianhua',
-                            'dongguan',
-                            'fuyang',
-                            'guangdongshengguangzhoushi',
-                            'hang kong',
-                            'hong kong',
-                            'hongkong',
-                            'jangxi',
-                            'jinhua',
-                            'jiangxi',
-                            'jingwaijinkou',
-                            'kulitiba',
-                            'nanchang',
-                            'shanghai',
-                            'shantou',
-                            'shanzhao',
-                            'sheng',
-                            'shenzhen',
-                            'singapore',
-                            'sunyou',
-                            'xinyu',
-                            'yanwen',
-                            'yingshangxian',
-                            'yiwu',
-                            'zhongxin',
-                        ];
-
-                        if (Str::contains(strtolower($event),
-                                $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event)) {
-                            $event = 'Encomenda em movimentação no exterior';
-                        }
-
-                        $checkpoints->add([
-                            'tracking_status_enum' => $status_enum,
-                            'tracking_status' => $status,
-                            'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
-                            'event' => $event,
-                        ]);
-                    }
-                }
-            }
-        } else {
-            if (!empty($apiTracking->trail)) {
-                foreach ($apiTracking->trail as $log) {
-                    $status_enum = $this->parseStatusApi($log->tracking_status, true);
+                if (!empty($event)) {
+                    $status_enum = $this->parseStatusApi($log->checkpoint_status ?? 'notfound');
                     $status = $status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($status_enum)) : 'Não informado';
 
-                    $event = $log->event;
-
                     //remove caracteres chineses e informações indesejadas
-                    preg_match('/[^\p{Common}\p{Latin}]+/u', $event, $nonLatinChars);
-                    $event = str_replace([
-                        'Clique aquiMinhas Importações - ',
-                        'CHINA/',
-                        'CHINA /',
-                        'Paísem'
-                    ], '', $event);
-                    $event = str_replace([
-                        'de País em',
-                    ], 'do exterior', $event);
+                    $blacklistWords = [
+                        'asendia',
+                        'beijing',
+                        'chaozhou',
+                        'china',
+                        'dianhua',
+                        'dongguan',
+                        'fuyang',
+                        'guangdongshengguangzhoushi',
+                        'hang kong',
+                        'hong kong',
+                        'hongkong',
+                        'jangxi',
+                        'jinhua',
+                        'jiangxi',
+                        'jingwaijinkou',
+                        'kulitiba',
+                        'nanchang',
+                        'shanghai',
+                        'shantou',
+                        'shanzhao',
+                        'sheng',
+                        'shenzhen',
+                        'singapore',
+                        'sunyou',
+                        'xinyu',
+                        'yanwen',
+                        'yingshangxian',
+                        'yiwu',
+                        'zhongxin',
+                    ];
+
+                    if (Str::contains(strtolower($event),
+                            $blacklistWords) || preg_match('/[^\p{Common}\p{Latin}]+/u', $event)) {
+                        $event = 'Encomenda em movimentação no exterior';
+                    }
 
                     $checkpoints->add([
                         'tracking_status_enum' => $status_enum,
                         'tracking_status' => $status,
-                        'created_at' => Carbon::parse($log->updated_at)->format('d/m/Y'),
-                        'event' => $nonLatinChars ? 'Encomenda em movimentação no exterior' : $event,
+                        'created_at' => Carbon::parse($log->Date)->format('d/m/Y'),
+                        'event' => $event,
                     ]);
                 }
             }
@@ -227,8 +158,12 @@ class TrackingService
      * @param  bool  $forceUpdate
      * @return mixed
      */
-    public function createOrUpdateTracking(string $trackingCode, ProductPlanSale $productPlanSale, $logging = false, $forceUpdate = false)
-    {
+    public function createOrUpdateTracking(
+        string $trackingCode,
+        ProductPlanSale $productPlanSale,
+        $logging = false,
+        $forceUpdate = false
+    ) {
         try {
             $trackingService = new TrackingService();
             $trackingModel = new Tracking();
@@ -343,8 +278,9 @@ class TrackingService
                         $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
                         $queryTransaction->where('status_enum', $statusEnum);
                     } else {
-                        $queryTransaction->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
-                            ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                        $queryTransaction->where('transactions.release_date', '>',
+                            '2020-05-25') //data que começou a bloquear
+                        ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
@@ -355,7 +291,8 @@ class TrackingService
                             $trackingPresenter = (new Tracking)->present();
                             $status = [
                                 $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-                                $trackingPresenter->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
+                                $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                                //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
                                 $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
                                 $trackingPresenter->getSystemStatusEnum('duplicated'),
                             ];
@@ -389,7 +326,8 @@ class TrackingService
                     function ($query) use ($trackingModel, $filters) {
                         $query->whereIn('system_status_enum', [
                                 $trackingModel->present()->getSystemStatusEnum('unknown_carrier'),
-                                $trackingModel->present()->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
+                                $trackingModel->present()->getSystemStatusEnum('no_tracking_info'),
+                                //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
                                 $trackingModel->present()->getSystemStatusEnum('posted_before_sale'),
                                 $trackingModel->present()->getSystemStatusEnum('duplicated'),
                             ]
