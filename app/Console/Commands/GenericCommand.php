@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\GetnetService;
 use Modules\Core\Services\ShopifyService;
 
 /**
@@ -26,7 +27,15 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $userId = $this->argument('user');
+
+
+        $getnetService = new GetnetService();
+
+
+        $getnetService->getStatement();
+
+
+        /*$userId = $this->argument('user');
 
         if (!empty($userId)) {
             $sales = Sale::with(
@@ -52,7 +61,7 @@ class GenericCommand extends Command
 
                 $shopifyService->addItemsToOrder($sale->id);
             }
-        }
+        }*/
     }
 }
 

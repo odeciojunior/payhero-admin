@@ -15,8 +15,6 @@ Route::group(
 
         Route::post('/notazz', 'PostBackNotazzController@postBackListener');
 
-        Route::post('/perfectlog', 'PostBackPerfectLogController@postBackListener');
-
         Route::post('/trackingmore', 'PostBackTrackingmoreController@postBackListener');
 
         Route::post('/shopify/{project_id}/tracking', 'PostBackShopifyController@postBackTracking');
