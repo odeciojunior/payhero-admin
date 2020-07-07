@@ -97,6 +97,7 @@ class CompaniesApiController extends Controller
                     'fantasy_name' => $fantasyName,
                     'company_document' => $companyDocument,
                     'company_type' => $requestData['company_type'],
+                    'account_type'=> 1,
                 ]
             );
 

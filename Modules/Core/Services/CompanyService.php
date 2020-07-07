@@ -327,9 +327,9 @@ class CompanyService
             if (empty($company->document_issuer_state)) {
                 return true;
             }
-            if (empty($company->account_type)) {
-                return true;
-            }
+//            if (empty($company->account_type)) {
+//                return true;
+//            }
         }
 
         if (empty($company->fantasy_name)) {
@@ -342,11 +342,12 @@ class CompanyService
             return true;
         } elseif (empty($company->account)) {
             return true;
-        } elseif (empty($company->account_type)) {
-            return true;
         } else {
             return false;
         }
+//    elseif (empty($company->account_type)) {
+//            return true;
+//        }
     }
 
     /**
@@ -475,9 +476,9 @@ class CompanyService
             if (empty($company->document_issuer_state)) {
                 $arrayFields[] = 'document_issuer_state';
             }
-            if (empty($company->account_type)) {
-                $arrayFields[] = 'account_type';
-            }
+//            if (empty($company->account_type)) {
+//                $arrayFields[] = 'account_type';
+//            }
         } else {
             if (empty($company->fantasy_name)) {
                 $arrayFields[] = 'fantasy_name';
@@ -494,9 +495,9 @@ class CompanyService
             if (empty($company->account)) {
                 $arrayFields[] = 'account';
             }
-            if (empty($company->account_type)) {
-                $arrayFields[] = 'account_type';
-            }
+//            if (empty($company->account_type)) {
+//                $arrayFields[] = 'account_type';
+//            }
         }
 
         return $arrayFields;
