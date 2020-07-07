@@ -12,7 +12,7 @@
                 <div class="toggle d-flex justify-content-center">
                     <div class="row align-items-center">
                         <div id="login" class="col-6 toggle-text active" style='cursor:pointer;'>LOGIN</div>
-                        <div id="cadastro" class="col-6 toggle-text" style='cursor:pointer;' onclick="window.open('http://www.cloudfox.net','_blank');">SIGN UP</div>
+                        <div id="cadastro" class="col-6 toggle-text" style='cursor:pointer;' onclick="window.open('https://cloudfox.net/','_blank');">SIGN UP</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -83,11 +83,11 @@
                     </div>
                 </div>
                 <div class="hr"></div>
-                <div class="d-flex justify-content-center align-items-center">
-                    <a class="linkfooter" target="_blank" href="https://cloudfox.net/terms" style="font-size: 11px"> Terms & Conditions</a>
-                    <div class="oval"></div>
-                    <a class="linkfooter" href="#" style="font-size: 11px"> Support</a>
-                </div>
+{{--                <div class="d-flex justify-content-center align-items-center">--}}
+{{--                    <a class="linkfooter" target="_blank" href="https://cloudfox.net/terms" style="font-size: 11px"> Terms & Conditions</a>--}}
+{{--                    <div class="oval"></div>--}}
+{{--                    <a class="linkfooter" href="#" style="font-size: 11px"> Support</a>--}}
+{{--                </div>--}}
                 <div class="clearfix"></div>
             </div>
         </div>
