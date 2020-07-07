@@ -46,8 +46,7 @@ class GetnetService
         return [
             'authorization: Bearer ' . $this->accessToken,
             'Content-Type: application/json',
-            'transaction_date_init: 2020-06-01',
-            'transaction_date_end: 2020-07-07'
+
         ];
     }
 
@@ -79,6 +78,8 @@ class GetnetService
         $queryParameters = http_build_query(
             [
                 'seller_id' => getenv('GET_NET_SELLER_ID'),
+                'transaction_date_init' => ' 2020-06-01',
+                'transaction_date_end' => ' 2020-07-07'
             ]
         );
 
@@ -102,6 +103,34 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
     }
+
+    private function curlPost($url, $data)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_ENCODING => '',
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
+            ]
+        );
+
+        $result = curl_exec($curl);
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        $this->saveRequests($url, $result, $httpStatus, $data);
+
+        return [
+            'result' => $result,
+            'httpStatus' => $httpStatus
+        ];
+    }
+
 
     /**
      * Consulta planos de pagamentos configurados para a loja
@@ -139,19 +168,11 @@ class GetnetService
         $url = self::URL_API . 'v1/mgm/pf/create-presubseller';
         $data = $this->getPrepareDataCreatePfCompany($company);
 
-        $curl = curl_init($url);
+        $getResult = $this->curlPost($url, $data);
 
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
+        $httpStatus = $getResult['httpStatus'];
+        $result = $getResult['result'];
 
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        $this->saveRequests($url, $result, $httpStatus, $data);
 
         if ($httpStatus == 200) {
             return [

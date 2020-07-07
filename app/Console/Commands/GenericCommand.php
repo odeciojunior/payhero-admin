@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\GetnetPaymentService;
 use Modules\Core\Services\GetnetService;
 use Modules\Core\Services\ShopifyService;
 
@@ -27,41 +28,26 @@ class GenericCommand extends Command
 
     public function handle()
     {
+       /* $getnetService = new GetnetPaymentService();
 
 
-        $getnetService = new GetnetService();
+        $paymentId = "57b3ba95-5216-4bb6-bb9d-02e78c0d326a";
+
+        $data = [
+            'releasePaymentDate' => "2020-07-05T00:00:00",
+            'subsellerId' => '700050655',
+            'productId' => '12670890',
+            'productAmount' => '319'
+        ];
+
+        $getnetService->paymentRelease($paymentId, $data);*/
+
+        //
 
 
-        $getnetService->getStatement();
-
-
-        /*$userId = $this->argument('user');
-
-        if (!empty($userId)) {
-            $sales = Sale::with(
-                [
-                    'upsells',
-                    'project.shopifyIntegrations'
-                ]
-            )->join('sales as s2', 'sales.id', '=', 's2.upsell_id')
-                ->where('sales.shopify_order', '!=', DB::raw('s2.shopify_order'))
-                ->where('sales.owner_id', $userId)
-                ->selectRaw('sales.*')
-                ->get();
-
-            $integrations = [];
-
-            foreach ($sales as $sale) {
-                $shopifyService = $integrations[$sale->project_id] ?? null;
-                if (empty($shopifyService)) {
-                    $integration = $sale->project->shopifyIntegrations->first();
-                    $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
-                    $integrations[$sale->project_id] = $shopifyService;
-                }
-
-                $shopifyService->addItemsToOrder($sale->id);
-            }
-        }*/
+     /*   $getnetService = new GetnetService();
+        $getnetService->checkPjCompanyRegister(28337339000105);*/
+//        $getnetService->getStatement();
     }
 }
 
