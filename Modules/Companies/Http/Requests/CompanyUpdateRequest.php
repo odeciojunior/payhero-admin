@@ -39,7 +39,7 @@ class CompanyUpdateRequest extends FormRequest
             'monthly_gross_income'                  => 'nullable',
 //            'federal_registration_status'           => 'nullable',
             'founding_date'                         => 'nullable',
-            'account_type'                          => 'nullable',
+//            'account_type'                          => 'nullable',
             'federal_registration_status_date'      => 'nullable',
             'social_value'                          => 'nullable',
             'document_issue_date'                   => 'nullable',

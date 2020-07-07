@@ -272,14 +272,14 @@
                                             </div>
                                         </div>
                                         <div class='col-xl-4'></div>
-                                        <div class='form-group col-xl-2'>
-                                            <label for='account_type'>Tipo de conta</label>
-                                            <select id="account_type" name="account_type" class="input-pad">
-                                                <option value="">Selecione</option>
-                                                <option value="1">Conta corrente</option>
-                                                <option value="2">Conta poupança</option>
-                                            </select>
-                                        </div>
+{{--                                        <div class='form-group col-xl-2'>--}}
+{{--                                            <label for='account_type'>Tipo de conta</label>--}}
+{{--                                            <select id="account_type" name="account_type" class="input-pad">--}}
+{{--                                                <option value="">Selecione</option>--}}
+{{--                                                <option value="1">Conta corrente</option>--}}
+{{--                                                <option value="2">Conta poupança</option>--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
                                         <div class="col-xl-8" id="swift-code-info" style="display:none">
                                             <div class="alert alert-secondary">
                                                 <h4 class="mt-0">O que é um código SWIFT/BIC?</h4>
