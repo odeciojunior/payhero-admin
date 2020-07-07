@@ -288,6 +288,10 @@
                     <a class='btn btn-update-later mt-10' style='color:darkorange;' data-dismiss="modal">
                         <b>Atualizar mais tarde</b></a>
                 </div>
+                <p class='info pt-5 mb-0 text-center' style='font-size: 10px;'>
+                    <i class='icon wb-info-circle' aria-hidden='true'></i>
+                    A partir de 09/07/2020 a solicitação de saque estará disponível apenas para empresas com os dados atualizados.
+                </p>
             </div>
         </div>
     </div>
