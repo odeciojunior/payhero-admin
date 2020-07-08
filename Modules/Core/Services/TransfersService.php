@@ -29,7 +29,7 @@ class TransfersService
         }
 
 
-        /*// Transações pagas
+        // Transações pagas
         if (empty($saleId)) {
             $transactions = $transactionModel->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
@@ -150,7 +150,7 @@ class TransfersService
             } catch (Exception $e) {
                 report($e);
             }
-        }*/
+        }
 
         try {
             settings()->group('withdrawal_request')->set('withdrawal_request', true);

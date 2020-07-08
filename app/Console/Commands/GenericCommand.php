@@ -28,7 +28,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-       /* $getnetService = new GetnetPaymentService();
+        $getnetService = new GetnetPaymentService();
 
 
         $paymentId = "57b3ba95-5216-4bb6-bb9d-02e78c0d326a";
@@ -36,18 +36,18 @@ class GenericCommand extends Command
         $data = [
             'releasePaymentDate' => "2020-07-05T00:00:00",
             'subsellerId' => '700050655',
-            'productId' => '12670890',
+            'productId' => '1',
             'productAmount' => '319'
         ];
 
-        $getnetService->paymentRelease($paymentId, $data);*/
+        $getnetService->paymentRelease($paymentId, $data);
 
         //
 
 
-     /*   $getnetService = new GetnetService();
-        $getnetService->checkPjCompanyRegister(28337339000105);*/
-//        $getnetService->getStatement();
+        /*$getnetService = new GetnetService();
+           $getnetService->checkPjCompanyRegister(28337339000105);
+        $getnetService->getStatement();*/
     }
 }
 
