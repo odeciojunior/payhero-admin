@@ -81,7 +81,7 @@ trait GetNetPrepareDataTrait
                     "payment_plan" => 3
                 ]
             ],
-            'url_callback' => getenv('APP_URL') . '/postback/getnet',
+            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
             'marketplace_store' => 'S',
@@ -184,7 +184,7 @@ trait GetNetPrepareDataTrait
                     'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
                 ]
             ],
-            'url_callback' => getenv('APP_URL') . '/postback/getnet',
+            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
             "accepted_contract" => "S",
             "liability_chargeback" => "S",
             'marketplace_store' => "S",
@@ -222,7 +222,7 @@ trait GetNetPrepareDataTrait
                 'document_issuer' => $company->document_issuer,
                 'document_issuer_state' => $company->document_issuer_state
             ],
-            'url_callback' => getenv('APP_URL') . '/postback/getnet',
+            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
             'state_fiscal_document_number' => $company->state_fiscal_document_number,
             'federal_registration_status_date' => $company->federal_registration_status_date,
             'social_value' => $company->social_value,
