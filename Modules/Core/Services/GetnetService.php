@@ -20,19 +20,6 @@ class GetnetService
     }
 
     /**
-     *
-     * @return string
-     */
-    public function getAuthorizationToken()
-    {
-        $clientId = getenv('GET_NET_CLIENT_ID');
-        $clientSecret = getenv('GET_NET_CLIENT_SECRET');
-
-        return base64_encode($clientId . ':' . $clientSecret);
-    }
-
-
-    /**
      * @param $url
      * @param $postFields
      * @throws Exception
@@ -41,7 +28,7 @@ class GetnetService
     {
         $headers = [
             'content-type: application/x-www-form-urlencoded',
-            'authorization: Basic ' . $this->getAuthorizationToken(),
+            'authorization: Basic ' . $this->authorizationToken,
         ];
 
         $curl = curl_init(self::URL_API . $url);
@@ -110,6 +97,5 @@ class GetnetService
 
         );
     }
-
-
+    
 }

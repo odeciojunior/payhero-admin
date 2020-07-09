@@ -24,18 +24,24 @@ class GetnetBackOfficeService extends GetnetService
      */
     private $postFieldsAcessToken = 'scope=mgm&grant_type=client_credentials';
 
+    public $authorizationToken;
+
     /**
      * GetnetBackOfficeService constructor.
      */
     public function __construct()
     {
         try {
+            $this->authorizationToken = base64_encode(
+                getenv('GET_NET_CLIENT_ID') . ':' . getenv('GET_NET_CLIENT_SECRET')
+            );
             $this->setAccessToken($this->urlCredentialAcessToken, $this->postFieldsAcessToken);
         } catch (Exception $e) {
         }
 
         parent::__construct();
     }
+
 
     /**
      * @return mixed
@@ -53,7 +59,6 @@ class GetnetBackOfficeService extends GetnetService
         return [
             'authorization: Bearer ' . $this->accessToken,
             'Content-Type: application/json',
-
         ];
     }
 
@@ -72,10 +77,10 @@ class GetnetBackOfficeService extends GetnetService
         ];
 
         if (is_null($pagination)) {
-            $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
+            $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
         } else {
             $queryParameters = $queryParameters + ['page' => $pagination];
-            $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+            $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
         }
 
         return $this->sendCurl($url, 'GET');

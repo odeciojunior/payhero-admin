@@ -16,7 +16,7 @@ class GetnetPaymentService extends GetnetService
     private $urlCredentialAcessToken = 'auth/oauth/v2/token';
     private $postFieldsAcessToken = 'scope=oob&grant_type=client_credentials';
 
-    private $authorizationToken;
+    public $authorizationToken;
     private $gatewayId;
     private $sendData = [];
     private $gatewayResult = [];
@@ -25,8 +25,8 @@ class GetnetPaymentService extends GetnetService
     public function __construct()
     {
         $gateway = Gateway::where("name", "getnet_sandbox")->first();
-        $configs = json_decode(FoxUtils::xorEncrypt($gateway->json_config, "decrypt"), true);
         $this->gatewayId = $gateway->id ?? null;
+        $configs = json_decode(FoxUtils::xorEncrypt($gateway->json_config, "decrypt"), true);
         $this->authorizationToken = base64_encode($configs['public_token'] . ':' . $configs['private_token']);
         try {
             $this->setAccessToken($this->urlCredentialAcessToken, $this->postFieldsAcessToken);
@@ -40,8 +40,8 @@ class GetnetPaymentService extends GetnetService
     public function getAuthorizationHeader()
     {
         return [
-            'authorization: Bearer ' . $this->getAuthorizationToken(),
-            'Content-Type: application/json',
+            'Content-Type: application/json; charset=utf-8',
+            'authorization: Bearer ' . $this->accessToken,
             'seller_id: ' . env('GET_NET_SELLER_ID'),
         ];
     }
@@ -413,7 +413,9 @@ class GetnetPaymentService extends GetnetService
             ]
         ];
         $method = ($updateReleaseDate == true) ? 'PATCH' : 'POST';
-        return json_decode($this->sendCurl('v1/marketplace/payments/' . $paymentId . '/release', $method, $data));
+        $url = 'v1/marketplace/payments/' . $paymentId . '/release';
+
+        return json_decode($this->sendCurl($url, $method, $data));
     }
 
     /**
