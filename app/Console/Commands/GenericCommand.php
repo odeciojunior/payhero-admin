@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\GetnetPaymentService;
 use Modules\Core\Services\GetnetService;
 use Modules\Core\Services\ShopifyService;
@@ -28,26 +29,26 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $getnetService = new GetnetPaymentService();
+        /*  $getnetService = new GetnetPaymentService();
 
+          $paymentId = "db5983c6-2bc4-4504-82ac-11b20d89c1e0";
 
-        $paymentId = "57b3ba95-5216-4bb6-bb9d-02e78c0d326a";
+          $data = [
+              'releasePaymentDate' => "2020-07-08T00:00:00Z",
+              'subsellerId' => '700050664',
+              'productId' => "2wq7GrYq0MZBANP",
+              'productAmount' => 406
+          ];
 
-        $data = [
-            'releasePaymentDate' => "2020-07-05T00:00:00",
-            'subsellerId' => '700050655',
-            'productId' => '1',
-            'productAmount' => '319'
-        ];
-
-        $getnetService->paymentRelease($paymentId, $data);
+          $getnetService->paymentRelease($paymentId, $data);*/
 
         //
 
 
-        /*$getnetService = new GetnetService();
-           $getnetService->checkPjCompanyRegister(28337339000105);
-        $getnetService->getStatement();*/
+        $getnetService = new GetnetBackOfficeService();
+        $result = $getnetService->getStatement(1);
+
+        dd($result);
     }
 }
 

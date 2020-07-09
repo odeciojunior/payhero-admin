@@ -379,6 +379,30 @@ class FoxUtils
             'number' => substr($number, 4)
         ];
     }
+
+    /**
+     * @param string $value
+     * @return array
+     */
+    public static function splitName($value)
+    {
+        $name = trim($value);
+        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace(
+            '#.*\s([\wáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\'\s]*)$#',
+            '$1',
+            $name
+        );
+        if ($last_name == $name) {
+            return [$name, $name];
+        }
+        $qtdd = strlen($last_name);
+        $first_name = trim(substr($name, 0, -$qtdd));
+        if ($first_name == '' || $last_name == '') {
+            return [$name, $name];
+        }
+
+        return [$first_name, $last_name];
+    }
 }
 
 

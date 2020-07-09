@@ -3,10 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\GetnetBackofficeRequests;
-use Modules\Core\Traits\GetNetPrepareDataTrait;
 
 /**
  * Class GetnetService
@@ -14,17 +11,18 @@ use Modules\Core\Traits\GetNetPrepareDataTrait;
  */
 class GetnetService
 {
-    use GetNetPrepareDataTrait;
-
     public const URL_API = 'https://api-homologacao.getnet.com.br/';
 
-    private $accessToken;
+    public $accessToken;
 
     public function __construct()
     {
-        $this->setAccessToken();
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getAuthorizationToken()
     {
         $clientId = getenv('GET_NET_CLIENT_ID');
@@ -33,33 +31,22 @@ class GetnetService
         return base64_encode($clientId . ':' . $clientSecret);
     }
 
-    public function getMerchantId()
-    {
-        return env('GET_NET_MERCHANT_ID');
-    }
 
     /**
-     * @return string[]
+     * @param $url
+     * @param $postFields
+     * @throws Exception
      */
-    public function getAuthorizationHeader()
-    {
-        return [
-            'authorization: Bearer ' . $this->accessToken,
-            'Content-Type: application/json',
-
-        ];
-    }
-
-    public function setAccessToken()
+    public function setAccessToken($url, $postFields)
     {
         $headers = [
             'content-type: application/x-www-form-urlencoded',
             'authorization: Basic ' . $this->getAuthorizationToken(),
         ];
 
-        $curl = curl_init(self::URL_API . 'credenciamento/auth/oauth/v2/token');
+        $curl = curl_init(self::URL_API . $url);
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, 'scope=mgm&grant_type=client_credentials');
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($curl);
@@ -69,419 +56,32 @@ class GetnetService
         if ($httpStatus == 200) {
             $this->accessToken = json_decode($result)->access_token;
         } else {
-            throw new Exception('Erro ao gerar token de acesso backoffice getnet');
-        }
-    }
-
-    public function getStatement()
-    {
-        $queryParameters = http_build_query(
-            [
-                'seller_id' => getenv('GET_NET_SELLER_ID'),
-                'transaction_date_init' => ' 2020-06-01',
-                'transaction_date_end' => ' 2020-07-07'
-            ]
-        );
-
-        $url = self::URL_API . 'v1/mgm/statement?' . $queryParameters;
-
-
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-    }
-
-    private function curlPost($url, $data)
-    {
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_ENCODING => '',
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        $this->saveRequests($url, $result, $httpStatus, $data);
-
-        return [
-            'result' => $result,
-            'httpStatus' => $httpStatus
-        ];
-    }
-
-
-    /**
-     * Consulta planos de pagamentos configurados para a loja
-     */
-    public function checkAvailablePaymentPlansPf()
-    {
-        $url = self::URL_API . 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
-
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-    }
-
-    /**
-     * @param Company $company
-     * @return array
-     * @throws PresenterException
-     * Cria pré-cadastro da loja PF
-     */
-    public function createPfCompany(Company $company)
-    {
-        $url = self::URL_API . 'v1/mgm/pf/create-presubseller';
-        $data = $this->getPrepareDataCreatePfCompany($company);
-
-        $getResult = $this->curlPost($url, $data);
-
-        $httpStatus = $getResult['httpStatus'];
-        $result = $getResult['result'];
-
-
-        if ($httpStatus == 200) {
-            return [
-                'message' => 'success',
-                'data' => json_decode($result)
-            ];
-        } else {
-            return [
-                'message' => 'error',
-                'data' => json_decode($result)
-            ];
+            throw new Exception('Erro ao gerar token de acesso captura getnet');
         }
     }
 
     /**
-     * @param Company $company
-     * Complementar pré-cadastro da loja quando necessario
+     * @param $url
+     * @param $method
+     * @param null $data
+     * @return bool|string
      */
-    public function complementPfCompany(Company $company)
+    public function sendCurl($url, $method, $data = null)
     {
-        $url = self::URL_API . 'v1/mgm/pf/complement';
-        $data = $this->getPrepareDataComplementPfCompany($company);
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_POST => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => 'PUT',
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
-                CURLOPT_POSTFIELDS => json_encode($data)
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * @param Company $company
-     * @return string[]
-     * @throws PresenterException
-     */
-    public function updatePfCompany(Company $company)
-    {
-        $url = self::URL_API . 'v1/mgm/pf/update-subseller';
-        $data = $this->getPrepareDataUpdatePfCompany($company);
-
-        $curl = curl_init();
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_POST => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => 'PUT',
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
-                CURLOPT_POSTFIELDS => json_encode($data)
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-
-        if ($httpStatus == 200 && json_decode($result)->success == 'true') {
-            return [
-                'message' => 'success',
-            ];
-        } else {
-            return [
-                'message' => 'error',
-            ];
-        }
-    }
-
-    /**
-     * @param string $cpf
-     * Consulta situação cadastral de um CPF que já finalizou o fluxo de pré cadastro
-     */
-    public function checkPfCompanyRegister(string $cpf)
-    {
-        $url = self::URL_API . 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
-        $data = $cpf;
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * @param $cnpj
-     */
-    public function checkComplementPjCompanyRegister($cnpj)
-    {
-        $url = self::URL_API . 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . $cnpj;
-        $data = $cnpj;
-        $curl = curl_init();
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * @param $cnpj
-     * Method GET
-     * Consulta situação cadastral do CNPJ da loja
-     */
-    public function checkPjCompanyRegister($cnpj)
-    {
-        $url = self::URL_API . 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . $cnpj;
-        $data = $cnpj;
-        $curl = curl_init();
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * Method GET
-     * Consulta planos de pagamentos connfigurados para loja PJ
-     */
-    public function checkAvailablePaymentPlansPj()
-    {
-        $url = self::URL_API . 'v1/mgm/pj/consult/paymentplans/' . $this->getMerchantId();
-        $data = '';
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader()
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * @param Company $company
-     * @return array
-     * @throws PresenterException
-     * Cria pré-cadastro da loja
-     */
-    public function createPjCompany(Company $company)
-    {
-        $url = self::URL_API . 'v1/mgm/pj/create-presubseller';
-        $data = $this->getPrepareDataCreatePjCompany($company);
-        $curl = curl_init($url);
-
-
+        $curl = curl_init(self::URL_API . $url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        if (!is_null($data)) {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getAuthorizationHeader());
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
+
         $this->saveRequests($url, $result, $httpStatus, $data);
-
-
-        if ($httpStatus == 200) {
-            return [
-                'message' => 'success',
-                'data' => json_decode($result)
-            ];
-        } else {
-            return [
-                'message' => 'error',
-                'data' => json_decode($result)
-            ];
-        }
-    }
-
-    /**
-     * @param Company $company
-     * Method PUT
-     * Complementa pré-cadastro da loja se necessario
-     */
-    public function complementPjCompany(Company $company)
-    {
-        $url = self::URL_API . 'v1/mgm/pj/complement';
-        $data = $this->getPrepareDataComplementPjCompany($company);
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_POST => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => 'PUT',
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
-                CURLOPT_POSTFIELDS => json_encode($data)
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * @param Company $company
-     * @throws PresenterException
-     * Method PUT
-     * Atualiza cadastro da loja
-     */
-    public function updatePjCompany(Company $company)
-    {
-        $url = self::URL_API . 'v1/mgm/pj/update-subseller';
-        $data = $this->getPrepareDataUpdatePjCompany($company);
-
-        $curl = curl_init();
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_POST => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_CUSTOMREQUEST => 'PUT',
-                CURLOPT_HTTPHEADER => $this->getAuthorizationHeader(),
-                CURLOPT_POSTFIELDS => json_encode($data)
-            ]
-        );
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
-    }
-
-    /**
-     * @param $subsellerGetnetId
-     * Method POST
-     * Descredenciar Loja PJ
-     */
-    public function disqualifyPjCompany($subsellerGetnetId)
-    {
-        $url = self::URL_API . 'v1/mgm/pj/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
-        $data = $this->getAuthorizationHeader();
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $data);
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $this->saveRequests($url, $result, $httpStatus, $data);
+        return $result;
     }
 
     /**
@@ -490,7 +90,7 @@ class GetnetService
      * @param $httpStatus
      * @param $data
      */
-    private function saveRequests($url, $result, $httpStatus, $data)
+    public function saveRequests($url, $result, $httpStatus, $data)
     {
         GetnetBackofficeRequests::create(
             [
@@ -510,5 +110,6 @@ class GetnetService
 
         );
     }
+
 
 }
