@@ -1,20 +1,21 @@
 <?php
 
-namespace Modules\Core\Services;
+namespace App\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Gateway;
+use App\Entities\Company;
+use App\Entities\Gateway;
+use App\Entities\GatewayPostback;
 use Vinkla\Hashids\Facades\Hashids;
 use Carbon\Carbon;
 
 /**
- * Class GetnetPaymentService
- * @package Modules\Core\Services
+ * Class GetnetService
+ * @package App\Services
  */
-class GetnetPaymentService
+class GetnetService
 {
     public const URL_API = 'https://api-homologacao.getnet.com.br/';
 
@@ -28,7 +29,7 @@ class GetnetPaymentService
     public function __construct()
     {
         $gateway = Gateway::where("name", "getnet_sandbox")->first();
-        $configs = json_decode(FoxUtils::xorEncrypt($gateway->json_config, "decrypt"), true);
+        $configs = json_decode(FoxUtilsService::xorEncrypt($gateway->json_config, "decrypt"), true);
         $this->gatewayId = $gateway->id ?? null;
         $this->authorizationToken = base64_encode($configs['public_token'] . ':' . $configs['private_token']);
         $this->setAccessToken();
@@ -38,8 +39,8 @@ class GetnetPaymentService
     {
         return [
             'authorization: Bearer ' . $this->accessToken,
-            'Content-Type: application/json; charset=utf-8',
-//            'seller_id: ' . env('GET_NET_SELLER_ID'),
+            'Content-Type: application/json',
+            'seller_id: ' . env('GET_NET_SELLER_ID'),
         ];
     }
 
@@ -66,18 +67,29 @@ class GetnetPaymentService
         }
     }
 
+    /**
+     * Method POST
+     * Tokeniza cartão
+     * @param string $cardNumber
+     * @param string $customerId
+     */
     public function tokenizeCard($cardNumber, $customerId)
     {
         $data = $this->sendCurl('v1/tokens/card', 'POST', ['card_number' => $cardNumber, 'customer_id' => $customerId]);
         return json_decode($data);
     }
 
+    /**
+     * @param string $url
+     * @param string $method
+     * @param array $data
+     */
     private function sendCurl($url, $method, $data = null)
     {
         $curl = curl_init(self::URL_API . $url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        if (!is_null($data)) {
+        if(!is_null($data)) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -88,29 +100,16 @@ class GetnetPaymentService
         return $result;
     }
 
-
-    public function paymentRelease($paymentId, $dataPayment)
-    {
-        $url = 'v1/marketplace/payments/' . $paymentId . '/release';
-
-        $data = [
-            'release_payment_date' => $dataPayment['releasePaymentDate'],
-            'subseller_id' => $dataPayment['subsellerId'],
-            'order_item_release' => [
-                'id' => $dataPayment['productId'],
-                'amount' => $dataPayment['productAmount']
-            ],
-        ];
-
-        $getResult = $this->sendCurl($url, 'POST', $data);
-    }
-
-
+    /**
+     * @param $data
+     * @return Sale|Sale|mixed
+     * @throws Exception
+     */
     public function creditCardPayment($data)
     {
         try {
             // dd($data);
-            $this->sendData = json_encode($this->getDataPayment($data));
+            $this->sendData      = json_encode($this->getDataPayment($data));
             $this->gatewayResult = $this->sendCurl('v1/payments/credit', 'POST', $this->getDataPayment($data));
             $return = json_decode($this->gatewayResult, 1);
             // dd($return);
@@ -121,39 +120,45 @@ class GetnetPaymentService
             }
 
             $gatewayTransactionId = null;
-            if (!empty($return['payment_id'])) {
+            if(!empty($return['payment_id'])) {
                 $gatewayTransactionId = $return['payment_id'];
-            } elseif (!empty($return['details'][0]['payment_id'])) {
+            } elseif(!empty($return['details'][0]['payment_id'])) {
                 $gatewayTransactionId = $return['details'][0]['payment_id'];
             }
 
             $gatewayStatus = null;
-            if (!empty($return['status'])) {
+            if(!empty($return['status'])) {
                 $gatewayStatus = $return['status'];
-            } elseif (!empty($return['details'][0]['status'])) {
+            } elseif(!empty($return['details'][0]['status'])) {
                 $gatewayStatus = $return['details'][0]['status'];
             }
 
             return [
-                'gateway_id' => $this->gatewayId,
-                'gateway_transaction_id' => $gatewayTransactionId,
-                'status' => $this->getSaleStatus($gatewayStatus),
-                'gateway_status' => $gatewayStatus,
-                'gateway_card_flag' => $return['credit']['brand'] ?? null,
-                'flag' => $return['credit']['brand'] ?? null,
-                'message' => $message,
+                'gateway_id'                 => $this->gatewayId,
+                'gateway_transaction_id'     => $gatewayTransactionId,
+                'status'                     => $this->getSaleStatus($gatewayStatus),
+                'gateway_status'             => $gatewayStatus,
+                'gateway_card_flag'          => $return['credit']['brand'] ?? null,
+                'flag'                       => $return['credit']['brand'] ?? null,
+                'message'                    => $message,
                 // // braspag
                 // 'gateway_proof_of_sale'      => $formatedGatewayResponse['gateway_proof_of_sale'] ?? null,
                 // 'gateway_tid'                => $formatedGatewayResponse['gateway_tid'] ?? null,
                 // 'gateway_authorization_code' => $formatedGatewayResponse['gateway_authorization_code'] ?? null,
                 // 'gateway_received_date'      => $formatedGatewayResponse['gateway_received_date'] ?? null,
             ];
+
         } catch (Exception $e) {
             // dd($e);
             throw $e;
         }
+
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     private function getDataPayment($data)
     {
         $itens = [];
@@ -170,16 +175,15 @@ class GetnetPaymentService
         foreach ($data['subseller'] as $key => $value) {
             // dd($value);
             $marketplaceSubsellers[] = [
-                "subseller_sales_amount" => $value['value'],
-                // TODO Parte do Valor da loja em relação ao Pedido (em centavos) int
+                "subseller_sales_amount" => $value['value'], // TODO Parte do Valor da loja em relação ao Pedido (em centavos) int
                 "subseller_id" => $value['subseller_id'],
                 "order_items" => [
                     [
-                        "amount" => $value['value'],
-                        "currency" => "BRL",
-                        "id" => $data['cart_items'][0]["sku"],
+                        "amount"      => $value['value'],
+                        "currency"    => "BRL",
+                        "id"          => $data['cart_items'][0]["sku"],
                         "description" => $data['cart_items'][0]["product_name"],
-                        "tax_amount" => $value['tax'] ?? 0,
+                        "tax_amount"  => $value['tax'] ?? 0,
                         // "tax_percent" => 0,
                     ],
                 ],
@@ -188,71 +192,71 @@ class GetnetPaymentService
 
         return [
             "seller_id" => env('GET_NET_SELLER_ID'),
-            "amount" => $amount,
-            "currency" => "BRL",
-            "order" => [
+            "amount"    => $amount,
+            "currency"  => "BRL",
+            "order"     => [
                 "order_id" => $idSale = Hashids::connection('sale_id')->encode($data['id']),
                 // "product_type" => "service", // TODO cash_carry, digital_content, digital_goods, digital_physical, gift_card, physical_goods, renew_subs, shareware, service
             ],
-            "customer" => [
-                "customer_id" => Hashids::encode($data['client']['id']),
-                "first_name" => FoxUtilsService::splitName($data['client']['name'])[0],
-                "last_name" => FoxUtilsService::splitName($data['client']['name'])[1],
-                "name" => $data['client']['name'],
-                "email" => $data['client']['email'] ?? null,
-                "document_type" => "", // TODO
+            "customer"  => [
+                "customer_id"     => Hashids::encode($data['client']['id']),
+                "first_name"      => FoxUtilsService::splitName($data['client']['name'])[0],
+                "last_name"       => FoxUtilsService::splitName($data['client']['name'])[1],
+                "name"            => $data['client']['name'],
+                "email"           => $data['client']['email'] ?? null,
+                "document_type"   => "", // TODO
                 "document_number" => $data['client']['document'],
-                "phone_number" => $data['client']['telephone'],
+                "phone_number"    => $data['client']['telephone'],
                 "billing_address" => [
-                    "street" => $data['delivery']['street'],
-                    "number" => $data['delivery']['number'],
-                    "complement" => $data['delivery']['complement'],
-                    "district" => $data['delivery']['neighborhood'],
-                    "city" => $data['delivery']['city'],
-                    "state" => $data['delivery']['state'],
-                    "country" => $data['delivery']['country'],
+                    "street"      => $data['delivery']['street'],
+                    "number"      => $data['delivery']['number'],
+                    "complement"  => $data['delivery']['complement'],
+                    "district"    => $data['delivery']['neighborhood'],
+                    "city"        => $data['delivery']['city'],
+                    "state"       => $data['delivery']['state'],
+                    "country"     => $data['delivery']['country'],
                     "postal_code" => $data['delivery']['zip_code'],
                 ],
             ],
-            "device" => [
+            "device"    => [
                 "ip_address" => "", // TODO
-                "device_id" => $data['cybersource_fingerprint'],
+                "device_id"  => $data['cybersource_fingerprint'],
             ],
             "shippings" => [
                 [
-                    "first_name" => FoxUtilsService::splitName($data['client']['name'])[0],
-                    "name" => $data['client']['name'],
-                    "email" => $data['client']['email'] ?? null,
-                    "phone_number" => $data['client']['telephone'],
+                    "first_name"      => FoxUtilsService::splitName($data['client']['name'])[0],
+                    "name"            => $data['client']['name'],
+                    "email"           => $data['client']['email'] ?? null,
+                    "phone_number"    => $data['client']['telephone'],
                     "shipping_amount" => 0,
-                    "address" => [
-                        "street" => $data['delivery']['street'],
-                        "number" => $data['delivery']['number'],
-                        "complement" => $data['delivery']['complement'],
-                        "district" => $data['delivery']['neighborhood'],
-                        "city" => $data['delivery']['city'],
-                        "state" => $data['delivery']['state'],
-                        "country" => $data['delivery']['country'],
+                    "address"         => [
+                        "street"      => $data['delivery']['street'],
+                        "number"      => $data['delivery']['number'],
+                        "complement"  => $data['delivery']['complement'],
+                        "district"    => $data['delivery']['neighborhood'],
+                        "city"        => $data['delivery']['city'],
+                        "state"       => $data['delivery']['state'],
+                        "country"     => $data['delivery']['country'],
                         "postal_code" => $data['delivery']['zip_code'],
                     ],
                 ],
             ],
-            "credit" => [
-                "delayed" => false,
-                "pre_authorization" => false,
-                "save_card_data" => false,
-                "transaction_type" => $data['installments'] > 1 ? "INSTALL_NO_INTEREST" : "FULL",
+            "credit"    => [
+                "delayed"             => false,
+                "pre_authorization"   => false,
+                "save_card_data"      => false,
+                "transaction_type"    => $data['installments'] > 1 ? "INSTALL_NO_INTEREST" : "FULL",
                 // TODO FULL -  a vista, INSTALL_NO_INTEREST - parcelado sem juro, INSTALL_WITH_INTEREST - parc c/ juro
                 "number_installments" => $data['installments'],
                 // "soft_descriptor"     => "",
                 // "dynamic_mcc"         => "",
-                "card" => [
-                    "number_token" => $data['card_token'],
-                    "cardholder_name" => $data['card_name'],
-                    "security_code" => $data['card_cvv'],
-                    "brand" => $data['card_brand'],
+                "card"                => [
+                    "number_token"     => $data['card_token'],
+                    "cardholder_name"  => $data['card_name'],
+                    "security_code"    => $data['card_cvv'],
+                    "brand"            => $data['card_brand'],
                     "expiration_month" => $data['card_expiration_date_month'],
-                    "expiration_year" => substr($data['card_expiration_date_year'], 2),
+                    "expiration_year"  => substr($data['card_expiration_date_year'],2),
                 ],
             ],
             "marketplace_subseller_payments" => $marketplaceSubsellers,
@@ -267,13 +271,16 @@ class GetnetPaymentService
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getGatewayRequest()
     {
         try {
             return [
-                "gateway_id" => $this->gatewayId,
-                "send_data" => $this->sendData,
-                "gateway_result" => $this->gatewayResult,
+                "gateway_id"         => $this->gatewayId,
+                "send_data"          => $this->sendData,
+                "gateway_result"     => $this->gatewayResult,
                 "gateway_exceptions" => json_encode([]),
             ];
         } catch (Exception $ex) {
@@ -283,6 +290,9 @@ class GetnetPaymentService
         }
     }
 
+    /**
+     * @param array $data
+     */
     public function verifyCard($data)
     {
         /*
@@ -295,11 +305,19 @@ class GetnetPaymentService
         return json_decode($this->sendCurl('v1/cards/verification', 'POST', $data));
     }
 
+    /**
+     * @param string $paymentId
+     */
     public function cancelPaymentDay($paymentId)
     {
-        return json_decode($this->sendCurl('v1/payments/credit/' . $paymentId . '/cancel', 'POST'));
+        return json_decode($this->sendCurl('v1/payments/credit/'.$paymentId.'/cancel', 'POST'));
     }
 
+    /**
+     * @param $gatewayStatus
+     * @return string
+     * @throws Exception
+     */
     public function getSaleStatus($gatewayStatus)
     {
         try {
@@ -342,36 +360,49 @@ class GetnetPaymentService
         }
     }
 
+    public function teste()
+    {
+        $this->gatewayResult = $this->sendCurl('v1/payments/credit/5ef5683d-d383-4b47-8849-aafcda32aca6', 'GET');
+    }
+
+    /**
+     * @param string $paymentId
+     * @param int $amount
+     * @param string $cancelCustomKey
+     * @param array $dataPartial
+     */
     public function cancelPayment($paymentId, $amount, $cancelCustomKey = null, $dataPartial = null)
     {
-        $data = array_filter(
-            [
-                "payment_id" => $paymentId,
-                "cancel_amount" => $amount,
-                "cancel_custom_key" => $cancelCustomKey,
-                "marketplace_subseller_payments" => $dataPartial
-                // [
-                //     [
-                //         "subseller_sales_amount" => 10202,
-                //         "subseller_id"           => 10,
-                //         "order_items"            => [
-                //             [
-                //                 "amount"      => 10202,
-                //                 "currency"    => "BRL",
-                //                 "id"          => "X0001",
-                //                 "description" => "Produto x",
-                //                 "tax_percent" => 0.1,
-                //                 "tax_amount"  => 100
-                //             ]
-                //         ]
-                //     ]
-                // ]
-            ]
-        );
+        $data = array_filter([
+                                 "payment_id"                     => $paymentId,
+                                 "cancel_amount"                  => $amount,
+                                 "cancel_custom_key"              => $cancelCustomKey,
+                                 "marketplace_subseller_payments" => $dataPartial
+                                 // [
+                                 //     [
+                                 //         "subseller_sales_amount" => 10202,
+                                 //         "subseller_id"           => 10,
+                                 //         "order_items"            => [
+                                 //             [
+                                 //                 "amount"      => 10202,
+                                 //                 "currency"    => "BRL",
+                                 //                 "id"          => "X0001",
+                                 //                 "description" => "Produto x",
+                                 //                 "tax_percent" => 0.1,
+                                 //                 "tax_amount"  => 100
+                                 //             ]
+                                 //         ]
+                                 //     ]
+                                 // ]
+                             ]);
 
         return json_decode($this->sendCurl('v1/payments/cancel/request', 'POST', $data));
     }
 
+    /**
+     * @param string $paymentId
+     * @param array $data
+     */
     public function confirmationLatePayment($paymentId, $data)
     {
         /*
@@ -396,31 +427,36 @@ class GetnetPaymentService
         ]
         */
 
-        return json_decode($this->sendCurl('v1/payments/credit/' . $paymentId . '/confirm', 'POST', $data));
+        return json_decode($this->sendCurl('v1/payments/credit/'.$paymentId.'/confirm', 'POST', $data));
     }
 
 
-    public function releasePaymentToSeller(
-        $paymentId,
-        $dateRelease,
-        $subseller,
-        $productId,
-        $amount,
-        $updateReleaseDate = false
-    ) {
+    /**
+     * @param string $paymentId
+     * @param string $dateRelease (YYYY-MM-DDTHH:MM:SSZ)
+     * @param string $subseller
+     * @param string $productId
+     * @param int $amount
+     * @param bool $updateReleaseDate
+     */
+    public function releasePaymentToSeller($paymentId, $dateRelease, $subseller, $productId, $amount, $updateReleaseDate = false)
+    {
         $data = [
             "release_payment_date" => $dateRelease,
-            "subseller_id" => $subseller,
-            "order_item_release" => [
-                "id" => $productId,
+            "subseller_id"         => $subseller,
+            "order_item_release"   => [
+                "id"     => $productId,
                 "amount" => $amount
             ]
         ];
         $method = ($updateReleaseDate == true) ? 'PATCH' : 'POST';
-        return json_decode($this->sendCurl('v1/marketplace/payments/' . $paymentId . '/release', $method, $data));
+        return json_decode($this->sendCurl('v1/marketplace/payments/'.$paymentId.'/release', $method, $data));
     }
 
 
+    /**
+     * @param array $data
+     */
     public function billetPayment($data)
     {
         try {
@@ -432,16 +468,15 @@ class GetnetPaymentService
             foreach ($data['subseller'] as $key => $value) {
                 // dd($value);
                 $marketplaceSubsellers[] = [
-                    "subseller_sales_amount" => $value['value'],
-                    // TODO Parte do Valor da loja em relação ao Pedido (em centavos) int
+                    "subseller_sales_amount" => $value['value'], // TODO Parte do Valor da loja em relação ao Pedido (em centavos) int
                     "subseller_id" => $value['subseller_id'],
                     "order_items" => [
                         [
-                            "amount" => $value['value'],
-                            "currency" => "BRL",
-                            "id" => $data['cart_items'][0]["sku"],
+                            "amount"      => $value['value'],
+                            "currency"    => "BRL",
+                            "id"          => $data['cart_items'][0]["sku"],
                             "description" => $data['cart_items'][0]["product_name"],
-                            "tax_amount" => $value['tax'] ?? 0,
+                            "tax_amount"  => $value['tax'] ?? 0,
                             // "tax_percent" => 0,
                         ],
                     ],
@@ -450,96 +485,108 @@ class GetnetPaymentService
 
             $dataBillet = [
                 "seller_id" => env('GET_NET_SELLER_ID'),
-                "amount" => $data['total_value'],
-                "currency" => "BRL",
-                "order" => [
+                "amount"    => $data['total_value'],
+                "currency"  => "BRL",
+                "order"     => [
                     "order_id" => $idSale = Hashids::connection('sale_id')->encode($data['id']),
                     // "product_type" => "service", // TODO cash_carry, digital_content, digital_goods, digital_physical, gift_card, physical_goods, renew_subs, shareware, service
                 ],
-                "customer" => [
-                    "first_name" => FoxUtilsService::splitName($data['client']['name'])[0],
-                    "name" => $data['client']['name'],
-                    "document_type" => "CPF", // CPF, CNPJ TODO
+                "customer"  => [
+                    "first_name"      => FoxUtilsService::splitName($data['client']['name'])[0],
+                    "name"            => $data['client']['name'],
+                    "document_type"   => "CPF", // CPF, CNPJ TODO
                     "document_number" => $data['client']['document'],
-                    "phone_number" => $data['client']['telephone'],
+                    "phone_number"    => $data['client']['telephone'],
                     "billing_address" => [
-                        "street" => $data['delivery']['street'],
-                        "number" => $data['delivery']['number'],
-                        "complement" => $data['delivery']['complement'],
-                        "district" => $data['delivery']['neighborhood'],
-                        "city" => $data['delivery']['city'],
-                        "state" => $data['delivery']['state'],
+                        "street"      => $data['delivery']['street'],
+                        "number"      => $data['delivery']['number'],
+                        "complement"  => $data['delivery']['complement'],
+                        "district"    => $data['delivery']['neighborhood'],
+                        "city"        => $data['delivery']['city'],
+                        "state"       => $data['delivery']['state'],
                         "postal_code" => $data['delivery']['zip_code'],
                     ],
                 ],
                 "marketplace_subseller_payments" => $marketplaceSubsellers,
                 "boleto" => [
                     // "document_number"           => "1", // TODO
-                    "expiration_date" => Carbon::parse($data["due_date"])->format('d/m/Y'),
-                    "instructions" => "Não receber após o vencimento", // TODO
-                    "provider" => "santander",
-                    "guarantor_document_type" => ($data['company_type'] == 1) ? "CPF" : "CNPJ",
+                    "expiration_date"           => Carbon::parse($data["due_date"])->format('d/m/Y'),
+                    "instructions"              => "Não receber após o vencimento", // TODO
+                    "provider"                  => "santander",
+                    "guarantor_document_type"   => ($data['company_type'] == 1) ? "CPF" : "CNPJ",
                     "guarantor_document_number" => $data['company_document'],
-                    "guarantor_name" => $data['fantasy_name'],
+                    "guarantor_name"            => $data['fantasy_name'],
                 ]
             ];
 
             // dd($dataBillet['boleto']);
 
-            $this->sendData = json_encode($dataBillet);
+            $this->sendData      = json_encode($dataBillet);
             $this->gatewayResult = $this->sendCurl('v1/payments/boleto', 'POST', $dataBillet);
 
             $return = json_decode($this->gatewayResult, 1);
             if (!empty($return['status']) && $return['status'] == 'PENDING') {
                 $saleArray = [
-                    'gateway_id' => $this->gatewayId,
-                    'gateway_transaction_id' => $return['payment_id'],
-                    'status' => $this->getSaleStatus($return['status']),
-                    'gateway_status' => $return['status'],
-                    'boleto_digitable_line' => $return['boleto']['typeful_line'] ?? null,
-                    'boleto_link' => (!empty($return['boleto']['_links'][0]['href'])) ? self::URL_API . $return['boleto']['_links'][0]['href'] : null,
-                    'boleto_due_date' => $return['boleto']['expiration_date'] ?? null,
-                    'status' => 2,
+                    'gateway_id'                 => $this->gatewayId,
+                    'gateway_transaction_id'     => $return['payment_id'],
+                    'status'                     => $this->getSaleStatus($return['status']),
+                    'gateway_status'             => $return['status'],
+                    'boleto_digitable_line'      => $return['boleto']['typeful_line'] ?? null,
+                    'boleto_link'                => (!empty($return['boleto']['_links'][0]['href'])) ? self::URL_API . $return['boleto']['_links'][0]['href'] : null,
+                    'boleto_due_date'            => $return['boleto']['expiration_date'] ?? null,
+                    'status'                     => 2,
                 ];
+
             } else {
                 return [
-                    'status' => 'error',
-                    'message' => $return['message'] ?? 'OCORREU UM ERRO AO GERAR O BOLETO, TENTE EM INSTANTES!',
+                    'status'   => 'error',
+                    'message'  => $return['message'] ?? 'OCORREU UM ERRO AO GERAR O BOLETO, TENTE EM INSTANTES!',
                     'response' => [
-                        'status' => 99,
+                        'status'     => 99,
                         // 'gateway_id' => $this->getGatewayId(),
                     ],
                 ];
             }
 
             return [
-                'status' => 'success',
-                'message' => 'Boleto gerado com sucesso!',
+                'status'   => 'success',
+                'message'  => 'Boleto gerado com sucesso!',
                 'response' => $saleArray,
             ];
+
+
         } catch (Exception $e) {
             $this->exceptions[] = $e->getMessage();
             return [
-                'status' => 'error',
-                'message' => 'OCORREU UM ERRO INESPERADO, TENTE NOVAMENTE EM ALGUNS INSTANTES!',
+                'status'   => 'error',
+                'message'  => 'OCORREU UM ERRO INESPERADO, TENTE NOVAMENTE EM ALGUNS INSTANTES!',
                 'response' => [
-                    'status' => 99,
+                    'status'     => 99,
                     // 'gateway_id' => $this->getGatewayId(), //TODO
                 ],
             ];
         }
     }
 
+    /**
+     * @param string $cancelCustomKey
+     */
     public function getCancellationByCustomKey($cancelCustomKey)
     {
-        return json_decode($this->sendCurl('v1/payments/cancel/request?cancel_custom_key=' . $cancelCustomKey, 'GET'));
+        return json_decode($this->sendCurl('v1/payments/cancel/request?cancel_custom_key='.$cancelCustomKey, 'GET'));
     }
 
+    /**
+     * @param string $cancelCustomKey
+     */
     public function getCancellationByRequestId($cancelRequestId)
     {
-        return json_decode($this->sendCurl('v1/payments/cancel/request/' . $cancelRequestId, 'GET'));
+        return json_decode($this->sendCurl('v1/payments/cancel/request/'.$cancelRequestId, 'GET'));
     }
 
+    /**
+     * @param array $data
+     */
     public function addCardSafeBox($data)
     {
         /* $data = [
@@ -555,6 +602,11 @@ class GetnetPaymentService
         return json_decode($this->sendCurl('v1/cards', 'POST', $data));
     }
 
+    /**
+     * @param string $customeId
+     * @param string $ststus | all, active, renewed
+     * @return object
+     */
     public function listCardsSafeBox($customerId, $status = null)
     {
         $url = 'v1/cards?customer_id=' . $customerId;
@@ -562,16 +614,27 @@ class GetnetPaymentService
         return json_decode($this->sendCurl($url, 'GET'));
     }
 
+    /**
+     * @param string $cardId
+     * @return object
+     */
     public function getCardSafeBox($cardId)
     {
         return json_decode($this->sendCurl('v1/cards/' . $cardId, 'GET'));
     }
 
+    /**
+     * @param string $cardId
+     */
     public function removeCardSafeBox($cardId)
     {
         return json_decode($this->sendCurl('v1/cards/' . $cardId, 'DELETE'));
     }
 
+    /**
+     * @param string $paymentId
+     * @param array $data
+     */
     public function adjustPreAuthorizationValue($paymentId, $data)
     {
         /*[
@@ -597,9 +660,14 @@ class GetnetPaymentService
             ]
         ]*/
 
-        return json_decode($this->sendCurl('v1/payments/credit/' . $paymentId . '/adjustment', 'POST', $data));
+        return json_decode($this->sendCurl('v1/payments/credit/'.$paymentId.'/adjustment', 'POST', $data));
     }
 
+    /**
+     * @param $data
+     * @return bool
+     * @throws Exception
+     */
     public function savePostback($data)
     {
         try {
@@ -607,17 +675,16 @@ class GetnetPaymentService
 
             $jsonData = json_encode($data);
 
-            $gatewayPostback = $gatewayPostbackModel->create(
-                [
-                    'data' => $jsonData,
-                    'gateway_id' => 5, // TODO
-                    'gateway_enum' => $gatewayPostbackModel->present()
-                        ->gatewayEnum('getnet'), // TODO
-                    'processed_flag' => false,
-                    'postback_valid_flag' => false,
-                ]
-            );
+            $gatewayPostback = $gatewayPostbackModel->create([
+                                                                 'data'                => $jsonData,
+                                                                 'gateway_id'          => 5, // TODO
+                                                                 'gateway_enum'        => $gatewayPostbackModel->present()
+                                                                     ->gatewayEnum('getnet'), // TODO
+                                                                 'processed_flag'      => false,
+                                                                 'postback_valid_flag' => false,
+                                                             ]);
             if ($gatewayPostback) {
+
                 return true;
             } else {
                 return false;
