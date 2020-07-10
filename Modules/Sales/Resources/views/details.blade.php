@@ -24,6 +24,19 @@
                     <div id="status" class="status d-inline">
                     </div>
                 </div>
+                <div class='div-refund-observation mt-20' style='display:none;'>
+                    <label for="refund-observation" class="table-title gray mb-0">Causa do estorno:</label>&nbsp;
+                    <div class="d-flex align-items-center">
+                        <input id="refund-observation" type="email" name="refund_observation"
+                               class="detail-input mr-2 table-title gray fake-label"
+                               readonly>
+                        <a class="pointer btn-edit-observation"><i class="material-icons font-size-18">edit</i></a>
+                        <a class="pointer btn-save-observation" style="display:none;">
+                            <i class="material-icons font-size-18">save</i></a>
+                        <a class="pointer btn-close-observation ml-2" style="display:none;">
+                            <i class="material-icons font-size-18">close</i></a>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
                 <div id='sale-details-card' class="card shadow pr-20 pl-20 p-10">
                     <div class='div-sale-by-affiliate' style='display:none;'>
@@ -149,23 +162,6 @@
                     </button>
                 </div>
                 {{--resend shopfy order--}}
-
-                <div class='div-refund-observation' style='display:none;'>
-{{--                    <h5>Causa do estorno</h5>--}}
-{{--                    <span class='refund-observation'></span>--}}
-                    <label for="refund-observation" class="table-title gray mb-0">Causa do estorno:</label>&nbsp;
-                    {{--        <h5>Causa do estorno</h5>--}}
-                    <div class="d-flex align-items-center">
-                        <input id="refund-observation" type="email" name="refund_observation"
-                               class="detail-input mr-2 table-title gray fake-label"
-                                readonly>
-                        <a class="pointer btn-edit-observation"><i class="material-icons font-size-18">edit</i></a>
-                        <a class="pointer btn-save-observation" style="display:none;">
-                            <i class="material-icons font-size-18">save</i></a>
-                        <a class="pointer btn-close-observation ml-2" style="display:none;">
-                            <i class="material-icons font-size-18">close</i></a>
-                    </div>
-                </div>
 
                 <div class="nav-tabs-horizontal">
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
