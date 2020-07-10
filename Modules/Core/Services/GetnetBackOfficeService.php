@@ -122,7 +122,7 @@ class GetnetBackOfficeService extends GetnetService
         $url = 'v1/mgm/pf/create-presubseller';
         $data = $this->getPrepareDataCreatePfCompany($company);
 
-        return $this->sendCurl($url, 'POST', $data);
+        return $this->sendCurl($url, 'POST', $data,$company->id);
     }
 
     /**
@@ -136,7 +136,7 @@ class GetnetBackOfficeService extends GetnetService
         $url = 'v1/mgm/pf/complement';
         $data = $this->getPrepareDataComplementPfCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data);
+        return $this->sendCurl($url, 'PUT', $data,$company->id);
     }
 
     /**
@@ -164,7 +164,7 @@ class GetnetBackOfficeService extends GetnetService
         $url = 'v1/mgm/pf/update-subseller';
         $data = $this->getPrepareDataUpdatePfCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data);
+        return $this->sendCurl($url, 'PUT', $data,$company->id);
     }
 
     /**
@@ -215,7 +215,7 @@ class GetnetBackOfficeService extends GetnetService
         $url = 'v1/mgm/pj/create-presubseller';
         $data = $this->getPrepareDataCreatePjCompany($company);
 
-        return $this->sendCurl($url, 'POST', $data);
+        return $this->sendCurl($url, 'POST', $data,$company->id);
     }
 
     /**
@@ -229,7 +229,7 @@ class GetnetBackOfficeService extends GetnetService
         $url = 'v1/mgm/pj/complement';
         $data = $this->getPrepareDataComplementPjCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data);
+        return $this->sendCurl($url, 'PUT', $data,$company->id);
     }
 
     /**
@@ -244,7 +244,7 @@ class GetnetBackOfficeService extends GetnetService
         $url = 'v1/mgm/pj/update-subseller';
         $data = $this->getPrepareDataUpdatePjCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data);
+        return $this->sendCurl($url, 'PUT', $data,$company->id);
     }
 
     /**

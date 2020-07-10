@@ -51,9 +51,10 @@ class GetnetService
      * @param $url
      * @param $method
      * @param null $data
+     * @param null $companyId
      * @return bool|string
      */
-    public function sendCurl($url, $method, $data = null)
+    public function sendCurl($url, $method, $data = null,$companyId = null)
     {
         $curl = curl_init(self::URL_API . $url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
@@ -67,7 +68,7 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        $this->saveRequests($url, $result, $httpStatus, $data);
+        $this->saveRequests($url, $result, $httpStatus, $data,$companyId);
         return $result;
     }
 
@@ -76,11 +77,13 @@ class GetnetService
      * @param $result
      * @param $httpStatus
      * @param $data
+     * @param $companyId
      */
-    public function saveRequests($url, $result, $httpStatus, $data)
+    public function saveRequests($url, $result, $httpStatus, $data,$companyId)
     {
         GetnetBackofficeRequests::create(
             [
+                'company_id'=> $companyId,
                 'sent_data' => json_encode(
                     [
                         'url' => $url,
@@ -97,5 +100,5 @@ class GetnetService
 
         );
     }
-    
+
 }
