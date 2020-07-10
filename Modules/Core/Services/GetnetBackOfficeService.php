@@ -66,15 +66,20 @@ class GetnetBackOfficeService extends GetnetService
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
      * @param $pagination | Primeira chamada sempre se inicia com o número 1.
+     * @param null $subsellerId |
      * @return bool|string
      */
-    public function getStatement($pagination = null)
+    public function getStatement($subsellerId = null, $pagination = null)
     {
         $queryParameters = [
             'seller_id' => getenv('GET_NET_SELLER_ID'),
             'transaction_date_init' => '2020-06-01',
-            'transaction_date_end' => '2020-07-09'
+            'transaction_date_end' => '2020-07-10'
         ];
+
+        if (!is_null($subsellerId)) {
+            $queryParameters = $queryParameters + ['subseller_id' => $subsellerId];
+        }
 
         if (is_null($pagination)) {
             $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
