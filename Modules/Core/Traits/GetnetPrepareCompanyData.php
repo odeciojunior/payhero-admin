@@ -11,7 +11,7 @@ use Modules\Core\Services\FoxUtils;
  * Trait GetNetPrepareDataTrait
  * @package Modules\Core\Traits
  */
-trait GetNetPrepareDataTrait
+trait GetnetPrepareCompanyData
 {
     /**
      * @param Company $company
