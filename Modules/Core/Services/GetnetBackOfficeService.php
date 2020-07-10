@@ -5,7 +5,7 @@ namespace Modules\Core\Services;
 use Exception;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Traits\GetNetPrepareDataTrait;
+use Modules\Core\Traits\GetnetPrepareCompanyData;
 
 /**
  * Class GetnetService
@@ -13,7 +13,7 @@ use Modules\Core\Traits\GetNetPrepareDataTrait;
  */
 class GetnetBackOfficeService extends GetnetService
 {
-    use GetNetPrepareDataTrait;
+    use GetnetPrepareCompanyData;
 
     /**
      * @var string
