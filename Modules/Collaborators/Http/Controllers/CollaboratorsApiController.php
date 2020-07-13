@@ -79,7 +79,7 @@ class CollaboratorsApiController extends Controller
             $user                                        = $userModel->create($data);
             $user->assignRole($data['role']);
 
-            if ($data['role'] == 'attendance' && !empty($data['permission']) && $data['permission'] == 'refund') {
+            if ($data['role'] == 'attendance' && !empty($data['refund_permission'])) {
                 $user->givePermissionTo('refund');
             }
             if (!empty($user)) {
@@ -178,10 +178,10 @@ class CollaboratorsApiController extends Controller
 
             if ((!empty($userFind) && $userFind->id == $user->id) || empty($userFind)) {
                 $userUpdated = $user->update($data);
-                if ($user->hasPermissionTo('refund') && empty($data['permission'])) {
+                if ($user->hasPermissionTo('refund') && empty($data['refund_permission'])) {
                     $user->revokePermissionTo('refund');
                 }
-                if (!$user->hasPermissionTo('refund') && $data['role'] == 'attendance' && !empty($data['permission']) && $data['permission'] == 'refund') {
+                if (!$user->hasPermissionTo('refund') && $data['role'] == 'attendance' && !empty($data['refund_permission'])) {
                     $user->givePermissionTo('refund');
                 }
                 $user->syncRoles([$data['role']]);

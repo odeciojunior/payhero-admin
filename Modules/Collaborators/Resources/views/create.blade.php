@@ -5,10 +5,22 @@
                 <div class='form-group'>
                     <label for="name">Função</label>
                     <select id='role' name='role' class='form-control'>
-                        <option value='admin' data-permission=''>Administrativo</option>
-                        <option value='attendance' data-permission='refund'>Atendimento (permissão de estorno)</option>
-                        <option value='attendance' data-permission=''>Atendimento (sem permissão de estorno)</option>
+                        <option value='admin'>Administrativo</option>
+                        <option value='attendance'>Atendimento</option>
+{{--                        <option value='attendance' data-permission=''>Atendimento (sem permissão de estorno)</option>--}}
                     </select>
+                </div>
+            </div>
+            <div class="col-md-12 div-permission mb-20" style='display:none;'>
+                <div class="switch-holder">
+{{--                    <label class='mb-10'>Permissões:</label>--}}
+{{--                    <br>--}}
+                    <label for='refund_permission' class='mb-10'>Habilitar estorno:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" value='' name="refund_permission" id="refund_permission"'>
+                        <span class="slider round"></span>
+                    </label>
                 </div>
             </div>
             <div class="col-md-12">
@@ -43,5 +55,5 @@
             </div>
         </div>
     </div>
-    <input type='hidden' id='permission' name='permission'>
+{{--    <input type='hidden' id='permission' name='permission'>--}}
 </form>

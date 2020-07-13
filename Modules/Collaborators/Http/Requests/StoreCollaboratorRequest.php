@@ -13,13 +13,14 @@ class StoreCollaboratorRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'      => 'required|unique:users|max:200',
-            'name'       => 'required',
-            'cellphone'  => 'required',
-            'document'   => 'required',
-            'password'   => 'required',
-            'role'       => 'required',
-            'permission' => 'nullable',
+            'email'             => 'required|unique:users|max:200',
+            'name'              => 'required',
+            'cellphone'         => 'required',
+            'document'          => 'required',
+            'password'          => 'required',
+            'role'              => 'required',
+            'refund_permission' => 'nullable',
+            //            'permission'        => 'nullable',
         ];
     }
 

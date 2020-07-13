@@ -124,13 +124,22 @@ $(document).ready(function () {
                             $('#role_edit > option[selected="selected"]').removeAttr('selected');
                             if (response.data.role == 'admin') {
                                 $('#role_edit .opt-admin').attr('selected', true);
-                                $('#permission_edit').val('');
-                            } else if (response.data.refund_permission) {
-                                $('#role_edit .opt-attendance-refund').attr('selected', true);
-                                $('#permission_edit').val('refund');
                             } else {
                                 $('#role_edit .opt-attendance').attr('selected', true);
-                                $('#permission_edit').val('');
+                            }
+
+                            if (response.data.role == 'attendance') {
+                                $('.div-permission-edit').show();
+                            } else {
+                                $('.div-permission-edit').hide();
+                            }
+
+                            if (response.data.refund_permission) {
+                                $("#refund_permission_edit").val('refund');
+                                $("#refund_permission_edit").attr('checked', 'checked');
+                            } else {
+                                $("#refund_permission_edit").val('');
+                                $("#refund_permission_edit").attr('checked', false);
                             }
 
                             $("#name_edit").val(response.data.name);
@@ -239,21 +248,41 @@ $(document).ready(function () {
 
     $('#role').on('change', function () {
         let selectedVal = $(this).val();
-        let permission = $('option:selected', this).data('permission');
-        if (selectedVal == 'attendance' && permission == 'refund') {
-            $('#permission').val(permission);
+        // let permission = $('option:selected', this).data('permission');
+        if (selectedVal == 'attendance') {
+            $('.div-permission').show();
         } else {
-            $('#permission').val('');
+            $('.div-permission').hide();
+            $('#refund_permission').val('');
+            $("#refund_permission").attr('checked', false);
         }
     });
 
     $('#role_edit').on('change', function () {
         let selectedVal = $(this).val();
-        let permission = $('option:selected', this).data('permission');
-        if (selectedVal == 'attendance' && permission == 'refund') {
-            $('#permission_edit').val(permission);
+        // let permission = $('option:selected', this).data('permission');
+        if (selectedVal == 'attendance') {
+            $('.div-permission-edit').show();
         } else {
-            $('#permission_edit').val('');
+            $('.div-permission-edit').hide();
+            $('#refund_permission_edit').val('');
+            $("#refund_permission_edit").attr('checked', false);
+        }
+    });
+
+    $('#refund_permission').on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).val('refund');
+        } else {
+            $(this).val('');
+        }
+    });
+
+    $('#refund_permission_edit').on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).val('refund');
+        } else {
+            $(this).val('');
         }
     });
 

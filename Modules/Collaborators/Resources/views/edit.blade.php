@@ -8,10 +8,22 @@
                 <div class='form-group'>
                     <label for="role_edit">Função</label>
                     <select id='role_edit' name='role' class='form-control'>
-                        <option value='admin' class='opt-admin' data-permission=''>Administrativo</option>
-                        <option value='attendance' class='opt-attendance-refund' data-permission='refund'>Atendimento (permissão de estorno)</option>
-                        <option value='attendance' class='opt-attendance' data-permission=''>Atendimento (sem permissão de estorno)</option>
+                        <option value='admin' class='opt-admin'>Administrativo</option>
+                        <option value='attendance' class='opt-attendance'>Atendimento</option>
+{{--                        <option value='attendance' class='opt-attendance' data-permission=''>Atendimento (sem permissão de estorno)</option>--}}
                     </select>
+                </div>
+            </div>
+            <div class="col-md-12 div-permission-edit mb-20" style='display:none;'>
+                <div class="switch-holder">
+                    {{--                    <label class='mb-10'>Permissões:</label>--}}
+                    {{--                    <br>--}}
+                    <label for='refund_permission_edit' class='mb-10'>Habilitar estorno:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" value='' name="refund_permission" id="refund_permission_edit">
+                        <span class="slider round"></span>
+                    </label>
                 </div>
             </div>
             <div class="col-md-12">
@@ -53,5 +65,5 @@
             </div>
         </div>
     </div>
-    <input type='hidden' id='permission_edit' name='permission'>
+{{--    <input type='hidden' id='permission_edit' name='permission'>--}}
 </form>
