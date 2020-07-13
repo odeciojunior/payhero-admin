@@ -126,12 +126,12 @@ class WithdrawalsApiController extends Controller
             $companyService = new CompanyService();
             $userService = new UserService();
 
-            /*if ($companyService->verifyFieldsEmpty($company) || $userService->verifyFieldsEmpty($user)) {
+            if ($companyService->verifyFieldsEmpty($company) || $userService->verifyFieldsEmpty($user)) {
                 return response()->json(
                     ['message' => 'Para efetuar o saque favor preencher os documentos pendentes'],
                     403
                 );
-            }*/
+            }
 
             if (!$company->bank_document_status == $companyModel->present()
                     ->getBankDocumentStatus('approved') ||
