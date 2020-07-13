@@ -28,15 +28,15 @@ class CollaboratorsApiController extends Controller
     {
         try {
             $userModel = new User();
-            $user = $userModel->where(
+            $user      = $userModel->where(
                 [
                     ['account_owner_id', auth()->user()->account_owner_id],
-                    ['id', '!=', auth()->user()->account_owner_id]
+                    ['id', '!=', auth()->user()->account_owner_id],
                 ]
             );
 
             activity()->on($userModel)->tap(
-                function (Activity $activity) {
+                function(Activity $activity) {
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todos colaboradores');
@@ -61,23 +61,27 @@ class CollaboratorsApiController extends Controller
     public function store(StoreCollaboratorRequest $request)
     {
         try {
-            $data = $request->validated();
-            $userModel = new User();
-            $data['password'] = bcrypt($data['password']);
-            $data['percentage_rate'] = '5.9';
-            $data['transaction_rate'] = '1.00';
-            $data['balance'] = '0';
+            $data                                        = $request->validated();
+            $userModel                                   = new User();
+            $data['password']                            = bcrypt($data['password']);
+            $data['percentage_rate']                     = '5.9';
+            $data['transaction_rate']                    = '1.00';
+            $data['balance']                             = '0';
             $data['credit_card_antecipation_money_days'] = '30';
-            $data['boleto_antecipation_money_days'] = '2';
-            $data['antecipation_tax'] = '0';
-            $data['boleto_release_money_days'] = 0;
-            $data['percentage_antecipable'] = '100';
-            $data['invites_amount'] = 1;
-            $data['address_document_status'] = 3;
-            $data['personal_document_status'] = 3;
-            $data['account_owner_id'] = auth()->user()->account_owner_id;
-            $user = $userModel->create($data);
+            $data['boleto_antecipation_money_days']      = '2';
+            $data['antecipation_tax']                    = '0';
+            $data['boleto_release_money_days']           = 0;
+            $data['percentage_antecipable']              = '100';
+            $data['invites_amount']                      = 1;
+            $data['address_document_status']             = 3;
+            $data['personal_document_status']            = 3;
+            $data['account_owner_id']                    = auth()->user()->account_owner_id;
+            $user                                        = $userModel->create($data);
             $user->assignRole($data['role']);
+
+            if ($data['role'] == 'attendance' && !empty($data['permission']) && $data['permission'] == 'refund') {
+                $user->givePermissionTo('refund');
+            }
             if (!empty($user)) {
                 return response()->json(
                     [
@@ -108,7 +112,7 @@ class CollaboratorsApiController extends Controller
     {
         try {
             $userModel = new User();
-            $userId = current(Hashids::decode($id));
+            $userId    = current(Hashids::decode($id));
 
             if (empty($userId)) {
                 return response()->json(['message' => 'Ocorreu um erro ao buscar colaborador'], 400);
@@ -117,8 +121,8 @@ class CollaboratorsApiController extends Controller
             $user = $userModel->with('roles')->find($userId);
 
             activity()->on($userModel)->tap(
-                function (Activity $activity) use ($userId) {
-                    $activity->log_name = 'visualization';
+                function(Activity $activity) use ($userId) {
+                    $activity->log_name   = 'visualization';
                     $activity->subject_id = $userId;
                 }
             )->log('Visualizou tela editar colaborador ' . $user->name);
@@ -152,9 +156,9 @@ class CollaboratorsApiController extends Controller
     public function update(UpdateCollaboratorRequest $request, $id)
     {
         try {
-            $data = $request->validated();
+            $data      = $request->validated();
             $userModel = new User();
-            $userId = current(Hashids::decode($id));
+            $userId    = current(Hashids::decode($id));
 
             if (empty($userId)) {
                 return response()->json(['message' => 'Ocorreu um erro ao atualizar colaborador'], 400);
@@ -174,7 +178,14 @@ class CollaboratorsApiController extends Controller
 
             if ((!empty($userFind) && $userFind->id == $user->id) || empty($userFind)) {
                 $userUpdated = $user->update($data);
+                if ($user->hasPermissionTo('refund') && empty($data['permission'])) {
+                    $user->revokePermissionTo('refund');
+                }
+                if (!$user->hasPermissionTo('refund') && $data['role'] == 'attendance' && !empty($data['permission']) && $data['permission'] == 'refund') {
+                    $user->givePermissionTo('refund');
+                }
                 $user->syncRoles([$data['role']]);
+
                 if ($userUpdated) {
                     return response()->json(
                         [
@@ -217,7 +228,7 @@ class CollaboratorsApiController extends Controller
     public function destroy($id)
     {
         $userModel = new User();
-        $userId = current(Hashids::decode($id));
+        $userId    = current(Hashids::decode($id));
 
         if (empty($userId)) {
             return response()->json(['message' => 'Ocorreu um erro ao remover colaborador'], 400);

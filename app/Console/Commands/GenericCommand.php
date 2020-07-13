@@ -9,6 +9,7 @@ use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\GetnetPaymentService;
 use Modules\Core\Services\GetnetService;
 use Modules\Core\Services\ShopifyService;
+use Spatie\Permission\Models\Permission;
 
 /**
  * Class GenericCommand
@@ -56,11 +57,12 @@ class GenericCommand extends Command
         $result = $getnetPayment->releasePaymentToSeller($paymentId, $dataRelease, $subseller, $productId, $amount);
 */
 
-        $getnetService = new GetnetBackOfficeService();
-        $result = $getnetService->getStatement();
-
-
-        dd($result);
+//        $getnetService = new GetnetBackOfficeService();
+//        $result = $getnetService->getStatement();
+//
+//
+//        dd($result);
+        Permission::create(['name' => 'refund']);
     }
 }
 

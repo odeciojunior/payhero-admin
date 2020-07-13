@@ -8,8 +8,9 @@
                 <div class='form-group'>
                     <label for="role_edit">Função</label>
                     <select id='role_edit' name='role' class='form-control'>
-                        <option value='admin' class='opt-admin'>Administrativo</option>
-                        <option value='attendance' class='opt-attendance'>Atendimento</option>
+                        <option value='admin' class='opt-admin' data-permission=''>Administrativo</option>
+                        <option value='attendance' class='opt-attendance-refund' data-permission='refund'>Atendimento (permissão de estorno)</option>
+                        <option value='attendance' class='opt-attendance' data-permission=''>Atendimento (sem permissão de estorno)</option>
                     </select>
                 </div>
             </div>
@@ -52,4 +53,5 @@
             </div>
         </div>
     </div>
+    <input type='hidden' id='permission_edit' name='permission'>
 </form>

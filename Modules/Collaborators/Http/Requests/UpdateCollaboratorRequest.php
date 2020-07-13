@@ -13,12 +13,13 @@ class UpdateCollaboratorRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => 'required|max:200',
-            'name'      => 'required',
-            'cellphone' => 'required',
-            'document'  => 'required',
-            'password'  => 'nullable',
-            'role'      => 'required',
+            'email'      => 'required|max:200',
+            'name'       => 'required',
+            'cellphone'  => 'required',
+            'document'   => 'required',
+            'password'   => 'nullable',
+            'role'       => 'required',
+            'permission' => 'nullable',
         ];
     }
 

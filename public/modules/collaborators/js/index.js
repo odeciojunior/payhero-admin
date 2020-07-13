@@ -121,10 +121,16 @@ $(document).ready(function () {
                             $("#btn_collaborator").text('Atualizar');
 
                             //select de funções
+                            $('#role_edit > option[selected="selected"]').removeAttr('selected');
                             if (response.data.role == 'admin') {
                                 $('#role_edit .opt-admin').attr('selected', true);
+                                $('#permission_edit').val('');
+                            } else if (response.data.refund_permission) {
+                                $('#role_edit .opt-attendance-refund').attr('selected', true);
+                                $('#permission_edit').val('refund');
                             } else {
                                 $('#role_edit .opt-attendance').attr('selected', true);
+                                $('#permission_edit').val('');
                             }
 
                             $("#name_edit").val(response.data.name);
@@ -231,6 +237,26 @@ $(document).ready(function () {
         $("#form_update_collaborator").hide();
     });
 
+    $('#role').on('change', function () {
+        let selectedVal = $(this).val();
+        let permission = $('option:selected', this).data('permission');
+        if (selectedVal == 'attendance' && permission == 'refund') {
+            $('#permission').val(permission);
+        } else {
+            $('#permission').val('');
+        }
+    });
+
+    $('#role_edit').on('change', function () {
+        let selectedVal = $(this).val();
+        let permission = $('option:selected', this).data('permission');
+        if (selectedVal == 'attendance' && permission == 'refund') {
+            $('#permission_edit').val(permission);
+        } else {
+            $('#permission_edit').val('');
+        }
+    });
+
     function clearFields() {
         $('#name').val('');
         $('#email').val('');
@@ -238,7 +264,6 @@ $(document).ready(function () {
         $('#document').val('');
         $('#password').val('');
     }
-
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
             $("#primeira_pagina_" + model).hide();

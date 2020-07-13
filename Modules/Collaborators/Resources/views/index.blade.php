@@ -108,7 +108,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/collaborators/js/index.js?v=1') }}"></script>
+        <script src="{{asset('modules/collaborators/js/index.js?v=2') }}"></script>
     @endpush
 
 @endsection

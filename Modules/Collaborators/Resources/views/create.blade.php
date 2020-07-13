@@ -5,8 +5,9 @@
                 <div class='form-group'>
                     <label for="name">Função</label>
                     <select id='role' name='role' class='form-control'>
-                        <option value='admin'>Administrativo</option>
-                        <option value='attendance'>Atendimento</option>
+                        <option value='admin' data-permission=''>Administrativo</option>
+                        <option value='attendance' data-permission='refund'>Atendimento (permissão de estorno)</option>
+                        <option value='attendance' data-permission=''>Atendimento (sem permissão de estorno)</option>
                     </select>
                 </div>
             </div>
@@ -42,4 +43,5 @@
             </div>
         </div>
     </div>
+    <input type='hidden' id='permission' name='permission'>
 </form>
