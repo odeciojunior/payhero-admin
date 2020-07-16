@@ -177,49 +177,30 @@ class SaleService
     public function getResume($filters)
     {
         $transactionModel = new Transaction();
-        $transactions     = $this->getSalesQueryBuilder($filters);
+        $transactions = $this->getSalesQueryBuilder($filters);
+        $transactions->getQuery()->orders = null;
+        $transactionStatus = implode(',',[
+            $transactionModel->present()->getStatusEnum('paid'),
+            $transactionModel->present()
+                ->getStatusEnum('transfered'),
+            $transactionModel->present()
+                ->getStatusEnum('anticipated'),
+        ]);
+        $result = $transactions->select(DB::raw("count(sales.id) as total_sales,
+                                            if(transactions.currency is null,'real', transactions.currency) as currency,
+                                            sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as comission,
+                                            round(sum((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100), 2) as total"))
+            ->groupBy('transactions.currency')
+            ->get();
 
-        $resume = ['total_sales' => 0];
-
-        foreach ($transactions->cursor() as $item) {
-            //quantidade de vendas
-            $resume['total_sales'] += 1;
-            //cria um item no array pra cada moeda inclusa nas vendas
-            $item->currency          = $item->currency ?? 'real';
-            $resume[$item->currency] = $resume[$item->currency] ?? ['comission' => 0, 'total' => 0];
-
-            //comissao
-            $resume[$item->currency]['comission'] += in_array($item->status_enum,
-                                                              [
-                                                                  $transactionModel->present()->getStatusEnum('paid'),
-                                                                  $transactionModel->present()
-                                                                                   ->getStatusEnum('transfered'),
-                                                                  $transactionModel->present()
-                                                                                   ->getStatusEnum('anticipated'),
-                                                              ]) ? (floatval($item->value) / 100) : 0;
-
-            //calcula o total
-            $total            = $item->sale->sub_total;
-            $total            += $item->sale->shipment_value;
-            $shopify_discount = floatval($item->sale->shopify_discount) / 100;
-            if ($shopify_discount > 0) {
-                $total -= $shopify_discount;
-            }
-
-            if (!empty($item->sale->automatic_discount)) {
-                $total -= ($item->sale->automatic_discount / 100);
-            }
-
-            $resume[$item->currency]['total'] += $total;
-        }
-
-        //formata os valores
-        foreach ($resume as &$item) {
-            if (is_array($item)) {
-                foreach ($item as &$value) {
-                    $value = number_format($value, 2, ',', '.');
-                }
-            }
+        $resume = [
+            'total_sales' => $result->sum('total_sales'),
+        ];
+        foreach ($result as $item) {
+            $resume[$item->currency] = [
+                'comission' => number_format($item->comission, 2, ',', '.'),
+                'total' => number_format($item->total, 2, ',', '.')
+            ];
         }
 
         return $resume;
