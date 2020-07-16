@@ -178,7 +178,6 @@ class SaleService
     {
         $transactionModel = new Transaction();
         $transactions = $this->getSalesQueryBuilder($filters);
-        $transactions->getQuery()->orders = null;
         $transactionStatus = implode(',',[
             $transactionModel->present()->getStatusEnum('paid'),
             $transactionModel->present()
@@ -186,22 +185,15 @@ class SaleService
             $transactionModel->present()
                 ->getStatusEnum('anticipated'),
         ]);
-        $result = $transactions->select(DB::raw("count(sales.id) as total_sales,
-                                            if(transactions.currency is null,'real', transactions.currency) as currency,
-                                            sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as comission,
+        $resume = $transactions->without(['sale'])
+            ->select(DB::raw("count(sales.id) as total_sales,
+                                            sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
                                             round(sum((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100), 2) as total"))
-            ->groupBy('transactions.currency')
-            ->get();
+            ->first()
+            ->toArray();
 
-        $resume = [
-            'total_sales' => $result->sum('total_sales'),
-        ];
-        foreach ($result as $item) {
-            $resume[$item->currency] = [
-                'comission' => number_format($item->comission, 2, ',', '.'),
-                'total' => number_format($item->total, 2, ',', '.')
-            ];
-        }
+        $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
+        $resume['total'] = number_format($resume['total'], 2, ',', '.');
 
         return $resume;
     }

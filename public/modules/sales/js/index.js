@@ -349,14 +349,8 @@ $(document).ready(function () {
                 if (response.total_sales) {
                     $('#total-sales, #comission, #total').text('');
                     $('#total-sales').text(response.total_sales);
-                    if (!isEmpty(response.real)) {
-                        $('#comission').append(`<div>R$ ${response.real.comission}</div>`);
-                        $('#total').append(`<div>R$ ${response.real.total}</div>`);
-                    }
-                    /*if (!isEmpty(response.dolar)) {
-                        $('#comission').append(`<div>$ ${response.dolar.comission}</div>`);
-                        $('#total').append(`<div>$ ${response.dolar.total}</div>`);
-                    }*/
+                    $('#commission').append(`<div>R$ ${response.commission}</div>`);
+                    $('#total').append(`<div>R$ ${response.total}</div>`);
                 }
 
             }
