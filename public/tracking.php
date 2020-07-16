@@ -241,21 +241,20 @@
                     let delivered = 0;
                     let exception = 0;
 
-                    for (let checkpoint of checkpoints) {
-                        switch (checkpoint.tracking_status_enum) {
-                            case 2: //dispatched
-                                dispatched = 1;
-                                break;
-                            case 4: // out_for_delivery
-                                out_for_delivery = 1;
-                                break;
-                            case 3: //delivered
-                                delivered = 1;
-                                break;
-                            case 5: //exception
-                                exception = 1;
-                                break;
-                        }
+
+                    switch (response.data.tracking_status_enum) {
+                        case 2: //dispatched
+                            dispatched = 1;
+                            break;
+                        case 4: // out_for_delivery
+                            out_for_delivery = 1;
+                            break;
+                        case 3: //delivered
+                            delivered = 1;
+                            break;
+                        case 5: //exception
+                            exception = 1;
+                            break;
                     }
 
                     let position = 0;

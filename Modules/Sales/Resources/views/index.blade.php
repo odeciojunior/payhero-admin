@@ -166,7 +166,7 @@
                         <div class="col-md-4">
                             <h6 class="text-center green-gradient">
                                 <i class="material-icons align-middle green-gradient mr-1"> trending_up </i> Total </h6>
-                            <h4 id="total" class="number text-center green-gradient"></i>
+                            <h4 id="total" class="number text-center green-gradient">
                             </h4>
                         </div>
                     </div>
@@ -395,7 +395,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=18') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=19') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

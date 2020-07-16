@@ -349,8 +349,8 @@ $(document).ready(function () {
                 if (response.total_sales) {
                     $('#total-sales, #comission, #total').text('');
                     $('#total-sales').text(response.total_sales);
-                    $('#commission').append(`<div>R$ ${response.commission}</div>`);
-                    $('#total').append(`<div>R$ ${response.total}</div>`);
+                    $('#commission').text(`R$ ${response.commission}`);
+                    $('#total').text(`R$ ${response.total}`);
                 }
 
             }
