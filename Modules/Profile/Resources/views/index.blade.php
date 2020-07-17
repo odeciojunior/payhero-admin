@@ -75,7 +75,7 @@
                                                 <div class="form-group col-lg-4">
                                                     <label for="date_birth">Data de nascimento</label>
                                                     <input name="date_birth" value="" type="date"
-                                                           class="form-control input-pad" id="date_birth">
+                                                           class="form-control input-pad" id="date_birth" onkeydown="return false">
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     {{--carrega label no js--}}
@@ -135,14 +135,14 @@
                                                     <div class="form-group">
                                                         <label for="document_issue_date">Data de emissão identidade</label>
                                                         <input name="document_issue_date" value="" type="date"
-                                                               class="input-pad" id="document_issue_date">
+                                                               class="input-pad" id="document_issue_date" onkeydown="return false">
                                                     </div>
                                                 </div>
                                                 <div class='col-lg-4'>
                                                     <div class="form-group">
                                                         <label for="document_expiration_date">Data de expiração identidade</label>
                                                         <input name="document_expiration_date" value="" type="date"
-                                                               class="input-pad" id="document_expiration_date">
+                                                               class="input-pad" id="document_expiration_date" onkeydown="return false">
                                                     </div>
                                                 </div>
                                                 <div class='col-lg-6'>
