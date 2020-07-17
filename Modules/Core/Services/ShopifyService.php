@@ -1411,6 +1411,10 @@ class ShopifyService
                     $totalValue -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
                 }
 
+                if (!empty($sale->automatic_discount)) {
+                    $totalValue -= preg_replace("/[^0-9]/", "", $sale->automatic_discount);
+                }
+
                 if ($productsPlanSale->amount > 1) {
                     $productPrice = intval($totalValue / $productsPlanSale->amount);
                 } else {
