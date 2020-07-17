@@ -345,9 +345,9 @@ $(document).ready(function () {
             success: function success(response) {
                 loadOnAny('.number', true);
                 $('#total-sales').text('0');
-                $('#comission, #total').text('R$ 0,00');
+                $('#commission, #total').text('R$ 0,00');
                 if (response.total_sales) {
-                    $('#total-sales, #comission, #total').text('');
+                    $('#total-sales, #commission, #total').text('');
                     $('#total-sales').text(response.total_sales);
                     $('#commission').text(`R$ ${response.commission}`);
                     $('#total').text(`R$ ${response.total}`);

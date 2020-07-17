@@ -95,13 +95,13 @@ class ReportsApiController extends Controller
                                                         SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
                                                         SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled,
                                                         SUM(CASE WHEN sales.status = 7 THEN 1 ELSE 0 END) AS contSalesRefunded,
-                                                        SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN sales.total_paid_value ELSE 0 END) AS totalValueCreditCard,
+                                                        SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN 1 ELSE 0 END) AS contCreditCardAproved,
-                                                        SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN sales.total_paid_value ELSE 0 END) AS totalValueBoleto,
+                                                        SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueBoleto,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN 1 ELSE 0 END) AS contBoletoAproved,
                                                         SUM(CASE WHEN sales.payment_method = 1 THEN 1 ELSE 0 END) AS contCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 2 THEN 1 ELSE 0 END) AS contBoleto,
-                                                        SUM(CASE WHEN sales.status = 1 THEN sales.total_paid_value ELSE 0 END) AS totalPaidValueAproved,
+                                                        SUM(CASE WHEN sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100) ELSE 0 END) AS totalPaidValueAproved,
                                                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS contMobile,
                                                         SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS contDesktop")
                     ->leftJoin('checkouts as checkout', 'sales.checkout_id', '=', 'checkout.id')
@@ -112,17 +112,9 @@ class ReportsApiController extends Controller
                 if (!empty($affiliate)) {
                     $salesDetails->where('affiliate_id', $affiliate->id);
                 }
-                if ($requestStartDate != '' && $requestEndDate != '') {
+                if (!empty($requestStartDate) && !empty($requestEndDate)) {
                     $salesDetails->whereBetween('start_date',
-                        [$requestStartDate, date('Y-m-d', strtotime($requestEndDate.' + 1 day'))]);
-                } else {
-                    if (!empty($requestStartDate)) {
-                        $salesDetails->whereDate('start_date', '>=', $requestStartDate);
-                    }
-
-                    if (!empty($requestEndDate)) {
-                        $salesDetails->whereDate('end_date', '<', date('Y-m-d', strtotime($requestEndDate.' + 1 day')));
-                    }
+                        [$requestStartDate.' 00:00:00', $requestEndDate.' 23:59:59']);
                 }
                 $salesDetails->where(function ($q1) {
                     $q1->where('sales.status', 4)->whereDoesntHave('saleLogs', function ($querySaleLog) {
