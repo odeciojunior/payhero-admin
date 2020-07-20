@@ -1544,10 +1544,27 @@ class ShopifyService
     }
 
     /**
-     * @param Sale $sale
+     * @param  Sale  $sale
      * @return array
      */
     public function newOrder(Sale $sale)
+    {
+        if (is_null($sale->upsell_id)) {
+            if ($sale->upsells->count()) {
+                return $this->addItemsToOrder($sale->id);
+            } else {
+                return $this->createOrder($sale);
+            }
+        } else {
+            return $this->addItemsToOrder($sale->upsell_id);
+        }
+    }
+
+    /**
+     * @param Sale $sale
+     * @return array
+     */
+    public function createOrder(Sale $sale)
     {
         try {
             $this->method = __METHOD__;
