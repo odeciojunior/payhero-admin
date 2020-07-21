@@ -236,6 +236,7 @@ $(document).ready(function () {
                     12: 'success',
                     20: 'antifraude',
                     22: 'danger',
+                    23: 'warning',
                 };
 
                 if (!isEmpty(response.data)) {

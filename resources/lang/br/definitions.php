@@ -77,17 +77,18 @@ return [
         ],
         "sale"                  => [
             "status" => [
-                "approved"        => "Aprovado",
-                "canceled"        => "Cancelado",
-                "charge_back"     => "Chargeback",
-                'in_proccess'     => "Em análise",
-                "pending"         => "Pendente",
-                "refused"         => "Recusado",
-                "refunded"        => "Estornado",
-                "partial_refund"  => "Estorno Parcial",
-                "in_review"       => "Revisão Antifraude",
-                "system_error"    => "Erro de sistema",
-                "billet_refunded" => "Estornado",
+                "approved"             => "Aprovado",
+                "canceled"             => "Cancelado",
+                "charge_back"          => "Chargeback",
+                'in_proccess'          => "Em análise",
+                "pending"              => "Pendente",
+                "refused"              => "Recusado",
+                "refunded"             => "Estornado",
+                "partial_refund"       => "Estorno Parcial",
+                "in_review"            => "Revisão Antifraude",
+                "system_error"         => "Erro de sistema",
+                "billet_refunded"      => "Estornado",
+                "chargeback_recovered" => "Recuperado",
             ],
         ],
         "invoices"              => [
@@ -107,7 +108,7 @@ return [
             "admin"         => "Administrativo",
             "attendance"    => "Atendimento",
         ],
-        "tracking"                 => [
+        "tracking"              => [
             "tracking_status_enum" => [
                 "posted"           => "Postado",
                 "dispatched"       => "Em trânsito",
