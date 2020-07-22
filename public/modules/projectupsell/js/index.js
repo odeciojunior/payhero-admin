@@ -33,6 +33,7 @@ $(document).ready(function () {
                 if (response.data == '') {
                     $('.div-config').hide();
                     $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
+                    $('#table-upsell').addClass('table-striped');
                 } else {
                     $('#table-upsell').addClass('table-striped');
                     let data = '';
