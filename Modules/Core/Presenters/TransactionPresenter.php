@@ -76,8 +76,6 @@ class TransactionPresenter extends Presenter
                     return 'anticipated';
                 case 13:
                     return 'billet_refunded';
-                case 14:
-                    return 'chargeback_recovered';
             }
 
             return '';
@@ -105,8 +103,6 @@ class TransactionPresenter extends Presenter
                     return 12;
                 case 'billet_refunded':
                     return 13;
-                case 'chargeback_recovered':
-                    return 14;
             }
 
             return '';
