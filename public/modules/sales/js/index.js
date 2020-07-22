@@ -260,12 +260,12 @@ $(document).ready(function () {
                                         <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
                                     </td>
                                     <td>
-                                        <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
-                                           ${value.is_chargeback_recovered ? `<br>
-                                            <span class="badge badge-warning mt-5 ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}"
-                                                ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>
-                                                Chargeback recuperado</span>`
-                                            : ''}
+                                       <div class="d-flex align-items-center">
+                                            <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
+                                               ${value.is_chargeback_recovered ? `
+                                                <img class="orange-gradient ml-5" src="/modules/global/img/svg/chargeback.svg" width="25px" title="Chargeback recuperado">`
+                                                : ''}
+                                        </div>
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>

@@ -24,7 +24,9 @@
                     <div id="status" class="status d-inline">
                     </div>
                     <div class="status d-inline">
-                        <span id='chargeback-recovered' class='badge badge-warning' style='display:none;'>Chargeback recuperado</span>
+                        <img id='chargeback-recovered' class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}" width="25px"
+                             style='display:none;' title="Chargeback recuperado">
+{{--                        <span id='chargeback-recovered' class='badge badge-warning' style='display:none;'>Chargeback recuperado</span>--}}
                     </div>
                 </div>
                 <div class='div-refund-observation mt-20' style='display:none;'>
