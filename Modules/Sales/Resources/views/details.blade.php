@@ -23,6 +23,9 @@
                     <p id='release-date'></p>
                     <div id="status" class="status d-inline">
                     </div>
+                    <div class="status d-inline">
+                        <span id='chargeback-recovered' class='badge badge-warning' style='display:none;'>Chargeback recuperado</span>
+                    </div>
                 </div>
                 <div class='div-refund-observation mt-20' style='display:none;'>
                     <label for="refund-observation" class="table-title gray mb-0">Causa do estorno:</label>&nbsp;
@@ -314,5 +317,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=8') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=10') }}"></script>
 @endpush

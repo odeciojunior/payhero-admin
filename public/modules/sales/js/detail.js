@@ -275,11 +275,18 @@ $(() => {
             case 22:
                 status.append("<span class='ml-2 badge badge-danger'>Estornado</span>");
                 break;
+            case 23:
+                status.append("<span class='ml-2 badge badge-warning'>Recuperado</span>");
+                break;
             default:
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
-
+        if (sale.is_chargeback_recovered) {
+            $('#chargeback-recovered').show();
+        } else {
+            $('#chargeback-recovered').hide();
+        }
         //Valores
         $("#subtotal-value").html("R$ " + sale.subTotal);
         $("#shipment-value").html("R$ " + sale.shipment_value);

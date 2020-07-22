@@ -126,9 +126,16 @@ class SaleService
                     $query->where('plan_id', $planId);
                 });
             }
-            $transactions->whereHas('sale', function($querySale) use ($status) {
-                $querySale->whereIn('status', $status);
-            });
+            if($filters['status'] == 'chargeback_recovered'){
+                $transactions->whereHas('sale', function($querySale){
+                    $querySale->where('is_chargeback_recovered', true);
+                });
+            } else {
+                $transactions->whereHas('sale', function($querySale) use ($status) {
+                    $querySale->whereIn('status', $status);
+                });
+            }
+
 
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
