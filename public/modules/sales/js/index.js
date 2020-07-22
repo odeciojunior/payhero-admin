@@ -263,7 +263,7 @@ $(document).ready(function () {
                                        <div class="d-flex align-items-center">
                                             <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
                                                ${value.is_chargeback_recovered ? `
-                                                <img class="orange-gradient ml-5" src="/modules/global/img/svg/chargeback.svg" width="25px" title="Chargeback recuperado">`
+                                                <img class="orange-gradient" style='margin-left:10px;' src="/modules/global/img/svg/chargeback.svg" width="25px" title="Chargeback recuperado">`
                                                 : ''}
                                         </div>
                                     </td>
