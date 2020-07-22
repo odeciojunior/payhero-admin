@@ -261,6 +261,11 @@ $(document).ready(function () {
                                     </td>
                                     <td>
                                         <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
+                                           ${value.is_chargeback_recovered ? `<br>
+                                            <span class="badge badge-warning mt-5 ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}"
+                                                ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>
+                                                Chargeback recuperado</span>`
+                                            : ''}
                                     </td>
                                     <td class='display-sm-none display-m-none'>${value.start_date}</td>
                                     <td class='display-sm-none'>${value.end_date}</td>

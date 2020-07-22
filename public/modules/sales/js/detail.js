@@ -282,7 +282,11 @@ $(() => {
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
-
+        if (sale.is_chargeback_recovered) {
+            $('#chargeback-recovered').show();
+        } else {
+            $('#chargeback-recovered').hide();
+        }
         //Valores
         $("#subtotal-value").html("R$ " + sale.subTotal);
         $("#shipment-value").html("R$ " + sale.shipment_value);

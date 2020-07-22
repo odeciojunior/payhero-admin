@@ -116,7 +116,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22, 23];
+                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             } else {
                 $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
@@ -126,9 +126,16 @@ class SaleService
                     $query->where('plan_id', $planId);
                 });
             }
-            $transactions->whereHas('sale', function($querySale) use ($status) {
-                $querySale->whereIn('status', $status);
-            });
+            if($filters['status'] == 'chargeback_recovered'){
+                $transactions->whereHas('sale', function($querySale){
+                    $querySale->where('is_chargeback_recovered', true);
+                });
+            } else {
+                $transactions->whereHas('sale', function($querySale) use ($status) {
+                    $querySale->whereIn('status', $status);
+                });
+            }
+
 
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);

@@ -46,6 +46,7 @@ class TransactionResource extends JsonResource
             'whatsapp_link'    => "https://api.whatsapp.com/send?phone=" . preg_replace('/\D/', '', $sale->customer->telephone) . '&text=Olá ' . explode(' ', preg_replace('/\D/', '', $sale->customer->name))[0],
             'total',
             'shopify_order'    => $sale->shopify_order ?? null,
+            'is_chargeback_recovered'    => $sale->is_chargeback_recovered,
         ];
         $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
 
