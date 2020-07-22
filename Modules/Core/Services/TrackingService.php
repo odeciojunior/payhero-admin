@@ -281,7 +281,7 @@ class TrackingService
                         $queryTransaction->where(function ($query) {
                             $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
                             ->orWhereHas('sale', function ($query) {
-                                $query->where('chargeback_recovered', true);
+                                $query->where('is_chargeback_recovered', true);
                             });
                         })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
