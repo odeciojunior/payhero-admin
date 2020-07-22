@@ -125,7 +125,8 @@ class Sale extends Model
         'automatic_discount',
         'interest_total_value',
         'refund_value',
-        'is_chargeback'
+        'is_chargeback',
+        'is_chargeback_recovered'
     ];
     /**
      * @var bool
