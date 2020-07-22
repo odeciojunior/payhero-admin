@@ -278,9 +278,12 @@ class TrackingService
                         $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
                         $queryTransaction->where('status_enum', $statusEnum);
                     } else {
-                        $queryTransaction->where('transactions.release_date', '>',
-                            '2020-05-25') //data que começou a bloquear
-                        ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
+                        $queryTransaction->where(function ($query) {
+                            $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
+                            ->orWhereHas('sale', function ($query) {
+                                $query->where('is_chargeback_recovered', true);
+                            });
+                        })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'));
                     }
                     $queryTransaction->where('type', $transactionPresenter->getType('producer'))
                         ->whereNull('invitation_id');
