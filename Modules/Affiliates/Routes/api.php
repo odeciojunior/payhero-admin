@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        'middleware' => ['auth:api'],
     ],
     function() {
 
