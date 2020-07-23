@@ -281,8 +281,6 @@ $(() => {
                 } else {
                     $.each(response.data, function (index, tracking) {
 
-                        let badge = getStatusBadge(tracking.tracking_status_enum);
-
                         if (lastSale !== tracking.sale) {
                             grayRow = !grayRow;
                         }
@@ -301,8 +299,13 @@ $(() => {
                                          </td>
                                          <td class="td-status">
                                             <div class="d-flex align-items-center">
-                                                <span class="badge badge-${badge}">${tracking.tracking_status}</span>
+                                                <span class="badge badge-${getStatusBadge(tracking.tracking_status_enum)}">${tracking.tracking_status}</span>
                                                 ${getSystemStatus(tracking.system_status_enum)}
+                                                ${  
+                                                    tracking.is_chargeback_recovered 
+                                                    ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">'
+                                                    : ''
+                                                }
                                             </div>
                                          </td>
                                          <td>
