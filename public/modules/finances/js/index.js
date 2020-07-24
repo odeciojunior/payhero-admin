@@ -32,7 +32,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.withdrawal-value').mask('#.###,#0', {reverse: true});
+    $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
 
     let balanceLoader = {
         styles: {
@@ -288,7 +288,7 @@ $(document).ready(function () {
                 toTransferText = $('#custom-input-addon').val();
                 toTransfer = toTransferText.slice(0, -2);
                 $('#custom-input-addon').val('');
-                $('.withdrawal-value').mask('#.###,#0', {reverse: true});
+                $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
             } else if ($('#custom-input-addon').val() == '') {
                 alertCustom('error', 'Valor do saque inválido!');
             } else {
