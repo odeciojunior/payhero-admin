@@ -252,6 +252,19 @@
                                                 <option value="unitedkingdom">Reino Unido</option>
                                             </select>
                                         </div>
+
+                                        <div class='form-group col-xl-4'>
+                                            <label for="active_flag">Status da empresa</label>
+                                            <select name='active_flag' class='form-control select-pad' id="active_flag">
+                                                <option value='1'>Ativo</option>
+                                                <option value='0'>Desativado</option>
+                                            </select>
+{{--                                            <p class='info pt-5' style='font-size: 10px;'>--}}
+{{--                                                <i class='icon wb-info-circle' aria-hidden='true'></i>--}}
+{{--                                                Quando estiver desativado não é possível cadastrar projeto com a empresa--}}
+{{--                                            </p>--}}
+                                        </div>
+
                                     </div>
                                     <div class="form-group text-right">
                                         <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
@@ -486,7 +499,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=10')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=11')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 

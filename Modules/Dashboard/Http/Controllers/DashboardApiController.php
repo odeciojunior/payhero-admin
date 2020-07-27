@@ -278,7 +278,7 @@ class DashboardApiController extends Controller
             $companyModel = new Company();
             $userService = new UserService();
             $companyService = new CompanyService();
-            $companies = $companyModel->where('user_id', $user->account_owner_id)->orderBy('order_priority')
+            $companies = $companyModel->where('user_id', $user->account_owner_id)->where('active_flag', true)->orderBy('order_priority')
                 ->get();
 
 

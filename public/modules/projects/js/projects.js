@@ -253,7 +253,7 @@ $(() => {
         $('#update-project #companies').html('');
         for (let company of companies) {
             $('#update-project #companies').append(
-                `<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} ${(company.company_document_status == 'pending' ? 'disabled' : '')}>
+                `<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} ${(company.company_document_status == 'pending' ? 'disabled' : '')} ${(company.active_flag == 0 ? 'disabled' : '')}>
                  ${(company.company_document_status == 'pending' ? company.name + ' (documentos pendentes)' : company.name)}
               </option>
               `)

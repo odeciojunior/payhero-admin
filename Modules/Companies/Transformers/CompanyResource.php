@@ -5,6 +5,7 @@ namespace Modules\Companies\Transformers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\CompanyService;
@@ -37,6 +38,7 @@ class CompanyResource extends JsonResource
         $companyService   = new CompanyService();
         $refusedDocuments = $companyService->getRefusedDocuments($this->resource->id);
         $user             = $this->resource->user;
+        $project          = UserProject::where('company_id', $this->resource->id)->first();
 
         return [
             'id_code'                               => Hashids::encode($this->resource->id),
@@ -86,6 +88,8 @@ class CompanyResource extends JsonResource
             'document_issuer'                       => $this->document_issuer ?? '',
             'document_issuer_state'                 => $this->document_issuer_state ?? '',
             'document_number'                       => $this->document_number ?? '',
+            'active_flag'                           => $this->active_flag,
+            'has_project'                           => !empty($project),
         ];
     }
 }

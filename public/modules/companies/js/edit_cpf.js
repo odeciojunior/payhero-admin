@@ -76,6 +76,13 @@ $(document).ready(function () {
                     getDocuments(encodedId);
                 });
 
+                if (response.company.has_project) {
+                    $('#active_flag').prop('disabled', true);
+                } else {
+                    $('#active_flag').prop('disabled', false);
+                }
+                $('#active_flag').val(response.company.active_flag);
+
                 $('#company_update_bank_form input,#company_update_bank_form select').each(function () {
                     let id = $(this).attr('id');
                     let attr = $(this).attr('data-plugin');
