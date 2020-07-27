@@ -50,16 +50,12 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
         $sale->products = collect();
         $this->saleService->getDetails($sale, $userCompany);
-        foreach ($sale->plansSales as &$planSale) {
-            $plan = $planSale->plan;
-            if(isset($plan)) {
-                foreach ($plan->productsPlans as $productPlan) {
-                    $productPlan->product['amount'] = $productPlan->amount * $planSale->amount;
-                    $productPlan->product['plan_name'] = $plan->name;
-                    $productPlan->product['plan_price'] = $plan->price;
-                    $sale->products->add($productPlan->product);
-                }
-            }
+        foreach ($sale->productsPlansSale as &$pps) {
+            $plan = $pps->plan;
+            $pps->product['amount']     = $pps->amount;
+            $pps->product['plan_name']  = $plan->name;
+            $pps->product['plan_price'] = $plan->price;
+            $sale->products->add($pps->product);
         }
 
         $saleData = [];
@@ -67,7 +63,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
             $productName = $product->name . ($product->description ? ' (' . $product->description . ')' : '');
 
-            $saleData[] = [
+            $data = [
                 //sale
                 'sale_code' => '#' . Hashids::connection('sale_id')->encode($sale->id),
                 'shopify_order' => strval($sale->shopify_order),
@@ -98,7 +94,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'amount' => $product->amount,
                 'sku' => $product->sku,
                 //client
-                'client_name' => utf8_encode(iconv("UTF-8", "ISO-8859-1//IGNORE", $sale->customer->name ?? '')),
+                'client_name' => $sale->customer->name ?? '',
                 'client_telephone' => $sale->customer->telephone ?? '',
                 'client_email' => $sale->customer->email ?? '',
                 'client_document' => $sale->customer->document ?? '',
@@ -116,8 +112,13 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'utm_medium' => $sale->checkout->utm_medium ?? '',
                 'utm_campaign' => $sale->checkout->utm_campaign ?? '',
                 'utm_term' => $sale->checkout->utm_term ?? '',
-                'utm_content' => preg_replace('/[^\p{Latin}[:punct:]\d\s+]/u', '', ($sale->checkout->utm_content ?? '')) ?? '',
+                'utm_content' => $sale->checkout->utm_content ?? '',
             ];
+
+            //remove caracteres indesejados em todos os campos
+            $saleData[] = array_map(function ($item) {
+                return preg_replace('/[^\p{Latin}[:alnum:][:punct:]_-]/u', '', $item);
+            }, $data);
         }
 
         return $saleData;
