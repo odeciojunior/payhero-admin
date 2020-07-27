@@ -114,7 +114,7 @@ class SalesApiController extends Controller
 
             $user = auth()->user();
 
-            $filename = 'sales_report_' . Hashids::encode($user->id) . '.csv'; // . $dataRequest['format'];  xls not working
+            $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 

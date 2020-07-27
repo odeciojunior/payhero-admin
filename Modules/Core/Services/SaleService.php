@@ -40,7 +40,7 @@ class SaleService
     /**
      * @param $filters
      * @param bool $withProducts
-     * @param int $userId
+     * @param int  $userId
      * @return Builder
      */
     public function getSalesQueryBuilder($filters, $withProducts = false, $userId = 0)
@@ -59,19 +59,27 @@ class SaleService
                                           ->pluck('id')
                                           ->toArray();
 
-            $transactions = $transactionModel->with([
-                                                        'sale',
-                                                        'sale.project',
-                                                        'sale.customer',
-                                                        'sale.plansSales' . ($withProducts ? '.plan.productsPlans.product' : ''),
-                                                        'sale.shipping',
-                                                        'sale.checkout',
-                                                        'sale.delivery',
-                                                        'sale.transactions.anticipatedTransactions',
-                                                        'sale.affiliate.user',
-                                                    ])->whereIn('company_id', $userCompanies)
-                                             ->join('sales', 'sales.id', 'transactions.sale_id')
-                                             ->whereNull('invitation_id');
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+                'sale.plansSales',
+                'sale.shipping',
+                'sale.checkout',
+                'sale.delivery',
+                'sale.transactions.anticipatedTransactions',
+                'sale.affiliate.user',
+            ];
+
+            if($withProducts) {
+                $relationsArray[] = 'sale.productsPlansSale.plan';
+                $relationsArray[] = 'sale.productsPlansSale.product';
+            }
+
+            $transactions = $transactionModel->with($relationsArray)
+                ->whereIn('company_id', $userCompanies)
+                ->join('sales', 'sales.id', 'transactions.sale_id')
+                ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -163,17 +171,6 @@ class SaleService
         $transactions = $this->getSalesQueryBuilder($filters);
 
         return $transactions->paginate(10);
-    }
-
-    /**
-     * @param $filters
-     * @return Collection
-     */
-    public function getAllSales($filters)
-    {
-        $transactions = $this->getSalesQueryBuilder($filters);
-
-        return $transactions->get();
     }
 
     /**
@@ -423,17 +420,15 @@ class SaleService
     {
         $saleModel = new Sale();
 
-        $sale         = $saleModel->with(['plansSales.plan.productsPlans.product'])->find($saleId);
+        $sale = $saleModel->with([
+            'productsPlansSale.product'
+        ])->find($saleId);
         $productsSale = [];
         if (!empty($sale)) {
-            /** @var PlanSale $planSale */
-            foreach ($sale->plansSales as $planSale) {
-                /** @var ProductPlan $productPlan */
-                foreach ($planSale->plan->productsPlans as $productPlan) {
-                    $product           = $productPlan->product->toArray();
-                    $product['amount'] = $productPlan->amount * $planSale->amount;
-                    $productsSale[]    = $product;
-                }
+            foreach ($sale->productsPlansSale as &$pps) {
+                $product = $pps->product->toArray();
+                $product['amount'] = $pps->amount;
+                $productsSale[] = $product;
             }
         }
 
