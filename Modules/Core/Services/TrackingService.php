@@ -191,7 +191,7 @@ class TrackingService
 
             if (!empty($apiResult)) {
                 //verifica se a data de postagem na transportadora é menor que a data da venda
-                if (!empty($apiResult->origin_info)) {
+                if (!empty($apiResult->origin_info->trackinfo ?? [])) {
                     $postDate = Carbon::parse($apiResult->origin_info->ItemReceived);
                     if ($postDate->lt($productPlanSale->created_at)) {
                         $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('posted_before_sale');
