@@ -37,15 +37,16 @@ class CompanyUpdateRequest extends FormRequest
             'business_entity_type'                  => 'nullable',
             'economic_activity_classification_code' => 'nullable',
             'monthly_gross_income'                  => 'nullable',
-//            'federal_registration_status'           => 'nullable',
+            //            'federal_registration_status'           => 'nullable',
             'founding_date'                         => 'nullable',
-//            'account_type'                          => 'nullable',
+            //            'account_type'                          => 'nullable',
             'federal_registration_status_date'      => 'nullable',
             'social_value'                          => 'nullable',
             'document_issue_date'                   => 'nullable',
             'document_issuer'                       => 'nullable',
             'document_issuer_state'                 => 'nullable',
             'document_number'                       => 'nullable',
+            'active_flag'                           => 'nullable',
             //'routing_number'    => 'nullable|string|max:255',
         ];
     }

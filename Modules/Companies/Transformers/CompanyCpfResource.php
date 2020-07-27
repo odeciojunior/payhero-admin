@@ -3,6 +3,7 @@
 namespace Modules\Companies\Transformers;
 
 use Illuminate\Http\Request;
+use Modules\Core\Entities\UserProject;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\CompanyService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,6 +26,7 @@ class CompanyCpfResource extends JsonResource
         //        $companyService = new CompanyService();
 
         //        $refusedDocuments = $companyService->getRefusedDocuments($this->resource->id);
+        $project = UserProject::where('company_id', $this->resource->id)->first();
 
         return [
             'id_code'         => Hashids::encode($this->resource->id),
@@ -39,6 +41,8 @@ class CompanyCpfResource extends JsonResource
             //            'refusedDocuments'     => $refusedDocuments,
             'type'            => $this->company_type,
             'account_type'    => $this->account_type ?? '',
+            'active_flag'     => $this->active_flag,
+            'has_project'     => !empty($project),
         ];
     }
 }

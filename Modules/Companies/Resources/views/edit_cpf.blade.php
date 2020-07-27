@@ -92,6 +92,17 @@
                                     <label for="update_bank_data"></label>
                                     <input id="update_bank_data" type="button" class="btn btn-success mt-30" value="Atualizar" style="width: auto;">
                                 </div>
+                                <div class='form-group col-xl-3'>
+                                    <label for="active_flag">Status da empresa</label>
+                                    <select name='active_flag' class='form-control select-pad' id="active_flag">
+                                        <option value='1'>Ativo</option>
+                                        <option value='0'>Desativado</option>
+                                    </select>
+{{--                                    <p class='info pt-5' style='font-size: 10px;'>--}}
+{{--                                        <i class='icon wb-info-circle' aria-hidden='true'></i>--}}
+{{--                                        Quando estiver desativado não é possível cadastrar projeto com a empresa--}}
+{{--                                    </p>--}}
+                                </div>
                             </div>
                         </form>
                         <form method="POST" enctype="multipart/form-data" id='company_bank_routing_number_form' style="display:none;">
@@ -116,7 +127,7 @@
                                 <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                             </div>
                         </form>
-                        <div class="col-lg-12 mb-40 mt-15">
+                        <div class="col-lg-12 mb-40">
 
                             <table class="table table-hover">
                                 <thead>
@@ -228,7 +239,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=7')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=8')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

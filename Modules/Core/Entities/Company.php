@@ -137,6 +137,7 @@ class Company extends Model
         'document_issue_date',
         'document_issuer',
         'document_issuer_state',
+        'active_flag',
         'deleted_at',
         'created_at',
         'updated_at',

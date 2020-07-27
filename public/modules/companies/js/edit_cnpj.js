@@ -134,6 +134,13 @@ $(document).ready(function () {
                 $('#monthly_gross_income').unmask();
                 $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
 
+                if (company.has_project) {
+                    $('#active_flag').prop('disabled', true);
+                } else {
+                    $('#active_flag').prop('disabled', false);
+                }
+                $('#active_flag').val(company.active_flag);
+
                 if (!isEmpty(unfilledFields)) {
                     $('form input, select').each(function () {
                         let id = $(this).attr('id');

@@ -17,7 +17,9 @@ $(document).ready(function () {
             loadOnAny('#card-project', true);
             if (!isEmpty(response)) {
                 $.each(response, (key, company) => {
-                    $('#company').append(`<option value="${company.id}">${company.name}</option>`);
+                    $('#company').append(`<option value="${company.id}" ${(company.active_flag == 0 ? 'disabled' : '')}>
+                        ${company.name}
+                    </option>`);
                 });
                 $('.content-error').hide();
             } else {
