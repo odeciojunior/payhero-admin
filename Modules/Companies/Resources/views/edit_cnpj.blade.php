@@ -252,23 +252,24 @@
                                                 <option value="unitedkingdom">Reino Unido</option>
                                             </select>
                                         </div>
-
+                                    </div>
+                                    <div class='row'>
                                         <div class='form-group col-xl-4'>
-{{--                                            <label for="active_flag">Status da empresa</label>--}}
-{{--                                            <select name='active_flag' class='form-control select-pad' id="active_flag">--}}
-{{--                                                <option value='1'>Ativo</option>--}}
-{{--                                                <option value='0'>Desativado</option>--}}
-{{--                                            </select>--}}
-                                                <div class="switch-holder">
-                                                    <label for="active_flag" class='mb-10'>Status da empresa</label>
-                                                    <br>
-                                                    <label class="switch">
-                                                        <input type="checkbox" value='1' name="active_flag" id="active_flag" class='check' checked>
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
+                                            {{--                                            <label for="active_flag">Status da empresa</label>--}}
+                                            {{--                                            <select name='active_flag' class='form-control select-pad' id="active_flag">--}}
+                                            {{--                                                <option value='1'>Ativo</option>--}}
+                                            {{--                                                <option value='0'>Desativado</option>--}}
+                                            {{--                                            </select>--}}
+                                            <div class="switch-holder">
+                                                <label for="active_flag" class='mb-10'>Status da empresa</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" value='1' name="active_flag" id="active_flag" class='check' checked>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="form-group text-right col-xl-4">
+                                        <div class="form-group text-right col-xl-8">
                                             <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                                         </div>
                                     </div>
