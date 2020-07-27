@@ -157,17 +157,17 @@ class DashboardApiController extends Controller
                                 $query->where('company_id', $companyId);
                             }
                         )
-                        ->where(
-                            function ($q1) {
-                                $q1->where('status', 4)
-                                    ->whereDoesntHave(
-                                        'saleLogs',
-                                        function ($querySaleLog) {
-                                            $querySaleLog->whereIn('status_enum', collect([20, 7]));
-                                        }
-                                    )->orWhere('status', 1);
-                            }
-                        )
+//                        ->where(
+//                            function ($q1) {
+//                                $q1->where('status', 4)
+//                                    ->whereDoesntHave(
+//                                        'saleLogs',
+//                                        function ($querySaleLog) {
+//                                            $querySaleLog->whereIn('status_enum', collect([20, 7]));
+//                                        }
+//                                    )->orWhere('status', 1);
+//                            }
+//                        )
                         ->first();
 
                     $totalSalesChargeBack = $chargebackData->contSalesChargeBack;
