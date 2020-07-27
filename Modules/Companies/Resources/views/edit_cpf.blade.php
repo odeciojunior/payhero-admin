@@ -3,6 +3,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=1')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
 @endpush
 
 @section('content')
@@ -93,15 +94,19 @@
                                     <input id="update_bank_data" type="button" class="btn btn-success mt-30" value="Atualizar" style="width: auto;">
                                 </div>
                                 <div class='form-group col-xl-3'>
-                                    <label for="active_flag">Status da empresa</label>
-                                    <select name='active_flag' class='form-control select-pad' id="active_flag">
-                                        <option value='1'>Ativo</option>
-                                        <option value='0'>Desativado</option>
-                                    </select>
-{{--                                    <p class='info pt-5' style='font-size: 10px;'>--}}
-{{--                                        <i class='icon wb-info-circle' aria-hidden='true'></i>--}}
-{{--                                        Quando estiver desativado não é possível cadastrar projeto com a empresa--}}
-{{--                                    </p>--}}
+{{--                                    <label for="active_flag">Status da empresa</label>--}}
+{{--                                    <select name='active_flag' class='form-control select-pad' id="active_flag">--}}
+{{--                                        <option value='1'>Ativo</option>--}}
+{{--                                        <option value='0'>Desativado</option>--}}
+{{--                                    </select>--}}
+                                    <div class="switch-holder">
+                                        <label for="active_flag" class='mb-10'>Status da empresa</label>
+                                        <br>
+                                        <label class="switch">
+                                            <input type="checkbox" value='1' name="active_flag" id="active_flag" class='check' checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -239,7 +244,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=8')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=9')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

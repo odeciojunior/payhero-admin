@@ -76,12 +76,28 @@ $(document).ready(function () {
                     getDocuments(encodedId);
                 });
 
+                // if (response.company.has_project) {
+                //     $('#active_flag').prop('disabled', true);
+                // } else {
+                //     $('#active_flag').prop('disabled', false);
+                // }
+                // $('#active_flag').val(response.company.active_flag);
+
                 if (response.company.has_project) {
-                    $('#active_flag').prop('disabled', true);
-                } else {
-                    $('#active_flag').prop('disabled', false);
+                    $('#active_flag').attr('disabled', true);
+                    $("#active_flag").css("cursor", "not-allowed");
+                    $(".switch").css("cursor", "not-allowed");
+                    $(".slider").css("cursor", "not-allowed");
+                    $(".switch").css("opacity", "0.5");
                 }
+
                 $('#active_flag').val(response.company.active_flag);
+
+                if (response.company.active_flag) {
+                    $("#active_flag").attr('checked', 'checked');
+                } else {
+                    $("#active_flag").attr('checked', false);
+                }
 
                 $('#company_update_bank_form input,#company_update_bank_form select').each(function () {
                     let id = $(this).attr('id');
@@ -117,6 +133,10 @@ $(document).ready(function () {
 
         var encodedId = extractIdFromPathName();
 
+        if (!$('#active_flag').is(':checked')) {
+            form_data.append('active_flag', '0');
+        }
+
         $.ajax({
             method: "POST",
             url: "/api/companies/" + encodedId,
@@ -137,6 +157,14 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
             }
         });
+    });
+
+    $('.check').on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
     });
 
     function getDocuments(encodedId) {

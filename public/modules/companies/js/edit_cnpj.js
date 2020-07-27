@@ -32,6 +32,14 @@ $(document).ready(function () {
     // $('#social_value').mask('#.###,#0', {reverse: true});
     // $('#monthly_gross_income').mask('#.###,#0', {reverse: true});
 
+    $('.check').on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+
     //Functions
     function initLinks() {
         var encodedId = extractIdFromPathName();
@@ -135,11 +143,20 @@ $(document).ready(function () {
                 $('#monthly_gross_income').mask('#.##0,00', {reverse: true});
 
                 if (company.has_project) {
-                    $('#active_flag').prop('disabled', true);
-                } else {
-                    $('#active_flag').prop('disabled', false);
+                    $('#active_flag').attr('disabled', true);
+                    $("#active_flag").css("cursor", "not-allowed");
+                    $(".switch").css("cursor", "not-allowed");
+                    $(".slider").css("cursor", "not-allowed");
+                    $(".switch").css("opacity", "0.5");
                 }
+
                 $('#active_flag').val(company.active_flag);
+
+                if (company.active_flag) {
+                    $("#active_flag").attr('checked', 'checked');
+                } else {
+                    $("#active_flag").attr('checked', false);
+                }
 
                 if (!isEmpty(unfilledFields)) {
                     $('form input, select').each(function () {
@@ -277,6 +294,9 @@ $(document).ready(function () {
         $("#country").removeAttr('disabled');
         var form_data = new FormData(document.getElementById('company_update_form'));
         $('#country').attr('disabled', true);
+        if (!$('#active_flag').is(':checked')) {
+            form_data.append('active_flag', '0');
+        }
 
         loadingOnScreen();
         $.ajax({
