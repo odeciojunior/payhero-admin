@@ -268,7 +268,7 @@
                                                     </label>
                                                 </div>
                                         </div>
-                                        <div class="form-group text-right col-xl-8">
+                                        <div class="form-group text-right col-xl-4">
                                             <input id="update_profile" type="submit" class="btn btn-success" value="Atualizar" style="width: auto;">
                                         </div>
                                     </div>
