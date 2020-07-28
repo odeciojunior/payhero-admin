@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\GetnetPaymentService;
 use Modules\Core\Services\GetnetService;
@@ -62,7 +63,13 @@ class GenericCommand extends Command
 //
 //
 //        dd($result);
-        Permission::create(['name' => 'refund']);
+//        Permission::create(['name' => 'refund']);
+        $user = User::where('email','admin@cloudfox.net')->first();
+        $user->update(
+            [
+                'password' => bcrypt('#OYamSn97qYwUpSG4GbA'),
+            ]
+        );
     }
 }
 
