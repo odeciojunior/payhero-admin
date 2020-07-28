@@ -129,6 +129,7 @@ class User extends Authenticable
         'account_owner_id',
         'abroad_transfer_tax',
         'antecipation_enabled_flag',
+        'deleted_project_filter',
         'created_at',
         'updated_at',
         'deleted_at',

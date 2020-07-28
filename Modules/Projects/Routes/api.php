@@ -30,5 +30,8 @@ Route::group(
 
         Route::post('/projects/updateorder', 'ProjectsApiController@updateOrder')
              ->middleware('role:account_owner|admin');
+
+        Route::post('/projects/updateconfig', 'ProjectsApiController@updateConfig')
+             ->middleware('role:account_owner|admin');
     }
 );

@@ -38,10 +38,10 @@ $(() => {
                     });
 
                     Sortable.create(document.getElementById('data-table-projects'), {
-                        onEnd: function(evt) {
+                        onEnd: function (evt) {
                             var orderProjects = [];
                             var listCompanies = $('#data-table-projects');
-                            $(listCompanies).find(".name_project").each(function(index, tr) {
+                            $(listCompanies).find(".name_project").each(function (index, tr) {
                                 orderProjects.push($(tr).data('id'));
                             });
 
@@ -49,7 +49,7 @@ $(() => {
                                 method: "POST",
                                 url: "/api/projects/updateorder",
                                 dataType: "json",
-                                data: { order: orderProjects },
+                                data: {order: orderProjects},
                                 headers: {
                                     'Authorization': $('meta[name="access-token"]').attr('content'),
                                     'Accept': 'application/json',
@@ -73,5 +73,40 @@ $(() => {
             }
         });
     }
+    $('#btn-config').on('click', function () {
+        $('#modal_config').modal('show');
+        if ($("#deleted_project_filter").val() == 1) {
+            $("#deleted_project_filter").attr('checked', 'checked');
+        } else {
+            $("#deleted_project_filter").attr('checked', false);
+        }
+    });
+    $('#btn_save_config').on('click', function () {
+        $.ajax({
+            method: "POST",
+            url: "/api/projects/updateconfig",
+            dataType: "json",
+            data: {deleted_project_filter: $("#deleted_project_filter").val()},
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                $('#modal_config').modal('hide');
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $('#modal_config').modal('hide');
+                alertCustom("success", response.message);
+            }
+        });
+    });
 
+    $('.check').on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
 });

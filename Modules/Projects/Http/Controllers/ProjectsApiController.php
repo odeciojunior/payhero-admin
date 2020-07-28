@@ -65,9 +65,13 @@ class ProjectsApiController extends Controller
             if (!empty($request->input('status')) && $request->input('status') == 'active') {
                 $projectStatus = [$projectModel->present()->getStatus('active')];
             } else {
-                $projectStatus = [
-                    $projectModel->present()->getStatus('active'), $projectModel->present()->getStatus('disabled'),
-                ];
+                if (auth()->user()->deleted_project_filter) {
+                    $projectStatus = [
+                        $projectModel->present()->getStatus('active'), $projectModel->present()->getStatus('disabled'),
+                    ];
+                } else {
+                    $projectStatus = [$projectModel->present()->getStatus('active')];
+                }
             }
 
             return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
@@ -749,22 +753,42 @@ class ProjectsApiController extends Controller
             foreach ($projectIds as $value) {
 
                 $project = $projects->firstWhere('project_id', $value);
-                if(isset($project->id)) {
+                if (isset($project->id)) {
                     $project->update(['order_priority' => $initOrder]);
                 } else {
                     $affiliate = $affiliates->firstWhere('project_id', $value);
-                    if(isset($affiliate->id)) {
+                    if (isset($affiliate->id)) {
                         $affiliate->update(['order_priority' => $initOrder]);
                     }
                 }
-                $initOrder ++;
+                $initOrder++;
             }
 
             return response()->json(['message' => 'Ordenação atualizada com sucesso'], 200);
-
         } catch (Exception $e) {
             report($e);
+
             return response()->json(['message' => 'Erro ao atualizar ordenação'], 400);
+        }
+    }
+
+    public function updateConfig(Request $request)
+    {
+        try {
+            $data    = $request->all();
+            $user    = auth()->user();
+            $updated = $user->update([
+                                         'deleted_project_filter' => $data['deleted_project_filter'],
+                                     ]);
+            if ($updated) {
+                return response()->json(['message' => 'Configuração atualizada com sucesso'], 200);
+            } else {
+                return response()->json(['message' => 'Erro ao atualizar configuração'], 400);
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao atualizar configuração'], 400);
         }
     }
 }
