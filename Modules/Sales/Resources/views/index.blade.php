@@ -105,9 +105,13 @@
                         </div>
                     </div>
                     <div class="row mt-15">
-                        <div class="col-sm-6 col-md">
+                        <div class="col-sm-8 col-md">
                             <label for="comprador">Nome do cliente</label>
                             <input name='client' id="comprador" class="input-pad" placeholder="cliente">
+                        </div>
+                        <div class="col-sm-8 col-md">
+                            <label for="customer_document">CPF do cliente</label>
+                            <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                         </div>
                         <div class="col-sm-6 col-md">
                             <label for="date_type">Data</label>
@@ -119,7 +123,7 @@
                         <div class="col-sm-6 col-md">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
-                        <div class="col-sm-6 col-md d-flex flex-column justify-content-center">
+                        <div class="col-sm-2 col-md d-flex flex-column justify-content-center">
                             <label for="token" class='mb-10 mr-5'>Shopify Erros</label>
                             <label class="switch m-0">
                                 <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
@@ -396,7 +400,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=26') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=1') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

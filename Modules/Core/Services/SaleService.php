@@ -103,6 +103,15 @@ class SaleService
                     $querySale->whereIn('customer_id', $customers);
                 });
             }
+
+            if(!empty($filters['customer_document'])){
+                $customers = $customerModel->where('document', $filters["customer_document"])->pluck('id');
+                $transactions->whereHas('sale', function($querySale) use ($customers) {
+                    $querySale->whereIn('customer_id', $customers);
+                });
+            }
+
+
             if (!empty($filters['shopify_error']) && $filters['shopify_error'] == true) {
                 $transactions->whereHas('sale.project.shopifyIntegrations', function($queryShopifyIntegration) {
                     $queryShopifyIntegration->where('status', 2);

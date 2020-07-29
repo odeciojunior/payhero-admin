@@ -105,6 +105,7 @@ $(document).ready(function () {
             'payment_method': $("#forma").val(),
             'status': $("#status").val(),
             'client': $("#comprador").val(),
+            'customer_document': $("#customer_document").val(),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'transaction': $("#transaction").val().replace('#', ''),
