@@ -684,7 +684,8 @@ $(() => {
                             <img src='${value.photo}' width='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-lg-5">
-                            <h4 class="table-title">${value.name}</h4>
+                            <h4 class="table-title mb-0">${value.name}</h4>
+                            <small>${value.description}</small>
                         </div>
                         <div class="col-lg-3 text-right">
                             <p class="sm-text text-muted">${value.amount}x</p>

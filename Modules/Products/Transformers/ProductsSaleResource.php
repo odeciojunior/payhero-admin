@@ -5,6 +5,7 @@ namespace Modules\Products\Transformers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 /**
  * Class ProductsResource
@@ -22,6 +23,7 @@ class ProductsSaleResource extends JsonResource
             'id'          => $this->id_code,
             'photo' => $this->photo,
             'name' => $this->name,
+            'description' => !empty($this->description) ? Str::limit($this->description, 23) : '',
             'sale_status' => $this->sale_status ?? null,
             'amount' => $this->amount ?? null,
             'tracking_id' => $this->tracking_id ?? null,
