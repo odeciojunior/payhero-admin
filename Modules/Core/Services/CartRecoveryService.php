@@ -6,13 +6,12 @@ use Exception;
 use Carbon\Carbon;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Project;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Entities\Log as CheckoutLog;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class CartRecoveryService
@@ -38,9 +37,7 @@ class CartRecoveryService
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
             $checkoutModel->where([
-                                      [
-                                          'status_enum', '=', $checkoutModel->present()
-                                                                            ->getStatusEnum('abandoned cart'),
+                                      ['status_enum', '=', $checkoutModel->present()->getStatusEnum('abandoned cart'),
                                       ], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd],
                                   ])
                           ->with('project', 'project.users', 'checkoutPlans.plan.productsPlans.product')
@@ -72,20 +69,8 @@ class CartRecoveryService
 
                                           $domainName = $domain->name ?? 'cloudfox.net';
 
-                                          $linkCheckout       = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
+                                          $linkCheckout       = "https://checkout." . $domainName . "/recovery/" . Hashids::encode($log->checkout_id);
                                           $clientNameExploded = explode(' ', $log->name);
-
-                                          if (empty($project->contact)) {
-                                              $projectContact = $project->users[0]->email;
-                                          } else {
-                                              $projectContact = $project->contact;
-                                          }
-
-                                          if (empty($project->support_phone)) {
-                                              $projectPhone = $project->users[0]->cellphone;
-                                          } else {
-                                              $projectPhone = $project->support_phone;
-                                          }
 
                                           //Traz a mensagem do sms formatado
                                           $projectNotificationPresenter = $projectNotificationModel->present();
@@ -118,7 +103,7 @@ class CartRecoveryService
                                               $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
                                               $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
                                               $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                              //                                              $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
+
                                               if (!empty($domain)) {
                                                   $bodyEmail = [
                                                       'name'            => $clientNameExploded[0],
@@ -146,17 +131,14 @@ class CartRecoveryService
                                               }
                                           }
                                       } catch (Exception $e) {
-                                          Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado');
                                           report($e);
                                       }
                                   }
                               } catch (Exception $e) {
-                                  Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado');
                                   report($e);
                               }
                           });
         } catch (Exception $e) {
-            Log::warning('Erro ao enviar e-mail - Carrinho abandonado ');
             report($e);
         }
     }
@@ -211,23 +193,11 @@ class CartRecoveryService
                                           $domainName = $domain->name;
                                       }
 
-                                      $linkCheckout = "https://checkout." . $domainName . "/recovery/" . $log->id_log_session;
+                                      $linkCheckout = "https://checkout." . $domainName . "/recovery/" . Hashids::encode($log->checkout_id);
 
                                       $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log->telephone);
 
                                       $clientNameExploded = explode(' ', $log->name);
-
-                                      if (empty($project->contact)) {
-                                          $projectContact = $project->users[0]->email;
-                                      } else {
-                                          $projectContact = $project->contact;
-                                      }
-
-                                      if (empty($project->support_phone)) {
-                                          $projectPhone = $project->users[0]->cellphone;
-                                      } else {
-                                          $projectPhone = $project->support_phone;
-                                      }
 
                                       //Traz a mensagem do sms formatado
                                       $projectNotificationPresenter = $projectNotificationModel->present();
@@ -259,7 +229,7 @@ class CartRecoveryService
                                           $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
                                           $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
                                           $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-                                          //                                          $projectMessageContact = 'Qualquer dúvida entre em contato pelo email ' . $projectContact . ' ou pelo telefone ' . FoxUtils::getTelephone(ltrim($projectPhone, '+55') . '.');
+
                                           if (!empty($domain)) {
                                               $bodyEmail = [
                                                   'name'            => $clientNameExploded[0],
@@ -286,14 +256,11 @@ class CartRecoveryService
                                           }
                                       }
                                   } catch (Exception $e) {
-                                      Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado, Dia seguinte');
                                       report($e);
                                   }
                               }
                           });
         } catch (Exception $e) {
-            Log::warning('Erro ao enviar e-mail - Carrinho abandonado, Dia seguinte');
-
             report($e);
         }
     }

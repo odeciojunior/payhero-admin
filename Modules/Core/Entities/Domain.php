@@ -27,6 +27,7 @@ use Modules\Domains\Transformers\DomainResource;
  * @property string $deleted_at
  * @property Project $project
  * @property DomainResource[] $domainsRecords
+ * @method DomainPresenter presenter()
  */
 class Domain extends Model
 {
