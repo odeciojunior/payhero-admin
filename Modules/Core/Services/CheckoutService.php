@@ -138,6 +138,7 @@ class CheckoutService
                                                'type_enum'      => $transferModel->present()->getTypeEnum('out'),
                                                'type'           => 'out',
                                                'reason'         => 'Taxa de estorno',
+                                               'is_refund_tax'  => 1,
                                                'company_id'     => $transaction->company_id,
                                            ]);
                     $transaction->company->update([

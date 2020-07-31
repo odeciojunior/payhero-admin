@@ -20,6 +20,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $type
  * @property int $type_enum
  * @property string $reason
+ * @property boolean $is_refund_tax
  * @property string $created_at
  * @property string $updated_at
  * @property Anticipation $anticipation
@@ -60,6 +61,7 @@ class Transfer extends Model
         'type',
         'type_enum',
         'reason',
+        'is_refund_tax',
         'created_at',
         'updated_at',
     ];
