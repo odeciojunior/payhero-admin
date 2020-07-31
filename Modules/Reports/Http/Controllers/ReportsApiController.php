@@ -172,8 +172,7 @@ class ReportsApiController extends Controller
                         2, ',', ' . ');
                     $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved),
                         2, ',', ' . ');
-                    $ticketMedio = number_format(intval(preg_replace("/[^0-9]/", "",
-                                $totalPaidValueAproved) / $countSalesAproved) / 100, 2, ',', '.');
+                    $ticketMedio = number_format($totalPaidValueAproved / $countSalesAproved, 2, ',', '.');
                 }
             }
             if (empty($chartData)) {
@@ -207,8 +206,7 @@ class ReportsApiController extends Controller
                 'cartaoConvert' => $cartaoConvert ?? 0,
                 'boletoConvert' => $boletoConvert ?? 0,
                 'plans' => $plans ?? 0,
-                'ticketMedio' => isset($ticketMedio) ? number_format(intval(preg_replace("/[^0-9]/", "",
-                        $ticketMedio)) / 100, 2, ',', '.') : 0,
+                'ticketMedio' => $ticketMedio ?? number_format(0,2, ',', '.)'),
             ]);
         } catch (Exception $e) {
             report($e);
