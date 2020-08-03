@@ -113,7 +113,6 @@ class WithdrawalsApiController extends Controller
 
             $withdrawalModel = new Withdrawal();
             $companyModel = new Company();
-            $saleService = new SaleService();
 
             $data = $request->all();
 
@@ -170,7 +169,7 @@ class WithdrawalsApiController extends Controller
             }
 
             // verify blocked balance
-            $blockedValue = $saleService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
+            $blockedValue = $companyService->getBlockedBalance($company->id, auth()->user()->account_owner_id);
 
             $availableBalance = $company->balance - $blockedValue;
 

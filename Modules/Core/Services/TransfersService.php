@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Carbon\Carbon;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transfer;
@@ -15,6 +16,10 @@ use Modules\Core\Entities\Transaction;
  */
 class TransfersService
 {
+    /**
+     * @param  null  $saleId
+     * @throws PresenterException
+     */
     public function verifyTransactions($saleId = null)
     {
         $companyModel = new Company();
@@ -158,5 +163,4 @@ class TransfersService
             report($e);
         }
     }
-
 }

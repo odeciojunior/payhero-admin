@@ -61,7 +61,7 @@ class FinancesApiController extends Controller
                     $availableBalance = $company->balance;
                     $totalBalance     = $availableBalance + $pendingBalance;
 
-                    $blockedBalance = $saleService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
+                    $blockedBalance = $companyService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
 
                     $availableBalance -= $blockedBalance;
 
