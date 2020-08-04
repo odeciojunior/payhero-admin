@@ -70,25 +70,28 @@ class TransfersService
 
         foreach ($transactions->cursor() as $transaction) {
             try {
-                $company = $companyModel->find($transaction->company_id);
+                if(!empty($transaction->company_id)){
 
-                $transferModel->create([
-                    'transaction_id' => $transaction->id,
-                    'user_id' => $company->user_id,
-                    'company_id' => $company->id,
-                    'type_enum' => $transferModel->present()->getTypeEnum('in'),
-                    'value' => $transaction->value,
-                    'type' => 'in',
-                ]);
-
-                $transaction->update([
-                    'status' => 'transfered',
-                    'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                ]);
-
-                $company->update([
-                    'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
-                ]);
+                    $company = $companyModel->find($transaction->company_id);
+    
+                    $transferModel->create([
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                        'value' => $transaction->value,
+                        'type' => 'in',
+                    ]);
+    
+                    $transaction->update([
+                        'status' => 'transfered',
+                        'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                    ]);
+    
+                    $company->update([
+                        'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
+                    ]);
+                }
             } catch (Exception $e) {
                 report($e);
             }
@@ -133,25 +136,28 @@ class TransfersService
 
         foreach ($transactions->cursor() as $transaction) {
             try {
-                $company = $companyModel->find($transaction->company_id);
+                if(!empty($transaction->company_id)){
 
-                $transferModel->create([
-                    'transaction_id' => $transaction->id,
-                    'user_id' => $company->user_id,
-                    'company_id' => $company->id,
-                    'type_enum' => $transferModel->present()->getTypeEnum('in'),
-                    'value' => $transaction->value - $transaction->anticipatedTransactions()->first()->value,
-                    'type' => 'in',
-                ]);
-
-                $transaction->update([
-                    'status' => 'transfered',
-                    'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                ]);
-
-                $company->update([
-                    'balance' => intval($company->balance) + intval($transaction->value - $transaction->anticipatedTransactions()->first()->value),
-                ]);
+                    $company = $companyModel->find($transaction->company_id);
+    
+                    $transferModel->create([
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                        'value' => $transaction->value - $transaction->anticipatedTransactions()->first()->value,
+                        'type' => 'in',
+                    ]);
+    
+                    $transaction->update([
+                        'status' => 'transfered',
+                        'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
+                    ]);
+    
+                    $company->update([
+                        'balance' => intval($company->balance) + intval($transaction->value - $transaction->anticipatedTransactions()->first()->value),
+                    ]);
+                }
             } catch (Exception $e) {
                 report($e);
             }
