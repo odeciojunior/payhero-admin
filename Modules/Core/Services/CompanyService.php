@@ -558,6 +558,16 @@ class CompanyService
                     ->where('ignore_balance_block', 0);
             })->sum('transactions.value');*/
 
-        return 0;
+        $salesModel        = new Sale();
+        $transactiosModel  = new Transaction();
+
+        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+                          ->where('sales.owner_id', $userAccountOwnerId)
+                          ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                          ->whereNull('transactions.invitation_id')
+                          ->where('transactions.company_id', $companyId)
+                          ->where('transactions.status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
+                          ->sum('transactions.value');
+
     }
 }

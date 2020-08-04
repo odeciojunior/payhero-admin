@@ -96,6 +96,8 @@ class SalePresenter extends Presenter
                     return 'canceled_antifraud';
                 case 22:
                     return 'billet_refunded';
+                case 24:
+                    return 'in_dispute';
                 case 99:
                     return 'system_error';
             }
@@ -128,6 +130,8 @@ class SalePresenter extends Presenter
                     return 21;
                 case 'billet_refunded':
                     return 22;
+                case 'in_dispute':
+                    return 24;
                 case 'system_error':
                     return 99;
             }
