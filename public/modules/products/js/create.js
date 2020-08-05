@@ -69,6 +69,12 @@ $(document).ready(function () {
             }
         });
     }
+    $('#digital_product_url').dropify({
+        messages: {
+            'default': 'Arraste e solte ou clique para adicionar um arquivo',
+            'replace': 'Arraste e solte ou clique para substituir',
+        },
+    });
 
     $("#my-form-add-product").submit(function (event) {
         if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {

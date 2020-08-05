@@ -84,6 +84,10 @@ $(document).ready(function () {
                         $('#digital').attr('checked', true);
                         $('#div_digital_product_upload').css('visibility', 'visible');
                         $('#digital_product_url').dropify({
+                            messages: {
+                                'default': 'Arraste e solte ou clique para adicionar um arquivo',
+                                'replace': 'Arraste e solte ou clique para substituir',
+                            },
                             defaultFile: response.data.product.digital_product_url,
                         });
                     }

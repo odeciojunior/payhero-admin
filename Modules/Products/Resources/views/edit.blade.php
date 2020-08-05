@@ -51,7 +51,7 @@
                                         </div>
                                         <div class=" flex-column" id="div_digital_product_upload" style="visibility: hidden">
                                             <label for="digital_product_url">Produto digital</label>
-                                            <input type="file" id="digital_product_url" name="digital_product_url">
+                                            <input type="file" id="digital_product_url" name="digital_product_url" data-height="300" data-max-width="300">
                                             <p class="info mt-5" style="font-size:10px;">
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
                                                 <br>.
@@ -136,40 +136,31 @@
                                                 <h3> 2. Logística </h3>
                                                 <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
                                             </div>
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-6">
                                                 <label for="height">Altura (cm)</label>
                                                 <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 80cm" value="{{--{!! $product->height !!}--}}" data-mask="0#">
                                             </div>
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-6">
                                                 <label for="width">Largura (cm)</label>
                                                 <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 135cm" value="{{--{!! $product->width !!}--}}" data-mask="0#">
                                             </div>
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-6">
                                                 <label for="width">Comprimento (cm)</label>
                                                 <input name="length" type="text" class="input-pad" id="length" placeholder="Ex: 150cm" value="{{--{!! $product->width !!}--}}" data-mask="0#">
                                             </div>
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-6">
                                                 <label for="weight">Peso (g)</label>
                                                 <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" value="{{--{!! $product->weight !!}--}}" data-mask="0#">
                                             </div>
-                                            <div class="form-group col-lg-4">
-                                                <label for="shipping">Transportadora:</label>
-                                                <select class="form-control select-pad" id="shipping">
-                                                    <option value="proprio" {{--{!! 'proprio' == $product->shipping ? 'selected' : '' !!}--}}>Envio próprio</option>
-                                                    <option value="null" {{--{!! 'kapsula' == $product->shipping ? 'selected' : '' !!}--}} disabled='disabled'>Kapsula (em breve)</option>
-                                                    <option value="null" {{--{!! 'hubsmart' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Hubsmart (em breve)</option>
-                                                    <option value="null" {{--{!! 'cosmarca' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Cosmarca (em breve)</option>
-                                                    <option value="null" {{--{!! 'nutreno' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Nutreno (em breve)</option>
-                                                    <option value="null" {{--{!! 'nutracaps' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Nutracaps (em breve)</option>
-                                                    <option value="null" {{--{!! 'biosupra' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Biosupra (em breve)</option>
-                                                </select>
-                                            </div>
-                                            <div id="div_carrier_id" class="form-group col-lg-4" style="display: none">
-                                                <label for="id_shipping">ID na Transportadora:</label>
-                                                <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
-                                            </div>
-                                            <div class="form-group col-lg-4 mt-0 mt-md-25">
-                                                <span>Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.</span>
+                                            <div class="form-group col-lg-6 mt-0">
+                                                <p class="info pt-5 mb-5" style="font-size: 10px;">
+                                                    <i class="icon wb-info-circle" aria-hidden="true"></i>
+                                                    Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
+                                                </p>
+                                                <p class="info pt-5" style="font-size: 10px;">
+                                                    <i class="icon wb-info-circle" aria-hidden="true"></i>
+                                                    Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
+                                                </p>
                                             </div>
                                             <div class="form-group col-lg-12 text-right btnSave">
                                                 <button type="submit" id='btn-save' class="btn btn-success">Atualizar</button>
@@ -209,7 +200,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=6') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=7') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
