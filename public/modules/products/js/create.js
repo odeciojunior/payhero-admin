@@ -75,12 +75,21 @@ $(document).ready(function () {
             alertCustom('error', 'Selecione as dimensões da imagem');
             return false;
         }
+        if ($('#digital').is(':checked') && $('#digital_product_url').val() == '') {
+            alertCustom('error', 'Selecione o produto digital');
+            return false;
+        }
         event.preventDefault();
 
         if (verify()) {
             loadingOnScreen();
             let myForm = document.getElementById('my-form-add-product');
             let formData = new FormData(myForm);
+            if ($('#physical').is(':checked')) {
+                formData.append('type_enum', 'physical');
+            } else {
+                formData.append('type_enum', 'digital');
+            }
             $.ajax({
                 method: 'POST',
                 url: "/api/products",
@@ -174,6 +183,14 @@ $(document).ready(function () {
     $("#next_step").on("click", function () {
         $("#nav-logistic-tab").click();
         $("#previewimage").imgAreaSelect({remove: true});
+    });
+
+    $("#physical").on("change", function () {
+        $('#div_digital_product_upload').css('visibility', 'hidden');
+    });
+
+    $("#digital").on("change", function () {
+        $('#div_digital_product_upload').css('visibility', 'visible');
     });
 
 });

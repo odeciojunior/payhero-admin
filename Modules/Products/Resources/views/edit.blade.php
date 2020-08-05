@@ -50,8 +50,8 @@
                                             </p>
                                         </div>
                                         <div class=" flex-column" id="div_digital_product_upload" style="visibility: hidden">
-                                            <label for="digital_product">Produto digital</label>
-                                            <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
+                                            <label for="digital_product_url">Produto digital</label>
+                                            <input type="file" id="digital_product_url" name="digital_product_url">
                                             <p class="info mt-5" style="font-size:10px;">
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
                                                 <br>.
@@ -77,11 +77,11 @@
                                                 <label for="name">Tipo</label>
                                                 <div class=" justify-content-start">
                                                     <div class="radio-custom radio-primary pr-20">
-                                                        <input type="radio" id="fisico" name="format" value="1" checked>
-                                                        <label for="fisico">Físico</label>
+                                                        <input type="radio" id="physical" name="format" value="1">
+                                                        <label for="physical">Físico</label>
                                                     </div>
                                                     <div class="radio-custom radio-primary ">
-                                                        <input type="radio" id="digital" name="format" value="0" disabled>
+                                                        <input type="radio" id="digital" name="format" value="2" {{env('APP_ENV') != 'local' ? 'disabled' : ''}}>
                                                         <label for="digital">Digital (em breve)</label>
                                                     </div>
                                                 </div>
@@ -209,7 +209,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=5') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=6') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
