@@ -47,7 +47,7 @@
                                             <br> Dimensões ideais: 300 x 300 pixels.
                                         </p>
                                     </div>
-                                    <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility:hidden">
+                                    <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility:hidden; width:300px;">
                                         <label for="digital_product_url">Produto digital</label>
                                         <input type="file" id="digital_product_url" name="digital_product_url" data-height="300" data-max-width="300">
                                         <p class="info mt-5" style="font-size:10px;">
@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="form-group col-lg-12">
                                             <label for="description">Descrição</label>
-                                            <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto"></textarea>
+                                            <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                             <p> Máximo 30 caracteres. </p>
                                         </div>
                                         <div class="form-group col-lg-6">
@@ -79,12 +79,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group col-lg-6">
-                                            <label for="category">Categoria</label>
-                                            <select name="category" class="form-control select-pad" id='select-categories'>
-                                                <option value="">Selecione</option>
-                                            </select>
-                                        </div>
+                                        <div class='col-lg-6'></div>
+{{--                                        <div class="form-group col-lg-6">--}}
+{{--                                            <label for="category">Categoria</label>--}}
+{{--                                            <select name="category" class="form-control select-pad" id='select-categories'>--}}
+{{--                                                <option value="">Selecione</option>--}}
+{{--                                            </select>--}}
+{{--                                        </div>--}}
                                         <div class='form-group col-lg-6'>
                                             <label for="category">Moeda de custo:</label>
                                             <select name="currency_type_enum" class="form-control select-pad" id='select-currency-type-enum'>
@@ -162,7 +163,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=3') }}"></script>
+        <script src="{{ asset('modules/products/js/create.js?v=4') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

@@ -35,40 +35,40 @@ $(document).ready(function () {
         return ver;
     }
 
-    getCategories();
-
-    function getCategories() {
-        $.ajax({
-            method: 'GET',
-            url: '/api/products/create',
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-
-            },
-            success: function (response) {
-                if (!isEmpty(response.data.categories)) {
-                    /**
-                     * Select com as categorias
-                     */
-                    $.each(response.data.categories, function (i, category) {
-                        $("#select-categories").append($('<option>', {
-                            value: category.id,
-                            text: category.name
-                        }));
-
-                    });
-                } else {
-                    alertCustom('success', 'Ocorreu um erro, tente novamente mais tarde');
-                    window.location = "/products";
-                }
-            }
-        });
-    }
+    // getCategories();
+    //
+    // function getCategories() {
+    //     $.ajax({
+    //         method: 'GET',
+    //         url: '/api/products/create',
+    //         dataType: "json",
+    //         headers: {
+    //             'Authorization': $('meta[name="access-token"]').attr('content'),
+    //             'Accept': 'application/json',
+    //         },
+    //         error: function error(response) {
+    //             errorAjaxResponse(response);
+    //
+    //         },
+    //         success: function (response) {
+    //             if (!isEmpty(response.data.categories)) {
+    //                 /**
+    //                  * Select com as categorias
+    //                  */
+    //                 $.each(response.data.categories, function (i, category) {
+    //                     $("#select-categories").append($('<option>', {
+    //                         value: category.id,
+    //                         text: category.name
+    //                     }));
+    //
+    //                 });
+    //             } else {
+    //                 alertCustom('success', 'Ocorreu um erro, tente novamente mais tarde');
+    //                 window.location = "/products";
+    //             }
+    //         }
+    //     });
+    // }
     $('#digital_product_url').dropify({
         messages: {
             'default': 'Arraste e solte ou clique para adicionar um arquivo',
