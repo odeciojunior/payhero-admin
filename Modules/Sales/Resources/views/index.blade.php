@@ -97,6 +97,7 @@
                                 {{--                                <option value="8">Parcialmente estornado</option>--}}
                                 <option value="chargeback_recovered">Chargeback recuperado</option>
                                 <option value="20">Revisão Antifraude</option>
+                                <option value="24">Em disputa</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md">
@@ -400,7 +401,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=10') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=11') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

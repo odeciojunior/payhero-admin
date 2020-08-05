@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,18 +13,13 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
-use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
-use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
-use Modules\Core\Services\SplitPaymentPartialRefundService;
-use Modules\Core\Services\TransfersService;
 use Modules\Products\Transformers\ProductsSaleResource;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
@@ -137,7 +131,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
+                $status = [1, 2, 4, 6, 7, 8, 12, 20, 22, 24];
             } else {
                 $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
@@ -202,10 +196,12 @@ class SaleService
             $transactionModel->present()
                 ->getStatusEnum('anticipated'),
         ]);
+        $statusDispute = (new Sale())->present()->getStatus('in_dispute');
+
         $resume = $transactions->without(['sale'])
             ->select(DB::raw("count(sales.id) as total_sales,
-                                            sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                                            round(sum((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100), 2) as total"))
+                              sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
+                              round(sum((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100), 2) as total"))
             ->first()
             ->toArray();
 
@@ -447,10 +443,11 @@ class SaleService
     }
 
     /**
-     * @param Sale $sale
-     * @param int $refundAmount
+     * @param $sale
+     * @param $refundAmount
      * @param $response
-     * @param array $partialValues
+     * @param  array  $partialValues
+     * @param $refundObservation
      * @return bool
      * @throws Exception
      */
@@ -669,18 +666,18 @@ class SaleService
                 ]);
 
                 $transaction->update([
-                    'status_enum' => (new Transaction)->present()->getStatusEnum('refunded'),
+                    'status_enum' => (new Transaction())->present()->getStatusEnum('refunded'),
                     'status' => 'refunded',
                 ]);
 
                 $transaction->sale->update([
                     'gateway_status' => 'refunded',
-                    'status' => (new Sale)->present()->getStatus('refunded'),
+                    'status' => (new Sale())->present()->getStatus('refunded'),
                 ]);
                 SaleLog::create([
                     'sale_id' => $sale->id,
                     'status' => 'refunded',
-                    'status_enum' => (new Sale)->present()->getStatus('refunded'),
+                    'status_enum' => (new Sale())->present()->getStatus('refunded'),
                 ]);
 
                 if (!empty($refundedTransaction)) {
@@ -726,10 +723,8 @@ class SaleService
     }
 
     /**
-     * @param $sale
-     * @param $partialValues
-     * @return bool
-     * @throws Exception
+     * @param  Sale  $sale
+     * @throws PresenterException
      */
     public function refundBillet(Sale $sale)
     {
@@ -801,7 +796,7 @@ class SaleService
             }
 
             $transaction->update([
-                'status_enum' => (new Transaction)->present()->getStatusEnum('billet_refunded'),
+                'status_enum' => (new Transaction())->present()->getStatusEnum('billet_refunded'),
                 'status' => 'billet_refunded',
             ]);
         }
@@ -811,7 +806,7 @@ class SaleService
         ]);
 
         $transactionUser = $transactionModel->where('sale_id', $sale->id)
-            ->whereIn('company_id', (new CompanyService)->getCompaniesUser()
+            ->whereIn('company_id', (new CompanyService())->getCompaniesUser()
                 ->pluck('id'))
             ->first();
 
@@ -841,6 +836,12 @@ class SaleService
         event(new BilletRefundedEvent($sale));
     }
 
+    /**
+     * @param $sale
+     * @param $partialValues
+     * @return bool
+     * @throws PresenterException
+     */
     public function recalcSaleRefundPartial($sale, $partialValues)
     {
         try {
@@ -906,7 +907,7 @@ class SaleService
         $newTotalValueWithoutInterest = $newTotalvalue;
 
         $userProject = UserProject::where([
-            ['type_enum', (new UserProject)->present()->getTypeEnum('producer')],
+            ['type_enum', (new UserProject())->present()->getTypeEnum('producer')],
             ['project_id', $sale->project->id],
         ])->first();
 
@@ -966,30 +967,5 @@ class SaleService
         $interesetTotalValue = $totalPaidValue - (($subTotal + $shipmentValue) - $shopifyDiscount - $automaticDiscount);
         $interesetTotalValue = ($interesetTotalValue < 0) ? 0 : $interesetTotalValue;
         $sale->update(['interest_total_value' => $interesetTotalValue]);
-    }
-
-    /**
-     * @param int $companyId
-     * @param int $userAccountOwnerId
-     * @return int
-     * @throws PresenterException
-     */
-    public function getBlockedBalance(int $companyId, int $userAccountOwnerId): int
-    {
-        /* $salesModel  = new Sale();
-         $ticketModel = new Ticket();
-
-         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-                           ->where('sales.owner_id', $userAccountOwnerId)
-                           ->where('sales.status', $salesModel->present()->getStatus('approved'))
-                           ->whereNull('transactions.invitation_id')
-                           ->where('transactions.company_id', $companyId)
-                           ->whereHas('tickets', function($query) use ($ticketModel) {
-                               $query->where('ticket_status_enum', $ticketModel->present()
-                                                                               ->getTicketStatusEnum('mediation'))
-                                     ->where('ignore_balance_block', 0);
-                           })->sum('transactions.value');*/
-
-        return 0;
     }
 }

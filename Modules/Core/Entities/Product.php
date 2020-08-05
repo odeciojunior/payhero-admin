@@ -90,6 +90,7 @@ class Product extends Model
         'shopify_variant_id',
         'project_id',
         'currency_type_enum',
+        'type_enum',
     ];
     /**
      * @var bool

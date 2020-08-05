@@ -15,20 +15,22 @@ class EditProductResource extends JsonResource
     public function toArray($request)
     {
         $product    = [
-            'id'                 => $this->resource['product']->id_code,
-            'name'               => $this->resource['product']->name,
-            'photo'              => $this->resource['product']->photo ?? 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png',
-            'description'        => $this->resource['product']->description,
-            'sku'                => $this->resource['product']->sku,
-            'category_id'        => Hashids::encode($this->resource['product']->category_id),
-            'shopify_id'         => $this->resource['product']->shopify_id,
-            'cost'               => $this->resource['product']->cost,
-            'price'              => $this->resource['product']->price,
-            'width'              => $this->resource['product']->width,
-            'height'             => $this->resource['product']->height,
-            'weight'             => $this->resource['product']->weight,
-            'length'             => $this->resource['product']->length,
-            'currency_type_enum' => $this->resource['product']->currency_type_enum,
+            'id'                  => $this->resource['product']->id_code,
+            'name'                => $this->resource['product']->name,
+            'photo'               => $this->resource['product']->photo ?? 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/product-default.png',
+            'description'         => $this->resource['product']->description,
+            'sku'                 => $this->resource['product']->sku,
+            'category_id'         => Hashids::encode($this->resource['product']->category_id),
+            'shopify_id'          => $this->resource['product']->shopify_id,
+            'cost'                => $this->resource['product']->cost,
+            'price'               => $this->resource['product']->price,
+            'width'               => $this->resource['product']->width,
+            'height'              => $this->resource['product']->height,
+            'weight'              => $this->resource['product']->weight,
+            'length'              => $this->resource['product']->length,
+            'currency_type_enum'  => $this->resource['product']->currency_type_enum,
+            'type_enum'           => env('APP_ENV') == 'local' ? $this->resource['product']->type_enum : '',
+            'digital_product_url' => $this->resource['product']->digital_product_url,
         ];
         $categories = [];
         foreach ($this->resource['categories'] as $category) {

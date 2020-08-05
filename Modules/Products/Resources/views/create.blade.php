@@ -47,9 +47,9 @@
                                             <br> Dimensões ideais: 300 x 300 pixels.
                                         </p>
                                     </div>
-                                    <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility: hidden">
-                                        <label for="digital_product">Produto digital</label>
-                                        <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
+                                    <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility:hidden">
+                                        <label for="digital_product_url">Produto digital</label>
+                                        <input type="file" id="digital_product_url" name="digital_product_url" data-height="300" data-max-width="300">
                                         <p class="info mt-5" style="font-size:10px;">
                                             <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
                                             <br>.
@@ -70,11 +70,11 @@
                                             <label for="name">Tipo</label>
                                             <div class="d-flex justify-content-start">
                                                 <div class="radio-custom radio-primary pr-20">
-                                                    <input type="radio" id="fisico" name="format" value="1" checked>
-                                                    <label for="fisico">Físico</label>
+                                                    <input type="radio" id="physical" name="format" value="1" checked>
+                                                    <label for="physical">Físico</label>
                                                 </div>
                                                 <div class="radio-custom radio-primary d-flex">
-                                                    <input type="radio" id="digital" name="format" value="0" disabled>
+                                                    <input type="radio" id="digital" name="format" value="2" {{env('APP_ENV') != 'local' ? 'disabled' : ''}}>
                                                     <label for="digital">Digital (em breve)</label>
                                                 </div>
                                             </div>
@@ -85,7 +85,7 @@
                                                 <option value="">Selecione</option>
                                             </select>
                                         </div>
-                                        <div class='form-group col-lg-4'>
+                                        <div class='form-group col-lg-6'>
                                             <label for="category">Moeda de custo:</label>
                                             <select name="currency_type_enum" class="form-control select-pad" id='select-currency-type-enum'>
                                                 <option value='BRL' selected>BRL</option>
@@ -95,14 +95,14 @@
                                                 <i class='icon wb-info-circle' aria-hidden='true'></i> Informação utilizada para emissão de notas fiscais
                                             </p>
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="cost">Custo</label>
                                             <input name="cost" type="text" class="input-pad money" id="cost" value='' placeholder="Digite o custo" autocomplete="off">
                                         </div>
-                                        <div class="form-group col-lg-4">
-                                            <label for="price">Preço</label>
-                                            <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">
-                                        </div>
+{{--                                        <div class="form-group col-lg-4">--}}
+{{--                                            <label for="price">Preço</label>--}}
+{{--                                            <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">--}}
+{{--                                        </div>--}}
                                         <div id="div_next_step" class="form-group col-lg-12 text-right">
                                             <button id="next_step" type="button" class="btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
                                             </button>
@@ -122,40 +122,31 @@
                                             <h3> 2. Logística </h3>
                                             <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="width">Altura (cm)</label>
                                             <input name="width" type="text" class="input-pad" id="width" value='' placeholder="Ex: 150cm" data-mask="0#">
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="height">Largura (cm)</label>
                                             <input name="height" type="text" class="input-pad" id="height" value='' placeholder="Ex: 135cm" data-mask="0#">
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="width">Comprimento (cm)</label>
                                             <input name="length" type="text" class="input-pad" id="length" placeholder="Ex: 150cm" value="{{--{!! $product->width !!}--}}" data-mask="0#">
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-6">
                                             <label for="weight">Peso (g)</label>
                                             <input name="weight" type="text" class="input-pad" id="weight" value='' placeholder="Ex: 950g" data-mask="0#">
                                         </div>
-                                        <div class="form-group col-lg-4">
-                                            <label for="shipping">Transportadora:</label>
-                                            <select class="form-control select-pad" id="shipping">
-                                                <option value="proprio" {{--{!! 'proprio' == $product->shipping ? 'selected' : '' !!}--}}>Envio próprio</option>
-                                                <option value="null" {{--{!! 'kapsula' == $product->shipping ? 'selected' : '' !!}--}} disabled='disabled'>Kapsula (em breve)</option>
-                                                <option value="null" {{--{!! 'hubsmart' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Hubsmart (em breve)</option>
-                                                <option value="null" {{--{!! 'cosmarca' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Cosmarca (em breve)</option>
-                                                <option value="null" {{--{!! 'nutreno' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Nutreno (em breve)</option>
-                                                <option value="null" {{--{!! 'nutracaps' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Nutracaps (em breve)</option>
-                                                <option value="null" {{--{!! 'biosupra' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Biosupra (em breve)</option>
-                                            </select>
-                                        </div>
-                                        <div id="div_carrier_id" class="form-group col-lg-4" style="display: none">
-                                            <label for="id_shipping">ID na Transportadora:</label>
-                                            <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
-                                        </div>
-                                        <div class="form-group col-lg-4 mt-0 mt-md-25">
-                                            <span>Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.</span>
+                                        <div class="form-group col-lg-6 mt-0">
+                                            <p class="info pt-5 mb-5" style="font-size: 10px;">
+                                                <i class="icon wb-info-circle" aria-hidden="true"></i>
+                                                Clique <a href="http://www2.correios.com.br/sistemas/precosprazos/Formato.cfm" target="_blank">aqui</a> para consultar as regras de dimensões dos Correios.
+                                            </p>
+                                            <p class="info pt-5" style="font-size: 10px;">
+                                                <i class="icon wb-info-circle" aria-hidden="true"></i>
+                                                Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
+                                            </p>
                                         </div>
                                         <div class="form-group col-lg-12 text-right">
                                             <button type="submit" class="btn btn-success btnSave">Salvar</button>
@@ -171,7 +162,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=1') }}"></script>
+        <script src="{{ asset('modules/products/js/create.js?v=3') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

@@ -5,6 +5,7 @@ namespace Modules\Products\Http\Controllers;
 use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
@@ -38,6 +39,10 @@ class ProductsApiController extends Controller
      * @var DigitalOceanFileService
      */
     private $digitalOceanFileService;
+    /**
+     * @var AmazonFileService
+     */
+    private $amazonFileService;
 
     /**
      * @return Application|mixed|DigitalOceanFileService
@@ -49,6 +54,18 @@ class ProductsApiController extends Controller
         }
 
         return $this->digitalOceanFileService;
+    }
+
+    /**
+     * @return Application|mixed|DigitalOceanFileService
+     */
+    private function getAmazonFileService()
+    {
+        if (!$this->amazonFileService) {
+            $this->amazonFileService = app(AmazonFileService::class);
+        }
+
+        return $this->amazonFileService;
     }
 
     /**
@@ -64,11 +81,9 @@ class ProductsApiController extends Controller
 
             $filters = $request->validated();
 
-
-            activity()->on($productsModel)->tap(function(Activity $activity){
-                $activity->log_name   = 'visualization';
+            activity()->on($productsModel)->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
             })->log('Visualizou tela todos os produtos');
-
 
             $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id);
 
@@ -102,11 +117,9 @@ class ProductsApiController extends Controller
         try {
             $categoryModel = new Category();
 
-
-            activity()->tap(function(Activity $activity){
-                $activity->log_name   = 'visualization';
+            activity()->tap(function(Activity $activity) {
+                $activity->log_name = 'visualization';
             })->log('Visualizou tela cadastro de produto');
-
 
             $categories = $categoryModel->all();
             if (!empty($categories)) {
@@ -146,6 +159,16 @@ class ProductsApiController extends Controller
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
             $data['name']               = FoxUtils::removeSpecialChars($data['name']);
             $data['description']        = FoxUtils::removeSpecialChars($data['description']);
+
+            if (env('APP_ENV') == 'local') {
+                $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
+            } else {
+                unset($data['type_enum']);
+                if (!empty($data['digital_product_url'])) {
+                    unset($data['digital_product_url']);
+                }
+            }
+
             if (empty($category)) {
                 $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
                 $data['category_id'] = $category->id;
@@ -173,6 +196,21 @@ class ProductsApiController extends Controller
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar foto do product');
                     report($e);
+                }
+            }
+            if (env('APP_ENV') == 'local') {
+                if (!empty($data['digital_product_url'])) {
+                    try {
+                        $amazonPath = $this->getAmazonFileService()
+                                           ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url']);
+
+                        $product->update([
+                                             'digital_product_url' => $amazonPath,
+                                         ]);
+                    } catch (Exception $e) {
+                        Log::warning('ProductController - store - Erro ao enviar anexo de produto digital');
+                        report($e);
+                    }
                 }
             }
 
@@ -238,12 +276,10 @@ class ProductsApiController extends Controller
                 $product    = $productModel->find($productId);
                 $categories = $categoryModel->all();
 
-
                 activity()->on($productModel)->tap(function(Activity $activity) use ($id) {
                     $activity->log_name   = 'visualization';
                     $activity->subject_id = current(Hashids::decode($id));
                 })->log('Visualizou tela editar produto ' . $product->name);
-
 
                 if (Gate::allows('edit', [$product])) {
                     return EditProductResource::make([
@@ -306,6 +342,15 @@ class ProductsApiController extends Controller
 
                     $data['name']        = FoxUtils::removeSpecialChars($data['name']);
                     $data['description'] = FoxUtils::removeSpecialChars($data['description']);
+                    if (env('APP_ENV') == 'local') {
+                        $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
+                    } else {
+                        unset($data['type_enum']);
+                        if (!empty($data['digital_product_url'])) {
+                            unset($data['digital_product_url']);
+                        }
+                    }
+
                     $product->update($data);
 
                     $productPhoto = $request->file('product_photo');
@@ -333,6 +378,21 @@ class ProductsApiController extends Controller
                             return response()->json([
                                                         'message' => 'Ocorreu um erro, tente novamente mais tarde',
                                                     ], 400);
+                        }
+                    }
+                    if (env('APP_ENV') == 'local') {
+                        if (!empty($data['digital_product_url'])) {
+                            try {
+                                $amazonPath = $this->getAmazonFileService()
+                                                   ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url']);
+
+                                $product->update([
+                                                     'digital_product_url' => $amazonPath,
+                                                 ]);
+                            } catch (Exception $e) {
+                                Log::warning('ProductController - update - Erro ao enviar anexo de produto digital');
+                                report($e);
+                            }
                         }
                     }
 

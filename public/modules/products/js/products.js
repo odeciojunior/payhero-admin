@@ -75,6 +75,23 @@ $(document).ready(function () {
                         $('#select-currency .select-currency-usd').attr('selected', true);
                     }
 
+                    //seleciona radio button product type
+                    if (response.data.product.type_enum == 1) {
+                        $('#physical').attr('checked', true);
+                        $('#div_digital_product_upload').css('visibility', 'hidden');
+                        $('#digital_product_url').dropify();
+                    } else {
+                        $('#digital').attr('checked', true);
+                        $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('#digital_product_url').dropify({
+                            messages: {
+                                'default': 'Arraste e solte ou clique para adicionar um arquivo',
+                                'replace': 'Arraste e solte ou clique para substituir',
+                            },
+                            defaultFile: response.data.product.digital_product_url,
+                        });
+                    }
+
                     var p = $("#previewimage");
                     $("#photo").on("change", function () {
 
@@ -145,6 +162,12 @@ $(document).ready(function () {
                         let myForm = document.getElementById('my-form');
 
                         let formData = new FormData(myForm);
+
+                        if ($('#physical').is(':checked')) {
+                            formData.append('type_enum', 'physical');
+                        } else {
+                            formData.append('type_enum', 'digital');
+                        }
 
                         if (verify()) {
                             loadingOnScreen();
@@ -272,5 +295,13 @@ $(document).ready(function () {
                 }
             });
         });
+    });
+
+    $("#physical").on("change", function () {
+        $('#div_digital_product_upload').css('visibility', 'hidden');
+    });
+
+    $("#digital").on("change", function () {
+        $('#div_digital_product_upload').css('visibility', 'visible');
     });
 });

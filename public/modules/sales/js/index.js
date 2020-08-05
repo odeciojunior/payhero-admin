@@ -238,6 +238,7 @@ $(document).ready(function () {
                     20: 'antifraude',
                     22: 'danger',
                     23: 'warning',
+                    24: 'antifraude',
                 };
 
                 if (!isEmpty(response.data)) {

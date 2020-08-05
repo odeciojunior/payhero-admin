@@ -36,4 +36,31 @@ class ProductPresenter extends Presenter
             return '';
         }
     }
+
+    /**
+     * @param $type
+     * @return int|string
+     */
+    public function getType($type)
+    {
+        if (is_numeric($type)) {
+            switch ($type) {
+                case 1:
+                    return 'physical';
+                case 2:
+                    return 'digital';
+            }
+
+            return '';
+        } else {
+            switch ($type) {
+                case 'physical':
+                    return 1;
+                case 'digital':
+                    return 2;
+            }
+
+            return '';
+        }
+    }
 }

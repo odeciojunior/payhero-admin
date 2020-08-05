@@ -116,6 +116,7 @@ return [
                 "system_error"         => "Erro de sistema",
                 "billet_refunded"      => "Estornado",
                 "chargeback_recovered" => "Recuperado",
+                "in_dispute"           => "Em disputa",
             ],
         ],
         "product_plan_sale"        => [

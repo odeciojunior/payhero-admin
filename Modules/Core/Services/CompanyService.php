@@ -2,16 +2,15 @@
 
 namespace Modules\Core\Services;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Log;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\AnticipatedTransaction;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
 
 /**
@@ -21,7 +20,7 @@ use Modules\Core\Entities\Transaction;
 class CompanyService
 {
     /**
-     * @param bool $paginate
+     * @param  bool  $paginate
      * @return array|AnonymousResourceCollection
      * @var Company $companies
      */
@@ -44,10 +43,15 @@ class CompanyService
         }
     }
 
+    /**
+     * @param  int  $companyId
+     * @return bool
+     * @throws PresenterException
+     */
     public function isDocumentValidated(int $companyId)
     {
-        $companyModel     = new Company();
-        $company          = $companyModel->find($companyId);
+        $companyModel = new Company();
+        $company = $companyModel->find($companyId);
         $companyPresenter = $companyModel->present();
         if (!empty($company)) {
             if ($company->company_type == $companyPresenter->getCompanyType('juridical person')) {
@@ -66,10 +70,14 @@ class CompanyService
         return false;
     }
 
+    /**
+     * @return bool
+     * @throws PresenterException
+     */
     public function haveAnyDocumentPending()
     {
-        $companyModel     = new Company();
-        $companies        = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
+        $companyModel = new Company();
+        $companies = $companyModel->where('user_id', auth()->user()->account_owner_id)->get();
         $companyPresenter = $companyModel->present();
 
         foreach ($companies as $company) {
@@ -97,24 +105,29 @@ class CompanyService
         return true;
     }
 
+    /**
+     * @param  int  $companyId
+     * @return \Illuminate\Support\Collection
+     * @throws PresenterException
+     */
     public function getRefusedDocuments(int $companyId)
     {
-        $companyModel     = new Company();
-        $company          = $companyModel->with('companyDocuments')->find($companyId);
+        $companyModel = new Company();
+        $company = $companyModel->with('companyDocuments')->find($companyId);
         $companyPresenter = $companyModel->present();
         $refusedDocuments = collect();
         if (!empty($company)) {
             foreach ($company->companyDocuments as $document) {
                 if (!empty($document->refused_reason)) {
                     $dataDocument = [
-                        'date'            => $document->created_at->format('d/m/Y'),
+                        'date' => $document->created_at->format('d/m/Y'),
                         'type_translated' => __(
-                            'definitions.enum.company_document_type.' . $companyPresenter->getDocumentType(
+                            'definitions.enum.company_document_type.'.$companyPresenter->getDocumentType(
                                 $document->document_type_enum
                             )
                         ),
-                        'document_url'    => $document->document_url,
-                        'refused_reason'  => $document->refused_reason,
+                        'document_url' => $document->document_url,
+                        'refused_reason' => $document->refused_reason,
                     ];
                     $refusedDocuments->push(collect($dataDocument));
                 }
@@ -124,12 +137,17 @@ class CompanyService
         return $refusedDocuments;
     }
 
+    /**
+     * @param $cnpj
+     * @return bool
+     * @throws PresenterException
+     */
     public function verifyCnpj($cnpj)
     {
-        $companyModel     = new Company();
+        $companyModel = new Company();
         $companyPresenter = $companyModel->present();
-        $cnpj             = preg_replace("/[^0-9]/", "", $cnpj);
-        $company          = $companyModel->where(
+        $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
+        $company = $companyModel->where(
             [
                 ['company_document', $cnpj],
                 ['bank_document_status', $companyPresenter->getBankDocumentStatus('approved')],
@@ -171,6 +189,10 @@ class CompanyService
         return false;
     }
 
+    /**
+     * @param $company
+     * @param $documentType
+     */
     public function getChangesUpdateCNPJ($company, $documentType)
     {
         $companyChanges = $company->getChanges();
@@ -180,6 +202,11 @@ class CompanyService
         }
     }
 
+    /**
+     * @param  Company  $company
+     * @param  false  $symbol
+     * @return string|null
+     */
     public function getCurrency(Company $company, $symbol = false)
     {
         $dolar = [
@@ -201,12 +228,12 @@ class CompanyService
 
         if (in_array($company->country, $dolar)) {
             return $symbol ? '$' : 'dolar';
-        } else if (in_array($company->country, $euro)) {
-            return $symbol ? '€' : 'euro';
-        } else if (in_array($company->country, $real)) {
-            return $symbol ? 'R$' : 'real';
+        } elseif (in_array($company->country, $euro)) {
+                return $symbol ? '€' : 'euro';
+        } elseif (in_array($company->country, $real)) {
+                    return $symbol ? 'R$' : 'real';
         } else {
-            return null;
+                    return null;
         }
     }
 
@@ -218,7 +245,7 @@ class CompanyService
     {
         try {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/' . $cnpj);
+            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/'.$cnpj);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
@@ -231,7 +258,7 @@ class CompanyService
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return int|mixed
      * @throws PresenterException
      */
@@ -240,19 +267,19 @@ class CompanyService
         $transactionModel = new Transaction();
 
         $pendingBalance = $transactionModel->where('company_id', $company->id)
-                                           ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
+            ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))
             // ->whereDate('release_date', '>', Carbon::today()->toDateString())
-                                           ->sum('value');
+            ->sum('value');
 
         $transactionsAnticipatedValue = $transactionModel->with('anticipatedTransactions')
-                                                         ->where('company_id', $company->id)
-                                                         ->where('status_enum', $transactionModel->present()
-                                                                                                 ->getStatusEnum('anticipated'))
-                                                         ->sum('value');
+            ->where('company_id', $company->id)
+            ->where('status_enum', $transactionModel->present()
+                ->getStatusEnum('anticipated'))
+            ->sum('value');
 
         $anticipatedValue = AnticipatedTransaction::with('transaction')->whereHas(
             'transaction',
-            function($query) use ($company) {
+            function ($query) use ($company) {
                 $query->where('status_enum', (new Transaction())->present()->getStatusEnum('anticipated'));
                 $query->where('company_id', $company->id);
             }
@@ -264,9 +291,10 @@ class CompanyService
     }
 
     /**
-     * @param Company $company
-     * @return bool
      * Verifica campos que estao vazio para integração com getnet
+     * @param  Company  $company
+     * @return bool
+     * @throws PresenterException
      */
     public function verifyFieldsEmpty(Company $company)
     {
@@ -351,14 +379,14 @@ class CompanyService
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return string[]
      * @throws PresenterException
      */
     public function createCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
-        $userService   = new UserService();
+        $userService = new UserService();
 
         $user = $company->user;
 
@@ -375,47 +403,52 @@ class CompanyService
             $company->update(
                 [
                     'subseller_getnet_id' => $result['data']->subseller_id,
-                    'getnet_status'       => $company->present()->getStatusGetnet('review'),
+                    'getnet_status' => $company->present()->getStatusGetnet('review'),
                 ]
             );
 
             return [
                 'message' => 'success',
-                'data'    => '',
+                'data' => '',
             ];
         }
 
         return [
             'message' => 'error',
-            'data'    => '',
+            'data' => '',
         ];
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return string[]
      * @throws PresenterException
      */
     public function updateCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
-        $userService   = new UserService();
-        $user          = $company->user;
+        $userService = new UserService();
+        $user = $company->user;
 
         if ($company->present()->getCompanyType($company->company_type) == 'physical person'
             && (!$userService->verifyFieldsEmpty($user))
         ) {
             $getnetService->updatePfCompany($company);
-        } else if (!empty($user->cellphone) && !empty($user->email)) {
-            $getnetService->updatePjCompany($company);
+        } elseif (!empty($user->cellphone) && !empty($user->email)) {
+                $getnetService->updatePjCompany($company);
         }
 
         return [
             'message' => 'success',
-            'data'    => '',
+            'data' => '',
         ];
     }
 
+    /**
+     * @param  Company  $company
+     * @return array
+     * @throws PresenterException
+     */
     public function unfilledFields(Company $company)
     {
         $arrayFields = [];
@@ -501,5 +534,40 @@ class CompanyService
         }
 
         return $arrayFields;
+    }
+
+    /**
+     * @param  int  $companyId
+     * @param  int  $userAccountOwnerId
+     * @return int
+     * @throws PresenterException
+     */
+    public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
+    {
+       /* $salesModel = new Sale();
+        $ticketModel = new Ticket();
+
+        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('sales.owner_id', $userAccountOwnerId)
+            ->where('sales.status', $salesModel->present()->getStatus('approved'))
+            ->whereNull('transactions.invitation_id')
+            ->where('transactions.company_id', $companyId)
+            ->whereHas('tickets', function ($query) use ($ticketModel) {
+                $query->where('ticket_status_enum', $ticketModel->present()
+                    ->getTicketStatusEnum('mediation'))
+                    ->where('ignore_balance_block', 0);
+            })->sum('transactions.value');*/
+
+        $salesModel        = new Sale();
+        $transactiosModel  = new Transaction();
+
+        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+                          ->where('sales.owner_id', $userAccountOwnerId)
+                          ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                          ->whereNull('transactions.invitation_id')
+                          ->where('transactions.company_id', $companyId)
+                          ->where('transactions.status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
+                          ->sum('transactions.value');
+
     }
 }
