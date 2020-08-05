@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddShopifyIdIndexToPlans extends Migration
@@ -13,6 +14,7 @@ class AddShopifyIdIndexToPlans extends Migration
      */
     public function up()
     {
+        DB::statement("ALTER TABLE plans ROW_FORMAT=DYNAMIC;");
         Schema::table('plans', function (Blueprint $table) {
             $table->index('shopify_id');
         });
