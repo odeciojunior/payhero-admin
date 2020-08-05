@@ -196,10 +196,12 @@ class SaleService
             $transactionModel->present()
                 ->getStatusEnum('anticipated'),
         ]);
+        $statusDispute = (new Sale())->present()->getStatus('in_dispute');
+
         $resume = $transactions->without(['sale'])
             ->select(DB::raw("count(sales.id) as total_sales,
-                                            sum(if(transactions.status_enum in ({$transactionStatus}), transactions.value, 0)) / 100 as commission,
-                                            round(sum((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100), 2) as total"))
+                              sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission,
+                              round(sum((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100), 2) as total"))
             ->first()
             ->toArray();
 
