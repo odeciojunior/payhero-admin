@@ -32,10 +32,14 @@ use Exception;
  * @property Sale $sale
  * @property AntecipatedTransaction[] $antecipatedTransactions
  * @property Transfer[] $transfers
+ * @method TransactionPresenter present()
  */
 class Transaction extends Model
 {
-    use SoftDeletes, PresentableTrait, LogsActivity;
+    use LogsActivity;
+    use PresentableTrait;
+    use SoftDeletes;
+
     /**
      * @var string
      */
@@ -166,7 +170,7 @@ class Transaction extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return HasMany
      */
     public function productPlanSales()
     {

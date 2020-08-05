@@ -89,6 +89,7 @@ return [
                 "system_error"         => "Erro de sistema",
                 "billet_refunded"      => "Estornado",
                 "chargeback_recovered" => "Recuperado",
+                "in_dispute"           => "Em disputa",
             ],
         ],
         "invoices"              => [
