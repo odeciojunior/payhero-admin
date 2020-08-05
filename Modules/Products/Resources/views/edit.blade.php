@@ -75,7 +75,7 @@
                                             </div>
                                             <div class="form-group col-lg-6">
                                                 <label for="name">Tipo</label>
-                                                <div class=" justify-content-start">
+                                                <div class="d-flex justify-content-start">
                                                     <div class="radio-custom radio-primary pr-20">
                                                         <input type="radio" id="physical" name="format" value="1">
                                                         <label for="physical">Físico</label>
@@ -92,7 +92,7 @@
                                                     <option value="">Selecione</option>
                                                 </select>
                                             </div>
-                                            <div class='form-group col-lg-4'>
+                                            <div class='form-group col-lg-6'>
                                                 <label for="category">Moeda de custo:</label>
                                                 <select name="currency_type_enum" class="form-control select-pad" id='select-currency'>
                                                     <option class='select-currency-brl' value='BRL' selected>BRL</option>
@@ -102,18 +102,18 @@
                                                     <i class='icon wb-info-circle' aria-hidden='true'></i> Informação utilizada para emissão de notas fiscais
                                                 </p>
                                             </div>
-                                            <div class="form-group col-lg-4">
+                                            <div class="form-group col-lg-6">
                                                 <label for="cost">Custo
                                                     <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
                                                 </label>
                                                 <input name="cost" type="text" class="input-pad money" id="cost" value="" placeholder="Digite o custo" autocomplete="off">
                                             </div>
-                                            <div class="form-group col-lg-4">
-                                                <label for="price">Preço
-                                                    <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
-                                                </label>
-                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">
-                                            </div>
+{{--                                            <div class="form-group col-lg-4">--}}
+{{--                                                <label for="price">Preço--}}
+{{--                                                    <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>--}}
+{{--                                                </label>--}}
+{{--                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">--}}
+{{--                                            </div>--}}
                                             <div id="div_next_step" class="form-group col-lg-12 justify-content-between mt-10">
                                                 <a style='display:none;' class="btn btn-danger delete-product white" productname='' product="" data-toggle="modal" data-target="#modal-delete">
                                                     <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
