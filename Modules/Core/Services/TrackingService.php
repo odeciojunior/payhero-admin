@@ -254,6 +254,7 @@ class TrackingService
 
         $saleStatus = [
             $salePresenter->getStatus('approved'),
+            $salePresenter->getStatus('in_dispute'),
         ];
 
         $productPlanSales = $productPlanSaleModel->with(['tracking', 'sale.delivery', 'sale.customer', 'product',]);

@@ -69,6 +69,7 @@ $(function () {
                 $("#qtd-recusadas").html(response.contRecused);
                 $("#qtd-reembolso").html(response.contRefunded);
                 $("#qtd-chargeback").html(response.contChargeBack);
+                $("#qtd-dispute").html(response.contInDispute);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
                 $("#percent-credit-card").html(response.totalPercentCartao + '%');
