@@ -149,13 +149,12 @@ class ProductsApiController extends Controller
             $productModel  = new Product();
             $categoryModel = new Category();
 
-            $data                       = $request->validated();
-            $data['shopify']            = 0;
-            $data['user']               = auth()->user()->account_owner_id;
-            $data['price']              = preg_replace("/[^0-9]/", "", $data['price']);
-            $data['cost']               = preg_replace("/[^0-9]/", "", $data['cost']);
-            $data['user_id']            = auth()->user()->account_owner_id;
-            $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
+            $data            = $request->validated();
+            $data['shopify'] = 0;
+            $data['user']    = auth()->user()->account_owner_id;
+            $data['cost']    = preg_replace("/[^0-9]/", "", $data['cost']);
+            $data['user_id'] = auth()->user()->account_owner_id;
+            //            $category                   = $categoryModel->find(current(Hashids::decode($data['category'])));
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
             $data['name']               = FoxUtils::removeSpecialChars($data['name']);
             $data['description']        = FoxUtils::removeSpecialChars($data['description']);
@@ -169,12 +168,9 @@ class ProductsApiController extends Controller
                 }
             }
 
-            if (empty($category)) {
-                $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
-                $data['category_id'] = $category->id;
-            } else {
-                $data['category_id'] = $category->id;
-            }
+            $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+            $data['category_id'] = $category->id;
+
             $product = $productModel->create($data);
 
             $productPhoto = $request->file('product_photo');
@@ -220,6 +216,7 @@ class ProductsApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar produto (ProductsApiController - store)');
             report($e);
+            dd($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
@@ -319,22 +316,16 @@ class ProductsApiController extends Controller
             $productModel  = new Product();
             $categoryModel = new Category();
 
-            $category = $categoryModel->find(current(Hashids::decode($data['category'])));
+            //            $category = $categoryModel->find(current(Hashids::decode($data['category'])));
 
-            if (empty($category)) {
-                $category         = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
-                $data['category'] = $category->id;
-            } else {
-                $data['category'] = $category->id;
-            }
+            $category         = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+            $data['category'] = $category->id;
+
             $data['currency_type_enum'] = $productModel->present()->getCurrency($data['currency_type_enum']);
             $productId                  = current(Hashids::decode($id));
             if (!empty($productId) && !empty($data['category'])) {
                 $product = $productModel->find($productId);
                 if (Gate::allows('update', [$product])) {
-                    if (isset($data['price'])) {
-                        $data['price'] = preg_replace("/[^0-9]/", "", $data['price']);
-                    }
 
                     if (isset($data['cost'])) {
                         $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
