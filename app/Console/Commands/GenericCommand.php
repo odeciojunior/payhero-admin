@@ -9,6 +9,7 @@ use Modules\Core\Entities\User;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\GetnetPaymentService;
 use Modules\Core\Services\GetnetService;
+use Modules\Core\Services\NrsSmsService;
 use Modules\Core\Services\ShopifyService;
 use Spatie\Permission\Models\Permission;
 
@@ -64,12 +65,14 @@ class GenericCommand extends Command
 //
 //        dd($result);
 //        Permission::create(['name' => 'refund']);
-        $user = User::where('email','admin@cloudfox.net')->first();
+       /* $user = User::where('email','admin@cloudfox.net')->first();
         $user->update(
             [
                 'password' => bcrypt('#OYamSn97qYwUpSG4GbA'),
             ]
-        );
+        );*/
+
+//        NrsSmsService::sendMessage(123123123, 'Teste mensagem ');
     }
 }
 
