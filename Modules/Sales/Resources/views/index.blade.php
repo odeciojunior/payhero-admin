@@ -105,7 +105,7 @@
                             <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                         </div>
                     </div>
-                    <div class="row mt-15">
+                    <div class="row mt-md-15">
                         <div class="col-sm-8 col-md">
                             <label for="comprador">Nome do cliente</label>
                             <input name='client' id="comprador" class="input-pad" placeholder="cliente">
@@ -124,15 +124,15 @@
                         <div class="col-sm-6 col-md">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
-                        <div class="col-sm-6 col-md d-flex align-items-center pt-20">
-                            <div class="mr-5">
+                        <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
+                            <div class="mr-10 d-flex flex-column">
                                 <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>
                                 <label class="switch m-0">
                                     <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                            <button id="bt_filtro" class="btn btn-primary">
+                            <button id="bt_filtro" class="btn btn-primary col">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
                         </div>
