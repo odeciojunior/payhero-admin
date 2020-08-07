@@ -56,15 +56,16 @@ class FinancesApiController extends Controller
 
                 if (!empty($company)) {
 
-                    $pendingBalance = $companyService->getPendingBalance($company);
-
                     $blockedBalance = $companyService->getBlockedBalance($companyId, auth()->user()->account_owner_id);
 
+                    $pendingBalance = $companyService->getPendingBalance($company) - $blockedBalance->pending;
+
                     $availableBalance = $company->balance;
-                    $totalBalance     = $availableBalance + $pendingBalance - $blockedBalance;
+                    $totalBalance     = $availableBalance + $pendingBalance - $blockedBalance->transfered;
 
+                    $availableBalance -= $blockedBalance->transfered;
 
-                    $availableBalance -= $blockedBalance;
+                    $blockedBalanceTotal = $blockedBalance->pending + $blockedBalance->transfered;
 
                     $currency          = $companyService->getCurrency($company);
                     $currencyQuotation = '';
@@ -84,7 +85,7 @@ class FinancesApiController extends Controller
                             'anticipable_balance' => number_format(intval($anticipationBalance) / 100, 2, ',', '.'),
                             'currency'            => $currency,
                             'currencyQuotation'   => $currencyQuotation,
-                            'blocked_balance'     => number_format(intval($blockedBalance) / 100, 2, ',', '.'),
+                            'blocked_balance'     => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
                         ]
                     );
                 } else {

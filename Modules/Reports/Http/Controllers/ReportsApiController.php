@@ -95,6 +95,7 @@ class ReportsApiController extends Controller
                                                         SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack,
                                                         SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled,
                                                         SUM(CASE WHEN sales.status = 7 THEN 1 ELSE 0 END) AS contSalesRefunded,
+                                                        SUM(CASE WHEN sales.status = 24 THEN 1 ELSE 0 END) AS contSalesInDispute,
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN 1 ELSE 0 END) AS contCreditCardAproved,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (sales.shopify_discount + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueBoleto,
@@ -129,6 +130,7 @@ class ReportsApiController extends Controller
                 $countSalesChargeBack = $details->contSalesChargeBack;
                 $countSalesRefunded = $details->contSalesRefunded;
                 $countSalesCanceled = $details->contSalesCanceled;
+                $countSalesInDispute = $details->contSalesInDispute;
                 $totalValueCreditCard = $details->totalValueCreditCard;
                 $contCreditCardAproved = $details->contCreditCardAproved;
                 $totalValueBoleto = $details->totalValueBoleto;
@@ -193,6 +195,7 @@ class ReportsApiController extends Controller
                 'contPending' => $countSalesPending ?? 0,
                 'contRefunded' => $countSalesRefunded ?? 0,
                 'contCanceled' => $countSalesCanceled ?? 0,
+                'contInDispute' => $countSalesInDispute ?? 0,
                 'totalPercentCartao' => $totalPercentPaidCredit ?? 0,
                 'totalPercentPaidBoleto' => $totalPercentPaidBoleto ?? 0,
                 'totalValueBoleto' => isset($totalValueBoleto) ? FoxUtils::formatMoney($totalValueBoleto) : 00,

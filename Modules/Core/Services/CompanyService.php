@@ -12,6 +12,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
+use DB;
 
 /**
  * Class CompaniesService
@@ -539,7 +540,7 @@ class CompanyService
     /**
      * @param  int  $companyId
      * @param  int  $userAccountOwnerId
-     * @return int
+     * @return object
      * @throws PresenterException
      */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
@@ -566,8 +567,14 @@ class CompanyService
                           ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
                           ->whereNull('transactions.invitation_id')
                           ->where('transactions.company_id', $companyId)
-                          ->where('transactions.status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
-                          ->sum('transactions.value');
-
+                          ->whereIn('transactions.status_enum', collect([
+                                $transactiosModel->present()->getStatusEnum('transfered'),
+                                $transactiosModel->present()->getStatusEnum('paid')
+                            ]))
+                          ->select(\DB::raw(
+                                'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
+                                 SUM(CASE WHEN transactions.status_enum = 2 THEN transactions.value ELSE 0 END) as pending'
+                            ))
+                          ->first();
     }
 }

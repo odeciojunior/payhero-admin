@@ -356,6 +356,10 @@ class SalesApiController extends Controller
             $saleId = current(Hashids::connection('sale_id')->decode($request->input('sale')));
             $sale = $saleModel->with(['customer', 'project'])->find($saleId);
 
+            if(empty($sale)){
+                return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
+            }
+
             activity()->on($saleModel)->tap(function (Activity $activity) use ($saleId, $request) {
                 $activity->log_name = 'created';
                 $activity->subject_id = $saleId;
@@ -369,7 +373,6 @@ class SalesApiController extends Controller
 
             return response()->json(['message' => 'Email enviado'], Response::HTTP_OK);
         } catch (Exception $e) {
-            Log::warning('Erro ao reenviar email da venda - saleReSendEmail');
             report($e);
 
             return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);

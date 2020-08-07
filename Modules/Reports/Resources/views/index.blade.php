@@ -77,6 +77,10 @@
                                     <h6 class="label-price relatorios"> ChargeBack </h6>
                                     <h4 id='qtd-chargeback' class="number purple" style='color:purple'>0</h4>
                                 </div>
+                                <div class="col">
+                                    <h6 class="label-price relatorios"> Em disputa </h6>
+                                    <h4 id='qtd-dispute' class="number purple" style='color:blue'>0</h4>
+                                </div>
                                 <!--div class="col-lg-12">
                                     <div class="grafico">
                                         <div class="text">
@@ -331,6 +335,6 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=3')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=4')}}'></script>
 @endpush
 
