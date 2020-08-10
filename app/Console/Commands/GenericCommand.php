@@ -27,7 +27,7 @@ class GenericCommand extends Command
     {
         $trackingmoreService = new TrackingmoreService();
 
-        $trackings = Tracking::whereDate('created_at', '<=', now()->subDays(30)->toDateTimeString())
+        $trackings = Tracking::whereDate('created_at', '>=', '2020-08-07 00:00:00')
         ->select('tracking_code')
             ->pluck('tracking_code');
 
