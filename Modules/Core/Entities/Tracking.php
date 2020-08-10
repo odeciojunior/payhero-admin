@@ -10,20 +10,21 @@ use App\Traits\LogsActivity;
 use Spatie\Activitylog\Models\Activity;
 
 /**
- * @property integer $id
- * @property integer $product_plan_sale_id
- * @property integer $delivery_id
+ * @property int $product_plan_sale_id
+ * @property int $sale_id
+ * @property int $product_id
+ * @property int $amount
+ * @property int $delivery_id
  * @property string $tracking_code
- * @property boolean $tracking_type_enum
  * @property int $tracking_status_enum
  * @property int $system_status_enum
- * @property string $tracking_date
- * @property string $description
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
+ * @property string created_at
+ * @property string updated_at
+ * @property string deleted_at
  * @property Delivery $delivery
  * @property ProductPlanSale $productPlanSale
+ * @property Sale $sale
+ * @property Product $product
  * @method TrackingPresenter present()
  */
 class Tracking extends Model
