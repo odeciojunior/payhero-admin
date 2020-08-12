@@ -57,19 +57,25 @@ class TrackingmoreService
             $result->already_exists = true;
             return $result;
         } else {
-            //jadlog
-            if (strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber)) {
-                $carrierCode = 'dpd-brazil';
-            } else {
-                if (preg_match('/^NX[0-9]{9}BR$/', $trackingNumber)) {
+
+            switch (true) {
+                case strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber):
+                    $carrierCode = 'dpd-brazil'; //jadlog
+                    break;
+                case preg_match('/^NX[0-9]{9}BR$/', $trackingNumber):
                     $carrierCode = 'brazil-correios';
-                } else {
+                    break;
+                case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
+                case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
+                    $carrierCode = "cainiao";
+                    break;
+                default:
                     $carrierCode = $this->detectCarrier($trackingNumber);
 
                     if ($carrierCode == "china-ems") {
                         $carrierCode = "china-post";
                     }
-                }
+                    break;
             }
 
             $data = [
