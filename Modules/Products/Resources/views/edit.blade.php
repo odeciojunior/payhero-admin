@@ -55,6 +55,10 @@
                                             <p class="info mt-5" style="font-size:10px;">
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
                                                 <br>.
+                                            </p>
+                                            <button class="btn btn-primary btn-sm btn-view-product-url" link='' style="display:none;" title='Visualizar produto digital'>
+                                                <i class="material-icons">remove_red_eye</i> Visualizar
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
@@ -108,6 +112,12 @@
                                                     <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span>
                                                 </label>
                                                 <input name="cost" type="text" class="input-pad money" id="cost" value="" placeholder="Digite o custo" autocomplete="off">
+                                            </div>
+                                            <div class='form-group col-lg-6 div-expiration-time' style='display:none;'>
+                                                <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
+                                                <div class="d-flex input-group">
+                                                    <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#" >
+                                                </div>
                                             </div>
 {{--                                            <div class="form-group col-lg-4">--}}
 {{--                                                <label for="price">Preço--}}
@@ -201,7 +211,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=7') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=8') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

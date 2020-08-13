@@ -12,6 +12,8 @@ Route::group(
              ->names('api.products')->middleware('role:account_owner|admin');
         Route::post('/products/userproducts', 'ProductsApiController@getProducts')->name('api.products.getproducts')
              ->middleware('role:account_owner|admin');
+        Route::post('/products/getsignedurl', 'ProductsApiController@getSignedUrl')->name('api.products.getsignedurl')
+             ->middleware('role:account_owner|admin|attendance');
         Route::get('/products/saleproducts/{saleId}', 'ProductsApiController@getProductBySale')
              ->name('api.products.saleproducts')->middleware('role:account_owner|admin|attendance');
     }

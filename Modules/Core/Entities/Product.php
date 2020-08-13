@@ -85,6 +85,7 @@ class Product extends Model
         'updated_at',
         'deleted_at',
         'digital_product_url',
+        'url_expiration_time',
         'price',
         'shopify_id',
         'shopify_variant_id',

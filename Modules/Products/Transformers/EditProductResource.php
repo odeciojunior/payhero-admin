@@ -30,7 +30,8 @@ class EditProductResource extends JsonResource
             'length'              => $this->resource['product']->length,
             'currency_type_enum'  => $this->resource['product']->currency_type_enum,
             'type_enum'           => env('APP_ENV') == 'local' ? $this->resource['product']->type_enum : '',
-            'digital_product_url' => $this->resource['product']->digital_product_url,
+            'digital_product_url' => $this->resource['product']->digital_product_url ?? '',
+            'url_expiration_time' => env('APP_ENV') == 'local' ? $this->resource['product']->url_expiration_time : '',
         ];
         $categories = [];
         foreach ($this->resource['categories'] as $category) {

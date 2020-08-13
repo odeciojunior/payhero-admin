@@ -100,6 +100,12 @@
                                             <label for="cost">Custo</label>
                                             <input name="cost" type="text" class="input-pad money" id="cost" value='' placeholder="Digite o custo" autocomplete="off">
                                         </div>
+                                        <div class='form-group col-lg-6 div-expiration-time' style='display:none;'>
+                                            <label for="url_expiration_time">Tempo de expiração da url (em horas)</label>
+                                            <div class="d-flex input-group">
+                                                <input type="text" min="0" class="form-control" name="url_expiration_time" id="url_expiration_time" placeholder="Tempo de expiração da url em horas" maxlength='2' data-mask="0#" >
+                                            </div>
+                                        </div>
 {{--                                        <div class="form-group col-lg-4">--}}
 {{--                                            <label for="price">Preço</label>--}}
 {{--                                            <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">--}}
@@ -163,7 +169,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=4') }}"></script>
+        <script src="{{ asset('modules/products/js/create.js?v=5') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

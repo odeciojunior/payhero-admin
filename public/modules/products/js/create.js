@@ -191,12 +191,17 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
+    $('#url_expiration_time').mask('0#');
+
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
+        $('.div-expiration-time').hide();
+        $('#url_expiration_time').val('');
     });
 
     $("#digital").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'visible');
+        $('.div-expiration-time').show();
     });
 
 });

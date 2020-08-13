@@ -2,6 +2,7 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Aws\S3\S3Client;
 use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
@@ -163,6 +164,7 @@ class ProductsApiController extends Controller
                 $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
             } else {
                 unset($data['type_enum']);
+                unset($data['url_expiration_time']);
                 if (!empty($data['digital_product_url'])) {
                     unset($data['digital_product_url']);
                 }
@@ -198,7 +200,7 @@ class ProductsApiController extends Controller
                 if (!empty($data['digital_product_url'])) {
                     try {
                         $amazonPath = $this->getAmazonFileService()
-                                           ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url']);
+                                           ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
 
                         $product->update([
                                              'digital_product_url' => $amazonPath,
@@ -337,6 +339,7 @@ class ProductsApiController extends Controller
                         $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
                     } else {
                         unset($data['type_enum']);
+                        unset($data['url_expiration_time']);
                         if (!empty($data['digital_product_url'])) {
                             unset($data['digital_product_url']);
                         }
@@ -375,7 +378,7 @@ class ProductsApiController extends Controller
                         if (!empty($data['digital_product_url'])) {
                             try {
                                 $amazonPath = $this->getAmazonFileService()
-                                                   ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url']);
+                                                   ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
 
                                 $product->update([
                                                      'digital_product_url' => $amazonPath,
@@ -505,6 +508,46 @@ class ProductsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar obter produtos'], 400);
+        }
+    }
+    public function getSignedUrl(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+
+            if (!empty($requestData['digital_product_url'])) {
+
+                $urlKey = str_replace('https://cloudfox-digital-products.s3.amazonaws.com/', '', $requestData['digital_product_url']);
+
+                $client = new S3Client([
+                                           'credentials' => [
+                                               'key'    => env('AWS_ACCESS_KEY_ID'),
+                                               'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                                           ],
+                                           'region'      => env('AWS_DEFAULT_REGION'),
+                                           'version'     => '2006-03-01',
+                                       ]);
+
+                $command = $client->getCommand('GetObject', [
+                    'Bucket' => env('AWS_BUCKET'),
+                    'Key'    => $urlKey,
+                ]);
+
+                $urlExpirationTime = $requestData['url_expiration_time'] ?? 24;
+
+                $signedRequest = $client->createPresignedRequest($command, "+$urlExpirationTime hours");
+
+                $signedUrl = (string) $signedRequest->getUri();
+
+                return response()->json([
+                                            'signed_url' => $signedUrl,
+                                        ]);
+            } else {
+                return response()->json(['message' => 'Url não encontrada'], 400);
+            }
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao gerar url assinada do produto'], 400);
         }
     }
 }

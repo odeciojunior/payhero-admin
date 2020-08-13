@@ -26,7 +26,6 @@ $(document).ready(function () {
 
                     }*/
 
-
                     $(".delete-product").show();
                     $('.delete-product').attr('product', response.data.product.id);
                     $('.delete-product').attr('productname', response.data.product.name);
@@ -90,7 +89,14 @@ $(document).ready(function () {
                             },
                             defaultFile: response.data.product.digital_product_url,
                         });
+                        if(response.data.product.digital_product_url != ''){
+                            $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
+                            $(".btn-view-product-url").show();
+                        }
+                        $('.div-expiration-time').show();
                     }
+
+                    $('#url_expiration_time').val(response.data.product.url_expiration_time);
 
                     var p = $("#previewimage");
                     $("#photo").on("change", function () {
@@ -252,8 +258,8 @@ $(document).ready(function () {
     });
 
     $("#next_step").on("click", function () {
-            $("#nav-logistic-tab").click();
-            $("#previewimage").imgAreaSelect({remove: true});
+        $("#nav-logistic-tab").click();
+        $("#previewimage").imgAreaSelect({remove: true});
     });
 
     $(".delete-product").on('click', function (event) {
@@ -297,11 +303,41 @@ $(document).ready(function () {
         });
     });
 
+    $(".btn-view-product-url").on("click", function (event) {
+        event.preventDefault();
+        var url = $(this).attr('link');
+        var expirationTime = $('#url_expiration_time').val();
+        loadingOnScreen();
+        $.ajax({
+            method: 'POST',
+            url: '/api/products/getsignedurl',
+            dataType: "json",
+            data: {digital_product_url: url, url_expiration_time: expirationTime},
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response)
+            },
+            success: function (response) {
+                loadingOnScreenRemove();
+                window.open(response.signed_url, '_blank');
+            },
+        });
+    });
+
+    $('#url_expiration_time').mask('0#');
+
     $("#physical").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'hidden');
+        $('.div-expiration-time').hide();
+        $('#url_expiration_time').val('');
     });
 
     $("#digital").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'visible');
+        $('.div-expiration-time').show();
     });
 });

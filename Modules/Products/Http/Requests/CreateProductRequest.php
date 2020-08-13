@@ -31,6 +31,7 @@ class CreateProductRequest extends FormRequest
             'currency_type_enum'  => 'nullable',
             'type_enum'           => 'required|string',
             'digital_product_url' => 'nullable',
+            'url_expiration_time' => 'nullable',
         ];
     }
 
