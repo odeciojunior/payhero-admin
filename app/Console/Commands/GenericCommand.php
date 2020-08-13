@@ -3,14 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\User;
-use Modules\Core\Services\GetnetBackOfficeService;
-use Modules\Core\Services\GetnetPaymentService;
-use Modules\Core\Services\GetnetService;
-use Modules\Core\Services\ShopifyService;
-use Spatie\Permission\Models\Permission;
+use Modules\Core\Entities\Tracking;
+use Modules\Core\Services\TrackingmoreService;
 
 /**
  * Class GenericCommand
@@ -31,45 +25,20 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $result = '';
+        $trackingmoreService = new TrackingmoreService();
 
-        /*  $getnetService = new GetnetPaymentService();
+        $trackings = Tracking::whereDate('created_at', '>=', now()->subDays(30)->startOfDay()->toDateTimeString())
+        ->select('tracking_code')
+            ->pluck('tracking_code');
 
-          $paymentId = "db5983c6-2bc4-4504-82ac-11b20d89c1e0";
+        $total = $trackings->count();
 
-          $data = [
-              'releasePaymentDate' => "2020-07-08T00:00:00Z",
-              'subsellerId' => '700050664',
-              'productId' => "2wq7GrYq0MZBANP",
-              'productAmount' => 406
-          ];
+        foreach ($trackings as $key => $tracking) {
+            $i = $key+1;
+            $this->line("Enviando tracking {$i} de {$total}");
+            $trackingmoreService->createTracking($tracking);
+        }
 
-          $getnetService->paymentRelease($paymentId, $data);*/
-
-        //
-     /*   $paymentId = "e30f2a2f-decb-4a9d-8b2d-2767ac6fe052";
-        $dataRelease = '2020-07-09T16:22:00Z';
-        $subseller = '700050655';
-        $productId = 'N1nVZpezaWGlM6B';
-        $amount = '457';
-
-
-        $getnetPayment = new GetnetPaymentService();
-        $result = $getnetPayment->releasePaymentToSeller($paymentId, $dataRelease, $subseller, $productId, $amount);
-*/
-
-//        $getnetService = new GetnetBackOfficeService();
-//        $result = $getnetService->getStatement();
-//
-//
-//        dd($result);
-//        Permission::create(['name' => 'refund']);
-        $user = User::where('email','admin@cloudfox.net')->first();
-        $user->update(
-            [
-                'password' => bcrypt('#OYamSn97qYwUpSG4GbA'),
-            ]
-        );
     }
 }
 

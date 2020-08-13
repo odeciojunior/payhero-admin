@@ -45,7 +45,7 @@ class TrackingmoreService
 
     /**
      * @param $trackingNumber
-     * @param null $optionalParams
+     * @param  null  $optionalParams
      * @return mixed
      * @see https://www.trackingmore.com/api-track-create-a-tracking-item.html#post
      */
@@ -53,22 +53,29 @@ class TrackingmoreService
     {
         $result = $this->find($trackingNumber);
 
-        if(!empty($result)) {
+        if (!empty($result)) {
             $result->already_exists = true;
             return $result;
         } else {
 
-            //jadlog
-            if (strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber)) {
-                $carrierCode = 'dpd-brazil';
-            } else if(preg_match('/^NX[0-9]{9}BR$/', $trackingNumber)){
-                $carrierCode = 'brazil-correios';
-            } else {
-                $carrierCode = $this->detectCarrier($trackingNumber);
+            switch (true) {
+                case strlen($trackingNumber) == 14 && preg_match('/^\d+$/', $trackingNumber):
+                    $carrierCode = 'dpd-brazil'; //jadlog
+                    break;
+                case preg_match('/^NX[0-9]{9}BR$/', $trackingNumber):
+                    $carrierCode = 'brazil-correios';
+                    break;
+                case preg_match('/^[A-Z]{2}[0-9]{9}HK$/', $trackingNumber): //hongkong post
+                case preg_match('/^[A-Z]{2}[0-9]{9}SG$/', $trackingNumber): //singapore post
+                    $carrierCode = "cainiao";
+                    break;
+                default:
+                    $carrierCode = $this->detectCarrier($trackingNumber);
 
-                if ($carrierCode == "china-ems") {
-                    $carrierCode = "china-post";
-                }
+                    if ($carrierCode == "china-ems") {
+                        $carrierCode = "china-post";
+                    }
+                    break;
             }
 
             $data = [
@@ -102,8 +109,8 @@ class TrackingmoreService
      * @return mixed
      * @see https://www.trackingmore.com/api-track-delete-a-tracking-item.html#single-delete
      */
-    public function delete($carrierCode, $trackingNumber){
-
+    public function delete($carrierCode, $trackingNumber)
+    {
         $result = $this->doRequest("/trackings/{$carrierCode}/{$trackingNumber}", [], 'DELETE');
 
         return $result->meta->code == 200;
@@ -133,14 +140,14 @@ class TrackingmoreService
     }
 
     /**
-     * @param string $uri
-     * @param null $data
-     * @param string $method
+     * @param  string  $uri
+     * @param  null  $data
+     * @param  string  $method
      * @return object
      */
     private function doRequest($uri = '/', $data = null, $method = 'GET')
     {
-        $url = self::API_URL . '/' . self::API_VERSION . $uri;
+        $url = self::API_URL.'/'.self::API_VERSION.$uri;
 
         $curl = curl_init();
 
@@ -148,28 +155,30 @@ class TrackingmoreService
 
         switch ($method) {
             case 'GET':
-                if ($data)
+                if ($data) {
                     $url = sprintf("%s?%s", $url, http_build_query($data));
+                }
                 break;
             default:
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-                if ($data)
+                if ($data) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                }
                 break;
         }
 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Trackingmore-Api-Key: ' . $this->apiKey,
+            'Trackingmore-Api-Key: '.$this->apiKey,
             'Content-Type: application/json',
         ]);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
         $retry = true;
-        while($retry) {
+        while ($retry) {
             $result = curl_exec($curl);
             $result = json_decode($result);
-            if($result->meta->code == 429) {
+            if ($result->meta->code == 429) {
                 sleep(1);
             } else {
                 $retry = false;
