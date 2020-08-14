@@ -275,6 +275,11 @@
                         <br>
                         <span id="checkout-attempts" class="table-title gray" style="display:none"></span>
                         <br>
+                        <span id="thank-page-url" class="table-title gray" style="display:none"></span>
+                        <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;" link="" title="Copiar link">
+                            <i class="material-icons gradient" style="font-size:17px;">file_copy</i>
+                        </a>
+                        <br>
                         <h4> Conversão </h4>
                         <span id="checkout-src" class="table-title gray"></span>
                         <br>
@@ -318,5 +323,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=13') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=14') }}"></script>
 @endpush
