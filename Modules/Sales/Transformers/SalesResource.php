@@ -24,6 +24,12 @@ class SalesResource extends JsonResource
         if ($user->hasRole('admin') || $user->hasRole('account_owner') || $user->hasPermissionTo('refund')) {
             $userPermissionRefunded = true;
         }
+
+        $thankPageUrl = '';
+        if ($this->status == $this->present()->getStatus('approved') && isset($this->project->domains[0]->name)) {
+            $thankPageUrl =  'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
+        }
+
         $data = [
             //hide ids
             'id' => Hashids::connection('sale_id')->encode($this->id),
@@ -69,7 +75,7 @@ class SalesResource extends JsonResource
             'refund_observation' => $this->details->refund_observation,
             'user_changed_observation'=>$this->details->user_changed_observation,
             'is_chargeback_recovered'    => $this->is_chargeback_recovered,
-
+            'thank_page_url'    => $thankPageUrl,
         ];
         $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         if (count($shopifyIntegrations) > 0) {

@@ -40,6 +40,15 @@ $(() => {
         alertCustom('success', 'Linha Digitável copiado!');
     });
 
+    $(document).on("click", '.btn-copy-thank-page-url', function () {
+        let temp = $("<input>");
+        $("#nav-tabContent").append(temp);
+        temp.val($(this).attr('link')).select();
+        document.execCommand("copy");
+        temp.remove();
+        alertCustom('success', 'Link copiado!');
+    });
+
     $('.btn-edit-client').on('click', function () {
         let container = $(this).parent();
         container.find('input')
@@ -462,6 +471,14 @@ $(() => {
             }
         } else {
             $('.div-refund-observation').hide();
+        }
+        if (sale.thank_page_url != '') {
+            $('#thank-page-url').text('Link página de obrigado:').show();
+            $('.btn-copy-thank-page-url').attr('link', sale.thank_page_url);
+            $('.btn-copy-thank-page-url').show();
+        } else {
+            $('#thank-page-url').hide();
+            $('.btn-copy-thank-page-url').hide();
         }
     }
 
