@@ -96,13 +96,13 @@ class ReportsApiController extends Controller
                                                         SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled,
                                                         SUM(CASE WHEN sales.status = 7 THEN 1 ELSE 0 END) AS contSalesRefunded,
                                                         SUM(CASE WHEN sales.status = 24 THEN 1 ELSE 0 END) AS contSalesInDispute,
-                                                        SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN (sales.sub_total + sales.shipment_value - ifnull(sales.shopify_discount, 0) - sales.automatic_discount / 100) ELSE 0 END) AS totalValueCreditCard,
+                                                        SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status = 1 THEN 1 ELSE 0 END) AS contCreditCardAproved,
-                                                        SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN (sales.sub_total + sales.shipment_value - ifnull(sales.shopify_discount, 0) - sales.automatic_discount / 100) ELSE 0 END) AS totalValueBoleto,
+                                                        SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalValueBoleto,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN 1 ELSE 0 END) AS contBoletoAproved,
                                                         SUM(CASE WHEN sales.payment_method = 1 AND sales.status != 99 THEN 1 ELSE 0 END) AS contCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status != 99 THEN 1 ELSE 0 END) AS contBoleto,
-                                                        SUM(CASE WHEN sales.status = 1 THEN (sales.sub_total + sales.shipment_value - ifnull(sales.shopify_discount, 0) - sales.automatic_discount / 100) ELSE 0 END) AS totalPaidValueAproved,
+                                                        SUM(CASE WHEN sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalPaidValueAproved,
                                                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS contMobile,
                                                         SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS contDesktop")
                     ->leftJoin('checkouts as checkout', 'sales.checkout_id', '=', 'checkout.id')
