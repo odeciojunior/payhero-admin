@@ -81,7 +81,7 @@
                                                 <label for="name">Tipo</label>
                                                 <div class="d-flex justify-content-start">
                                                     <div class="radio-custom radio-primary pr-20">
-                                                        <input type="radio" id="physical" name="format" value="1">
+                                                        <input type="radio" id="physical" name="format" value="1" checked>
                                                         <label for="physical">Físico</label>
                                                     </div>
                                                     <div class="radio-custom radio-primary ">
@@ -212,7 +212,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=8') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=9') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
