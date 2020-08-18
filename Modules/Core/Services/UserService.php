@@ -229,7 +229,7 @@ class UserService
         if (empty($userInformation->nationality)) {
             $arrayFields[] = 'nationality';
         }
-        if ($userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
+        if (!empty($userInformation) && $userInformation->present()->getMaritalStatus('married') == $userInformation->marital_status
             && empty($userInformation->spouse_name)) {
             $arrayFields[] = 'spouse_name';
         }
