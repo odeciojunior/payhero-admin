@@ -75,28 +75,29 @@ $(document).ready(function () {
                     }
 
                     //seleciona radio button product type
-                    // if (response.data.product.type_enum == 1) {
-                    //     $('#physical').attr('checked', true);
-                    //     $('#div_digital_product_upload').css('visibility', 'hidden');
-                    //     $('#digital_product_url').dropify();
-                    // } else {
-                    //     $('#digital').attr('checked', true);
-                    //     $('#div_digital_product_upload').css('visibility', 'visible');
-                    //     $('#digital_product_url').dropify({
-                    //         messages: {
-                    //             'default': 'Arraste e solte ou clique para adicionar um arquivo',
-                    //             'replace': 'Arraste e solte ou clique para substituir',
-                    //         },
-                    //         defaultFile: response.data.product.digital_product_url,
-                    //     });
-                    //     if(response.data.product.digital_product_url != ''){
-                    //         $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
-                    //         $(".btn-view-product-url").show();
-                    //     }
-                    //     $('.div-expiration-time').show();
-                    // }
-                    //
-                    // $('#url_expiration_time').val(response.data.product.url_expiration_time);
+                    if (response.data.product.type_enum == 1) {
+                        $('#physical').attr('checked', true);
+                        $('#div_digital_product_upload').css('visibility', 'hidden');
+                        $('#digital_product_url').dropify();
+                    } else {
+                        $('#digital').attr('checked', true);
+                        $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('#digital_product_url').dropify({
+                            messages: {
+                                'default': 'Arraste e solte ou clique para adicionar um arquivo',
+                                'replace': 'Arraste e solte ou clique para substituir',
+                            },
+                            defaultFile: response.data.product.digital_product_url,
+                        });
+                        if(response.data.product.digital_product_url != ''){
+                            console.log('asfsf');
+                            $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
+                            $(".btn-view-product-url").show();
+                        }
+                        $('.div-expiration-time').show();
+                    }
+
+                    $('#url_expiration_time').val(response.data.product.url_expiration_time);
 
                     var p = $("#previewimage");
                     $("#photo").on("change", function () {
@@ -330,14 +331,14 @@ $(document).ready(function () {
 
     $('#url_expiration_time').mask('0#');
 
-    // $("#physical").on("change", function () {
-    //     $('#div_digital_product_upload').css('visibility', 'hidden');
-    //     $('.div-expiration-time').hide();
-    //     $('#url_expiration_time').val('');
-    // });
-    //
-    // $("#digital").on("change", function () {
-    //     $('#div_digital_product_upload').css('visibility', 'visible');
-    //     $('.div-expiration-time').show();
-    // });
+    $("#physical").on("change", function () {
+        $('#div_digital_product_upload').css('visibility', 'hidden');
+        $('.div-expiration-time').hide();
+        $('#url_expiration_time').val('');
+    });
+
+    $("#digital").on("change", function () {
+        $('#div_digital_product_upload').css('visibility', 'visible');
+        $('.div-expiration-time').show();
+    });
 });

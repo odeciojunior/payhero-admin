@@ -160,15 +160,7 @@ class ProductsApiController extends Controller
             $data['name']               = FoxUtils::removeSpecialChars($data['name']);
             $data['description']        = FoxUtils::removeSpecialChars($data['description']);
 
-            if (env('APP_ENV') == 'local') {
-                $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
-            } else {
-                unset($data['type_enum']);
-                unset($data['url_expiration_time']);
-                if (!empty($data['digital_product_url'])) {
-                    unset($data['digital_product_url']);
-                }
-            }
+            $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
 
             $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
             $data['category_id'] = $category->id;
@@ -196,19 +188,17 @@ class ProductsApiController extends Controller
                     report($e);
                 }
             }
-            if (env('APP_ENV') == 'local') {
-                if (!empty($data['digital_product_url'])) {
-                    try {
-                        $amazonPath = $this->getAmazonFileService()
-                                           ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
+            if (!empty($data['digital_product_url'])) {
+                try {
+                    $amazonPath = $this->getAmazonFileService()
+                                       ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
 
-                        $product->update([
-                                             'digital_product_url' => $amazonPath,
-                                         ]);
-                    } catch (Exception $e) {
-                        Log::warning('ProductController - store - Erro ao enviar anexo de produto digital');
-                        report($e);
-                    }
+                    $product->update([
+                                         'digital_product_url' => $amazonPath,
+                                     ]);
+                } catch (Exception $e) {
+                    Log::warning('ProductController - store - Erro ao enviar anexo de produto digital');
+                    report($e);
                 }
             }
 
@@ -218,7 +208,6 @@ class ProductsApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar produto (ProductsApiController - store)');
             report($e);
-            dd($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
@@ -335,15 +324,8 @@ class ProductsApiController extends Controller
 
                     $data['name']        = FoxUtils::removeSpecialChars($data['name']);
                     $data['description'] = FoxUtils::removeSpecialChars($data['description']);
-                    if (env('APP_ENV') == 'local') {
-                        $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
-                    } else {
-                        unset($data['type_enum']);
-                        unset($data['url_expiration_time']);
-                        if (!empty($data['digital_product_url'])) {
-                            unset($data['digital_product_url']);
-                        }
-                    }
+
+                    $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
 
                     $product->update($data);
 
@@ -374,19 +356,17 @@ class ProductsApiController extends Controller
                                                     ], 400);
                         }
                     }
-                    if (env('APP_ENV') == 'local') {
-                        if (!empty($data['digital_product_url'])) {
-                            try {
-                                $amazonPath = $this->getAmazonFileService()
-                                                   ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
+                    if (!empty($data['digital_product_url'])) {
+                        try {
+                            $amazonPath = $this->getAmazonFileService()
+                                               ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
 
-                                $product->update([
-                                                     'digital_product_url' => $amazonPath,
-                                                 ]);
-                            } catch (Exception $e) {
-                                Log::warning('ProductController - update - Erro ao enviar anexo de produto digital');
-                                report($e);
-                            }
+                            $product->update([
+                                                 'digital_product_url' => $amazonPath,
+                                             ]);
+                        } catch (Exception $e) {
+                            Log::warning('ProductController - update - Erro ao enviar anexo de produto digital');
+                            report($e);
                         }
                     }
 
