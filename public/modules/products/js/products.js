@@ -90,7 +90,6 @@ $(document).ready(function () {
                             defaultFile: response.data.product.digital_product_url,
                         });
                         if(response.data.product.digital_product_url != ''){
-                            console.log('asfsf');
                             $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
                             $(".btn-view-product-url").show();
                         }
