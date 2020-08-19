@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
@@ -358,6 +359,13 @@ class TrackingService
                 }
             );
         }
+
+        $productPlanSales->whereHas(
+            'product',
+            function ($query) use ($filters) {
+                $query->where('type_enum', (new Product)->present()->getType('physical'));
+            }
+        );
 
         return $productPlanSales;
     }

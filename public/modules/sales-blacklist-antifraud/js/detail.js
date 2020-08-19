@@ -26,7 +26,9 @@ $(() => {
             renderSale(sale);
             getProducts(sale.id);
             getClient(sale.customer_id);
-            getDelivery(sale.delivery_id);
+            if (sale.delivery_id != '') {
+                getDelivery(sale.delivery_id);
+            }
             getCheckout(sale.checkout_id);
 
         }
@@ -38,7 +40,11 @@ $(() => {
 
         let status = $(".modal-body-detalhes-black-antifraud #status");
         status.html('').append(`<img style='width: 50px;' src='/modules/global/img/cartoes/${sale.flag}.png' alt='Cartao utilizado'>`);
-
+        if (sale.delivery_id != '') {
+            $('#div_delivery').css('display', 'block');
+        } else {
+            $('#div_delivery').css('display', 'none');
+        }
     }
 
     function getProducts(saleId) {

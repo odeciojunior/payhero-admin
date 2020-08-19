@@ -279,7 +279,9 @@ class SalesRecoveryService
 
         $customer->document = FoxUtils::getDocument($customer->document);
 
-        $delivery->zip_code = FoxUtils::getCep($delivery->zip_code);
+        if(!empty($delivery)){
+            $delivery->zip_code = FoxUtils::getCep($delivery->zip_code);
+        }
 
         return [
             'checkout' => $checkout,

@@ -59,14 +59,16 @@
                             <input id="customer-email" type="email" name="customer-email" class="detail-input mr-2 table-title gray fake-label" readonly>
                         </div>
                         <span id="customer-document" class="table-title gray"></span>
-                        <h4> Entrega </h4>
-                        <span id="delivery-address" class="table-title gray"></span>
-                        <br>
-                        <span id="delivery-neighborhood" class="table-title gray"></span>
-                        <br>
-                        <span id="delivery-zipcode" class="table-title gray"></span>
-                        <br>
-                        <span id="delivery-city" class="table-title gray"></span>
+                        <div id='div_delivery' style='display:none;'>
+                            <h4> Entrega </h4>
+                            <span id="delivery-address" class="table-title gray"></span>
+                            <br>
+                            <span id="delivery-neighborhood" class="table-title gray"></span>
+                            <br>
+                            <span id="delivery-zipcode" class="table-title gray"></span>
+                            <br>
+                            <span id="delivery-city" class="table-title gray"></span>
+                        </div>
                     </div>
                     <!-- DETALHES  -->
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">

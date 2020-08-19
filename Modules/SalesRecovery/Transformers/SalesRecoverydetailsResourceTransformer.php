@@ -36,10 +36,10 @@ class SalesRecoverydetailsResourceTransformer extends JsonResource
         }
 
         $delivery = [
-            'street'   => $this['delivery']->street,
-            'zip_code' => $this['delivery']->zip_code,
-            'city'     => $this['delivery']->city,
-            'state'    => $this['delivery']->state,
+            'street'   => $this['delivery']->street ?? '',
+            'zip_code' => $this['delivery']->zip_code ?? '',
+            'city'     => $this['delivery']->city ?? '',
+            'state'    => $this['delivery']->state ?? '',
         ];
 
         $checkout = [

@@ -216,14 +216,16 @@
                             <a class="pointer d-inline-flex align-items-center" id="btnSaleReSendEmail">
                                 <i class="material-icons">email</i><b class="ml-2">Reenviar e-mail</b></a>
                         </div>
-                        <h4> Entrega </h4>
-                        <span id="delivery-address" class="table-title gray"></span>
-                        <br>
-                        <span id="delivery-neighborhood" class="table-title gray"></span>
-                        <br>
-                        <span id="delivery-zipcode" class="table-title gray"></span>
-                        <br>
-                        <span id="delivery-city" class="table-title gray"></span>
+                        <div id='div_delivery' style='display:none;'>
+                            <h4 class='delivery-title'> Entrega </h4>
+                            <span id="delivery-address" class="table-title gray"></span>
+                            <br>
+                            <span id="delivery-neighborhood" class="table-title gray"></span>
+                            <br>
+                            <span id="delivery-zipcode" class="table-title gray"></span>
+                            <br>
+                            <span id="delivery-city" class="table-title gray"></span>
+                        </div>
                         <div id='div_tracking_code' style='display:none;'>
                             <h4> Rastreio </h4>
                             <table class='table table-striped mb-10'>
@@ -323,5 +325,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=14') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=15') }}"></script>
 @endpush

@@ -13,6 +13,7 @@ use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\ShopifyIntegration;
@@ -435,6 +436,15 @@ class SaleService
             foreach ($sale->productsPlansSale as &$pps) {
                 $product = $pps->product->toArray();
                 $product['amount'] = $pps->amount;
+                if($product['type_enum'] == (new Product)->present()->getType('digital') && !empty($product['digital_product_url'])){
+                    $product['digital_product_url'] = FoxUtils::getAwsSignedUrl($product['digital_product_url'],$product['url_expiration_time']);
+                    $pps->update([
+                                     'temporary_url' => $product['digital_product_url'],
+                                 ]);
+                } else {
+                    $product['digital_product_url'] = '';
+                }
+
                 $productsSale[] = $product;
             }
         }

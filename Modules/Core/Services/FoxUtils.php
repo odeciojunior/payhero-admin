@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Aws\S3\S3Client;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Illuminate\Encryption\Encrypter;
@@ -402,6 +403,46 @@ class FoxUtils
         }
 
         return [$first_name, $last_name];
+    }
+
+    /**
+     * @param $url
+     * @param null $expiration
+     * @return string
+     */
+    public static function getAwsSignedUrl($url, $expiration = null)
+    {
+        try {
+            if (!empty($url)) {
+                $urlKey = str_replace('https://cloudfox-digital-products.s3.amazonaws.com/', '', $url);
+
+                $client = new S3Client([
+                                           'credentials' => [
+                                               'key'    => env('AWS_ACCESS_KEY_ID'),
+                                               'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                                           ],
+                                           'region'      => env('AWS_DEFAULT_REGION'),
+                                           'version'     => '2006-03-01',
+                                       ]);
+
+                $command = $client->getCommand('GetObject', [
+                    'Bucket' => env('AWS_BUCKET'),
+                    'Key'    => $urlKey,
+                ]);
+
+                $urlExpirationTime = $expiration ?? 24;
+
+                $signedRequest = $client->createPresignedRequest($command, "+$urlExpirationTime hours");
+
+                $signedUrl = (string) $signedRequest->getUri();
+
+                return $signedUrl;
+            }
+            return '';
+        } catch (Exception $ex) {
+            return '';
+
+        }
     }
 }
 

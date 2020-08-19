@@ -386,6 +386,11 @@ $(document).ready(function () {
         $("#client-city-state").html('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
         $("#sale-motive").html('Motivo: ' + data.client.error);
 
+        if (data.method == 'boletoCartao' && (data.delivery.street == '' && data.delivery.zip_code == '' && data.delivery.city == '' && data.delivery.state == '')) {
+            $('#div_delivery').hide();
+        } else {
+            $('#div_delivery').show();
+        }
         if (!isEmpty(data.link)) {
             $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + data.link + '" title="Copiar link"><i class="material-icons gradient" style="font-size:17px;">file_copy</i> </a> ');
         } else {
@@ -413,7 +418,6 @@ $(document).ready(function () {
         /**
          * Fim dados do checkout
          */
-
 
         $('#modal_detalhes').modal('show');
 

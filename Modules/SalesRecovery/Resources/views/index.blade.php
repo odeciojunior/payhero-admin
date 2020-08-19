@@ -181,12 +181,14 @@
                                             <span id='client-email' class="table-title gray clear-fields"> </span>
                                             <br>
                                             <span id='client-document' class="table-title gray clear-fields"></span>
-                                            <h4> Entrega </h4>
-                                            <span id="client-street" class="table-title gray clear-fields"> </span>
-                                            <br>
-                                            <span id='client-zip-code' class="table-title gray clear-fields"> </span>
-                                            <br>
-                                            <span id='client-city-state' class="table-title gray clear-fields"></span>
+                                            <div id='div_delivery' style='display:none;'>
+                                                <h4> Entrega </h4>
+                                                <span id="client-street" class="table-title gray clear-fields"> </span>
+                                                <br>
+                                                <span id='client-zip-code' class="table-title gray clear-fields"> </span>
+                                                <br>
+                                                <span id='client-city-state' class="table-title gray clear-fields"></span>
+                                            </div>
                                         </div>
                                         <!-- DETALHES  -->
                                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -239,7 +241,7 @@
     </div>
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=3') }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=4') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
 

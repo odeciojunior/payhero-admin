@@ -78,6 +78,7 @@ class ProductPlanSale extends Model
         'tracking_code',
         'tracking_type_enum',
         'tracking_status_enum',
+        'temporary_url',
         'created_at',
         'updated_at',
         'deleted_at',

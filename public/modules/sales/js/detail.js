@@ -229,9 +229,11 @@ $(() => {
 
         getClient(sale.client_id);
 
-        getProducts(sale.id);
+        getProducts(sale);
 
-        getDelivery(sale.delivery_id);
+        if (sale.delivery_id != '') {
+            getDelivery(sale.delivery_id);
+        }
 
         getCheckout(sale.checkout_id);
 
@@ -480,6 +482,11 @@ $(() => {
             $('#thank-page-url').hide();
             $('.btn-copy-thank-page-url').hide();
         }
+        if (sale.delivery_id != '') {
+            $('#div_delivery').css('display', 'block');
+        } else {
+            $('#div_delivery').css('display', 'none');
+        }
     }
 
     function getNotazz(invoices) {
@@ -675,7 +682,7 @@ $(() => {
     function getProducts(sale) {
         $.ajax({
             method: "GET",
-            url: '/api/products/saleproducts/' + sale,
+            url: '/api/products/saleproducts/' + sale.id,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -714,7 +721,7 @@ $(() => {
             $("#table-product").html(div);
 
             //Tabela de produtos Tracking Code
-            if (value.sale_status == 1 || value.sale_status == 4) {
+            if ((value.sale_status == 1 || value.sale_status == 4) && sale.delivery_id != '') {
                 let data = `<tr>
                                 <td>
                                     <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
