@@ -74,7 +74,7 @@
                                                     <label for="physical">Físico</label>
                                                 </div>
                                                 <div class="radio-custom radio-primary d-flex">
-                                                    <input type="radio" id="digital" name="format" value="2" {{env('APP_ENV') != 'local' ? 'disabled' : ''}}>
+                                                    <input type="radio" id="digital" name="format" value="2">
                                                     <label for="digital">Digital (em breve)</label>
                                                 </div>
                                             </div>

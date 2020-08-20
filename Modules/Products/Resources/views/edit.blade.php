@@ -81,11 +81,11 @@
                                                 <label for="name">Tipo</label>
                                                 <div class="d-flex justify-content-start">
                                                     <div class="radio-custom radio-primary pr-20">
-                                                        <input type="radio" id="physical" name="format" value="1" checked>
+                                                        <input type="radio" id="physical" name="format" value="1">
                                                         <label for="physical">Físico</label>
                                                     </div>
                                                     <div class="radio-custom radio-primary ">
-                                                        <input type="radio" id="digital" name="format" value="2" {{env('APP_ENV') != 'local' ? 'disabled' : ''}}>
+                                                        <input type="radio" id="digital" name="format" value="2">
                                                         <label for="digital">Digital (em breve)</label>
                                                     </div>
                                                 </div>
@@ -126,18 +126,23 @@
 {{--                                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" id='price' value="" autocomplete="off">--}}
 {{--                                            </div>--}}
                                             <div id="div_next_step" class="form-group col-lg-12 justify-content-between mt-10">
-                                                <a style='display:none;' class="btn btn-danger delete-product white" productname='' product="" data-toggle="modal" data-target="#modal-delete">
-                                                    <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
-                                                </a>
+
                                                 <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
                                                 <button id="save_digital_product" type="submit" class="btn btn-success">Salvar</button>
                                             </div>
+
                                         </div>
                                     </div>
+                                    <div class='col-lg-12'>
+                                        <a style='display:none;' class="btn btn-danger delete-product white float-right" productname='' product="" data-toggle="modal" data-target="#modal-delete">
+                                            <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
+                                        </a>
+                                    </div>
                                 </div>
+
                             </div>
                             <div class="tab-pane fade p-30" id="nav-logistic" role="tabpanel" aria-labelledby="nav-logistic-tab">
                                 <div class="row mt50">
@@ -212,7 +217,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=9') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=10') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
