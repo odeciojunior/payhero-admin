@@ -121,13 +121,14 @@ $(document).ready(function () {
                 /**
                  * Dados Residenciais
                  */
-                if (statusArray[response.user.address_document_translate] === 'Aprovado') {
-                    $('.dados-residenciais').attr('disabled', 'disabled');
+                // if (statusArray[response.user.address_document_translate] === 'Aprovado') {
+                //     $('.dados-residenciais').attr('disabled', 'disabled');
+                //
+                // } else {
+                //     $("#text-alert-documents").show();
+                //     $('.dados-residenciais').removeAttr('disabled');
+                // }
 
-                } else {
-                    $("#text-alert-documents").show();
-                    $('.dados-residenciais').removeAttr('disabled');
-                }
                 $('#zip_code').val(response.user.zip_code);
                 $('#street').val(response.user.street);
                 $('#number').val(response.user.number);
@@ -220,6 +221,20 @@ $(document).ready(function () {
 
                 if (response.user.personal_document_translate === 'approved' || response.user.personal_document_translate === 'analyzing') {
                     $('#document').attr('disabled', 'disabled');
+                    $('#document_number').attr('disabled', 'disabled');
+                    $('#document_issuer').attr('disabled', 'disabled');
+                    $('#document_issue_date').attr('disabled', 'disabled');
+                    $('#document_expiration_date').attr('disabled', 'disabled');
+                    $('#document_issuer_state').attr('disabled', 'disabled');
+                    $('#sex').attr('disabled', 'disabled');
+                    $('#nationality').attr('disabled', 'disabled');
+                    $('#mother_name').attr('disabled', 'disabled');
+                    $('#father_name').attr('disabled', 'disabled');
+                    $('#birth_country').attr('disabled', 'disabled');
+                    $('#birth_state').attr('disabled', 'disabled');
+                    $('#birth_city').attr('disabled', 'disabled');
+                    $('#birth_place').attr('disabled', 'disabled');
+
                     $("#personal-document-id").hide();
                 }
 
@@ -393,6 +408,19 @@ $(document).ready(function () {
     $("#profile_update_form").on("submit", function (event) {
         $('.dados-residenciais').removeAttr('disabled');
         $('#document').removeAttr('disabled');
+        $('#document_number').removeAttr('disabled');
+        $('#document_issuer').removeAttr('disabled');
+        $('#document_issue_date').removeAttr('disabled');
+        $('#document_expiration_date').removeAttr('disabled');
+        $('#document_issuer_state').removeAttr('disabled');
+        $('#sex').removeAttr('disabled');
+        $('#nationality').removeAttr('disabled');
+        $('#mother_name').removeAttr('disabled');
+        $('#father_name').removeAttr('disabled');
+        $('#birth_country').removeAttr('disabled');
+        $('#birth_state').removeAttr('disabled');
+        $('#birth_city').removeAttr('disabled');
+        $('#birth_place').removeAttr('disabled');
 
         event.preventDefault();
         if ($('#marital_status').val() == 'married' && $('#spouse_name').val() == '') {

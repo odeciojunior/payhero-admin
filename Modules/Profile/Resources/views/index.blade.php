@@ -149,7 +149,7 @@
                                                     <div class="form-group">
                                                         <label for="document_issuer_state">Estado emissor identidade</label>
                                                         {{--                                                <input name="document_issuer_state" value="" type="text" class="input-pad" id="document_issuer_state" placeholder="Estado do emissor do documento">--}}
-                                                        <select id="document_issuer_state" name='document_issuer_state' class="form-control select-pad">
+                                                        <select id="document_issuer_state" name='document_issuer_state' class="select-pad">
                                                             <option value="">Selecione</option>
                                                             <option value="São Paulo">São Paulo</option>
                                                             <option value="Minas Gerais">Minas Gerais</option>
@@ -190,7 +190,7 @@
                                                 </div>
                                                 <div class='col-lg-4'>
                                                     <label for="sex">Sexo</label>
-                                                    <select id="sex" name='sex' class="form-control select-pad">
+                                                    <select id="sex" name='sex' class="select-pad">
                                                         <option value="">Selecione</option>
                                                         <option value="male">Masculino</option>
                                                         <option value="female">Feminino</option>
@@ -198,7 +198,7 @@
                                                 </div>
                                                 <div class='col-lg-4'>
                                                     <label for="nationality">Nacionalidade</label>
-                                                    <select id="nationality" name='nationality' class="form-control select-pad" style='width:100%' data-plugin="select2">
+                                                    <select id="nationality" name='nationality' class="select-pad" style='width:100%' data-plugin="select2">
                                                         <option value="">Selecione</option>
                                                     </select>
                                                 </div>
@@ -232,7 +232,7 @@
                                                     <div class="form-group">
                                                         <label for="birth_country">País de nascimento</label>
                                                         {{--                                                <input name="birth_country" value="" type="text" class="input-pad" id="birth_country" placeholder="País de nascimento">--}}
-                                                        <select id="birth_country" name='birth_country' class="form-control select-pad" style='width:100%' data-plugin="select2">
+                                                        <select id="birth_country" name='birth_country' class="select-pad" style='width:100%' data-plugin="select2">
                                                             <option value="">Selecione</option>
                                                         </select>
                                                     </div>
@@ -874,7 +874,7 @@
     </style>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js?v=11')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js?v=12')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

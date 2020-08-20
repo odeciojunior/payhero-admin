@@ -171,6 +171,18 @@ class ProfileApiController
                         $company->update(['company_document' => $user->document]);
                     }
                 }
+                if ($user->address_document_status == $user->present()->getAddressDocumentStatus('approved')) {
+                    if (!empty($userUpdateChanges['zip_code']) ||
+                        !empty($userUpdateChanges['street']) ||
+                        !empty($userUpdateChanges['number']) ||
+                        !empty($userUpdateChanges['neighborhood']) ||
+                        !empty($userUpdateChanges['complement']) ||
+                        !empty($userUpdateChanges['city']) ||
+                        !empty($userUpdateChanges['state']) ||
+                        !empty($userUpdateChanges['country'])) {
+                        $user->update(['address_document_status' => $user->present()->getAddressDocumentStatus('pending')]);
+                    }
+                }
             }
 
             $userPhoto = $request->file('profile_photo');
