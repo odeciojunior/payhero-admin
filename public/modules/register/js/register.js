@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    verifyInviteRegister();
+    // verifyInviteRegister();
     function verifyInviteRegister() {
         let inviteCode = $(window.location.pathname.split('/')).get(-1);
 
@@ -198,6 +198,9 @@ $(document).ready(function () {
         }
         loadingOnScreenRemove();
 
+        // Envia SMS
+        // sendTokenSMS($('#phone').val());
+
         currentPage = 'password';
         $(".div1").hide();
         $(".div2").show();
@@ -248,6 +251,11 @@ $(document).ready(function () {
                 account: $('#account').val(),
                 account_digit: $('#account_digit').val(),
 
+                // Token
+                // tokenEmail: $('#tokenEmail').val(),
+                // email_verified: $('#emailCheck').val(),
+                // tokenCellphone: $('#tokenCellphone').val(),
+                // cellphone_verified: $('#cellphoneCheck').val(),
             },
             error: function (_error) {
                 function error(_x) {
@@ -732,6 +740,63 @@ $(document).ready(function () {
         });
     });
 
+    $("#tokenEmail").on('input', function () {
+        var token = $(this).val();
+        if (token.length !== 6) return false;
+
+        $.ajax({
+            method: "POST",
+            url: "/api/register/matchemailverifycode",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                verifyCode: token,
+            },
+            error: function error(response) {
+                alertCustom('error', response.responseJSON.message)
+            },
+            success: function success(response) {
+                if (response.checked === true) {
+                    $('#emailCheck').val(1);
+                    alertCustom('success', response.message)
+                } else {
+                    $('#emailCheck').val(0);
+                    alertCustom('error', response.message)
+                }
+            }
+        })
+    })
+
+    $("#tokenCellphone").on('input', function () {
+        var token = $(this).val();
+        if (token.length !== 6) return false;
+
+        $.ajax({
+            method: "POST",
+            url: "/api/register/matchcellphoneverifycode",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                verifyCode: token,
+            },
+            error: function error(response) {
+                alertCustom('error', response.responseJSON.message)
+            },
+            success: function success(response) {
+
+                if (response.checked === true) {
+                    $('#cellphoneCheck').val(1);
+                    alertCustom('success', response.message)
+                } else {
+                    $('#cellphoneCheck').val(0);
+                    alertCustom('error', response.message)
+                }
+            }
+        })
+    })
+
     function registerComplete() {
 
         location.href = "/dashboard";
@@ -800,11 +865,52 @@ $(document).ready(function () {
                 if (response.email_exist == 'true') {
                     result = true;
                 } else {
+                    // sendTokenEmail(email)
                     result = false;
                 }
             }
         });
         return result;
+    }
+    function sendTokenEmail(email) {
+        $.ajax({
+            method: "POST",
+            url: "/api/register/sendemailcode",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {email: email},
+            error: function error(response) {
+                alertCustom('error', response.responseJSON.message )
+            },
+            success: function success(response) {
+                if (response.sent === true) {
+                    alertCustom('success', response.message )
+                } else {
+                    alertCustom('error', response.message )
+                }
+            }
+        })
+    }
+    function sendTokenSMS(cellphone) {
+        $.ajax({
+            method: "POST",
+            url: "/api/register/sendcellphonecode",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {cellphone: cellphone},
+            error: function error(response) {
+                alertCustom('error', response.responseJSON.message )
+            },
+            success: function success(response) {
+                if (response.sent === true) {
+                    alertCustom('success', response.message )
+                } else {
+                    alertCustom('error', response.message )
+                }
+            }
+        })
     }
     $.ajax({
         method: "GET",

@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Services\SmsService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
@@ -305,6 +307,176 @@ class RegisterApiController extends Controller
                     'email_exist' => 'false',
                 ]
             );
+        }
+    }
+
+    public function sendEmailCode(Request $request) {
+
+        $data = $request->all();
+        $email = $data["email"] ?? null;
+
+        $verifyCode = random_int(100000, 999999);
+        $data = [
+            "verify_code" => $verifyCode,
+        ];
+
+        /** @var SendgridService $sendgridService */
+        $sendgridService = app(SendgridService::class);
+
+        if ($sendgridService->sendEmail(
+            'noreply@cloudfox.net',
+            'cloudfox',
+            $email,
+            '$data[\'firstname\']',
+            "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
+            $data
+        )) {
+                return response()->json(
+                    [
+                        "sent" => true,
+                        "message" => "Email enviado com sucesso!",
+                    ],
+                    200
+                )
+                    ->withCookie("emailverifycode", $verifyCode, 15);
+            }
+
+        return response()->json(
+            [
+                "message" => "Erro ao enviar email, tente novamente mais tarde!",
+            ],
+            400
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function matchEmailVerifyCode(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $verifyCode = $data["verifyCode"] ?? null;
+            if (empty($verifyCode)) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação não pode ser vazio!',
+                    ],
+                    400
+                );
+            }
+            $cookie = Cookie::get("emailverifycode");
+            if ($verifyCode != $cookie) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação inválido!',
+                    ],
+                    400
+                );
+            }
+
+            return response()->json(
+                [
+                    'checked' => true,
+                    "message" => "Email verificado com sucesso!",
+                ],
+                200
+            )
+                ->withCookie(Cookie::forget("emailverifycode"));
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro'
+                ],
+                403);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function sendCellphoneCode(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $cellphone = $data["cellphone"] ?? null;
+            if (FoxUtils::isEmpty($cellphone)) {
+                return response()->json(
+                    [
+                        'message' => 'Telefone não pode ser vazio!',
+                    ],
+                    400
+                );
+            }
+
+            $verifyCode = random_int(100000, 999999);
+
+            $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
+
+            $message = "Código de verificação CloudFox - " . $verifyCode;
+            $smsService = new SmsService();
+            $smsService->sendSms($cellphone, $message, ' ', 1);
+
+            return response()->json(
+                [
+                    "sent" => true,
+                    "message" => "Mensagem enviada com sucesso!",
+                ],
+                200
+            )
+                ->withCookie("cellphoneverifycode", $verifyCode, 15);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function matchCellphoneVerifyCode(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $verifyCode = $data["verifyCode"] ?? null;
+            if (empty($verifyCode)) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação não pode ser vazio!',
+                    ],
+                    400
+                );
+            }
+
+            $cookie = Cookie::get("cellphoneverifycode");
+
+            if ($verifyCode != $cookie) {
+                return response()->json(
+                    [
+                        'message' => 'Código de verificação inválido!',
+                    ],
+                    400
+                );
+            }
+
+            return response()->json(
+                [
+                    'checked' => true,
+                    "message" => "Telefone verificado com sucesso!",
+                ],
+                200
+            )
+                ->withCookie(Cookie::forget("cellphoneverifycode"));
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro'], 403);
         }
     }
 
