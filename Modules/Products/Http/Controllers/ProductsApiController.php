@@ -496,28 +496,7 @@ class ProductsApiController extends Controller
             $requestData = $request->all();
 
             if (!empty($requestData['digital_product_url'])) {
-
-                $urlKey = str_replace('https://cloudfox-digital-products.s3.amazonaws.com/', '', $requestData['digital_product_url']);
-
-                $client = new S3Client([
-                                           'credentials' => [
-                                               'key'    => env('AWS_ACCESS_KEY_ID'),
-                                               'secret' => env('AWS_SECRET_ACCESS_KEY'),
-                                           ],
-                                           'region'      => env('AWS_DEFAULT_REGION'),
-                                           'version'     => '2006-03-01',
-                                       ]);
-
-                $command = $client->getCommand('GetObject', [
-                    'Bucket' => env('AWS_BUCKET'),
-                    'Key'    => $urlKey,
-                ]);
-
-                $urlExpirationTime = $requestData['url_expiration_time'] ?? 24;
-
-                $signedRequest = $client->createPresignedRequest($command, "+$urlExpirationTime hours");
-
-                $signedUrl = (string) $signedRequest->getUri();
+                $signedUrl = FoxUtils::getAwsSignedUrl($requestData['digital_product_url'], $requestData['url_expiration_time']);
 
                 return response()->json([
                                             'signed_url' => $signedUrl,

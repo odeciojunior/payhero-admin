@@ -14,6 +14,15 @@ class EditProductResource extends JsonResource
      */
     public function toArray($request)
     {
+        $urlExpirationTime = null;
+        if ($this->resource['product']->type_enum == 2) {
+            if (!empty($this->resource['product']->url_expiration_time)) {
+                $urlExpirationTime = $this->resource['product']->url_expiration_time;
+            } else {
+                $urlExpirationTime = 24;
+            }
+        }
+
         $product    = [
             'id'                  => $this->resource['product']->id_code,
             'name'                => $this->resource['product']->name,
@@ -31,7 +40,7 @@ class EditProductResource extends JsonResource
             'currency_type_enum'  => $this->resource['product']->currency_type_enum,
             'type_enum'           => $this->resource['product']->type_enum,
             'digital_product_url' => $this->resource['product']->digital_product_url ?? '',
-            'url_expiration_time' => $this->resource['product']->url_expiration_time,
+            'url_expiration_time' => $urlExpirationTime,
         ];
         $categories = [];
         foreach ($this->resource['categories'] as $category) {
