@@ -244,7 +244,7 @@ class WithdrawalsApiController extends Controller
                     function ($query) {
                         $query->where('user_id', auth()->user()->account_owner_id);
                     }
-                )->first();
+                )->where('status', $withdrawalModel->present()->getStatus('transfered'))->first();
                 if (empty($userWithdrawal)) {
                     $isFirstUserWithdrawal = true;
                 }
