@@ -163,6 +163,10 @@ $(document).ready(function () {
                             alertCustom('error', 'Selecione as dimensões da imagem');
                             return false;
                         }
+                        if ($('#digital').is(':checked') && $('#url_expiration_time').val() == '') {
+                            alertCustom('error', 'Preencha o campo Tempo de expiração da url');
+                            return false;
+                        }
                         event.preventDefault();
 
                         let myForm = document.getElementById('my-form');
