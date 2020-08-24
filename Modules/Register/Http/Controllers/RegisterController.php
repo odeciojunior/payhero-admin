@@ -19,6 +19,12 @@ class RegisterController extends Controller
 {
     public function create(Request $request)
     {
+        return view('register::create');
+    }
+
+    // Método que permite o registro apenas com o convite
+    public function createInvitation(Request $request)
+    {
         if ($request->segment(2) == 'nw2usr3cfx') {
             return view('register::create');
         }
@@ -37,7 +43,6 @@ class RegisterController extends Controller
 
     public function loginAsSomeUser($userId)
     {
-
         auth()->loginUsingId($userId);
 
         return response()->redirectTo('/dashboard');
