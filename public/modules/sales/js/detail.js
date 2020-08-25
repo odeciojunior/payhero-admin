@@ -296,7 +296,7 @@ $(() => {
                 status.append("<span class='ml-2 badge badge-primary'>" + sale.status + "</span>");
                 break;
         }
-        if (sale.is_chargeback_recovered) {
+        if (sale.is_chargeback_recovered && sale.status == 1) {
             $('#chargeback-recovered').show();
         } else {
             $('#chargeback-recovered').hide();
