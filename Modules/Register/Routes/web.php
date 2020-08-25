@@ -20,13 +20,13 @@ Route::group(
     ],
     function() {
         Route::post('/', 'RegisterApiController@store');
-        Route::post('/verifycpf', 'RegisterApiController@verifyCpf');
-        Route::post('/verifycnpj', 'RegisterApiController@verifyCnpj');
-        Route::post('/verifyemail', 'RegisterApiController@verifyEmail');
-        Route::post('/sendemailcode', 'RegisterApiController@sendEmailCode');
-        Route::post('/matchemailverifycode', 'RegisterApiController@matchEmailVerifyCode');
-        Route::post('/sendcellphonecode', 'RegisterApiController@sendCellphoneCode');
-        Route::post('/matchcellphoneverifycode', 'RegisterApiController@matchCellphoneVerifyCode');
-        Route::get('/getbanks', 'RegisterApiController@getBanks');
+        Route::post('/match-email-verify-code', 'RegisterApiController@matchEmailVerifyCode');
+        Route::post('/match-cellphone-verify-code', 'RegisterApiController@matchCellphoneVerifyCode');
+        Route::get('/verify-cpf', 'RegisterApiController@verifyCpf');
+        Route::get('/verify-cnpj', 'RegisterApiController@verifyCnpj');
+        Route::get('/verify-email', 'RegisterApiController@verifyEmail');
+        Route::get('/send-email-code', 'RegisterApiController@sendEmailCode');
+        Route::get('/send-cellphone-code', 'RegisterApiController@sendCellphoneCode');
+        Route::get('/get-banks', 'RegisterApiController@getBanks');
     }
 );

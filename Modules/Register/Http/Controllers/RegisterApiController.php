@@ -12,7 +12,12 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
 use Modules\Core\Entities\UserInformation;
+use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Services\SmsService;
+use Modules\Register\Http\Requests\ValidateCnpjRequest;
+use Modules\Register\Http\Requests\ValidateCpfRequest;
+use Modules\Register\Http\Requests\ValidateEmailRequest;
+use Modules\Register\Http\Requests\ValidatePhoneNumberRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
@@ -196,6 +201,19 @@ class RegisterApiController extends Controller
                 }
             }
 
+            /**
+             * Event Send Welcome Email
+             */
+            $dataEmail = [
+                'domainName' => $requestData['domainName'] ?? 'cloudfox.net',
+                'clientName' => $requestData['name'] ?? '',
+                'clientEmail' => $requestData['email'],
+                'templateId' => 'd-267dbdcbcc5a454e94a5ae3ffb704505',
+                'bodyEmail' => $requestData,
+            ];
+
+            event(new UserRegisteredEvent($dataEmail));
+
             return response()->json(
                 [
                     'success'      => 'true',
@@ -204,41 +222,17 @@ class RegisterApiController extends Controller
                 ]
             );
         } catch (Exception $ex) {
-            report($ex);
+            dd($ex);
 
             return response()->json(['success' => 'false', 'message' => 'revise os dados informados']);
         }
     }
 
     /**
-     * Send welcome e-mail
-     */
-    public function welcomeEmail()
-    {
-        $userEmail       = auth()->user()->email;
-        $userName        = auth()->user()->name;
-        $sendgridService = new SendgridService();
-        $data            = [
-            "name" => $userName,
-        ];
-        $emailValidated  = FoxUtils::validateEmail($userEmail);
-        if ($emailValidated) {
-            $sendgridService->sendEmail(
-                'noreply@cloudfox.net',
-                'cloudfox',
-                $userEmail,
-                $userName,
-                'd-267dbdcbcc5a454e94a5ae3ffb704505',
-                $data
-            );
-        }
-    }
-
-    /**
-     * @param Request $request
+     * @param ValidateCpfRequest $request
      * @return JsonResponse
      */
-    public function verifyCpf(Request $request)
+    public function verifyCpf(ValidateCpfRequest $request)
     {
         $data        = $request->all();
         $userService = new UserService();
@@ -260,10 +254,11 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ValidateCnpjRequest $request
      * @return JsonResponse
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
-    public function verifyCnpj(Request $request)
+    public function verifyCnpj(ValidateCnpjRequest $request)
     {
         $data           = $request->all();
         $companyService = new CompanyService();
@@ -285,10 +280,10 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ValidateEmailRequest $request
      * @return JsonResponse
      */
-    public function verifyEmail(Request $request)
+    public function verifyEmail(ValidateEmailRequest  $request)
     {
         $data      = $request->all();
         $userModel = new User();
@@ -310,7 +305,12 @@ class RegisterApiController extends Controller
         }
     }
 
-    public function sendEmailCode(Request $request) {
+    /**
+     * @param ValidateEmailRequest $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function sendEmailCode(ValidateEmailRequest $request) {
 
         $data = $request->all();
         $email = $data["email"] ?? null;
@@ -350,22 +350,15 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ValidateEmailRequest $request
      * @return JsonResponse
      */
-    public function matchEmailVerifyCode(Request $request)
+    public function matchEmailVerifyCode(ValidateEmailRequest $request)
     {
         try {
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
-            if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
+
             $cookie = Cookie::get("emailverifycode");
             if ($verifyCode != $cookie) {
                 return response()->json(
@@ -396,10 +389,10 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ValidatePhoneNumberRequest $request
      * @return JsonResponse
      */
-    public function sendCellphoneCode(Request $request)
+    public function sendCellphoneCode(ValidatePhoneNumberRequest  $request)
     {
         try {
             $data = $request->all();
@@ -437,22 +430,14 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ValidatePhoneNumberRequest $request
      * @return JsonResponse
      */
-    public function matchCellphoneVerifyCode(Request $request)
+    public function matchCellphoneVerifyCode(ValidatePhoneNumberRequest $request)
     {
         try {
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
-            if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
 
             $cookie = Cookie::get("cellphoneverifycode");
 

@@ -214,7 +214,9 @@ $(document).ready(function () {
         }
         loadingOnScreenRemove();
         let url = new URL(window.location.href).pathname;
-        let parameter = url.split("/")[2];
+        // Para usar o convite setar segundo parâmetro
+        // let parameter = url.split("/")[2];
+        let parameter = url.split("/")[1];
         $("#progress-bar-register").css('width', '99%');
         $(".div5").hide();
         $(".div6").show();
@@ -746,7 +748,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/api/register/matchemailverifycode",
+            url: "/api/register/match-email-verify-code",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -774,7 +776,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/api/register/matchcellphoneverifycode",
+            url: "/api/register/match-cellphone-verify-code",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -806,8 +808,8 @@ $(document).ready(function () {
         var result = '';
 
         $.ajax({
-            method: "POST",
-            url: "/api/register/verifycpf",
+            method: "GET",
+            url: "/api/register/verify-cpf",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -829,8 +831,8 @@ $(document).ready(function () {
         var result = '';
 
         $.ajax({
-            method: "POST",
-            url: "/api/register/verifycnpj",
+            method: "GET",
+            url: "/api/register/verify-cnpj",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -852,8 +854,8 @@ $(document).ready(function () {
         var result = '';
 
         $.ajax({
-            method: "POST",
-            url: "/api/register/verifyemail",
+            method: "GET",
+            url: "/api/register/verify-email",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -874,8 +876,8 @@ $(document).ready(function () {
     }
     function sendTokenEmail(email) {
         $.ajax({
-            method: "POST",
-            url: "/api/register/sendemailcode",
+            method: "GET",
+            url: "/api/register/send-email-code",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -894,8 +896,8 @@ $(document).ready(function () {
     }
     function sendTokenSMS(cellphone) {
         $.ajax({
-            method: "POST",
-            url: "/api/register/sendcellphonecode",
+            method: "GET",
+            url: "/api/register/send-cellphone-code",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -914,7 +916,7 @@ $(document).ready(function () {
     }
     $.ajax({
         method: "GET",
-        url: "/api/register/getbanks/",
+        url: "/api/register/get-banks/",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
