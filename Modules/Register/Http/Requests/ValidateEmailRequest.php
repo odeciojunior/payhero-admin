@@ -14,7 +14,7 @@ class ValidateEmailRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'             => 'required|unique:users|max:200',
+            'email'             => 'required|max:200',
         ];
     }
 

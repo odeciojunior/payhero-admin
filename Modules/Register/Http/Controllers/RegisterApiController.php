@@ -358,14 +358,7 @@ class RegisterApiController extends Controller
         try {
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
-            if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
+
             $cookie = Cookie::get("emailverifycode");
             if ($verifyCode != $cookie) {
                 return response()->json(
@@ -445,14 +438,6 @@ class RegisterApiController extends Controller
         try {
             $data = $request->all();
             $verifyCode = $data["verifyCode"] ?? null;
-            if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
 
             $cookie = Cookie::get("cellphoneverifycode");
 
