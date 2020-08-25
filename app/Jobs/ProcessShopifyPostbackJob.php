@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -76,7 +77,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
                             foreach ($fulfillment["line_items"] as $line_item) {
                                 //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
                                 $products = $saleProducts->where('shopify_variant_id', $line_item["variant_id"])
-                                    ->where('amount', $line_item["quantity"]);
+                                    ->where('amount', $line_item["quantity"])->where('type_enum', (new Product)->present()->getType('physical'));
                                 if ($products->count()) {
                                     foreach ($products as &$product) {
 
