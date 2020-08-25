@@ -222,7 +222,7 @@ class RegisterApiController extends Controller
                 ]
             );
         } catch (Exception $ex) {
-            dd($ex);
+            report($ex);
 
             return response()->json(['success' => 'false', 'message' => 'revise os dados informados']);
         }
