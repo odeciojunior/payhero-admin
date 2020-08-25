@@ -220,19 +220,19 @@ class NotazzService
                         //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
                         'DESTINATION_TAXTYPE' => 'F',
                         //F = Física, J = Jurídica, E = Estrangeiro
-                        'DESTINATION_STREET' => $sale->delivery->street,
+                        'DESTINATION_STREET' => $sale->delivery->street ?? 'Avenida General Afonseca',
                         //Rua do cliente
-                        'DESTINATION_NUMBER' => (($sale->delivery->number ?? 'S/N') == 0) ? 'S/N' : $sale->delivery->number,
+                        'DESTINATION_NUMBER' => (($sale->delivery->number ?? 'S/N') == 0) ? 'S/N' : $sale->delivery->number ?? '1475',
                         //Número
-                        'DESTINATION_COMPLEMENT' => $sale->delivery->complement,
+                        'DESTINATION_COMPLEMENT' => $sale->delivery->complement ?? '',
                         //Complemento
-                        'DESTINATION_DISTRICT' => $sale->delivery->neighborhood,
+                        'DESTINATION_DISTRICT' => $sale->delivery->neighborhood ?? 'Manejo',
                         //Bairro
-                        'DESTINATION_CITY' => $sale->delivery->city,
+                        'DESTINATION_CITY' => $sale->delivery->city ?? 'Resende',
                         //Cidade, informar corretamente o nome da cidade sem abreviações
-                        'DESTINATION_UF' => $sale->delivery->state,
+                        'DESTINATION_UF' => $sale->delivery->state ?? 'RJ',
                         //Sigla do estado
-                        'DESTINATION_ZIPCODE' => $sale->delivery->zip_code,
+                        'DESTINATION_ZIPCODE' => $sale->delivery->zip_code ?? '27520174',
                         //CEP, somente números
                         'DESTINATION_PHONE' => $sale->customer->telephone,
                         //Telefone do cliente (opcional), somente números
@@ -418,19 +418,19 @@ class NotazzService
                             //'DESTINATION_IM'         => '',//Inscrição Municipal (opcional), somente números
                             'DESTINATION_TAXTYPE' => 'F',
                             //F = Física, J = Jurídica, E = Estrangeiro
-                            'DESTINATION_STREET' => $sale->delivery->street,
+                            'DESTINATION_STREET' => $sale->delivery->street ?? 'Avenida General Afonseca',
                             //Rua do cliente
-                            'DESTINATION_NUMBER' => $sale->delivery->number,
+                            'DESTINATION_NUMBER' => $sale->delivery->number ?? '1475',
                             //Número
-                            'DESTINATION_COMPLEMENT' => $sale->delivery->complement,
+                            'DESTINATION_COMPLEMENT' => $sale->delivery->complement ?? '',
                             //Complemento
-                            'DESTINATION_DISTRICT' => $sale->delivery->neighborhood,
+                            'DESTINATION_DISTRICT' => $sale->delivery->neighborhood ?? 'Manejo',
                             //Bairro
-                            'DESTINATION_CITY' => $sale->delivery->city,
+                            'DESTINATION_CITY' => $sale->delivery->city ?? 'Resende',
                             //Cidade, informar corretamente o nome da cidade sem abreviações
-                            'DESTINATION_UF' => $sale->delivery->state,
+                            'DESTINATION_UF' => $sale->delivery->state ?? 'RJ',
                             //Sigla do estado
-                            'DESTINATION_ZIPCODE' => $sale->delivery->zip_code,
+                            'DESTINATION_ZIPCODE' => $sale->delivery->zip_code ?? '27520174',
                             //CEP, somente números
                             'DESTINATION_PHONE' => $sale->customer->telephone,
                             //Telefone do cliente (opcional), somente números
