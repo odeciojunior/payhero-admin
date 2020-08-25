@@ -215,8 +215,7 @@ $(document).ready(function () {
         loadingOnScreenRemove();
         let url = new URL(window.location.href).pathname;
         // Para usar o convite setar segundo parâmetro
-        // let parameter = url.split("/")[2];
-        let parameter = url.split("/")[1];
+        let parameter = url.split("/")[2];
         $("#progress-bar-register").css('width', '99%');
         $(".div5").hide();
         $(".div6").show();
