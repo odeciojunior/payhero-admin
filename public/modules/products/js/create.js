@@ -85,6 +85,10 @@ $(document).ready(function () {
             alertCustom('error', 'Selecione o produto digital');
             return false;
         }
+        if ($('#digital').is(':checked') && $('#url_expiration_time').val() == '') {
+            alertCustom('error', 'Preencha o campo Tempo de expiração da url');
+            return false;
+        }
         event.preventDefault();
 
         if (verify()) {
@@ -202,6 +206,7 @@ $(document).ready(function () {
     $("#digital").on("change", function () {
         $('#div_digital_product_upload').css('visibility', 'visible');
         $('.div-expiration-time').show();
+        $('#url_expiration_time').val('24');
     });
 
 });

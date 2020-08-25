@@ -75,7 +75,7 @@
                                                 </div>
                                                 <div class="radio-custom radio-primary d-flex">
                                                     <input type="radio" id="digital" name="format" value="2">
-                                                    <label for="digital">Digital (em breve)</label>
+                                                    <label for="digital">Digital</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -169,7 +169,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=5') }}"></script>
+        <script src="{{ asset('modules/products/js/create.js?v=6') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
