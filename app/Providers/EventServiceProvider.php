@@ -120,6 +120,9 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\EvaluateAffiliateRequestEvent' => [
             'Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener',
         ],
+        'Modules\Core\Events\UserRegisteredEvent' => [
+            'Modules\Core\Listeners\SendEmailRegisteredListener',
+        ]
     ];
 
     /**

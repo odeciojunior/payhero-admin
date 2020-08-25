@@ -18,6 +18,6 @@ Route::group(
         'prefix'     => 'register',
     ],
     function() {
-        Route::get('/welcome', 'RegisterApiController@welcomeEmail');
+//        Route::get('/welcome', 'RegisterApiController@welcomeEmail');
     }
 );
