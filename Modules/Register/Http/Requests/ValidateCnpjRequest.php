@@ -14,7 +14,7 @@ class ValidateCnpjRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_document'  => 'nullable',
+            'company_document'  => 'required',
         ];
     }
 
@@ -26,6 +26,7 @@ class ValidateCnpjRequest extends FormRequest
     {
         return [
             // Coloque aqui as mensagens de erro da validação
+            'company_document.required'     => 'Precisamos do seu CPF para continuar'
         ];
     }
 

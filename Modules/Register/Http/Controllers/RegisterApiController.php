@@ -50,7 +50,7 @@ class RegisterApiController extends Controller
             $userNotificationModel = new UserNotification();
             $userInformationModel   = new UserInformation();
 
-            $parameter = $requestData['parameter'];
+            $parameter = $requestData['parameter'] ?? 'nw2usr3cfx';
 
             $withoutInvite = false;
             if ($parameter == 'nw2usr3cfx') {
@@ -222,7 +222,7 @@ class RegisterApiController extends Controller
                 ]
             );
         } catch (Exception $ex) {
-            dd($ex);
+            report($ex);
 
             return response()->json(['success' => 'false', 'message' => 'revise os dados informados']);
         }
