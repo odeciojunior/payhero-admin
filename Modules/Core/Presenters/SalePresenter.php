@@ -53,7 +53,19 @@ class SalePresenter extends Presenter
             '.'
         ) : '0,00';
     }
+    /**
+     * @return string|string[]
+     */
+    public function getFormattedShipmentValue()
+    {
+        if (!is_null($this->delivery_id)) {
+            $shipmentValeu = preg_replace("/[^0-9]/", "", $this->shipment_value);
 
+            return substr_replace($shipmentValeu, ',', strlen($shipmentValeu) - 2, 0);
+        } else {
+            return '';
+        }
+    }
     /**
      * @return false|string
      */

@@ -59,7 +59,7 @@ class BilletPaidSendEmailListener implements ShouldQueue
             if (stristr($customer->email, 'invalido') !== false) {
                 return false;
             }
-            
+
             $saleCode = Hashids::connection('sale_id')->encode($sale->id);
             $products = $saleService->getEmailProducts($sale->id);
 
@@ -128,7 +128,7 @@ class BilletPaidSendEmailListener implements ShouldQueue
                 'sale_code' => $saleCode,
                 "products" => $products,
                 "total_paid_value" => $sale->total_paid_value,
-                "shipment_value" => $sale->shipment_value,
+                "shipment_value" => $sale->present()->getFormattedShipmentValue(),
                 "subtotal" => strval($subTotal),
                 "subject" => $subjectMessage,
                 "title" => $titleMessage,
