@@ -242,12 +242,13 @@ class CollaboratorsApiController extends Controller
 
         $user = $userModel->find($userId);
 
-        if (Gate::denies('destroy', [$user])) {
+        if (Gate::denies('destroy', [$user]) && Gate::denies('update', [$user])) {
             return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
         }
 
+        $userUpdated = $user->update(['email' => uniqid() . $user->email]);
         $userDeleted = $user->delete();
-        if ($userDeleted) {
+        if ($userDeleted && $userUpdated) {
             return response()->json(['message' => 'Colaborador removido com sucesso!'], 200);
         } else {
             return response()->json(['message' => 'Ocorreu um erro ao remover colaborador'], 400);
