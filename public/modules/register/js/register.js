@@ -966,6 +966,37 @@ $(document).ready(function () {
             return false;
         }
     }
+
+    $('#fileDoc').change(function () {
+        var formdata = $(this).prop('files')[0];
+        var file = formdata['name'];
+        var extension = formdata['type'];
+        var document = $('#document').val().replace(/[^0-9]/g, '')
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            method: 'POST',
+            data: {
+                file: file,
+                document: document,
+                document_type: extension,
+            },
+            url: '/api/register/upload-documents',
+            acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
+            maxFilesize: 2,
+            success: function success(file, response) {
+                alertCustom('success', response.message);
+
+                // if (file.previewElement) {
+                //     return file.previewElement.classList.add('dz-success');
+                // }
+
+            }
+        })
+    });
+
     $('#form-register input').on('keypress', function (e) {
         if (e.keyCode == 13) {
             return false;

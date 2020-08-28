@@ -11,13 +11,18 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Lang;
+use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\SmsService;
+use Modules\Register\Http\Requests\UploudDocumentsRequest;
 use Modules\Register\Http\Requests\ValidateCnpjRequest;
 use Modules\Register\Http\Requests\ValidateCpfRequest;
 use Modules\Register\Http\Requests\ValidateEmailRequest;
 use Modules\Register\Http\Requests\ValidatePhoneNumberRequest;
+use Modules\Register\Transformers\RegisterDocumentsResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
@@ -45,12 +50,11 @@ class RegisterApiController extends Controller
         try {
             $requestData           = $request->validated();
             $userModel             = new User();
-            $inviteModel           = new Invitation();
             $companyModel          = new Company();
             $userNotificationModel = new UserNotification();
             $userInformationModel   = new UserInformation();
 
-            $parameter = $requestData['parameter'] ?? 'nw2usr3cfx';
+            $parameter = $requestData['parameter'];
 
             $withoutInvite = false;
             if ($parameter == 'nw2usr3cfx') {
@@ -158,49 +162,6 @@ class RegisterApiController extends Controller
                 );
             }
 
-            auth()->loginUsingId($user->id, true);
-
-            if ($withoutInvite == false) {
-                if (!isset($invite)) {
-                    $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
-                }
-                // $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
-
-                if ($invite) {
-                    $invite->update(
-                        [
-                            'user_invited'    => $user->account_owner_id,
-                            'status'          => '1',
-                            'register_date'   => Carbon::now()->format('Y-m-d'),
-                            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                            'email_invited'   => $requestData['email'],
-                        ]
-                    );
-
-                    if (empty($invite->invite) && isset($company->id)) {
-                        $invite->update(
-                            [
-                                'invite' => $company->user_id,
-                            ]
-                        );
-                    }
-                } else {
-                    if ($company) {
-                        $inviteModel->create(
-                            [
-                                'invite'          => $company->user_id,
-                                'user_invited'    => $user->account_owner_id,
-                                'status'          => '1',
-                                'company_id'      => $company->id,
-                                'register_date'   => Carbon::now()->format('Y-m-d'),
-                                'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                'email_invited'   => $requestData['email'],
-                            ]
-                        );
-                    }
-                }
-            }
-
             /**
              * Event Send Welcome Email
              */
@@ -234,7 +195,7 @@ class RegisterApiController extends Controller
      */
     public function verifyCpf(ValidateCpfRequest $request)
     {
-        $data        = $request->all();
+        $data        = $request->validated();
         $userService = new UserService();
         $cpf         = $userService->verifyCpf($data['document']);
         if ($cpf) {
@@ -260,7 +221,7 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
-        $data           = $request->all();
+        $data           = $request->validated();
         $companyService = new CompanyService();
         $cnpj           = $companyService->verifyCnpj($data['company_document']);
         if ($cnpj) {
@@ -285,7 +246,7 @@ class RegisterApiController extends Controller
      */
     public function verifyEmail(ValidateEmailRequest  $request)
     {
-        $data      = $request->all();
+        $data      = $request->validated();
         $userModel = new User();
 
         $user = $userModel->where('email', 'like', '%' . $data['email'] . '%')->first();
@@ -306,13 +267,128 @@ class RegisterApiController extends Controller
     }
 
     /**
+     * @param UploudDocumentsRequest $request
+     * @return JsonResponse
+     */
+    public function uploadDocuments(UploudDocumentsRequest $request)
+    {
+        try {
+                $digitalOceanFileService = app(DigitalOceanFileService::class);
+
+                $dataForm = $request->validated();
+                $file = $request->file('file');
+                $document = $request['document'];
+
+                dd($dataForm);
+
+                $digitalOceanPath = $digitalOceanFileService->uploadFile(
+                    'uploads/register/user/' . Hashids::encode($document) . '/private/documents',
+                    $file,
+                    null,
+                    null,
+                    'private'
+                );
+
+                $documentType = $dataForm["document_type"];
+//                $documentSaved = $userDocument->create(
+//                    [
+//                        'user_id' => auth()->user()->account_owner_id,
+//                        'document_url' => $digitalOceanPath,
+//                        'document_type_enum' => $documentType,
+//                        'status' => $userDocument->present()
+//                            ->getTypeEnum('analyzing'),
+//                    ]
+//                );
+
+                if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
+                    $user->update(
+                        [
+                            'personal_document_status' => $user->present()
+                                ->getPersonalDocumentStatus('analyzing'),
+                        ]
+                    );
+                } else {
+                    if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
+                        $user->update(
+                            [
+                                'address_document_status' => $user->present()
+                                    ->getAddressDocumentStatus('analyzing'),
+                            ]
+                        );
+                    } else {
+                        $documentSaved->delete();
+
+                        return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+                    }
+                }
+
+                return response()->json(
+                    [
+                        'message' => 'Arquivo enviado com sucesso.',
+                        'personal_document_translate' => Lang::get(
+                            'definitions.enum.personal_document_status.' . $user->present()
+                                ->getPersonalDocumentStatus($user->personal_document_status)
+                        ),
+                        'address_document_translate' => Lang::get(
+                            'definitions.enum.personal_document_status.' . $user->present()
+                                ->getAddressDocumentStatus($user->address_document_status)
+                        ),
+                    ],
+                    200
+                );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDocuments(Request $request)
+    {
+        try {
+            if (!empty($request->input('document_type'))) {
+                $userDocumentModel = new UserDocument();
+                $userModel = new User();
+
+                $documentType = $userModel->present()->getDocumentType($request->input('document_type'));
+
+                $userDocuments = $userDocumentModel->where('user_id', auth()->user()->account_owner_id)
+                    ->where('document_type_enum', $documentType)->get();
+
+                return RegisterDocumentsResource::collection($userDocuments);
+            } else {
+                return response()->json(
+                    [
+                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                    ],
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                ],
+                400
+            );
+        }
+    }
+
+    /**
      * @param ValidateEmailRequest $request
      * @return JsonResponse
      * @throws Exception
      */
-    public function sendEmailCode(ValidateEmailRequest $request) {
+    public function sendEmailCode(ValidateEmailRequest $request)
+    {
 
-        $data = $request->all();
+        $data = $request->validated();
         $email = $data["email"] ?? null;
 
         $verifyCode = random_int(100000, 999999);
@@ -356,7 +432,7 @@ class RegisterApiController extends Controller
     public function matchEmailVerifyCode(ValidateEmailRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
             $verifyCode = $data["verifyCode"] ?? null;
 
             $cookie = Cookie::get("emailverifycode");
@@ -395,7 +471,7 @@ class RegisterApiController extends Controller
     public function sendCellphoneCode(ValidatePhoneNumberRequest  $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
             $cellphone = $data["cellphone"] ?? null;
             if (FoxUtils::isEmpty($cellphone)) {
                 return response()->json(
@@ -436,7 +512,7 @@ class RegisterApiController extends Controller
     public function matchCellphoneVerifyCode(ValidatePhoneNumberRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
             $verifyCode = $data["verifyCode"] ?? null;
 
             $cookie = Cookie::get("cellphoneverifycode");

@@ -22,6 +22,8 @@ Route::group(
         Route::post('/', 'RegisterApiController@store');
         Route::post('/match-email-verify-code', 'RegisterApiController@matchEmailVerifyCode');
         Route::post('/match-cellphone-verify-code', 'RegisterApiController@matchCellphoneVerifyCode');
+        Route::post('/upload-documents', 'RegisterApiController@uploadDocuments');
+        Route::post('/upload-documents', 'RegisterApiController@uploadDocuments');
         Route::get('/verify-cpf', 'RegisterApiController@verifyCpf');
         Route::get('/verify-cnpj', 'RegisterApiController@verifyCnpj');
         Route::get('/verify-email', 'RegisterApiController@verifyEmail');
