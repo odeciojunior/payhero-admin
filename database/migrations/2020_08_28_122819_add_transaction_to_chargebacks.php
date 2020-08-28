@@ -14,7 +14,7 @@ class AddTransactionToChargebacks extends Migration
     public function up()
     {
         Schema::table('chargebacks', function (Blueprint $table) {
-            $table->json('transaction')->nullable();
+            $table->json('transaction')->nullable()->after('status_enum');
         });
     }
 
