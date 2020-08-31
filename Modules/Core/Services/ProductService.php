@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
 use Laracasts\Presenter\Exceptions\PresenterException;
@@ -76,10 +77,12 @@ class ProductService
                     $product['tracking_code'] = $trackingCode;
                     $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()
                             ->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não Informado';
+                    $product['tracking_created_at'] = Carbon::parse($tracking->created_at)->format('d/m/Y H:i:s');
                 } else {
                     $product['tracking_id'] = '';
                     $product['tracking_code'] = '';
                     $product['tracking_status_enum'] = 'Não Informado';
+                    $product['tracking_created_at'] = '';
                 }
 
                 $productsSale->add((object) $product);
