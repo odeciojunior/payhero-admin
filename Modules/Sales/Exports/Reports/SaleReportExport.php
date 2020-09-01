@@ -85,10 +85,10 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'comission' => $sale->details->comission,
                 //plan
                 'project_name' => $sale->project->name ?? '',
-                'plan' => utf8_encode($product->plan_name),
+                'plan' => $product->plan_name,
                 'price' => $product->plan_price,
                 'product_id' => '#' . Hashids::encode($product->id),
-                'product' => utf8_encode($productName),
+                'product' => $productName,
                 'product_shopify_id' => $product->shopify_id,
                 'product_shopify_variant_id' => $product->shopify_variant_id,
                 'amount' => $product->amount,
@@ -117,7 +117,7 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
 
             //remove caracteres indesejados em todos os campos
             $saleData[] = array_map(function ($item) {
-                return preg_replace('/[^\p{Latin}[:alnum:][:punct:]_-]/u', '', $item);
+                return preg_replace('/[^\p{Latin}[:alnum:][:punct:]\s_-]/u', '', $item);
             }, $data);
         }
 

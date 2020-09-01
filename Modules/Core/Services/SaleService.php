@@ -63,6 +63,7 @@ class SaleService
                 'sale.delivery',
                 'sale.transactions.anticipatedTransactions',
                 'sale.affiliate.user',
+                'sale.saleRefundHistory',
             ];
 
             if ($withProducts) {
@@ -231,7 +232,6 @@ class SaleService
         ])->find(current(Hashids::connection('sale_id')->decode($saleId)));
 
         //add details to sale
-        //        $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
         $userCompanies = $companyModel->where('user_id', $sale->owner_id)->pluck('id');
 
         $this->getDetails($sale, $userCompanies);
@@ -372,8 +372,8 @@ class SaleService
             'refund_value' => number_format(intval($sale->refund_value) / 100, 2, ',', '.'),
             'value_anticipable' => number_format(intval($valueAnticipable) / 100, 2, ',', '.'),
             'total_paid_value' => number_format($sale->total_paid_value, 2, ',', '.'),
-            'refund_observation' => count($sale->saleRefundHistory) > 0 ? $sale->saleRefundHistory->first()->refund_observation : null,
-            'user_changed_observation' => count($sale->saleRefundHistory) > 0 && !empty($sale->saleRefundHistory->first()->user_id),
+            'refund_observation' => $sale->saleRefundHistory->count() ? $sale->saleRefundHistory->first()->refund_observation : null,
+            'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
         ];
     }
 
