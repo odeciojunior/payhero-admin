@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/postback/*',
         '/api/register',
+        '/api/register/*'
     ];
 }
