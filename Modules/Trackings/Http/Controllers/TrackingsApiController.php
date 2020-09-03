@@ -134,7 +134,9 @@ class TrackingsApiController extends Controller
             $trackingModel = new Tracking();
             $trackingService = new TrackingService();
 
-            $tracking = $trackingModel->where('tracking_code', $trackingCode)->first();
+            $tracking = $trackingModel->where('tracking_code', $trackingCode)
+                ->where('system_status_enum', '!=', $trackingModel->present()->getSystemStatusEnum('ignored'))
+                ->first();
 
             if (!empty($tracking)) {
                 $apiTracking = $trackingService->findTrackingApi($tracking);

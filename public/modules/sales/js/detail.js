@@ -733,6 +733,9 @@ $(() => {
                                 <td>
                                     <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                 </td>
+                                <td>
+                                    <span class='small'>${value.tracking_created_at}</span>
+                                </td>
                             </tr>`;
                 $('#div_tracking_code').css('display', 'block');
                 $('#data-tracking-products').append(data);

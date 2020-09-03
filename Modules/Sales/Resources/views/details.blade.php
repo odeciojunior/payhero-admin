@@ -234,6 +234,7 @@
                                         <th>Produto</th>
                                         <th>Rastreio</th>
                                         <th>Status</th>
+                                        <th>Postagem</th>
                                         {{-- <th>Ações</th> --}}
                                     </tr>
                                 </thead>
@@ -325,5 +326,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=16') }}"></script>
+    <script src="{{ asset('/modules/sales/js/detail.js?v=17') }}"></script>
 @endpush
