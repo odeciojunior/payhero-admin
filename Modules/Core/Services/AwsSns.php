@@ -24,10 +24,16 @@ class AwsSns
         ]);
 
         try {
-            $snsClient->publish([
-                'Message' => $message,
-                'PhoneNumber' => $phone
-            ]);
+                if(env('APP_ENV') == 'local') {
+                    Log::info("$message - número: $phone");
+                }else {
+                     $snsClient->publish([
+                    'Message' => $message,
+                    'PhoneNumber' => $phone
+                ]);
+            }
+
+
         } catch (Exception $e) {
             Log::warning('Erro ao enviar sms SNS-AWS - SendMessage');
             report($e);
