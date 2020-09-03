@@ -154,21 +154,34 @@ class RegisterApiController extends Controller
         $data = $request->validated();
         $userModel = new User();
 
-        $user = $userModel->where('email', 'like', '%' . $data['email'] . '%')->first();
-        if (!empty($user) || $data['email'] == 'kim@mail.com') {
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+
+            return response()->json(
+                [
+                    'email_exist' => 'false',
+                    'message' => 'Email com formato inválido',
+                ], 403
+            );
+
+        }
+
+        if ($data['email'] == 'kim@mail.com' || $userModel->where('email', $data['email'])->count()) {
+
             return response()->json(
                 [
                     'email_exist' => 'true',
                     'message' => 'Esse Email já está cadastrado na plataforma',
-                ]
+                ], 403
             );
-        } else {
-            return response()->json(
-                [
-                    'email_exist' => 'false',
-                ]
-            );
+
         }
+
+        return response()->json(
+            [
+                'email_exist' => 'false',
+            ], 200
+        );
+
     }
 
     /**
