@@ -3,7 +3,6 @@
 namespace Modules\Register\Http\Controllers;
 
 use Exception;
-use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -11,13 +10,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
-use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\SmsService;
-use Modules\Register\Http\Requests\UploudDocumentsRequest;
 use Modules\Register\Http\Requests\ValidateCnpjRequest;
 use Modules\Register\Http\Requests\ValidateCpfRequest;
 use Modules\Register\Http\Requests\ValidateEmailRequest;
@@ -31,7 +33,6 @@ use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
-use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\SendgridService;
 use Modules\Register\Http\Requests\RegisterRequest;
 
@@ -53,39 +54,6 @@ class RegisterApiController extends Controller
             $companyModel          = new Company();
             $userNotificationModel = new UserNotification();
             $userInformationModel   = new UserInformation();
-
-            $parameter = $requestData['parameter'];
-
-            $withoutInvite = false;
-            if ($parameter == 'nw2usr3cfx') {
-                $withoutInvite = true;
-            } else if (strlen($parameter) > 15) {
-                $inviteId = substr($parameter, 0, 15);
-                $inviteId = Hashids::decode($inviteId);
-                $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)
-                                        ->first();
-                if (!isset($invite->id) || (isset($invite->id) && $invite->status != 2)) {
-                    return response()->json(['success' => 'false', 'message' => 'Convite inválido!']);
-                }
-            } else {
-                $companyId = Hashids::decode($parameter);
-                $company   = $companyModel->where('id', $companyId)->first();
-                if (isset($company->id)) {
-                    $invitesSent    = $inviteModel->where('invite', $company->user_id)->count();
-                    $companyService = new CompanyService();
-                    if (!$companyService->isDocumentValidated($company->id)) {
-                        return response()->json(['success' => 'false', 'message' => 'Convite indisponivel!']);
-                    }
-
-                    if ($invitesSent >= $company->user->invites_amount) {
-                        return response()->json(
-                            ['success' => 'false', 'message' => 'Convite indisponivel, limite atingido!']
-                        );
-                    }
-                } else {
-                    return response()->json(['success' => 'false', 'message' => 'Link convite inválido']);
-                }
-            }
 
             if (!stristr($requestData['date_birth'], '-')) {
                 $requestData['date_birth'] = null;
@@ -267,52 +235,87 @@ class RegisterApiController extends Controller
     }
 
     /**
-     * @param UploudDocumentsRequest $request
+     * Verifica o tipo de documento para usar respectiovo método de uploud
+     * @param Request $request
+     */
+    public function uploudDocumentTo(Request $request) {
+        $dataForm = Validator::make($request->all(), [
+            // Usuário
+            'personal_document'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+            'address_document'   => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+
+            // Empresa
+            'bank_document'             => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+            'company_address_document'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+            'contract_document'         => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+        ], [
+            'personal_document.mimes'     => 'Arquivo com formato inválido',
+            'personal_document.required'  => 'Precisamos do arquivo Para continuar',
+        ])->validate();
+
+        foreach ($dataForm as $fileName => $file) {
+            if (in_array($fileName, ['personal_document', 'address_document'])) {
+                $this->uploadDocumentsUser($fileName, $file);
+            }
+            if (in_array($fileName, ['bank_document', 'company_address_document', 'contract_document'])) {
+                $this->uploadDocumentsCompany($fileName, $file);
+            }
+        }
+//        dd($dataForm);
+    }
+
+    /**
+     * @param $file
+     * @param $document_type
      * @return JsonResponse
      */
-    public function uploadDocuments(UploudDocumentsRequest $request)
+    public function uploadDocumentsUser(string $document_type, array $file)
     {
         try {
-                $digitalOceanFileService = app(DigitalOceanFileService::class);
+            $user = auth()->user();
 
-                $dataForm = $request->validated();
-                $file = $request->file('file');
-                $document = $request['document'];
+            if (Gate::allows('uploadDocuments', [$user])) {
+                $amazonFileService = app(AmazonFileService::class);
+                $userDocument = new UserDocument();
 
-                dd($dataForm);
+                $document = $file ?? '';
 
-                $digitalOceanPath = $digitalOceanFileService->uploadFile(
-                    'uploads/register/user/' . Hashids::encode($document) . '/private/documents',
-                    $file,
+                /**
+                 *  Salva Arquivos | (Usuário)
+                 */
+                $amazonPathUser = $amazonFileService->uploadFile(
+                    'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
+                    $document,
                     null,
                     null,
                     'private'
                 );
 
-                $documentType = $dataForm["document_type"];
-//                $documentSaved = $userDocument->create(
-//                    [
-//                        'user_id' => auth()->user()->account_owner_id,
-//                        'document_url' => $digitalOceanPath,
-//                        'document_type_enum' => $documentType,
-//                        'status' => $userDocument->present()
-//                            ->getTypeEnum('analyzing'),
-//                    ]
-//                );
+                $documentType = $document_type ?? '';
 
-                if (($documentType ?? '') == $user->present()->getDocumentType('personal_document')) {
+                /**
+                 * Salva status do documentos no Banco | (Usuário)
+                 */
+                $documentSaved = $userDocument->create(
+                    [
+                        'user_id' => auth()->user()->account_owner_id,
+                        'document_url' => $amazonPathUser,
+                        'document_type_enum' => $documentType,
+                        'status' => $userDocument->present()->getTypeEnum('analyzing'),
+                    ]
+                );
+
+                if ($documentType == $user->present()->getDocumentType('personal_document')) {
                     $user->update(
                         [
-                            'personal_document_status' => $user->present()
-                                ->getPersonalDocumentStatus('analyzing'),
+                            'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
                         ]
                     );
                 } else {
-                    if (($documentType ?? '') == $user->present()->getDocumentType('address_document')) {
+                    if ($documentType == $user->present()->getDocumentType('address_document')) {
                         $user->update(
                             [
-                                'address_document_status' => $user->present()
-                                    ->getAddressDocumentStatus('analyzing'),
+                                'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
                             ]
                         );
                     } else {
@@ -336,7 +339,92 @@ class RegisterApiController extends Controller
                     ],
                     200
                 );
+            } else {
+                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
+            }
         } catch (Exception $e) {
+            Log::warning('RegisterApiController uploadDocumentsUser');
+            report($e);
+
+            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+        }
+    }
+
+    public function uploadDocumentsCompany(string $document_type, array $file)
+    {
+        try {
+            $companyModel = new Company();
+            $companyDocumentModel = new CompanyDocument();
+
+            $company = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
+
+            if (Gate::allows('uploadDocuments', [$company])) {
+                $amazonFileService = app(AmazonFileService::class);
+
+                $document = $file ?? '';
+                $documentType = $document_type ?? '';
+
+
+                /**
+                 *  Salva Arquivos | (Empresa)
+                 */
+
+                $amazonPathCompanies = $amazonFileService->uploadFile(
+                    'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id)
+                    . '/companies/' . Hashids::encode($company->id) . '/private/documents',
+                    $document,
+                    null,
+                    null,
+                    'private'
+                );
+
+                /**
+                 * Salva status do documentos no Banco | (Empresa)
+                 */
+                $companyDocumentModel->create(
+                    [
+                        'company_id' => $company->id,
+                        'document_url' => $amazonPathCompanies,
+                        'document_type_enum' => $documentType,
+                        'status' => $companyDocumentModel->present()->getTypeEnum('analyzing'),
+                    ]
+                );
+
+                if ($documentType == $company->present()->getDocumentType('bank_document_status')) {
+                    $company->update(
+                        [
+                            'bank_document_status' => $company->present()
+                                ->getBankDocumentStatus('analyzing'),
+                        ]
+                    );
+                }
+                if ($documentType == $company->present()->getDocumentType('address_document_status')) {
+                    $company->update(
+                        [
+                            'address_document_status' => $company->present()
+                                ->getAddressDocumentStatus('analyzing'),
+                        ]
+                    );
+                }
+                if ($documentType == $company->present()->getDocumentType('contract_document_status')) {
+                    $company->update(
+                        [
+                            'contract_document_status' => $company->present()->getContractDocumentStatus('analyzing'),
+                        ]
+                    );
+                }
+
+                return response()->json(
+                    [
+                        'message' => 'Arquivo enviado com sucesso.',
+                    ],
+                    Response::HTTP_OK
+                );
+            } else {
+                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
+            }
+        } catch (Exception $e) {
+            Log::warning('RegisterApiController uploadDocumentsCompany');
             report($e);
 
             return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);

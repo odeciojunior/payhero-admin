@@ -967,35 +967,39 @@ $(document).ready(function () {
         }
     }
 
-    $('#fileDoc').change(function () {
-        var formdata = $(this).prop('files')[0];
-        var file = formdata['name'];
-        var extension = formdata['type'];
-        var document = $('#document').val().replace(/[^0-9]/g, '')
+    // function uploadFile(document_type) {
+        $("#fileToUpload").change(function () {
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(document.getElementById("fileToUpload").files[0]);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            method: 'POST',
-            data: {
-                file: file,
-                document: document,
-                document_type: extension,
-            },
-            url: '/api/register/upload-documents',
-            acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
-            maxFilesize: 2,
-            success: function success(file, response) {
-                alertCustom('success', response.message);
+            fileReader.onload = function (oFREvent) {
+                let myForm = document.getElementById('form-register');
+                let formData = new FormData(myForm);
 
-                // if (file.previewElement) {
-                //     return file.previewElement.classList.add('dz-success');
-                // }
+                $.ajax({
+                    method: "POST",
+                    url: "/api/register/upload-documents",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data:  formData,
+                    processData: false,
+                    cache: false,
+                    contentType: false,
+                    dataType: "json",
+                    error: function (response) {
+                        errorAjaxResponse(response);
+                    },
+                    success: function (response) {
+                        alertCustom('success', response.message)
+                        // }
+                    }
 
-            }
-        })
-    });
+                });
+            };
+
+        });
+    // }
 
     $('#form-register input').on('keypress', function (e) {
         if (e.keyCode == 13) {

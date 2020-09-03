@@ -89,8 +89,8 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="input-holder d-flex flex-column">
-                            <label for="fileDoc">Nome</label>
-                            <input style="display: block !important;" type="file" name="fileDoc" id="fileDoc" placeholder="Insira o documento" required>
+                            <label for="fileDoc">Documento</label>
+                            <input style="display: block !important;" type="file" name="fileToUpload" id="fileToUpload" placeholder="Insira o documento" required>
                             <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                     </div>
