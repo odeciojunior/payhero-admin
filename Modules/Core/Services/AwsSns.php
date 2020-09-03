@@ -6,14 +6,15 @@ namespace Modules\Core\Services;
 use Aws\Credentials\Credentials;
 use Aws\Sns\SnsClient;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AwsSns
 {
-    private $snsClient;
 
-    public function __construct()
+    public static function sendMessage($phone, $message) : void
     {
-        $this->snsClient = new SnsClient([
+
+        $snsClient = new SnsClient([
             'version' => '2010-03-31',
             'credentials' => new Credentials(
                 getenv('AWS_ACCESS_KEY_ID_SMS'),
@@ -21,18 +22,14 @@ class AwsSns
             ),
             'region' => getenv('AWS_DEFAULT_REGION_SMS'),
         ]);
-    }
 
-    public function sendMessage($phone, $message)
-    {
         try {
-            $result = $this->snsClient->publish([
+            $snsClient->publish([
                 'Message' => $message,
                 'PhoneNumber' => $phone
             ]);
-
-            dd($result);
         } catch (Exception $e) {
+            Log::warning('Erro ao enviar sms SNS-AWS - SendMessage');
             report($e);
         }
     }
