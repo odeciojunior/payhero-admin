@@ -20,6 +20,7 @@ use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\SmsService;
+use Modules\Register\Http\Requests\UploudDocument;
 use Modules\Register\Http\Requests\ValidateCnpjRequest;
 use Modules\Register\Http\Requests\ValidateCpfRequest;
 use Modules\Register\Http\Requests\ValidateEmailRequest;
@@ -211,19 +212,19 @@ class RegisterApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function uploadDocuments(Request $request)
+    public function uploadDocuments(UploudDocument $request)
     {
         try {
             $amazonFileService = app(AmazonFileService::class);
-            $dataForm = Validator::make($request->all(), [
-                // Usuário
-                'fileToUploud'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-                'document_type'   => 'required',
-            ], [
-                'fileToUploud.mimes'     => 'O arquivo esta com formato inválido',
-                'fileToUploud.required'  => 'Precisamos do arquivo para continuar',
-                'document_type.required'  => 'Precisamos saber o tipo do documento para continuar',
-            ])->validate();
+//            $dataForm = Validator::make($request->all(), [
+//                // Usuário
+//                'fileToUploud'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+//                'document_type'   => 'required',
+//            ], [
+//                'fileToUploud.mimes'     => 'O arquivo esta com formato inválido',
+//                'fileToUploud.required'  => 'Precisamos do arquivo para continuar',
+//                'document_type.required'  => 'Precisamos saber o tipo do documento para continuar',
+//            ])->validate();
 
             $document = $request->file('fileToUploud');
 
@@ -253,24 +254,27 @@ class RegisterApiController extends Controller
             );
 
             if ($documentType == $user->present()->getDocumentType('personal_document')) {
-                $user->update(
-                    [
-                        'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
-                    ]
-                );
-            } else {
+                    $user->update(
+                        [
+                            'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
+                        ]
+                    );
+                }
+
                 if ($documentType == $user->present()->getDocumentType('address_document')) {
                     $user->update(
                         [
                             'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
                         ]
                     );
-                } else {
+                }
+
+                if(empty($documentType)) {
                     $documentSaved->delete();
 
                     return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
                 }
-            }
+
 
             return response()->json(
                 [
