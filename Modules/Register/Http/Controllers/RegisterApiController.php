@@ -90,7 +90,7 @@ class RegisterApiController extends Controller
         } catch (Exception $ex) {
             report($ex);
 
-            return response()->json(['success' => 'false', 'message' => 'revise os dados informados']);
+            return response()->json(['success' => 'false', 'message' => 'revise os dados informados'], 403);
         }
     }
 
@@ -108,7 +108,7 @@ class RegisterApiController extends Controller
                 [
                     'cpf_exist' => 'true',
                     'message' => 'Esse CPF já está cadastrado na plataforma',
-                ]
+                ], 403
             );
         } else {
             return response()->json(
@@ -134,7 +134,7 @@ class RegisterApiController extends Controller
                 [
                     'cnpj_exist' => 'true',
                     'message' => 'Esse CNPJ já está cadastrado na plataforma',
-                ]
+                ], 403
             );
         } else {
             return response()->json(
