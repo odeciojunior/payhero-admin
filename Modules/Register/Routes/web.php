@@ -15,7 +15,7 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => ['web'],
+//        'middleware' => ['web'],
         'prefix'     => 'api/register',
     ],
     function() {

@@ -187,6 +187,8 @@ class RegisterApiController extends Controller
     /**
      * Verifica o tipo de documento para usar respectiovo método de uploud
      * @param Request $request
+     *
+     * [Remover]
      */
     public function uploudDocumentTo(Request $request)
     {
@@ -203,96 +205,87 @@ class RegisterApiController extends Controller
             'personal_document.mimes' => 'Arquivo com formato inválido',
             'personal_document.required' => 'Precisamos do arquivo Para continuar',
         ])->validate();
-
-        foreach ($dataForm as $fileName => $file) {
-            if (in_array($fileName, ['personal_document', 'address_document'])) {
-                $this->uploadDocumentsUser($fileName, $file);
-            }
-            if (in_array($fileName, ['bank_document', 'company_address_document', 'contract_document'])) {
-                $this->uploadDocumentsCompany($fileName, $file);
-            }
-        }
-//        dd($dataForm);
     }
 
     /**
-     * @param $file
-     * @param $document_type
+     * @param Request $request
      * @return JsonResponse
      */
-    public function uploadDocumentsUser(string $document_type, array $file)
+    public function uploadDocuments(Request $request)
     {
         try {
-            $user = auth()->user();
+            $amazonFileService = app(AmazonFileService::class);
+            $dataForm = Validator::make($request->all(), [
+                // Usuário
+                'fileToUploud'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+                'document_type'   => 'required',
+            ], [
+                'fileToUploud.mimes'     => 'O arquivo esta com formato inválido',
+                'fileToUploud.required'  => 'Precisamos do arquivo para continuar',
+                'document_type.required'  => 'Precisamos saber o tipo do documento para continuar',
+            ])->validate();
 
-            if (Gate::allows('uploadDocuments', [$user])) {
-                $amazonFileService = app(AmazonFileService::class);
-                $userDocument = new UserDocument();
+            $document = $request->file('fileToUploud');
 
-                $document = $file ?? '';
+            /**
+             *  Salva Arquivos | (Usuário)
+             */
+            $amazonPathUser = $amazonFileService->uploadFile(
+                'uploads/register/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
+                $document,
+                null,
+                null,
+                'private'
+            );
 
-                /**
-                 *  Salva Arquivos | (Usuário)
-                 */
-                $amazonPathUser = $amazonFileService->uploadFile(
-                    'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
-                    $document,
-                    null,
-                    null,
-                    'private'
-                );
+            $documentType = $dataForm['$document_type'] ?? '';
 
-                $documentType = $document_type ?? '';
+            /**
+             * Salva status do documentos no Banco | (Usuário)
+             */
+            $documentSaved = $userDocument->create(
+                [
+                    'user_id' => auth()->user()->account_owner_id,
+                    'document_url' => $amazonPathUser,
+                    'document_type_enum' => $documentType,
+                    'status' => $userDocument->present()->getTypeEnum('analyzing'),
+                ]
+            );
 
-                /**
-                 * Salva status do documentos no Banco | (Usuário)
-                 */
-                $documentSaved = $userDocument->create(
+            if ($documentType == $user->present()->getDocumentType('personal_document')) {
+                $user->update(
                     [
-                        'user_id' => auth()->user()->account_owner_id,
-                        'document_url' => $amazonPathUser,
-                        'document_type_enum' => $documentType,
-                        'status' => $userDocument->present()->getTypeEnum('analyzing'),
+                        'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
                     ]
                 );
-
-                if ($documentType == $user->present()->getDocumentType('personal_document')) {
+            } else {
+                if ($documentType == $user->present()->getDocumentType('address_document')) {
                     $user->update(
                         [
-                            'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
+                            'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
                         ]
                     );
                 } else {
-                    if ($documentType == $user->present()->getDocumentType('address_document')) {
-                        $user->update(
-                            [
-                                'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
-                            ]
-                        );
-                    } else {
-                        $documentSaved->delete();
+                    $documentSaved->delete();
 
-                        return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
-                    }
+                    return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
                 }
-
-                return response()->json(
-                    [
-                        'message' => 'Arquivo enviado com sucesso.',
-                        'personal_document_translate' => Lang::get(
-                            'definitions.enum.personal_document_status.' . $user->present()
-                                ->getPersonalDocumentStatus($user->personal_document_status)
-                        ),
-                        'address_document_translate' => Lang::get(
-                            'definitions.enum.personal_document_status.' . $user->present()
-                                ->getAddressDocumentStatus($user->address_document_status)
-                        ),
-                    ],
-                    200
-                );
-            } else {
-                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
             }
+
+            return response()->json(
+                [
+                    'message' => 'Arquivo enviado com sucesso.',
+                    'personal_document_translate' => Lang::get(
+                        'definitions.enum.personal_document_status.' . $user->present()
+                            ->getPersonalDocumentStatus($user->personal_document_status)
+                    ),
+                    'address_document_translate' => Lang::get(
+                        'definitions.enum.personal_document_status.' . $user->present()
+                            ->getAddressDocumentStatus($user->address_document_status)
+                    ),
+                ],
+                200
+            );
         } catch (Exception $e) {
             Log::warning('RegisterApiController uploadDocumentsUser');
             report($e);
