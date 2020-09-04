@@ -426,7 +426,7 @@ class FoxUtils
                                        ]);
 
                 $command = $client->getCommand('GetObject', [
-                    'Bucket' => env('AWS_BUCKET'),
+                    'Bucket' => 'cloudfox-digital-products',
                     'Key'    => $urlKey,
                 ]);
 
