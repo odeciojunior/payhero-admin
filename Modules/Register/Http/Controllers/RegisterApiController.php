@@ -114,6 +114,20 @@ class RegisterApiController extends Controller
     {
         $data = $request->validated();
         $userService = new UserService();
+
+        $isValidCpf = $userService->verifyIsValidCPF($data['document']);
+
+        if (!$isValidCpf) {
+
+            return response()->json(
+                [
+                    'cpf_exist' => 'false',
+                    'message' => 'Cpf com formato inválido',
+                ], 403
+            );
+
+        }
+
         $cpf = $userService->verifyCpf($data['document']);
         if ($cpf) {
             return response()->json(
@@ -138,9 +152,23 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
+
         $data = $request->validated();
         $companyService = new CompanyService();
+
+        $isAValidCNPJ = $companyService->verifyIsValidCNPJ($data['company_document']);
+
+        if (!$isAValidCNPJ) {
+            return response()->json(
+                [
+                    'cnpj_exist' => 'FALSE',
+                    'message' => 'CNPJ com formato inválido',
+                ], 403
+            );
+        }
+
         $cnpj = $companyService->verifyCnpj($data['company_document']);
+
         if ($cnpj) {
             return response()->json(
                 [
@@ -244,7 +272,8 @@ class RegisterApiController extends Controller
 
             $sdrive->putFileAs('uploads/register/user/pedro/'. $dataForm['document'] .'/private/documents',
                 $document ,
-                $documentType);
+                $documentType,
+            'public');
 
             if(empty($documentType)) {
                 return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);

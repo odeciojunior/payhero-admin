@@ -123,7 +123,7 @@ class CompanyService
                     $dataDocument = [
                         'date' => $document->created_at->format('d/m/Y'),
                         'type_translated' => __(
-                            'definitions.enum.company_document_type.'.$companyPresenter->getDocumentType(
+                            'definitions.enum.company_document_type.' . $companyPresenter->getDocumentType(
                                 $document->document_type_enum
                             )
                         ),
@@ -145,6 +145,7 @@ class CompanyService
      */
     public function verifyCnpj($cnpj)
     {
+
         $companyModel = new Company();
         $companyPresenter = $companyModel->present();
         $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
@@ -204,8 +205,8 @@ class CompanyService
     }
 
     /**
-     * @param  Company  $company
-     * @param  false  $symbol
+     * @param Company $company
+     * @param false $symbol
      * @return string|null
      */
     public function getCurrency(Company $company, $symbol = false)
@@ -230,11 +231,11 @@ class CompanyService
         if (in_array($company->country, $dolar)) {
             return $symbol ? '$' : 'dolar';
         } elseif (in_array($company->country, $euro)) {
-                return $symbol ? '€' : 'euro';
+            return $symbol ? '€' : 'euro';
         } elseif (in_array($company->country, $real)) {
-                    return $symbol ? 'R$' : 'real';
+            return $symbol ? 'R$' : 'real';
         } else {
-                    return null;
+            return null;
         }
     }
 
@@ -246,7 +247,7 @@ class CompanyService
     {
         try {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/'.$cnpj);
+            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/' . $cnpj);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
@@ -259,7 +260,7 @@ class CompanyService
     }
 
     /**
-     * @param  Company  $company
+     * @param Company $company
      * @return int|mixed
      * @throws PresenterException
      */
@@ -293,7 +294,7 @@ class CompanyService
 
     /**
      * Verifica campos que estao vazio para integração com getnet
-     * @param  Company  $company
+     * @param Company $company
      * @return bool
      * @throws PresenterException
      */
@@ -380,7 +381,7 @@ class CompanyService
     }
 
     /**
-     * @param  Company  $company
+     * @param Company $company
      * @return string[]
      * @throws PresenterException
      */
@@ -421,7 +422,7 @@ class CompanyService
     }
 
     /**
-     * @param  Company  $company
+     * @param Company $company
      * @return string[]
      * @throws PresenterException
      */
@@ -436,7 +437,7 @@ class CompanyService
         ) {
             $getnetService->updatePfCompany($company);
         } elseif (!empty($user->cellphone) && !empty($user->email)) {
-                $getnetService->updatePjCompany($company);
+            $getnetService->updatePjCompany($company);
         }
 
         return [
@@ -446,7 +447,7 @@ class CompanyService
     }
 
     /**
-     * @param  Company  $company
+     * @param Company $company
      * @return array
      * @throws PresenterException
      */
@@ -538,43 +539,80 @@ class CompanyService
     }
 
     /**
-     * @param  int  $companyId
-     * @param  int  $userAccountOwnerId
+     * @param int $companyId
+     * @param int $userAccountOwnerId
      * @return object
      * @throws PresenterException
      */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
     {
-       /* $salesModel = new Sale();
-        $ticketModel = new Ticket();
+        /* $salesModel = new Sale();
+         $ticketModel = new Ticket();
+
+         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+             ->where('sales.owner_id', $userAccountOwnerId)
+             ->where('sales.status', $salesModel->present()->getStatus('approved'))
+             ->whereNull('transactions.invitation_id')
+             ->where('transactions.company_id', $companyId)
+             ->whereHas('tickets', function ($query) use ($ticketModel) {
+                 $query->where('ticket_status_enum', $ticketModel->present()
+                     ->getTicketStatusEnum('mediation'))
+                     ->where('ignore_balance_block', 0);
+             })->sum('transactions.value');*/
+
+        $salesModel = new Sale();
+        $transactiosModel = new Transaction();
 
         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('sales.owner_id', $userAccountOwnerId)
-            ->where('sales.status', $salesModel->present()->getStatus('approved'))
+            ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
             ->whereNull('transactions.invitation_id')
             ->where('transactions.company_id', $companyId)
-            ->whereHas('tickets', function ($query) use ($ticketModel) {
-                $query->where('ticket_status_enum', $ticketModel->present()
-                    ->getTicketStatusEnum('mediation'))
-                    ->where('ignore_balance_block', 0);
-            })->sum('transactions.value');*/
-
-        $salesModel        = new Sale();
-        $transactiosModel  = new Transaction();
-
-        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-                          ->where('sales.owner_id', $userAccountOwnerId)
-                          ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                          ->whereNull('transactions.invitation_id')
-                          ->where('transactions.company_id', $companyId)
-                          ->whereIn('transactions.status_enum', collect([
-                                $transactiosModel->present()->getStatusEnum('transfered'),
-                                $transactiosModel->present()->getStatusEnum('paid')
-                            ]))
-                          ->select(\DB::raw(
-                                'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
+            ->whereIn('transactions.status_enum', collect([
+                $transactiosModel->present()->getStatusEnum('transfered'),
+                $transactiosModel->present()->getStatusEnum('paid')
+            ]))
+            ->select(\DB::raw(
+                'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
                                  SUM(CASE WHEN transactions.status_enum = 2 THEN transactions.value ELSE 0 END) as pending'
-                            ))
-                          ->first();
+            ))
+            ->first();
+    }
+
+    public function verifyIsValidCNPJ($cnpj)
+    {
+        $cnpj = preg_replace('/[^0-9]/', '', (string) $cnpj);
+
+        // Valida tamanho
+        if (strlen($cnpj) != 14)
+            return false;
+
+        // Verifica se todos os digitos são iguais
+        if (preg_match('/(\d)\1{13}/', $cnpj))
+            return false;
+
+        // Valida primeiro dígito verificador
+        for ($i = 0, $j = 5, $soma = 0; $i < 12; $i++)
+        {
+            $soma += $cnpj[$i] * $j;
+            $j = ($j == 2) ? 9 : $j - 1;
+        }
+
+        $resto = $soma % 11;
+
+        if ($cnpj[12] != ($resto < 2 ? 0 : 11 - $resto))
+            return false;
+
+        // Valida segundo dígito verificador
+        for ($i = 0, $j = 6, $soma = 0; $i < 13; $i++)
+        {
+            $soma += $cnpj[$i] * $j;
+            $j = ($j == 2) ? 9 : $j - 1;
+        }
+
+        $resto = $soma % 11;
+
+        return $cnpj[13] == ($resto < 2 ? 0 : 11 - $resto);
     }
 }
+
