@@ -305,7 +305,7 @@ class RegisterApiController extends Controller
         $data = $request->validated();
         $email = $data["email"] ?? null;
 
-        $verifyCode = random_int(100000, 999999);
+        $verifyCode = random_int(1000, 9999);
         $data = [
             "verify_code" => $verifyCode,
         ];
@@ -317,7 +317,7 @@ class RegisterApiController extends Controller
             'noreply@cloudfox.net',
             'cloudfox',
             $email,
-            '$data[\'firstname\']',
+            $data['firstname'],
             "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
             $data
         )) {
@@ -396,7 +396,7 @@ class RegisterApiController extends Controller
                 );
             }
 
-            $verifyCode = random_int(100000, 999999);
+            $verifyCode = random_int(1000, 9999);
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
 

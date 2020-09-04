@@ -743,7 +743,7 @@ $(document).ready(function () {
 
     $("#tokenEmail").on('input', function () {
         var token = $(this).val();
-        if (token.length !== 6) return false;
+        if (token.length !== 4) return false;
 
         $.ajax({
             method: "POST",
@@ -771,7 +771,7 @@ $(document).ready(function () {
 
     $("#tokenCellphone").on('input', function () {
         var token = $(this).val();
-        if (token.length !== 6) return false;
+        if (token.length !== 4) return false;
 
         $.ajax({
             method: "POST",
@@ -880,7 +880,10 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: {email: email},
+            data: {
+                email: email,
+                firstName: $('#firstname').val()
+            },
             error: function error(response) {
                 alertCustom('error', response.responseJSON.message )
             },

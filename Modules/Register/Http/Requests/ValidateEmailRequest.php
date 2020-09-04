@@ -14,7 +14,8 @@ class ValidateEmailRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'             => 'required|max:200',
+            'email'     => 'required|max:200',
+            'firstname' => 'nullable',
         ];
     }
 
@@ -25,8 +26,8 @@ class ValidateEmailRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'        => 'Precisamos do seu email para continuar',
-            'email.unique'          => 'Email informado ja esta sendo utilizado',
+            'email.required'    => 'Precisamos do seu email para continuar',
+            'email.unique'      => 'Email informado ja esta sendo utilizado',
         ];
     }
 
