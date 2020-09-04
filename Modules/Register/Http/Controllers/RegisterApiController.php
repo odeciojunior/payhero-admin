@@ -103,6 +103,20 @@ class RegisterApiController extends Controller
     {
         $data = $request->validated();
         $userService = new UserService();
+
+        $isValidCpf = $userService->verifyIsValidCPF($data['document']);
+
+        if (!$isValidCpf) {
+
+            return response()->json(
+                [
+                    'cpf_exist' => 'false',
+                    'message' => 'Cpf com formato inválido',
+                ], 403
+            );
+
+        }
+
         $cpf = $userService->verifyCpf($data['document']);
         if ($cpf) {
             return response()->json(
@@ -127,9 +141,23 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
+
         $data = $request->validated();
         $companyService = new CompanyService();
+
+        $isAValidCNPJ = $companyService->verifyIsValidCNPJ($data['company_document']);
+
+        if (!$isAValidCNPJ) {
+            return response()->json(
+                [
+                    'cnpj_exist' => 'FALSE',
+                    'message' => 'CNPJ com formato inválido',
+                ], 403
+            );
+        }
+
         $cnpj = $companyService->verifyCnpj($data['company_document']);
+
         if ($cnpj) {
             return response()->json(
                 [
@@ -254,26 +282,26 @@ class RegisterApiController extends Controller
             );
 
             if ($documentType == $user->present()->getDocumentType('personal_document')) {
-                    $user->update(
-                        [
-                            'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
+                $user->update(
+                    [
+                        'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
+                    ]
+                );
+            }
 
-                if ($documentType == $user->present()->getDocumentType('address_document')) {
-                    $user->update(
-                        [
-                            'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
+            if ($documentType == $user->present()->getDocumentType('address_document')) {
+                $user->update(
+                    [
+                        'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
+                    ]
+                );
+            }
 
-                if(empty($documentType)) {
-                    $documentSaved->delete();
+            if (empty($documentType)) {
+                $documentSaved->delete();
 
-                    return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
-                }
+                return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+            }
 
 
             return response()->json(
