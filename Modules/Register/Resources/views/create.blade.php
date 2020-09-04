@@ -102,6 +102,13 @@
                             <p class='sm-tex text-danger' id='lastNameError' style='display:none;'>O campo sobrenome é obrigatório</p>
                         </div>
                     </div>
+                    <div class="col-lg-6">
+                        <div class="input-holder d-flex flex-column">
+                            <label for="fileDoc">Documento</label>
+                            <input style="display: block !important;" type="file" name="fileToUpload" id="fileToUpload2" placeholder="Insira o documento" required>
+                            <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é obrigatório</p>
+                        </div>
+                    </div>
                 </div>
                 <div class='row mt-20'>
                     <div class="col-lg-4">

@@ -10,23 +10,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Modules\Core\Entities\CompanyDocument;
-use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
-use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\SmsService;
-use Modules\Register\Http\Requests\UploudDocument;
 use Modules\Register\Http\Requests\ValidateCnpjRequest;
 use Modules\Register\Http\Requests\ValidateCpfRequest;
 use Modules\Register\Http\Requests\ValidateEmailRequest;
 use Modules\Register\Http\Requests\ValidatePhoneNumberRequest;
-use Modules\Register\Transformers\RegisterDocumentsResource;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\UserNotification;
@@ -79,12 +72,30 @@ class RegisterApiController extends Controller
                 $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
             }
 
+            if (env('APP_ENV') == 'local')
+                $sdrive = Storage::disk('local');
+            else
+                $sdrive = Storage::disk('s3');
+
+            if ($files = $sdrive->allFiles('uploads/register/user/pedro/' . $user->document . '/private/documents')) {
+                if (!app(RegisterController::class)->uploudDocumentsRegistered($files)) {
+                    return response()->json(
+                        [
+                            'success' => 'false',
+                            'message' => 'Não foi Possivel enviar os arquivos ao servidor, favor verificar os arquivos
+                                          no Perfil do usuário e da empresa',
+                        ]
+                    );
+                }
+            }
+
             $this->sendWelcomeEmail($requestData);
 
             return response()->json(
                 [
-                    'success' => 'true',
-                    'access_token' => auth()->user()->createToken("Laravel Password Grant Client")->accessToken,
+                    'success'       => 'true',
+                    'message'       => 'Arquivos Enviado com Sucesso',
+                    'access_token'  => auth()->user()->createToken("Laravel Password Grant Client")->accessToken,
                 ]
             );
 
@@ -212,207 +223,45 @@ class RegisterApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function uploadDocuments(UploudDocument $request)
+    public function uploadDocuments(Request $request)
     {
         try {
-            $amazonFileService = app(AmazonFileService::class);
-//            $dataForm = Validator::make($request->all(), [
-//                // Usuário
-//                'fileToUploud'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-//                'document_type'   => 'required',
-//            ], [
-//                'fileToUploud.mimes'     => 'O arquivo esta com formato inválido',
-//                'fileToUploud.required'  => 'Precisamos do arquivo para continuar',
-//                'document_type.required'  => 'Precisamos saber o tipo do documento para continuar',
-//            ])->validate();
+            $dataForm = Validator::make($request->all(), [
+                'fileToUpload'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+                'document'      => 'required',
+            ], [
+                'fileToUpload.mimes'     => 'O arquivo esta com formato inválido',
+                'fileToUpload.required'  => 'Precisamos do arquivo para continuar',
+            ])->validate();
+
+            if (env('APP_ENV') == 'local')
+                $sdrive = Storage::disk('local');
+            else
+                $sdrive = Storage::disk('s3');
 
             $document = $request->file('fileToUploud');
+            $documentType = $document->getClientOriginalName() ?? '';
 
-            /**
-             *  Salva Arquivos | (Usuário)
-             */
-            $amazonPathUser = $amazonFileService->uploadFile(
-                'uploads/register/user/' . Hashids::encode(auth()->user()->account_owner_id) . '/private/documents',
-                $document,
-                null,
-                null,
-                'private'
-            );
+            $sdrive->putFileAs('uploads/register/user/pedro/'. $dataForm['document'] .'/private/documents',
+                $document ,
+                $documentType);
 
-            $documentType = $dataForm['$document_type'] ?? '';
-
-            /**
-             * Salva status do documentos no Banco | (Usuário)
-             */
-            $documentSaved = $userDocument->create(
-                [
-                    'user_id' => auth()->user()->account_owner_id,
-                    'document_url' => $amazonPathUser,
-                    'document_type_enum' => $documentType,
-                    'status' => $userDocument->present()->getTypeEnum('analyzing'),
-                ]
-            );
-
-            if ($documentType == $user->present()->getDocumentType('personal_document')) {
-                    $user->update(
-                        [
-                            'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
-
-                if ($documentType == $user->present()->getDocumentType('address_document')) {
-                    $user->update(
-                        [
-                            'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
-
-                if(empty($documentType)) {
-                    $documentSaved->delete();
-
-                    return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
-                }
+            if(empty($documentType)) {
+                return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+            }
 
 
             return response()->json(
                 [
                     'message' => 'Arquivo enviado com sucesso.',
-                    'personal_document_translate' => Lang::get(
-                        'definitions.enum.personal_document_status.' . $user->present()
-                            ->getPersonalDocumentStatus($user->personal_document_status)
-                    ),
-                    'address_document_translate' => Lang::get(
-                        'definitions.enum.personal_document_status.' . $user->present()
-                            ->getAddressDocumentStatus($user->address_document_status)
-                    ),
                 ],
                 200
             );
         } catch (Exception $e) {
-            Log::warning('RegisterApiController uploadDocumentsUser');
+            Log::warning('RegisterApiController uploadDocuments');
             report($e);
 
             return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
-        }
-    }
-
-    public function uploadDocumentsCompany(string $document_type, array $file)
-    {
-        try {
-            $companyModel = new Company();
-            $companyDocumentModel = new CompanyDocument();
-
-            $company = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
-
-            if (Gate::allows('uploadDocuments', [$company])) {
-                $amazonFileService = app(AmazonFileService::class);
-
-                $document = $file ?? '';
-                $documentType = $document_type ?? '';
-
-
-                /**
-                 *  Salva Arquivos | (Empresa)
-                 */
-
-                $amazonPathCompanies = $amazonFileService->uploadFile(
-                    'uploads/user/' . Hashids::encode(auth()->user()->account_owner_id)
-                    . '/companies/' . Hashids::encode($company->id) . '/private/documents',
-                    $document,
-                    null,
-                    null,
-                    'private'
-                );
-
-                /**
-                 * Salva status do documentos no Banco | (Empresa)
-                 */
-                $companyDocumentModel->create(
-                    [
-                        'company_id' => $company->id,
-                        'document_url' => $amazonPathCompanies,
-                        'document_type_enum' => $documentType,
-                        'status' => $companyDocumentModel->present()->getTypeEnum('analyzing'),
-                    ]
-                );
-
-                if ($documentType == $company->present()->getDocumentType('bank_document_status')) {
-                    $company->update(
-                        [
-                            'bank_document_status' => $company->present()
-                                ->getBankDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
-                if ($documentType == $company->present()->getDocumentType('address_document_status')) {
-                    $company->update(
-                        [
-                            'address_document_status' => $company->present()
-                                ->getAddressDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
-                if ($documentType == $company->present()->getDocumentType('contract_document_status')) {
-                    $company->update(
-                        [
-                            'contract_document_status' => $company->present()->getContractDocumentStatus('analyzing'),
-                        ]
-                    );
-                }
-
-                return response()->json(
-                    [
-                        'message' => 'Arquivo enviado com sucesso.',
-                    ],
-                    Response::HTTP_OK
-                );
-            } else {
-                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
-            }
-        } catch (Exception $e) {
-            Log::warning('RegisterApiController uploadDocumentsCompany');
-            report($e);
-
-            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function getDocuments(Request $request)
-    {
-        try {
-            if (!empty($request->input('document_type'))) {
-                $userDocumentModel = new UserDocument();
-                $userModel = new User();
-
-                $documentType = $userModel->present()->getDocumentType($request->input('document_type'));
-
-                $userDocuments = $userDocumentModel->where('user_id', auth()->user()->account_owner_id)
-                    ->where('document_type_enum', $documentType)->get();
-
-                return RegisterDocumentsResource::collection($userDocuments);
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                    ],
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-                ],
-                400
-            );
         }
     }
 

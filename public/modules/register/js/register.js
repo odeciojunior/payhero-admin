@@ -968,13 +968,16 @@ $(document).ready(function () {
     }
 
     // function uploadFile(document_type) {
-        $("#fileToUpload").change(function () {
+        $("[name='fileToUpload']").change(function (e) {
+            var fileId = e.target.getAttribute('id');
+            var file = document.getElementById(fileId).files[0]
             var fileReader = new FileReader();
-            fileReader.readAsDataURL(document.getElementById("fileToUpload").files[0]);
+            fileReader.readAsDataURL(file);
 
             fileReader.onload = function (oFREvent) {
                 let myForm = document.getElementById('form-register');
                 let formData = new FormData(myForm);
+                formData.append('fileToUpload', file, fileId)
 
                 $.ajax({
                     method: "POST",
@@ -992,12 +995,10 @@ $(document).ready(function () {
                     },
                     success: function (response) {
                         alertCustom('success', response.message)
-                        // }
                     }
 
                 });
             };
-
         });
     // }
 
