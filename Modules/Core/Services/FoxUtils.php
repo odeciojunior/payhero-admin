@@ -24,7 +24,7 @@ class FoxUtils
         if (defined('INTL_IDNA_VARIANT_UTS46')) {
             $variant = INTL_IDNA_VARIANT_UTS46;
         }
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
+        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.').'.';
 
         $Aresult = true;
         $MXresult = checkdnsrr($host, 'MX');
@@ -99,8 +99,8 @@ class FoxUtils
 
     /**
      * @param $telephone
-     * @param bool $ddd
-     * @param bool $number
+     * @param  bool  $ddd
+     * @param  bool  $number
      * @return string
      */
     public static function getTelephone($telephone, $ddd = false, $number = false)
@@ -110,35 +110,35 @@ class FoxUtils
         if (!$ddd && !$number) {
             $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
             if ($length == 13) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS e 9 dígitos
-                return "+" . substr($telephone, 0, $length - 11) . "(" . substr(
+                return "+".substr($telephone, 0, $length - 11)."(".substr(
                         $telephone,
                         $length - 11,
                         2
-                    ) . ")" . substr($telephone, $length - 9, 5) . "-" . substr($telephone, -4);
+                    ).")".substr($telephone, $length - 9, 5)."-".substr($telephone, -4);
             }
             if ($length == 12) { // COM CÓDIGO DE ÁREA NACIONAL E DO PAIS
-                return "+" . substr($telephone, 0, $length - 10) . "(" . substr(
+                return "+".substr($telephone, 0, $length - 10)."(".substr(
                         $telephone,
                         $length - 10,
                         2
-                    ) . ")" . substr($telephone, $length - 8, 4) . "-" . substr($telephone, -4);
+                    ).")".substr($telephone, $length - 8, 4)."-".substr($telephone, -4);
             }
             if ($length == 11) { // COM CÓDIGO DE ÁREA NACIONAL e 9 dígitos
-                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 5) . "-" . substr(
+                return "(".substr($telephone, 0, 2).")".substr($telephone, 2, 5)."-".substr(
                         $telephone,
                         7,
                         11
                     );
             }
             if ($length == 10) { // COM CÓDIGO DE ÁREA NACIONAL
-                return "(" . substr($telephone, 0, 2) . ")" . substr($telephone, 2, 4) . "-" . substr(
+                return "(".substr($telephone, 0, 2).")".substr($telephone, 2, 4)."-".substr(
                         $telephone,
                         6,
                         10
                     );
             }
             if ($length <= 9) { // SEM CÓDIGO DE ÁREA
-                return substr($telephone, 0, $length - 4) . "-" . substr($telephone, -4);
+                return substr($telephone, 0, $length - 4)."-".substr($telephone, -4);
             }
         } else {
             if ($ddd) {
@@ -147,10 +147,10 @@ class FoxUtils
                 $length = strlen(preg_replace("/[^0-9]/", "", $telephone));
 
                 if ($length == 11) {
-                    return substr($telephone, 2, 5) . "-" . substr($telephone, 7, 11);
+                    return substr($telephone, 2, 5)."-".substr($telephone, 7, 11);
                 }
                 if ($length == 10) {
-                    return substr($telephone, 2, 4) . "-" . substr($telephone, 6, 10);
+                    return substr($telephone, 2, 4)."-".substr($telephone, 6, 10);
                 }
 
                 return '';
@@ -166,7 +166,7 @@ class FoxUtils
      */
     public static function getCep($zipCode)
     {
-        return substr($zipCode, 0, 5) . '-' . substr($zipCode, 5, 3);
+        return substr($zipCode, 0, 5).'-'.substr($zipCode, 5, 3);
     }
 
     /**
@@ -179,7 +179,7 @@ class FoxUtils
             return null;
         }
 
-        return substr($cep, 0, 5) . "-" . substr($cep, 5);
+        return substr($cep, 0, 5)."-".substr($cep, 5);
     }
 
     /**
@@ -237,7 +237,7 @@ class FoxUtils
     }
 
     /**
-     * @param mixed $var
+     * @param  mixed  $var
      * @return bool
      */
     public static function isEmpty($var)
@@ -293,7 +293,7 @@ class FoxUtils
 
     /**
      * @param $value
-     * @param string $type
+     * @param  string  $type
      * @return null
      */
     public static function xorEncrypt($value, $type = "encrypt")
@@ -351,8 +351,8 @@ class FoxUtils
 
     /**
      * @param $value
-     * @param string $locale
-     * @param string $currency
+     * @param  string  $locale
+     * @param  string  $currency
      * @return string
      * https://www.php.net/manual/pt_BR/class.numberformatter.php
      */
@@ -382,7 +382,7 @@ class FoxUtils
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      * @return array
      */
     public static function splitName($value)
@@ -407,7 +407,7 @@ class FoxUtils
 
     /**
      * @param $url
-     * @param null $expiration
+     * @param  null  $expiration
      * @return string
      */
     public static function getAwsSignedUrl($url, $expiration = null)
@@ -417,31 +417,92 @@ class FoxUtils
                 $urlKey = str_replace('https://cloudfox-digital-products.s3.amazonaws.com/', '', $url);
 
                 $client = new S3Client([
-                                           'credentials' => [
-                                               'key'    => env('AWS_ACCESS_KEY_ID'),
-                                               'secret' => env('AWS_SECRET_ACCESS_KEY'),
-                                           ],
-                                           'region'      => env('AWS_DEFAULT_REGION'),
-                                           'version'     => '2006-03-01',
-                                       ]);
+                    'credentials' => [
+                        'key' => env('AWS_ACCESS_KEY_ID'),
+                        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                    ],
+                    'region' => env('AWS_DEFAULT_REGION'),
+                    'version' => '2006-03-01',
+                ]);
 
                 $command = $client->getCommand('GetObject', [
                     'Bucket' => 'cloudfox-digital-products',
-                    'Key'    => $urlKey,
+                    'Key' => $urlKey,
                 ]);
 
                 $urlExpirationTime = $expiration ?? 24;
 
                 $signedRequest = $client->createPresignedRequest($command, "+$urlExpirationTime hours");
 
-                $signedUrl = (string) $signedRequest->getUri();
+                $signedUrl = (string)$signedRequest->getUri();
 
                 return $signedUrl;
             }
             return '';
         } catch (Exception $ex) {
             return '';
+        }
+    }
 
+    public static function getFormatState($uf)
+    {
+        switch ($uf) {
+            case 'Acre':
+                return 'AC';
+            case 'Alagoas':
+                return 'AL';
+            case 'Amapá':
+                return 'AP';
+            case 'Amazonas':
+                return 'AM';
+            case 'Bahia':
+                return 'BA';
+            case 'Ceará':
+                return 'CE';
+            case 'Distrito Federal':
+                return 'DF';
+            case 'Espírito Santo':
+                return 'ES';
+            case 'Goiás':
+                return 'GO';
+            case 'Maranhão':
+                return 'MA';
+            case 'Mato Grosso':
+                return 'MT';
+            case 'Mato Grosso do Sul':
+                return 'MS';
+            case 'Minas Gerais':
+                return 'MG';
+            case 'Pará':
+                return 'PA';
+            case 'Paraíba':
+                return 'PB';
+            case 'Paraná':
+                return 'PR';
+            case 'Pernambuco':
+                return 'PE';
+            case 'Piauí':
+                return 'PI';
+            case 'Rio de Janeiro':
+                return 'RJ';
+            case 'Rio Grande do Norte':
+                return 'RN';
+            case 'Rio Grande do Sul':
+                return 'RS';
+            case 'Rondônia':
+                return 'RO';
+            case 'Roraima':
+                return 'RR';
+            case 'Santa Catarina':
+                return 'SC';
+            case 'São Paulo':
+                return 'SP';
+            case 'Sergipe':
+                return 'SE';
+            case 'Tocantins':
+                return 'TO';
+            default:
+                return $uf;
         }
     }
 }

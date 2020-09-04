@@ -22,7 +22,7 @@ class GetnetBackOfficeService extends GetnetService
     /**
      * @var string
      */
-    private $postFieldsAcessToken = 'scope=mgm&grant_type=client_credentials';
+    private $postFieldsAcessToken;
 
     public $authorizationToken;
 
@@ -32,11 +32,23 @@ class GetnetBackOfficeService extends GetnetService
     public function __construct()
     {
         try {
-            $this->authorizationToken = base64_encode(
-                getenv('GET_NET_CLIENT_ID') . ':' . getenv('GET_NET_CLIENT_SECRET')
-            );
+            if (FoxUtils::isProduction()) {
+                $this->authorizationToken = base64_encode(
+                    getenv('GET_NET_CLIENT_ID_PRODUCTION').':'.getenv('GET_NET_CLIENT_SECRET_PRODUCTION')
+                );
+
+                $this->postFieldsAcessToken = 'scope=oob&grant_type=client_credentials';
+            } else {
+                $this->authorizationToken = base64_encode(
+                    getenv('GET_NET_CLIENT_ID_SANDBOX').':'.getenv('GET_NET_CLIENT_SECRET_SANDBOX')
+                );
+
+                $this->postFieldsAcessToken = 'scope=mgm&grant_type=client_credentials';
+            }
+
             $this->setAccessToken($this->urlCredentialAcessToken, $this->postFieldsAcessToken);
         } catch (Exception $e) {
+            report($e);
         }
 
         parent::__construct();
@@ -48,7 +60,11 @@ class GetnetBackOfficeService extends GetnetService
      */
     public function getMerchantId()
     {
-        return env('GET_NET_MERCHANT_ID');
+        if (FoxUtils::isProduction()) {
+            return env('GET_NET_MERCHANT_ID_PRODUCTION');
+        }
+
+        return env('GET_NET_MERCHANT_ID_SANDBOX');
     }
 
     /**
@@ -57,7 +73,7 @@ class GetnetBackOfficeService extends GetnetService
     public function getAuthorizationHeader()
     {
         return [
-            'authorization: Bearer ' . $this->accessToken,
+            'authorization: Bearer '.$this->accessToken,
             'Content-Type: application/json',
         ];
     }
@@ -65,14 +81,20 @@ class GetnetBackOfficeService extends GetnetService
     /**
      * Endpoint para solicitação de extrato eletrônico
      * @method GET
-     * @param $pagination | Primeira chamada sempre se inicia com o número 1.
-     * @param null $subsellerId |
+     * @param $pagination  | Primeira chamada sempre se inicia com o número 1.
+     * @param  null  $subsellerId  |
      * @return bool|string
      */
     public function getStatement($subsellerId = null, $pagination = null)
     {
+        if (FoxUtils::isProduction()) {
+            $sellerId = getenv('GET_NET_SELLER_ID_PRODUCTION');
+        } else {
+            $sellerId = getenv('GET_NET_SELLER_ID_SANDBOX');
+        }
+
         $queryParameters = [
-            'seller_id' => getenv('GET_NET_SELLER_ID'),
+            'seller_id' => $sellerId,
             'transaction_date_init' => '2020-06-01',
             'transaction_date_end' => '2020-07-10'
         ];
@@ -82,185 +104,115 @@ class GetnetBackOfficeService extends GetnetService
         }
 
         if (is_null($pagination)) {
-            $url = 'v1/mgm/statement?' . http_build_query($queryParameters);
+            $url = 'v1/mgm/statement?'.http_build_query($queryParameters);
         } else {
             $queryParameters = $queryParameters + ['page' => $pagination];
-            $url = 'v1/mgm/paginatedstatement?' . http_build_query($queryParameters);
+            $url = 'v1/mgm/paginatedstatement?'.http_build_query($queryParameters);
         }
 
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * Endpoint Consulta situação cadastral de um CPF
-     * Method GET
-     * @param string $cpf
-     * @return bool|string
-     */
     public function checkPfCompanyRegister(string $cpf)
     {
-        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
+        $url = 'v1/mgm/pf/callback/'.$this->getMerchantId().'/'.$cpf;
 
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * Endpoint Consulta planos de pagamentos configurados para a loja PF
-     * Method GET
-     */
     public function checkAvailablePaymentPlansPf()
     {
-        $url = 'v1/mgm/pf/consult/paymentplans/' . $this->getMerchantId();
+        $url = 'v1/mgm/pf/consult/paymentplans/'.$this->getMerchantId();
 
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * Endpoint Cria pré-cadastro da loja PF
-     * Method POST
-     * @param Company $company
-     * @return bool|string
-     * @throws PresenterException
-     */
     public function createPfCompany(Company $company)
     {
         $url = 'v1/mgm/pf/create-presubseller';
         $data = $this->getPrepareDataCreatePfCompany($company);
 
-        return $this->sendCurl($url, 'POST', $data,$company->id);
+        return $this->sendCurl($url, 'POST', $data, $company->id);
     }
 
-    /**
-     * Endpoint Complementar pré-cadastro da loja quando necessario
-     * Method PUT
-     * @param Company $company
-     * @return bool|string
-     */
     public function complementPfCompany(Company $company)
     {
         $url = 'v1/mgm/pf/complement';
         $data = $this->getPrepareDataComplementPfCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data,$company->id);
+        return $this->sendCurl($url, 'PUT', $data, $company->id);
     }
 
-    /**
-     * Endpoint para descredenciar Loja
-     * Method POST
-     * @param $subsellerGetnetId
-     * @return bool|string
-     */
     public function disqualifyPfCompany($subsellerGetnetId)
     {
-        $url = 'v1/mgm/pf/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
+        $url = 'v1/mgm/pf/de-accredit/'.$this->getMerchantId().'/'.$subsellerGetnetId;
 
         return $this->sendCurl($url, 'POST');
     }
 
-    /**
-     * Endpoint Atualiza cadastro da loja
-     * Method PUT
-     * @param Company $company
-     * @return bool|string
-     * @throws PresenterException
-     */
     public function updatePfCompany(Company $company)
     {
         $url = 'v1/mgm/pf/update-subseller';
         $data = $this->getPrepareDataUpdatePfCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data,$company->id);
+        return $this->sendCurl($url, 'PUT', $data, $company->id);
     }
 
-    /**
-     * Endpoint Consulta complemento cadastral de um CNPJ
-     * @param $cnpj
-     * @return bool|string
-     */
+    public function checkPaymentPlans()
+    {
+        $url = "v1/mgm/pj/consult/paymentplans/{$this->getMerchantId()}";
+
+        return $this->sendCurl($url, 'GET');
+    }
+
     public function checkComplementPjCompanyRegister($cnpj)
     {
-        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/consult/'.$this->getMerchantId().'/'.$cnpj;
 
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * Endpoint Consulta situação cadastral de um CNPJ
-     * Method GET
-     * @param $cnpj
-     * @return bool|string
-     */
     public function checkPjCompanyRegister($cnpj)
     {
-        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/callback/'.$this->getMerchantId().'/'.$cnpj;
 
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * Endpoint Consulta planos de pagamentos connfigurados para loja PJ
-     * Method GET
-     */
     public function checkAvailablePaymentPlansPj()
     {
-        $url = 'v1/mgm/pj/consult/paymentplans/' . $this->getMerchantId();
+        $url = 'v1/mgm/pj/consult/paymentplans/'.$this->getMerchantId();
 
         return $this->sendCurl($url, 'GET');
     }
 
-    /**
-     * Endpoint Cria pré-cadastro da loja
-     * Method POST
-     * @param Company $company
-     * @return bool|string
-     * @throws PresenterException
-     */
     public function createPjCompany(Company $company)
     {
         $url = 'v1/mgm/pj/create-presubseller';
         $data = $this->getPrepareDataCreatePjCompany($company);
 
-        return $this->sendCurl($url, 'POST', $data,$company->id);
+        return $this->sendCurl($url, 'POST', $data, $company->id);
     }
 
-    /**
-     * Endpoint Complementa pré-cadastro da loja se necessario
-     * Method PUT
-     * @param Company $company
-     * @return bool|string
-     */
     public function complementPjCompany(Company $company)
     {
         $url = 'v1/mgm/pj/complement';
         $data = $this->getPrepareDataComplementPjCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data,$company->id);
+        return $this->sendCurl($url, 'PUT', $data, $company->id);
     }
 
-    /**
-     * Endpoint Atualiza cadastro da loja
-     * Method PUT
-     * @param Company $company
-     * @return bool|string
-     * @throws PresenterException
-     */
     public function updatePjCompany(Company $company)
     {
         $url = 'v1/mgm/pj/update-subseller';
         $data = $this->getPrepareDataUpdatePjCompany($company);
 
-        return $this->sendCurl($url, 'PUT', $data,$company->id);
+        return $this->sendCurl($url, 'PUT', $data, $company->id);
     }
 
-    /**
-     * Endpoint Descredenciar Loja PJ
-     * Method POST
-     * @param $subsellerGetnetId
-     * @return bool|string
-     */
     public function disqualifyPjCompany($subsellerGetnetId)
     {
-        $url = 'v1/mgm/pj/de-accredit/' . $this->getMerchantId() . '/' . $subsellerGetnetId;
+        $url = 'v1/mgm/pj/de-accredit/'.$this->getMerchantId().'/'.$subsellerGetnetId;
 
         return $this->sendCurl($url, 'POST');
     }

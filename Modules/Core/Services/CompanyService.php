@@ -230,11 +230,11 @@ class CompanyService
         if (in_array($company->country, $dolar)) {
             return $symbol ? '$' : 'dolar';
         } elseif (in_array($company->country, $euro)) {
-                return $symbol ? '€' : 'euro';
+            return $symbol ? '€' : 'euro';
         } elseif (in_array($company->country, $real)) {
-                    return $symbol ? 'R$' : 'real';
+            return $symbol ? 'R$' : 'real';
         } else {
-                    return null;
+            return null;
         }
     }
 
@@ -291,12 +291,6 @@ class CompanyService
         return $pendingBalance;
     }
 
-    /**
-     * Verifica campos que estao vazio para integração com getnet
-     * @param  Company  $company
-     * @return bool
-     * @throws PresenterException
-     */
     public function verifyFieldsEmpty(Company $company)
     {
         if ($company->company_type == $company->present()->getCompanyType('juridical person')) {
@@ -379,32 +373,35 @@ class CompanyService
 //        }
     }
 
-    /**
-     * @param  Company  $company
-     * @return string[]
-     * @throws PresenterException
-     */
     public function createCompanyGetnet(Company $company)
     {
-        $getnetService = new GetnetService();
-        $userService = new UserService();
+        try {
+            $getnetService = new GetnetBackOfficeService();
+            $userService = new UserService();
 
-        $user = $company->user;
+            $user = $company->user;
 
-        if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-            && (!$userService->verifyFieldsEmpty($user))
-        ) {
-            $result = $getnetService->createPfCompany($company);
-        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
-            && !empty($user->cellphone) && !empty($user->email)) {
-            $result = $getnetService->createPjCompany($company);
-        }
+            /*   if (($company->present()->getCompanyType($company->company_type) == 'physical person')
+                   && (!$userService->verifyFieldsEmpty($user))
+               ) {
+                   $result = $getnetService->createPfCompany($company);
+               } else*/
+            if (($company->present()->getCompanyType($company->company_type) == 'juridical person')
+                && !empty($user->cellphone) && !empty($user->email)) {
+                $result = $getnetService->createPjCompany($company);
+            }
 
-        if (!empty($result) && $result['message'] == 'success') {
+            if (empty($result) || empty(json_decode($result)->subseller_id)) {
+                return [
+                    'message' => 'error',
+                    'data' => '',
+                ];
+            }
+
             $company->update(
                 [
-                    'subseller_getnet_id' => $result['data']->subseller_id,
-                    'getnet_status' => $company->present()->getStatusGetnet('review'),
+                    'subseller_getnet_id' => json_decode($result)->subseller_id,
+                    'get_net_status' => $company->present()->getStatusGetnet('review'),
                 ]
             );
 
@@ -412,19 +409,16 @@ class CompanyService
                 'message' => 'success',
                 'data' => '',
             ];
-        }
+        } catch (Exception $e) {
+            report($e);
 
-        return [
-            'message' => 'error',
-            'data' => '',
-        ];
+            return [
+                'message' => 'error',
+                'data' => '',
+            ];
+        }
     }
 
-    /**
-     * @param  Company  $company
-     * @return string[]
-     * @throws PresenterException
-     */
     public function updateCompanyGetnet(Company $company)
     {
         $getnetService = new GetnetService();
@@ -436,7 +430,7 @@ class CompanyService
         ) {
             $getnetService->updatePfCompany($company);
         } elseif (!empty($user->cellphone) && !empty($user->email)) {
-                $getnetService->updatePjCompany($company);
+            $getnetService->updatePjCompany($company);
         }
 
         return [
@@ -545,36 +539,36 @@ class CompanyService
      */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
     {
-       /* $salesModel = new Sale();
-        $ticketModel = new Ticket();
+        /* $salesModel = new Sale();
+         $ticketModel = new Ticket();
+
+         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+             ->where('sales.owner_id', $userAccountOwnerId)
+             ->where('sales.status', $salesModel->present()->getStatus('approved'))
+             ->whereNull('transactions.invitation_id')
+             ->where('transactions.company_id', $companyId)
+             ->whereHas('tickets', function ($query) use ($ticketModel) {
+                 $query->where('ticket_status_enum', $ticketModel->present()
+                     ->getTicketStatusEnum('mediation'))
+                     ->where('ignore_balance_block', 0);
+             })->sum('transactions.value');*/
+
+        $salesModel = new Sale();
+        $transactiosModel = new Transaction();
 
         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('sales.owner_id', $userAccountOwnerId)
-            ->where('sales.status', $salesModel->present()->getStatus('approved'))
+            ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
             ->whereNull('transactions.invitation_id')
             ->where('transactions.company_id', $companyId)
-            ->whereHas('tickets', function ($query) use ($ticketModel) {
-                $query->where('ticket_status_enum', $ticketModel->present()
-                    ->getTicketStatusEnum('mediation'))
-                    ->where('ignore_balance_block', 0);
-            })->sum('transactions.value');*/
-
-        $salesModel        = new Sale();
-        $transactiosModel  = new Transaction();
-
-        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-                          ->where('sales.owner_id', $userAccountOwnerId)
-                          ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                          ->whereNull('transactions.invitation_id')
-                          ->where('transactions.company_id', $companyId)
-                          ->whereIn('transactions.status_enum', collect([
-                                $transactiosModel->present()->getStatusEnum('transfered'),
-                                $transactiosModel->present()->getStatusEnum('paid')
-                            ]))
-                          ->select(\DB::raw(
-                                'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
+            ->whereIn('transactions.status_enum', collect([
+                $transactiosModel->present()->getStatusEnum('transfered'),
+                $transactiosModel->present()->getStatusEnum('paid')
+            ]))
+            ->select(\DB::raw(
+                'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
                                  SUM(CASE WHEN transactions.status_enum = 2 THEN transactions.value ELSE 0 END) as pending'
-                            ))
-                          ->first();
+            ))
+            ->first();
     }
 }
