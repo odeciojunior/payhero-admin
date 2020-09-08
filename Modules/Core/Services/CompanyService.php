@@ -238,10 +238,6 @@ class CompanyService
         }
     }
 
-    /**
-     * @param $cnpj
-     * @return mixed|void
-     */
     public function getNameCompanyByApiCNPJ($cnpj)
     {
         try {
@@ -258,11 +254,6 @@ class CompanyService
         }
     }
 
-    /**
-     * @param  Company  $company
-     * @return int|mixed
-     * @throws PresenterException
-     */
     public function getPendingBalance(Company $company)
     {
         $transactionModel = new Transaction();
@@ -350,27 +341,24 @@ class CompanyService
             if (empty($company->document_issuer_state)) {
                 return true;
             }
-//            if (empty($company->account_type)) {
-//                return true;
-//            }
         }
 
         if (empty($company->fantasy_name)) {
             return true;
-        } elseif (empty($company->company_document)) {
-            return true;
-        } elseif (empty($company->bank)) {
-            return true;
-        } elseif (empty($company->agency)) {
-            return true;
-        } elseif (empty($company->account)) {
-            return true;
-        } else {
-            return false;
         }
-//    elseif (empty($company->account_type)) {
-//            return true;
-//        }
+        if (empty($company->company_document)) {
+            return true;
+        }
+        if (empty($company->bank)) {
+            return true;
+        }
+        if (empty($company->agency)) {
+            return true;
+        }
+        if (empty($company->account)) {
+            return true;
+        }
+        return false;
     }
 
     public function createCompanyGetnet(Company $company)
@@ -441,11 +429,6 @@ class CompanyService
         ];
     }
 
-    /**
-     * @param  Company  $company
-     * @return array
-     * @throws PresenterException
-     */
     public function unfilledFields(Company $company)
     {
         $arrayFields = [];
@@ -533,28 +516,8 @@ class CompanyService
         return $arrayFields;
     }
 
-    /**
-     * @param  int  $companyId
-     * @param  int  $userAccountOwnerId
-     * @return object
-     * @throws PresenterException
-     */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
     {
-        /* $salesModel = new Sale();
-         $ticketModel = new Ticket();
-
-         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-             ->where('sales.owner_id', $userAccountOwnerId)
-             ->where('sales.status', $salesModel->present()->getStatus('approved'))
-             ->whereNull('transactions.invitation_id')
-             ->where('transactions.company_id', $companyId)
-             ->whereHas('tickets', function ($query) use ($ticketModel) {
-                 $query->where('ticket_status_enum', $ticketModel->present()
-                     ->getTicketStatusEnum('mediation'))
-                     ->where('ignore_balance_block', 0);
-             })->sum('transactions.value');*/
-
         $salesModel = new Sale();
         $transactiosModel = new Transaction();
 

@@ -26,17 +26,6 @@ trait GetnetPrepareCompanyData
 
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
-        $country = 'BR';
-        if ($company->country == 'usa') {
-            $country = 'EUA';
-        }
-
-        $complement = $user->complement;
-        if (empty($complement)) {
-            $complement = FoxUtils::removeAccents(FoxUtils::removeSpecialChars($user->complement));
-        }
-
-
         return [
             'merchant_id' => $this->getMerchantId(),
             'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
@@ -52,12 +41,11 @@ trait GetnetPrepareCompanyData
                 'city' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->city)),
                 'state' => FoxUtils::getFormatState($user->state),
                 'postal_code' => FoxUtils::onlyNumbers($user->zip_code),
-                'suite' => $complement,
-                'country' => $country
+                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
             ],
             'working_hours' => [
                 "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
-                "end_day" => "mon",
+                "end_day" => "fri",
                 "start_time" => "08:00:00",      // "hh:mm:ss"
                 "end_time" => "18:00:00"
             ],
@@ -133,18 +121,36 @@ trait GetnetPrepareCompanyData
         $user = $company->user;
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
+        $stateFiscal = [
+            'SERVIÇO É ISENTO',
+            'SEM INSCRIÇÃO',
+            'INSENTO',
+            'n/e',
+            'Não Possui',
+            'Nao possui',
+            'nao possui',
+            'não possui',
+            'não se aplica',
+            'nao tem',
+            'Não tem',
+            'não',
+            '00000000',
+            '000000000000',
+            '000',
+            'ISENTO',
+            'isento',
+            'Isento',
+            'Insento',
+            'Isenta',
+            'Não Contribuinte'
+        ];
 
-        if (empty($stateFiscal) || strlen($stateFiscal) < 5 || $stateFiscal == 'n/e' || $stateFiscal == 'Não Possui'
-            || $stateFiscal == 'ISENTO'
+        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 5
+            || in_array($company->state_fiscal_document_number, $stateFiscal)
         ) {
             $stateFiscal = 'ISENTO';
         } else {
             $stateFiscal = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
-        }
-
-        $complement = $company->complement;
-        if (empty($complement)) {
-            $complement = FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->complement));
         }
 
         return [
@@ -160,14 +166,12 @@ trait GetnetPrepareCompanyData
             ],
             'business_address' => [
                 'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'number' => $company->number ?? '',
+                'number' => $company->number == null ? '' : $company->number,
                 'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
                 'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
                 'state' => FoxUtils::getFormatState($company->state),
                 'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'suite' => $complement,
                 'country' => 'BR'
-
             ],
             'bank_accounts' => [
                 'type_accounts' => 'unique',
@@ -212,8 +216,6 @@ trait GetnetPrepareCompanyData
                 'document_issuer' => $company->document_issuer,
                 'document_issuer_state' => $company->document_issuer_state
             ],
-            'url_callback' => $this->urlCallback,
-            'state_fiscal_document_number' => $company->state_fiscal_document_number,
             'federal_registration_status_date' => $company->federal_registration_status_date,
             'social_value' => $company->social_value,
         ];
@@ -223,11 +225,6 @@ trait GetnetPrepareCompanyData
     {
         $user = $company->user;
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
-
-        $country = 'BR';
-        if ($company->country == 'usa') {
-            $country = 'EUA';
-        }
 
         return [
             'merchant_id' => $this->getMerchantId(),
@@ -261,10 +258,7 @@ trait GetnetPrepareCompanyData
                 'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
                 'state' => $company->state,
                 'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($company->complement)
-                ),
-                'country' => $country
+                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
             ],
             'phone' => [
                 'area_code' => $telephone['dd'],

@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Aws\S3\S3Client;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Exception;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -484,17 +485,21 @@ class FoxUtils
             case 'Piauí':
                 return 'PI';
             case 'Rio de Janeiro':
+            case 'Rio de janeiro':
                 return 'RJ';
             case 'Rio Grande do Norte':
                 return 'RN';
             case 'Rio Grande do Sul':
+            case 'rio grande do sul':
                 return 'RS';
             case 'Rondônia':
                 return 'RO';
             case 'Roraima':
                 return 'RR';
+            case 'santa catarina':
             case 'Santa Catarina':
                 return 'SC';
+            case 'Sao Paulo':
             case 'São Paulo':
                 return 'SP';
             case 'Sergipe':

@@ -34,11 +34,13 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $users = User::with([
+        /*$users = User::with([
             'companies' => function ($q) {
-                $q->where('bank_document_status', 3)
+                $q->where('company_type', 2)
+                    ->where('bank_document_status', 3)
                     ->where('address_document_status', 3)
-                    ->where('contract_document_status', 3);
+                    ->where('contract_document_status', 3)
+                    ->where('subseller_getnet_id', null);
             }
         ])->whereHas('sales', function (Builder $query) {
             $query->whereDate('created_at', '>=', '2020-05-01');
@@ -54,7 +56,7 @@ class GenericCommand extends Command
             }
         }
 
-        $this->line('Terminou!!!');
+        $this->line('Terminou!!!');*/
     }
 }
 
