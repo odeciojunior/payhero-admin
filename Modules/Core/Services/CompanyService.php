@@ -386,6 +386,8 @@ class CompanyService
                ) {
                    $result = $getnetService->createPfCompany($company);
                } else*/
+
+            $result = null;
             if (($company->present()->getCompanyType($company->company_type) == 'juridical person')
                 && !empty($user->cellphone) && !empty($user->email)) {
                 $result = $getnetService->createPjCompany($company);
