@@ -326,7 +326,7 @@ class RegisterApiController extends Controller
             'noreply@cloudfox.net',
             'cloudfox',
             $email,
-            $data['firstname'],
+            $data['firstname'] ? $data['firstname'] : 'Cliente',
             "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
             $data
         )) {
