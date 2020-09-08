@@ -155,9 +155,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class='col-10'></div>
-                        <div class="col-sm-6 col-md-6 col-xl-2 col-12 text-right mt-20">
-                            <button id="bt_filtro" class="btn btn-primary col">
+                        <div class='col-9'></div>
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 text-right mt-20">
+                            <button id="bt_filtro" class="btn btn-primary col-9">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
                         </div>
