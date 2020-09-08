@@ -76,7 +76,9 @@
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state_fiscal_document_number">Inscrição Estadual</label>
+                                            <i class="far fa-question-circle" data-toggle="tooltip" title="Quando não possuir informar 'ISENTO' "></i>
                                             <input name="state_fiscal_document_number" value="" type="text" class="form-control" id="state_fiscal_document_number" placeholder='Inscrição Estadual'>
+
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="economic_activity_classification_code">CNAE primário (somente o código)</label>

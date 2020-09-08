@@ -3,8 +3,17 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\User;
+use Modules\Core\Services\AwsSns;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\TrackingmoreService;
+use Illuminate\Database\Eloquent\Builder;
+use Vinkla\Hashids\Facades\Hashids;
+
 
 /**
  * Class GenericCommand
@@ -25,20 +34,29 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $trackingmoreService = new TrackingmoreService();
+        /*$users = User::with([
+            'companies' => function ($q) {
+                $q->where('company_type', 2)
+                    ->where('bank_document_status', 3)
+                    ->where('address_document_status', 3)
+                    ->where('contract_document_status', 3)
+                    ->where('subseller_getnet_id', null);
+            }
+        ])->whereHas('sales', function (Builder $query) {
+            $query->whereDate('created_at', '>=', '2020-05-01');
+        })->get();
 
-        $trackings = Tracking::whereDate('created_at', '>=', now()->subDays(30)->startOfDay()->toDateTimeString())
-        ->select('tracking_code')
-            ->pluck('tracking_code');
-
-        $total = $trackings->count();
-
-        foreach ($trackings as $key => $tracking) {
-            $i = $key+1;
-            $this->line("Enviando tracking {$i} de {$total}");
-            $trackingmoreService->createTracking($tracking);
+        $companyService = new CompanyService();
+        foreach ($users as $user) {
+            $companies = $user->companies;
+            foreach ($companies as $company) {
+                if (FoxUtils::isEmpty($company->subseller_getnet_id) && !$companyService->verifyFieldsEmpty($company)) {
+                    $companyService->createCompanyGetnet($company);
+                }
+            }
         }
 
+        $this->line('Terminou!!!');*/
     }
 }
 

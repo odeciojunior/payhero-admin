@@ -37,7 +37,7 @@ class AmazonFileService
     /**
      * @var array
      */
-    private $availableDisks = ['s3'];
+    private $availableDisks = ['s3','s3_digital_product','s3_chargeback'];
 
     /**
      * AbstractUploadApi constructor.
