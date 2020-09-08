@@ -63,7 +63,6 @@ class RegisterApiController extends Controller
     {
 
         try {
-
             $requestData = $this->createAndPassDefaultValuesToRequest($request);
             $user = $this->createUserAndAssignRole($requestData, $userModel);
             $this->createCompanyToUser($requestData, $companyModel, $user);
@@ -72,12 +71,10 @@ class RegisterApiController extends Controller
                 $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
             }
 
-            if (env('APP_ENV') == 'local')
-                $sdrive = Storage::disk('local');
-            else
-                $sdrive = Storage::disk('s3');
+            $sDrive = Storage::disk('s3');
+            $documentCpf = preg_replace('/[^0-9]/', '', $user->document);
 
-            if ($files = $sdrive->allFiles('uploads/register/user/pedro/' . $user->document . '/private/documents')) {
+            if ($files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents')) {
                 if (!app(RegisterController::class)->uploudDocumentsRegistered($files)) {
                     return response()->json(
                         [
@@ -86,6 +83,15 @@ class RegisterApiController extends Controller
                                           no Perfil do usuário e da empresa',
                         ]
                     );
+                } else {
+                    $sDrive->deleteDirectory('uploads/register/user/' . $documentCpf);
+                    return response()->json(
+                        [
+                            'success' => 'true',
+                            'message' => 'Arquivos Salvos com sucesso',
+                        ]
+                    );
+
                 }
             }
 
@@ -224,38 +230,6 @@ class RegisterApiController extends Controller
 
     }
 
-    public function getDocument(Request $request)
-    {
-        $dataForm = $request->all();
-
-        if (env('APP_ENV') == 'local')
-            $sdrive = Storage::disk('local');
-        else
-            $sdrive = Storage::disk('s3');
-
-
-
-        $pathFile = 'uploads/register/user/pedro/' . $dataForm['document'] . '/private/documents/' . $dataForm['documentType'] . '.png';
-        dd(pathinfo($sdrive->get($pathFile)));
-        if ($file = $sdrive->get($pathFile)) {
-            if (env('APP_ENV') == 'local'){
-                return response()->file('uploads/register/user/pedro/' . $dataForm['document'] . '/private/documents/' . $file);
-            } else {
-               $file = $sdrive->temporaryUrl(
-                    $pathFile,
-                    now()->addMinutes(5)
-                );
-               return response()->file($file);
-
-            }
-
-        }
-
-        return response()->json([
-            'message' => 'Sem Arquivos Enviado.'
-        ]);
-    }
-
     /**
      * @param Request $request
      * @return JsonResponse
@@ -271,35 +245,40 @@ class RegisterApiController extends Controller
                 'fileToUpload.required'  => 'Precisamos do arquivo para continuar',
             ])->validate();
 
-            if (env('APP_ENV') == 'local')
-                $sdrive = Storage::disk('local');
-            else
-                $sdrive = Storage::disk('s3');
+            $sDrive = Storage::disk('s3');
 
             $document = $dataForm['fileToUpload'];
+            $documentCpf = preg_replace('/[^0-9]/','', $dataForm['document']);
             $documentType = $document->getClientOriginalName() . '.' . $document->extension() ?? '';
 
-            $sdrive->putFileAs('uploads/register/user/pedro/'. $dataForm['document'] .'/public/documents',
+            $sDrive->putFileAs('uploads/register/user/'. $documentCpf .'/private/documents',
                 $document ,
                 $documentType,
-            'public');
+            'private');
 
             if(empty($documentType)) {
                 return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
             }
 
-
+                $urlPath = $sDrive->temporaryUrl(
+                                'uploads/register/user/'. $documentCpf .'/private/documents/' . $documentType,
+                                now()->addHours(24)
+                            );
             return response()->json(
                 [
                     'message' => 'Arquivo enviado com sucesso.',
+                    'path' => $urlPath
                 ],
                 200
             );
         } catch (Exception $e) {
+            $sDrive->delete('uploads/register/user/'. $documentCpf .'/private/documents/' . $documentType);
             Log::warning('RegisterApiController uploadDocuments');
             report($e);
 
-            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+            return response()->json([
+                'message' => 'Não foi possivel enviar o arquivo.',
+            ], 400);
         }
     }
 
@@ -337,7 +316,7 @@ class RegisterApiController extends Controller
                 ],
                 200
             )
-                ->withCookie("emailverifycode", $verifyCode, 15);
+                ->withCookie("emailverifycode", $verifyCode, 10);
         }
 
         return response()->json(
@@ -420,7 +399,7 @@ class RegisterApiController extends Controller
                 ],
                 200
             )
-                ->withCookie("cellphoneverifycode", $verifyCode, 15);
+                ->withCookie("cellphoneverifycode", $verifyCode, 10);
         } catch (Exception $e) {
             report($e);
 

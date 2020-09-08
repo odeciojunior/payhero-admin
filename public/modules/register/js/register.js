@@ -1,8 +1,6 @@
 $(document).ready(function () {
 
     // verifyInviteRegister();
-    getDocuments('personal_document');
-    getDocuments('address_document');
     function verifyInviteRegister() {
         let inviteCode = $(window.location.pathname.split('/')).get(-1);
 
@@ -974,7 +972,6 @@ $(document).ready(function () {
 
     $("[name='fileToUpload']").change(function (e) {
         var fileId = e.target.getAttribute('id');
-        getDocuments(fileId);
         var file = document.getElementById(fileId).files[0];
         var fileReader = new FileReader();
         fileReader.readAsDataURL(file);
@@ -999,33 +996,11 @@ $(document).ready(function () {
                     errorAjaxResponse(response);
                 },
                 success: function (response) {
-                    var getFiles = getDocuments(file);
-                    console.log(getFiles);
                     alertCustom('success', response.message);
                 },
             });
         };
     });
-
-    function getDocuments(documentType) {
-        $.ajax({
-            method: "GET",
-            url: "/api/register/get-document",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-              document: $('#document').val().replace(/[^0-9]/g, ''),
-              documentType: documentType
-            },
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function (response) {
-                alertCustom('success', response.message)
-            }
-        });
-    }
 
     $('#form-register input').on('keypress', function (e) {
         if (e.keyCode == 13) {
