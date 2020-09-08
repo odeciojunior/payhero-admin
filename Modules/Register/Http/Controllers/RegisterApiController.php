@@ -344,7 +344,7 @@ class RegisterApiController extends Controller
             [
                 "message" => "Erro ao enviar email, tente novamente mais tarde!",
             ],
-            400
+            403
         );
     }
 
