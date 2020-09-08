@@ -124,14 +124,39 @@
                         <div class="col-sm-6 col-md">
                             <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly style="margin-top:30px">
                         </div>
+                        {{--                        <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">--}}
+                        {{--                            <div class="mr-10 d-flex flex-column">--}}
+                        {{--                                <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>--}}
+                        {{--                                <label class="switch m-0">--}}
+                        {{--                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>--}}
+                        {{--                                    <span class="slider round"></span>--}}
+                        {{--                                </label>--}}
+                        {{--                            </div>--}}
+                        {{--                            <button id="bt_filtro" class="btn btn-primary col">--}}
+                        {{--                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
+                        {{--                            </button>--}}
+                        {{--                        </div>--}}
                         <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
-                            <div class="mr-10 d-flex flex-column">
-                                <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>
-                                <label class="switch m-0">
-                                    <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
-                                    <span class="slider round"></span>
-                                </label>
+                            <div class='row'>
+                                <div class='col-6'>
+                                    <label for="token" class='mb-5 font-size-10'>Shopify Erros</label>
+                                    <label class="switch m-0">
+                                        <input type="checkbox" id='shopify_error' name="shopify_error" class='check shopify_error' value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class='col-6'>
+                                    <label for="upsell" class='mb-10 font-size-10'>Upsell</label>
+                                    <br>
+                                    <label class="switch m-0 mx-5">
+                                        <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
                             </div>
+                        </div>
+                        <div class='col-10'></div>
+                        <div class="col-sm-6 col-md-6 col-xl-2 col-12 text-right mt-20">
                             <button id="bt_filtro" class="btn btn-primary col">
                                 <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                             </button>
@@ -306,7 +331,7 @@
                 </div>
                 <div class="form-group">
                     <label for="refund_observation">Causa do estorno</label>
-                    <textarea class="form-control" id="refund_observation"  rows="3"></textarea>
+                    <textarea class="form-control" id="refund_observation" rows="3"></textarea>
                 </div>
                 <div class="modal-footer">
                     <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
@@ -401,7 +426,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=12') }}"></script>
+        <script src="{{ asset('/modules/sales/js/index.js?v=13') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
