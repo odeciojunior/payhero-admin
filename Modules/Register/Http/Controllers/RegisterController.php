@@ -16,7 +16,6 @@ use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\UserDocument;
 use Modules\Core\Services\AmazonFileService;
-use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\SendgridService;
 
@@ -27,25 +26,6 @@ class RegisterController extends Controller
         return view('register::create');
     }
 
-    // Método que permite o registro apenas com o convite
-    public function createInvitation(Request $request)
-    {
-        if ($request->segment(2) == 'nw2usr3cfx') {
-            return view('register::create');
-        }
-        $companyId = current(Hashids::decode($request->segment(2)));
-        if (!empty($companyId)) {
-            $invitation = Invitation::where(['company_id' => $companyId])->first();
-            if (!empty($invitation) && ($invitation->company_id == 22 || $invitation->company_id == 156)) {
-                return view('register::create');
-            } else {
-                return view('register::notInvite');
-            }
-        } else {
-            return view('register::notInvite');
-        }
-    }
-
     public function loginAsSomeUser($userId)
     {
         auth()->loginUsingId($userId);
@@ -53,9 +33,8 @@ class RegisterController extends Controller
         return response()->redirectTo('/dashboard');
     }
 
-    public function uploudDocumentsRegistered(array $files) : bool
+    public function uploudDocumentsRegistered(array $files)
     {
-        dd('entrei');
         $userModel = new User();
         $userDocument = new UserDocument();
         $user = $userModel->find(2349);
@@ -66,8 +45,8 @@ class RegisterController extends Controller
 
         if (env('APP_ENV') == 'local')
             $sdrive = Storage::disk('local');
-        else
-            $sdrive = Storage::disk('s3');
+//        else
+//            $sdrive = Storage::disk('s3');
 
         $company = $companyModel->where('user_id', auth()->user()->account_owner_id)->first();
         if (Gate::allows('uploadDocuments', [$user]) && Gate::allows('uploadDocuments', [$company])) {
@@ -83,7 +62,7 @@ class RegisterController extends Controller
                      */
                     if (in_array($document->fileName, ['personal_document', 'address_document'])) {
                         $amazonPathUser = $sdrive->putFileAs(
-                            'uploads/register/user/' . $user->present()->get('document') . '/private/documents',
+                            'uploads/register/user/' . $user->present()->get('document') . '/public/documents',
                             $document,
                             null,
                             'private'
@@ -123,7 +102,7 @@ class RegisterController extends Controller
                     if (in_array($document->fileName, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
                         $amazonPathCompanies = $sdrive->putFileAs(
                             'uploads/user/' . auth()->user()->account_owner_id
-                            . '/companies/' . $company->id . '/private/documents',
+                            . '/companies/' . $company->id . '/public/documents',
                             $document,
                             null,
                             'private'

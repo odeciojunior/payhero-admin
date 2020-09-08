@@ -224,27 +224,36 @@ class RegisterApiController extends Controller
 
     }
 
-    /**
-     * Verifica o tipo de documento para usar respectiovo método de uploud
-     * @param Request $request
-     *
-     * [Remover]
-     */
-    public function uploudDocumentTo(Request $request)
+    public function getDocument(Request $request)
     {
-        $dataForm = Validator::make($request->all(), [
-            // Usuário
-            'personal_document' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-            'address_document' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+        $dataForm = $request->all();
 
-            // Empresa
-            'bank_document' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-            'company_address_document' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-            'contract_document' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-        ], [
-            'personal_document.mimes' => 'Arquivo com formato inválido',
-            'personal_document.required' => 'Precisamos do arquivo Para continuar',
-        ])->validate();
+        if (env('APP_ENV') == 'local')
+            $sdrive = Storage::disk('local');
+        else
+            $sdrive = Storage::disk('s3');
+
+
+
+        $pathFile = 'uploads/register/user/pedro/' . $dataForm['document'] . '/private/documents/' . $dataForm['documentType'] . '.png';
+        dd(pathinfo($sdrive->get($pathFile)));
+        if ($file = $sdrive->get($pathFile)) {
+            if (env('APP_ENV') == 'local'){
+                return response()->file('uploads/register/user/pedro/' . $dataForm['document'] . '/private/documents/' . $file);
+            } else {
+               $file = $sdrive->temporaryUrl(
+                    $pathFile,
+                    now()->addMinutes(5)
+                );
+               return response()->file($file);
+
+            }
+
+        }
+
+        return response()->json([
+            'message' => 'Sem Arquivos Enviado.'
+        ]);
     }
 
     /**
@@ -267,10 +276,10 @@ class RegisterApiController extends Controller
             else
                 $sdrive = Storage::disk('s3');
 
-            $document = $request->file('fileToUploud');
-            $documentType = $document->getClientOriginalName() ?? '';
+            $document = $dataForm['fileToUpload'];
+            $documentType = $document->getClientOriginalName() . '.' . $document->extension() ?? '';
 
-            $sdrive->putFileAs('uploads/register/user/pedro/'. $dataForm['document'] .'/private/documents',
+            $sdrive->putFileAs('uploads/register/user/pedro/'. $dataForm['document'] .'/public/documents',
                 $document ,
                 $documentType,
             'public');
