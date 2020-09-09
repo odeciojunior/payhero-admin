@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Services\SmsService;
@@ -63,28 +65,30 @@ class RegisterApiController extends Controller
     {
 
         try {
-            $requestData = $this->createAndPassDefaultValuesToRequest($request);
-            $user = $this->createUserAndAssignRole($requestData, $userModel);
-            $this->createCompanyToUser($requestData, $companyModel, $user);
-
-            if (!empty($user)) {
-                $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
-            }
+//            $requestData = $this->createAndPassDefaultValuesToRequest($request);
+//            $user = $this->createUserAndAssignRole($requestData, $userModel);
+//            $this->createCompanyToUser($requestData, $companyModel, $user);
+//
+//            if (!empty($user)) {
+//                $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
+//            }
+            $userModel = new User();
+            $user = $userModel->find(3184);
 
             $sDrive = Storage::disk('s3');
             $documentCpf = preg_replace('/[^0-9]/', '', $user->document);
 
             if ($files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents')) {
-                if (!app(RegisterController::class)->uploudDocumentsRegistered($files)) {
+                if (!$this->uploadDocumentsRegistered($files, $user)) {
                     return response()->json(
                         [
                             'success' => 'false',
                             'message' => 'Não foi Possivel enviar os arquivos ao servidor, favor verificar os arquivos
-                                          no Perfil do usuário e da empresa',
+                                          no Perfil do usuário e da empresa se estão em análise.'
                         ]
                     );
                 } else {
-                    $sDrive->deleteDirectory('uploads/register/user/' . $documentCpf);
+//                    $sDrive->deleteDirectory('uploads/register/user/' . $documentCpf);
                     return response()->json(
                         [
                             'success' => 'true',
@@ -94,8 +98,9 @@ class RegisterApiController extends Controller
 
                 }
             }
+            exit();
 
-            $this->sendWelcomeEmail($requestData);
+//            $this->sendWelcomeEmail($requestData);
 
             return response()->json(
                 [
@@ -243,6 +248,7 @@ class RegisterApiController extends Controller
             ], [
                 'fileToUpload.mimes'     => 'O arquivo esta com formato inválido',
                 'fileToUpload.required'  => 'Precisamos do arquivo para continuar',
+                'document.required'      => 'Precisamos do CPF para continuar',
             ])->validate();
 
             $sDrive = Storage::disk('s3');
@@ -272,14 +278,133 @@ class RegisterApiController extends Controller
                 200
             );
         } catch (Exception $e) {
-            $sDrive->delete('uploads/register/user/'. $documentCpf .'/private/documents/' . $documentType);
-            Log::warning('RegisterApiController uploadDocuments');
+            Log::warning('RegisterApiController uploadDocuments' . $e);
             report($e);
 
             return response()->json([
                 'message' => 'Não foi possivel enviar o arquivo.',
             ], 400);
         }
+    }
+
+    public function uploadDocumentsRegistered(array $files, User $user)
+    {
+        $userDocument = new UserDocument();
+
+        $companyModel = new Company();
+        $companyDocumentModel = new CompanyDocument();
+
+        $sDrive = Storage::disk('s3');
+
+        $company = $companyModel->where('user_id', $user->id)->first();
+        try {
+
+            foreach ($files as $file) {
+
+//            dd($sDrive->allFiles('uploads/register/user/' . $user->id . '/private/documents'), $sDrive->allFiles('uploads/register/user/' . 46997399894 . '/private/documents'));
+                $fileName = explode('/', $file)[6];
+                $fileType = preg_split('/[\/.]/', $file)[6];
+
+                if (!$sDrive->exists($file) ?? '') {
+                    return false;
+                }
+
+                /**
+                 * Uploud Usuário
+                 */
+                if (in_array($fileType, ['personal_document', 'address_document'])) {
+                    $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents';
+                    if ($sDrive->exists($amazonPathUser . '/' . $fileName))
+                        dd('entrei');
+
+                    $sDrive->move(
+                        $file,
+                        $amazonPathUser
+                    );
+                dd($files);
+
+
+                    /**
+                     * Salva status do documentos no Banco | (Usuário)
+                     */
+                    $userDocument->create(
+                        [
+                            'user_id' => $user->id,
+                            'document_url' => $amazonPathUser,
+                            'document_type_enum' => $fileType,
+                            'status' => 'analyzing',
+                        ]
+                    );
+
+                    if ($fileType == $user->present()->getDocumentType('personal_document')) {
+                        $user->update(
+                            [
+                                'personal_document_status' => 'analyzing',
+                            ]
+                        );
+                    }
+
+                    if ($fileType == $user->present()->getDocumentType('address_document')) {
+                        $user->update(
+                            [
+                                'address_document_status' => 'analyzing',
+                            ]
+                        );
+                    }
+                }
+
+                /**
+                 * Uploud Empresa
+                 */
+                if (in_array($fileType, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
+                    $amazonPathCompanies = 'uploads/register/user/' . $user->id . '/companies/' . $company->id . '/private/documents';
+                    $sDrive->move(
+                        $file,
+                        $amazonPathCompanies
+                    );
+
+                    /**
+                     * Salva status do documentos no Banco | (Empresa)
+                     */
+                    $companyDocumentModel->create(
+                        [
+                            'company_id' => $company->id,
+                            'document_url' => $amazonPathCompanies,
+                            'document_type_enum' => $fileType,
+                            'status' => 'analyzing',
+                        ]
+                    );
+
+                    if ($fileType == $company->present()->getDocumentType('bank_document_status')) {
+                        $company->update(
+                            [
+                                'bank_document_status' => 'analyzing',
+                            ]
+                        );
+                    }
+                    if ($fileType == $company->present()->getDocumentType('address_document_status')) {
+                        $company->update(
+                            [
+                                'address_document_status' => 'analyzing',
+                            ]
+                        );
+                    }
+                    if ($fileType == $company->present()->getDocumentType('contract_document_status')) {
+                        $company->update(
+                            [
+                                'contract_document_status' => 'analyzing',
+                            ]
+                        );
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning('RegisterApiController uploadDocumentsRegistered');
+
+            report($e);
+            return false;
+        }
+        return true;
     }
 
     /**
