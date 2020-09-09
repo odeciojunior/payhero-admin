@@ -456,17 +456,17 @@ class RegisterApiController extends Controller
      * @param ValidateEmailRequest $request
      * @return JsonResponse
      */
-    public function matchEmailVerifyCode(ValidateEmailRequest $request)
+    public function matchEmailVerifyCode()
     {
         try {
-            $data = $request->validated();
+            $data = \request()->all();
             $verifyCode = $data["verifyCode"] ?? null;
 
             $cookie = Cookie::get("emailverifycode");
             if ($verifyCode != $cookie) {
                 return response()->json(
                     [
-                        'message' => 'Código de verificação inválido!',
+                        'message' => 'Código de verificação inválido ou expirado!',
                     ],
                     400
                 );
