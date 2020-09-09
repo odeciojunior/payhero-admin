@@ -4,7 +4,6 @@ namespace Modules\Core\Traits;
 
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\UserInformation;
 use Modules\Core\Services\FoxUtils;
 
 /**
@@ -13,8 +12,10 @@ use Modules\Core\Services\FoxUtils;
  */
 trait GetnetPrepareCompanyData
 {
+    private $urlCallback = 'https://app.cloudfox.net/postback/getnet';
+
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return array
      * @throws PresenterException
      */
@@ -25,35 +26,26 @@ trait GetnetPrepareCompanyData
 
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
 
-        $country = 'BR';
-        if ($company->country == 'usa') {
-            $country = 'EUA';
-        }
-
         return [
             'merchant_id' => $this->getMerchantId(),
-            'legal_document_number' => $company->company_document,
+            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
             'legal_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->name)),
             'birth_date' => $user->date_birth,
             'mothers_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($userInformation->mother_name)),
             'occupation' => 'vendedor',
-            'monthly_gross_income' => FoxUtils::onlyNumbers($userInformation->monthly_income),
             'business_address' => [
                 'mailing_address_equals' => 'S',
                 'street' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
                 'number' => $user->number ?? '',
                 'district' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->neighborhood)),
                 'city' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->city)),
-                'state' => $user->state,
+                'state' => FoxUtils::getFormatState($user->state),
                 'postal_code' => FoxUtils::onlyNumbers($user->zip_code),
-                'suite' => empty($user->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($user->complement)
-                ),
-                'country' => $country
+                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
             ],
             'working_hours' => [
                 "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
-                "end_day" => "mon",
+                "end_day" => "fri",
                 "start_time" => "08:00:00",      // "hh:mm:ss"
                 "end_time" => "18:00:00"
             ],
@@ -73,15 +65,7 @@ trait GetnetPrepareCompanyData
                     'account_digit' => $company->account_digit,
                 ]
             ],
-            "list_commissions" => [
-                [
-                    "brand" => "MASTERCARD",
-                    "product" => "CREDITO A VISTA",
-                    "commission_percentage" => 10.00,
-                    "payment_plan" => 3
-                ]
-            ],
-            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
+            'url_callback' => $this->urlCallback,
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
             'marketplace_store' => 'S',
@@ -89,10 +73,6 @@ trait GetnetPrepareCompanyData
         ];
     }
 
-    /**
-     * @param Company $company
-     * @return array
-     */
     public function getPrepareDataComplementPfCompany(Company $company)
     {
         $user = $company->user;
@@ -124,11 +104,6 @@ trait GetnetPrepareCompanyData
         ];
     }
 
-    /**
-     * @param Company $company
-     * @return array
-     * @throws PresenterException
-     */
     public function getPrepareDataUpdatePfCompany(Company $company)
     {
         $user = $company->user;
@@ -141,21 +116,49 @@ trait GetnetPrepareCompanyData
         ];
     }
 
-    /**
-     * @param Company $company
-     * @return array
-     * @throws PresenterException
-     */
     private function getPrepareDataCreatePjCompany(Company $company)
     {
         $user = $company->user;
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
+
+        $stateFiscal = [
+            'SERVIÇO É ISENTO',
+            'SEM INSCRIÇÃO',
+            'INSENTO',
+            'n/e',
+            'Não Possui',
+            'Nao possui',
+            'nao possui',
+            'não possui',
+            'não se aplica',
+            'nao tem',
+            'Não tem',
+            'não',
+            '00000000',
+            '000000000000',
+            '000',
+            'ISENTO',
+            'isento',
+            'Isento',
+            'Insento',
+            'Isenta',
+            'Não Contribuinte'
+        ];
+
+        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 5
+            || in_array($company->state_fiscal_document_number, $stateFiscal)
+        ) {
+            $stateFiscal = 'ISENTO';
+        } else {
+            $stateFiscal = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
+        }
+
         return [
             'merchant_id' => $this->getMerchantId(),
-            'legal_document_number' => $company->company_document,
+            'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
             'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'state_fiscal_document_number' => empty($company->state_fiscal_document_number) ? 'ISENTO' : $company->state_fiscal_document_number,
+            'state_fiscal_document_number' => $stateFiscal,
             'email' => $user->email,
             'cellphone' => [
                 'area_code' => $telephone['dd'],
@@ -163,16 +166,12 @@ trait GetnetPrepareCompanyData
             ],
             'business_address' => [
                 'street' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->street)),
-                'number' => $company->number ?? '',
+                'number' => $company->number == null ? '' : $company->number,
                 'district' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->neighborhood)),
                 'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
-                'state' => $company->state,
+                'state' => FoxUtils::getFormatState($company->state),
                 'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($company->complement)
-                ),
                 'country' => 'BR'
-
             ],
             'bank_accounts' => [
                 'type_accounts' => 'unique',
@@ -184,25 +183,20 @@ trait GetnetPrepareCompanyData
                     'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
                 ]
             ],
-            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
+            'url_callback' => $this->urlCallback,
             "accepted_contract" => "S",
             "liability_chargeback" => "S",
             'marketplace_store' => "S",
-            'payment_plan' => 1005,
+            'payment_plan' => 3,
             'business_entity_type' => FoxUtils::onlyNumbers($company->business_entity_type),
             'economic_activity_classification_code' => FoxUtils::onlyNumbers(
                 $company->economic_activity_classification_code
             ),
-            'monthly_gross_income' => FoxUtils::onlyNumbers($company->monthly_gross_income),
             'federal_registration_status' => 'active',
             'founding_date' => $company->founding_date,
         ];
     }
 
-    /**
-     * @param Company $company
-     * @return array
-     */
     private function getPrepareDataComplementPjCompany(Company $company)
     {
         return [
@@ -222,27 +216,15 @@ trait GetnetPrepareCompanyData
                 'document_issuer' => $company->document_issuer,
                 'document_issuer_state' => $company->document_issuer_state
             ],
-            'url_callback' => 'https://app.cloudfox.net/postback/getnet',
-            'state_fiscal_document_number' => $company->state_fiscal_document_number,
             'federal_registration_status_date' => $company->federal_registration_status_date,
             'social_value' => $company->social_value,
         ];
     }
 
-    /**
-     * @param Company $company
-     * @return array
-     * @throws PresenterException
-     */
     private function getPrepareDataUpdatePjCompany(Company $company)
     {
         $user = $company->user;
         $telephone = FoxUtils::formatCellPhoneGetNet($user->cellphone);
-
-        $country = 'BR';
-        if ($company->country == 'usa') {
-            $country = 'EUA';
-        }
 
         return [
             'merchant_id' => $this->getMerchantId(),
@@ -276,10 +258,7 @@ trait GetnetPrepareCompanyData
                 'city' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->city)),
                 'state' => $company->state,
                 'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
-                'suite' => empty($company->complement) ? '' : FoxUtils::removeAccents(
-                    FoxUtils::removeSpecialChars($company->complement)
-                ),
-                'country' => $country
+                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
             ],
             'phone' => [
                 'area_code' => $telephone['dd'],

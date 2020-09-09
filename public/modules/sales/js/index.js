@@ -111,6 +111,7 @@ $(document).ready(function () {
             'transaction': $("#transaction").val().replace('#', ''),
             'shopify_error': $("#shopify_error").val(),
             'plan': $('#plan').val(),
+            'upsell': $("#upsell").val(),
         };
 
         if (urlParams) {

@@ -44,13 +44,12 @@ class RegisterController extends Controller
 
 
         if (env('APP_ENV') == 'local')
-            $sdrive = Storage::disk('local');
-//        else
-//            $sdrive = Storage::disk('s3');
+            $sDrive = Storage::disk('local');
+        else
+            $sDrive = Storage::disk('s3');
 
         $company = $companyModel->where('user_id', auth()->user()->account_owner_id)->first();
         if (Gate::allows('uploadDocuments', [$user]) && Gate::allows('uploadDocuments', [$company])) {
-//            $amazonFileService = app(AmazonFileService::class);
             try {
                 foreach ($files as $document) {
                     if ($documentType = $document->fileName ?? '') {
@@ -61,7 +60,7 @@ class RegisterController extends Controller
                      * Uploud Usuário
                      */
                     if (in_array($document->fileName, ['personal_document', 'address_document'])) {
-                        $amazonPathUser = $sdrive->putFileAs(
+                        $amazonPathUser = $sDrive->putFileAs(
                             'uploads/register/user/' . $user->present()->get('document') . '/public/documents',
                             $document,
                             null,
@@ -100,7 +99,7 @@ class RegisterController extends Controller
                      * Uploud Empresa
                      */
                     if (in_array($document->fileName, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
-                        $amazonPathCompanies = $sdrive->putFileAs(
+                        $amazonPathCompanies = $sDrive->putFileAs(
                             'uploads/user/' . auth()->user()->account_owner_id
                             . '/companies/' . $company->id . '/public/documents',
                             $document,

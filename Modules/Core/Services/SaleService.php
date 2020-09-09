@@ -152,7 +152,11 @@ class SaleService
                     $querySale->whereIn('status', $status);
                 });
             }
-
+            if (!empty($filters['upsell']) && $filters['upsell'] == true) {
+                $transactions->whereHas('sale', function ($querySale) {
+                    $querySale->whereNotNull('upsell_id');
+                });
+            }
 
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);

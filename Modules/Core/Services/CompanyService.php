@@ -123,7 +123,7 @@ class CompanyService
                     $dataDocument = [
                         'date' => $document->created_at->format('d/m/Y'),
                         'type_translated' => __(
-                            'definitions.enum.company_document_type.' . $companyPresenter->getDocumentType(
+                            'definitions.enum.company_document_type.'.$companyPresenter->getDocumentType(
                                 $document->document_type_enum
                             )
                         ),
@@ -145,7 +145,6 @@ class CompanyService
      */
     public function verifyCnpj($cnpj)
     {
-
         $companyModel = new Company();
         $companyPresenter = $companyModel->present();
         $cnpj = preg_replace("/[^0-9]/", "", $cnpj);
@@ -205,8 +204,8 @@ class CompanyService
     }
 
     /**
-     * @param Company $company
-     * @param false $symbol
+     * @param  Company  $company
+     * @param  false  $symbol
      * @return string|null
      */
     public function getCurrency(Company $company, $symbol = false)
@@ -239,15 +238,11 @@ class CompanyService
         }
     }
 
-    /**
-     * @param $cnpj
-     * @return mixed|void
-     */
     public function getNameCompanyByApiCNPJ($cnpj)
     {
         try {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/' . $cnpj);
+            curl_setopt($ch, CURLOPT_URL, 'https://www.receitaws.com.br/v1/cnpj/'.$cnpj);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
@@ -260,7 +255,7 @@ class CompanyService
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return int|mixed
      * @throws PresenterException
      */
@@ -294,7 +289,7 @@ class CompanyService
 
     /**
      * Verifica campos que estao vazio para integração com getnet
-     * @param Company $company
+     * @param  Company  $company
      * @return bool
      * @throws PresenterException
      */
@@ -357,55 +352,62 @@ class CompanyService
             if (empty($company->document_issuer_state)) {
                 return true;
             }
-//            if (empty($company->account_type)) {
-//                return true;
-//            }
         }
 
         if (empty($company->fantasy_name)) {
             return true;
-        } elseif (empty($company->company_document)) {
-            return true;
-        } elseif (empty($company->bank)) {
-            return true;
-        } elseif (empty($company->agency)) {
-            return true;
-        } elseif (empty($company->account)) {
-            return true;
-        } else {
-            return false;
         }
-//    elseif (empty($company->account_type)) {
-//            return true;
-//        }
+        if (empty($company->company_document)) {
+            return true;
+        }
+        if (empty($company->bank)) {
+            return true;
+        }
+        if (empty($company->agency)) {
+            return true;
+        }
+        if (empty($company->account)) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return string[]
      * @throws PresenterException
      */
     public function createCompanyGetnet(Company $company)
     {
-        $getnetService = new GetnetService();
-        $userService = new UserService();
+        try {
+            $getnetService = new GetnetBackOfficeService();
+            $userService = new UserService();
 
-        $user = $company->user;
+            $user = $company->user;
 
-        if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-            && (!$userService->verifyFieldsEmpty($user))
-        ) {
-            $result = $getnetService->createPfCompany($company);
-        } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
-            && !empty($user->cellphone) && !empty($user->email)) {
-            $result = $getnetService->createPjCompany($company);
-        }
+            /*   if (($company->present()->getCompanyType($company->company_type) == 'physical person')
+                   && (!$userService->verifyFieldsEmpty($user))
+               ) {
+                   $result = $getnetService->createPfCompany($company);
+               } else*/
 
-        if (!empty($result) && $result['message'] == 'success') {
+            $result = null;
+            if (($company->present()->getCompanyType($company->company_type) == 'juridical person')
+                && !empty($user->cellphone) && !empty($user->email)) {
+                $result = $getnetService->createPjCompany($company);
+            }
+
+            if (empty($result) || empty(json_decode($result)->subseller_id)) {
+                return [
+                    'message' => 'error',
+                    'data' => '',
+                ];
+            }
+
             $company->update(
                 [
-                    'subseller_getnet_id' => $result['data']->subseller_id,
-                    'getnet_status' => $company->present()->getStatusGetnet('review'),
+                    'subseller_getnet_id' => json_decode($result)->subseller_id,
+                    'get_net_status' => $company->present()->getStatusGetnet('review'),
                 ]
             );
 
@@ -413,16 +415,18 @@ class CompanyService
                 'message' => 'success',
                 'data' => '',
             ];
-        }
+        } catch (Exception $e) {
+            report($e);
 
-        return [
-            'message' => 'error',
-            'data' => '',
-        ];
+            return [
+                'message' => 'error',
+                'data' => '',
+            ];
+        }
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return string[]
      * @throws PresenterException
      */
@@ -447,7 +451,7 @@ class CompanyService
     }
 
     /**
-     * @param Company $company
+     * @param  Company  $company
      * @return array
      * @throws PresenterException
      */
@@ -539,29 +543,29 @@ class CompanyService
     }
 
     /**
-     * @param int $companyId
-     * @param int $userAccountOwnerId
+     * @param  int  $companyId
+     * @param  int  $userAccountOwnerId
      * @return object
      * @throws PresenterException
      */
     public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
     {
-        /* $salesModel = new Sale();
-         $ticketModel = new Ticket();
+       /* $salesModel = new Sale();
+        $ticketModel = new Ticket();
 
-         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-             ->where('sales.owner_id', $userAccountOwnerId)
-             ->where('sales.status', $salesModel->present()->getStatus('approved'))
-             ->whereNull('transactions.invitation_id')
-             ->where('transactions.company_id', $companyId)
-             ->whereHas('tickets', function ($query) use ($ticketModel) {
-                 $query->where('ticket_status_enum', $ticketModel->present()
-                     ->getTicketStatusEnum('mediation'))
-                     ->where('ignore_balance_block', 0);
-             })->sum('transactions.value');*/
+        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
+            ->where('sales.owner_id', $userAccountOwnerId)
+            ->where('sales.status', $salesModel->present()->getStatus('approved'))
+            ->whereNull('transactions.invitation_id')
+            ->where('transactions.company_id', $companyId)
+            ->whereHas('tickets', function ($query) use ($ticketModel) {
+                $query->where('ticket_status_enum', $ticketModel->present()
+                    ->getTicketStatusEnum('mediation'))
+                    ->where('ignore_balance_block', 0);
+            })->sum('transactions.value');*/
 
-        $salesModel = new Sale();
-        $transactiosModel = new Transaction();
+        $salesModel        = new Sale();
+        $transactiosModel  = new Transaction();
 
         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('sales.owner_id', $userAccountOwnerId)
@@ -578,41 +582,4 @@ class CompanyService
             ))
             ->first();
     }
-
-    public function verifyIsValidCNPJ($cnpj)
-    {
-        $cnpj = preg_replace('/[^0-9]/', '', (string) $cnpj);
-
-        // Valida tamanho
-        if (strlen($cnpj) != 14)
-            return false;
-
-        // Verifica se todos os digitos são iguais
-        if (preg_match('/(\d)\1{13}/', $cnpj))
-            return false;
-
-        // Valida primeiro dígito verificador
-        for ($i = 0, $j = 5, $soma = 0; $i < 12; $i++)
-        {
-            $soma += $cnpj[$i] * $j;
-            $j = ($j == 2) ? 9 : $j - 1;
-        }
-
-        $resto = $soma % 11;
-
-        if ($cnpj[12] != ($resto < 2 ? 0 : 11 - $resto))
-            return false;
-
-        // Valida segundo dígito verificador
-        for ($i = 0, $j = 6, $soma = 0; $i < 13; $i++)
-        {
-            $soma += $cnpj[$i] * $j;
-            $j = ($j == 2) ? 9 : $j - 1;
-        }
-
-        $resto = $soma % 11;
-
-        return $cnpj[13] == ($resto < 2 ? 0 : 11 - $resto);
-    }
 }
-

@@ -553,7 +553,7 @@ class ProjectsApiController extends Controller
 
             $message    = "Código de verificação CloudFox - " . $verifyCode;
             $smsService = new SmsService();
-            $smsService->sendSms($supportPhone, $message);
+            $smsService->sendSms($supportPhone, $message, '', 'aws-sns');
 
             return response()->json(
                 [
