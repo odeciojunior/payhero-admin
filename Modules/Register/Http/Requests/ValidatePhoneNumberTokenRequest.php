@@ -4,7 +4,7 @@ namespace Modules\Register\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidatePhoneNumberRequest extends FormRequest
+class ValidatePhoneNumberTokenRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,6 +15,7 @@ class ValidatePhoneNumberRequest extends FormRequest
     {
         return [
             'cellphone' => 'required',
+            'token' => 'required',
         ];
     }
 
@@ -26,6 +27,7 @@ class ValidatePhoneNumberRequest extends FormRequest
     {
         return [
             'cellphone.required' => 'Precisamos do seu celular para continuar',
+            'token.required' => 'Precisamos do seu token para continuar',
         ];
     }
 

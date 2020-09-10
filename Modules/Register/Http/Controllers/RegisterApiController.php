@@ -34,6 +34,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
 use Modules\Core\Services\SendgridService;
 use Modules\Register\Http\Requests\RegisterRequest;
+use Modules\Register\Http\Requests\ValidatePhoneNumberTokenRequest;
 
 /**
  * Class RegisterApiController
@@ -473,6 +474,25 @@ class RegisterApiController extends Controller
         return $registration_token;
     }
 
+    /**
+     * @param $email
+     * @throws Exception
+     */
+    private function createRegistrationTokenSms($phone): RegistrationToken
+    {
+
+        $registration_token = new RegistrationToken();
+        $registration_token->type = 'sms';
+        $registration_token->type_data = $phone;
+        $registration_token->token = random_int(1000, 9999);
+        $registration_token->number_wrong_attempts = 0;
+        $registration_token->ip = \request()->ip();
+        $registration_token->expiration = \Carbon\Carbon::now()->addMinutes(10);
+        $registration_token->save();
+
+        return $registration_token;
+    }
+
     private function sendRegistrationTokenEmail($email, $token)
     {
 
@@ -489,6 +509,13 @@ class RegisterApiController extends Controller
             ]
         );
 
+    }
+
+    private function sendRegistrationTokenSms($phone, $token)
+    {
+        $message = "Código de verificação CloudFox - " . $token;
+        $smsService = new SmsService();
+        $smsService->sendSms($phone, $message, ' ', 'aws-sns');
     }
 
     /**
@@ -578,23 +605,22 @@ class RegisterApiController extends Controller
     {
         try {
             $data = $request->validated();
-            $cellphone = $data["cellphone"] ?? null;
-            if (FoxUtils::isEmpty($cellphone)) {
-                return response()->json(
-                    [
-                        'message' => 'Telefone não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
-
-            $verifyCode = random_int(1000, 9999);
+            $cellphone = $data["cellphone"];
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
+            $verifyIfExistCode = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->first();
+            $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
-            $message = "Código de verificação CloudFox - " . $verifyCode;
-            $smsService = new SmsService();
-            $smsService->sendSms($cellphone, $message, ' ', 'aws-sns');
+            if ($verifyIfExistCode) {
+                $verifyIfExistCode->expiration = $time_with_ten_minutes;
+                $verifyIfExistCode->save();
+                $token = $verifyIfExistCode->token;
+            } else {
+                $registration_token = $this->createRegistrationTokenSms($cellphone);
+                $token = $registration_token->token;
+            }
+
+            $this->sendRegistrationTokenSms($cellphone, $token);
 
             return response()->json(
                 [
@@ -602,8 +628,8 @@ class RegisterApiController extends Controller
                     "message" => "Mensagem enviada com sucesso!",
                 ],
                 200
-            )
-                ->withCookie("cellphoneverifycode", $verifyCode, 10);
+            );
+
         } catch (Exception $e) {
             report($e);
 
@@ -615,22 +641,59 @@ class RegisterApiController extends Controller
      * @param ValidatePhoneNumberRequest $request
      * @return JsonResponse
      */
-    public function matchCellphoneVerifyCode(ValidatePhoneNumberRequest $request)
+    public function matchCellphoneVerifyCode(ValidatePhoneNumberTokenRequest $request)
     {
         try {
+
             $data = $request->validated();
-            $verifyCode = $data["verifyCode"] ?? null;
+            $token = $data["token"];
+            $cellphone = $data["cellphone"];
+            $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
 
-            $cookie = Cookie::get("cellphoneverifycode");
+            $existCodeToPhone = RegistrationToken::where('type', 'sms')->where('type_data', $cellphone)->latest()->first();
 
-            if ($verifyCode != $cookie) {
+            if (!$existCodeToPhone) {
+
                 return response()->json(
                     [
-                        'message' => 'Código de verificação inválido!',
+                        'message' => 'Não existe código de verificação para este telephone',
                     ],
                     400
                 );
+
             }
+
+            if (!$existCodeToPhone->number_wrong_attempts > 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
+
+                $registration_token = $this->createRegistrationTokenSms($cellphone);
+                $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
+
+                return response()->json(
+                    [
+                        "message" => "Seu cadastro com este telefone esta bloqueado por tentativas erradas ou se encontra expirado, enviamos um novo código para o seu telefone",
+                    ],
+                    403
+                );
+
+            }
+
+            if ($existCodeToPhone->token != $token) {
+
+                $existCodeToPhone->number_wrong_attempts = $existCodeToPhone->number_wrong_attempts + 1;
+                $existCodeToPhone->ip = $request->ip();
+                $existCodeToPhone->save();
+
+                return response()->json(
+                    [
+                        'message' => 'O código informado está errado, você tem mais ' . (3 - $existCodeToPhone->number_wrong_attempts) . ' tentativas.',
+                    ],
+                    400
+                );
+
+            }
+
+            $existCodeToPhone->validated = true;
+            $existCodeToPhone->save();
 
             return response()->json(
                 [
@@ -638,8 +701,9 @@ class RegisterApiController extends Controller
                     "message" => "Telefone verificado com sucesso!",
                 ],
                 200
-            )
-                ->withCookie(Cookie::forget("cellphoneverifycode"));
+            );
+
+
         } catch (Exception $e) {
             report($e);
 
