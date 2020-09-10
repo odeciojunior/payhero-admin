@@ -559,7 +559,7 @@ class RegisterApiController extends Controller
             );
 
         } catch (Exception $e) {
-            dd($e->getMessage());
+
             report($e);
 
             return response()->json(
