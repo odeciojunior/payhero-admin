@@ -743,7 +743,7 @@ $(document).ready(function () {
 
     $("#tokenEmail").on('input', function () {
         var token = $(this).val();
-        if (token.length !== 6) return false;
+        if (token.length !== 4) return false;
 
         $.ajax({
             method: "POST",
@@ -771,7 +771,7 @@ $(document).ready(function () {
 
     $("#tokenCellphone").on('input', function () {
         var token = $(this).val();
-        if (token.length !== 6) return false;
+        if (token.length !== 4) return false;
 
         $.ajax({
             method: "POST",
@@ -880,7 +880,10 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: {email: email},
+            data: {
+                email: email,
+                firstName: $('#firstname').val()
+            },
             error: function error(response) {
                 alertCustom('error', response.responseJSON.message )
             },
@@ -966,6 +969,39 @@ $(document).ready(function () {
             return false;
         }
     }
+
+    $("[name='fileToUpload']").change(function (e) {
+        var fileId = e.target.getAttribute('id');
+        var file = document.getElementById(fileId).files[0];
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = function (oFREvent) {
+            let myForm = document.getElementById('form-register');
+            let formData = new FormData(myForm);
+            formData.append('fileToUpload', file, fileId);
+
+            $.ajax({
+                method: "POST",
+                url: "/api/register/upload-documents",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data:  formData,
+                processData: false,
+                cache: false,
+                contentType: false,
+                dataType: "json",
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    alertCustom('success', response.message);
+                },
+            });
+        };
+    });
+
     $('#form-register input').on('keypress', function (e) {
         if (e.keyCode == 13) {
             return false;

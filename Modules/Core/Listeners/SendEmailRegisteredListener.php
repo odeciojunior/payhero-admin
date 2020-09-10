@@ -6,8 +6,9 @@ namespace Modules\Core\Listeners;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\UserRegisteredEvent;
-use Modules\Core\Services\EmailService;
+use Modules\Core\Services\SendgridService;
 
 /**
  * Class SendEmailRegisteredListener
@@ -18,27 +19,24 @@ class SendEmailRegisteredListener implements ShouldQueue
     use Queueable;
 
     /**
-     * @var EmailService
+     * @var SendgridService
      */
     private $emailService;
 
-    /**
-     * Create the event listener.
-     * @return void
-     */
     public function __construct()
     {
-        $this->emailService = new EmailService();
+        $this->emailService = new SendgridService();
     }
 
     /**
-     * @param UserRegisteredEvent $data
+     * @param UserRegisteredEvent $event
      */
     public function handle(UserRegisteredEvent $event) {
         $data      = $event->request;
+
         try {
             $this->emailService->sendEmail(
-                'noreply@' . $data['domainName'],
+                'noreply@cloudfox.net',
                 $data['domainName'],
                 $data['clientEmail'],
                 $data['clientName'],
@@ -46,7 +44,13 @@ class SendEmailRegisteredListener implements ShouldQueue
                 $data['bodyEmail']
             );
         } catch (Exception $e) {
+            Log::warning('Erro ao enviar email de cadastro de novos usuários');
             report($e);
         }
+    }
+
+    public function tags()
+    {
+        return ['listener:' . static::class, 'SendEmailRegisteredListener'];
     }
 }

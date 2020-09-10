@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Traits;
 
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\FoxUtils;
 
@@ -14,11 +13,6 @@ trait GetnetPrepareCompanyData
 {
     private $urlCallback = 'https://app.cloudfox.net/postback/getnet';
 
-    /**
-     * @param  Company  $company
-     * @return array
-     * @throws PresenterException
-     */
     public function getPrepareDataCreatePfCompany(Company $company)
     {
         $user = $company->user;
@@ -36,12 +30,11 @@ trait GetnetPrepareCompanyData
             'business_address' => [
                 'mailing_address_equals' => 'S',
                 'street' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->street)),
-                'number' => $user->number ?? '',
                 'district' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->neighborhood)),
                 'city' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->city)),
                 'state' => FoxUtils::getFormatState($user->state),
+                'number' => FoxUtils::onlyNumbers($user->number) ?? 0,
                 'postal_code' => FoxUtils::onlyNumbers($user->zip_code),
-                'country' => $company->country == 'usa' ? 'EUA' : 'BR',
             ],
             'working_hours' => [
                 "start_day" => "mon",            // "mon" "tue" "wed" "thu" "fri" "sat" "sun"
@@ -65,6 +58,7 @@ trait GetnetPrepareCompanyData
                     'account_digit' => $company->account_digit,
                 ]
             ],
+            'list_commissions' => $this->getListCommissions($company->user),
             'url_callback' => $this->urlCallback,
             'accepted_contract' => 'S',
             'liability_chargeback' => 'S',
@@ -145,12 +139,12 @@ trait GetnetPrepareCompanyData
             'Não Contribuinte'
         ];
 
-        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 5
+        if (empty($company->state_fiscal_document_number) || strlen($company->state_fiscal_document_number) < 4
             || in_array($company->state_fiscal_document_number, $stateFiscal)
         ) {
-            $stateFiscal = 'ISENTO';
+            $stateFiscalNumber = 'ISENTO';
         } else {
-            $stateFiscal = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
+            $stateFiscalNumber = FoxUtils::onlyNumbers($company->state_fiscal_document_number);
         }
 
         return [
@@ -158,7 +152,7 @@ trait GetnetPrepareCompanyData
             'legal_document_number' => FoxUtils::onlyNumbers($company->company_document),
             'legal_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
             'trade_name' => FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
-            'state_fiscal_document_number' => $stateFiscal,
+            'state_fiscal_document_number' => $stateFiscalNumber,
             'email' => $user->email,
             'cellphone' => [
                 'area_code' => $telephone['dd'],
@@ -268,5 +262,74 @@ trait GetnetPrepareCompanyData
         ];
     }
 
+
+    private function getListCommissions($user)
+    {
+        $listCommissions = [];
+
+        $brands = [
+            "MASTERCARD",
+            "MAESTRO",
+            "VISA",
+            "VISA ELECTRON",
+            "AMEX",
+            "ELO CRÉDITO",
+            "ELO DÉBITO",
+            "HIPERCARD"
+        ];
+
+        $products = [
+            "DEBITO A VISTA",
+            "CREDITO A VISTA",
+            "PARCELADO LOJISTA 3X",
+            "PARCELADO LOJISTA 6X",
+            "PARCELADO LOJISTA 9X",
+            "PARCELADO LOJISTA 12X",
+            "PARCELADO EMISSOR",
+            "BOLETO"
+        ];
+
+        foreach ($brands as $brand) {
+            foreach ($products as $product) {
+                if (!in_array([$product, $brand], $listCommissions)) {
+                    switch ($product) {
+                        case 'BOLETO':
+                            $value = 100 - $user->boleto_tax;
+                            break;
+                        case 'DEBITO A VISTA':
+                            $value = 100 - $user->debit_card_tax;
+                            break;
+                        default:
+                            $value = 100 - $user->credit_card_tax;
+                    }
+
+                    if ((in_array($brand, $brands)) && ($product == 'DEBITO A VISTA' || $product == 'BOLETO')) {
+                        continue;
+                    }
+
+                    if ((in_array($brand, ['MAESTRO', 'VISA ELECTRON', 'ELO DÉBITO']))
+                        && in_array($product, [
+                            'CREDITO A VISTA',
+                            'PARCELADO LOJISTA 3X',
+                            'PARCELADO LOJISTA 6X',
+                            'PARCELADO LOJISTA 9X',
+                            'PARCELADO LOJISTA 12X',
+                            'PARCELADO EMISSOR'
+                        ])) {
+                        continue;
+                    }
+
+                    $listCommissions[] = [
+                        'brand' => $brand,
+                        'product' => $product,
+                        'commission_percentage' => $value,
+                        'payment_plan' => 3,
+                    ];
+                }
+            }
+        }
+
+        return $listCommissions;
+    }
 }
 

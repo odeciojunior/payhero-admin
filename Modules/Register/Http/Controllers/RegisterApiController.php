@@ -3,7 +3,6 @@
 namespace Modules\Register\Http\Controllers;
 
 use Exception;
-use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -11,6 +10,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Services\SmsService;
@@ -18,7 +20,6 @@ use Modules\Register\Http\Requests\ValidateCnpjRequest;
 use Modules\Register\Http\Requests\ValidateCpfRequest;
 use Modules\Register\Http\Requests\ValidateEmailRequest;
 use Modules\Register\Http\Requests\ValidatePhoneNumberRequest;
-use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\UserNotification;
@@ -26,7 +27,6 @@ use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
-use Modules\Core\Entities\Invitation;
 use Modules\Core\Services\SendgridService;
 use Modules\Register\Http\Requests\RegisterRequest;
 
@@ -36,195 +36,79 @@ use Modules\Register\Http\Requests\RegisterRequest;
  */
 class RegisterApiController extends Controller
 {
+
+    const PERCENTAGE_RATE = '5.9';
+    const TRANSACTION_RATE = '1.00';
+    const BALANCE = '0';
+    const CREDIT_CARD_ANTECIPATION_MONEY_DAYS = '30';
+    const BOLETO_ANTECIPATION_MONEY_DAYS = '2';
+    const ANTECIPATION_TAX = '0';
+    const PERCENTAGE_ANTECIPABLE = '100';
+    const INVITES_AMOUNT = 1;
+    const BOLETO_RELEASE_MONEY_DAYS = 0;
+
     /**
      * @param RegisterRequest $request
+     * @param User $userModel
+     * @param Company $companyModel
+     * @param UserNotification $userNotificationModel
+     * @param UserInformation $userInformationModel
      * @return JsonResponse
      */
-    public function store(RegisterRequest $request)
+    public function store(RegisterRequest $request,
+                          User $userModel,
+                          Company $companyModel,
+                          UserNotification $userNotificationModel,
+                          UserInformation $userInformationModel)
     {
+
         try {
-            $requestData           = $request->validated();
-            $userModel             = new User();
-            $inviteModel           = new Invitation();
-            $companyModel          = new Company();
-            $userNotificationModel = new UserNotification();
-            $userInformationModel   = new UserInformation();
-
-            $parameter = $requestData['parameter'] ?? 'nw2usr3cfx';
-
-            $withoutInvite = false;
-            if ($parameter == 'nw2usr3cfx') {
-                $withoutInvite = true;
-            } else if (strlen($parameter) > 15) {
-                $inviteId = substr($parameter, 0, 15);
-                $inviteId = Hashids::decode($inviteId);
-                $invite   = $inviteModel->where('email_invited', $requestData['email'])->where('id', $inviteId)
-                                        ->first();
-                if (!isset($invite->id) || (isset($invite->id) && $invite->status != 2)) {
-                    return response()->json(['success' => 'false', 'message' => 'Convite inválido!']);
-                }
-            } else {
-                $companyId = Hashids::decode($parameter);
-                $company   = $companyModel->where('id', $companyId)->first();
-                if (isset($company->id)) {
-                    $invitesSent    = $inviteModel->where('invite', $company->user_id)->count();
-                    $companyService = new CompanyService();
-                    if (!$companyService->isDocumentValidated($company->id)) {
-                        return response()->json(['success' => 'false', 'message' => 'Convite indisponivel!']);
-                    }
-
-                    if ($invitesSent >= $company->user->invites_amount) {
-                        return response()->json(
-                            ['success' => 'false', 'message' => 'Convite indisponivel, limite atingido!']
-                        );
-                    }
-                } else {
-                    return response()->json(['success' => 'false', 'message' => 'Link convite inválido']);
-                }
-            }
-
-            if (!stristr($requestData['date_birth'], '-')) {
-                $requestData['date_birth'] = null;
-            }
-
-            $requestData['password']                            = bcrypt($requestData['password']);
-            $requestData['percentage_rate']                     = '5.9';
-            $requestData['transaction_rate']                    = '1.00';
-            $requestData['balance']                             = '0';
-            $requestData['credit_card_antecipation_money_days'] = '30';
-            $requestData['boleto_antecipation_money_days']      = '2';
-            $requestData['antecipation_tax']                    = '0';
-            $requestData['percentage_antecipable']              = '100';
-            $requestData['invites_amount']                      = 1;
-            $requestData['boleto_release_money_days']           = 0;
-
-            $user = $userModel->create($requestData);
-
-            $user->update(['account_owner_id' => $user->id]);
-
-            $user->assignRole('account_owner');
-
-            $streetCompany       = $requestData['street_company'] ?? null;
-            $numberCompany       = $requestData['number_company'] ?? null;
-            $neighborhoodCompany = $requestData['neighborhood_company'] ?? null;
-            $complementCompany   = $requestData['complement_company'] ?? null;
-            $stateCompany        = $requestData['state_company'] ?? null;
-            $cityCompany         = $requestData['city_company'] ?? null;
-            $supportEmail        = $requestData['support_email'] ?? null;
-            $supportPhone        = $requestData['support_telephone'] ?? null;
-
-            $companyModel->create(
-                [
-                    'user_id'           => $user->account_owner_id,
-                    'fantasy_name'      => ($requestData['company_type'] == $companyModel->present()
-                                                                                         ->getCompanyType('physical person')) ? $user->name : $requestData['fantasy_name'],
-                    'company_document'  => ($requestData['company_type'] == $companyModel->present()
-                                                                                         ->getCompanyType(
-                                                                                             'physical person'
-                                                                                         )) ? $requestData['document'] : $requestData['company_document'],
-                    'company_type'      => $requestData['company_type'],
-                    'support_email'     => $supportEmail,
-                    'support_telephone' => $supportPhone,
-                    'street'            => $streetCompany,
-                    'number'            => $numberCompany,
-                    'neighborhood'      => $neighborhoodCompany,
-                    'complement'        => $complementCompany,
-                    'state'             => $stateCompany,
-                    'city'              => $cityCompany,
-                    'bank'              => $requestData['bank'],
-                    'agency'            => $requestData['agency'],
-                    'agency_digit'      => $requestData['agency_digit'],
-                    'account'           => $requestData['account'],
-                    'account_digit'     => $requestData['account_digit'],
-                ]
-            );
+            $requestData = $this->createAndPassDefaultValuesToRequest($request);
+            $user = $this->createUserAndAssignRole($requestData, $userModel);
+            $this->createCompanyToUser($requestData, $companyModel, $user);
 
             if (!empty($user)) {
-                $user->load(["userNotification"]);
-                $userNotification = $user->userNotification ?? collect();
-                if ($userNotification->isEmpty()) {
-                    $userNotificationModel->create(
-                        [
-                            "user_id" => $user->id,
-                        ]
-                    );
-                }
-                $userInformationModel->create(
-                    [
-                        "user_id"         => $user->id,
-                        "document_type"   => 1,
-                        "document_number" => $user->document,
-                    ]
-                );
+                $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
             }
 
-            auth()->loginUsingId($user->id, true);
+            $sDrive = Storage::disk('s3');
+            $documentCpf = preg_replace('/[^0-9]/', '', $user->document);
 
-            if ($withoutInvite == false) {
-                if (!isset($invite)) {
-                    $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
-                }
-                // $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
-
-                if ($invite) {
-                    $invite->update(
+            if ($files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents')) {
+                if (!app(RegisterController::class)->uploudDocumentsRegistered($files)) {
+                    return response()->json(
                         [
-                            'user_invited'    => $user->account_owner_id,
-                            'status'          => '1',
-                            'register_date'   => Carbon::now()->format('Y-m-d'),
-                            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                            'email_invited'   => $requestData['email'],
+                            'success' => 'false',
+                            'message' => 'Não foi Possivel enviar os arquivos ao servidor, favor verificar os arquivos
+                                          no Perfil do usuário e da empresa',
                         ]
                     );
-
-                    if (empty($invite->invite) && isset($company->id)) {
-                        $invite->update(
-                            [
-                                'invite' => $company->user_id,
-                            ]
-                        );
-                    }
                 } else {
-                    if ($company) {
-                        $inviteModel->create(
-                            [
-                                'invite'          => $company->user_id,
-                                'user_invited'    => $user->account_owner_id,
-                                'status'          => '1',
-                                'company_id'      => $company->id,
-                                'register_date'   => Carbon::now()->format('Y-m-d'),
-                                'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                'email_invited'   => $requestData['email'],
-                            ]
-                        );
-                    }
+                    $sDrive->deleteDirectory('uploads/register/user/' . $documentCpf);
+                    return response()->json(
+                        [
+                            'success' => 'true',
+                            'message' => 'Arquivos Salvos com sucesso',
+                        ]
+                    );
+
                 }
             }
 
-            /**
-             * Event Send Welcome Email
-             */
-            $dataEmail = [
-                'domainName' => $requestData['domainName'] ?? 'cloudfox.net',
-                'clientName' => $requestData['name'] ?? '',
-                'clientEmail' => $requestData['email'],
-                'templateId' => 'd-267dbdcbcc5a454e94a5ae3ffb704505',
-                'bodyEmail' => $requestData,
-            ];
-
-            event(new UserRegisteredEvent($dataEmail));
+            $this->sendWelcomeEmail($requestData);
 
             return response()->json(
                 [
-                    'success'      => 'true',
-                    'access_token' => auth()->user()
-                                            ->createToken("Laravel Password Grant Client")->accessToken,
+                    'success'       => 'true',
+                    'message'       => 'Arquivos Enviado com Sucesso',
+                    'access_token'  => auth()->user()->createToken("Laravel Password Grant Client")->accessToken,
                 ]
             );
+
         } catch (Exception $ex) {
             report($ex);
 
-            return response()->json(['success' => 'false', 'message' => 'revise os dados informados']);
+            return response()->json(['success' => 'false', 'message' => 'revise os dados informados'], 403);
         }
     }
 
@@ -234,15 +118,29 @@ class RegisterApiController extends Controller
      */
     public function verifyCpf(ValidateCpfRequest $request)
     {
-        $data        = $request->all();
+        $data = $request->validated();
         $userService = new UserService();
-        $cpf         = $userService->verifyCpf($data['document']);
+
+        $isValidCpf = $userService->verifyIsValidCPF($data['document']);
+
+        if (!$isValidCpf) {
+
+            return response()->json(
+                [
+                    'cpf_exist' => 'false',
+                    'message' => 'Cpf com formato inválido',
+                ], 403
+            );
+
+        }
+
+        $cpf = $userService->verifyCpf($data['document']);
         if ($cpf) {
             return response()->json(
                 [
                     'cpf_exist' => 'true',
-                    'message'   => 'Esse CPF já está cadastrado na plataforma',
-                ]
+                    'message' => 'Esse CPF já está cadastrado na plataforma',
+                ], 403
             );
         } else {
             return response()->json(
@@ -260,15 +158,29 @@ class RegisterApiController extends Controller
      */
     public function verifyCnpj(ValidateCnpjRequest $request)
     {
-        $data           = $request->all();
+
+        $data = $request->validated();
         $companyService = new CompanyService();
-        $cnpj           = $companyService->verifyCnpj($data['company_document']);
+
+        $isAValidCNPJ = $companyService->verifyIsValidCNPJ($data['company_document']);
+
+        if (!$isAValidCNPJ) {
+            return response()->json(
+                [
+                    'cnpj_exist' => 'FALSE',
+                    'message' => 'CNPJ com formato inválido',
+                ], 403
+            );
+        }
+
+        $cnpj = $companyService->verifyCnpj($data['company_document']);
+
         if ($cnpj) {
             return response()->json(
                 [
                     'cnpj_exist' => 'true',
-                    'message'    => 'Esse CNPJ já está cadastrado na plataforma',
-                ]
+                    'message' => 'Esse CNPJ já está cadastrado na plataforma',
+                ], 403
             );
         } else {
             return response()->json(
@@ -283,25 +195,90 @@ class RegisterApiController extends Controller
      * @param ValidateEmailRequest $request
      * @return JsonResponse
      */
-    public function verifyEmail(ValidateEmailRequest  $request)
+    public function verifyEmail(ValidateEmailRequest $request)
     {
-        $data      = $request->all();
+        $data = $request->validated();
         $userModel = new User();
 
-        $user = $userModel->where('email', 'like', '%' . $data['email'] . '%')->first();
-        if (!empty($user) || $data['email'] == 'kim@mail.com') {
-            return response()->json(
-                [
-                    'email_exist' => 'true',
-                    'message'     => 'Esse Email já está cadastrado na plataforma',
-                ]
-            );
-        } else {
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+
             return response()->json(
                 [
                     'email_exist' => 'false',
-                ]
+                    'message' => 'Email com formato inválido',
+                ], 403
             );
+
+        }
+
+        if ($data['email'] == 'kim@mail.com' || $userModel->where('email', $data['email'])->count()) {
+
+            return response()->json(
+                [
+                    'email_exist' => 'true',
+                    'message' => 'Esse Email já está cadastrado na plataforma',
+                ], 403
+            );
+
+        }
+
+        return response()->json(
+            [
+                'email_exist' => 'false',
+            ], 200
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function uploadDocuments(Request $request)
+    {
+        try {
+            $dataForm = Validator::make($request->all(), [
+                'fileToUpload'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+                'document'      => 'required',
+            ], [
+                'fileToUpload.mimes'     => 'O arquivo esta com formato inválido',
+                'fileToUpload.required'  => 'Precisamos do arquivo para continuar',
+            ])->validate();
+
+            $sDrive = Storage::disk('s3');
+
+            $document = $dataForm['fileToUpload'];
+            $documentCpf = preg_replace('/[^0-9]/','', $dataForm['document']);
+            $documentType = $document->getClientOriginalName() . '.' . $document->extension() ?? '';
+
+            $sDrive->putFileAs('uploads/register/user/'. $documentCpf .'/private/documents',
+                $document ,
+                $documentType,
+            'private');
+
+            if(empty($documentType)) {
+                return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
+            }
+
+                $urlPath = $sDrive->temporaryUrl(
+                                'uploads/register/user/'. $documentCpf .'/private/documents/' . $documentType,
+                                now()->addHours(24)
+                            );
+            return response()->json(
+                [
+                    'message' => 'Arquivo enviado com sucesso.',
+                    'path' => $urlPath
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            $sDrive->delete('uploads/register/user/'. $documentCpf .'/private/documents/' . $documentType);
+            Log::warning('RegisterApiController uploadDocuments');
+            report($e);
+
+            return response()->json([
+                'message' => 'Não foi possivel enviar o arquivo.',
+            ], 400);
         }
     }
 
@@ -310,12 +287,13 @@ class RegisterApiController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function sendEmailCode(ValidateEmailRequest $request) {
+    public function sendEmailCode(ValidateEmailRequest $request)
+    {
 
-        $data = $request->all();
+        $data = $request->validated();
         $email = $data["email"] ?? null;
 
-        $verifyCode = random_int(100000, 999999);
+        $verifyCode = random_int(1000, 9999);
         $data = [
             "verify_code" => $verifyCode,
         ];
@@ -327,25 +305,25 @@ class RegisterApiController extends Controller
             'noreply@cloudfox.net',
             'cloudfox',
             $email,
-            '$data[\'firstname\']',
+            isset($data['firstname']) ? $data['firstname'] : 'Cliente',
             "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
             $data
         )) {
-                return response()->json(
-                    [
-                        "sent" => true,
-                        "message" => "Email enviado com sucesso!",
-                    ],
-                    200
-                )
-                    ->withCookie("emailverifycode", $verifyCode, 15);
-            }
+            return response()->json(
+                [
+                    "sent" => true,
+                    "message" => "Email enviado com sucesso!",
+                ],
+                200
+            )
+                ->withCookie("emailverifycode", $verifyCode, 10);
+        }
 
         return response()->json(
             [
                 "message" => "Erro ao enviar email, tente novamente mais tarde!",
             ],
-            400
+            403
         );
     }
 
@@ -356,7 +334,7 @@ class RegisterApiController extends Controller
     public function matchEmailVerifyCode(ValidateEmailRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
             $verifyCode = $data["verifyCode"] ?? null;
 
             $cookie = Cookie::get("emailverifycode");
@@ -392,10 +370,10 @@ class RegisterApiController extends Controller
      * @param ValidatePhoneNumberRequest $request
      * @return JsonResponse
      */
-    public function sendCellphoneCode(ValidatePhoneNumberRequest  $request)
+    public function sendCellphoneCode(ValidatePhoneNumberRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
             $cellphone = $data["cellphone"] ?? null;
             if (FoxUtils::isEmpty($cellphone)) {
                 return response()->json(
@@ -406,7 +384,7 @@ class RegisterApiController extends Controller
                 );
             }
 
-            $verifyCode = random_int(100000, 999999);
+            $verifyCode = random_int(1000, 9999);
 
             $cellphone = preg_replace("/[^0-9]/", "", $cellphone);
 
@@ -421,7 +399,7 @@ class RegisterApiController extends Controller
                 ],
                 200
             )
-                ->withCookie("cellphoneverifycode", $verifyCode, 15);
+                ->withCookie("cellphoneverifycode", $verifyCode, 10);
         } catch (Exception $e) {
             report($e);
 
@@ -436,7 +414,7 @@ class RegisterApiController extends Controller
     public function matchCellphoneVerifyCode(ValidatePhoneNumberRequest $request)
     {
         try {
-            $data = $request->all();
+            $data = $request->validated();
             $verifyCode = $data["verifyCode"] ?? null;
 
             $cookie = Cookie::get("cellphoneverifycode");
@@ -471,7 +449,7 @@ class RegisterApiController extends Controller
     public function getBanks()
     {
         $bankService = new BankService();
-        $banks       = $bankService->getBanks('brazil');
+        $banks = $bankService->getBanks('brazil');
 
         return response(
             [
@@ -479,5 +457,139 @@ class RegisterApiController extends Controller
             ],
             200
         );
+    }
+
+    /**
+     * @param $request
+     * @return mixed
+     */
+    private function createAndPassDefaultValuesToRequest($request)
+    {
+        $requestData = $request->validated();
+
+        $requestData['percentage_rate'] = self::PERCENTAGE_RATE;
+        $requestData['transaction_rate'] = self::TRANSACTION_RATE;
+        $requestData['balance'] = self::BALANCE;
+        $requestData['credit_card_antecipation_money_days'] = self::CREDIT_CARD_ANTECIPATION_MONEY_DAYS;
+        $requestData['boleto_antecipation_money_days'] = self::BOLETO_ANTECIPATION_MONEY_DAYS;
+        $requestData['antecipation_tax'] = self::ANTECIPATION_TAX;
+        $requestData['percentage_antecipable'] = self::PERCENTAGE_ANTECIPABLE;
+        $requestData['invites_amount'] = self::INVITES_AMOUNT;
+        $requestData['boleto_release_money_days'] = self::BOLETO_RELEASE_MONEY_DAYS;
+
+        if (!stristr($requestData['date_birth'], '-')) {
+            $requestData['date_birth'] = null;
+        }
+
+        $requestData['password'] = bcrypt($requestData['password']);
+
+        return $requestData;
+    }
+
+    /**
+     * @param $requestData
+     * @param User $userModel
+     * @return mixed
+     */
+    private function createUserAndAssignRole($requestData, User $userModel)
+    {
+
+        $user = $userModel->create($requestData);
+        $user->update(['account_owner_id' => $user->id]);
+        $user->assignRole('account_owner');
+        return $user;
+
+    }
+
+    /**
+     * @param $requestData
+     * @param Company $companyModel
+     * @param User $user
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     */
+    private function createCompanyToUser($requestData, Company $companyModel, User $user): void
+    {
+
+        $streetCompany = $requestData['street_company'] ?? null;
+        $numberCompany = $requestData['number_company'] ?? null;
+        $neighborhoodCompany = $requestData['neighborhood_company'] ?? null;
+        $complementCompany = $requestData['complement_company'] ?? null;
+        $stateCompany = $requestData['state_company'] ?? null;
+        $cityCompany = $requestData['city_company'] ?? null;
+        $supportEmail = $requestData['support_email'] ?? null;
+        $supportPhone = $requestData['support_telephone'] ?? null;
+
+        $companyModel->create(
+            [
+                'user_id' => $user->account_owner_id,
+                'fantasy_name' => ($requestData['company_type'] == $companyModel->present()
+                        ->getCompanyType('physical person')) ? $user->name : $requestData['fantasy_name'],
+                'company_document' => ($requestData['company_type'] == $companyModel->present()
+                        ->getCompanyType(
+                            'physical person'
+                        )) ? $requestData['document'] : $requestData['company_document'],
+                'company_type' => $requestData['company_type'],
+                'support_email' => $supportEmail,
+                'support_telephone' => $supportPhone,
+                'street' => $streetCompany,
+                'number' => $numberCompany,
+                'neighborhood' => $neighborhoodCompany,
+                'complement' => $complementCompany,
+                'state' => $stateCompany,
+                'city' => $cityCompany,
+                'bank' => $requestData['bank'],
+                'agency' => $requestData['agency'],
+                'agency_digit' => $requestData['agency_digit'],
+                'account' => $requestData['account'],
+                'account_digit' => $requestData['account_digit'],
+            ]
+        );
+    }
+
+    /**
+     * @param User $user
+     * @param UserNotification $userNotificationModel
+     * @param UserInformation $userInformationModel
+     */
+    private function sendUserNotification(User $user, UserNotification $userNotificationModel, UserInformation $userInformationModel): void
+    {
+        $user->load(["userNotification"]);
+        $userNotification = $user->userNotification ?? collect();
+
+        if ($userNotification->isEmpty()) {
+            $userNotificationModel->create(
+                [
+                    "user_id" => $user->id,
+                ]
+            );
+        }
+
+        $userInformationModel->create(
+            [
+                "user_id" => $user->id,
+                "document_type" => 1,
+                "document_number" => $user->document,
+            ]
+        );
+
+    }
+
+    /**
+     * @param $requestData
+     */
+    private function sendWelcomeEmail($requestData)
+    {
+        /**
+         * Event Send Welcome Email
+         */
+        $dataEmail = [
+            'domainName' => $requestData['domainName'] ?? 'cloudfox.net',
+            'clientName' => $requestData['name'] ?? '',
+            'clientEmail' => $requestData['email'],
+            'templateId' => 'd-267dbdcbcc5a454e94a5ae3ffb704505',
+            'bodyEmail' => $requestData,
+        ];
+
+        event(new UserRegisteredEvent($dataEmail));
     }
 }
