@@ -34,7 +34,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        /*$users = User::with([
+        $users = User::with([
             'companies' => function ($q) {
                 $q->where('bank_document_status', 3)
                     ->where('address_document_status', 3)
@@ -55,7 +55,7 @@ class GenericCommand extends Command
             }
         }
 
-        $this->line('Terminou!!!');*/
+        $this->line('Terminou!!!');
     }
 }
 
