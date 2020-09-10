@@ -36,8 +36,7 @@ class GenericCommand extends Command
     {
         /*$users = User::with([
             'companies' => function ($q) {
-                $q->where('company_type', 2)
-                    ->where('bank_document_status', 3)
+                $q->where('bank_document_status', 3)
                     ->where('address_document_status', 3)
                     ->where('contract_document_status', 3)
                     ->where('subseller_getnet_id', null);

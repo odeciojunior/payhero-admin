@@ -225,9 +225,12 @@ class FoxUtils
                 "/(ú|ù|û|ü)/",
                 "/(Ú|Ù|Û|Ü)/",
                 "/(ñ)/",
-                "/(Ñ)/"
+                "/(Ñ)/",
+                "/(Ç)/",
+                "/(ç)/",
+
             ],
-            explode(" ", "a A e E i I o O u U n N"),
+            explode(" ", "a A e E i I o O u U n N C c"),
             $string
         );
     }
