@@ -260,7 +260,6 @@ class UserService
         return $arrayFields;
     }
 
-
     public function verifyIsValidCPF($cpf)
     {
         $cpf = preg_replace('/[^0-9]/is', '', $cpf);
@@ -284,5 +283,17 @@ class UserService
         }
 
         return true;
+    }
+
+    public function verifyExistsCPF ($cpf) {
+        $userModel     = new User();
+        $cpf           = preg_replace("/[^0-9]/", "", $cpf);
+
+        $user = $userModel->where('document', $cpf)->first();
+        if (!empty($user)) {
+            return true;
+        }
+
+        return false;
     }
 }

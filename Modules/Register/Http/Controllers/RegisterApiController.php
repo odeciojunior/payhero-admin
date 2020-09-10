@@ -65,15 +65,13 @@ class RegisterApiController extends Controller
     {
 
         try {
-//            $requestData = $this->createAndPassDefaultValuesToRequest($request);
-//            $user = $this->createUserAndAssignRole($requestData, $userModel);
-//            $this->createCompanyToUser($requestData, $companyModel, $user);
-//
-//            if (!empty($user)) {
-//                $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
-//            }
-            $userModel = new User();
-            $user = $userModel->find(3184);
+            $requestData = $this->createAndPassDefaultValuesToRequest($request);
+            $user = $this->createUserAndAssignRole($requestData, $userModel);
+            $this->createCompanyToUser($requestData, $companyModel, $user);
+
+            if (!empty($user)) {
+                $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
+            }
 
             $sDrive = Storage::disk('s3');
             $documentCpf = preg_replace('/[^0-9]/', '', $user->document);
@@ -98,9 +96,8 @@ class RegisterApiController extends Controller
 
                 }
             }
-            exit();
 
-//            $this->sendWelcomeEmail($requestData);
+            $this->sendWelcomeEmail($requestData);
 
             return response()->json(
                 [
@@ -139,7 +136,7 @@ class RegisterApiController extends Controller
 
         }
 
-        $cpf = $userService->verifyCpf($data['document']);
+        $cpf = $userService->verifyExistsCPF($data['document']);
         if ($cpf) {
             return response()->json(
                 [
@@ -241,7 +238,6 @@ class RegisterApiController extends Controller
      */
     public function uploadDocuments(Request $request)
     {
-        try {
             $dataForm = Validator::make($request->all(), [
                 'fileToUpload'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
                 'document'      => 'required',
@@ -251,6 +247,7 @@ class RegisterApiController extends Controller
                 'document.required'      => 'Precisamos do CPF para continuar',
             ])->validate();
 
+        try {
             $sDrive = Storage::disk('s3');
 
             $document = $dataForm['fileToUpload'];
@@ -289,40 +286,37 @@ class RegisterApiController extends Controller
 
     public function uploadDocumentsRegistered(array $files, User $user)
     {
-        $userDocument = new UserDocument();
-
         $companyModel = new Company();
+        $userDocument = new UserDocument();
         $companyDocumentModel = new CompanyDocument();
 
         $sDrive = Storage::disk('s3');
-
         $company = $companyModel->where('user_id', $user->id)->first();
+
         try {
-
             foreach ($files as $file) {
-
-//            dd($sDrive->allFiles('uploads/register/user/' . $user->id . '/private/documents'), $sDrive->allFiles('uploads/register/user/' . 46997399894 . '/private/documents'));
                 $fileName = explode('/', $file)[6];
-                $fileType = preg_split('/[\/.]/', $file)[6];
+                $fileTypeName = preg_split('/[\/.]/', $file)[6];
+                $fileType = $user->present()->getDocumentType($fileTypeName);
 
-                if (!$sDrive->exists($file) ?? '') {
+                if (!$sDrive->exists($file)) {
                     return false;
                 }
 
                 /**
                  * Uploud Usuário
                  */
-                if (in_array($fileType, ['personal_document', 'address_document'])) {
-                    $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents';
-                    if ($sDrive->exists($amazonPathUser . '/' . $fileName))
+                if (in_array($fileTypeName, ['personal_document', 'address_document'])) {
+                    $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents/' . $fileName;
+                    if ($sDrive->exists($amazonPathUser)) {
                         dd('entrei');
-
+                        $sDrive->delete($amazonPathUser);
+                    }
                     $sDrive->move(
                         $file,
                         $amazonPathUser
                     );
-                dd($files);
-
+                    $amazonPathUrlUser = $sDrive->url($amazonPathUser);
 
                     /**
                      * Salva status do documentos no Banco | (Usuário)
@@ -330,16 +324,17 @@ class RegisterApiController extends Controller
                     $userDocument->create(
                         [
                             'user_id' => $user->id,
-                            'document_url' => $amazonPathUser,
+                            'document_url' => $amazonPathUrlUser,
                             'document_type_enum' => $fileType,
-                            'status' => 'analyzing',
+                            'status' => $userDocument->present()->getTypeEnum('analyzing'),
                         ]
                     );
 
                     if ($fileType == $user->present()->getDocumentType('personal_document')) {
                         $user->update(
                             [
-                                'personal_document_status' => 'analyzing',
+                                'personal_document_status' => $user->present()
+                                    ->getPersonalDocumentStatus('analyzing'),
                             ]
                         );
                     }
@@ -347,7 +342,8 @@ class RegisterApiController extends Controller
                     if ($fileType == $user->present()->getDocumentType('address_document')) {
                         $user->update(
                             [
-                                'address_document_status' => 'analyzing',
+                                'address_document_status' => $user->present()
+                                    ->getPersonalDocumentStatus('analyzing'),
                             ]
                         );
                     }
@@ -356,12 +352,13 @@ class RegisterApiController extends Controller
                 /**
                  * Uploud Empresa
                  */
-                if (in_array($fileType, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
-                    $amazonPathCompanies = 'uploads/register/user/' . $user->id . '/companies/' . $company->id . '/private/documents';
+                if (in_array($fileTypeName, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
+                    $amazonPathCompanies = 'uploads/register/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
                     $sDrive->move(
                         $file,
                         $amazonPathCompanies
                     );
+                    $amazonPathUrlcompany = $sDrive->url($amazonPathCompanies);
 
                     /**
                      * Salva status do documentos no Banco | (Empresa)
@@ -369,30 +366,33 @@ class RegisterApiController extends Controller
                     $companyDocumentModel->create(
                         [
                             'company_id' => $company->id,
-                            'document_url' => $amazonPathCompanies,
+                            'document_url' => $amazonPathUrlcompany,
                             'document_type_enum' => $fileType,
-                            'status' => 'analyzing',
+                            'status' => $companyDocumentModel->present()->getTypeEnum('analyzing'),
                         ]
                     );
 
                     if ($fileType == $company->present()->getDocumentType('bank_document_status')) {
                         $company->update(
                             [
-                                'bank_document_status' => 'analyzing',
+                                'bank_document_status' => $companyDocumentModel->present()
+                                    ->getTypeEnum('analyzing'),
                             ]
                         );
                     }
                     if ($fileType == $company->present()->getDocumentType('address_document_status')) {
                         $company->update(
                             [
-                                'address_document_status' => 'analyzing',
+                                'address_document_status' => $companyDocumentModel->present()
+                                    ->getTypeEnum('analyzing'),
                             ]
                         );
                     }
                     if ($fileType == $company->present()->getDocumentType('contract_document_status')) {
                         $company->update(
                             [
-                                'contract_document_status' => 'analyzing',
+                                'contract_document_status' => $companyDocumentModel->present()
+                                    ->getTypeEnum('analyzing'),
                             ]
                         );
                     }
