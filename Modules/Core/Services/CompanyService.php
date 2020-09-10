@@ -508,18 +508,9 @@ class CompanyService
                 $queryDispute->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
                              ->orWhere(function($queryTracking) use($salesModel) {
                                     $queryTracking->where('sales.status', $salesModel->present()->getStatus('approved'))
-                                       ->where(function ($query) {
-                                            $query->whereHas('tracking', function ($trackingsQuery) {
-                                                $trackingPresenter = (new Tracking)->present();
-                                                $status = [
-                                                    $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-                                                    $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
-                                                    $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
-                                                    $trackingPresenter->getSystemStatusEnum('duplicated'),
-                                                ];
-                                                $trackingsQuery->whereIn('system_status_enum', $status);
-                                            })->orDoesntHave('tracking');
-                                        });
+                                                  ->whereHas('productsPlansSale', function($q) {
+                                                        $q->doesntHave('tracking');
+                                                  });
                             });
             })
             ->select(\DB::raw(

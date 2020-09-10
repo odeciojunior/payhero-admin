@@ -41,19 +41,8 @@ class TransactionBlockedResource extends JsonResource
 
         if($sale->status == 24) {
             $data['reason_blocked'] = 'Em disputa';
-        } elseif(!isset($sale->tracking[0]->id)) {
-            $data['reason_blocked'] = 'Sem rastreio';
         } else {
-            $tracking = $sale->tracking->whereIn('system_status_enum', [2,3,4,5])->first();
-            if($tracking->system_status_enum == 2) {
-                $data['reason_blocked'] = 'Rastreio sem movimentação';
-            } elseif($tracking->system_status_enum == 3) {
-                $data['reason_blocked'] = 'Rastreio desconhecido';
-            } elseif($tracking->system_status_enum == 4) {
-                $data['reason_blocked'] = 'Rastreio postado antes da venda';
-            } elseif($tracking->system_status_enum == 5) {
-                $data['reason_blocked'] = 'Rastreio duplicado';
-            }
+            $data['reason_blocked'] = 'Sem rastreio';
         }
 
         if ($sale->owner_id == auth()->user()->account_owner_id) {
