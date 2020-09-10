@@ -1,3 +1,5 @@
+var exportFormat = null;
+
 $(document).ready(function () {
 
     getProjects();
@@ -5,6 +7,29 @@ $(document).ready(function () {
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         updateSalesRecovery();
+    });
+
+    $("#bt_get_csv").on("click", function () {
+        $('#modal-export-sale').modal('show');
+        exportFormat = 'csv';
+    });
+
+    $("#bt_get_xls").on("click", function () {
+        $('#modal-export-sale').modal('show');
+        exportFormat = 'xls';
+    });
+
+    $(".btn-confirm-export-sale").on("click", function () {
+        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+        var email = $('#email_export').val();
+
+        if( email == '' || !regexEmail.test(email) ) {
+            alertCustom('error', 'Preencha o email corretamente');
+            return false;
+        } else {
+            salesExport(exportFormat);
+            $('#modal-export-sale').modal('hide');
+        }
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -481,7 +506,49 @@ $(document).ready(function () {
             return '';
         }
     }
+    function getFilters(urlParams = false) {
+        let data = {
+            'project': $("#project option:selected").val(),
+            'status': $("#type_recovery option:selected").val(),
+            'date_range': $("#date-range-sales-recovery").val(),
+            'client': $("#client-name").val(),
+            'date_type': 'created_at',
+        };
 
+        if (urlParams) {
+            let params = "";
+            for (let param in data) {
+                params += '&' + param + '=' + data[param];
+            }
+            return encodeURI(params);
+        } else {
+            return data;
+        }
+    }
+    // Download do relatorio
+    function salesExport(fileFormat) {
+
+        let data = getFilters();
+        data['format'] = fileFormat;
+        data['email'] = $('#email_export').val();
+        $.ajax({
+            method: "POST",
+            url: '/api/recovery/export',
+            data: data,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                $('#export-email').text(response.email);
+                $('#alert-export').show()
+                    .shake();
+            }
+        });
+    }
     function clearFields() {
         $("#status-checkout").removeClass('badge-success badge-danger');
         $("#client-whatsapp").attr('href', '');
