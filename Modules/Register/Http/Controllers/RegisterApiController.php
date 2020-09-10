@@ -2,6 +2,7 @@
 
 namespace Modules\Register\Http\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -18,9 +19,11 @@ use Modules\Core\Entities\UserDocument;
 use Modules\Core\Entities\UserInformation;
 use Modules\Core\Events\UserRegisteredEvent;
 use Modules\Core\Services\SmsService;
+use Modules\Register\Entities\RegistrationToken;
 use Modules\Register\Http\Requests\ValidateCnpjRequest;
 use Modules\Register\Http\Requests\ValidateCpfRequest;
 use Modules\Register\Http\Requests\ValidateEmailRequest;
+use Modules\Register\Http\Requests\ValidateEmailTokenRequest;
 use Modules\Register\Http\Requests\ValidatePhoneNumberRequest;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Company;
@@ -101,9 +104,9 @@ class RegisterApiController extends Controller
 
             return response()->json(
                 [
-                    'success'       => 'true',
-                    'message'       => 'Arquivos Enviado com Sucesso',
-                    'access_token'  => auth()->user()->createToken("Laravel Password Grant Client")->accessToken,
+                    'success' => 'true',
+                    'message' => 'Arquivos Enviado com Sucesso',
+                    'access_token' => auth()->user()->createToken("Laravel Password Grant Client")->accessToken,
                 ]
             );
 
@@ -238,35 +241,35 @@ class RegisterApiController extends Controller
      */
     public function uploadDocuments(Request $request)
     {
-            $dataForm = Validator::make($request->all(), [
-                'fileToUpload'  => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
-                'document'      => 'required',
-            ], [
-                'fileToUpload.mimes'     => 'O arquivo esta com formato inválido',
-                'fileToUpload.required'  => 'Precisamos do arquivo para continuar',
-                'document.required'      => 'Precisamos do CPF para continuar',
-            ])->validate();
+        $dataForm = Validator::make($request->all(), [
+            'fileToUpload' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+            'document' => 'required',
+        ], [
+            'fileToUpload.mimes' => 'O arquivo esta com formato inválido',
+            'fileToUpload.required' => 'Precisamos do arquivo para continuar',
+            'document.required' => 'Precisamos do CPF para continuar',
+        ])->validate();
 
         try {
             $sDrive = Storage::disk('s3');
 
             $document = $dataForm['fileToUpload'];
-            $documentCpf = preg_replace('/[^0-9]/','', $dataForm['document']);
+            $documentCpf = preg_replace('/[^0-9]/', '', $dataForm['document']);
             $documentType = $document->getClientOriginalName() . '.' . $document->extension() ?? '';
 
-            $sDrive->putFileAs('uploads/register/user/'. $documentCpf .'/private/documents',
-                $document ,
+            $sDrive->putFileAs('uploads/register/user/' . $documentCpf . '/private/documents',
+                $document,
                 $documentType,
-            'private');
+                'private');
 
-            if(empty($documentType)) {
+            if (empty($documentType)) {
                 return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
             }
 
-                $urlPath = $sDrive->temporaryUrl(
-                                'uploads/register/user/'. $documentCpf .'/private/documents/' . $documentType,
-                                now()->addHours(24)
-                            );
+            $urlPath = $sDrive->temporaryUrl(
+                'uploads/register/user/' . $documentCpf . '/private/documents/' . $documentType,
+                now()->addHours(24)
+            );
             return response()->json(
                 [
                     'message' => 'Arquivo enviado com sucesso.',
@@ -416,32 +419,32 @@ class RegisterApiController extends Controller
     {
 
         $data = $request->validated();
-        $email = $data["email"] ?? null;
 
-        $verifyCode = random_int(1000, 9999);
-        $data = [
-            "verify_code" => $verifyCode,
-        ];
+        $email = $data["email"];
 
-        /** @var SendgridService $sendgridService */
-        $sendgridService = app(SendgridService::class);
+        $verifyIfExistCode = RegistrationToken::where('type', 'email')->where('type_data', $email)->first();
+        $time_with_ten_minutes = Carbon::now()->addMinutes(10);
 
-        if ($sendgridService->sendEmail(
-            'noreply@cloudfox.net',
-            'cloudfox',
-            $email,
-            isset($data['firstname']) ? $data['firstname'] : 'Cliente',
-            "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
-            $data
-        )) {
+        if ($verifyIfExistCode) {
+            $verifyIfExistCode->expiration = $time_with_ten_minutes;
+            $verifyIfExistCode->save();
+            $token = $verifyIfExistCode->token;
+        } else {
+            $registration_token = $this->createRegistrationTokenEmail($email);
+            $token = $registration_token->token;
+        }
+
+        $isSend = $this->sendRegistrationTokenEmail($email, $token);
+
+        if ($isSend) {
+
             return response()->json(
                 [
-                    "sent" => true,
                     "message" => "Email enviado com sucesso!",
                 ],
                 200
-            )
-                ->withCookie("emailverifycode", $verifyCode, 10);
+            );
+
         }
 
         return response()->json(
@@ -453,24 +456,99 @@ class RegisterApiController extends Controller
     }
 
     /**
+     * @param $email
+     * @throws Exception
+     */
+    private function createRegistrationTokenEmail($email): RegistrationToken
+    {
+        $registration_token = new RegistrationToken();
+        $registration_token->type = 'email';
+        $registration_token->type_data = $email;
+        $registration_token->token = random_int(1000, 9999);
+        $registration_token->number_wrong_attempts = 0;
+        $registration_token->ip = \request()->ip();
+        $registration_token->expiration = \Carbon\Carbon::now()->addMinutes(10);
+        $registration_token->save();
+
+        return $registration_token;
+    }
+
+    private function sendRegistrationTokenEmail($email, $token)
+    {
+
+        $sendgridService = app(SendgridService::class);
+
+        return $sendgridService->sendEmail(
+            'noreply@cloudfox.net',
+            'cloudfox',
+            $email,
+            isset($data['firstname']) ? $data['firstname'] : 'Cliente',
+            "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
+            [
+                "verify_code" => $token,
+            ]
+        );
+
+    }
+
+    /**
      * @param ValidateEmailRequest $request
      * @return JsonResponse
      */
-    public function matchEmailVerifyCode()
+    public function matchEmailVerifyCode(ValidateEmailTokenRequest $request)
     {
         try {
-            $data = \request()->all();
-            $verifyCode = $data["verifyCode"] ?? null;
 
-            $cookie = Cookie::get("emailverifycode");
-            if ($verifyCode != $cookie) {
+            $data = $request->validated();
+            $email = $data["email"];
+            $token = $data["code"];
+
+            $existCodeToEmail = RegistrationToken::where('type', 'email')->where('type_data', $email)->latest()->first();
+
+            if (!$existCodeToEmail) {
+
                 return response()->json(
                     [
-                        'message' => 'Código de verificação inválido ou expirado!',
+                        'message' => 'Não existe código para o email informado',
                     ],
                     400
                 );
+
             }
+
+            if (!$existCodeToEmail->number_wrong_attempts > 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
+
+                $registration_token = $this->createRegistrationTokenEmail($email);
+                $this->sendRegistrationTokenEmail($email, $registration_token->token);
+
+                return response()->json(
+                    [
+                        "message" => "Seu cadastro com este email esta bloqueado por tentativas erradas ou se encontra expirado, enviamos um novo código para o seu email",
+                    ],
+                    403
+                );
+
+            }
+
+
+            if ($existCodeToEmail->token != $token) {
+
+                $existCodeToEmail->number_wrong_attempts = $existCodeToEmail->number_wrong_attempts + 1;
+                $existCodeToEmail->ip = $request->ip();
+                $existCodeToEmail->save();
+
+                return response()->json(
+                    [
+                        'message' => 'O código informado está errado, você tem mais ' . (3 - $existCodeToEmail->number_wrong_attempts) . ' tentativas.',
+                    ],
+                    400
+                );
+
+            }
+
+
+            $existCodeToEmail->validated = true;
+            $existCodeToEmail->save();
 
             return response()->json(
                 [
@@ -478,9 +556,10 @@ class RegisterApiController extends Controller
                     "message" => "Email verificado com sucesso!",
                 ],
                 200
-            )
-                ->withCookie(Cookie::forget("emailverifycode"));
+            );
+
         } catch (Exception $e) {
+            dd($e->getMessage());
             report($e);
 
             return response()->json(

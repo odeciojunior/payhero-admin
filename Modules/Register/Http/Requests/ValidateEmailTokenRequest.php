@@ -4,7 +4,7 @@ namespace Modules\Register\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateEmailRequest extends FormRequest
+class ValidateEmailTokenRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,7 +15,7 @@ class ValidateEmailRequest extends FormRequest
     {
         return [
             'email'     => 'required|max:200',
-            'code' => 'nullable',
+            'code' => 'required|min:4|max:4',
         ];
     }
 
@@ -27,7 +27,9 @@ class ValidateEmailRequest extends FormRequest
     {
         return [
             'email.required'    => 'Precisamos do seu email para continuar',
-            'email.unique'      => 'Email informado ja esta sendo utilizado',
+            'code.required'      => 'Precisamos do token',
+            'code.min'      => 'O token deve conter no mínimo 4 caracteres',
+            'code.max'      => 'O token deve conter no máximo 4 caracteres',
         ];
     }
 
