@@ -476,47 +476,41 @@ class CompanyService
         return $arrayFields;
     }
 
-    public function getBlockedBalance(int $companyId, int $userAccountOwnerId)
+    public function getBlockedBalance(int $companyId)
     {
-        /* $salesModel = new Sale();
-         $ticketModel = new Ticket();
-
-         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-             ->where('sales.owner_id', $userAccountOwnerId)
-             ->where('sales.status', $salesModel->present()->getStatus('approved'))
-             ->whereNull('transactions.invitation_id')
-             ->where('transactions.company_id', $companyId)
-             ->whereHas('tickets', function ($query) use ($ticketModel) {
-                 $query->where('ticket_status_enum', $ticketModel->present()
-                     ->getTicketStatusEnum('mediation'))
-                     ->where('ignore_balance_block', 0);
-             })->sum('transactions.value');*/
-
         $salesModel = new Sale();
         $transactiosModel = new Transaction();
 
-        return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-            ->where('sales.owner_id', $userAccountOwnerId)
-            // ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-            ->whereNull('transactions.invitation_id')
-            ->where('transactions.company_id', $companyId)
-            ->whereIn('transactions.status_enum', collect([
-                $transactiosModel->present()->getStatusEnum('transfered'),
-                $transactiosModel->present()->getStatusEnum('paid')
-            ]))
-            ->where(function($queryDispute) use($salesModel){
-                $queryDispute->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
-                             ->orWhere(function($queryTracking) use($salesModel) {
-                                    $queryTracking->where('sales.status', $salesModel->present()->getStatus('approved'))
-                                                  ->whereHas('productsPlansSale', function($q) {
-                                                        $q->doesntHave('tracking');
-                                                  });
-                            });
+        return $transactiosModel->whereNull('invitation_id')
+            ->where('company_id', $companyId)
+            ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
+            ->where(function($query) use($salesModel) {
+                $query->whereHas('sale', function($query) use($salesModel) {
+                    $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
+                })
+                ->orWhere(function($queryTracking) use($salesModel) {
+                    $queryTracking->whereHas('sale', function($querySale) use($salesModel) {
+                        $querySale->where('status', $salesModel->present()->getStatus('approved'))
+                            ->whereHas('productsPlansSale', function($q) {
+                                $q->doesntHave('tracking');
+                        });
+                    });
+                });
             })
-            ->select(\DB::raw(
-                'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
-                 SUM(CASE WHEN transactions.status_enum = 2 AND sales.status = 24 THEN transactions.value ELSE 0 END) as pending'
-            ))
-            ->first();
+            ->sum('value');
+    }
+
+    public function getBlockedBalancePending(int $companyId)
+    {
+        $salesModel = new Sale();
+        $transactiosModel = new Transaction();
+
+        return $transactiosModel->whereNull('invitation_id')
+            ->where('company_id', $companyId)
+            ->where('status_enum', $transactiosModel->present()->getStatusEnum('paid'))
+            ->whereHas('sale', function($query) use($salesModel) {
+                $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
+            })
+            ->sum('value');
     }
 }
