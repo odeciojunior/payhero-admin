@@ -128,9 +128,8 @@ class DashboardApiController extends Controller
                 if (!empty($company)) {
                     //Balance
                     $blockedBalance = $companyService->getBlockedBalance($company->id);
-                    $blockedBalancePending = $companyService->getBlockedBalancePending($company->id);
 
-                    $pendingBalance = $companyService->getPendingBalance($company) - $blockedBalancePending;
+                    $pendingBalance = $companyService->getPendingBalance($company);
 
                     $statusArray = [
                         $transactionModel->present()->getStatusEnum('paid'),
