@@ -25,6 +25,9 @@ use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Reports\Exports\Reports\ReportExport;
 use Modules\Reports\Transformers\ReportCouponResource;
+use Spatie\Activitylog\Models\Activity;
+use Modules\Core\Services\SaleService;
+use Modules\Reports\Transformers\TransactionBlockedResource;
 
 class ReportsApiController extends Controller
 {
@@ -691,6 +694,47 @@ class ReportsApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(null);
+        }
+    }
+
+    public function blockedBalance(Request $request)
+    {
+        try {
+            activity()->tap(function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            })->log('Visualizou tela saldo bloqueado');
+
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $sales = $saleService->getPaginetedBlocked($data);
+
+            return TransactionBlockedResource::collection($sales);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar vendas bloqueadas ReportsApiController - blockedBalance');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao carregar vendas'], 400);
+        }
+    }
+
+    public function resumeBlockedBalance(Request $request)
+    {
+        try {
+
+            $saleService = new SaleService();
+
+            $data = $request->all();
+
+            $resume = $saleService->getResumeBlocked($data);
+
+            return response()->json($resume);
+        } catch (Exception $e) {
+            Log::warning('Erro ao exibir resumo das venda bloqueadas ReportsApiController - resumeBlockedBalance');
+            report($e);
+
+            return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
         }
     }
 }

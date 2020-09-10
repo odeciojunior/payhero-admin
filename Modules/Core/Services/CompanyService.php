@@ -12,6 +12,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Tracking;
 use DB;
 
 /**
@@ -496,16 +497,34 @@ class CompanyService
 
         return $salesModel->join('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('sales.owner_id', $userAccountOwnerId)
-            ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+            // ->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
             ->whereNull('transactions.invitation_id')
             ->where('transactions.company_id', $companyId)
             ->whereIn('transactions.status_enum', collect([
                 $transactiosModel->present()->getStatusEnum('transfered'),
                 $transactiosModel->present()->getStatusEnum('paid')
             ]))
+            ->where(function($queryDispute) use($salesModel){
+                $queryDispute->where('sales.status', $salesModel->present()->getStatus('in_dispute'))
+                             ->orWhere(function($queryTracking) use($salesModel) {
+                                    $queryTracking->where('sales.status', $salesModel->present()->getStatus('approved'))
+                                       ->where(function ($query) {
+                                            $query->whereHas('tracking', function ($trackingsQuery) {
+                                                $trackingPresenter = (new Tracking)->present();
+                                                $status = [
+                                                    $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
+                                                    $trackingPresenter->getSystemStatusEnum('no_tracking_info'),
+                                                    $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
+                                                    $trackingPresenter->getSystemStatusEnum('duplicated'),
+                                                ];
+                                                $trackingsQuery->whereIn('system_status_enum', $status);
+                                            })->orDoesntHave('tracking');
+                                        });
+                            });
+            })
             ->select(\DB::raw(
                 'SUM(CASE WHEN transactions.status_enum = 1 THEN transactions.value ELSE 0 END) as transfered,
-                                 SUM(CASE WHEN transactions.status_enum = 2 THEN transactions.value ELSE 0 END) as pending'
+                 SUM(CASE WHEN transactions.status_enum = 2 AND sales.status = 24 THEN transactions.value ELSE 0 END) as pending'
             ))
             ->first();
     }
