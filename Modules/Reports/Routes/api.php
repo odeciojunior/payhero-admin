@@ -21,5 +21,9 @@ Route::group(
 
         Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('role:account_owner|admin');
 
+        Route::get('/reports/blockedbalance', 'ReportsApiController@blockedbalance')->middleware('role:account_owner|admin');
+
+        Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('role:account_owner|admin');
+
     }
 );
