@@ -120,11 +120,11 @@ class ReportsApiController extends Controller
                     $salesDetails->whereBetween('start_date',
                         [$requestStartDate.' 00:00:00', $requestEndDate.' 23:59:59']);
                 }
-                $salesDetails->where(function ($q1) {
-                    $q1->where('sales.status', 4)->whereDoesntHave('saleLogs', function ($querySaleLog) {
-                        $querySaleLog->whereIn('status_enum', collect([20, 7]));
-                    })->orWhere('sales.status', '<>', 4);
-                });
+//                $salesDetails->where(function ($q1) {
+//                    $q1->where('sales.status', 4)->whereDoesntHave('saleLogs', function ($querySaleLog) {
+//                        $querySaleLog->whereIn('status_enum', collect([20, 7]));
+//                    })->orWhere('sales.status', '<>', 4);
+//                });
                 $details = $salesDetails->first();
                 $contSales = $details->contSales;
                 $countSalesAproved = $details->contSalesAproved;
