@@ -243,11 +243,14 @@ class RegisterApiController extends Controller
     public function uploadDocuments(Request $request)
     {
         $dataForm = Validator::make($request->all(), [
-            'fileToUpload' => 'required|image|mimes:jpeg,jpg,png,doc,pdf',
+            'fileToUpload' => 'required|mimes:jpeg,jpg,png,doc,pdf',
+            'document_type' =>'required|in:RG_FRENTE,RG_VERSO,USUARIO_RESIDENCIA,USUARIO_EXTRATO,EMPRESA_CCMEI,EMPRESA_EXTRATO,EMPRESA_RESIDENCIA',
             'document' => 'required',
         ], [
-            'fileToUpload.mimes' => 'O arquivo esta com formato inválido',
             'fileToUpload.required' => 'Precisamos do arquivo para continuar',
+            'fileToUpload.mimes' => 'O arquivo esta com formato inválido',
+            'document_type.required' => 'Precisamos do saber o tipo do documento',
+            'document_type.in' => 'Tipo de documento Inválido',
             'document.required' => 'Precisamos do CPF para continuar',
         ])->validate();
 
@@ -256,19 +259,19 @@ class RegisterApiController extends Controller
 
             $document = $dataForm['fileToUpload'];
             $documentCpf = preg_replace('/[^0-9]/', '', $dataForm['document']);
-            $documentType = $document->getClientOriginalName() . '.' . $document->extension() ?? '';
+            $documentRename = $dataForm['document_type'] . '.' . $document->extension();
 
             $sDrive->putFileAs('uploads/register/user/' . $documentCpf . '/private/documents',
                 $document,
-                $documentType,
+                $documentRename,
                 'private');
 
-            if (empty($documentType)) {
+            if (empty($documentRename)) {
                 return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
             }
 
             $urlPath = $sDrive->temporaryUrl(
-                'uploads/register/user/' . $documentCpf . '/private/documents/' . $documentType,
+                'uploads/register/user/' . $documentCpf . '/private/documents/' . $documentRename,
                 now()->addHours(24)
             );
             return response()->json(
@@ -301,7 +304,7 @@ class RegisterApiController extends Controller
             foreach ($files as $file) {
                 $fileName = explode('/', $file)[6];
                 $fileTypeName = preg_split('/[\/.]/', $file)[6];
-                $fileType = $user->present()->getDocumentType($fileTypeName);
+                $fileType = $user->present()->getDocumentTypeRegistered($fileTypeName);
 
                 if (!$sDrive->exists($file)) {
                     return false;
@@ -310,7 +313,7 @@ class RegisterApiController extends Controller
                 /**
                  * Uploud Usuário
                  */
-                if (in_array($fileTypeName, ['personal_document', 'address_document'])) {
+                if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'RG_FRENTE', 'RG_VERSO', 'USUARIO_EXTRATO'])) {
                     $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents/' . $fileName;
                     if ($sDrive->exists($amazonPathUser)) {
                         dd('entrei');
@@ -356,7 +359,7 @@ class RegisterApiController extends Controller
                 /**
                  * Uploud Empresa
                  */
-                if (in_array($fileTypeName, ['bank_document_status', 'address_document_status', 'contract_document_status'])) {
+                if (in_array($fileTypeName, ['EMPRESA_EXTRATO', 'EMPRESA_RESIDENCIA', 'EMPRESA_CCMEI'])) {
                     $amazonPathCompanies = 'uploads/register/user/' . $user->id . '/companies/' . $company->id . '/private/documents/' . $fileName;
                     $sDrive->move(
                         $file,

@@ -118,7 +118,6 @@ class UserPresenter extends Presenter
             return '';
         }
     }
-
     /**
      * @param $type
      * @return int|string
@@ -144,5 +143,34 @@ class UserPresenter extends Presenter
 
             return '';
         }
+    }
+
+    /**
+     * @param $document_type
+     * @return int|string
+     */
+    public function getDocumentTypeRegistered($document_type)
+    {
+        switch ($document_type) {
+            //USUARIO
+            case 'USUARIO_RESIDENCIA':
+                return 2;
+            case 'RG_FRENTE':
+                return 3;
+            case 'RG_VERSO':
+                return 4;
+            case 'USUARIO_EXTRATO':
+                return 5;
+
+            //EMPRESA
+            case 'EMPRESA_EXTRATO':
+                return 1;
+            case 'EMPRESA_RESINDENCIA':
+                return 2;
+            case 'EMPRESA_CCMEI':
+                return 3;
+
+        }
+            return '';
     }
 }
