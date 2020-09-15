@@ -75,7 +75,10 @@
         "psr-4": {
             "App\\"    : "app/",
             "Modules\\": "Modules/"
-        }
+        },
+        "classmap": [
+            "tests"
+        ]
     },
     "extra"            : {
         "laravel": {

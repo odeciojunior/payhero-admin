@@ -190,6 +190,7 @@ class ProductsApiController extends Controller
             }
             if (!empty($data['digital_product_url'])) {
                 try {
+                    $this->getAmazonFileService()->changeDisk('s3_digital_product');
                     $amazonPath = $this->getAmazonFileService()
                                        ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
 
@@ -358,6 +359,7 @@ class ProductsApiController extends Controller
                     }
                     if (!empty($data['digital_product_url'])) {
                         try {
+                            $this->getAmazonFileService()->changeDisk('s3_digital_product');
                             $amazonPath = $this->getAmazonFileService()
                                                ->uploadFile('products/' . Hashids::encode($product->id), $data['digital_product_url'], null, false, 'private');
 

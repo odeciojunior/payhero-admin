@@ -330,51 +330,35 @@ class SendgridService
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
-            try {
-                $response = $this->sendgrid()->send($email);
-                $statusCode = $response->statusCode();
-                $body = $response->body();
 
-                if (in_array($statusCode, [200, 201, 202])) {
-                    $status = "success";
-                } else {
-                    $status = "error";
-                }
+            $response = $this->sendgrid()->send($email);
+            $statusCode = $response->statusCode();
+            $body = $response->body();
 
-                SentEmail::create(
-                    [
-                        'from_email' => $fromEmail,
-                        'from_name' => $fromName == '' ? ' vazio ' : $fromName,
-                        'to_email' => $toEmail,
-                        'to_name' => $toName,
-                        'template_id' => $templateId,
-                        'template_data' => json_encode($data),
-                        'status_code' => $statusCode,
-                        'status' => $status,
-                        'log_error' => $body,
-                    ]
-                );
-
-                return true;
-            } catch (Exception $e) {
-
-                SentEmail::create(
-                    [
-                        'from_email' => $fromEmail,
-                        'from_name' => $fromName == '' ? ' vazio ' : $fromName,
-                        'to_email' => $toEmail,
-                        'to_name' => $toName,
-                        'template_id' => $templateId,
-                        'template_data' => json_encode($data),
-                        'status_code' => 400,
-                        'status' => "error",
-                        'log_error' => $e->getMessage(),
-                    ]
-                );
-
-                return false;
+            if (in_array($statusCode, [200, 201, 202])) {
+                $status = "success";
+            } else {
+                $status = "error";
             }
+
+            SentEmail::create(
+                [
+                    'from_email' => $fromEmail,
+                    'from_name' => $fromName == '' ? ' vazio ' : $fromName,
+                    'to_email' => $toEmail,
+                    'to_name' => $toName,
+                    'template_id' => $templateId,
+                    'template_data' => json_encode($data),
+                    'status_code' => $statusCode,
+                    'status' => $status,
+                    'log_error' => $body,
+                ]
+            );
+
+            return true;
+
         } catch (Exception $e) {
+
             report($e);
             SentEmail::create(
                 [

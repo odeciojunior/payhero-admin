@@ -1,6 +1,5 @@
 var currentPage  = null;
 var atualizar    = null;
-var exportFormat = null;
 
 $(document).ready(function () {
 
@@ -13,29 +12,6 @@ $(document).ready(function () {
         }
     });
     // COMPORTAMENTOS DA JANELA
-
-    $("#bt_get_csv").on("click", function () {
-        $('#modal-export-sale').modal('show');
-        exportFormat = 'csv';
-    });
-
-    $("#bt_get_xls").on("click", function () {
-        $('#modal-export-sale').modal('show');
-        exportFormat = 'xls';
-    });
-
-    $(".btn-confirm-export-sale").on("click", function () {
-        var regexEmail = new RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
-        var email = $('#email_export').val();
-
-        if( email == '' || !regexEmail.test(email) ) {
-            alertCustom('error', 'Preencha o email corretamente');
-            return false;
-        } else {
-            salesExport(exportFormat);
-            $('#modal-export-sale').modal('hide');
-        }
-    });
 
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
@@ -86,19 +62,6 @@ $(document).ready(function () {
         endDate = end.format('YYYY-MM-DD');
     });
 
-    $(document).on({
-            mouseenter: function () {
-                $(this).css('cursor', 'pointer').text('Regerar');
-                $(this).css("background", "#545B62");
-            },
-            mouseleave: function () {
-                var status = $(this).attr('status');
-                $(this).removeAttr("style");
-                $(this).text(status);
-            }
-        }, '.boleto-pending'
-    );
-
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
@@ -109,9 +72,7 @@ $(document).ready(function () {
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'transaction': $("#transaction").val().replace('#', ''),
-            'shopify_error': $("#shopify_error").val(),
             'plan': $('#plan').val(),
-            'upsell': $("#upsell").val(),
         };
 
         if (urlParams) {
@@ -128,46 +89,6 @@ $(document).ready(function () {
     // FIM - COMPORTAMENTOS DA JANELA
 
     getProjects();
-
-    //Carrega o modal para regerar boleto
-    $(document).on('click', '.boleto-pending', function () {
-
-        let saleId = $(this).attr('sale');
-        $('#modal_regerar_boleto #bt_send').attr('sale', saleId);
-
-        $('#modal_regerar_boleto').modal('show');
-    });
-
-    //Salvar boleto regerado
-    $('#bt_send').on('click', function () {
-        loadingOnScreen();
-        let saleId = $(this).attr('sale');
-        $.ajax({
-            method: "POST",
-            url: "/api/recovery/regenerateboleto",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: {
-                saleId: saleId,
-                date: $('#date').val(),
-                discountType: $("#discount_type").val(),
-                discountValue: $("#discount_value").val()
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                loadingOnScreenRemove();
-                $(".loading").css("visibility", "hidden");
-                $("#modal_regerar_boleto").modal('hide');
-                atualizar(currentPage);
-            }
-        });
-    });
 
     // Obtem o os campos dos filtros
     function getProjects() {
@@ -200,14 +121,13 @@ $(document).ready(function () {
     atualizar = function (link = null) {
 
         currentPage = link;
-
         let updateResume = true;
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/api/sales?' + getFilters(true).substr(1);
+            link = '/api/reports/blockedbalance?' + getFilters(true).substr(1);
         } else {
-            link = '/api/sales' + link + getFilters(true);
+            link = '/api/reports/blockedbalance' + link + getFilters(true);
             updateResume = false;
         }
 
@@ -244,14 +164,8 @@ $(document).ready(function () {
 
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (index, value) {
-                        let tableClass = '';
-                        if (value.has_shopify_integration != null && value.shopify_order == null && value.status != 20 && value.date_before_five_minutes_ago) {
-                            tableClass = 'table-warning-roll'
-                        } else {
-                            tableClass = ''
-                        }
 
-                        dados = `  <tr class='` + tableClass + `'>
+                        dados = `  <tr>
                                     <td class='display-sm-none display-m-none display-lg-none text-center'>
                                         ${value.sale_code}
                                         ${value.upsell ? '<span class="text-muted font-size-10">(Upsell)</span>' : ''}
@@ -274,7 +188,7 @@ $(document).ready(function () {
                                     <td class='display-sm-none'>${value.end_date}</td>
                                     <td style='white-space: nowrap'><b>${value.total_paid}</b></td>
                                     <td>
-                                        <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
+                                        ${value.reason_blocked}
                                     </td>
                                 </tr>`;
 
@@ -287,84 +201,15 @@ $(document).ready(function () {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response, 'sales', atualizar);
-                $('#export-excel').show();
             }
         });
 
         if (updateResume) {
-            salesResume();
+            blockedResume();
         }
+
     }
 
-    // Download do relatorio
-    function salesExport(fileFormat) {
-
-        let data = getFilters();
-        data['format'] = fileFormat;
-        data['email'] = $('#email_export').val();
-        $.ajax({
-            method: "POST",
-            url: '/api/sales/export',
-            data: data,
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-                $('#export-email').text(response.email);
-                $('#alert-export').show()
-                    .shake();
-            }
-        });
-    }
-
-    // Resumo
-    function salesResume() {
-
-        loadOnAny('.number', false, {
-            styles: {
-                container: {
-                    minHeight: '32px',
-                    height: 'auto'
-                },
-                loader: {
-                    width: '20px',
-                    height: '20px',
-                    borderWidth: '4px'
-                },
-            }
-        });
-
-        $.ajax({
-            method: "GET",
-            url: '/api/sales/resume',
-            data: getFilters(),
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                loadOnAny('.number', true);
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                loadOnAny('.number', true);
-                $('#total-sales').text('0');
-                $('#commission, #total').text('R$ 0,00');
-                if (response.total_sales) {
-                    $('#total-sales, #commission, #total').text('');
-                    $('#total-sales').text(response.total_sales);
-                    $('#commission').text(`R$ ${response.commission}`);
-                    $('#total').text(`R$ ${response.total}`);
-                }
-
-            }
-        });
-    }
     $("#projeto").on('change', function () {
         let value = $(this).val();
         $("#plan").val(null).trigger('change');
@@ -412,4 +257,47 @@ $(document).ready(function () {
             atualizar();
         }
     });
+
+    function blockedResume() {
+
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: '32px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '20px',
+                    height: '20px',
+                    borderWidth: '4px'
+                },
+            }
+        });
+
+        $.ajax({
+            method: "GET",
+            url: '/api/reports/blockedresume',
+            data: getFilters(),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.number', true);
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadOnAny('.number', true);
+                $('#total_sales').text('0');
+                $('#commission_blocked, #total').text('R$ 0,00');
+                if (response.total_sales) {
+                    $('#total_sales, #commission_blocked, #total').text('');
+                    $('#total_sales').text(response.total_sales);
+                    $('#commission_blocked').text(`R$ ${response.commission}`);
+                    $('#total').text(`R$ ${response.total}`);
+                }
+            }
+        });
+    }
 });

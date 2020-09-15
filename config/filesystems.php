@@ -62,6 +62,22 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        's3_digital_product' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => 'cloudfox-digital-products',
+            'url' => env('AWS_URL'),
+        ],
+        's3_chargeback' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => 'cloudfox-chargeback-contestations',
+            'url' => env('AWS_URL'),
+        ],
         'downloadSpaces'     => [
             'driver'   => 's3',
             'key'      => env('DO_SPACES_KEY'),

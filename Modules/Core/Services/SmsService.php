@@ -18,7 +18,7 @@ class SmsService
      * @param string $msgType
      * @return bool
      */
-    public function sendSms($number, $message, $sender = '', $msgType = '1')
+    public function sendSms($number, $message, $sender = '', $msgType = 'DisparoPro')
     {
         try {
             /*
@@ -32,7 +32,10 @@ class SmsService
                 $number = '55' . $number;
             }
 
-            DisparoProService::sendMessage($number, $message);
+            if($msgType == 'aws-sns')
+                AwsSns::sendMessage($number, $message);
+            else
+                DisparoProService::sendMessage($number, $message);
 
             return true;
         } catch (Exception $e) {

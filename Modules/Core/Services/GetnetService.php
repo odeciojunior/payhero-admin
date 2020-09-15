@@ -11,12 +11,19 @@ use Modules\Core\Entities\GetnetBackofficeRequests;
  */
 class GetnetService
 {
-    public const URL_API = 'https://api-homologacao.getnet.com.br/';
 
     public $accessToken;
 
     public function __construct()
     {
+    }
+
+    public function getUrlApi()
+    {
+        if (FoxUtils::isProduction()) {
+            return "https://api-backoffice.getnet.com.br/";
+        }
+        return 'https://api-homologacao.getnet.com.br/';
     }
 
     /**
@@ -28,10 +35,10 @@ class GetnetService
     {
         $headers = [
             'content-type: application/x-www-form-urlencoded',
-            'authorization: Basic ' . $this->authorizationToken,
+            'authorization: Basic '.$this->authorizationToken,
         ];
 
-        $curl = curl_init(self::URL_API . $url);
+        $curl = curl_init($this->getUrlApi().$url);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -50,13 +57,13 @@ class GetnetService
     /**
      * @param $url
      * @param $method
-     * @param null $data
-     * @param null $companyId
+     * @param  null  $data
+     * @param  null  $companyId
      * @return bool|string
      */
-    public function sendCurl($url, $method, $data = null,$companyId = null)
+    public function sendCurl($url, $method, $data = null, $companyId = null)
     {
-        $curl = curl_init(self::URL_API . $url);
+        $curl = curl_init($this->getUrlApi().$url);
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
         if (!is_null($data)) {
@@ -68,7 +75,7 @@ class GetnetService
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        $this->saveRequests($url, $result, $httpStatus, $data,$companyId);
+        $this->saveRequests($url, $result, $httpStatus, $data, $companyId);
         return $result;
     }
 
@@ -79,11 +86,11 @@ class GetnetService
      * @param $data
      * @param $companyId
      */
-    public function saveRequests($url, $result, $httpStatus, $data,$companyId)
+    public function saveRequests($url, $result, $httpStatus, $data, $companyId)
     {
         GetnetBackofficeRequests::create(
             [
-                'company_id'=> $companyId,
+                'company_id' => $companyId,
                 'sent_data' => json_encode(
                     [
                         'url' => $url,

@@ -2,9 +2,20 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Tracking;
+use Modules\Core\Entities\User;
+use Modules\Core\Services\AwsSns;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\TrackingmoreService;
+use Illuminate\Database\Eloquent\Builder;
+use Vinkla\Hashids\Facades\Hashids;
+
 
 /**
  * Class GenericCommand
@@ -25,19 +36,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $trackingmoreService = new TrackingmoreService();
-
-        $trackings = Tracking::whereDate('created_at', '>=', now()->subDays(30)->startOfDay()->toDateTimeString())
-        ->select('tracking_code')
-            ->pluck('tracking_code');
-
-        $total = $trackings->count();
-
-        foreach ($trackings as $key => $tracking) {
-            $i = $key+1;
-            $this->line("Enviando tracking {$i} de {$total}");
-            $trackingmoreService->createTracking($tracking);
-        }
 
     }
 }
