@@ -444,6 +444,12 @@ class FoxUtils
 
         }
     }
+
+    public static function formatCellPhoneBraspag($number)
+    {
+        $number = self::onlyNumbers($number);
+        return substr($number, 2);
+    }
 }
 
 

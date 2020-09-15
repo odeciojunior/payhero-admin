@@ -141,6 +141,8 @@ class Company extends Model
         'deleted_at',
         'created_at',
         'updated_at',
+        'braspag_status',
+        'braspag_merchant_id ',
     ];
     /**
      * @var bool

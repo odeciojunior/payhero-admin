@@ -328,4 +328,41 @@ class CompanyPresenter extends Presenter
             return '';
         }
     }
+
+    /**
+     * @param null $status
+     * @return int|string
+     */
+    public function getStatusBraspag($status = null)
+    {
+        $company = $this->entity;
+        $status = $status ?? $company->braspag_status;
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'Approved';
+                case 2:
+                    return 'ApprovedWithRestriction';
+                case 3:
+                    return 'Rejected';
+                case 4:
+                    return 'UnderAnalysis';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'Approved':
+                    return 1;
+                case 'ApprovedWithRestriction':
+                    return 2;
+                case 'Rejected':
+                    return 3;
+                case 'UnderAnalysis':
+                    return 4;
+            }
+
+            return '';
+        }
+    }
 }
