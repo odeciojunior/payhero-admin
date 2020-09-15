@@ -465,13 +465,15 @@ class RegisterApiController extends Controller
      */
     private function createRegistrationTokenEmail($email): RegistrationToken
     {
+        $time_with_ten_minutes = Carbon::now()->addMinutes(10);
+
         $registration_token = new RegistrationToken();
         $registration_token->type = 'email';
         $registration_token->type_data = $email;
         $registration_token->token = random_int(1000, 9999);
         $registration_token->number_wrong_attempts = 0;
+        $registration_token->expiration = $time_with_ten_minutes;
         $registration_token->ip = \request()->ip();
-        $registration_token->expiration = \Carbon\Carbon::now()->addMinutes(10);
         $registration_token->save();
 
         return $registration_token;
@@ -484,13 +486,15 @@ class RegisterApiController extends Controller
     private function createRegistrationTokenSms($phone): RegistrationToken
     {
 
+        $time_with_ten_minutes = Carbon::now()->addMinutes(10);
+
         $registration_token = new RegistrationToken();
         $registration_token->type = 'sms';
         $registration_token->type_data = $phone;
         $registration_token->token = random_int(1000, 9999);
         $registration_token->number_wrong_attempts = 0;
         $registration_token->ip = \request()->ip();
-        $registration_token->expiration = \Carbon\Carbon::now()->addMinutes(10);
+        $registration_token->expiration = $time_with_ten_minutes;
         $registration_token->save();
 
         return $registration_token;
@@ -546,7 +550,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if (!$existCodeToEmail->number_wrong_attempts > 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
+            if ($existCodeToEmail->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToEmail->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenEmail($email);
                 $this->sendRegistrationTokenEmail($email, $registration_token->token);
@@ -565,6 +569,7 @@ class RegisterApiController extends Controller
 
                 $existCodeToEmail->number_wrong_attempts = $existCodeToEmail->number_wrong_attempts + 1;
                 $existCodeToEmail->ip = $request->ip();
+                $existCodeToEmail->expiration = Carbon::now()->addMinutes(10);
                 $existCodeToEmail->save();
 
                 return response()->json(
@@ -666,7 +671,7 @@ class RegisterApiController extends Controller
 
             }
 
-            if (!$existCodeToPhone->number_wrong_attempts > 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
+            if ($existCodeToPhone->number_wrong_attempts >= 3 || Carbon::now()->greaterThan($existCodeToPhone->expiration)) {
 
                 $registration_token = $this->createRegistrationTokenSms($cellphone);
                 $this->sendRegistrationTokenSms($cellphone, $registration_token->token);
@@ -684,6 +689,7 @@ class RegisterApiController extends Controller
 
                 $existCodeToPhone->number_wrong_attempts = $existCodeToPhone->number_wrong_attempts + 1;
                 $existCodeToPhone->ip = $request->ip();
+                $existCodeToPhone->expiration = Carbon::now()->addMinutes(10);
                 $existCodeToPhone->save();
 
                 return response()->json(
