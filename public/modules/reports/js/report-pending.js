@@ -55,7 +55,8 @@ $(document).ready(function () {
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
-            'sale_code': $("#sale_code").val(),
+            'sale_code': $("#sale_code").val().replace('#', ''),
+            'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
         };
 
