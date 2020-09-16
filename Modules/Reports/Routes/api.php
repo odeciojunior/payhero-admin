@@ -21,5 +21,6 @@ Route::group(
 
         Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('role:account_owner|admin');
 
+        Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance')->middleware('role:account_owner|admin');
     }
 );

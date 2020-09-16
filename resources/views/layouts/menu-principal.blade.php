@@ -211,6 +211,11 @@
                             <span class="site-menu-title">Cupons de desconto</span>
                         </a>
                     </li>
+                    <li class="site-menu-item">
+                        <a href="{{ route('reports.pending') }}">
+                            <span class="site-menu-title">Saldo pendente</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\FoxUtils;
+use Modules\Reports\Transformers\PendingBalanceResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\UserProject;
@@ -692,5 +693,40 @@ class ReportsApiController extends Controller
             report($e);
             return response()->json(null);
         }
+    }
+
+    public function pendingBalance (Request $request) {
+        $filters = $request->all();
+        $userId = auth()->user()->account_owner_id;
+        $companyModel = new Company();
+        $transactionModel = new Transaction();
+
+        $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
+        $companiesUserTransactions = $transactionModel->whereIn('company_id', (array) $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->join('projects', 'projects.id', 'sales.project_id')
+            ->where('status_enum' , '=', 2)
+            ->orderBy('transactions.id', 'DESC')
+            ->paginate(10);
+
+        if (!empty($filters["sale_code"])) {
+            $saleId = Hashids::connection('sale_id')
+                ->decode(str_replace('#', '', $filters["sale_code"]));
+
+            $companiesUserTransactions->whereHas('sale', function ($querySale) use ($saleId) {
+                $querySale->where('id', $saleId);
+            });
+        }
+
+        if (!empty($filters["project"])) {
+            $projectId = Hashids::decode($filters["project"]);
+            $companiesUserTransactions->whereHas('sale', function ($querySale) use ($projectId) {
+                $querySale->where('project_id', $projectId);
+            });
+        }
+
+        return PendingBalanceResource::collection($companiesUserTransactions);
+
+
     }
 }
