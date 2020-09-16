@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 use Modules\Core\Entities\Company;
+use Modules\Core\Services\FoxUtils;
 
 /**
  * Class CompanyPresenter
@@ -376,5 +377,10 @@ class CompanyPresenter extends Presenter
 
             return '';
         }
+    }
+    public function formatCellPhoneBraspag($number)
+    {
+        $number = FoxUtils::onlyNumbers($number);
+        return substr($number, 2);
     }
 }

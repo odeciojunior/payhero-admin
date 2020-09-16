@@ -115,18 +115,15 @@ class CompanyServiceBraspag
 
             $user = $company->user;
 
-            /*   if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-                   && (!$userService->verifyFieldsEmpty($user))
-               ) {
-                   $result = $braspagService->createPfCompany($company);
-               } else*/
-
-            $result = null;
-            if (($company->present()->getCompanyType($company->company_type) == 'juridical person')
+            if (($company->present()->getCompanyType($company->company_type) == 'physical person')
+                && (!$userService->verifyFieldsEmpty($user))
+            ) {
+                $result = $braspagService->createPfCompany($company);
+            } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
                 && !empty($user->cellphone) && !empty($user->email)) {
                 $result = $braspagService->createPjCompany($company);
             }
-            dd("result");
+
             if (empty($result) || empty(json_decode($result)->MerchantId)) {
                 return [
                     'message' => 'error',

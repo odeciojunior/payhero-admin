@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Exception;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Traits\BraspagPrepareCompanyData;
 
 /**
@@ -34,18 +35,15 @@ class BraspagBackOfficeService extends BraspagService
     {
         try {
             if (FoxUtils::isProduction()) {
-                $this->authorizationToken = base64_encode(
-                    getenv('BRASPAG_CLIENT_ID_PRODUCTION').':'.getenv('BRASPAG_CLIENT_SECRET_PRODUCTION')
-                );
+                $gateway = Gateway::where("name", "braspag_production")->first();
 
-                $this->postFieldsAcessToken = 'grant_type=client_credentials';
             } else {
-                $this->authorizationToken = base64_encode(
-                    getenv('BRASPAG_CLIENT_ID_SANDBOX').':'.getenv('BRASPAG_CLIENT_SECRET_SANDBOX')
-                );
+                $gateway = Gateway::where("name", "braspag_sandbox")->first();
 
-                $this->postFieldsAcessToken = 'grant_type=client_credentials';
             }
+            $this->postFieldsAcessToken = 'braspag_type=client_credentials';
+            $configs = json_decode(FoxUtils::xorEncrypt($gateway->json_config, "decrypt"), true);
+            $this->authorizationToken = base64_encode($configs['public_token'].':'.$configs['private_token']);
 
             $this->setAccessToken($this->urlCredentialAcessToken, $this->postFieldsAcessToken);
         } catch (Exception $e) {
@@ -86,9 +84,16 @@ class BraspagBackOfficeService extends BraspagService
         return $this->sendCurl($url, 'GET');
     }
 
+    public function createPfCompany(Company $company)
+    {
+        $url = '/api/subordinates';
+        $data = $this->getPrepareDataCreatePfCompany($company);
+
+        return $this->sendCurl($url, 'POST', $data, $company->id);
+    }
+
     public function createPjCompany(Company $company)
     {
-        //$url = 'v1/mgm/pj/create-presubseller';
         $url = '/api/subordinates';
         $data = $this->getPrepareDataCreatePjCompany($company);
 

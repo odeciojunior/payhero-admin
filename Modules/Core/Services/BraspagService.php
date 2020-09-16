@@ -46,9 +46,7 @@ class BraspagService
         $result = curl_exec($curl);
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        dd("json_decode($result)->access_token"); /////////////
         if ($httpStatus == 200) {
-            dd(json_decode($result)->access_token); /////////////
             $this->accessToken = json_decode($result)->access_token;
         } else {
             throw new Exception('Erro ao gerar token de acesso captura getnet');
