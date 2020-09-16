@@ -206,31 +206,18 @@ class TrackingService
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
             }
 
-            $tracking = $productPlanSale->tracking;
+            return Tracking::updateOrCreate([
+                'sale_id' => $productPlanSale->sale_id,
+                'product_id' => $productPlanSale->product_id,
+                'product_plan_sale_id' => $productPlanSale->id,
+                'amount' => $productPlanSale->amount,
+                'delivery_id' => $productPlanSale->sale->delivery->id,
+            ], [
+                'tracking_code' => $trackingCode,
+                'tracking_status_enum' => $statusEnum,
+                'system_status_enum' => $systemStatusEnum,
+            ]);
 
-            if (!empty($tracking)) {
-                if (($tracking->tracking_code != $trackingCode) || $forceUpdate) {
-                    $tracking->update([
-                        'tracking_code' => $trackingCode,
-                        'tracking_status_enum' => $statusEnum,
-                        'system_status_enum' => $systemStatusEnum,
-                    ]);
-                }
-            } else { //senao cria o tracking
-                $tracking = $trackingModel->firstOrNew([
-                    'sale_id' => $productPlanSale->sale_id,
-                    'product_id' => $productPlanSale->product_id,
-                    'product_plan_sale_id' => $productPlanSale->id,
-                    'amount' => $productPlanSale->amount,
-                    'delivery_id' => $productPlanSale->sale->delivery->id,
-                    'tracking_code' => $trackingCode,
-                    'tracking_status_enum' => $statusEnum,
-                    'system_status_enum' => $systemStatusEnum,
-                ]);
-                $tracking->save();
-            }
-
-            return $tracking;
         } catch (\Exception $e) {
             report($e);
             return null;

@@ -60,7 +60,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
             $shopifyOrder = $postback['id'];
 
             $sales = $salesModel->with([
-                'productsPlansSale.tracking',
+                'productsPlansSale',
                 'productsPlansSale.product'
             ])->where('shopify_order', $shopifyOrder)
                 ->where('project_id', $projectId)
