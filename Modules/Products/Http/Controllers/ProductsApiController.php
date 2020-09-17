@@ -160,6 +160,8 @@ class ProductsApiController extends Controller
             $data['name']               = FoxUtils::removeSpecialChars($data['name']);
             $data['description']        = FoxUtils::removeSpecialChars($data['description']);
 
+            $data['status_enum'] = $data['type_enum'] == 'digital' ? $productModel->present()->getStatus('analyzing') : null;
+
             $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
 
             $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
@@ -325,6 +327,8 @@ class ProductsApiController extends Controller
 
                     $data['name']        = FoxUtils::removeSpecialChars($data['name']);
                     $data['description'] = FoxUtils::removeSpecialChars($data['description']);
+
+                    $data['status_enum'] = $data['type_enum'] == 'digital' ? $productModel->present()->getStatus('analyzing') : null;
 
                     $data['type_enum'] = $productModel->present()->getType($data['type_enum']);
 
@@ -509,6 +513,32 @@ class ProductsApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao gerar url assinada do produto'], 400);
+        }
+    }
+    public function verifyProductInPlan(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $productPlanModel  = new ProductPlan();
+
+            $productId = current(Hashids::decode($requestData['product_id']));
+
+            if ($productId) {
+                $productInPlan = $productPlanModel->where('product_id', $productId)->exists();
+
+                return response()->json(
+                    [
+                        'product_in_plan' => $productInPlan,
+                    ],
+                    200
+                );
+            } else {
+                return response()->json(['message' => 'Produto não encontrado'], 400);
+            }
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao verificar produto'], 400);
         }
     }
 }

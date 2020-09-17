@@ -1,5 +1,6 @@
 $(document).ready(function () {
     let code = window.location.href.split('/')[4];
+    let typeEnum;
     getDataProducts();
     function getDataProducts() {
         $.ajax({
@@ -73,6 +74,7 @@ $(document).ready(function () {
                     } else {
                         $('#select-currency .select-currency-usd').attr('selected', true);
                     }
+                    typeEnum = response.data.product.type_enum;
 
                     //seleciona radio button product type
                     if (response.data.product.type_enum == 1) {
@@ -89,7 +91,7 @@ $(document).ready(function () {
                             },
                             defaultFile: response.data.product.digital_product_url,
                         });
-                        if(response.data.product.digital_product_url != ''){
+                        if (response.data.product.digital_product_url != '') {
                             $(".btn-view-product-url").attr('link', response.data.product.digital_product_url);
                             $(".btn-view-product-url").show();
                         }
@@ -341,7 +343,35 @@ $(document).ready(function () {
     });
 
     $("#digital").on("change", function () {
-        $('#div_digital_product_upload').css('visibility', 'visible');
-        $('.div-expiration-time').show();
+        if (typeEnum == 1) {
+            $.ajax({
+                method: 'POST',
+                url: '/api/products/verifyproductinplan',
+                dataType: "json",
+                data: {product_id: code},
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response)
+                },
+                success: function (response) {
+                    if (response.product_in_plan) {
+                        $('#modal-plan-already-created').modal('show');
+                        $('#physical').click();
+                    } else {
+                        $('#div_digital_product_upload').css('visibility', 'visible');
+                        $('.div-expiration-time').show();
+                    }
+                },
+            });
+        } else {
+            $('#div_digital_product_upload').css('visibility', 'visible');
+            $('.div-expiration-time').show();
+        }
     });
+    // $(".btn-close-modal-plan").on("change", function () {
+    //
+    // });
 });

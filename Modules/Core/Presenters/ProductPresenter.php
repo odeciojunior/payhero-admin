@@ -63,4 +63,35 @@ class ProductPresenter extends Presenter
             return '';
         }
     }
+
+    /**
+     * @param $status
+     * @return int|string
+     */
+    public function getStatus($status)
+    {
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'analyzing';
+                case 2:
+                    return 'approved';
+                case 3:
+                    return 'refused';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'analyzing':
+                    return 1;
+                case 'approved':
+                    return 2;
+                case 'refused':
+                    return 3;
+            }
+
+            return '';
+        }
+    }
 }
