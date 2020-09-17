@@ -54,21 +54,6 @@ class TrackingService
     }
 
     /**
-     * @param $apiTracking
-     * @return mixed
-     */
-    public function deleteTrackingApi($apiTracking)
-    {
-        $trackingmoreService = new TrackingmoreService();
-
-        $carrierCode = $apiTracking->carrier_code;
-
-        $trackingNumber = $apiTracking->tracking_number;
-
-        return $trackingmoreService->delete($carrierCode, $trackingNumber);
-    }
-
-    /**
      * @param $status
      * @return int|mixed
      * @throws PresenterException
@@ -156,14 +141,12 @@ class TrackingService
      * @param  string  $trackingCode
      * @param  ProductPlanSale  $productPlanSale
      * @param  bool  $logging
-     * @param  bool  $forceUpdate
      * @return mixed
      */
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
-        $logging = false,
-        $forceUpdate = false
+        $logging = false
     ) {
         try {
             $trackingService = new TrackingService();
@@ -217,7 +200,6 @@ class TrackingService
                 'tracking_status_enum' => $statusEnum,
                 'system_status_enum' => $systemStatusEnum,
             ]);
-
         } catch (\Exception $e) {
             report($e);
             return null;
