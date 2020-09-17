@@ -64,7 +64,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{asset('/modules/products/js/index.js?v=4')}}'></script>
+        <script src='{{asset('/modules/products/js/index.js?v=5')}}'></script>
     @endpush
 
 @endsection
