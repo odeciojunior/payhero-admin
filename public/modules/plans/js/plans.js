@@ -57,7 +57,7 @@ $(function () {
                 } else {
                     $("#product_1").html('');
                     $(response.data).each(function (index, data) {
-                        $("#product_1").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                        $("#product_1").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`);
                     });
                     $("#modal-title-plan").html('<span class="ml-15">Adicionar Plano</span>');
                     $("#btn-modal").addClass('btn-save-plan');
@@ -450,7 +450,7 @@ $(function () {
                                     success: function success(response) {
                                         $("#products_edit").html('');
                                         $(response.data).each(function (index, data) {
-                                            $("#products_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                                            $("#products_edit").append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`);
                                         });
                                     }
                                 });
@@ -476,7 +476,7 @@ $(function () {
                                         var selectProduct = $(this);
                                         $(response.data).each(function (index, data) {
                                             if (data.id != selectProduct.val()) {
-                                                selectProduct.append("<option value='" + data.id + "' >" + data.name + "</option>");
+                                                selectProduct.append(`<option value="${data.id}" ${data.type_enum == 2 && data.status_enum != 2 ? 'disabled' : ''}>${data.name}</option>`);
                                             }
                                         });
 

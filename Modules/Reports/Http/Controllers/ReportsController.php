@@ -49,4 +49,9 @@ class ReportsController extends Controller
     {
         return view('reports::pending');
     }
+
+    public function blockedbalance()
+    {
+        return view('reports::blockedbalance');
+    }
 }

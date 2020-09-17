@@ -3,11 +3,8 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Companies\Transformers\CompanyDocumentsResource;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
@@ -16,8 +13,6 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Contracts\View\Factory;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Entities\CompanyDocument;
@@ -28,7 +23,6 @@ use Modules\Companies\Transformers\CompanyCpfResource;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
 use Modules\Companies\Transformers\CompaniesSelectResource;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
 
 /**
@@ -37,10 +31,6 @@ use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
  */
 class CompaniesApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index(Request $request)
     {
         try {
@@ -65,18 +55,11 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @return Factory|View
-     */
     public function create()
     {
         return view('companies::create');
     }
 
-    /**
-     * @param CompanyCreateRequest $request
-     * @return JsonResponse
-     */
     public function store(CompanyCreateRequest $request)
     {
         try {
@@ -97,7 +80,7 @@ class CompaniesApiController extends Controller
                     'fantasy_name' => $fantasyName,
                     'company_document' => $companyDocument,
                     'company_type' => $requestData['company_type'],
-                    'account_type'=> 1,
+                    'account_type' => 1,
                 ]
             );
 
@@ -112,10 +95,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param $encodedId
-     * @return JsonResponse
-     */
     public function show($encodedId)
     {
         try {
@@ -162,11 +141,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param CompanyUpdateRequest $request
-     * @param $encodedId
-     * @return JsonResponse
-     */
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
         try {
@@ -184,7 +158,7 @@ class CompaniesApiController extends Controller
             }
 
             if (!empty($requestData['country']) && $requestData['country'] == 'brazil' && !empty($requestData['support_telephone'])) {
-                $requestData['support_telephone'] = '+' . FoxUtils::onlyNumbers($requestData['support_telephone']);
+                $requestData['support_telephone'] = '+'.FoxUtils::onlyNumbers($requestData['support_telephone']);
             }
             if (!empty($requestData['company_document'])) {
                 $requestData['company_document'] = preg_replace("/[^0-9]/", "", $requestData['company_document']);
@@ -203,21 +177,31 @@ class CompaniesApiController extends Controller
             if (!empty($requestData['monthly_gross_income'])) {
                 $requestData['monthly_gross_income'] = FoxUtils::onlyNumbers($requestData['monthly_gross_income']);
             }
+
+            if (empty($requestData['state_fiscal_document_number'])
+                || strlen($requestData['state_fiscal_document_number']) < 5
+                || $requestData['state_fiscal_document_number'] == 'n/e'
+                || $requestData['state_fiscal_document_number'] == 'Não Possui'
+            ) {
+                $requestData['state_fiscal_document_number'] = 'ISENTO';
+            }
+
             $company->update($requestData);
             $dataUpdate = $companyService->getChangesUpdateBankData($company);
 
-            $messageReturn = 'Dados atualizados com sucesso';
-          /*  if (!$companyService->verifyFieldsEmpty($company)) {
-                if (empty($company->subseller_getnet_id)) {
-                    $result = $companyService->createCompanyGetnet($company);
-                } elseif (($dataUpdate == true)
-                    || ($company->getnet_status != $company->present()->getStatusGetnet('approved'))
-                ) {
-                    $result = $companyService->updateCompanyGetnet($company);
-                }
+            if ($companyService->verifyFieldsEmpty($company)) {
+                return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
+            }
+
+            /*if (empty($company->subseller_getnet_id)) {
+                $result = $companyService->createCompanyGetnet($company);
+            } elseif (($dataUpdate == true)
+                || ($company->getnet_status != $company->present()->getStatusGetnet('approved'))
+            ) {
+                $result = $companyService->updateCompanyGetnet($company);
             }*/
 
-            return response()->json(['message' => $messageReturn], Response::HTTP_OK);
+            return response()->json(['message' => 'Dados atualizados com sucesso'], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
 
@@ -225,10 +209,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param $encodedId
-     * @return JsonResponse
-     */
     public function destroy($encodedId)
     {
         try {
@@ -296,10 +276,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param CompanyUploadDocumentRequest $request
-     * @return JsonResponse
-     */
     public function uploadDocuments(CompanyUploadDocumentRequest $request)
     {
         try {
@@ -314,9 +290,9 @@ class CompaniesApiController extends Controller
             if (Gate::allows('uploadDocuments', [$company])) {
                 $document = $request->file('file');
                 $digitalOceanPath = $digitalOceanFileService->uploadFile(
-                    'uploads/user/' . Hashids::encode(
+                    'uploads/user/'.Hashids::encode(
                         auth()->user()->account_owner_id
-                    ) . '/companies/' . Hashids::encode($company->id) . '/private/documents',
+                    ).'/companies/'.Hashids::encode($company->id).'/private/documents',
                     $document,
                     null,
                     null,
@@ -390,9 +366,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function getCompanies()
     {
         try {
@@ -413,10 +386,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function openDocument(Request $request)
     {
         try {
@@ -436,10 +405,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @return JsonResponse
-     * @throws PresenterException
-     */
     public function verify()
     {
         $companyModel = new Company();
@@ -459,10 +424,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function verifyCnpj(Request $request)
     {
         $data = $request->all();
@@ -484,11 +445,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @param $companyId
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function getDocuments(Request $request, $companyId)
     {
         try {
@@ -525,10 +481,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function consultCnpj(Request $request)
     {
         try {
@@ -546,10 +498,6 @@ class CompaniesApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function updateOrder(Request $request)
     {
         try {

@@ -19,6 +19,9 @@ use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\SalesRecoveryService;
+use Modules\Sales\Exports\Reports\AbandonedCartReportExport;
+use Modules\Sales\Exports\Reports\BilletExpiredReportExport;
+use Modules\Sales\Exports\Reports\CardRefusedReportExport;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
@@ -305,6 +308,34 @@ class SalesRecoveryApiController extends Controller
             return response()->json([
                                         'message' => "Ocorreu um erro, tente novamente mais tarde",
                                     ], 400);
+        }
+    }
+    public function export(Request $request)
+    {
+        try {
+            $dataRequest = $request->all();
+            $user = auth()->user();
+
+            if ($dataRequest['status'] == 1) {
+                $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+
+                (new AbandonedCartReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+            } else if ($dataRequest['status'] == 3) {
+                $filename = 'report_card_refused' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+
+                (new CardRefusedReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+            } else {
+                $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+
+                (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+            }
+
+
+            return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
     }
 }

@@ -1,7 +1,16 @@
 $(document).ready(function () {
 
     var pageCurrent;
-
+    let badgeList = {
+        1: '#3E8EF7',
+        2: '#41C26D',
+        3: '#F54C52',
+    };
+    let statusList = {
+        1: 'Em análise',
+        2: 'Aprovado',
+        3: 'Recusado',
+    };
     // Comportamentos da tela
     $("#type-products").on('change', function () {
 
@@ -108,25 +117,47 @@ $(document).ready(function () {
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
                     $("#data-table-products").html('');
+                    let dados = '';
 
                     $.each(response.data, function (index, value) {
-                        dados = '';
-                        dados += '<div class="col-xl-3 col-md-6 d-flex align-items-stretch">';
-                        dados += '<div class="card shadow" style="cursor:pointer;width:100%;">';
-                        dados += '<img style="min-height: 200px;" class="card-img-top product-image" src="' + value.image + '"  ' +
-                            'data-link=" + value.link + " alt="Imagem do produto" data-code="' + value.id + '">' +
-                            '<div class="card-body">' +
-                            '<div class="row align-items-end justify-content-between">' +
-                            '<div class="col-10">' +
-                            '<h5 class="card-title">' + value.name + '</h5>' +
-                            '<h5 class="">' + value.description + '</h5>' +
-                            '<p class="card-text sm">Criado em  ' + value.created_at + '</p>' +
-                            '<p class="card-text sm">ID: ' + value.id_view + '</p>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
+                        dados = `
+                        <div class="col-xl-3 col-md-6 d-flex align-items-stretch">
+                        <div class="card shadow" style="cursor:pointer;width:100%; ">
+                        <img style="min-height: 200px;" class="card-img-top product-image" src="${value.image}"
+                            data-link="${value.link}" alt="Imagem do produto" data-code="${value.id}">
+                            ${value.type_enum == 2 ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]}">
+                            ${statusList[value.status_enum]}</span>` : ''}
+                            <div class="card-body">
+                                <div class="row align-items-end justify-content-between">
+                                    <div class="col-10">
+                                        <h5 class="card-title">${value.name}</h5>
+                                        <h5 class="">${value.description}</h5>
+                                        <p class="card-text sm">Criado em  ${value.created_at}</p>
+                                        <p class="card-text sm">ID: ${value.id_view}</p>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                        </div>
+                            `;
+                        // dados = '';
+                        // dados += '<div class="col-xl-3 col-md-6 d-flex align-items-stretch">';
+                        // dados += '<div class="card shadow" style="cursor:pointer;width:100%; ">';
+                        // dados += '<img style="min-height: 200px;" class="card-img-top product-image" src="' + value.image + '"  ' +
+                        //     'data-link=" + value.link + " alt="Imagem do produto" data-code="' + value.id + '">' +
+                        //     '<span class="ribbon-inner ribbon-primary" style="background-color:' + badgeList[value.status_enum] + '">' + statusList[value.status_enum] + '</span>' +
+                        //     '<div class="card-body">' +
+                        //     '<div class="row align-items-end justify-content-between">' +
+                        //     '<div class="col-10">' +
+                        //     '<h5 class="card-title">' + value.name + '</h5>' +
+                        //     '<h5 class="">' + value.description + '</h5>' +
+                        //     '<p class="card-text sm">Criado em  ' + value.created_at + '</p>' +
+                        //     '<p class="card-text sm">ID: ' + value.id_view + '</p>' +
+                        //     '</div>' +
+                        //     '</div>' +
+                        //     '</div>' +
+                        //     '</div>' +
+                        //     '</div>';
 
                         $("#data-table-products").append(dados);
                     });

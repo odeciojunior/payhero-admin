@@ -54,21 +54,6 @@ class TrackingService
     }
 
     /**
-     * @param $apiTracking
-     * @return mixed
-     */
-    public function deleteTrackingApi($apiTracking)
-    {
-        $trackingmoreService = new TrackingmoreService();
-
-        $carrierCode = $apiTracking->carrier_code;
-
-        $trackingNumber = $apiTracking->tracking_number;
-
-        return $trackingmoreService->delete($carrierCode, $trackingNumber);
-    }
-
-    /**
      * @param $status
      * @return int|mixed
      * @throws PresenterException
@@ -156,14 +141,12 @@ class TrackingService
      * @param  string  $trackingCode
      * @param  ProductPlanSale  $productPlanSale
      * @param  bool  $logging
-     * @param  bool  $forceUpdate
      * @return mixed
      */
     public function createOrUpdateTracking(
         string $trackingCode,
         ProductPlanSale $productPlanSale,
-        $logging = false,
-        $forceUpdate = false
+        $logging = false
     ) {
         try {
             $trackingService = new TrackingService();
@@ -206,31 +189,17 @@ class TrackingService
                 $statusEnum = $trackingModel->present()->getTrackingStatusEnum('posted');
             }
 
-            $tracking = $productPlanSale->tracking;
-
-            if (!empty($tracking)) {
-                if (($tracking->tracking_code != $trackingCode) || $forceUpdate) {
-                    $tracking->update([
-                        'tracking_code' => $trackingCode,
-                        'tracking_status_enum' => $statusEnum,
-                        'system_status_enum' => $systemStatusEnum,
-                    ]);
-                }
-            } else { //senao cria o tracking
-                $tracking = $trackingModel->firstOrNew([
-                    'sale_id' => $productPlanSale->sale_id,
-                    'product_id' => $productPlanSale->product_id,
-                    'product_plan_sale_id' => $productPlanSale->id,
-                    'amount' => $productPlanSale->amount,
-                    'delivery_id' => $productPlanSale->sale->delivery->id,
-                    'tracking_code' => $trackingCode,
-                    'tracking_status_enum' => $statusEnum,
-                    'system_status_enum' => $systemStatusEnum,
-                ]);
-                $tracking->save();
-            }
-
-            return $tracking;
+            return Tracking::updateOrCreate([
+                'sale_id' => $productPlanSale->sale_id,
+                'product_id' => $productPlanSale->product_id,
+                'product_plan_sale_id' => $productPlanSale->id,
+                'amount' => $productPlanSale->amount,
+                'delivery_id' => $productPlanSale->sale->delivery->id,
+            ], [
+                'tracking_code' => $trackingCode,
+                'tracking_status_enum' => $statusEnum,
+                'system_status_enum' => $systemStatusEnum,
+            ]);
         } catch (\Exception $e) {
             report($e);
             return null;

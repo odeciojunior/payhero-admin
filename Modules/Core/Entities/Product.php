@@ -92,6 +92,7 @@ class Product extends Model
         'project_id',
         'currency_type_enum',
         'type_enum',
+        'status_enum',
     ];
     /**
      * @var bool

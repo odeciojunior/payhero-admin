@@ -26,6 +26,8 @@ class ProductsResource extends JsonResource
             'image'       => $this->photo == '' ? 'modules/global/img/semimagem.png' : $this->photo,
             'link'        => '/api/products/' . $this->id_code . '/edit',
             'created_at'  => Carbon::parse($this->created_at)->format('d/m/Y'),
+            'type_enum'   => $this->type_enum,
+            'status_enum' => $this->status_enum,
 
         ];
     }

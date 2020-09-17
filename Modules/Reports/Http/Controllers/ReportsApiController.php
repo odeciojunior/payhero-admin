@@ -26,6 +26,9 @@ use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Reports\Exports\Reports\ReportExport;
 use Modules\Reports\Transformers\ReportCouponResource;
+use Spatie\Activitylog\Models\Activity;
+use Modules\Core\Services\SaleService;
+use Modules\Reports\Transformers\TransactionBlockedResource;
 
 class ReportsApiController extends Controller
 {
@@ -693,46 +696,5 @@ class ReportsApiController extends Controller
             report($e);
             return response()->json(null);
         }
-    }
-
-    public function pendingBalance (Request $request) {
-        $filters = $request->all();
-        $userId = auth()->user()->account_owner_id;
-        $companyModel = new Company();
-        $transactionModel = new Transaction();
-
-        $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
-        $companiesUserTransactions = $transactionModel->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->join('projects', 'projects.id', 'sales.project_id')
-            ->where('status_enum' , '=', 2)
-            ->orderBy('transactions.id', 'DESC');
-
-        if (!empty($filters["sale_code"])) {
-            $saleId = !empty(Hashids::connection('sale_id')->decode($filters["sale_code"])) ?
-                Hashids::connection('sale_id')->decode($filters["sale_code"]) : 0;
-
-            $companiesUserTransactions->whereHas('sale', function ($querySale) use ($saleId) {
-                $querySale->where('id', $saleId);
-            });
-        }
-
-        if (!empty($filters["project"])) {
-            $projectId = Hashids::decode($filters["project"]);
-            $companiesUserTransactions->whereHas('sale', function ($querySale) use ($projectId) {
-                $querySale->where('sales.project_id', $projectId);
-            });
-        }
-
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-        $dateType = $filters["date_type"];
-
-        $companiesUserTransactions->whereHas('sale', function ($querySale) use ($dateRange, $dateType) {
-            $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-        });
-
-        return PendingBalanceResource::collection($companiesUserTransactions->paginate(10));
-
-
     }
 }

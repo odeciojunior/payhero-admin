@@ -23,6 +23,8 @@ Route::middleware(['web', 'auth', 'setUserAsLogged'])->prefix('reports')->group(
     Route::get('/pending', 'ReportsController@pending')->name('reports.pending')->middleware('role:account_owner|admin');
 
     Route::get('/coupons', 'ReportsController@coupons')->name('reports.coupons')->middleware('role:account_owner|admin');
+
+    Route::get('/blockedbalance', 'ReportsController@blockedbalance')->name('reports.blockedbalance')->middleware('role:account_owner|admin');
 });
 
 

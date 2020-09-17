@@ -17,5 +17,6 @@ Route::group(
 
         Route::post('recovery/details', 'SalesRecoveryApiController@getDetails');
         Route::post('recovery/regenerateboleto', 'SalesRecoveryApiController@regenerateBoleto');
+        Route::post('recovery/export', 'SalesRecoveryApiController@export');
     }
 );

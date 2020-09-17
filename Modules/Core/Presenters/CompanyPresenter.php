@@ -17,7 +17,7 @@ class CompanyPresenter extends Presenter
     protected $entity;
 
     /**
-     * @param int|string $addressDocumentStatus
+     * @param  int|string  $addressDocumentStatus
      * @return int|string
      */
     public function getAddressDocumentStatus($addressDocumentStatus = null)
@@ -53,7 +53,7 @@ class CompanyPresenter extends Presenter
     }
 
     /**
-     * @param int|string $bankStatus
+     * @param  int|string  $bankStatus
      * @return int|string
      */
     public function getBankDocumentStatus($bankStatus = null)
@@ -91,7 +91,7 @@ class CompanyPresenter extends Presenter
     }
 
     /**
-     * @param int|string $contractDocumentStatus
+     * @param  int|string  $contractDocumentStatus
      * @return int|string
      */
     public function getContractDocumentStatus($contractDocumentStatus = null)
@@ -230,7 +230,7 @@ class CompanyPresenter extends Presenter
     }
 
     /**
-     * @param null $federalRegistrationStatus
+     * @param  null  $federalRegistrationStatus
      * @return int|string
      * Situação do subseller na receita federal
      */
@@ -297,7 +297,7 @@ class CompanyPresenter extends Presenter
     }
 
     /**
-     * @param null $status
+     * @param  null  $status
      * @return int|string
      */
     public function getStatusGetnet($status = null)
@@ -312,6 +312,12 @@ class CompanyPresenter extends Presenter
                     return 'review';
                 case 3:
                     return 'reproved';
+                case 4:
+                    return 'approved_getnet';
+                case 5:
+                    return 'error';
+                case 6:
+                    return 'pending';
             }
 
             return '';
@@ -323,6 +329,12 @@ class CompanyPresenter extends Presenter
                     return 2;
                 case 'reproved':
                     return 3;
+                case 'approved_getnet' :
+                    return 4;
+                case 'error' :
+                    return 5;
+                case 'pending' :
+                    return 6;
             }
 
             return '';
