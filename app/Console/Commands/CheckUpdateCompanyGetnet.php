@@ -5,17 +5,16 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
-class UpdateCompanyGetnet extends Command
+class CheckUpdateCompanyGetnet extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:updateCompanyGetnet';
+    protected $signature = 'command:checkUpdateCompanyGetnet';
 
     /**
      * The console command description.
