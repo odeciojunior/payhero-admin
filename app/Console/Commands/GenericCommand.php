@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\User;
@@ -36,7 +37,13 @@ class GenericCommand extends Command
 
     public function handle()
     {
-
+        $products = Product::where('type_enum', 2)->whereNull('status_enum')->get();
+        foreach ($products as $product) {
+            $product->update([
+                                 'status_enum' => 1,
+                             ]);
+        }
+        dd('feitoo');
     }
 }
 
