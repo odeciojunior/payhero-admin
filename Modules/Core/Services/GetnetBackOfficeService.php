@@ -113,11 +113,11 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'GET');
     }
 
-    public function checkPfCompanyRegister(string $cpf)
+    public function checkPfCompanyRegister(string $cpf, $companyId)
     {
         $url = 'v1/mgm/pf/callback/'.$this->getMerchantId().'/'.$cpf;
 
-        return $this->sendCurl($url, 'GET');
+        return $this->sendCurl($url, 'GET',null,  $companyId);
     }
 
     public function checkAvailablePaymentPlansPf()
@@ -172,11 +172,11 @@ class GetnetBackOfficeService extends GetnetService
         return $this->sendCurl($url, 'GET');
     }
 
-    public function checkPjCompanyRegister($cnpj)
+    public function checkPjCompanyRegister($cnpj, $companyId)
     {
         $url = 'v1/mgm/pj/callback/'.$this->getMerchantId().'/'.$cnpj;
 
-        return $this->sendCurl($url, 'GET');
+        return $this->sendCurl($url, 'GET',null,  $companyId);
     }
 
     public function checkAvailablePaymentPlansPj()

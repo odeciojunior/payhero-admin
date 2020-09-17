@@ -324,54 +324,64 @@ class CompanyService
         return false;
     }
 
-    public function createCompanyGetnet(Company $company)
+    public function createCompanyPjGetnet(Company $company)
     {
         try {
-            $getnetService = new GetnetBackOfficeService();
-            $userService = new UserService();
-
-            $user = $company->user;
-
-            if (($company->present()->getCompanyType($company->company_type) == 'physical person')
-                && (!$userService->verifyFieldsEmpty($user))
-            ) {
-                $result = $getnetService->createPfCompany($company);
-            } elseif (($company->present()->getCompanyType($company->company_type) == 'juridical person')
-                && !empty($user->cellphone) && !empty($user->email)) {
-                $result = $getnetService->createPjCompany($company);
+            if (empty($company->user->cellphone) || empty($company->user->email)) {
+                $company->update([
+                    'get_net_status' => $company->present()->getStatusGetnet('pending'),
+                ]);
+                return;
             }
 
-            if (empty($result) || empty(json_decode($result)->subseller_id)) {
-                return [
-                    'message' => 'error',
-                    'data' => '',
-                ];
-            }
+            $result = (new GetnetBackOfficeService())->createPjCompany($company);
 
-            $company->update(
-                [
-                    'subseller_getnet_id' => json_decode($result)->subseller_id,
-                    'get_net_status' => $company->present()->getStatusGetnet('review'),
-                ]
-            );
-
-            return [
-                'message' => 'success',
-                'data' => '',
-            ];
+            $this->updateToReviewStatusGetnet($company, $result);
         } catch (Exception $e) {
             report($e);
-
-            return [
-                'message' => 'error',
-                'data' => '',
-            ];
         }
     }
 
+    public function createCompanyPfGetnet(Company $company)
+    {
+        try {
+            if ((new UserService())->verifyFieldsEmpty($company->user)) {
+                $company->update([
+                    'get_net_status' => $company->present()->getStatusGetnet('pending'),
+                ]);
+                return;
+            }
+
+            $result = (new GetnetBackOfficeService())->createPfCompany($company);
+
+            $this->updateToReviewStatusGetnet($company, $result);
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    private function updateToReviewStatusGetnet($company, $result)
+    {
+        if (empty($result) || empty(json_decode($result)->subseller_id)) {
+            $company->update([
+                'get_net_status' => $company->present()->getStatusGetnet('error'),
+            ]);
+
+            return;
+        }
+
+        $company->update(
+            [
+                'subseller_getnet_id' => json_decode($result)->subseller_id,
+                'get_net_status' => $company->present()->getStatusGetnet('review'),
+            ]
+        );
+    }
+
+
     public function updateCompanyGetnet(Company $company)
     {
-        $getnetService = new GetnetService();
+        $getnetService = new GetnetBackOfficeService();
         $userService = new UserService();
         $user = $company->user;
 
@@ -484,20 +494,19 @@ class CompanyService
         return $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $companyId)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('transfered'))
-            ->where(function($query) use($salesModel) {
-                $query->whereHas('sale', function($query) use($salesModel) {
+            ->where(function ($query) use ($salesModel) {
+                $query->whereHas('sale', function ($query) use ($salesModel) {
                     $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
                 })
-                ->orWhere(function($queryTracking) use($salesModel) {
-                    $queryTracking->whereHas('sale', function($querySale) use($salesModel) {
-                        $querySale->where('status', $salesModel->present()->getStatus('approved'))
-                            ->whereHas('productsPlansSale', function($q) {
-                                $q->doesntHave('tracking');
+                    ->orWhere(function ($queryTracking) use ($salesModel) {
+                        $queryTracking->whereHas('sale', function ($querySale) use ($salesModel) {
+                            $querySale->where('status', $salesModel->present()->getStatus('approved'))
+                                ->whereHas('productsPlansSale', function ($q) {
+                                    $q->doesntHave('tracking');
+                                });
                         });
                     });
-                });
-            })
-            ->sum('value');
+            })->sum('value');
     }
 
     public function getBlockedBalancePending(int $companyId)
@@ -508,9 +517,8 @@ class CompanyService
         return $transactiosModel->whereNull('invitation_id')
             ->where('company_id', $companyId)
             ->where('status_enum', $transactiosModel->present()->getStatusEnum('paid'))
-            ->whereHas('sale', function($query) use($salesModel) {
+            ->whereHas('sale', function ($query) use ($salesModel) {
                 $query->where('sales.status', $salesModel->present()->getStatus('in_dispute'));
-            })
-            ->sum('value');
+            })->sum('value');
     }
 }

@@ -52,7 +52,7 @@ class VerifyTrackingsWithoutInfo extends Command
                     try {
                         $trackingCode = $tracking->tracking_code;
                         $pps = $tracking->productPlanSale;
-                        $trackingService->createOrUpdateTracking($trackingCode, $pps, false, true);
+                        $trackingService->createOrUpdateTracking($trackingCode, $pps);
                     } catch (\Exception $e) {
                         continue;
                     }
