@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +29,6 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\UserNotification;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
 use Modules\Core\Services\SendgridService;
 use Modules\Register\Http\Requests\RegisterRequest;
@@ -69,6 +67,15 @@ class RegisterApiController extends Controller
     {
 
         try {
+            if (!$files = $this->verifyFiles($request['document'])) {
+                return response()->json(
+                    [
+                        'success' => 'false',
+                        'message' => 'Existem Arquivos Pendentes, favor preencher todos os campos com os arquivos.'
+                    ]
+                );
+            }
+
             $requestData = $this->createAndPassDefaultValuesToRequest($request);
             $user = $this->createUserAndAssignRole($requestData, $userModel);
             $this->createCompanyToUser($requestData, $companyModel, $user);
@@ -77,30 +84,16 @@ class RegisterApiController extends Controller
                 $this->sendUserNotification($user, $userNotificationModel, $userInformationModel);
             }
 
-            $sDrive = Storage::disk('s3');
-            $documentCpf = preg_replace('/[^0-9]/', '', $user->document);
-
-            if ($files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents')) {
-                if (!$this->uploadDocumentsRegistered($files, $user)) {
-                    return response()->json(
-                        [
-                            'success' => 'false',
-                            'message' => 'Não foi Possivel enviar os arquivos ao servidor, favor verificar os arquivos
-                                          no Perfil do usuário e da empresa se estão em análise.'
-                        ]
-                    );
-                } else {
-//                    $sDrive->deleteDirectory('uploads/register/user/' . $documentCpf);
-                    return response()->json(
-                        [
-                            'success' => 'true',
-                            'message' => 'Arquivos Salvos com sucesso',
-                        ]
-                    );
-
-                }
+            if (!$this->uploadDocumentsRegistered($files, $user)) {
+                return response()->json(
+                    [
+                        'success' => 'false',
+                        'message' => 'Não foi Possivel enviar os arquivos ao servidor.'
+                    ]
+                );
             }
 
+            Storage::disk('s3')->deleteDirectory('uploads/register/user/' . $user->document);
             $this->sendWelcomeEmail($requestData);
 
             return response()->json(
@@ -116,6 +109,19 @@ class RegisterApiController extends Controller
 
             return response()->json(['success' => 'false', 'message' => 'revise os dados informados'], 403);
         }
+    }
+
+    public function verifyFiles ($document)
+    {
+        $sDrive = Storage::disk('s3');
+        $documentCpf = preg_replace('/[^0-9]/', '', $document);
+        $files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents');
+
+        if (!count($files) === 7) {
+           return false;
+        }
+
+            return $files;
     }
 
     /**
@@ -316,7 +322,6 @@ class RegisterApiController extends Controller
                 if (in_array($fileTypeName, ['USUARIO_RESIDENCIA', 'RG_FRENTE', 'RG_VERSO', 'USUARIO_EXTRATO'])) {
                     $amazonPathUser = 'uploads/register/user/' . $user->id . '/private/documents/' . $fileName;
                     if ($sDrive->exists($amazonPathUser)) {
-                        dd('entrei');
                         $sDrive->delete($amazonPathUser);
                     }
                     $sDrive->move(
