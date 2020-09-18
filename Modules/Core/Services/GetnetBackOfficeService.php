@@ -3,7 +3,6 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
