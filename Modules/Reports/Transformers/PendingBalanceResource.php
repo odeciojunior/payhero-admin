@@ -36,7 +36,7 @@ class PendingBalanceResource extends JsonResource
             'client'     => $sale->customer->name ?? '',
             'start_date' => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
             'end_date'   => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
-            'total_paid' => $sale->total_paid_value ? FoxUtils::formatMoney($sale->total_paid_value) : '',
+            'total_paid' => 'R$ ' . substr_replace(@$this->value, ',', strlen(@$this->value) - 2, 0),
         ];
 
         return $data;

@@ -1010,7 +1010,9 @@ class SaleService
                 ->whereIn('company_id', $userCompanies)
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->where('transactions.status_enum' , '=',
-                    $transactionModel->present()->getStatusEnum('paid'));
+                    $transactionModel->present()->getStatusEnum('paid'))
+                ->whereNull('invitation_id');
+            ;
 
             // Filtros - INICIO
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
@@ -1069,11 +1071,6 @@ class SaleService
                 });
             }
             // Filtros - FIM
-
-            $transactions->whereBetween('sales.' . $filters["date_type"], [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-                ->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
-
             return $transactions;
         } catch (Exception $e) {
             report($e);
