@@ -19,7 +19,7 @@ class RegisterRequest extends FormRequest
             'name'              => 'required',
             'cellphone'         => 'required',
             'document'          => 'required',
-            'date_birth'        => 'required',
+            'date_birth'        => 'nullable',
             'password'          => 'required',
             'zip_code'          => 'required',
             'street'            => 'required',
