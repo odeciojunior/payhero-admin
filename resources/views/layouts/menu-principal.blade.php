@@ -212,6 +212,12 @@
                         </a>
                     </li>
                     <li class="site-menu-item">
+                        <a href="{{ route('reports.pending') }}">
+                            <span class="site-menu-title">Saldo pendente</span>
+                        </a>
+                    </li>
+
+                    <li class="site-menu-item">
                         <a href="{{ route('reports.blockedbalance') }}">
                             <span class="site-menu-title">Saldo bloqueado</span>
                         </a>
