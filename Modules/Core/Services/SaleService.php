@@ -1012,7 +1012,7 @@ class SaleService
                 ->where('transactions.status_enum' , '=',
                     $transactionModel->present()->getStatusEnum('paid'))
                 ->whereNull('invitation_id');
-            ;
+
 
             // Filtros - INICIO
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);

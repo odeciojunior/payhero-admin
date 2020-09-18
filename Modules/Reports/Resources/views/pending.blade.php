@@ -50,8 +50,8 @@
                             </div>
                             <div class="row mt-md-15">
                                 <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                    <label for="sale_code">Código da Venda</label>
-                                    <input type="text" id="sale_code">
+                                    <label for="sale_code">Transação</label>
+                                    <input type="text" id="sale_code" placeholder="transação">
                                 </div>
                                 <div class="col-sm-6 col-md">
                                     <label for="date_type">Data</label>
@@ -88,7 +88,7 @@
                                 <div class="col-md-4">
                                     <h6 class="text-center orange-gradient">
                                         <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i>
-                                        Saldo Pendente
+                                        Comissão
                                     </h6>
                                     <h4 id="commission_pending" class="number text-center orange-gradient"></h4>
                                 </div>
@@ -111,7 +111,7 @@
                             <table class="table-vendas table unify table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="table-title">Venda</th>
+                                    <th class="table-title">Transação</th>
                                     <th class="table-title">Projeto</th>
                                     <th class="table-title">Cliente</th>
                                     <th class="table-title display-sm-none display-m-none display-lg-none">Forma</th>
