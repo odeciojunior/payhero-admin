@@ -6,6 +6,7 @@
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
     @endpush
 
     <div class="page">
@@ -29,6 +30,25 @@
                                         <option value="0">Todas os projetos</option>
                                     </select>
                                 </div>
+                                <div class="col-sm-8 col-md">
+                                    <label for="comprador">Nome do cliente</label>
+                                    <input name='client' id="comprador" class="input-pad" placeholder="cliente">
+                                </div>
+                                <div class="col-sm-8 col-md">
+                                    <label for="customer_document">CPF do cliente</label>
+                                    <input name='customer_document' id="customer_document" class="input-pad"
+                                           placeholder="CPF" data-mask="000.000.000-00">
+                                </div>
+                                <div class="col-sm-6 col-md">
+                                    <label for="forma">Forma de pagamento</label>
+                                    <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                        <option value="">Boleto e cartão de crédito</option>
+                                        <option value="1">Cartão de crédito</option>
+                                        <option value="2">Boleto</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-md-15">
                                 <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                     <label for="sale_code">Código da Venda</label>
                                     <input type="text" id="sale_code">
@@ -41,35 +61,64 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                    <label for="date_type" >Data</label>
-                                    <input name='date_range' id="date_range" class="select-pad" placeholder="Clique para editar..." readonly >
+                                    <label for="date_range">‏‏‎ ‎</label>
+                                    <input name='date_range' id="date_range" class="select-pad"
+                                           placeholder="Clique para editar..." readonly>
                                 </div>
-                                <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                    <label> </label>
-                                    <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: .5rem">
+                                <div class="col-sm-6 col-md d-flex align-items-center pt-md-20 pt-10">
+                                    <button id="bt_filtro" class="btn btn-primary col">
                                         <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                     </button>
-                                </div>
-                                <div class="col-2">
                                 </div>
                             </div>
                         </div>
                     </form>
+                    <!-- Resumo -->
+                    <div class="fixhalf"></div>
+                    @if(!auth()->user()->hasRole('attendance'))
+                        <div class="card shadow p-20" style='display:block;'>
+                            <div class="row justify-content-center">
+                                <div class="col-md-4">
+                                    <h6 class="text-center green-gradient">
+                                        <i class="material-icons align-middle mr-1 green-gradient"> swap_vert </i>
+                                        Quantidade de vendas
+                                    </h6>
+                                    <h4 id="total_sales" class="number text-center green-gradient"></h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="text-center orange-gradient">
+                                        <i class="material-icons align-middle mr-1 orange-gradient"> attach_money </i>
+                                        Saldo Pendente
+                                    </h6>
+                                    <h4 id="commission_pending" class="number text-center orange-gradient"></h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="text-center green-gradient">
+                                        <i class="material-icons align-middle green-gradient mr-1"> trending_up </i>
+                                        Valor Total </h6>
+                                    <h4 id="total" class="number text-center green-gradient">
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
+                <!-- Tabela -->
                 <div class="col-lg-12">
-                    <div class="card shadow" style="min-height: 300px;">
-                        <div class=" card-body data-holder">
-                            <table class="table-pending table table-striped" style="width:100%;margin: auto; margin-top:15px;">
+                    <div class="card shadow">
+                        <div class="page-invoice-table table-responsive">
+                            <table class="table-vendas table unify table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>Venda</th>
-                                        <th>Projeto</th>
-                                        <th>Forma</th>
-                                        <th>Data</th>
-                                        <th>Pagamento</th>
-                                        <th>Comissão</th>
-                                    </tr>
+                                <tr>
+                                    <th class="table-title">Venda</th>
+                                    <th class="table-title">Projeto</th>
+                                    <th class="table-title">Cliente</th>
+                                    <th class="table-title display-sm-none display-m-none display-lg-none">Forma</th>
+                                    <th class="table-title display-sm-none display-m-none display-lg-none">Data</th>
+                                    <th class="table-title">Pagamento</th>
+                                    <th class="table-title">Comissão</th>
+                                </tr>
                                 </thead>
                                 <tbody id="body-table-pending">
                                 {{-- js carrega... --}}
@@ -77,7 +126,8 @@
                             </table>
                         </div>
                     </div>
-                    <ul id="pagination-pending" class="pagination-sm margin-chat-pagination" style="position:relative;float:right">
+                    <ul id="pagination-pending" class="pagination-sm margin-chat-pagination"
+                        style="position:relative;float:right">
                         {{-- js carrega... --}}
                     </ul>
                 </div>

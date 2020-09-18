@@ -55,6 +55,9 @@ $(document).ready(function () {
     function getFilters(urlParams = false) {
         let data = {
             'project': $("#projeto").val(),
+            'client': $("#comprador").val(),
+            'customer_document': $("#customer_document").val(),
+            'payment_method': $("#forma").val(),
             'sale_code': $("#sale_code").val().replace('#', ''),
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
@@ -99,9 +102,53 @@ $(document).ready(function () {
         });
     }
 
+    function resumePending() {
+
+        loadOnAny('.number', false, {
+            styles: {
+                container: {
+                    minHeight: '32px',
+                    height: 'auto'
+                },
+                loader: {
+                    width: '20px',
+                    height: '20px',
+                    borderWidth: '4px'
+                },
+            }
+        });
+
+        $.ajax({
+            method: "GET",
+            url: '/api/reports/resume-pending-balance',
+            data: getFilters(),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnAny('.number', true);
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                loadOnAny('.number', true);
+                $('#total_sales').text('0');
+                $('#commission_pending, #total').text('R$ 0,00');
+                if (response.total_sales) {
+                    $('#total_sales, #commission_blocked, #total').text('');
+                    $('#total_sales').text(response.total_sales);
+                    $('#commission_pending').text(response.commission);
+                    $('#total').text(response.total);
+                }
+            }
+        });
+    }
+
     atualizar = function (link = null) {
 
         currentPage = link;
+        let updateResume = true;
 
         loadOnTable('#body-table-pending', '.table-pending');
 
@@ -109,6 +156,7 @@ $(document).ready(function () {
             link = '/api/reports/pending-balance?' + getFilters(true).substr(1);
         } else {
             link = '/api/reports/pending-balance' + link + getFilters(true);
+            updateResume = false;
         }
 
         $.ajax({
@@ -125,20 +173,22 @@ $(document).ready(function () {
             success: function success(response) {
                 $('#body-table-pending').html('');
                 $('.table-pending').addClass('table-striped');
-                    console.log(response)
+                console.log(response)
 
                 if (!isEmpty(response.data)) {
+                    console.log(response.data)
                     $.each(response.data, function (index, value) {
 
-                        var dados = `  <tr>
+                        dados = `  <tr>
                                     <td>${value.sale_code}</td>
                                     <td>${value.project}</td>
-                                    <td>
+                                    <td>${value.client}</td>
+                                    <td class="display-sm-none display-m-none display-lg-none">
                                         <img src='/modules/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
                                     </td>
-                                    <td>${value.start_date}</td>
+                                    <td class="display-sm-none display-m-none display-lg-none">${value.start_date}</td>
                                     <td>${value.end_date}</td>
-                                    <td>${value.value}</td>
+                                    <td>${value.total_paid}</td>
                                     <td>
                                         <a role='button' class='detalhes_venda pointer' venda='${value.id}'><i class='material-icons gradient'>remove_red_eye</i></button></a>
                                     </td>
@@ -155,6 +205,10 @@ $(document).ready(function () {
                 pagination(response, 'pending', atualizar);
             }
         });
+
+        if (updateResume) {
+            resumePending();
+        }
     }
 
     $(document).on('keypress', function (e) {

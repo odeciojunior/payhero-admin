@@ -23,6 +23,8 @@ Route::group(
 
         Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance')->middleware('role:account_owner|admin');
 
+        Route::get('/reports/resume-pending-balance', 'ReportsApiController@resumePendingBalance')->middleware('role:account_owner|admin');
+
         Route::get('/reports/blockedbalance', 'ReportsApiController@blockedbalance')->middleware('role:account_owner|admin');
 
         Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('role:account_owner|admin');

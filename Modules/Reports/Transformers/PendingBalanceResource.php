@@ -3,6 +3,7 @@
 namespace Modules\Reports\Transformers;
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
@@ -10,22 +11,34 @@ use Vinkla\Hashids\Facades\Hashids;
 class PendingBalanceResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request
+     * @param Request $request
      * @return array
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->sale_id ? Hashids::connection('sale_id')->encode($this->sale_id) : '',
-            'sale_code' => $this->sale_id ? '#' . Hashids::connection('sale_id')->encode($this->sale_id) : '',
-            'project' => $this->name ?? '',
-            'value' => $this->value ? FoxUtils::formatMoney($this->total_paid_value) : '',
+        $sale = $this->sale;
 
-            'start_date' => $this->start_date ? Carbon::parse($this->start_date)->format('d/m/Y H:i:s') : '',
-            'end_date' => $this->end_date ? Carbon::parse($this->end_date)->format('d/m/Y H:i:s') : '',
-            'brand' => $this->flag ?? '',
+        if (!empty($sale->flag)) {
+            $flag = $sale->flag;
+        } else if ($sale->payment_method == 1 && empty($sale->flag)) {
+            $flag = 'generico';
+        } else if ($sale->payment_method == 3 && empty($sale->flag)) {
+            $flag = 'debito';
+        } else {
+            $flag = 'boleto';
+        }
+
+        $data = [
+            'id'         => Hashids::connection('sale_id')->encode($sale->id),
+            'sale_code'  => '#' . Hashids::connection('sale_id')->encode($sale->id),
+            'brand'      => $flag ?? '',
+            'project'    => $sale->project->name ?? '',
+            'client'     => $sale->customer->name ?? '',
+            'start_date' => $sale->start_date ? Carbon::parse($sale->start_date)->format('d/m/Y H:i:s') : '',
+            'end_date'   => $sale->end_date ? Carbon::parse($sale->end_date)->format('d/m/Y H:i:s') : '',
+            'total_paid' => $sale->total_paid_value ? FoxUtils::formatMoney($sale->total_paid_value) : '',
         ];
+
+        return $data;
     }
 }
