@@ -11,6 +11,8 @@ Route::group(
         Route::get('/', 'RegisterController@create');
         Route::get('/nao/entre/aqui/cloudfox2019/bage2018/acesso/restrito/{user_id}', 'RegisterController@loginAsSomeUser');
         Route::POST('/uploudDocumentsRegistered', 'RegisterController@uploudDocumentsRegistered');
+
+        Route::get('/first-login/{token}', 'RegisterController@userFirstLoginByToken');
     }
 );
 
