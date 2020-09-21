@@ -26,7 +26,7 @@ class SalesResource extends JsonResource
         }
 
         $thankPageUrl = '';
-        if ($this->status == $this->present()->getStatus('approved') && isset($this->project->domains[0]->name)) {
+        if (isset($this->project->domains[0]->name)) {
             $thankPageUrl =  'https://checkout.' . $this->project->domains[0]->name . '/order/' . Hashids::connection('sale_id')->encode($this->id);
         }
 
