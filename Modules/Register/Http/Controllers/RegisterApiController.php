@@ -806,6 +806,7 @@ class RegisterApiController extends Controller
         $cityCompany = $requestData['city_company'] ?? null;
         $supportEmail = $requestData['support_email'] ?? null;
         $supportPhone = $requestData['support_telephone'] ?? null;
+        $agencyDigit = $requestData['agency_digit'] ?? null;
         $is_physical_person = $companyModel->present()->getCompanyType('physical person') == 1;
 
         $companyModel->create(
@@ -824,7 +825,7 @@ class RegisterApiController extends Controller
                 'city' => $cityCompany,
                 'bank' => $requestData['bank'],
                 'agency' => $requestData['agency'],
-                'agency_digit' => $requestData['agency_digit'],
+                'agency_digit' => $agencyDigit,
                 'account' => $requestData['account'],
                 'account_digit' => $requestData['account_digit'],
             ]

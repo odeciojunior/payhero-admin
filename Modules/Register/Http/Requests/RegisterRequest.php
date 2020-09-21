@@ -32,8 +32,9 @@ class RegisterRequest extends FormRequest
             'fantasy_name'      => 'nullable',
             'support_email'     => 'nullable',
             'support_telephone' => 'nullable',
-            'company_type'      => 'nullable|in:physical person, juridical person',
             'parameter'         => 'nullable',
+
+            'company_type'      => 'required|in:physical person, juridical person',
 
             'bank'          => 'required',
             'agency'        => 'required',
