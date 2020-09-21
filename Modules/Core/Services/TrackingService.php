@@ -163,7 +163,7 @@ class TrackingService
             $exists = $trackingModel->where('trackings.tracking_code', $trackingCode)
                 ->whereHas('sale', function ($query) use ($sale) {
                     $query->where('id', '!=', $sale->id)
-                        ->orWhere('upsell_id', '!=', $sale->upsell_id);
+                        ->orWhere('upsell_id', '!=', $sale->id);
                 })->exists();
 
             if ($exists) {
