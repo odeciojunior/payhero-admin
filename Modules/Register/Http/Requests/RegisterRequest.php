@@ -15,22 +15,22 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'              => 'required',
-            'document'          => 'required',
+            'name'              => 'required|max:200',
+            'document'          => 'required|min:11|max:11',
             'email'             => 'required|unique:users|max:200',
             'cellphone'         => 'required',
             'password'          => 'required',
             'zip_code'          => 'required',
             'street'            => 'required',
             'number'            => 'required',
-            'complement'        => 'nullable',
-            'neighborhood'      => 'required',
+            'complement'        => 'nullable|max:200',
+            'neighborhood'      => 'required|max:200',
             'city'              => 'required',
             'state'             => 'required',
             'country'           => 'required',
             'date_birth'        => 'nullable',
-            'fantasy_name'      => 'nullable',
-            'support_email'     => 'nullable',
+            'fantasy_name'      => 'nullable|max:200',
+            'support_email'     => 'nullable|max:200',
             'support_telephone' => 'nullable',
             'parameter'         => 'nullable',
 
@@ -73,18 +73,29 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'        => 'Precisamos do seu email para continuar',
-            'email.unique'          => 'Email informado ja esta sendo utilizado',
-            'name.required'         => 'Precisamos do seu nome para continuar',
-            'cellphone.required'    => 'Precisamos do seu celular para continuar',
-            'document.required'     => 'Precisamos do seu CPF para continuar',
-            'date_birth.required'   => 'Precisamos do sua data de nascimento para continuar',
-            'zip_code.required'     => 'Precisamos do seu CEP para continuar',
-            'street.required'       => 'Precisamos do nome da sua rua para continuar',
-            'neighborhood.required' => 'Precisamos do nome do seu bairro para continuar',
-            'city.required'         => 'Precisamos do nome da sua cidade para continuar',
-            'state.required'        => 'Precisamos do nome do seu estado para continuar',
-            'password.required'     => 'Password inválido',
+            'name.required'             => 'Precisamos do seu nome para continuar.',
+            'document.required'         => 'Precisamos do seu CPF para continuar.',
+            'email.required'            => 'Precisamos do seu email para continuar.',
+            'email.unique'              => 'Email informado ja esta sendo utilizado.',
+            'cellphone.required'        => 'Precisamos do seu celular para continuar.',
+            'password.required'         => 'Password inválido.',
+            'zip_code.required'         => 'Precisamos do seu CEP para continuar.',
+            'street.required'           => 'Precisamos do nome da sua rua para continuar.',
+            'number.required'           => 'Precisamos do número do estabelecimento para continuar.',
+            'neighborhood.required'     => 'Precisamos do nome do seu bairro para continuar.',
+            'city.required'             => 'Precisamos do nome da sua cidade para continuar.',
+            'state.required'            => 'Precisamos do nome do seu estado para continuar.',
+            'country.required'          => 'Precisamos saber seu país para continuar.',
+
+            'bank.required'             => 'Precisamos do seu banco para continuar.',
+            'agency.required'           => 'Precisamos de sua agência para continuar.',
+            'account.required'          => 'Precisamos de sua conta para continuar.',
+
+            'company_type.required'     => 'Precisamos saber o tipo de cadastro para continuar. (Pessoa Física/Pessoa Júridica).',
+            'company_type.in'           => 'Tipo de cadastro inválido.',
+
+            'privacy_terms.required'    => 'É preciso aceitar os "Termos de Privacidade" para finalizar o cadastro.',
+            'use_terms.required'        => 'É preciso aceitar os "Termos de Uso" para finalizar o cadastro.',
         ];
     }
 
