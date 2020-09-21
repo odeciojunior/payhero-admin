@@ -107,7 +107,8 @@ class RegisterApiController extends Controller
         } catch (Exception $ex) {
             report($ex);
 
-            return response()->json(['success' => 'false', 'message' => 'revise os dados informados'], 403);
+            return response()->json(['success' => 'false', 'message' => 'revise os dados informados',
+                'mensagem_de_erro' => $ex->getMessage() ], 403);
         }
     }
 
@@ -759,7 +760,7 @@ class RegisterApiController extends Controller
         $requestData['invites_amount'] = self::INVITES_AMOUNT;
         $requestData['boleto_release_money_days'] = self::BOLETO_RELEASE_MONEY_DAYS;
 
-        if (!stristr($requestData['date_birth'], '-')) {
+        if (isset($requestData['date_birth']) && !stristr($requestData['date_birth'], '-')) {
             $requestData['date_birth'] = null;
         }
 
