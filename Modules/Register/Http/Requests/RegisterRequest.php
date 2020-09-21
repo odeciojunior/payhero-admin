@@ -34,7 +34,7 @@ class RegisterRequest extends FormRequest
             'support_telephone' => 'nullable',
             'parameter'         => 'nullable',
 
-            'company_type'      => 'required|in:physical person, juridical person',
+            'company_type'      => 'required|in:physical person,juridical person',
 
             'bank'          => 'required',
             'agency'        => 'required',
