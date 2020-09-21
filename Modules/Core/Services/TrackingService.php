@@ -151,6 +151,7 @@ class TrackingService
         try {
             $trackingService = new TrackingService();
             $trackingModel = new Tracking();
+            $salesModel = new Sale();
 
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
@@ -160,11 +161,11 @@ class TrackingService
 
             //verifica se já tem uma venda nessa conta com o mesmo código de rastreio
             $sale = $productPlanSale->sale;
-            $exists = $trackingModel->where('trackings.tracking_code', $trackingCode)
-                ->whereHas('sale', function ($query) use ($sale) {
-                    $query->where('id', '!=', $sale->id)
-                        ->orWhere('upsell_id', '!=', $sale->id);
-                })->exists();
+            $exists = $salesModel->whereHas('tracking', function ($query) use ($trackingCode) {
+                $query->where('tracking_code', $trackingCode);
+            })->where('id', '!=', $sale->id)
+                ->orWhere('upsell_id', '!=', $sale->id)
+                ->exists();
 
             if ($exists) {
                 $systemStatusEnum = $trackingModel->present()->getSystemStatusEnum('duplicated');
