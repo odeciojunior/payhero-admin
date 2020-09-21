@@ -70,7 +70,7 @@ class RegisterApiController extends Controller
 
             \DB::beginTransaction();
 
-            if (!$files = $this->verifyFiles($request['document'])) {
+            if (!$files = $this->verifyFiles($request['document'],$request['company_type'] )) {
                 return response()->json(
                     [
                         'success' => 'false',
@@ -117,16 +117,23 @@ class RegisterApiController extends Controller
         }
     }
 
-    public function verifyFiles ($document)
+    public function verifyFiles ($document, $company_type)
     {
+        $companyModel = new Company();
+        $companyPresent = $companyModel->present();
+        $is_physical_person = $companyPresent->getCompanyType($company_type) == $companyPresent->getCompanyType('physical person') ? 1 : 2;
+
         $sDrive = Storage::disk('s3');
         $documentCpf = preg_replace('/[^0-9]/', '', $document);
         $files = $sDrive->allFiles('uploads/register/user/' . $documentCpf . '/private/documents');
 
-        if (!count($files) === 7) {
-           return false;
+        if ($is_physical_person === 1 && !count($files) === 5) {
+            return false;
         }
 
+        if ($is_physical_person === 2 && !count($files) === 7) {
+            return false;
+        }
             return $files;
     }
 

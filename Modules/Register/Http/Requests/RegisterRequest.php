@@ -40,7 +40,7 @@ class RegisterRequest extends FormRequest
             'agency'        => 'required',
             'agency_digit'  => 'nullable',
             'account'       => 'required',
-            'account_digit' => 'nullable',
+            'account_digit' => 'required',
 
             'company_document'     => 'nullable',
             'zip_code_company'     => 'nullable',
