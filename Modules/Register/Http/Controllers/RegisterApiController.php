@@ -105,7 +105,7 @@ class RegisterApiController extends Controller
                 [
                     'success' => 'true',
                     'message' => 'Arquivos Enviado com Sucesso',
-                    'access_token' => auth()->user()->createToken("Laravel Password Grant Client")->accessToken,
+                    'access_token' => $user->id,
                 ]
             );
 
