@@ -812,8 +812,7 @@ class RegisterApiController extends Controller
         $companyModel->create(
             [
                 'user_id' => $user->account_owner_id,
-                'fantasy_name' => (isset($requestData['company_type']) ?? $requestData['company_type'] == $companyModel->present()
-                        ->getCompanyType('physical person')) ? $user->name : $requestData['fantasy_name'],
+                'fantasy_name' => ($companyModel->present()->getCompanyType('physical person') == 1 ) ? $user->name : $requestData['fantasy_name'],
                 'company_document' => ($requestData['company_type'] == $companyModel->present()
                         ->getCompanyType(
                             'physical person'
