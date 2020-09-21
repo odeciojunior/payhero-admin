@@ -886,19 +886,18 @@ class NotazzService
         $saleModel = new Sale();
         $createdCount = 0;
 
-        $sales = $saleModel->with(['project', 'project.notazzIntegration'])
-            ->has('project.notazzIntegration')
+        $sales = $saleModel->with(['project.notazzIntegration'])
+            ->join('projects', 'projects.id', 'sales.project_id')
+            ->join('notazz_integrations', 'notazz_integrations.project_id', 'projects.id')
             ->doesnthave('notazzInvoices')
-            ->whereBetween('created_at', [$startData, Carbon::now()->toDateTimeString()])
-            ->where('status', $saleModel->present()->getStatus('approved'));
+            ->whereBetween('sales.created_at', [$startData, Carbon::now()->toDateTimeString()])
+            ->where('sales.status', $saleModel->present()->getStatus('approved'))
+            ->whereNull('projects.deleted_at')
+            ->whereNull('notazz_integrations.deleted_at')
+            ->select('sales.*');
 
         if (!empty($projectId)) {
-            $sales->whereHas(
-                'project',
-                function ($queryProject) use ($projectId) {
-                    $queryProject->where('id', $projectId);
-                }
-            );
+            $sales->where('projects.id', $projectId);
         }
 
         $sales = $sales->get();

@@ -88,7 +88,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
         //checks companies update on getnet
-        $schedule->command('command:updateCompanyGetnet')->dailyAt('20:00');
+        $schedule->command('command:checkUpdateCompanyGetnet')->dailyAt('20:00');
     }
 
     /**
