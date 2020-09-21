@@ -9,7 +9,7 @@ class IdwallService
 
     public function __construct()
     {
-        $this->accessToken = getenv('ID_WALL_TOKEN');
+        $this->accessToken = getenv('IDWALL_TOKEN');
     }
 
     public function getGenerateProtocolByCNPJ($cnpj)
